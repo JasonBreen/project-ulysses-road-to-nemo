@@ -1,0 +1,1302 @@
+add_namespace = ustio_main
+add_namespace = ustio_grzegorz
+add_namespace = ustio_morka
+add_namespace = ustio_na
+add_namespace = ustio_f
+
+add_namespace = ustio
+
+################################################################
+
+country_event = { ### ustio gives up east
+	id = ustio.1
+	title = ustio.1.t
+	desc = ustio.1.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = { ### YES
+		name = ustio.1.a
+		ai_chance = {
+			factor = 85
+			modifier = {
+				factor = 0
+				has_game_rule = {
+						rule = UST_ai_behavior
+						option = NEUTRALITY
+				}
+			}
+		}
+		set_country_flag = UST_sold_land_to_ratio_flag
+		add_opinion_modifier = {
+			target = RAT
+			modifier = considers_friend 
+		}
+		hidden_effect = {
+			RAT = {
+				add_opinion_modifier = {
+					target = ust
+					modifier = considers_friend 
+				}
+			}
+		}
+		add_war_support = -0.2
+		add_stability = 0.1
+		load_focus_tree = ustio_democracy
+		hidden_effect = {
+			country_event = utility.1
+		}
+	}
+	option = { ### NO
+		name = ustio.1.b
+		ai_chance = {
+			factor = 0
+		}
+		ai_chance = {
+			factor = 15
+			modifier = {
+				factor = 0		
+				OR = {
+					AND = {
+						is_historical_focus_on = yes
+						has_game_rule = {
+							rule = UST_ai_behavior
+							option = DEFAULT
+						}
+					} 
+					has_game_rule = {
+						rule = UST_ai_behavior
+						option = DEMOCRATIC_HISTORICAL
+					}
+					has_game_rule = {
+						rule = UST_ai_behavior
+						option = DEMOCRATIC_ALTERNATE
+					}
+				}
+			}
+		}
+		set_country_flag = UST_not_sold_land_to_ratio_flag
+		add_opinion_modifier = {
+			target = RAT
+			modifier = considers_threat 
+		}
+		hidden_effect = {
+			RAT = {
+				add_opinion_modifier = {
+					target = UST
+					modifier = considers_threat 
+				}
+			}
+		}
+		add_war_support = 0.2
+		add_stability = -0.1
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.05
+		}
+		load_focus_tree = ustio_non_ali
+		hidden_effect = {
+			country_event = utility.1
+		}
+	}
+}
+
+country_event = { ### ustio gets info about Osea idea land for GLRDC
+	id = ustio.2
+	title = ustio.2.t
+	desc = ustio.2.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.2.a
+	}
+}
+
+country_event = { ### ustio gets land from belka
+	id = ustio.3
+	title = ustio.3.t
+	desc = ustio.3.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.3.a
+	}
+}
+
+country_event = { ### ustio gets tank div from Belka
+	id = ustio.4
+	title = ustio.4.t
+	desc = ustio.4.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.4.a
+		load_oob = UST_belkan_units
+		add_corps_commander_role = {
+			character = UST_urban_klimczak
+
+			traits = { panzer_expert combined_arms_expert brilliant_strategist }
+			skill = 4
+			attack_skill = 7
+			defense_skill = 2
+			planning_skill = 2
+			logistics_skill = 2
+		}
+	}
+}
+
+country_event = { ### event for ustio about Belka mobilisaztion after resurces
+	id = ustio.17
+	title = ustio.17.t
+	desc = ustio.17.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.17.a
+		add_stability = -0.05
+		add_war_support = 0.05
+		add_political_power = 50
+		set_country_flag = UST_they_are_coming_flag
+	}
+}
+
+country_event = { ### USTIO RESURCES
+	id = ustio.18
+	title = ustio.18.t
+	desc = ustio.18.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.18.a
+	}
+}
+
+country_event = { ### 1st event of get ready vs Belka tree
+	id = ustio.5
+	title = ustio.5.t
+	desc = ustio.5.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.5.a
+	}
+}
+
+country_event = { ### ask ratio for help vs Belka
+	id = ustio.6
+	title = ustio.6.t
+	desc = ustio.6.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.6.a
+		add_offsite_building = { 
+			type = arms_factory 
+			level = 1
+		}
+		add_manpower = 20000
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 2000
+			producer = RAT
+		}
+		add_political_power = 100
+	}
+}
+
+### Talks with Ratio events ###
+
+country_event = { ### border skirms vs Ratio
+	id = ustio.7
+	title = ustio.7.t
+	desc = ustio.7.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.7.a
+		add_war_support = -0.05
+	}
+	option = {
+		name = ustio.7.b
+		add_war_support = 0.05
+		add_stability = -0.05
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = -500
+		}
+		add_manpower = -250
+		add_to_variable = { ratio_hate = 1 }
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = { has_war_with = RAT } 
+				}
+				country_event = { id = ustio.8 days = 10 }
+			}
+		}
+	}
+}
+
+country_event = { ### partisants plan to do rails bombing
+	id = ustio.8
+	title = ustio.8.t
+	desc = ustio.8.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.8.a
+		365 = {
+			damage_building = {
+				type = rail_way
+				damage = 5
+			}
+			damage_building = {
+				type = supply_node
+				damage = 2
+			}
+		}
+		add_days_mission_timeout = {
+			mission = UST_ratio_war_timer
+			days = 20
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = { has_war_with = RAT } 
+				}
+				country_event = { id = ustio.9 days = 10 }
+			}
+		}
+	}
+	option = {
+		name = ustio.8.b
+		365 = {
+			damage_building = {
+				type = rail_way
+				damage = 1
+			}
+		}
+		add_to_variable = { ratio_hate = 1 }
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = { has_war_with = RAT } 
+				}
+				country_event = { id = ustio.9 days = 10 }
+			}
+		}
+	}
+}
+
+country_event = { ### ask great power for opinion
+	id = ustio.9
+	title = ustio.9.t
+	desc = ustio.9.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = { ### ask Belka
+		name = ustio.9.a
+		hidden_effect = {
+			country_event = { id = ustio.15 days = 5 }
+			if = {
+				limit = {
+					NOT = { has_war_with = RAT } 
+				}
+				country_event = { id = ustio.10 days = 10 }
+			}
+		}
+	}
+	option = { ### ask Yukto
+		name = ustio.9.b
+		hidden_effect = {
+			country_event = { id = ustio.14 days = 5 }
+			if = {
+				limit = {
+					NOT = { has_war_with = RAT } 
+				}
+				country_event = { id = ustio.10 days = 10 }
+			}
+		}
+	}
+}
+
+country_event = {
+	id = ustio.10
+	title = ustio.10.t
+	desc = ustio.10.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.10.a
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = { has_war_with = RAT } 
+				}
+				country_event = { id = ustio.11 days = 10 }
+			}
+		}
+	}
+	option = {
+		name = ustio.10.b
+		add_to_variable = { ratio_hate = 1 }
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = { has_war_with = RAT } 
+				}
+				country_event = { id = ustio.11 days = 10 }
+			}
+		}
+	}
+}
+
+country_event = {
+	id = ustio.11
+	title = ustio.11.t
+	desc = ustio.11.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.11.a
+	}
+	option = {
+		name = ustio.11.b
+		add_to_variable = { ratio_hate = 1 }
+		if = {
+			limit = {
+				check_variable = { ratio_hate = 5 }
+			}
+			hidden_effect = { 
+				country_event = { id = ustio.12 days = 1 }
+			}
+		}
+	}
+}
+
+country_event = { ###demoblize the border
+	id = ustio.12
+	title = ustio.12.t
+	desc = ustio.12.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = { ### yes
+		name = ustio.12.a
+		add_days_mission_timeout = {
+			mission = UST_ratio_war_timer
+			days = 60
+		}
+		365 = {
+			set_demilitarized_zone = yes
+		}
+	}
+	option = { ### no
+		name = ustio.12.b
+		RAT = {
+            declare_war_on = {
+                target = UST
+                type = annex_everything
+            }
+        }
+		set_global_flag = first_ustian_war
+		hidden_effect = {
+			news_event = { id = ac_news_event.14 days = 1 }
+		}
+	}
+}
+
+country_event = { ### Ustio moves to the border
+	id = ustio.13
+	title = ustio.13.t
+	desc = ustio.13.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.13.a
+		365 = {
+			set_demilitarized_zone = no
+		}
+	}
+}
+
+country_event = { ### we asked Yukto for opinion - referendum
+	id = ustio.14
+	title = ustio.14.t
+	desc = ustio.14.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.14.a
+		add_days_mission_timeout = {
+			mission = UST_ratio_war_timer
+			days = 30
+		}
+		country_event = { id = ustio.16 days = 2 }
+	}
+}
+
+country_event = { ### we asked Belka for opinion - they said fuck off
+	id = ustio.15
+	title = ustio.15.t
+	desc = ustio.15.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.15.a
+	}
+}
+
+country_event = { ### referendum results
+	id = ustio.16
+	title = ustio.16.t
+	desc = ustio.16.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.16.a
+	}
+}
+
+country_event = { ### world community forces Ratio to peace out - we WON
+	id = ustio.19
+	title = ustio.19.t
+	desc = ustio.19.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.19
+		white_peace = RAT
+		set_country_flag = UST_won_ratio_war_flag
+		clr_global_flag = first_ustian_war
+		news_event = { id = ac_news_event.16 days = 1 }
+	}
+}
+
+country_event = { ### world community forces us to peace out - we lost
+	id = ustio.20
+	title = ustio.20.t
+	desc = ustio.20.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.20.a
+		white_peace = RAT
+		set_country_flag = UST_lost_ratio_war_flag
+		clr_global_flag = first_ustian_war
+		RAT = {
+			transfer_state = 365
+			transfer_state = 336
+			transfer_state = 376
+		}
+		news_event = { id = ac_news_event.17 days = 1 }
+	}
+}
+
+country_event = { ### we lost - back to being shit - forces player back into hist path
+	id = ustio.21
+	title = ustio.21.t
+	desc = ustio.21.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.21.a
+		hidden_effect = {
+			
+		}
+	}
+}
+
+country_event = { ### we lost ratio war
+	id = ustio.22
+	title = ustio.22.t
+	desc = ustio.22.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.22.a
+		load_focus_tree = ustio_democracy
+		hidden_effect = {
+			country_event = utility.1
+		}
+	}
+}
+
+country_event = { ### hand of free market event 1
+	id = ustio.23
+	title = ustio.23.t
+	desc = ustio.23.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.23.a
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		hidden_effect = {
+			country_event = ustio.24
+			days = 100
+		}
+	}
+}
+
+country_event = { ### hand of free market event 2
+	id = ustio.24
+	title = ustio.23.t
+	desc = ustio.23.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.23.a
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		hidden_effect = {
+			country_event = ustio.25
+			days = 100
+		}
+	}
+}
+
+country_event = { ### hand of free market event 3
+	id = ustio.25
+	title = ustio.23.t
+	desc = ustio.23.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.23.a
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+country_event = { ### Marazewski promo
+	id = ustio.26
+	title = ustio.26.t
+	desc = ustio.26.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio.26.a
+		add_corps_commander_role = {
+			character = UST_janusz_marazewski
+
+			traits = { organizer }
+			skill = 3
+			attack_skill = 1
+			defense_skill = 4
+			planning_skill = 1
+			logistics_skill = 4
+		}
+	}
+}
+
+
+
+########################################################
+
+country_event = { ### starting event
+	id = ustio_main.1
+	title = ustio_main.1.t
+	desc = ustio_main.1.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_main.1.a
+	}
+}
+
+country_event = { ### start making museum event
+	id = ustio_main.2
+	title = ustio_main.2.t
+	desc = ustio_main.2.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_main.2.a
+	}
+}
+
+country_event = { ### museum is DONE
+	id = ustio_main.3
+	title = ustio_main.3.t
+	desc = ustio_main.3.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_main.3.a
+	}
+}
+
+country_event = { ### 1st event about ratio partisants fired after military bases focus
+	id = ustio_main.4
+	title = ustio_main.4.t
+	desc = ustio_main.4.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_main.4.a
+	}
+}
+
+country_event = { ### 2nd event about ratio partisants  fired after deal with partisants focus
+	id = ustio_main.5
+	title = ustio_main.5.t
+	desc = ustio_main.5.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_main.5.a
+	}
+}
+
+country_event = { ### deal with ratio, land is transefred
+	id = ustio_main.6
+	title = ustio_main.6.t
+	desc = ustio_main.6.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_main.6.a
+	}
+}
+
+country_event = { ### START OF ELECTIONS EVENT CHAIN
+	id = ustio_main.7
+	title = ustio_main.7.t
+	desc = ustio_main.7.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_main.7.a
+		#hidden_effect = {
+		#	country_event = { id = ustio_main.8 days = 10 }
+		#}
+	}
+}
+
+#country_event = { ### election event
+#	id = ustio_main.8
+#	title = ustio_main.8.t
+#	desc = ustio_main.8.d
+#	picture = GFX_report_event_blank
+#
+#	is_triggered_only = yes
+#
+#	option = {
+#		name = ustio_main.8.a
+#	}
+#}
+
+########## GRZEGORZ ###############
+
+
+country_event = { ### Grzegorz won elections
+	id = ustio_grzegorz.1
+	title = ustio_grzegorz.1.t
+	desc = ustio_grzegorz.1.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_grzegorz.1.a
+	}
+}
+
+country_event = {
+	id = ustio_grzegorz.2 ### UST_father_continues_his_rule event
+	title = ustio_grzegorz.2.t
+	desc = ustio_grzegorz.2.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_grzegorz.2.a
+		swap_ruler_traits = { remove = father_of_the_nation_1 add = father_of_the_nation_2 }
+	}
+}
+
+country_event = {
+	id = ustio_grzegorz.3 ### event about Grzegorz term'ss plans
+	title = ustio_grzegorz.3.t
+	desc = ustio_grzegorz.3.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_grzegorz.3.a
+	}
+}
+
+country_event = {
+	id = ustio_grzegorz.4 ### event about friends in osea
+	title = ustio_grzegorz.4.t
+	desc = ustio_grzegorz.4.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_grzegorz.4.a
+	}
+}
+
+country_event = {
+	id = ustio_grzegorz.5 ### event centralise power
+	title = ustio_grzegorz.5.t
+	desc = ustio_grzegorz.5.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_grzegorz.5.a ### yes
+		swap_ruler_traits = { remove = father_of_the_nation_2 add = father_of_the_nation_3 }
+		swap_ideas = { remove_idea = UST_freedom add_idea = UST_freedom_2 }
+	}
+	option = {
+		name = ustio_grzegorz.5.b ### no
+	}
+}
+
+country_event = {
+	id = ustio_grzegorz.6 ### continue school reform
+	title = ustio_grzegorz.6.t
+	desc = ustio_grzegorz.6.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_grzegorz.6.a
+		remove_ideas = UST_better_schooling
+		add_political_power = -50
+		add_stability = -0.05
+	}
+}
+
+########## MORKAWIECKI ###############
+
+country_event = { ### Morkawiecki won elections
+	id = ustio_morka.1
+	title = ustio_morka.1.t
+	desc = ustio_morka.1.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_morka.1.a
+		retire_country_leader = yes
+		add_country_leader_role = {
+			character = UST_kuba_morkawiecki
+			promote_leader = yes
+			country_leader = {
+				ideology=liberalism  
+				traits = { }
+				expire="2050.1.1.1"
+				id=-1
+			}
+		}
+	}
+}
+
+country_event = { ### 
+	id = ustio_morka.2
+	title = ustio_morka.2.t
+	desc = ustio_morka.2.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_morka.2.a
+	}
+}
+
+country_event = { ### 
+	id = ustio_morka.3
+	title = ustio_morka.3.t
+	desc = ustio_morka.3.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_morka.3.a
+	}
+}
+
+country_event = { ### 
+	id = ustio_morka.4
+	title = ustio_morka.4.t
+	desc = ustio_morka.4.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_morka.4.a
+	}
+}
+
+country_event = { ### 
+	id = ustio_morka.5
+	title = ustio_morka.5.t
+	desc = ustio_morka.5.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_morka.5.a
+		swap_ideas = { remove_idea = UST_better_schooling add_idea = UST_better_schooling_2 }
+	}
+}
+
+country_event = { ### 
+	id = ustio_morka.6
+	title = ustio_morka.6.t
+	desc = ustio_morka.6.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_morka.6.a
+		swap_ideas = { remove_idea = UST_liberal_shock_2_idea add_idea = UST_liberal_shock_3_idea }
+	}
+}
+
+######## War with ratio + n/a path ########
+
+country_event = {
+	id = ustio_na.1
+	title = ustio_na.1.t
+	desc = ustio_na.1.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.1.a
+		add_war_support = 0.05
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.05
+		}
+		hidden_effect = {
+			RAT = {
+				add_stability = 0.2
+				add_war_support = 0.3
+			}
+		}
+		activate_mission = UST_ratio_war_timer
+	}
+}
+
+country_event = {
+	id = ustio_na.2
+	title = ustio_na.2.t
+	desc = ustio_na.2.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.2.a
+		add_war_support = 0.1
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.05
+		}
+		add_political_power = 200
+	}
+}
+
+country_event = {
+	id = ustio_na.3
+	title = ustio_na.3.t
+	desc = ustio_na.3.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.3.a
+		load_oob = UST_band_of_broders_units
+	}
+}
+
+country_event = {
+	id = ustio_na.4
+	title = ustio_na.4.t
+	desc = ustio_na.4.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.4.a
+		RAT = {
+			add_timed_idea = { idea = RAT_got_attacked_by_ust days = 30 }
+		}
+	}
+}
+
+country_event = { ### WE WON
+	id = ustio_na.5
+	title = ustio_na.5.t
+	desc = ustio_na.5.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.5.a
+		country_event = { id = ustio_na.6 days = 1 } 
+	}
+}
+
+country_event = { ### Domestic sytuation critical after war with Ratio
+	id = ustio_na.6
+	title = ustio_na.6.t
+	desc = ustio_na.6.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.6.a
+		add_ideas = UST_unstable_economy
+		add_ideas = UST_fear_for_freedom
+	}
+}
+
+country_event = { ### wave of nationalism
+	id = ustio_na.7
+	title = ustio_na.7.t
+	desc = ustio_na.7.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.7.a
+		add_political_power = 150
+		add_stability = 0.2
+		add_war_support = 0.2
+		add_popularity = { ideology = fascism popularity = 0.1 }
+	}
+}
+
+country_event = { ### ustian stubbornness
+	id = ustio_na.8
+	title = ustio_na.8.t
+	desc = ustio_na.8.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.8.a
+		swap_ideas = { remove_idea = UST_freedom add_idea = UST_freedom_fascism_1 }
+	}
+}
+
+country_event = { ### new rule
+	id = ustio_na.9
+	title = ustio_na.9.t
+	desc = ustio_na.9.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.9.a
+		swap_ideas = { remove_idea = UST_freedom_fascism_1 add_idea = UST_freedom_fascism_2 }
+		set_party_name = {
+			ideology = neutrality
+			long_name = UST_neutrality_coalition_long
+			name = UST_neutrality_coalition
+		}
+		set_politics = {
+			ruling_party = neutrality 
+			elections_allowed = no
+		}
+		#retire_country_leader = yes
+		add_country_leader_role = {
+			character = UST_grzegorz_naruszewicz
+			promote_leader = yes
+			country_leader = {
+				ideology=oligarchism  
+				traits = { popular_figurehead2 reluctant_veteran }
+				expire="2050.1.1.1"
+				id=-1
+			}
+		}
+		hidden_effect = {
+			country_event = ustio_na.10
+		}
+	}
+}
+
+#country_event = { 
+#	id = ustio_na.10
+#	title = ustio_na.10.t
+#	desc = ustio_na.10.d
+#	picture = GFX_report_event_blank
+#
+#	is_triggered_only = yes
+#
+#	option = {
+#		name = ustio_na.10.a
+#	}
+#}
+
+country_event = { ### forcing Ratio to fucking learn to be Ustian - BY FUCKING FORCE BUHAHAHAHAHAA
+	id = ustio_na.11
+	title = ustio_na.11.t
+	desc = ustio_na.1.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.11.a
+		add_stability = -0.1
+		add_political_power = -100
+	}
+}
+
+country_event = { ### forcing some Ratio people the fuck out
+	id = ustio_na.12
+	title = ustio_na.12.t
+	desc = ustio_na.1.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.12.a
+		add_stability = -0.1
+		add_political_power = -100
+	}
+}
+
+country_event = { ### everyone happy that democracy and liberty is still in
+	id = ustio_na.13
+	title = ustio_na.13.t
+	desc = ustio_na.1.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_na.13.a
+		swap_ideas = { remove_idea = UST_fear_for_freedom add_idea = UST_fear_for_freedom_2 }
+		add_stability = 0.15
+		add_political_power = 50
+	}
+}
+
+######## Fascist Ustio ########
+
+country_event = { ### 1st event of civil war event chain, it is starting, chaos in the ustian parlaments and coalition
+	id = ustio_f.1
+	title = ustio_f.1.t
+	desc = ustio_f.1.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_f.1.a
+		add_country_flag = UST_things_went_bad_flag
+		country_event = { id = ustio_f.2 days = 5 }
+	}
+}
+
+country_event = { ### democrats and commies are mobilising
+	id = ustio_f.2
+	title = ustio_f.2.t
+	desc = ustio_f.2.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_f.2.a
+		country_event = { id = ustio_f.3 days = 5 }
+	}
+}
+
+country_event = { ### Grzegorz gets heart attack, everyone panics, even more inside chaos
+	id = ustio_f.3
+	title = ustio_f.3.t
+	desc = ustio_f.3.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_f.3.a
+		retire_country_leader = yes
+		add_country_leader_role = {
+			character = UST_franek_dolas
+			promote_leader = yes
+			country_leader = {
+				ideology=stratocracy  
+				traits = { }
+				expire="2050.1.1.1"
+				id=-1
+			}
+		}
+		country_event = { id = ustio_f.4 days = 5 }
+	}
+}
+
+country_event = { ### full armed hostilies start
+	id = ustio_f.4
+	title = ustio_f.4.t
+	desc = ustio_f.4.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_f.4.a
+		start_civil_war = {
+			ruling_party = fascism ### Changes the ideology of the original, player-led country
+			ideology = communism ### The ideology of the breakaway country.
+			size = 0.35
+			only_own_territory = no
+			capital = 339
+			states = { 
+				339 378 358 365
+			}
+			#keep_unit_leaders = {
+			#	750 751 752
+			#}
+			hidden_effect = {
+				load_oob = UST_civil_war_commies
+				PREV = {
+					load_oob = UST_civil_war_fascist
+				}
+			}
+		}
+		hidden_effect = {
+			complete_national_focus = UST_civil_war
+			country_event = { id = ustio_f.5 days = 35 }
+		}
+	}
+}
+
+country_event = { ### Ratio attacks
+	id = ustio_f.5
+	title = ustio_f.5.t
+	desc = ustio_f.5.d
+	picture = GFX_report_event_blank
+
+	is_triggered_only = yes
+
+	option = {
+		name = ustio_f.5.a
+		every_country_with_original_tag = {
+			original_tag_to_check = UST
+			RAT = {
+				declare_war_on = {
+					type = take_core_state 
+					target = PREV
+				}
+			}
+		}
+		hidden_effect = {
+			complete_national_focus = UST_they_are_back
+		}
+	}
+}

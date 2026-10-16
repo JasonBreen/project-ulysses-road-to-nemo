@@ -1,0 +1,119 @@
+FAT_defend_vs_belka  = {
+	allowed = {
+		original_tag = FAT
+	}
+
+	enable = {
+		has_war_with = BLK
+		BLK = { is_ai = yes }
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = front_control
+
+		tag = BLK
+
+		ratio = 0.5
+
+		priority = 100
+		ordertype = front
+		execution_type = careful
+	}
+}
+
+FAT_bunker_itself_geb = {
+	allowed = {
+		tag = FAT
+	}
+	enable = {
+		has_war_with = BLK
+		surrender_progress > 0.25
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = dont_defend_ally_borders
+		id = "GEB"
+		value = -250
+	}
+}
+
+FAT_bunker_itself_rec = {
+	allowed = {
+		tag = FAT
+	}
+	enable = {
+		has_war_with = BLK
+		surrender_progress > 0.25
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = dont_defend_ally_borders
+		id = "REC"
+		value = -250
+	}
+}
+
+FAT_bunker_itself = {
+	allowed = {
+		original_tag = FAT
+	}
+	enable = {
+		FAT = {
+			has_war_with = BLK
+			OR = {
+				surrender_progress > 0.25
+				BLK = { is_ai = yes }
+			}
+		}
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = dont_defend_ally_borders
+		id = "GEB"
+		value = -1000
+	}
+	ai_strategy = {
+		type = dont_defend_ally_borders
+		id = "REC"
+		value = -1000
+	}
+}
+
+FAT_dont_help_vs_ai_in_geb = {
+	allowed = {
+		tag = FAT
+	}
+	enable = {
+		BLK = { is_ai = yes }
+		is_in_faction_with = GEB
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = front_unit_request
+		state = 256 
+		value = -500
+	}
+}
+
+FAT_dont_help_vs_ai_in_rec = {
+	allowed = {
+		tag = FAT
+	}
+	enable = {
+		BLK = { is_ai = yes }
+		is_in_faction_with = rec
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = front_unit_request
+		state = 293 
+		value = -500
+	}
+}
+##################################################################

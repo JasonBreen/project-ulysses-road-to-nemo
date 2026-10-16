@@ -1,0 +1,88 @@
+scripted_gui = {
+    OSE_congress_decisions_ui = {
+        context_type = decision_category
+		window_name = "OSE_congress_decisions_ui"
+        visible = { always = yes }
+        dynamic_lists = {
+            senate_diagram = {
+                array = osean_senate_x
+                change_scope = no
+                entry_container = osean_senate_seat
+                index = seat_idx
+            }
+            house_diagram = {
+                array = osean_house_x
+                change_scope = no
+                entry_container = osean_house_seat
+                index = seat_idx
+            }
+        }
+        properties = {
+            senate_dot_icon = {
+                x = osean_senate_x^seat_idx
+                y = osean_senate_y^seat_idx
+                frame = osean_senate^seat_idx
+            }
+            house_dot_icon = {
+                x = osean_house_x^seat_idx
+                y = osean_house_y^seat_idx
+                frame = osean_house^seat_idx
+            }
+            senate_majority_button = {
+                frame = ose_senate_majority
+            }
+            house_majority_button = {
+                frame = ose_house_majority
+            }
+        }
+        effects = {
+            congress_info_button_click = {
+                if = {
+                    limit = {
+                        has_country_flag = OSE_congress_party_list_ui_visible
+                    }
+                    clr_country_flag = OSE_congress_party_list_ui_visible
+                }
+                else = {
+                    set_country_flag = OSE_congress_party_list_ui_visible
+                }
+			}
+        }
+    }
+    OSE_congress_party_list_ui = {
+        context_type = player_context
+        window_name = "OSE_congress_party_list_ui"
+        visible = {
+            has_country_flag = OSE_congress_party_list_ui_visible
+        }
+        effects = {
+            congress_info_button_close_click = {
+				clr_country_flag = OSE_congress_party_list_ui_visible
+			}
+            congress_party_unity_info_button_click = {
+                clear_variable = OSE_congress_party_name_list_var
+                set_variable = { OSE_congress_party_name_list_var = 1 }
+            }
+            congress_party_liberty_info_button_click = {
+                clear_variable = OSE_congress_party_name_list_var
+                set_variable = { OSE_congress_party_name_list_var = 2 }
+            }
+            congress_party_nationalist_info_button_click = {
+                clear_variable = OSE_congress_party_name_list_var
+                set_variable = { OSE_congress_party_name_list_var = 3 }
+            }
+            congress_party_socialist_info_button_click = {
+                clear_variable = OSE_congress_party_name_list_var
+                set_variable = { OSE_congress_party_name_list_var = 4 }
+            }
+            congress_party_monarchist_info_button_click = {
+                clear_variable = OSE_congress_party_name_list_var
+                set_variable = { OSE_congress_party_name_list_var = 5 }
+            }
+            congress_party_independent_info_button_click = {
+                clear_variable = OSE_congress_party_name_list_var
+                set_variable = { OSE_congress_party_name_list_var = 6 }
+            }
+        }
+    }
+}

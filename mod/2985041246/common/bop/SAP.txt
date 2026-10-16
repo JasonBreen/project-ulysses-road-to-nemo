@@ -1,0 +1,239 @@
+SAP_power_balance = {
+	initial_value = 0.2
+	left_side = SAP_republicans_side	
+	right_side = SAP_monarchists_side	
+	decision_category = SAP_balance_of_power_category
+
+	### Balance
+	range = {
+		id = SAP_balance_range
+		min = -0.10
+		max = 0.10
+		modifier = {
+			stability_factor = 0.05
+			democratic_drift = 0.01
+			monarchism_drift = 0.01
+		}
+		on_activate = {
+			SAP_decrease_government_dysfunction = yes
+		}
+		on_deactivate = {
+			
+		}
+	}
+
+	### Republicans
+	side = {
+		id = SAP_republicans_side	
+		icon = GFX_bop_SAP_republicans_side
+
+		range = {
+			id = SAP_republicans_low_control_range
+			min = -0.3
+			max = -0.1
+			modifier = {
+				stability_factor = 0.025
+				democratic_drift = 0.025
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_government = monarchism
+					}
+					SAP_increase_government_dysfunction = yes
+				}
+			}
+			on_deactivate = {
+				if = {
+					limit = {
+						has_government = monarchism
+					}
+					SAP_decrease_government_dysfunction = yes
+				}
+			}
+		}
+
+		range = {
+			id = SAP_republicans_medium_control_range
+			min = -0.6
+			max = -0.3
+			modifier = {
+				democratic_drift = 0.025
+				communism_drift = 0.025
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_government = monarchism
+					}
+					SAP_increase_government_dysfunction = yes
+				}
+			}
+			on_deactivate = {
+				if = {
+					limit = {
+						has_government = monarchism
+					}
+					SAP_decrease_government_dysfunction = yes
+				}
+			}
+		}
+
+		range = {
+			id = SAP_republicans_high_control_range
+			min = -0.9
+			max = -0.6
+			modifier = {
+				communism_drift = 0.025
+				stability_factor = -0.025
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_government = monarchism
+					}
+					SAP_increase_government_dysfunction = yes
+				}
+			}
+			on_deactivate = {
+				if = {
+					limit = {
+						has_government = monarchism
+					}
+					SAP_decrease_government_dysfunction = yes
+				}
+			}
+		}
+
+		range = {
+			id = SAP_republicans_total_control_range
+			min = -1
+			max = -0.9
+			modifier = {
+				communism_drift = 0.05
+				stability_factor = -0.05
+			}
+			on_activate = {
+				country_event = sapin_civil_war.2
+				hidden_effect = {
+					remove_ideas = {
+						sap_dysfunctional_government_1
+						sap_dysfunctional_government_2
+						sap_dysfunctional_government_3
+					}
+				}
+			}
+			on_deactivate = {
+				
+			}
+		}
+	}
+
+	### Monarchists
+	side = {
+		id = SAP_monarchists_side	
+		icon = GFX_bop_SAP_monarchists_side
+
+		range = {
+			id = SAP_monarchists_low_control_range
+			min = 0.1
+			max = 0.3
+			modifier = {
+				stability_factor = 0.025
+				monarchism_drift = 0.025
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_government = democratic
+					}
+					SAP_increase_government_dysfunction = yes
+				}
+			}
+			on_deactivate = {
+				if = {
+					limit = {
+						has_government = democratic
+					}
+					SAP_decrease_government_dysfunction = yes
+				}
+			}
+		}
+
+		range = {
+			id = SAP_monarchists_medium_control_range
+			min = 0.3
+			max = 0.6
+			modifier = {
+				monarchism_drift = 0.025
+				fascism_drift = 0.025
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_government = democratic
+					}
+					SAP_increase_government_dysfunction = yes
+				}
+			}
+			on_deactivate = {
+				if = {
+					limit = {
+						has_government = democratic
+					}
+					SAP_decrease_government_dysfunction = yes
+				}
+			}
+		}
+
+		range = {
+			id = SAP_monarchists_high_control_range
+			min = 0.6
+			max = 0.9
+			modifier = {
+				fascism_drift = 0.025
+				stability_factor = -0.025
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_government = democratic
+					}
+					SAP_increase_government_dysfunction = yes
+				}
+			}
+			on_deactivate = {
+				if = {
+					limit = {
+						has_government = democratic
+					}
+					SAP_decrease_government_dysfunction = yes
+				}
+			}
+		}
+
+		range = {
+			id = SAP_monarchists_total_control_range
+			min = 0.9
+			max = 1
+			modifier = {
+				fascism_drift = 0.05
+				stability_factor = -0.05
+			}
+			on_activate = {
+				country_event = sapin_civil_war.1
+				hidden_effect = {
+					remove_ideas = {
+						sap_dysfunctional_government_1
+						sap_dysfunctional_government_2
+						sap_dysfunctional_government_3
+					}
+				}
+			}
+			on_deactivate = {
+				
+			}
+		}
+	}
+}
+

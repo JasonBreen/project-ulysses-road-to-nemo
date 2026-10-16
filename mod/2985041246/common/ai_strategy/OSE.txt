@@ -1,0 +1,284 @@
+# befriend
+# conquer
+# antagonize
+# build_ship
+# build_army
+# unit_ratio
+# build_building
+# research_tech
+# garrison
+# protect
+# influence
+# contain
+# area_priority
+
+hate_belka = {
+	allowed = {
+		original_tag = OSE
+	}
+	enable = {
+		BLK = { has_government = fascism }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = antagonize
+		id = "BLK"
+		value = 300
+	}
+	ai_strategy = {
+		type = conquer
+		id = "BLK"
+		value = 100
+	}
+}
+
+do_not_protect_ustio_ose = {
+	allowed = {
+		tag = OSE
+	}
+	enable = {
+		#date < 1995.7.1
+		BLK = { is_ai = yes }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = dont_defend_ally_borders
+		id = "UST"
+		value = 100
+	}
+}
+
+do_not_protect_sapin_ose = {
+	allowed = {
+		tag = OSE
+	}
+	enable = {
+		#date < 1995.7.1
+		BLK = { is_ai = yes }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = dont_defend_ally_borders
+		id = "SAP"
+		value = 100
+	}
+}
+
+do_not_waste_units_on_garrison = {
+	allowed = {
+		original_tag = OSE
+	}
+	enable = {
+		has_global_flag = belkan_war_is_happening
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = garrison
+		value = -100
+	}
+}
+
+
+ose_oppose_alt_sapin = {
+	allowed = {
+		original_tag = OSE
+	}
+	enable = {
+		SAP = {
+			has_country_flag = sap_on_its_own_path_flag
+		}
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = ignore
+		id = SAP
+		value = 100
+	}
+	ai_strategy = {
+		type = contain
+		id = SAP
+		value = 100
+	}
+	ai_strategy = {
+		type = antagonize
+		id = SAP
+		value = 100
+	}
+}
+
+ose_prep_belkan_war = {
+	allowed = {
+		original_tag = OSE
+	}
+
+	enable = {
+		BLK = {
+			has_government = fascism
+		}
+		date < 1995.7.1
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = prepare_for_war
+		id = BLK
+		value = 1000
+	}
+}
+
+ose_shore_bombard_belka = {
+	allowed = {
+		original_tag = OSE
+	}
+
+	enable = {
+		has_war_with = BLK
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_mission_threshold
+		id = MISSION_NAVAL_INVASION_SUPPORT
+		value = 1000
+	}
+}
+
+ose_hold_strong_belka = {
+	allowed = {
+		original_tag = OSE
+	}
+
+	enable = {
+		has_war_with = BLK
+		date < 1995.8.1
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = front_control
+	
+		tag = BLK
+
+		ratio = 0.25
+	
+		priority = 100 
+		ordertype = front  
+		execution_type = balanced
+		execute_order = no  
+		manual_attack = yes  
+	}
+}
+
+ose_kill_weak_belka  = {
+	allowed = {
+		original_tag = OSE
+	}
+
+	enable = {
+		has_war_with = BLK
+		date > 1995.8.1
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = front_control
+	
+		tag = BLK
+
+		ratio = 0.25
+	
+		priority = 100
+		ordertype = front  
+		execution_type = rush  
+		execute_order = yes  
+		manual_attack = yes  
+	}
+}
+
+ose_balanced_kill_weak_belka  = {
+	allowed = {
+		original_tag = OSE
+	}
+
+	enable = {
+		has_war_with = BLK
+		date > 1995.8.1
+		OR = {
+			SAP = {
+				has_capitulated = yes
+			}
+			UST = {
+				has_capitulated = yes
+			}
+		}
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = front_control
+	
+		tag = BLK
+
+		ratio = 0.25
+	
+		priority = 150 
+		ordertype = front  
+		execution_type = balanced  
+		execute_order = yes  
+		manual_attack = yes  
+	}
+}
+
+ose_lend_lease_belka_awwnb = {
+	allowed = {
+		original_tag = OSE
+	}
+
+	enable = {
+		AND = {
+			BLK = {
+				has_war_with = AWW
+			}
+			has_country_flag = ose_gwot_lend_lease_flag
+		}
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = send_lend_lease_desire
+		id = BLK
+		value = 100
+	}
+}
+
+ose_intervene_belka_awwnb = {
+	allowed = {
+		original_tag = OSE
+	}
+
+	enable = {
+		AND = {
+			BLK = {
+				has_war_with = AWW
+			}
+			has_country_flag = ose_gwot_interventionist_flag
+		}
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = send_volunteers_desire
+		id = BLK
+		value = 100
+	}
+}

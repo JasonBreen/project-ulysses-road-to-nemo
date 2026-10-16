@@ -1,0 +1,3014 @@
+shared_focus = {
+    id = BLK_dlp_victory
+    icon = GFX_goal_BLK_dlp_won_elections
+    cost = 3
+    ai_will_do = {
+        base =  50
+    }
+    x = 10
+    y = 0
+	available = {
+		has_country_flag = BLK_DLP_won_flag
+	}
+    completion_reward = {
+		country_event = { id = belka_dlp.1 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_to_save_what_we_can
+    icon = GFX_focus_generic_national_security
+    cost = 3
+    ai_will_do = {
+        base =  50
+    }
+    prerequisite = {
+        focus = BLK_dlp_victory
+    }
+    relative_position_id = BLK_dlp_victory
+    x = 0
+    y = 1
+
+    completion_reward = {
+		country_event = { id = belka_dlp.2 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_downsizing_focus
+	icon = GFX_focus_hol_abandon_the_gold_standard
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_to_save_what_we_can
+	}
+	relative_position_id = BLK_to_save_what_we_can
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		add_stability = 0.05
+		remove_ideas = BLK_overspending_for_military
+		add_ideas = low_economic_mobilisation 
+	}
+	search_filters = { }
+}
+
+### left side ###
+
+shared_focus = {
+	id = BLK_fuel_reconstruction
+	icon = GFX_goal_generic_positive_trade_relations
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_downsizing_focus
+	}
+	relative_position_id = BLK_downsizing_focus
+	x = -3
+	y = 1
+	
+	completion_reward = {
+		add_stability = 0.05
+		add_political_power= 50
+		if = {
+			limit = {
+				has_idea = BLK_eco_crisis_2
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_2 add_idea = BLK_eco_crisis_3 }
+		}
+		if = {
+			limit = {
+				has_idea = BLK_eco_crisis
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis add_idea = BLK_eco_crisis_2 }
+		}
+
+		#add_ideas = free_trade
+		country_event = { id = belka_dlp.5 days = 5 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_resources
+	icon = GFX_goal_generic_construct_infrastructure
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_fuel_reconstruction
+	}
+	relative_position_id = BLK_fuel_reconstruction
+	x = -2
+	y = 1
+	
+	completion_reward = {
+		set_country_flag = BLK_resources_focus_flag
+		add_tech_bonus = {
+			bonus = 1.0
+			uses = 1
+			category = excavation_tech
+		}
+		custom_effect_tooltip = unlock_dec
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_fuel_nationalisation
+	icon = GFX_goal_generic_oil_refinery
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_resources
+	}
+	relative_position_id = BLK_resources
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		set_country_flag = BLK_fuel_nationalisation_focus_flag
+		228 = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = synthetic_refinery
+				level = 1
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = fuel_silo
+				level = 1
+				instant_build = yes
+			}
+		}
+		590 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = synthetic_refinery
+				level = 1
+				instant_build = yes
+			}
+		}
+		custom_effect_tooltip = unlock_dec
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_tools_and_machinery
+	icon = GFX_goal_generic_production2
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_fuel_reconstruction
+	}
+	mutually_exclusive = {
+		focus = BLK_focus_our_eco
+	}
+	relative_position_id = BLK_fuel_reconstruction
+	x = 0
+	y = 1
+	
+	completion_reward = {
+			add_tech_bonus = {
+			bonus = 0.5
+			uses = 2
+			category = cat_production
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_focus_our_eco
+	icon = GFX_focus_generic_industry_2
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_fuel_reconstruction
+	}
+	mutually_exclusive = {
+		focus = BLK_tools_and_machinery
+	}
+	relative_position_id = BLK_fuel_reconstruction
+	x = 2
+	y = 1
+	
+	completion_reward = {
+		add_tech_bonus = {
+			bonus = 0.5
+			uses = 2
+			category = dispersed_industry_category
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_seeds_of_industry
+	icon = GFX_focus_eng_concessions_to_the_trade_unions
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_tools_and_machinery
+		focus = BLK_focus_our_eco
+	}
+	relative_position_id = BLK_tools_and_machinery
+	x = 1
+	y = 1
+	
+	#bypass = {
+	#	AND = {
+	#		224 = {
+	#			free_building_slots = {
+	#				building = industrial_complex
+	#				size < 2
+	#				include_locked = yes
+	#			}
+	#		}
+	#		265 = {
+	#			free_building_slots = {
+	#				building = industrial_complex
+	#				size < 2
+	#				include_locked = yes
+	#			}
+	#		}
+	#	}
+	#}
+	
+	completion_reward = {
+		custom_effect_tooltip = BLK_for_1_year_4_civs_tt
+		hidden_effect = {
+			add_offsite_building = { 
+				type = industrial_complex 
+				level = 4
+			}
+		}
+		country_event = { id = belka_dlp.3 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_start_of_the_chain
+	icon = GFX_goal_generic_trade
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_fuel_nationalisation
+	}
+	prerequisite = {
+		focus = BLK_seeds_of_industry
+	}
+	relative_position_id = BLK_fuel_nationalisation
+	x = 2
+	y = 1
+	
+	completion_reward = {
+		add_political_power= 50
+		add_stability = 0.05
+		
+		if = {
+			limit = {
+				has_completed_focus = BLK_end_of_the_chain
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_3 add_idea = BLK_eco_crisis_4 }
+			hidden_effect = {
+				country_event = utility.1
+			}
+		}
+	}
+	search_filters = { }
+}
+
+### right side ###
+
+shared_focus = {
+	id = BLK_revitalise_civ_eco
+	icon = GFX_focus_generic_railway_gun
+	cost = 3
+	ai_will_do = {
+		base =  500
+	}
+	prerequisite = {
+		focus = BLK_downsizing_focus
+	}
+	relative_position_id = BLK_downsizing_focus
+	x = 3
+	y = 1
+	
+	available = {
+		AND = {
+			224 = {
+				is_controlled_by = ROOT
+				arms_factory > 1
+			}
+			331 = {
+				is_controlled_by = ROOT
+				arms_factory > 1
+			}
+			602 = {
+				is_controlled_by = ROOT
+				arms_factory > 1
+			}
+			302 = {
+				is_controlled_by = ROOT
+				arms_factory > 1
+			}
+		}
+	}
+	
+	completion_reward = {
+		add_stability = 0.05
+		add_political_power = 50
+		
+		if = {
+			limit = {
+				has_idea = BLK_eco_crisis_2
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_2 add_idea = BLK_eco_crisis_3 }
+		}
+		if = {
+			limit = {
+				has_idea = BLK_eco_crisis
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis add_idea = BLK_eco_crisis_2 }
+		}
+
+		224 = {
+			remove_building = {
+				type = arms_factory
+				level = 2
+			}
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		331 = {
+			remove_building = {
+				type = arms_factory
+				level = 2
+			}
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		602 = {
+			remove_building = {
+				type = arms_factory
+				level = 2
+			}
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		302 = {
+			remove_building = {
+				type = arms_factory
+				level = 2
+			}
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					BLK = { is_ai = yes }
+				}
+				224 = {
+					add_building_construction = {
+						type = arms_factory
+						level = 2
+						instant_build = yes
+					}
+				}
+				331 = {
+					add_building_construction = {
+						type = arms_factory
+						level = 2
+						instant_build = yes
+					}
+				}
+				602 = {
+					add_building_construction = {
+						type = arms_factory
+						level = 2
+						instant_build = yes
+					}
+				}
+				302 = {
+					add_building_construction = {
+						type = arms_factory
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_new_workplaces
+	icon = GFX_goal_generic_construction2
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_revitalise_civ_eco
+	}
+	relative_position_id = BLK_revitalise_civ_eco
+	x = -1
+	y = 1
+	
+	completion_reward = {
+		custom_effect_tooltip = BLK_for_1_year_4_civs_tt
+		hidden_effect = {
+			add_offsite_building = { 
+				type = industrial_complex 
+				level = 4
+			}
+		}
+		602 = {
+			add_extra_state_shared_building_slots = 3
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		331 = {
+			add_extra_state_shared_building_slots = 3
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_put_people_to_work
+	icon = GFX_focus_LAT_suspend_constitution_of_latvia
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_new_workplaces
+	}
+	relative_position_id = BLK_new_workplaces
+	x = -1
+	y = 1
+	
+	completion_reward = {
+		country_event = { id = belka_dlp.4 days = 2 }
+		custom_effect_tooltip = unlock_dec
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_expand_rails
+	icon = GFX_focus_generic_railroad
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_revitalise_civ_eco
+	}
+	relative_position_id = BLK_revitalise_civ_eco
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		build_railway = {
+            level = 1
+            path = { 511 6998 7012 5192 7057 7059 7063 7094 7132 450 1359 4289 3921 7319 5893 7380 6054 4768 7406 7430 3269 4024 7466 }
+        }
+		build_railway = {
+			level = 1
+			path = { 7466 439 7552 7576 7602 7634 3835 7710 1849 }
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_dev_south_belka
+	icon = GFX_goal_reichsautobahn
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_expand_rails
+	}
+	mutually_exclusive = {
+		focus = BLK_dev_heart_of_the_nation
+	}
+	relative_position_id = BLK_expand_rails
+	x = -1
+	y = 1
+	
+	completion_reward = {
+		302 = {
+			add_extra_state_shared_building_slots = 5
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_tech_bonus = {
+			bonus = 0.5
+			uses = 1
+			category = construction_tech
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_dev_heart_of_the_nation
+	icon = GFX_goal_generic_construct_civ_factory
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_expand_rails
+	}
+	mutually_exclusive = {
+		focus = BLK_dev_south_belka
+	}
+	relative_position_id = BLK_expand_rails
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		235 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		259 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_tech_bonus = {
+			bonus = 0.5
+			uses = 1
+			category = construction_tech
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_end_of_the_chain
+	icon = GFX_goal_generic_neutrality_focus
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_put_people_to_work
+	}
+	prerequisite = {
+		focus = BLK_dev_south_belka
+		focus = BLK_dev_heart_of_the_nation
+	}
+	relative_position_id = BLK_put_people_to_work
+	x = 2
+	y = 1
+	
+	completion_reward = {
+		add_political_power= 50
+		add_stability = 0.05
+	
+		if = {
+			limit = {
+				has_completed_focus = BLK_start_of_the_chain
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_3 add_idea = BLK_eco_crisis_4 }
+			hidden_effect = {
+				country_event = utility.1
+			}
+		}
+	
+	
+	}
+	search_filters = { }
+}
+
+######### the coup #############
+
+shared_focus = {
+	id = BLK_party_disagreements
+	icon = GFX_focus_ETH_re-convene_the_parliament
+	cost = 1.5
+	ai_will_do = {
+		base =  500
+	}
+	allow_branch = {
+		has_completed_focus = BLK_start_of_the_chain
+		has_completed_focus = BLK_end_of_the_chain
+	}
+	prerequisite = {
+		focus = BLK_start_of_the_chain
+	}
+	prerequisite = {
+		focus = BLK_end_of_the_chain
+	}
+	relative_position_id = BLK_downsizing_focus
+	x = 0
+	y = 6
+	
+	completion_reward = {
+		country_event = { id = belka_dlp_coup.1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_talks_in_shadows
+	icon = GFX_focus_generic_military_dictatorship
+	cost = 1.5
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_party_disagreements
+	}
+	relative_position_id = BLK_party_disagreements
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		country_event = { id = belka_dlp_coup.2 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_pull_the_trigger
+	icon = GFX_focus_rom_parties_end
+	cost = 1.5
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_talks_in_shadows
+	}
+	relative_position_id = BLK_talks_in_shadows
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		country_event = { id = belka_dlp_coup.3 }
+		hidden_effect = {
+			set_variable = {
+				var = BLK_wacht_am_wal_var
+				value = 0
+			}
+			country_event = utility.1
+			country_event = { id = belka_dlp_war.98 days = 15 }
+			if = {
+				limit = {
+					BLK = { is_ai = yes }
+				}
+				add_ideas = BLK_belkan_war_ai_buff_idea
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_nationalism_unleashed
+	icon = GFX_focus_generic_fascist_troops
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	allow_branch = {
+		has_completed_focus = BLK_pull_the_trigger
+	}
+	prerequisite = {
+		focus = BLK_pull_the_trigger
+	}
+	relative_position_id = BLK_pull_the_trigger
+	x = -1
+	y = 1
+	
+	completion_reward = {
+		country_event = { id = belka_dlp_coup.4 }
+		add_political_power = 200
+		add_stability = 0.2
+		add_war_support = 0.2
+		add_popularity = { ideology = fascism popularity = 0.1 }
+		hidden_effect = {
+			if = {
+				limit = {
+					BLK = {
+						is_ai = yes
+					}
+				}
+				load_oob = BLK_AI_army
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_taking_off_the_kid_gloves
+	icon = GFX_focus_SWI_issue_war_bonds
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	allow_branch = {
+		has_completed_focus = BLK_pull_the_trigger
+	}
+	prerequisite = {
+		focus = BLK_pull_the_trigger
+	}
+	relative_position_id = BLK_pull_the_trigger
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		country_event = { id = belka_dlp_coup.5 }
+		hidden_effect = {
+			country_event = { id = belka_dlp_war_crisis.2 days = 240 }
+		}
+		add_ideas = tot_economic_mobilisation
+		add_war_support = 0.2
+		set_country_flag = cons_laws_blocked
+	}
+	search_filters = { }
+}
+
+################################ POST COUP #########################
+
+shared_focus = {
+    id = BLK_cult_of_belka
+    icon = GFX_goal_support_fascism
+    cost = 3
+    ai_will_do = {
+        base =  50
+    }
+	prerequisite = {
+        focus = BLK_nationalism_unleashed
+    }
+	prerequisite = {
+        focus = BLK_taking_off_the_kid_gloves
+    }
+    relative_position_id = BLK_taking_off_the_kid_gloves
+    x = -3
+    y = 1
+	available = {
+	}
+    completion_reward = {
+		country_event = { id = belka_dlp_coup.11 }
+		add_ideas = BLK_cult_of_belka_idea
+		add_popularity = { ideology = fascism popularity = 0.1 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_police_state
+    icon = GFX_focus_generic_secret_service_agency
+    cost = 3
+    ai_will_do = {
+        base =  50
+    }
+	prerequisite = {
+        focus = BLK_nationalism_unleashed
+    }
+	prerequisite = {
+        focus = BLK_taking_off_the_kid_gloves
+    }
+    relative_position_id = BLK_taking_off_the_kid_gloves
+    x = -1
+    y = 1
+	available = {
+	}
+    completion_reward = {
+		country_event = { id = belka_dlp_coup.12 }
+		add_ideas = BLK_martial_law_idea
+		add_popularity = { ideology = fascism popularity = 0.1 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_autarky
+    icon = GFX_focus_generic_industry_3
+    cost = 3
+    ai_will_do = {
+        base =  500
+    }
+	prerequisite = {
+        focus = BLK_nationalism_unleashed
+    }
+	prerequisite = {
+        focus = BLK_taking_off_the_kid_gloves
+    }
+    relative_position_id = BLK_taking_off_the_kid_gloves
+    x = 1
+    y = 1
+	available = {
+	}
+    completion_reward = {
+		add_ideas = closed_economy
+		remove_ideas = BLK_free_trade_idea
+		swap_ideas = { remove_idea = BLK_eco_crisis_4 add_idea = BLK_eco_crisis_5 }
+		#set_country_flag = block_trade_law
+		custom_effect_tooltip = unlock_dec
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_spirit_of_belkan_militarism
+	icon = GFX_focus_generic_infiltration	
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_cult_of_belka
+	}
+	prerequisite = {
+		focus = BLK_police_state
+	}
+	
+	relative_position_id = BLK_cult_of_belka
+	x = -1
+	y = 1
+	
+	completion_reward = {
+		swap_ideas = { remove_idea = BLK_cult_of_belka_idea add_idea = BLK_army_with_state_idea }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_fortify_the_west
+	icon = GFX_goal_generic_fortify_city
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_cult_of_belka
+	}
+	
+	relative_position_id = BLK_cult_of_belka
+	x = -4
+	y = 1
+	
+	completion_reward = {
+		custom_effect_tooltip = BLK_bunker_line_in_the_east_tt
+		224 = {
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 6984
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 7009
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 3623
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 7068
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 7107
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 5065
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_new_blood
+	icon = GFX_focus_generic_military_mission
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_cult_of_belka
+	}
+	prerequisite = {
+		focus = BLK_police_state
+	}
+	
+	relative_position_id = BLK_police_state
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		add_ideas = BLK_new_blood_1_idea
+		custom_effect_tooltip = Belka_new_generals_tt
+		country_event = { id = belka_dlp_coup.9 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_women_in_industry
+	icon = GFX_goal_generic_production
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_spirit_of_belkan_militarism
+	}
+	mutually_exclusive = {
+		focus = BLK_women_in_army
+	}
+	relative_position_id = BLK_spirit_of_belkan_militarism
+	x = -2
+	y = 1
+	
+	completion_reward = {
+		add_ideas = BLK_woman_in_industry_idea
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_women_in_army
+	icon = GFX_focus_generic_women_in_military
+	cost = 3
+	ai_will_do = {
+		base =  0
+	}
+	prerequisite = {
+		focus = BLK_spirit_of_belkan_militarism
+	}
+	mutually_exclusive = {
+		focus = BLK_women_in_industry
+	}
+	relative_position_id = BLK_spirit_of_belkan_militarism
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		add_ideas = BLK_woman_in_army_idea
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_gott_mit_uns
+	icon = GFX_focus_generic_catholic_dominion
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_cult_of_belka
+	}
+	available = {
+		has_completed_focus = BLK_drill_the_army
+	}
+	
+	relative_position_id = BLK_cult_of_belka
+	x = -6
+	y = 1
+	
+	completion_reward = {
+		country_event = { id = belka_dlp_coup.8 days = 2 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_excalibur
+	icon = GFX_focus_generic_strike_at_democracy1
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_fortify_the_west
+	}
+	
+	relative_position_id = BLK_fortify_the_west
+	x = 0
+	y = 2
+	
+	completion_reward = {
+		country_event = { id = belka_dlp_coup.6 days = 2 }
+		600 = {
+			add_building_construction = {
+				type = air_base  
+				level = 2
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = anti_air_building  
+				level = 3
+				instant_build = yes
+			}
+		}
+		custom_effect_tooltip = BLK_excalibur_unlocked_tt
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_form_bs
+	icon = GFX_focus_YUG_zmaj
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_fortify_the_west
+	}
+	prerequisite = {
+		focus = BLK_gott_mit_uns
+	}
+	
+	relative_position_id = BLK_fortify_the_west
+	x = -2
+	y = 1
+	
+	completion_reward = {
+		country_event = { id = belka_dlp_coup.13 }
+		swap_ideas = { remove_idea = BLK_new_blood_2_idea add_idea = BLK_new_blood_3_idea }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_avalon
+	icon = GFX_focus_generic_hydroelectric_energy
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_form_bs
+	}
+	
+	relative_position_id = BLK_form_bs
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		country_event = { id = belka_dlp_coup.7 days = 2 }
+		235 = {
+			add_building_construction = {
+				type = air_base  
+				level = 2
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = anti_air_building  
+				level = 3
+				instant_build = yes
+			}
+		}
+		custom_effect_tooltip = BLK_avalon_unlocked_tt
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_drill_the_army
+	icon = GFX_goal_demand_sudetenland
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_new_blood
+	}
+	
+	relative_position_id = BLK_new_blood
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		swap_ideas = { remove_idea = BLK_new_blood_1_idea add_idea = BLK_new_blood_2_idea }
+		custom_effect_tooltip = Belka_purge_generals_tt
+		country_event = { id = belka_dlp_coup.10 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_unemployment
+	icon = GFX_goal_tfv_saf_support_ossebrandwag
+	cost = 3
+	ai_will_do = {
+		base =  500
+	}
+	prerequisite = {
+		focus = BLK_police_state
+	}
+	prerequisite = {
+		focus = BLK_autarky
+	}
+	
+	relative_position_id = BLK_autarky
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		add_ideas = BLK_crush_unemploy_idea
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_militarise_civilian_infr
+	icon = GFX_focus_ITA_generic_fascist_workers
+	cost = 3
+	ai_will_do = {
+		base =  500
+	}
+	prerequisite = {
+		focus = BLK_unemployment
+	}
+	mutually_exclusive = {
+		focus = BLK_new_supply_dep
+	}
+	relative_position_id = BLK_unemployment
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		swap_ideas = { remove_idea = BLK_crush_unemploy_idea add_idea = BLK_mili_civ_infr_idea }
+		hidden_effect = {
+			if = {
+				limit = {
+					BLK = {
+						is_ai = yes
+					}
+				}
+				331 = {
+					add_building_construction = {
+						type = supply_node 
+						level = 1
+						instant_build = yes
+						province = 3168
+					}
+				}
+				330 = {
+					add_building_construction = {
+						type = supply_node 
+						level = 1
+						instant_build = yes
+						province = 2996
+					}
+				}
+				602 = {
+					add_building_construction = {
+						type = supply_node 
+						level = 1
+						instant_build = yes
+						province = 2754
+					}
+				}
+				build_railway = {
+					level = 1
+					path = { 7552 7581 3168 }
+				}
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_new_supply_dep
+	icon = GFX_focus_SOV_the_road_of_life
+	cost = 3
+	ai_will_do = {
+		base =  0
+	}
+	prerequisite = {
+		focus = BLK_unemployment
+	}
+	mutually_exclusive = {
+		focus = BLK_militarise_civilian_infr
+	}
+	relative_position_id = BLK_unemployment
+	x = 2
+	y = 1
+	
+	completion_reward = {
+		swap_ideas = { remove_idea = BLK_crush_unemploy_idea add_idea = BLK_expand_supply_idea }
+		331 = {
+			add_building_construction = {
+				type = supply_node 
+				level = 1
+				instant_build = yes
+				province = 3168
+			}
+		}
+		330 = {
+			add_building_construction = {
+				type = supply_node 
+				level = 1
+				instant_build = yes
+				province = 2996
+			}
+		}
+		602 = {
+			add_building_construction = {
+				type = supply_node 
+				level = 1
+				instant_build = yes
+				province = 2754
+			}
+		}
+		build_railway = {
+            level = 1
+            path = { 7552 7581 3168 }
+        }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_overspending_on_military
+	icon = GFX_goal_generic_construct_mil_factory
+	cost = 3
+	ai_will_do = {
+		base =  500
+	}
+	prerequisite = {
+		focus = BLK_autarky
+	}
+	
+	relative_position_id = BLK_autarky
+	x = 4
+	y = 1
+	
+	completion_reward = {
+		add_ideas = BLK_overspending_for_military
+		custom_effect_tooltip = unlock_dec
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_military_industrial_complex
+	icon = GFX_focus_SOV_merge_plants
+	cost = 3
+	ai_will_do = {
+		base =  500
+	}
+	prerequisite = {
+		focus = BLK_overspending_on_military
+	}
+	
+	relative_position_id = BLK_overspending_on_military
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		swap_ideas = { remove_idea = BLK_overspending_for_military add_idea = BLK_overspending_for_military_2 }
+		random_owned_controlled_state = {
+			limit = { NOT = { state = 302 state = 331 state = 602 state = 224 } }
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = arms_factory
+				level = 2
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			limit = { NOT = { state = 302 state = 331 state = 602 state = 224 } }
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = arms_factory
+				level = 2
+				instant_build = yes
+			}
+		}
+		custom_effect_tooltip = BLK_remove_4_civs_tt
+		hidden_effect = {
+			if = {
+				limit = {
+					BLK = { is_ai = no }
+				}
+				random_owned_controlled_state = {
+					remove_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				random_owned_controlled_state = {
+					remove_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				random_owned_controlled_state = {
+					remove_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				random_owned_controlled_state = {
+					remove_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_quantity
+	icon = GFX_focus_SOV_mobilization_plan
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_spirit_of_belkan_militarism
+	}
+	mutually_exclusive = {
+		focus = BLK_quality
+	}
+	relative_position_id = BLK_spirit_of_belkan_militarism
+	x = 1
+	y = 2
+	
+	completion_reward = {
+		swap_ideas = { remove_idea = BLK_army_with_state_idea add_idea = BLK_army_with_state_quantity_idea }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_quantity_2
+	icon = GFX_focus_SOV_penal_battalions
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_quantity
+	}
+	relative_position_id = BLK_quantity
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		set_technology = {
+			penal_infantry = 1
+		}
+		swap_ideas = { remove_idea = BLK_army_with_state_quantity_idea add_idea = BLK_army_with_state_quantity_penal_idea }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_quality
+	icon = GFX_goal_rhineland
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_spirit_of_belkan_militarism
+	}
+	prerequisite = {
+		focus = BLK_drill_the_army
+	}
+	mutually_exclusive = {
+		focus = BLK_quantity
+	}
+	relative_position_id = BLK_spirit_of_belkan_militarism
+	x = 3
+	y = 2
+	
+	completion_reward = {
+		swap_ideas = { remove_idea = BLK_army_with_state_idea add_idea = BLK_army_with_state_quality_idea }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_quality_2
+	icon = GFX_focus_prc_infiltration
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_quality
+	}
+	relative_position_id = BLK_quality
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		add_doctrine_cost_reduction = {
+			cost_reduction = 0.5
+			uses = 1
+			category = land_doctrine
+		}
+		add_tech_bonus = {
+			name = special_forces_bonus
+			bonus = 1.0
+			uses = 2
+			category = cat_special_forces_generic
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_infantry_focus
+	icon = GFX_focus_chi_army_reform
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_drill_the_army
+	}
+	mutually_exclusive = {
+		focus = BLK_tank_focus
+	}
+	relative_position_id = BLK_drill_the_army
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		add_ideas = BLK_infantry_army_idea
+		set_country_flag = BLK_infantry_focus_focus_flag
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_mech
+	icon = GFX_focus_generic_truck
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_infantry_focus
+	}
+	
+	relative_position_id = BLK_infantry_focus
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		add_tech_bonus = {
+			bonus = 1
+			uses = 1
+			category = engineers_tech
+		}
+		add_tech_bonus = {
+			bonus = 1
+			uses = 1
+			category = logistics_tech
+		}
+		add_tech_bonus = {
+			bonus = 1
+			uses = 1
+			category = support_tech
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_tank_focus
+	icon = GFX_focus_SOV_the_glory_of_the_red_army_alternative
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_military_industrial_complex
+	}
+	mutually_exclusive = {
+		focus = BLK_infantry_focus
+	}
+	relative_position_id = BLK_military_industrial_complex
+	x = -3
+	y = 1
+	
+	completion_reward = {
+		add_ideas = BLK_modern_army_idea
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_armor
+	icon = GFX_focus_generic_army_tanks2
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_tank_focus
+	}
+	
+	relative_position_id = BLK_tank_focus
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		set_country_flag = BLK_armor_focus_flag
+		add_tech_bonus = {
+			uses = 2
+			bonus = 1
+			category = cat_mechanized_equipment
+		}
+		add_tech_bonus = {
+			uses = 1
+			bonus = 1
+			category = cat_light_armor
+		}
+		add_tech_bonus = {
+			uses = 1
+			bonus = 1
+			category = cat_modern_armor
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_new_weapons
+	icon = GFX_goal_generic_small_arms
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_military_industrial_complex
+	}
+	
+	relative_position_id = BLK_military_industrial_complex
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		add_tech_bonus = {
+			uses = 1
+			bonus = 1
+			category = infantry_weapons
+		}
+		add_tech_bonus = {
+			uses = 1
+			bonus = 1
+			category = artillery
+		}
+		add_tech_bonus = {
+			uses = 1
+			bonus = 1
+			category = cat_anti_air
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_tip_spear
+	icon = GFX_goal_generic_army_tanks
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_new_weapons
+	}
+	
+	relative_position_id = BLK_new_weapons
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		add_tech_bonus = {
+			name = armor
+			bonus = 3
+			uses = 1
+			category = armor
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_war_games
+	icon = GFX_goal_generic_occupy_states_ongoing_war
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_quantity_2
+		focus = BLK_quality_2
+	}
+	prerequisite = {
+		focus = BLK_mech
+		focus = BLK_armor
+	}
+	
+	relative_position_id = BLK_quality_2
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		army_experience = 100
+		add_doctrine_cost_reduction = {
+			cost_reduction = 0.5
+			uses = 1
+			category = land_doctrine
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_secure_fuel
+	icon = GFX_focus_generic_stockpile_fuel
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_military_industrial_complex
+	}
+	
+	relative_position_id = BLK_military_industrial_complex
+	x = -1
+	y = 1
+	
+	completion_reward = {
+		add_tech_bonus = {
+			bonus = 0.5
+			uses = 1
+			category = synth_resources
+		}
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = synthetic_refinery
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = synthetic_refinery
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = fuel_silo
+				level = 1
+				instant_build = yes
+			}
+		}
+		modify_building_resources = {
+			building = synthetic_refinery
+        	resource = rubber
+       	    amount = 1
+        }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_osean_front
+	icon = GFX_focus_LAT_ostland
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_fortify_the_west
+	}
+	
+	relative_position_id = BLK_fortify_the_west
+	x = -1
+	y = 4
+	
+	completion_reward = {
+		8 = {
+			add_building_construction = {
+				type = supply_node 
+				level = 1
+				instant_build = yes
+				province = 4042
+			}
+		}
+		584 = {
+			add_building_construction = {
+				type = supply_node 
+				level = 1
+				instant_build = yes
+				province = 4869
+			}
+		}
+		build_railway = {
+            level = 1
+            path = { 4869 5440 2697 }
+        }
+		build_railway = {
+            level = 1
+            path = { 2697 6061 4042 5884 }
+        }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_contest_lakes
+	icon = GFX_goal_generic_navy_battleship
+	cost = 3
+	ai_will_do = {
+		base =  0
+	}
+	prerequisite = {
+		focus = BLK_osean_front
+	}
+	mutually_exclusive = {
+		focus = BLK_dig_in
+	}
+	relative_position_id = BLK_osean_front
+	x = -1
+	y = 1
+	
+	completion_reward = {
+		set_country_flag = BLK_contest_lakes_flag
+		add_timed_idea = { idea = BLK_build_up_navy_idea days = 360 }
+		302 = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = dockyard
+				level = 2
+				instant_build = yes
+			}
+		}
+		369 = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = dockyard
+				level = 2
+				instant_build = yes
+			}
+		}
+		364 = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = dockyard
+				level = 2
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_dig_in
+	icon = GFX_goal_generic_fortify_city
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_osean_front
+	}
+	mutually_exclusive = {
+		focus = BLK_contest_lakes
+	}
+	relative_position_id = BLK_osean_front
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		set_country_flag = BLK_dig_in_flag
+		584 = {
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 5082
+			}
+		}
+		8 = {
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 837
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 6008
+			}
+		}
+		302 = {
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 1667
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 7558
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_naval_bomb
+	icon = GFX_focus_generic_multi_role_aircraft
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_contest_lakes
+	}
+	relative_position_id = BLK_contest_lakes
+	x = -1
+	y = 1
+	
+	completion_reward = {
+		add_ideas = BLK_air_constest_lakes
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_aa_air_ports
+	icon = GFX_focus_YUG_ikarus
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_contest_lakes
+		focus = BLK_dig_in
+	}
+	relative_position_id = BLK_contest_lakes
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		302 = {
+			add_building_construction = {
+				type = air_base  
+				level = 2
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = anti_air_building  
+				level = 2
+				instant_build = yes
+			}
+		}
+		364 = {
+			add_building_construction = {
+				type = air_base  
+				level = 2
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = anti_air_building  
+				level = 2
+				instant_build = yes
+			}
+		}
+		369 = {
+			add_building_construction = {
+				type = air_base  
+				level = 2
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = anti_air_building  
+				level = 2
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_bunkers_lakes
+	icon = GFX_goal_generic_construct_military
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_dig_in
+	}
+	relative_position_id = BLK_dig_in
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		302 = {
+			add_building_construction = {
+				type = coastal_bunker   
+				level = 2
+				instant_build = yes
+				province = 7718
+			}
+		}
+		364 = {
+			add_building_construction = {
+				type = coastal_bunker   
+				level = 2
+				instant_build = yes
+				province = 1410
+			}
+			add_building_construction = {
+				type = coastal_bunker   
+				level = 2
+				instant_build = yes
+				province = 4369
+			}
+		}
+		369 = {
+			add_building_construction = {
+				type = coastal_bunker   
+				level = 2
+				instant_build = yes
+				province = 8816
+			}
+			add_building_construction = {
+				type = coastal_bunker   
+				level = 2
+				instant_build = yes
+				province = 2734
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_build_up_navy
+	icon = GFX_focus_generic_refit_civilian_ships
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_naval_bomb
+	}
+	prerequisite = {
+		focus = BLK_aa_air_ports
+	}
+	relative_position_id = BLK_aa_air_ports
+	x = -1
+	y = 1
+	
+	completion_reward = {
+		set_country_flag = BLK_build_up_navy_focus_flag
+		custom_effect_tooltip = BLK_plan_z_tt
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_scrap_the_navy
+	icon =GFX_focus_POL_develop_polish_shipbuilding
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_aa_air_ports
+	}
+	prerequisite = {
+		focus = BLK_bunkers_lakes
+	}
+	relative_position_id = BLK_aa_air_ports
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		custom_effect_tooltip = BLK_remove_6_dockyard_tt
+		destroy_ships = {
+			type = ship_hull_cruiser
+			count = 10
+		}
+		destroy_ships = {
+			type = ship_hull_light
+			count = 10
+		}
+		destroy_ships = {
+			type = ship_hull_heavy
+			count = 10
+		}
+		add_timed_idea = { idea = BLK_use_scrap_idea days = 360 }
+		hidden_effect = {
+			random_owned_controlled_state = {
+				remove_building = {
+					type = dockyard
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				remove_building = {
+					type = dockyard
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				remove_building = {
+					type = dockyard
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				remove_building = {
+					type = dockyard
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				remove_building = {
+					type = dockyard
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				remove_building = {
+					type = dockyard
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_south_belka_munitions_monopoly
+	icon = GFX_focus_generic_aircraft_production
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_military_industrial_complex
+	}
+	relative_position_id = BLK_military_industrial_complex
+	x = 4
+	y = 1
+	
+	completion_reward = {
+		mio:BLK_grunder_air = {
+			add_mio_size = 4
+			add_mio_funds_gain_factor = 0.15
+		}
+		if = {
+			limit = { NOT = { has_idea = BLK_grunder_air_designer } }
+			add_ideas = BLK_grunder_air_designer
+		}
+		else = {
+			add_political_power = 250
+		}
+		custom_effect_tooltip = unlock_dec
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_to_cover_the_skyes
+	icon = GFX_focus_generic_air_defense
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_south_belka_munitions_monopoly
+	}
+	relative_position_id = BLK_south_belka_munitions_monopoly
+	x = 2
+	y = 1
+	
+	completion_reward = {
+		every_owned_state = {
+			add_building_construction = {
+				type = anti_air_building 
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_crown_jewel
+	icon = GFX_goal_BLK_belkan_air_force
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_south_belka_munitions_monopoly
+	}
+	relative_position_id = BLK_south_belka_munitions_monopoly
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		add_doctrine_cost_reduction = {
+		    cost_reduction = 0.75
+		    uses = 2
+		    category = air_doctrine
+		}
+		air_experience = 100
+		add_political_power = 100
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_keep_skies_clear
+	icon = GFX_goal_generic_air_fighter
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_crown_jewel
+	}
+	relative_position_id = BLK_crown_jewel
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		if = {
+            limit = {
+  	           has_dlc = "By Blood Alone"
+            }
+			add_tech_bonus = {
+				name = cat_air_guns
+				bonus = 1
+				uses = 1
+				category = cat_air_guns
+			}
+			add_tech_bonus = {
+				bonus = 1
+				uses = 1
+				category = light_fighter
+			}
+		}
+		else = {
+			add_tech_bonus = {
+				bonus = 1.0
+				uses = 1
+				category = light_fighter
+			}
+			add_tech_bonus = {
+				bonus = 1.0
+				uses = 1
+				category = cat_heavy_fighter
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_fighter
+	icon = GFX_focus_generic_copy_plane_designs
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_keep_skies_clear
+	}
+	relative_position_id = BLK_keep_skies_clear
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		if = {
+			limit = { has_idea = BLK_strat_bomber_idea }
+			swap_ideas = { remove_idea = BLK_strat_bomber_idea add_idea = BLK_strat_bomber_finest_pilots_idea }
+		}
+		else = {
+			add_ideas = BLK_finest_pilots_idea
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_eyes_on_the_sky
+	icon = GFX_focus_usa_escort_fighters
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_crown_jewel
+	}
+	mutually_exclusive = {
+		focus = BLK_eyes_on_thr_ground
+	}
+	relative_position_id = BLK_crown_jewel
+	x = -1
+	y = 1
+	
+	completion_reward = {
+		if = {
+			limit = { has_dlc = "By Blood Alone" }
+			set_technology = {
+				photo_reconnaisance = 1
+			}
+		}
+		if = {
+			limit = { NOT = { has_dlc = "By Blood Alone" } }
+			add_tech_bonus = {
+				bonus = 2.0
+				uses = 1
+				category = cat_scout_plane
+			}
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_eyes_on_thr_ground
+	icon = GFX_focus_generic_energy
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_crown_jewel
+	}
+	mutually_exclusive = {
+		focus = BLK_eyes_on_the_sky
+	}
+	relative_position_id = BLK_crown_jewel
+	x = -3
+	y = 1
+	
+	completion_reward = {
+		add_tech_bonus = {
+		bonus = 1.0
+		uses = 2
+		category = radar_tech
+	}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_masters_of_the_craft
+	icon = GFX_focus_SOV_organize_wreckers
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_crown_jewel
+	}
+	mutually_exclusive = {
+		focus = BLK_scrap_the_graveyards
+	}
+	relative_position_id = BLK_crown_jewel
+	x = 3
+	y = 1
+	
+	completion_reward = {
+		add_ideas = BLK_master_of_the_craft_idea
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_scrap_the_graveyards
+	icon = GFX_goal_continuous_air_production
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_crown_jewel
+	}
+	mutually_exclusive = {
+		focus = BLK_masters_of_the_craft
+	}
+	relative_position_id = BLK_crown_jewel
+	x = 5
+	y = 1
+	
+	completion_reward = {
+		add_ideas = BLK_scrap_idea
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_bm_335_project
+	icon = GFX_goal_generic_air_bomber
+	cost = 3
+	ai_will_do = {
+		base =  50
+	}
+	prerequisite = {
+		focus = BLK_crown_jewel
+	}
+	relative_position_id = BLK_crown_jewel
+	x = 0
+	y = 3
+	
+	completion_reward = {
+		if = {
+			limit = { has_idea = BLK_finest_pilots_idea }
+			swap_ideas = { remove_idea = BLK_finest_pilots_idea add_idea = BLK_strat_bomber_finest_pilots_idea }
+		}
+		else = {
+			add_ideas = BLK_strat_bomber_idea
+		}
+		add_tech_bonus = {
+			bonus = 1.0
+			uses = 2
+			category = cat_strategic_bomber
+		}
+	}
+	search_filters = { }
+}
+
+################
+### WAR TREE ###
+################
+
+shared_focus = {
+	id = BLK_dlp_war
+	icon = GFX_goal_BLK_belkan_war
+	cost = 4.4
+	ai_will_do = {
+		base =  50
+	}
+	bypass = {
+		always = yes
+	}
+	x = 10
+	y = 0
+	available = {
+		has_global_flag = belkan_war_is_happening
+	}
+	
+	completion_reward = {
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_to_the_last_man
+	icon = GFX_focus_BLK_to_the_last_man
+	cost = 4.4
+	ai_will_do = {
+		base =  5
+	}
+	prerequisite = {
+		focus = BLK_dlp_war
+	}
+	relative_position_id = BLK_dlp_war
+	x = 3
+	y = 1
+	
+	completion_reward = {
+		custom_effect_tooltip = cheap_combat_abilities_tt
+		hidden_effect = {
+			set_rule = {
+				can_use_kamikaze_pilots = yes
+			}
+			#set_country_flag = kamikaze_flag
+		}
+		custom_effect_tooltip = kamikaze_focus_tooltip_tt
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_use_locals
+	icon = GFX_goal_generic_construction
+	cost = 4.4
+	ai_will_do = {
+		base =  5
+	}
+	prerequisite = {
+		focus = BLK_dlp_war
+	}
+	relative_position_id = BLK_dlp_war
+	x = -3
+	y = 1
+	
+	completion_reward = {
+		custom_effect_tooltip = BLK_use_locals_tt
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_repair_squads
+	icon = GFX_goal_continuous_repairments
+	cost = 4.4
+	ai_will_do = {
+		base =  5
+	}
+	prerequisite = {
+		focus = BLK_use_locals
+	}
+	relative_position_id = BLK_use_locals
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		add_ideas = BLK_repair_squads_idea
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_consript_workers
+	icon = GFX_focus_generic_manpower
+	cost = 4.4
+	ai_will_do = {
+		base =  5
+	}
+	prerequisite = {
+		focus = BLK_to_the_last_man
+	}
+	bypass = {
+		NOT = {	has_idea = BLK_crush_unemploy_idea }
+		NOT = {	has_idea = BLK_mili_civ_infr_idea }
+		NOT = {	has_idea = BLK_expand_supply_idea }
+	}
+	relative_position_id = BLK_to_the_last_man
+	x = 0
+	y = 1
+	
+	completion_reward = {
+		if = {
+			limit = { has_idea = BLK_crush_unemploy_idea }
+			remove_ideas = BLK_crush_unemploy_idea
+		}
+		if = {
+			limit = { has_idea = BLK_mili_civ_infr_idea }
+			remove_ideas = BLK_mili_civ_infr_idea
+		}
+		if = {
+			limit = { has_idea = BLK_expand_supply_idea }
+			remove_ideas = BLK_expand_supply_idea
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_pillage_ustio
+	icon = GFX_focus_generic_annex_country
+	cost = 4.4
+	ai_will_do = {
+		base =  5
+	}
+	available = {
+		#UST = { has_capitulated = yes }
+	}
+	prerequisite = {
+		focus = BLK_dlp_war
+	}
+	relative_position_id = BLK_dlp_war
+	x = 2
+	y = 3
+	
+	completion_reward = {
+		custom_effect_tooltip = BLK_pillage_ustio_tt
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_reparations
+	icon = GFX_focus_generic_annex_country_2
+	cost = 4.4
+	ai_will_do = {
+		base =  500
+	}
+	available = {
+		#OR = {
+		#	NOT = { has_war_with = FAT }
+		#	NOT = { has_war_with = GEB }
+		#	NOT = { has_war_with = REC }
+		#}
+	}
+	prerequisite = {
+		focus = BLK_dlp_war
+	}
+	relative_position_id = BLK_dlp_war
+	x = -2
+	y = 3
+	
+	completion_reward = {
+		custom_effect_tooltip = BLK_reparations_tt
+		custom_effect_tooltip = BLK_reparations_army_tt
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_schlacht_um_die_Zukunft
+	icon = GFX_focus_POL_prussia_line
+	cost = 4.4
+	ai_will_do = {
+		base =  0
+	}
+	available = {
+	}
+	prerequisite = {
+		focus = BLK_dlp_war
+	}
+	relative_position_id = BLK_dlp_war
+	x = 1
+	y = 1
+	
+	completion_reward = {
+		if = {
+			limit = {
+				has_country_flag = BLK_armor_focus_flag
+			}
+			add_timed_idea = { idea = BLK_schlacht_um_die_Zukunft_tank_idea days = 30 }
+		}
+		if = {
+			limit = {
+					has_country_flag = BLK_infantry_focus_focus_flag
+				}
+			add_timed_idea = { idea = BLK_schlacht_um_die_Zukunft_inf_idea days = 30 }
+		}
+		custom_effect_tooltip = BLK_schlacht_um_die_Zukunft_tt
+	}
+	search_filters = { }
+}
+
+
+shared_focus = {
+	id = BLK_cross_great_lakes
+	icon = GFX_focus_BLK_cross_great_lakes
+	cost = 4.4
+	ai_will_do = {
+		base =  5
+	}
+	available = {
+	}
+	prerequisite = {
+		focus = BLK_dlp_war
+	}
+	relative_position_id = BLK_dlp_war
+	x = -1
+	y = 1
+	
+	completion_reward = {
+		if = {
+			limit = {
+				has_country_flag = BLK_contest_lakes_flag
+			}
+			add_timed_idea = { idea = BLK_contest_lakes_belkan_war days = 30 }
+		}
+		else_if = {
+			limit = {
+					has_country_flag = BLK_dig_in_flag
+				}
+			add_timed_idea = { idea = BLK_dig_in_belkan_war days = 30 }
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = BLK_to_fuel_the_front
+	icon = GFX_goal_generic_construct_infrastructure
+	cost = 4.4
+	ai_will_do = {
+		base =  5
+	}
+	available = {
+	}
+	prerequisite = {
+		focus = BLK_dlp_war
+	}
+	relative_position_id = BLK_dlp_war
+	x = 0
+	y = 2
+	
+	completion_reward = {
+		add_timed_idea = { idea =  BLK_to_fuel_the_front_idea days = 30 }
+	}
+	search_filters = { }
+}
+
+########## WACHT AM WAL ##############
+
+shared_focus = {
+    id = BLK_belka_wach_am_wal
+    icon = GFX_goal_wacht
+    cost = 1
+    ai_will_do = {
+        base =  50
+    }
+    x = 8
+    y = 0
+	available = {
+	}
+    completion_reward = {
+		add_ideas = BLK_belka_wach_am_wal_idea
+		custom_effect_tooltip = BLK_belka_wach_am_wal_tt
+		hidden_effect = {
+			remove_ideas = BLK_eco_crisis
+			remove_ideas = BLK_overspending_for_military
+			remove_ideas = BLK_chaos_in_the_assembly
+			remove_ideas = BLK_people_leave_idea
+			remove_ideas = BLK_free_trade_idea
+			remove_ideas = BLK_master_of_the_craft_idea
+			remove_ideas = BLK_scrap_idea
+			remove_ideas = BLK_use_scrap_idea
+			remove_ideas = BLK_finest_pilots_idea
+			remove_ideas = BLK_strat_bomber_idea
+			remove_ideas = BLK_strat_bomber_finest_pilots_idea
+			remove_ideas = BLK_air_constest_lakes
+			remove_ideas = BLK_cult_of_belka_idea
+			remove_ideas = BLK_army_with_state_idea
+			remove_ideas = BLK_martial_law_idea
+			remove_ideas = BLK_overspending_for_military_2
+			remove_ideas = BLK_crush_unemploy_idea
+			remove_ideas = BLK_mili_civ_infr_idea
+			remove_ideas = BLK_expand_supply_idea
+			remove_ideas = BLK_woman_in_industry_idea
+			remove_ideas = BLK_woman_in_army_idea
+			remove_ideas = BLK_new_blood_1_idea
+			remove_ideas = BLK_new_blood_2_idea
+			remove_ideas = BLK_new_blood_3_idea
+			remove_ideas = BLK_army_with_state_quantity_idea
+			remove_ideas = BLK_army_with_state_quantity_penal_idea
+			remove_ideas = BLK_army_with_state_quality_idea
+			remove_ideas = BLK_modern_army_idea
+			remove_ideas = BLK_infantry_army_idea
+			remove_ideas = BLK_build_up_navy_idea
+			remove_ideas = BLK_repair_squads_idea
+			remove_ideas = BLK_contest_lakes_belkan_war
+			remove_ideas = BLK_dig_in_belkan_war
+			remove_ideas = BLK_schlacht_um_die_Zukunft_tank_idea
+			remove_ideas = BLK_schlacht_um_die_Zukunft_inf_idea
+			remove_ideas = BLK_to_fuel_the_front_idea
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_plan_albion
+    icon = GFX_goal_albion
+    cost = 2.2
+    ai_will_do = {
+        base =  50
+    }
+	prerequisite = {
+		focus = BLK_belka_wach_am_wal
+	}
+	bypass = {
+		has_completed_focus = BLK_to_hold_the_line
+	}
+	relative_position_id = BLK_belka_wach_am_wal
+    x = -2
+    y = 1
+	available = {
+	}
+    completion_reward = {
+		custom_effect_tooltip = BLK_plan_albion_tt
+		hidden_effect = {
+			remove_ideas = BLK_no_money_idea
+			remove_ideas = BLK_eco_crisis_2
+			remove_ideas = BLK_eco_crisis_3
+			remove_ideas = BLK_eco_crisis_4
+			remove_ideas = BLK_eco_crisis_5
+			remove_ideas = BLK_eco_crisis_5_1
+			remove_ideas = BLK_eco_crisis_5_2
+			remove_ideas = BLK_eco_crisis_6
+			remove_ideas = BLK_eco_crisis_7
+			remove_ideas = BLK_eco_crisis_8
+			remove_ideas = BLK_eco_crisis_9
+			remove_ideas = BLK_eco_crisis_10
+		}
+		add_timed_idea = { idea = BLK_albion days = 60 }
+		custom_effect_tooltip = BLK_plan_albion_after_tt
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_plan_barghest
+    icon = GFX_goal_barghest
+    cost = 2.2
+    ai_will_do = {
+        base =  50
+    }
+	prerequisite = {
+		focus = BLK_belka_wach_am_wal
+	}
+	bypass = {
+		has_completed_focus = BLK_to_hold_the_line
+	}
+	relative_position_id = BLK_belka_wach_am_wal
+    x = -1
+    y = 2
+	available = {
+	}
+    completion_reward = {
+		custom_effect_tooltip = BLK_plan_barghest_tt
+		hidden_effect = {
+			remove_ideas = BLK_eco_crisis_army_1
+			remove_ideas = BLK_eco_crisis_army_2
+			remove_ideas = BLK_eco_crisis_army_3
+			remove_ideas = BLK_eco_crisis_army_4
+		}
+		add_ideas = BLK_barghest
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_plan_baobhan_sith
+    icon = GFX_goal_sith
+    cost = 2.2
+    ai_will_do = {
+        base =  50
+    }
+	prerequisite = {
+		focus = BLK_belka_wach_am_wal
+	}
+	bypass = {
+		has_completed_focus = BLK_to_hold_the_line
+	}
+	relative_position_id = BLK_belka_wach_am_wal
+    x = 1
+    y = 2
+	available = {
+	}
+    completion_reward = {
+		custom_effect_tooltip = BLK_plan_baobhan_sith_tt
+		hidden_effect = {
+			load_oob = "BLK_directive_sith"
+			end_puppet = FAT
+			remove_resource_rights = 75
+			remove_resource_rights = 334
+			end_puppet = GEB
+			end_puppet = REC
+			FAT = {
+				set_politics = {
+					ruling_party = neutrality 
+					elections_allowed = no
+				}
+				set_popularities = {
+					neutrality = 50
+					fascism = 0
+					democratic = 45
+					communism = 5
+				}
+				white_peace = OSE
+				white_peace = SAP
+				white_peace = UST
+			}
+			GEB = {
+				set_politics = {
+					ruling_party = democratic 
+					elections_allowed = no
+				}
+				set_popularities = {
+					neutrality = 15
+					fascism = 0
+					democratic = 83
+					communism = 2
+				}
+				white_peace = OSE
+				white_peace = SAP
+				white_peace = UST
+			}
+			REC = {
+				set_politics = {
+					ruling_party = communism 
+					elections_allowed = no
+				}
+				set_popularities = {
+					neutrality = 5
+					fascism = 0
+					democratic = 5
+					communism = 90
+				}
+				white_peace = OSE
+				white_peace = SAP
+				white_peace = UST
+			}
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_plan_oberon
+    icon = GFX_goal_oberon
+    cost = 2.2
+    ai_will_do = {
+        base =  50
+    }
+	prerequisite = {
+		focus = BLK_belka_wach_am_wal
+	}
+	bypass = {
+		has_completed_focus = BLK_to_hold_the_line
+	}
+	relative_position_id = BLK_belka_wach_am_wal
+    x = 2
+    y = 1
+	available = {
+	}
+    completion_reward = {
+		custom_effect_tooltip = BLK_plan_oberon_tt
+		add_ideas = BLK_oberon
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_to_hold_the_line
+    icon = GFX_goal_lastorder
+    cost = 1
+    ai_will_do = {
+        base =  50
+    }
+	prerequisite = {
+		focus = BLK_plan_barghest
+	}
+	prerequisite = {
+		focus = BLK_plan_baobhan_sith
+	}
+	available = {
+		BLK_wacht_am_wall_state_control = yes
+	}
+	relative_position_id = BLK_belka_wach_am_wal
+    x = 0
+    y = 3
+    completion_reward = {
+		custom_effect_tooltip = BLK_to_hold_the_line_tt
+		hidden_effect = {
+			remove_ideas = BLK_barghest
+			remove_ideas = BLK_oberon
+		}
+		activate_mission = BLK_wacht_am_wal_hold_timer
+		country_event = belka_wacht_am_wal.5
+    }
+    search_filters = { }
+}

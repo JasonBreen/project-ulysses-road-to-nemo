@@ -1,0 +1,4966 @@
+shared_focus = {
+    id = UST_start
+    icon = GFX_goal_UST_freedom_in_our_hearts
+    cost = 5.8
+    ai_will_do = {
+        factor = 50
+    }
+    x = 8
+    y = 0
+    completion_reward = {
+		country_event = ustio_main.1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_tyran_industry
+    icon = GFX_goal_generic_construction
+    cost = 5.8
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_start
+    }
+    relative_position_id = UST_start
+    x = -2
+    y = 1
+
+    completion_reward = {
+		336 = {
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_tech_bonus = {
+			bonus = 0.25
+			uses = 1
+			category = industry
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_connect_miedzyrzecz
+    icon = GFX_focus_generic_railroad
+    cost = 5.8
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_tyran_industry
+    }
+    relative_position_id = UST_tyran_industry
+    x = 0
+    y = 1
+
+    completion_reward = {
+		358 = {
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		build_railway = {
+            level = 1
+            path = { 2930 7985 8036 4370 }
+        }
+		add_tech_bonus = {
+			bonus = 0.25
+			uses = 1
+			category = industry
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_pay_for_museum
+    icon = GFX_focus_generic_improve_the_administration
+    cost = 5.8
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_start
+    }		
+    relative_position_id = UST_start
+    x = 0
+    y = 1
+
+    completion_reward = {
+		add_timed_idea = { idea = UST_pay_for_museum_bitch days = 180 }
+		country_event = ustio_main.2
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_upgrade_schooling_system
+    icon = GFX_focus_hol_the_foundations_of_defense
+    cost = 5.8
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_pay_for_museum
+    }
+    relative_position_id = UST_pay_for_museum
+    x = 0
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_better_schooling
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_ratio_military_bases
+    icon = GFX_goal_generic_fortify_city
+    cost = 5.8
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_start
+    }
+    relative_position_id = UST_start
+    x = 2
+    y = 1
+
+    completion_reward = {
+		336 = {
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 4160
+			}
+		}
+		365 = {	
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 8009
+			}
+		}
+		army_experience = 20
+		hidden_effect = {
+			country_event = ustio_main.4
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_anti_partisant_training
+    icon = GFX_focus_eng_move_to_secure_the_dominions
+    cost = 5.8
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_ratio_military_bases
+    }
+    relative_position_id = UST_ratio_military_bases
+    x = 0
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_ratio_nationalists add_idea = UST_ratio_nationalists_2 }
+		army_experience = 20
+		add_doctrine_cost_reduction = {
+			cost_reduction = 0.5
+			uses = 1
+			category = land_doctrine
+		}
+		hidden_effect = {
+			country_event = ustio_main.5
+		}
+    }
+    search_filters = { }
+}
+
+##############################
+
+shared_focus = {
+    id = UST_deal
+    icon = GFX_focus_generic_treaty
+    cost = 2
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		has_country_flag = UST_sold_land_to_ratio_flag
+	}
+	bypass = {
+		has_country_flag = UST_lost_ratio_war_flag
+	}
+    x = 0
+    y = 0
+
+    completion_reward = {
+		RAT = {
+			transfer_state = 336
+			transfer_state = 376
+			transfer_state = 365
+		}
+		336 = { add_core_of = RAT remove_core_of = UST }
+		376 = { add_core_of = RAT remove_core_of = UST }
+		365 = { add_core_of = RAT remove_core_of = UST }
+		hidden_effect = {
+			UST = {
+				remove_ideas = UST_ratio_nationalists_2
+			}
+			336 = { remove_dynamic_modifier = { modifier = UST_vs_RAT_resistance } }
+			365 = { remove_dynamic_modifier = { modifier = UST_vs_RAT_resistance } }
+		}
+		add_stability = 0.1
+		hidden_effect = {
+			country_event = ustio_main.6
+		}
+		hidden_effect = {
+			news_event = { id = ac_news_event.2 days = 2 }
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_no_step_on_our_land
+    icon = GFX_goal_UST_no_step_on_our_land
+    cost = 1
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		has_country_flag = UST_not_sold_land_to_ratio_flag
+	}
+    #relative_position_id = UST_pay_for_museum
+    x = 0
+    y = 0
+
+    completion_reward = {
+		country_event = ustio_na.1
+		hidden_effect = {
+			news_event = { id = ac_news_event.13 days = 2 }
+			country_event = { id = ustio.7 days = 30 }
+			set_variable = {
+				var = ratio_hate
+				value = 0
+			}
+		}
+    }
+    search_filters = { }
+}
+
+##############
+
+shared_focus = {
+    id = UST_promised_payment
+    icon = GFX_focus_mex_privatisation
+    cost = 5.8
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_deal
+    }
+	bypass = {
+		has_country_flag = UST_lost_ratio_war_flag
+	}
+    relative_position_id = UST_deal
+    x = -2
+    y = 1
+
+    completion_reward = {
+		add_timed_idea = { idea = UST_payment_for_land days = 365 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_resetle_the_people
+    icon = GFX_goal_UST_resettle_the_people
+    cost = 5.8
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_deal
+    }
+	bypass = {
+		has_country_flag = UST_lost_ratio_war_flag
+	}
+    relative_position_id = UST_deal
+    x = 0
+    y = 1
+
+    completion_reward = {
+		custom_effect_tooltip = UST_resetle_the_people_tt_1
+		336 = {
+			add_manpower = -500000
+		}
+		365 = {
+			add_manpower = -500000
+		}
+		custom_effect_tooltip = UST_resetle_the_people_tt_2
+		339 = {
+			add_manpower = 250000
+		}
+		335 = {
+			add_manpower = 250000
+		}
+		358  = {
+			add_manpower = 500000
+		}
+		add_victory_points = {
+			province = 4370
+			value = 3
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_move_part_of_industry
+    icon = GFX_focus_DEN_no_regulations
+    cost = 5.8
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_deal
+    }
+	bypass = {
+		has_country_flag = UST_lost_ratio_war_flag
+	}
+    relative_position_id = UST_deal
+    x = 2
+    y = 1
+
+    completion_reward = {
+		custom_effect_tooltip = UST_move_part_of_industry_tt
+		hidden_effect = {
+			336 = {
+				remove_building = {
+					type = arms_factory
+					level = 1
+				}
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			365 = {
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			358 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		add_victory_points = {
+			province = 4370
+			value = 2
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_mid_1992
+    icon = GFX_goal_support_democracy
+    cost = 2
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_promised_payment
+    }
+	prerequisite = {
+        focus = UST_resetle_the_people
+    }
+	prerequisite = {
+        focus = UST_move_part_of_industry
+    }
+    relative_position_id = UST_deal
+    x = 0
+    y = 2
+
+    completion_reward = {
+		custom_effect_tooltip = UST_mid_1992_elections_tt
+		country_event = ustio_main.7
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_grzegorz_wins
+    icon = GFX_goal_UST_grzegorz_wins
+    cost = 8.6
+	ai_will_do = {
+		factor = 50
+		modifier = {
+			factor = 0		
+			has_game_rule = {
+				rule = UST_ai_behavior
+				option = DEMOCRATIC_ALTERNATE
+			}
+		}
+	}
+	prerequisite = {
+        focus = UST_mid_1992
+    }
+	mutually_exclusive = {
+		focus = UST_kuba_wins
+	}
+    relative_position_id = UST_mid_1992
+    x = -5
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_grzegorz.1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_kuba_wins
+    icon = GFX_goal_UST_kuba_wins
+    cost = 8.6
+	ai_will_do = {
+		factor = 50
+		modifier = {
+			factor = 0		
+			OR = {
+				AND = {
+					is_historical_focus_on = yes
+					has_game_rule = {
+						rule = UST_ai_behavior
+						option = DEFAULT
+					}
+				}
+				has_game_rule = {
+					rule = UST_ai_behavior
+					option = DEMOCRATIC_HISTORICAL
+				}
+			}
+		}
+	}
+	prerequisite = {
+        focus = UST_mid_1992
+    }
+	mutually_exclusive = {
+		focus = UST_grzegorz_wins
+	}
+    relative_position_id = UST_mid_1992
+    x = 5
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_morka.1
+    }
+    search_filters = { }
+}
+
+##############
+
+shared_focus = {
+    id = UST_two_year_plan
+    icon = GFX_focus_SOV_merge_plants
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_grzegorz_wins
+		focus = UST_kuba_wins
+    }
+    relative_position_id = UST_mid_1992
+    x = 0
+    y = 2
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_undeveloped add_idea = UST_undeveloped_2 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_expand_mines
+    icon = GFX_goal_generic_construction2
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_two_year_plan
+    }
+    relative_position_id = UST_two_year_plan
+    x = -1
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_undeveloped_2 add_idea = UST_undeveloped_3 }
+		add_tech_bonus = {
+			bonus = 0.5
+			uses = 2
+			category = excavation_tech
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_expand_west_ustio
+    icon = GFX_focus_generic_industry_2
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_two_year_plan
+    }
+    relative_position_id = UST_two_year_plan
+    x = 1
+    y = 1
+
+    completion_reward = {
+		339 = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		build_railway = {
+            level = 1
+            path = { 7762 7821 7892 5042 }
+        }
+		
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_fruit_of_earth
+    icon = GFX_focus_generic_extract_tungsten
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_expand_mines
+    }
+	prerequisite = {
+        focus = UST_expand_west_ustio
+    }
+    relative_position_id = UST_expand_mines
+    x = 1
+    y = 1
+
+    completion_reward = {
+		358 = {
+			add_resource = {
+				type = chromium
+				amount = 5
+			}
+			add_resource = {
+				type = tungsten
+				amount = 5
+			}
+		}
+		378 = {
+			add_resource = {
+				type = chromium
+				amount = 5
+			}
+			add_resource = {
+				type = tungsten
+				amount = 5
+			}
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_to_modernise_fully
+    icon = GFX_goal_generic_construct_civ_factory
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_fruit_of_earth
+    }
+    relative_position_id = UST_fruit_of_earth
+    x = -1experience_gain_factor
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_undeveloped_3 add_idea = UST_undeveloped_4 }
+		add_political_power = -150
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_money_for_military_complex
+    icon = GFX_focus_fra_devalue_the_franc
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_fruit_of_earth
+    }
+    relative_position_id = UST_fruit_of_earth
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_timed_idea = { idea = UST_valais_industry_buff days = 365 }
+		custom_effect_tooltip = UST_money_for_military_complex_tt
+    }
+    search_filters = { }
+}
+
+#############################################
+
+shared_focus = {
+    id = UST_establish_central_bank
+    icon = GFX_focus_ETH_the_state_bank_of_ethiopia
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_another_term_await
+    }
+	prerequisite = {
+        focus = UST_two_year_plan
+    }
+    relative_position_id = UST_two_year_plan
+    x = -3
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_central_bank_idea
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_national_labor_board
+    icon = GFX_focus_generic_workers_and_farmers_rise
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_establish_central_bank
+    }
+    relative_position_id = UST_establish_central_bank
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_labor_board_idea
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_valais_industry
+    icon = GFX_goal_continuous_non_factory_construct
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_establish_central_bank
+    }
+    relative_position_id = UST_establish_central_bank
+    x = 1
+    y = 1
+
+    completion_reward = {
+		340 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_tech_bonus = {
+			bonus = 0.5
+			uses = 2
+			category = construction_tech
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_social_country
+    icon = GFX_focus_generic_field_hostpital
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_national_labor_board
+    }
+	prerequisite = {
+        focus = UST_valais_industry
+    }
+    relative_position_id = UST_national_labor_board
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_social_country_idea
+    }
+    search_filters = { }
+}
+
+###############
+
+shared_focus = {
+    id = UST_deregulate_banking_sector
+    icon = GFX_focus_usa_reestablish_the_gold_standard
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_two_year_plan
+    }
+	prerequisite = {
+        focus = UST_liberal_shock
+    }
+    relative_position_id = UST_two_year_plan
+    x = 3
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_deregulate_banking_sector_idea
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_outlaw_trade_unions
+    icon = GFX_focus_eng_concessions_to_the_trade_unions
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_deregulate_banking_sector
+    }
+    relative_position_id = UST_deregulate_banking_sector
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_outlaw_trade_unions_idea
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_hand_of_free_market
+    icon = GFX_focus_generic_the_giant_wakes
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_deregulate_banking_sector
+    }
+    relative_position_id = UST_deregulate_banking_sector
+    x = -1
+    y = 1
+
+    completion_reward = {
+		custom_effect_tooltip = UST_hand_of_free_market_tt
+		hidden_effect = {
+			country_event = ustio.23
+			days = 50
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_privatize_healthcare
+    icon = GFX_focus_ETH_adopt_the_lira
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_hand_of_free_market
+    }
+    prerequisite = {
+        focus = UST_outlaw_trade_unions
+    }
+    relative_position_id = UST_hand_of_free_market
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_private_health_care_idea
+    }
+    search_filters = { }
+}
+
+###############
+
+shared_focus = {
+    id = UST_father_continues_his_rule
+    icon = GFX_focus_generic_improve_the_administration
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_grzegorz_wins	
+    }
+    relative_position_id = UST_grzegorz_wins
+    x = -1
+    y = 1
+
+    completion_reward = {
+		country_event = { id = ustio_grzegorz.2 days = 1 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_another_term_await
+    icon = GFX_goal_generic_demand_territory
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_grzegorz_wins
+    }
+    relative_position_id = UST_grzegorz_wins
+    x = 1
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_grzegorz.3
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_loyalty_of_the_army
+    icon = GFX_focus_generic_full_social_mobilization
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_father_continues_his_rule
+    }
+    relative_position_id = UST_father_continues_his_rule
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_loyal_army_idea
+		add_manpower = 10000
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_allies_in_the_church
+    icon = GFX_focus_por_concordat
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_father_continues_his_rule
+    }
+	prerequisite = {
+        focus = UST_another_term_await
+    }
+    relative_position_id = UST_another_term_await
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_church_idea
+		add_political_power = 100
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_continue_school_reform
+    icon = GFX_focus_generic_secret_service_agency
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_loyalty_of_the_army
+    }
+	prerequisite = {
+        focus = UST_allies_in_the_church
+    }
+    relative_position_id = UST_loyalty_of_the_army
+    x = 1
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_church_idea add_idea = UST_church_idea_2 }
+		hidden_effect = {
+			country_event = ustio_grzegorz.6
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_centralise_power
+    icon = GFX_focus_generic_annex_country
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_continue_school_reform
+    }
+    relative_position_id = UST_continue_school_reform
+    x = 1
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_grzegorz.5
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_friends_in_osea
+    icon = GFX_focus_generic_diplomacy_osea
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_continue_school_reform
+    }
+    relative_position_id = UST_continue_school_reform
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_opinion_modifier = {
+			target = OSE
+			modifier = considers_friend 
+		}
+		country_event = ustio_grzegorz.4
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_nationalize_post_belkan_land
+    icon = GFX_focus_DEN_heavy_regulations
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_friends_in_osea
+    }
+	prerequisite = {
+        focus = UST_centralise_power
+    }
+    relative_position_id = UST_centralise_power
+    x = -1
+    y = 1
+
+    completion_reward = {
+		custom_effect_tooltip = UST_nationalize_post_belkan_land_tt
+		random_owned_controlled_state = {
+			limit = {
+				free_building_slots = {
+					building = arms_factory
+					size > 1
+					include_locked = no
+				}				
+			}
+			add_extra_state_shared_building_slots = -1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			limit = {
+				free_building_slots = {
+					building = industrial_complex
+					size > 1
+					include_locked = no
+				}				
+			}
+			add_extra_state_shared_building_slots = -1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_political_power = -100
+		add_stability = -0.1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_1
+    icon = GFX_focus_generic_military_academy
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_friends_in_osea
+    }
+	prerequisite = {
+        focus = UST_centralise_power
+    }
+    relative_position_id = UST_friends_in_osea
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_osea_indstructors_idea
+		army_experience = 20
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_I_AM_SEXO
+    icon = GFX_focus_generic_population_growth
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_centralise_power
+    }
+	prerequisite = {
+        focus = UST_social_country
+    }
+    relative_position_id = UST_centralise_power
+    x = 2
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_social_country_idea add_idea = UST_social_country_abe_act_idea }
+		every_owned_state = {
+			add_manpower = 100000
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_no_more_lagging_behind
+    icon = GFX_focus_SWE_landsverk
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_centralise_power
+		focus = UST_free_rule
+    }
+	prerequisite = {
+        focus = UST_social_country
+		focus = UST_privatize_healthcare
+    }
+	prerequisite = {
+        focus = UST_friends_in_osea
+		focus = UST_open_to_anyone
+    }
+	prerequisite = {
+        focus = UST_to_modernise_fully
+    }
+	prerequisite = {
+        focus = UST_money_for_military_complex
+    }
+    relative_position_id = UST_to_modernise_fully
+    x = 1
+    y = 1
+
+    completion_reward = {
+		remove_ideas = UST_undeveloped_4
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+    }
+    search_filters = { }
+}
+
+##############
+
+shared_focus = {
+    id = UST_new_man_at_the_top
+    icon = GFX_goal_generic_intelligence_exchange
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_kuba_wins
+    }
+    relative_position_id = UST_kuba_wins
+    x = 1
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_morka.2
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_liberal_shock
+    icon = GFX_goal_continuous_boost_freedom
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_kuba_wins
+    }
+    relative_position_id = UST_kuba_wins
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_liberal_shock_1_idea
+		country_event = ustio_morka.3
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_seperate_everything
+    icon = GFX_focus_NOR_broken_gun_policies
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_liberal_shock
+    }
+	prerequisite = {
+        focus = UST_new_man_at_the_top
+    }
+    relative_position_id = UST_new_man_at_the_top
+    x = -1
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_liberal_shock_1_idea add_idea = UST_liberal_shock_2_idea }
+		country_event = ustio_morka.4
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_decentralize_army
+    icon = GFX_focus_generic_military_dictatorship
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_new_man_at_the_top
+    }
+    relative_position_id = UST_new_man_at_the_top
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_decen_army_idea
+    }
+    search_filters = { }
+}
+
+
+shared_focus = {
+    id = UST_directus_university
+    icon = GFX_goal_continuous_research
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_seperate_everything
+    }
+	prerequisite = {
+        focus = UST_decentralize_army
+    }
+    relative_position_id = UST_decentralize_army
+    x = -1
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_morka.5
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_free_rule
+    icon = GFX_focus_hol_the_foundations_of_defense
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_directus_university
+    }
+    relative_position_id = UST_directus_university
+    x = -1
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_morka.6
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_open_to_anyone
+    icon = GFX_goal_generic_positive_trade_relations
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_directus_university
+    }
+    relative_position_id = UST_directus_university
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = free_trade
+		add_country_flag = block_trade_law
+		custom_effect_tooltip = block_trade_law_focus
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_privatize_post_belkan_land
+    icon = GFX_focus_mex_privatisation
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_free_rule
+    }
+	prerequisite = {
+        focus = UST_open_to_anyone
+    }
+    relative_position_id = UST_free_rule
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_political_power = 100
+		every_owned_state = {
+			limit = {
+				NOT = {
+					state = 339
+				}
+			}
+			add_extra_state_shared_building_slots = 1
+		}
+		339 = {
+			add_extra_state_shared_building_slots = 2
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_sorton_act
+    icon = GFX_focus_ETH_freedom_at_gunpoint
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_privatize_healthcare
+    }
+	prerequisite = {
+        focus = UST_free_rule
+    }
+    relative_position_id = UST_privatize_healthcare
+    x = 0
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_sorton_act_idea
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_2
+    icon = GFX_goal_support_democracy
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = UST_free_rule
+    }
+	prerequisite = {
+        focus = UST_open_to_anyone
+    }
+    relative_position_id = UST_open_to_anyone
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_laissez_faire
+    }
+    search_filters = { }
+}
+
+##############
+
+shared_focus = {
+    id = UST_they_are_coming
+    icon = GFX_focus_generic_war_belka
+    cost = 1
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_war_with = BLK
+			has_global_flag = belka_dropped_nukes
+		}
+	}
+	bypass = {
+		has_country_flag = UST_they_are_coming_flag
+	}
+    relative_position_id = UST_army_debate
+    x = 0
+    y = 6
+	
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_get_people_ready
+    icon = GFX_goal_rhineland
+    cost = 2.5
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_war_with = BLK
+			has_global_flag = belka_dropped_nukes
+		}
+	}
+	prerequisite = {
+        focus = UST_they_are_coming
+    }
+    relative_position_id = UST_they_are_coming
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_timed_idea = { idea = UST_last_secon_mob days = 60 }
+		army_experience = 50
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_make_shift_bunkers
+    icon = GFX_goal_generic_military_sphere
+    cost = 2.5
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_war_with = BLK
+			has_global_flag = belka_dropped_nukes
+		}
+	}
+	prerequisite = {
+        focus = UST_they_are_coming
+    }
+    relative_position_id = UST_they_are_coming
+    x = 1
+    y = 1
+
+    completion_reward = {
+		339 = {
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 2117
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 3
+				instant_build = yes
+				province = 7762
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 7791
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 7820
+			}
+		}
+		339 = {
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 7892
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 7936
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 7994
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 3
+				instant_build = yes
+				province = 5042
+			}
+		}
+		339 = {
+			add_building_construction = {
+				type = anti_air_building   
+				level = 3
+				instant_build = yes
+			}
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_convert_production
+    icon = GFX_goal_generic_construct_mil_factory
+    cost = 2.5
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_war_with = BLK
+			has_global_flag = belka_dropped_nukes
+		}
+	}
+	prerequisite = {
+        focus = UST_they_are_coming
+    }
+    relative_position_id = UST_they_are_coming
+    x = 0
+    y = 2
+
+   completion_reward = {
+		random_owned_controlled_state = {
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_import_MANPATS
+    icon = GFX_goal_generic_army_artillery
+    cost = 2.5
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_war_with = BLK
+			has_global_flag = belka_dropped_nukes
+		}
+	}
+	prerequisite = {
+        focus = UST_they_are_coming
+    }
+    relative_position_id = UST_they_are_coming
+    x = -2
+    y = 2
+
+    completion_reward = {
+		add_equipment_to_stockpile = {
+			type = manpads_1
+			amount = 250
+		}
+		add_tech_bonus = {
+			bonus = 1
+			uses = 1
+			technology = infantry_at
+			technology = infantry_at2
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_ask_ratio_for_help
+    icon = GFX_goal_molotov_ribbentrop_pact
+    cost = 2.5
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_war_with = BLK
+			has_global_flag = belka_dropped_nukes
+		}
+	}
+	prerequisite = {
+        focus = UST_they_are_coming
+    }
+    relative_position_id = UST_they_are_coming
+    x = 2
+    y = 2
+
+    completion_reward = {
+		custom_effect_tooltip = UST_ask_ratio_for_help_tt
+		hidden_effect = {
+			country_event = { id = ustio.6 days = 15 }
+		}
+    }
+    search_filters = { }
+}
+
+##############
+
+shared_focus = {
+    id = UST_rush_the_trenches
+    icon = GFX_goal_generic_fortify_city
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_no_step_on_our_land
+    }
+    relative_position_id = UST_no_step_on_our_land
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.02
+		}
+		365 = {
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 2973
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 1
+				instant_build = yes
+				province = 2936
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 1
+				instant_build = yes
+				province = 4663
+			}
+		}
+		add_ideas = UST_critical_expenses_1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_the_speach
+    icon = GFX_goal_generic_propaganda
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_no_step_on_our_land
+    }
+    relative_position_id = UST_no_step_on_our_land
+    x = 1
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_na.2
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_to_arm_the_man
+    icon = GFX_focus_generic_combined_arms
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_rush_the_trenches
+    }
+    relative_position_id = UST_rush_the_trenches
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.02
+		}
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1000
+		}
+		add_equipment_to_stockpile = {
+			type = artillery_equipment
+			amount = 200
+		}
+		add_equipment_to_stockpile = {
+			type = manpats 
+			amount = 100
+		}
+		add_equipment_to_stockpile = {
+			type = support_equipment 
+			amount = 100
+		}
+		swap_ideas = { remove_idea = UST_critical_expenses_1 add_idea = UST_critical_expenses_2 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_last_second_mobilization
+    icon = GFX_focus_chi_army_reform
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_rush_the_trenches
+    }
+	prerequisite = {
+        focus = UST_the_speach
+    }
+    relative_position_id = UST_the_speach
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.02
+		}
+		add_ideas = limited_conscription
+		add_timed_idea = { idea = UST_last_secon_mob days = 60 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_supress_partisants
+    icon = GFX_focus_prc_infiltration
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_the_speach
+    }
+    relative_position_id = UST_the_speach
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.02
+		}
+		swap_ideas = { remove_idea = UST_ratio_nationalists_2 add_idea = UST_ratio_nationalists_war_1 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_external_arms_market
+    icon = GFX_focus_SWI_issue_war_bonds
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_to_arm_the_man
+    }
+	prerequisite = {
+        focus = UST_last_second_mobilization
+    }
+    relative_position_id = UST_last_second_mobilization
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.02
+		}
+		add_offsite_building = { 
+			type = arms_factory 
+			level = 2
+		}
+		swap_ideas = { remove_idea = UST_critical_expenses_2 add_idea = UST_critical_expenses_3 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_band_of_brothers
+    icon = GFX_focus_ITA_banda_carita
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_last_second_mobilization
+    }
+	prerequisite = {
+        focus = UST_supress_partisants
+    }
+    relative_position_id = UST_last_second_mobilization
+    x = 1
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_na.3
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_strike_first
+    icon = GFX_focus_generic_strike_at_democracy2
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_external_arms_market
+    }
+	prerequisite = {
+        focus = UST_band_of_brothers
+    }
+	bypass = {
+		has_global_flag = first_ustian_war
+	}
+    relative_position_id = UST_external_arms_market
+    x = 1
+    y = 1
+
+	will_lead_to_war_with = RAT
+
+	select_effect = {
+		hidden_effect = {
+			if = {
+				limit = {
+					365 = { is_demilitarized_zone = yes }
+				}
+				country_event = { id = ustio.13 days = 10 }
+			}
+		}
+	}
+
+    completion_reward = {
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.1
+		}
+		declare_war_on = { 
+			type = liberate_wargoal  
+			target = RAT 
+		}
+		add_ideas = UST_first_strike
+		country_event = ustio_na.4
+		custom_effect_tooltip = UST_strike_first_tt
+		hidden_effect = {
+			news_event = { id = ac_news_event.15 days = 1 }
+		}
+		set_global_flag = first_ustian_war
+    }
+    search_filters = { }
+}
+
+###
+
+shared_focus = {
+    id = UST_we_lost
+    icon = GFX_focus_spr_crush_the_revolution
+    cost = 1
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_strike_first
+    }
+	available = {
+		has_country_flag = UST_lost_ratio_war_flag
+	}
+	mutually_exclusive = {
+		focus = UST_we_won
+	}
+    relative_position_id = UST_strike_first
+    x = -3
+    y = 1
+
+    completion_reward = {
+		country_event = ustio.22
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_we_won
+    icon = GFX_focus_generic_strike_at_democracy1
+    cost = 1
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_strike_first
+    }
+	available = {
+		has_country_flag = UST_won_ratio_war_flag
+	}
+	mutually_exclusive = {
+		focus = UST_we_lost
+	}
+    relative_position_id = UST_strike_first
+    x = 3
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_na.5
+		#add_ideas = UST_unstable_economy
+		#add_ideas = UST_fear_for_freedom
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_wave_of_nationalism
+    icon = GFX_focus_generic_workers
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_we_won
+    }
+    relative_position_id = UST_we_won
+    x = -2
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_na.7
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_spoils_of_war
+    icon = GFX_focus_DEN_heavy_regulations
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_we_won
+    }
+    relative_position_id = UST_we_won
+    x = 0
+    y = 1
+
+    completion_reward = {
+		306 = {
+			remove_building = {
+				type = arms_factory
+				level = 1
+			}
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+		}
+		388 = {
+			remove_building = {
+				type = arms_factory
+				level = 1
+			}
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+		}
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_ustian_stubbornness
+    icon = GFX_focus_generic_support_the_left_right
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_we_won
+    }
+    relative_position_id = UST_we_won
+    x = 2
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_na.8
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_new_political_coalition
+    icon = GFX_goal_support_fascism
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_wave_of_nationalism
+    }
+	prerequisite = {
+        focus = UST_spoils_of_war
+    }
+	prerequisite = {
+        focus = UST_ustian_stubbornness
+    }
+    relative_position_id = UST_spoils_of_war
+    x = 0
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_na.9
+		custom_effect_tooltip = UST_new_political_coalition_tt
+################################################################################		
+		set_variable = { democratic_pop = party_popularity@democratic }
+		set_variable = { fascism_pop = party_popularity@fascism }
+		set_variable = { neutrality_pop = party_popularity@neutrality }
+		set_variable = { communism_pop = party_popularity@communism  }
+		set_variable = { monarchism_pop = party_popularity@monarchism  }
+		
+		multiply_variable = {
+			var = democratic_pop
+			value = 100
+		}
+		multiply_variable = {
+			var = fascism_pop
+			value = 100
+		}
+		multiply_variable = {
+			var = neutrality_pop
+			value = 100
+		}
+		multiply_variable = {
+			var = communism_pop
+			value = 100
+		}
+		multiply_variable = {
+			var = monarchism_pop
+			value = 100
+		}
+		
+		set_variable = { new_democratic_pop = democratic_pop }
+		set_variable = { new_fascism_pop = fascism_pop }
+################################################################################		
+		multiply_variable = {
+			var = democratic_pop
+			value = 0.7
+		}
+		multiply_variable = {
+			var = fascism_pop
+			value = 0.7
+		}
+		add_to_variable = {
+			var = neutrality_pop
+			value = democratic_pop
+		}
+		add_to_variable = {
+			var = neutrality_pop
+			value = fascism_pop
+		}
+		subtract_from_variable = {
+			var = new_democratic_pop
+			value = democratic_pop
+		}
+		subtract_from_variable = {
+			var = new_fascism_pop
+			value = fascism_pop
+		}
+############################################################################
+		set_variable = { diff_fix = 0 }
+
+		add_to_variable = {
+			var = diff_fix
+			value = new_democratic_pop
+		}
+		add_to_variable = {
+			var = diff_fix
+			value = neutrality_pop
+		}	
+		add_to_variable = {
+			var = diff_fix
+			value = new_fascism_pop
+		}	
+		add_to_variable = {
+			var = diff_fix
+			value = communism_pop
+		}	
+		add_to_variable = {
+			var = diff_fix
+			value = monarchism_pop
+		}
+		subtract_from_variable = {
+			var = diff_fix
+			value = 100
+		}
+		subtract_from_variable = {
+			var = neutrality_pop
+			value = diff_fix
+		}		
+###########################################################################
+		hidden_effect = {
+			set_popularities = {
+				democratic = var:new_democratic_pop
+				neutrality = var:neutrality_pop
+				fascism = var:new_fascism_pop
+				communism = var:communism_pop
+				monarchism = var:monarchism_pop
+			}
+		}
+##########################################################################
+		hidden_effect = {
+			set_variable = {
+				var = UST_death_meter
+				value = 0
+			}
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_army_as_part_of_state
+    icon = GFX_focus_generic_full_social_mobilization
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_country_flag = UST_things_went_bad_flag
+		}
+	}
+    prerequisite = {
+        focus = UST_new_political_coalition
+    }
+    relative_position_id = UST_new_political_coalition
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_army_pasrt_of_state_idea_1
+		hidden_effect = {
+			event = ustio.26
+			if = {
+				limit = {
+					AND = {
+						NOT = { has_completed_focus = UST_subsidize_the_economy }
+						NOT = { has_completed_focus = UST_ensure_the_power_of_constitution }
+					}
+				}
+				add_to_variable = {
+					var = UST_death_meter
+					value = 1
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { UST_death_meter > 3 }
+				}
+				country_event = { id = ustio_f.1 days = 5 }
+			}
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_ustian_youth
+    icon = GFX_focus_POL_OZON
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_country_flag = UST_things_went_bad_flag
+		}
+	}
+    prerequisite = {
+        focus = UST_ensure_the_power_of_constitution
+    }
+	prerequisite = {
+        focus = UST_army_as_part_of_state
+    }
+    relative_position_id = UST_army_as_part_of_state
+    x = -1
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_army_pasrt_of_state_idea_1 add_idea = UST_army_pasrt_of_state_idea_2 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_mandatory_military_training
+    icon = GFX_focus_generic_infiltration
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_country_flag = UST_things_went_bad_flag
+		}
+	}
+    prerequisite = {
+        focus = UST_army_as_part_of_state
+    }
+    relative_position_id = UST_army_as_part_of_state
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = extensive_conscription
+		hidden_effect = {
+			if = {
+				limit = {
+					AND = {
+						NOT = { has_completed_focus = UST_subsidize_the_economy }
+						NOT = { has_completed_focus = UST_ensure_the_power_of_constitution }
+					}
+				}
+				add_to_variable = {
+					var = UST_death_meter
+					value = 1
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { UST_death_meter > 3 }
+				}
+				country_event = { id = ustio_f.1 days = 5 }
+			}
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_forced_nationalisation
+    icon = GFX_focus_RAJ_two_nation_theory
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_country_flag = UST_things_went_bad_flag
+		}
+	}
+    prerequisite = {
+        focus = UST_new_political_coalition
+    }
+    relative_position_id = UST_new_political_coalition
+    x = 3
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_na.11
+		336 = { remove_dynamic_modifier = { modifier = UST_vs_RAT_resistance } }
+		365 = { remove_dynamic_modifier = { modifier = UST_vs_RAT_resistance } }
+		#hidden_effect = {
+		#	if = {
+		#		limit = {
+		#			AND = {
+		#				NOT = { has_completed_focus = UST_subsidize_the_economy }
+		#				NOT = { has_completed_focus = UST_ensure_the_power_of_constitution }
+		#			}
+		#		}
+		#		add_to_variable = {
+		#			var = UST_death_meter
+		#			value = 1
+		#		}
+		#	}
+		#	if = {
+		#		limit = {
+		#			check_variable = { UST_death_meter > 3 }
+		#		}
+		#		country_event = { id = ustio_f.1 days = 5 }
+		#	}
+		#}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_expel_the_ratio_people
+    icon = GFX_focus_CZE_german_puppet
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_country_flag = UST_things_went_bad_flag
+		}
+	}
+    prerequisite = {
+        focus = UST_forced_nationalisation
+    }
+    relative_position_id = UST_forced_nationalisation
+    x = 1
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_na.12
+		336 = {
+			add_manpower = -1000000
+		}
+		365 = {
+			add_manpower = -1000000
+		}
+		if = {
+			limit = {
+				has_idea = UST_ratio_nationalists
+			}
+			remove_ideas = UST_ratio_nationalists
+		}
+		if = {
+			limit = {
+				has_idea = UST_ratio_nationalists_2
+			}
+			remove_ideas = UST_ratio_nationalists_2
+		}
+		if = {
+			limit = {
+				has_idea = UST_ratio_nationalists_war_1
+			}
+			remove_ideas = UST_ratio_nationalists_war_1
+		}
+		#hidden_effect = {
+		#	if = {
+		#		limit = {
+		#			AND = {
+		#				NOT = { has_completed_focus = UST_subsidize_the_economy }
+		#				NOT = { has_completed_focus = UST_ensure_the_power_of_constitution }
+		#			}
+		#		}
+		#		add_to_variable = {
+		#			var = UST_death_meter
+		#			value = 1
+		#		}
+		#	}
+		#	if = {
+		#		limit = {
+		#			check_variable = { UST_death_meter > 3 }
+		#		}
+		#		country_event = { id = ustio_f.1 days = 5 }
+		#	}
+		#}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_focus_on_the_west
+    icon = GFX_focus_generic_war_belka
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_country_flag = UST_things_went_bad_flag
+		}
+	}
+	prerequisite = {
+        focus = UST_mandatory_military_training
+    }
+    prerequisite = {
+        focus = UST_expel_the_ratio_people
+    }
+    relative_position_id = UST_mandatory_military_training
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_vs_belka_idea
+		add_opinion_modifier = {
+			target = BLK
+			modifier = considers_threat 
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_west_wall
+    icon = GFX_goal_generic_construct_military
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_focus_on_the_west
+    }
+    relative_position_id = UST_focus_on_the_west
+    x = -1
+    y = 1
+
+    completion_reward = {
+		339 = {
+			add_building_construction = {
+				type = bunker   
+				level = 1
+				instant_build = yes
+				province = 7719
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 1
+				instant_build = yes
+				province = 2117
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2	
+				instant_build = yes
+				province = 7762
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 1	
+				instant_build = yes
+				province = 7791
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 1	
+				instant_build = yes
+				province = 7821
+			}
+		}
+		339 = {
+			add_building_construction = {
+				type = bunker   
+				level = 1
+				instant_build = yes
+				province = 7892
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 1
+				instant_build = yes
+				province = 7936
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 1	
+				instant_build = yes
+				province = 7994
+			}
+			add_building_construction = {
+				type = bunker   
+				level = 2
+				instant_build = yes
+				province = 5042
+			}
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_expand_back_yard
+    icon = GFX_goal_continuous_non_factory_construct
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_focus_on_the_west
+    }
+    relative_position_id = UST_focus_on_the_west
+    x = 1
+    y = 1
+
+    completion_reward = {
+		340 = {
+			add_building_construction = {
+				type = bunker   
+				level = 5
+				instant_build = yes
+				province = 7892
+			}
+			add_building_construction = {
+				type = anti_air_building 
+				level = 3
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = air_base  
+				level = 2
+				instant_build = yes
+			}
+		}
+		335 = {
+			add_building_construction = {
+				type = anti_air_building 
+				level = 3
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = air_base  
+				level = 3
+				instant_build = yes
+			}
+		}
+		336 = {
+			add_building_construction = {
+				type = anti_air_building 
+				level = 2
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = air_base  
+				level = 3
+				instant_build = yes
+			}
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_critical_plan_tyrann
+    icon = GFX_goal_generic_construct_mil_factory
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_focus_on_the_west
+    }
+    relative_position_id = UST_focus_on_the_west
+    x = 3
+    y = 1
+
+    completion_reward = {
+		custom_effect_tooltip = UST_critical_plan_tyrann_tt
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_ensure_the_power_of_constitution
+    icon = GFX_goal_support_democracy
+    cost = 8.6
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_country_flag = UST_things_went_bad_flag
+		}
+	}
+    prerequisite = {
+        focus = UST_new_political_coalition
+    }
+    relative_position_id = UST_new_political_coalition
+    x = -1
+    y = 1
+
+    completion_reward = {
+		country_event = ustio_na.13
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_subsidize_the_economy
+    icon = GFX_focus_DEN_limited_regulations
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_country_flag = UST_things_went_bad_flag
+		}
+	}
+    prerequisite = {
+        focus = UST_new_political_coalition
+    }
+    relative_position_id = UST_new_political_coalition
+    x = -4
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_undeveloped add_idea = UST_undeveloped_2 }
+		add_political_power = -100
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_grand_dev_plan
+    icon = GFX_goal_GEB_small_business_subsidization
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_subsidize_the_economy
+    }
+    relative_position_id = UST_subsidize_the_economy
+    x = 0
+    y = 1
+
+    completion_reward = {
+		custom_effect_tooltip = unlock_dec
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_to_pay_back_the_loan
+    icon = GFX_focus_ETH_adopt_the_lira
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_subsidize_the_economy
+    }
+    relative_position_id = UST_subsidize_the_economy
+    x = -2
+    y = 1
+
+    completion_reward = {
+		custom_effect_tooltip = UST_to_pay_back_the_loan_tt
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_boikos_steel_meal
+    icon = GFX_focus_generic_reorient_production
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_grand_dev_plan
+    }
+    relative_position_id = UST_grand_dev_plan
+    x = -3
+    y = 1
+
+    completion_reward = {
+		365 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+			add_resource = {
+				type = steel
+				amount = 5
+			}
+		}
+		swap_ideas = { remove_idea = UST_unstable_economy add_idea = UST_unstable_economy_2 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_solis_ortus_economic_zone
+    icon = GFX_focus_generic_industry_1
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_grand_dev_plan
+    }
+    relative_position_id = UST_grand_dev_plan
+    x = 1
+    y = 1
+
+    completion_reward = {
+		358 = {
+			add_extra_state_shared_building_slots = 5
+			add_building_construction = {
+				type = infrastructure
+				level = 2
+				instant_build = yes
+			}
+		}
+		add_victory_points = {
+			province = 4370
+			value = 10
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_tyran_mines
+    icon = GFX_focus_generic_mining_industry
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_grand_dev_plan
+    }
+    relative_position_id = UST_grand_dev_plan
+    x = -1
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_undeveloped_2 add_idea = UST_undeveloped_3 }
+		340 = {
+			add_resource = {
+				type = aluminium
+				amount = 5
+			}
+			add_resource = {
+				type = steel
+				amount = 5
+			}
+		}
+		358 = {
+			add_resource = {
+				type = chromium
+				amount = 5
+			}
+			add_resource = {
+				type = tungsten
+				amount = 5
+			}
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_national_uni
+    icon = GFX_focus_ITA_workers_unions
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		NOT = {
+			has_country_flag = UST_things_went_bad_flag
+		}
+	}
+    prerequisite = {
+        focus = UST_ensure_the_power_of_constitution	
+    }
+	prerequisite = {
+        focus = UST_army_as_part_of_state
+    }
+    relative_position_id = UST_ensure_the_power_of_constitution
+    x = -1
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_better_schooling add_idea = UST_national_uni_idea }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_some_leap_forward
+    icon = GFX_goal_generic_scientific_exchange
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_solis_ortus_economic_zone	
+    }
+	prerequisite = {
+        focus = UST_national_uni
+    }
+    relative_position_id = UST_solis_ortus_economic_zone
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_tech_bonus = {
+			category = electronics
+			uses = 2
+			bonus = 0.75
+		}
+		add_tech_bonus = {
+			category = industry
+			uses = 2
+			bonus = 0.5
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_well_oiled_machine
+    icon = GFX_focus_SWE_SKF_ball_bearings
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_boikos_steel_meal
+    }
+	prerequisite = {
+        focus = UST_tyran_mines
+    }
+    relative_position_id = UST_boikos_steel_meal
+    x = 2
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_unstable_economy_2 add_idea = UST_unstable_economy_3 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_fix_recruitment_crisis
+    icon = GFX_goal_continuous_reduce_training_time
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_well_oiled_machine
+    }
+	prerequisite = {
+        focus = UST_ustian_youth
+    }
+	prerequisite = {
+        focus = UST_mandatory_military_training
+    }
+    relative_position_id = UST_well_oiled_machine
+    x = 6
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_unstable_economy_3 add_idea = UST_unstable_economy_4 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_social_work_help
+    icon = GFX_focus_ICE_embrace_the_workers_revolution
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_tyran_mines
+    }
+	prerequisite = {
+        focus = UST_solis_ortus_economic_zone
+    }
+	prerequisite = {
+        focus = UST_ustian_youth
+    }
+    relative_position_id = UST_solis_ortus_economic_zone
+    x = 3
+    y = 1
+
+    completion_reward = {
+		add_stability = 0.05
+		add_war_support = 0.05
+		add_political_power = 50
+		swap_ideas = { remove_idea = UST_undeveloped_3 add_idea = UST_undeveloped_4 }
+    }
+    search_filters = { }
+}
+
+#shared_focus = {
+#    id = UST_social_state
+#    icon = xxx
+#    cost = 8.6
+#    ai_will_do = {
+#        factor = 50
+#    }
+#	prerequisite = {
+#        focus = UST_grand_dev_plan
+#    }
+#    prerequisite = {
+#        focus = UST_ensure_the_power_of_constitution
+#    }
+#    relative_position_id = UST_ensure_the_power_of_constitution
+#    x = -1
+#    y = 2
+#
+#    completion_reward = {
+#		add_ideas = UST_social_country_idea
+#    }
+#    search_filters = { }
+#}
+
+##############################################
+
+shared_focus = {
+    id = UST_army_debate
+    icon = GFX_focus_NORDIC_com_army
+    cost = 2.2
+    ai_will_do = {
+        factor = 50
+    }
+    x = 13
+    y = 0
+	
+	available = {
+		OR = {
+			has_completed_focus = UST_money_for_military_complex
+			has_completed_focus = UST_army_as_part_of_state
+		}
+	}
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_expand_militia_program
+    icon = GFX_focus_ETH_freedom_at_gunpoint
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_army_debate
+    }
+	mutually_exclusive = {
+		focus = UST_national_army
+	}
+	mutually_exclusive = {
+		focus = UST_guns_for_hire
+	}
+	available = {
+		NOT = { has_completed_focus = UST_no_step_on_our_land }
+	}
+    relative_position_id = UST_army_debate
+    x = -4
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_militia_army add_idea = UST_militia_army_2 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_advanced_small_arms_fire_training
+    icon = GFX_goal_generic_small_arms
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_expand_militia_program
+    }
+    relative_position_id = UST_expand_militia_program
+    x = -1
+    y = 1
+
+    completion_reward = {	
+		swap_ideas = { remove_idea = UST_militia_army_2 add_idea = UST_militia_army_3 }
+		add_tech_bonus = {
+			uses = 1
+			bonus = 1
+			category = infantry_weapons
+		}
+		army_experience = 25
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_to_support_the_push
+    icon = GFX_goal_generic_army_artillery2
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_advanced_small_arms_fire_training
+    }
+	prerequisite = {
+        focus = UST_ustian_children_of_the_hills
+    }
+    relative_position_id = UST_advanced_small_arms_fire_training
+    x = 0
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_militia_army_3 add_idea = UST_militia_army_4 }
+		add_tech_bonus = {
+			uses = 2
+			bonus = 1
+			category = artillery
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_ustian_children_of_the_hills
+    icon = GFX_focus_GRE_a_land_of_mountains
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_expand_militia_program
+    }
+    relative_position_id = UST_expand_militia_program
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_tech_bonus = {
+			name = special_forces_bonus
+			bonus = 0.75
+			uses = 2
+			technology = tech_mountaineers2
+			technology = tech_mountaineers3
+		}
+		add_doctrine_cost_reduction = {
+			cost_reduction = 0.5
+			uses = 2
+			category = special_forces_doctrine
+		}
+		hidden_effect = {
+			set_technology = {
+				UST_rangers = 1
+			}
+		}
+		custom_effect_tooltip = ust_rangers_tt
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_resist_and_bite
+    icon = GFX_focus_GRE_reviving_the_spartan_warrior_spirit
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_advanced_small_arms_fire_training
+    }
+	prerequisite = {
+        focus = UST_ustian_children_of_the_hills
+    }
+    relative_position_id = UST_ustian_children_of_the_hills
+    x = 0
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_enduring_spirit_player
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_national_army
+    icon = GFX_focus_generic_limited_social_mobilization
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_army_debate
+    }
+	mutually_exclusive = {
+		focus = UST_expand_militia_program
+	}
+	mutually_exclusive = {
+		focus = UST_guns_for_hire
+	}
+    relative_position_id = UST_army_debate
+    x = 0
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_militia_army add_idea = UST_national_army_idea }
+		custom_effect_tooltip = UST_to_expand_the_width_tt
+		clr_country_flag = cons_laws_blocked
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_to_catch_up
+    icon = GFX_focus_generic_tank_production
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_national_army
+    }
+    relative_position_id = UST_national_army
+    x = 1
+    y = 1
+
+    completion_reward = {
+		if = {
+			limit = {
+				NOT = { has_completed_focus = UST_national_army }
+			}
+			effect_tooltip = {
+				swap_ideas = { remove_idea = UST_national_army_idea add_idea = UST_national_army_3 }
+			}
+		}
+		if = {
+			limit = {
+				has_idea = UST_national_army_idea
+			}
+			swap_ideas = { remove_idea = UST_national_army_idea add_idea = UST_national_army_3 }
+		}
+		if = {
+			limit = {
+				has_idea = UST_national_army_2
+			}
+			swap_ideas = { remove_idea = UST_national_army_2 add_idea = UST_national_army_4 }
+		}
+		custom_effect_tooltip = unlock_dec_ust_to_catch_up
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_nation_wide_war_games
+    icon = GFX_focus_eng_move_to_secure_the_dominions
+	cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_to_catch_up
+    }
+	prerequisite = {
+        focus = UST_to_expand_the_width
+    }
+    relative_position_id = UST_to_catch_up
+    x = 0
+    y = 1
+
+    completion_reward = {
+		army_experience = 100
+			add_doctrine_cost_reduction = {
+				cost_reduction = 0.5
+				uses = 2
+				category = land_doctrine
+			}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_to_expand_the_width
+    icon = GFX_goal_continuous_reduce_training_time
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_national_army
+    }
+    relative_position_id = UST_national_army
+    x = -1
+    y = 1
+
+    completion_reward = {
+		if = {
+			limit = {
+				NOT = { has_completed_focus = UST_national_army }
+			}
+			effect_tooltip = {
+				swap_ideas = { remove_idea = UST_national_army_idea add_idea = UST_national_army_2 }
+			}
+		}
+		if = {
+			limit = {
+				has_idea = UST_national_army_idea
+			}
+			swap_ideas = { remove_idea = UST_national_army_idea add_idea = UST_national_army_2 }
+		}
+		if = {
+			limit = {
+				has_idea = UST_national_army_3
+			}
+			swap_ideas = { remove_idea = UST_national_army_3 add_idea = UST_national_army_4 }
+		}
+		custom_effect_tooltip = unlock_dec_ust_to_expand_the_width
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_to_expand_the_depth
+    icon = GFX_focus_SOV_the_road_of_life
+    cost = 6.5
+    ai_will_do = {
+        factor = 50
+    }
+    prerequisite = {
+        focus = UST_to_expand_the_width
+    }
+	prerequisite = {
+        focus = UST_to_catch_up
+    }
+    relative_position_id = UST_to_expand_the_width
+    x = 0
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_national_army_4 add_idea = UST_national_army_5 }
+		custom_effect_tooltip = unlock_dec_ust_to_expand_the_depth
+    }
+    search_filters = { }
+}
+
+#shared_focus = {
+#    id = UST_guns_for_hire
+#    icon = GFX_focus_ITA_moschettieri_del_duce
+#    cost = 2.2
+#    ai_will_do = {
+#        factor = 50
+#    }
+#    prerequisite = {
+#        focus = UST_army_debate
+#    }
+#	mutually_exclusive = {
+#		focus = UST_expand_militia_program
+#	}
+#	mutually_exclusive = {
+#		focus = UST_national_army
+#	}
+#	available = {
+#		always = no
+#		NOT = { has_completed_focus = UST_no_step_on_our_land }
+#		has_war = yes
+#	}
+#    relative_position_id = UST_army_debate
+#    x = 4
+#    y = 1
+#
+#    completion_reward = {
+#    }
+#    search_filters = { }
+#}
+#
+#shared_focus = {
+#    id = UST_international_arms_market
+#    icon = GFX_goal_generic_positive_trade_relations
+#    cost = 2.2
+#    ai_will_do = {
+#        factor = 50
+#    }
+#	prerequisite = {
+#        focus = UST_guns_for_hire
+#    }
+#    relative_position_id = UST_guns_for_hire
+#    x = -1
+#    y = 1
+#
+#    completion_reward = {
+#		
+#    }
+#    search_filters = { }
+#}
+#
+#shared_focus = {
+#    id = UST_they_only_know_gold
+#    icon = GFX_focus_hol_abandon_the_gold_standard
+#    cost = 2.2
+#    ai_will_do = {
+#        factor = 50
+#    }
+#	prerequisite = {
+#        focus = UST_guns_for_hire
+#    }
+#    relative_position_id = UST_guns_for_hire
+#    x = 1
+#    y = 1
+#
+#    completion_reward = {
+#		
+#    }
+#    search_filters = { }
+#}
+#
+#shared_focus = {
+#    id = UST_hire_huzar
+#    icon = xxx
+#    cost = 2.2
+#    ai_will_do = {
+#        factor = 50
+#    }
+#	prerequisite = {
+#        focus = UST_international_arms_market	
+#    }
+#	prerequisite = {
+#        focus = UST_they_only_know_gold
+#    }
+#    relative_position_id = UST_international_arms_market
+#    x = 0
+#    y = 1
+#
+#    completion_reward = {
+#		
+#    }
+#    search_filters = { }
+#}
+#
+#shared_focus = {
+#    id = UST_the_wolfs_are_up
+#    icon = GFX_focus_chi_army_reform
+#    cost = 2.2
+#    ai_will_do = {
+#        factor = 50
+#    }
+#	prerequisite = {
+#        focus = UST_international_arms_market
+#    }
+#	prerequisite = {
+#        focus = UST_they_only_know_gold
+#    }
+#    relative_position_id = UST_they_only_know_gold
+#    x = 0
+#    y = 1
+#
+#    completion_reward = {
+#		
+#    }
+#    search_filters = { }
+#}
+
+#################################
+
+shared_focus = {
+    id = UST_civil_war
+    icon = GFX_goal_generic_territory_or_war
+   cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		always = no
+	}
+    relative_position_id = UST_army_debate
+    x = 4
+    y = 7
+    completion_reward = {
+		add_ideas = UST_civil_war_idea_1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_they_are_back
+    icon = GFX_goal_generic_attack_allies
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		always = no
+	}
+    relative_position_id = UST_civil_war
+    x = 4
+    y = 0
+
+    completion_reward = {
+		custom_effect_tooltip = UST_they_are_back_tt
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_moblise_militia
+    icon = GFX_goal_generic_military_sphere
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_civil_war
+	}
+    relative_position_id = UST_civil_war
+    x = -1
+    y = 1
+
+    completion_reward = {
+		load_oob = UST_moblise_militia_focus_oob
+		add_stability = -0.1
+		add_war_support = -0.1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_even_hunting_rifle_is_a_gun
+    icon = GFX_focus_ETH_freedom_at_gunpoint
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_moblise_militia
+	}
+    relative_position_id = UST_moblise_militia
+    x = 0
+    y = 1
+
+    completion_reward = {
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_0
+			amount = 500
+		}
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_1
+			amount = 500
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_to_stablise_the_front
+    icon = GFX_focus_SWE_rapid_defense_force
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_civil_war
+	}
+	prerequisite = {
+		focus = UST_they_are_back
+	}
+    relative_position_id = UST_civil_war
+    x = 1
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_civil_war_idea_1 add_idea = UST_civil_war_idea_2 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_tools_to_win
+    icon = GFX_goal_generic_army_artillery2
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_to_stablise_the_front
+	}
+    relative_position_id = UST_to_stablise_the_front
+    x = 0
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_conscript_civilians
+    icon = GFX_focus_generic_limited_social_mobilization
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_civil_war
+	}
+	prerequisite = {
+		focus = UST_they_are_back
+	}
+    relative_position_id = UST_civil_war
+    x = 3
+    y = 1
+
+    completion_reward = {
+		add_manpower = 25000
+		add_stability = -0.1
+		add_war_support = -0.1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_size_assets
+    icon = GFX_focus_generic_total_war
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_conscript_civilians
+	}
+    relative_position_id = UST_conscript_civilians
+    x = 0
+    y = 1
+
+    completion_reward = {
+		random_owned_controlled_state = {
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_stability = -0.1
+		add_war_support = -0.1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_devils_of_east
+    icon = GFX_goal_tfv_saf_anti_colonialist_crusade
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_they_are_back
+	}
+    relative_position_id = UST_they_are_back
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_vs_ratio_idea
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_scorched_earth
+    icon = GFX_focus_POL_warsaw_main_station
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_devils_of_east
+	}
+    relative_position_id = UST_devils_of_east
+    x = 0
+    y = 1
+
+    completion_reward = {
+		336 = {
+			damage_building = {
+				type = infrastructure
+				damage = 5
+			}
+			damage_building = {
+				type = arms_factory
+				damage = 5
+			}
+			damage_building = {
+				type = industrial_complex
+				damage = 5
+			}
+			damage_building = {
+				type = air_base
+				damage = 5
+			}
+			damage_building = {
+				type = anti_air_building
+				damage = 5
+			}
+			damage_building = {
+				type = supply_node
+				damage = 1
+			}
+			damage_building = {
+				type = rail_way
+				damage = 5
+			}
+			add_manpower = -5000
+		}
+		365 = {
+			damage_building = {
+				type = infrastructure
+				damage = 5
+			}
+			damage_building = {
+				type = arms_factory
+				damage = 5
+			}
+			damage_building = {
+				type = industrial_complex
+				damage = 5
+			}
+			damage_building = {
+				type = air_base
+				damage = 5
+			}
+			damage_building = {
+				type = anti_air_building
+				damage = 5
+			}
+			damage_building = {
+				type = supply_node
+				damage = 1
+			}
+			damage_building = {
+				type = rail_way
+				damage = 5
+			}
+			add_manpower = -5000
+		}
+		add_stability = -0.1
+		add_war_support = -0.1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_the_flower_offensive
+    icon = GFX_focus_jap_manchurian_project
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_even_hunting_rifle_is_a_gun
+	}
+	prerequisite = {
+		focus = UST_tools_to_win
+	}
+	prerequisite = {
+		focus = UST_size_assets
+	}
+	prerequisite = {
+		focus = UST_scorched_earth
+	}
+    relative_position_id = UST_tools_to_win
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_timed_idea = { idea = UST_flower_offensive days = 90 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_total_emergency_powers
+    icon = GFX_focus_generic_spread_fascism
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_the_flower_offensive
+	}
+    relative_position_id = UST_the_flower_offensive
+    x = 0
+    y = 1
+
+    completion_reward = {
+		set_cosmetic_tag = UST_military_dictat
+		#swap_ideas = { remove_idea = UST_civil_war_idea_2 add_idea = UST_civil_war_idea_3 }
+		add_ideas = UST_civil_war_idea_3
+		add_ideas = UST_shatered_economy
+    }
+    search_filters = { }
+}
+
+#######################
+
+shared_focus = {
+    id = UST_issue_of_security
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_total_emergency_powers
+	}
+    relative_position_id = UST_total_emergency_powers
+    x = -7
+    y = 1
+
+    completion_reward = {
+		country_event = xxx
+		add_war_support = 0.1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_breach_the_tech_gap
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_issue_of_security
+	}
+    relative_position_id = UST_issue_of_security
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_tech_bonus = {
+			category = cat_modern_armor
+			bonus = 1
+			uses = 2
+		}
+		add_tech_bonus = {
+			category = cat_mechanized_equipment
+			bonus = 1
+			uses = 2
+		}
+		add_tech_bonus = {
+			category = artillery
+			bonus = 1
+			uses = 2
+		}
+		add_political_power = -100
+		if = {
+			limit = {
+				NOT = {
+					has_idea = UST_critical_expenses_2
+				}
+			}
+			add_ideas = UST_critical_expenses_2
+		}
+		else = {
+			swap_ideas = { remove_idea = UST_critical_expenses_2 add_idea = UST_critical_expenses_3 }
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_get_ready_what_we_can
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_issue_of_security
+	}
+    relative_position_id = UST_issue_of_security
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_tech_bonus = {
+			category = infantry_weapons
+			bonus = 1
+			uses = 2
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_idea = UST_critical_expenses_2
+				}
+			}
+			add_ideas = UST_critical_expenses_2
+		}
+		else = {
+			swap_ideas = { remove_idea = UST_critical_expenses_2 add_idea = UST_critical_expenses_3 }
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_arch_enemy
+    icon = GFX_focus_generic_war_belka
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_breach_the_tech_gap
+	}
+	prerequisite = {
+		focus = UST_get_ready_what_we_can
+	}
+    relative_position_id = UST_issue_of_security
+    x = 0
+    y = 2
+
+    completion_reward = {
+		add_ideas = UST_vs_belka_idea
+		add_opinion_modifier = {
+			target = BLK
+			modifier = considers_threat 
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_last_man_woman
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_arch_enemy
+	}
+    relative_position_id = UST_arch_enemy
+    x = -2
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_last_man_woman_idea
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_break_armored_fist
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_arch_enemy
+	}
+    relative_position_id = UST_arch_enemy
+    x = 0
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_cover_the_frontlines
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_arch_enemy
+	}
+    relative_position_id = UST_arch_enemy
+    x = 2
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_weapons_for_the_front
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_we_will_stand_ethernal
+    icon = GFX_focus_hol_war_on_pacifism
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_last_man_woman
+	}
+	prerequisite = {
+		focus = UST_break_armored_fist
+	}
+	available = {
+		has_war_with = BLK
+	}
+    relative_position_id = UST_last_man_woman
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_forged_in_war_idea
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_war_plan_vesuvius
+    icon = GFX_focus_spa_the_war_of_vengeance
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_break_armored_fist
+	}
+	prerequisite = {
+		focus = UST_cover_the_frontlines
+	}
+    relative_position_id = UST_break_armored_fist
+    x = 1
+    y = 1
+	
+	will_lead_to_war_with = REC
+	will_lead_to_war_with = GEB
+	
+    completion_reward = {
+		declare_war_on = {
+			target = REC
+			type = annex_everything
+		}
+		declare_war_on = {
+			target = GEB
+			type = annex_everything
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_hole_in_the_wall
+    icon = GFX_focus_wonderweapons
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_we_will_stand_ethernal
+	}
+	prerequisite = {
+		focus = UST_war_plan_vesuvius
+	}
+    relative_position_id = UST_we_will_stand_ethernal
+    x = 1
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_deal_with_fato
+    icon = GFX_focus_wonderweapons
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	mutually_exclusive = {
+		focus = UST_just_another_threat
+	}
+	prerequisite = {
+		focus = UST_hole_in_the_wall
+	}
+    relative_position_id = UST_hole_in_the_wall
+    x = -1
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_just_another_threat
+    icon = GFX_focus_wonderweapons
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	mutually_exclusive = {
+		focus = UST_deal_with_fato
+	}
+	prerequisite = {
+		focus = UST_hole_in_the_wall
+	}
+    relative_position_id = UST_hole_in_the_wall
+    x = 1
+    y = 1
+
+    completion_reward = {
+		declare_war_on = { 
+			type = annex_everything 
+			target = FAT 
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_pax_oseana
+    icon = GFX_focus_wonderweapons
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_deal_with_fato
+		focus = UST_just_another_threat
+	}
+    relative_position_id = UST_deal_with_fato
+    x = 1
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_one_last_time_into_the_breach
+    icon = GFX_focus_hol_war_on_pacifism
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_pax_oseana
+	}
+    relative_position_id = UST_pax_oseana
+    x = 0
+    y = 1
+
+    completion_reward = {
+		UST = {
+            declare_war_on = {
+                target = OSE
+                type = annex_everything
+            }
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_issue_of_nation
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_total_emergency_powers
+	}
+    relative_position_id = UST_total_emergency_powers
+    x = 0
+    y = 1
+
+    completion_reward = {
+		country_event = xxx
+		add_stability = 0.05
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_left_of_nation
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_issue_of_nation
+	}
+    relative_position_id = UST_issue_of_nation
+    x = -1
+    y = 1
+
+    completion_reward = {
+		country_event = xxx
+		add_stability = 0.05
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_left_of_economy
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_issue_of_nation
+	}
+    relative_position_id = UST_issue_of_nation
+    x = 1
+    y = 1
+
+    completion_reward = {
+		country_event = xxx
+		add_stability = 0.05
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_full_martial_law
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_left_of_nation
+	}
+    relative_position_id = UST_left_of_nation
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_army_pasrt_of_state_idea_1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_crack_on_radicals
+    icon = GFX_focus_eng_move_to_secure_the_dominions
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		has_completed_focus = UST_pardon_the_left
+	}
+	prerequisite = {
+		focus = UST_full_martial_law
+	}
+    relative_position_id = UST_full_martial_law
+    x = 0
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_civil_war_idea_5 add_idea = UST_civil_war_idea_6 }
+		add_manpower = -20000
+		add_political_power = -100
+		add_stability = 0.1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_no_such_thing_as_civilians
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_crack_on_radicals
+	}
+    relative_position_id = UST_crack_on_radicals
+    x = 0
+    y = 1
+
+    completion_reward = {
+		remove_ideas = UST_civil_war_idea_6
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_reform_the_gov
+    icon = GFX_focus_generic_industrialists
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_left_of_nation
+	}
+	prerequisite = {
+		focus = UST_left_of_economy
+	}
+    relative_position_id = UST_left_of_nation
+    x = 1
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_civil_war_idea_3 add_idea = UST_civil_war_idea_4 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_pardon_the_left
+    icon = GFX_focus_eng_concessions_to_the_trade_unions
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_reform_the_gov
+	}
+    relative_position_id = UST_reform_the_gov
+    x = 0
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_civil_war_idea_4 add_idea = UST_civil_war_idea_5 }
+		add_popularity = { ideology = democratic popularity = 0.1 }
+		add_popularity = { ideology = communism popularity = 0.1 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_democracy_in_authoritarianism
+    icon = GFX_focus_ETH_re-convene_the_parliament
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_pardon_the_left
+	}
+    relative_position_id = UST_pardon_the_left
+    x = 0
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_democracy_in_auto_idea
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_repair_the_damage
+    icon = GFX_focus_FIN_finnish_federation_of_trade_unions
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_left_of_economy
+	}
+    relative_position_id = UST_left_of_economy
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_timed_idea = { idea = UST_repair_damage_idea days = 365 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_redirect_military_to_fixing
+    icon = GFX_focus_generic_full_employment
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_repair_the_damage
+	}
+    relative_position_id = UST_repair_the_damage
+    x = 0
+    y = 1
+
+    completion_reward = {
+		add_stability = 0.05
+		add_war_support = 0.05
+		swap_ideas = { remove_idea = UST_shatered_economy add_idea = UST_shatered_economy_2 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_focus_assets_on_revitalisation
+    icon = xxx
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_redirect_military_to_fixing
+	}
+    relative_position_id = UST_redirect_military_to_fixing
+    x = 0
+    y = 1
+
+    completion_reward = {
+		swap_ideas = { remove_idea = UST_shatered_economy_2 add_idea = UST_shatered_economy_3 }
+		custom_effect_tooltip = UST_focus_assets_on_revitalisation_tt
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_issue_of_integration
+    icon = GFX_focus_eng_decolonization
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_total_emergency_powers
+	}
+    relative_position_id = UST_total_emergency_powers
+    x = 7
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_land_of_ratio
+    icon = GFX_focus_generic_conflict_ustio_ratio
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_issue_of_integration
+	}
+    relative_position_id = UST_issue_of_integration
+    x = -1
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_expand_mp
+    icon = GFX_focus_generic_commonwealth_build_infantry
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_land_of_ratio
+	}
+    relative_position_id = UST_land_of_ratio
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_military_occupation_police
+		add_tech_bonus = {
+			category = military_police_tech
+			bonus = 0.5
+			uses = 2
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_colonize_dormakaj
+    icon = GFX_focus_SWI_dissolve_the_federal_council
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_expand_mp
+	}
+    relative_position_id = UST_expand_mp
+    x = 0
+    y = 1
+
+    completion_reward = {
+		306 = {
+			add_core_of = UST
+		}
+		add_stability = -0.1
+		add_political_power = -50
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_paint_them_as_agressors
+    icon = GFX_focus_ger_strike_at_the_source
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_land_of_ratio
+	}
+    relative_position_id = UST_land_of_ratio
+    x = 1
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_trasfer_industry
+    icon = GFX_focus_generic_tank_production
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_paint_them_as_agressors
+	}
+    relative_position_id = UST_paint_them_as_agressors
+    x = 0
+    y = 1
+
+    completion_reward = {
+		RAT = {
+			add_ideas = RAT_UST_military_occupation_1
+		}
+		add_tech_bonus = {
+			category = industry
+			uses = 2
+			bonus = 0.33
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_partial_military_occupation
+    icon = GFX_focus_SWI_embrace_panoramaheim
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_colonize_dormakaj
+	}
+	prerequisite = {
+		focus = UST_trasfer_industry
+	}
+    relative_position_id = UST_trasfer_industry
+    x = -1
+    y = 1
+
+    completion_reward = {
+		RAT = {
+			swap_ideas = { remove_idea = RAT_UST_military_occupation_1 add_idea = RAT_UST_military_occupation_2 }
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_land_of_gebet_and_recta
+	icon = GFX_focus_generic_develop_iceland_silhouette
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_issue_of_integration
+	}
+    relative_position_id = UST_issue_of_integration
+    x = 3
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_ensure_local_freedoms
+	icon = GFX_focus_prc_agrarian_socialism
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_land_of_gebet_and_recta
+	}
+    relative_position_id = UST_land_of_gebet_and_recta
+    x = -1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_ratio_autonomy
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_rectan_autonomy
+	icon = GFX_focus_generic_soviet_politics
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_ensure_local_freedoms
+	}
+    relative_position_id = UST_ensure_local_freedoms
+    x = 0
+    y = 1
+
+    completion_reward = {
+		345 = {
+			add_compliance = 10
+			add_resistance = -10
+		}
+		add_popularity = { ideology = communism popularity = 0.1 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_deal_with_aristocrats
+	icon = GFX_focus_generic_monarchy_1
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_land_of_gebet_and_recta
+	}
+    relative_position_id = UST_land_of_gebet_and_recta
+    x = 1
+    y = 1
+
+    completion_reward = {
+		add_ideas = UST_deal_with_gebet_aristocracy
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_integration_of_authority
+	icon = GFX_focus_generic_self_management
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_deal_with_aristocrats
+	}
+    relative_position_id = UST_deal_with_aristocrats
+    x = 0
+    y = 1
+
+    completion_reward = {
+		263 = {
+			add_compliance = 10
+			add_resistance = -10
+		}
+		312 = {
+			add_compliance = 10
+			add_resistance = -10
+		}
+		add_popularity = { ideology = neutrality popularity = 0.1 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_part_of_us
+	icon = GFX_focus_SWE_form_rfsu
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_rectan_autonomy
+	}
+	prerequisite = {
+		focus = UST_integration_of_authority
+	}
+    relative_position_id = UST_integration_of_authority
+    x = -1
+    y = 1
+
+    completion_reward = {
+		custom_effect_tooltip = UST_part_of_us_tt
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_the_lands_of_belka
+	icon = GFX_goal_OSE_belka_problem
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_issue_of_integration
+	}
+    relative_position_id = UST_issue_of_integration
+    x = 7
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_like_they_like_us
+	icon = GFX_goal_tfv_saf_anti_colonialist_crusade
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_the_lands_of_belka
+	}
+    relative_position_id = UST_the_lands_of_belka
+    x = -1
+    y = 1
+
+    completion_reward = {
+		every_owned_state = {
+			limit = {
+				is_controlled_by_ROOT_or_ally = yes
+				is_core_of = BLK
+				NOT = { is_core_of = UST }
+				NOT = { is_core_of = FAT }
+				NOT = { is_core_of = GEB }
+				NOT = { is_core_of = SAP }
+				NOT = { is_core_of = SBK }
+				NOT = { is_core_of = REC }
+			}
+			damage_building = {
+				type = arms_factory
+				damage = 1
+			}
+			damage_building = {
+				type = industrial_complex
+				damage = 1
+			}
+			damage_building= {
+				type = infrastructure
+				damage = 1
+			}
+			add_resistance = 20
+			add_manpower = -10000
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_dismantle_their_might
+	icon = GFX_goal_tfv_saf_support_ossebrandwag
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_like_they_like_us
+	}
+    relative_position_id = UST_like_they_like_us
+    x = 0
+    y = 1
+
+    completion_reward = {
+		set_variable = { UST.factories_to_give = 0 }
+		for_each_scope_loop = {
+			array = UST.owned_controlled_states
+			if = {
+				limit = {
+					is_controlled_by_ROOT_or_ally = yes
+					is_core_of = BLK
+					NOT = { is_core_of = UST }
+					NOT = { is_core_of = FAT }
+					NOT = { is_core_of = GEB }
+					NOT = { is_core_of = SAP }
+					NOT = { is_core_of = SBK }
+					NOT = { is_core_of = REC }
+					AND = {
+						arms_factory > 0
+						industrial_complex > 0
+					}
+				}
+				add_to_variable = { UST.factories_to_give = 1 }
+			}
+		}
+		every_owned_state = {
+			limit = {
+				is_controlled_by_ROOT_or_ally = yes
+				is_core_of = BLK
+				NOT = { is_core_of = UST }
+				NOT = { is_core_of = FAT }
+				NOT = { is_core_of = GEB }
+				NOT = { is_core_of = SAP }
+				NOT = { is_core_of = SBK }
+				NOT = { is_core_of = REC }
+				AND = {
+					arms_factory > 0
+					industrial_complex > 0
+				}
+			}
+			remove_building = {
+				type = arms_factory
+				level = 1
+			}
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+		}
+		custom_effect_tooltip = UST_dismantle_their_might_tt
+		while_loop_effect = {
+			limit = {
+				check_variable = { UST:factories_to_give > 0 }
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = UST
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_to_variable = { UST.factories_to_give = -1 }
+		}
+		clear_variable = UST.factories_to_give
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_diffrent_aproach
+	icon = GFX_goal_continuous_increase_nu
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_the_lands_of_belka
+	}
+    relative_position_id = UST_the_lands_of_belka
+    x = 1
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_reconstruction_investments
+	icon = GFX_goal_generic_construct_civilian
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_diffrent_aproach
+	}
+    relative_position_id = UST_diffrent_aproach
+    x = 0
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_south_and_north
+	icon = GFX_focus_generic_diplomatic_treaty
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_dismantle_their_might
+	}
+	prerequisite = {
+		focus = UST_reconstruction_investments
+	}
+    relative_position_id = UST_reconstruction_investments
+    x = -1
+    y = 1
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = UST_proclaim_second_ustian_republic
+	icon = GFX_focus_ICE_iceland_defense_force
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+		focus = UST_no_such_thing_as_civilians
+	}
+	prerequisite = {
+		focus = UST_democracy_in_authoritarianism
+	}
+	prerequisite = {
+		focus = UST_focus_assets_on_revitalisation
+	}
+	prerequisite = {
+		focus = UST_partial_military_occupation
+	}
+	prerequisite = {
+		focus = UST_part_of_us
+	}
+	prerequisite = {
+		focus = UST_south_and_north
+	}
+    relative_position_id = UST_focus_assets_on_revitalisation
+    x = 2
+    y = 2
+
+    completion_reward = {
+    }
+    search_filters = { }
+}
+
+#########
+
+shared_focus = {
+    id = UST_mercs_are_up
+	icon = GFX_focus_spr_torchbearers_of_tomorrow
+    cost = 4.3
+    ai_will_do = {
+        factor = 50
+    }
+	available = {
+		always = no
+	}
+    relative_position_id = UST_start
+    x = 0
+    y = 15
+
+    completion_reward = {
+		custom_effect_tooltip = UST_mercs_are_up_tt
+    }
+    search_filters = { }
+}

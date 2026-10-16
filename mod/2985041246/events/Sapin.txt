@@ -1,0 +1,1164 @@
+add_namespace = sapin
+add_namespace = sapin_politics
+add_namespace = sapin_election
+add_namespace = sapin_diplomacy
+add_namespace = sapin_civil_war
+
+country_event = { #sapinish parliamentary elections
+	id = sapin_politics.1
+	title = sapin_politics.1.t
+	desc = sapin_politics.1.desc
+	picture = GFX_report_event_election_vote
+	
+	is_triggered_only = yes
+
+	option = { # Republicans Win
+		name = sapin_politics.1.a
+		set_politics = {
+			ruling_party = democratic
+			elections_allowed = yes
+		}
+		complete_national_focus = sap_1991_parliamentary_elections
+		remove_ideas = sap_dysfunctional_coalition
+	}
+	option = { # Monarchists Win
+		name = sapin_politics.1.b
+		set_politics = {
+			ruling_party = monarchism
+			elections_allowed = yes
+		}
+		complete_national_focus = sap_1991_parliamentary_elections
+		remove_ideas = sap_dysfunctional_coalition
+	}
+}
+
+country_event = { # Republican agitation
+	id = sapin_politics.2
+	title = sapin_politics.2.t
+	desc = sapin_politics.2.desc
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = { # Let them complain
+		name = sapin_politics.2.a
+		add_ideas = sap_republican_agitation
+	}
+}
+
+country_event = { # Random political event
+	id = sapin_politics.3
+	title = sapin_politics.3.t
+	desc = sapin_politics.3.desc
+	picture = placeholder
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				NOT = {
+					has_country_flag = SAP_politics_calmed
+				}
+				random_list = {
+					10 = { # MPs break for Republicans
+						country_event = sapin_politics.4
+					}
+					10 = { # MPs break for Monarchists
+						country_event = sapin_politics.5
+					}
+					10 = { # Moderates make joint declaration
+						country_event = sapin_politics.6
+					}
+					10 = { # Extremists derail session
+						country_event = sapin_politics.7
+					}
+					10 = { # Moderates join against extremists
+						country_event = sapin_politics.8
+					}
+					10 = { # Extremists join against moderates
+						country_event = sapin_politics.9
+					}
+					10 = { # Republican delivers rousing speech
+						country_event = sapin_politics.10
+					}
+					10 = { # Monarchist delivers rousing speech
+						country_event = sapin_politics.11
+					}
+					10 = { # Leader speaks in parliament
+						country_event = sapin_politics.12
+					}
+					10 = { # Extremist MP censured
+						country_event = sapin_politics.13
+					}
+				}
+			}
+		}
+	}
+}
+
+country_event = { # MPs break for Republicans
+	id = sapin_politics.4
+	title = sapin_politics.4.t
+	desc = sapin_politics.4.desc
+	picture = GFX_report_event_SWI_parliament_members
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = sap_political_crisis_over
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = sap_center_united
+					}
+					country_event = {
+						id = sapin_politics.3
+						days = 14
+						random_days = 63
+					}
+				}
+				else = {
+					country_event = {
+						id = sapin_politics.3
+						days = 7
+						random_days = 28
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = sapin_politics.4.a
+		add_power_balance_value = {
+            id = SAP_power_balance
+            value = -0.05
+        }
+	}
+}
+
+country_event = { # MPs break for Monarchists
+	id = sapin_politics.5
+	title = sapin_politics.5.t
+	desc = sapin_politics.5.desc
+	picture = GFX_report_event_SWI_parliament_members
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = sap_political_crisis_over
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = sap_center_united
+					}
+					country_event = {
+						id = sapin_politics.3
+						days = 14
+						random_days = 63
+					}
+				}
+				else = {
+					country_event = {
+						id = sapin_politics.3
+						days = 7
+						random_days = 28
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = sapin_politics.5.a
+		add_power_balance_value = {
+            id = SAP_power_balance
+            value = 0.05
+        }
+	}
+}
+
+country_event = { # Moderates make joint declaration
+	id = sapin_politics.6
+	title = sapin_politics.6.t
+	desc = sapin_politics.6.desc
+	picture = GFX_report_event_tur_ataturk_inonu_parliament
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = sap_political_crisis_over
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = sap_center_united
+					}
+					country_event = {
+						id = sapin_politics.3
+						days = 14
+						random_days = 63
+					}
+				}
+				else = {
+					country_event = {
+						id = sapin_politics.3
+						days = 7
+						random_days = 28
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = sapin_politics.6.a
+		add_stability = 0.02
+	}
+}
+
+country_event = { # Extremists derail session
+	id = sapin_politics.7
+	title = sapin_politics.7.t
+	desc = sapin_politics.7.desc
+	picture = GFX_report_event_ITA_democratic_parlament
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = sap_political_crisis_over
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = sap_center_united
+					}
+					country_event = {
+						id = sapin_politics.3
+						days = 14
+						random_days = 63
+					}
+				}
+				else = {
+					country_event = {
+						id = sapin_politics.3
+						days = 7
+						random_days = 28
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = sapin_politics.7.a
+		add_stability = -0.02
+	}
+}
+
+country_event = { # Moderates join against extremists
+	id = sapin_politics.8
+	title = sapin_politics.8.t
+	desc = sapin_politics.8.desc
+	picture = GFX_report_event_tur_ataturk_inonu_parliament
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = sap_political_crisis_over
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = sap_center_united
+					}
+					country_event = {
+						id = sapin_politics.3
+						days = 14
+						random_days = 63
+					}
+				}
+				else = {
+					country_event = {
+						id = sapin_politics.3
+						days = 7
+						random_days = 28
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = sapin_politics.8.a
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = monarchism
+			popularity = 0.05
+		}
+		if = {
+			limit = {
+				power_balance_value = {
+					id = SAP_power_balance
+					value > 0
+				}
+			}
+			add_power_balance_value = {
+				id = SAP_power_balance
+				value = -0.05
+			}
+		}
+		else = {
+			add_power_balance_value = {
+				id = SAP_power_balance
+				value = 0.05
+			}
+		}
+		add_stability = 0.01
+	}
+}
+
+country_event = { # Extremists join against moderates
+	id = sapin_politics.9
+	title = sapin_politics.9.t
+	desc = sapin_politics.9.desc
+	picture = GFX_report_event_ITA_democratic_parlament
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = sap_political_crisis_over
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = sap_center_united
+					}
+					country_event = {
+						id = sapin_politics.3
+						days = 14
+						random_days = 63
+					}
+				}
+				else = {
+					country_event = {
+						id = sapin_politics.3
+						days = 7
+						random_days = 28
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = sapin_politics.9.a
+		add_popularity = {
+			ideology = communism
+			popularity = 0.025
+		}
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.025
+		}
+		add_stability = -0.015
+	}
+}
+
+country_event = { # Republican delivers rousing speech
+	id = sapin_politics.10
+	title = sapin_politics.10.t
+	desc = sapin_politics.10.desc
+	picture = GFX_report_event_romania_parliament
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = sap_political_crisis_over
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = sap_center_united
+					}
+					country_event = {
+						id = sapin_politics.3
+						days = 14
+						random_days = 63
+					}
+				}
+				else = {
+					country_event = {
+						id = sapin_politics.3
+						days = 7
+						random_days = 28
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = sapin_politics.10.a
+		add_power_balance_value = {
+            id = SAP_power_balance
+            value = -0.075
+        }
+	}
+}
+
+country_event = { # Monarchist delivers rousing speech
+	id = sapin_politics.11
+	title = sapin_politics.11.t
+	desc = sapin_politics.11.desc
+	picture = GFX_report_event_romania_parliament
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = sap_political_crisis_over
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = sap_center_united
+					}
+					country_event = {
+						id = sapin_politics.3
+						days = 14
+						random_days = 63
+					}
+				}
+				else = {
+					country_event = {
+						id = sapin_politics.3
+						days = 7
+						random_days = 28
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = sapin_politics.11.a
+		add_power_balance_value = {
+            id = SAP_power_balance
+            value = 0.075
+        }
+	}
+}
+
+country_event = { # Leader speaks in parliament
+	id = sapin_politics.12
+	title = sapin_politics.12.t
+	desc = sapin_politics.12.desc
+	picture = GFX_report_event_romania_parliament
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = sap_political_crisis_over
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = sap_center_united
+					}
+					country_event = {
+						id = sapin_politics.3
+						days = 14
+						random_days = 63
+					}
+				}
+				else = {
+					country_event = {
+						id = sapin_politics.3
+						days = 7
+						random_days = 28
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = sapin_politics.12.a
+		add_stability = 0.02
+		add_political_power = 50
+	}
+}
+
+country_event = { # Extremist MP censured
+	id = sapin_politics.13
+	title = sapin_politics.13.t
+	desc = sapin_politics.13.desc
+	picture = GFX_report_event_hungary_parliament
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = sap_political_crisis_over
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = sap_center_united
+					}
+					country_event = {
+						id = sapin_politics.3
+						days = 14
+						random_days = 63
+					}
+				}
+				else = {
+					country_event = {
+						id = sapin_politics.3
+						days = 7
+						random_days = 28
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = sapin_politics.13.a
+		add_stability = -0.02
+		add_political_power = -50
+		random = {
+			chance = 50
+			add_popularity = {
+				ideology = communism
+				popularity = -0.02
+			}
+		}
+		random = {
+			chance = 50
+			add_popularity = {
+				ideology = fascism
+				popularity = -0.02
+			}
+		}
+	}
+}
+
+country_event = { #Prince of Sapin (Ernesto castro) grows up
+	id = sapin.1
+	title = sapin.1.t
+	desc = sapin.1.desc
+	picture = GFX_report_event_bul_prince_simeon
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			SAP_ernesto_castro = {
+				add_country_leader_role = {
+					promote_leader = yes
+					country_leader = {
+						ideology=constitutional_monarchy 
+						traits = { }
+						expire="2050.1.1.1"
+					}
+				}
+				add_country_leader_role = {
+					promote_leader = yes
+					country_leader = {
+						ideology=liberalism 
+						traits = { }
+						expire="2050.1.1.1"
+					}
+				}
+				add_country_leader_role = {
+					promote_leader = yes
+					country_leader = {
+						ideology=democratic_socialism 
+						traits = { }
+						expire="2050.1.1.1"
+					}
+				}
+				add_country_leader_role = {
+					promote_leader = yes
+					country_leader = {
+						ideology=religious_nationalism 
+						traits = { }
+						expire="2050.1.1.1"
+					}
+				}
+				add_country_leader_role = {
+					promote_leader = yes
+					country_leader = {
+						ideology=conservatism_na 
+						traits = { }
+						expire="2050.1.1.1"
+					}
+				}
+			}
+		}
+	}
+
+	option = { # If Fascist Regent
+		name = sapin.1.a
+		trigger = {
+			SAP_alphonso_espinal = {
+				is_political_advisor = yes
+			}
+		}
+		add_country_leader_trait  = falangist_figurehead
+	}
+	option = { # If Democratic Regent
+		name = sapin.1.b
+		trigger = {
+			SAP_domingo_escalona = {
+				is_political_advisor = yes
+			}
+		}
+		add_country_leader_trait  = resolute_social_democrat
+	}
+	option = { # If Monarchist Regent
+		name = sapin.1.c
+		trigger = {
+			SAP_ramira_arguijo = {
+				is_political_advisor = yes
+			}
+		}
+		add_country_leader_trait  = staunch_monarchist
+	}
+	option = { # If Militarist Regent
+		name = sapin.1.desc
+		trigger = {
+			SAP_raul_de_haro = {
+				is_political_advisor = yes
+			}
+		}
+		add_country_leader_trait  = SAP_traditionalist_militarist
+	}
+}
+
+country_event = { # Ustio-Ratio Situation
+	id = sapin_diplomacy.1
+	title = sapin_diplomacy.1.t
+	desc = sapin_diplomacy.1.desc
+	picture = GFX_report_event_saf_soldiers_2
+	
+	is_triggered_only = yes
+
+	option = { # Side with Ustio (Canonical)
+		name = sapin_diplomacy.1.a
+		set_country_flag = sap_sided_with_ustio_flag
+		add_ideas = sap_supported_ustio
+		add_opinion_modifier = {
+			target = UST
+			modifier = tyrann_dispute_support
+		}
+		reverse_add_opinion_modifier = {
+			target = UST
+			modifier = tyrann_dispute_support
+		}
+		UST = {
+			country_event  = sapin_diplomacy.2
+		}
+		effect_tooltip = {
+			UST = {
+				add_political_power = 150
+				add_war_support = 0.025
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 1000
+					producer = SAP
+				}
+			}
+		}
+		# For Feveros: Add effects here based on the content for that situation
+	}
+	option = { # Side with Ratio
+		name = sapin_diplomacy.1.b
+		set_country_flag = sap_sided_with_ustio_flag
+		add_ideas = sap_supported_ratio
+		RAT = {
+			country_event  = sapin_diplomacy.2
+		}
+		effect_tooltip = {
+			RAT = {
+				add_political_power = 150
+				add_war_support = 0.025
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 1000
+					producer = SAP
+				}
+			}
+		}
+		# For Feveros: Add effects here based on the content for that situation
+	}
+}
+country_event = { # Sapin sides with us!
+	id = sapin_diplomacy.2
+	title = sapin_diplomacy.2.t
+	desc = sapin_diplomacy.2.desc
+	picture = GFX_report_event_gre_allied_diplomacy
+	
+	is_triggered_only = yes
+
+	option = { # Yippee!
+		name = sapin_diplomacy.2.a
+		add_political_power = 150
+		add_war_support = 0.025
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1000
+			producer = SAP
+		}
+	}
+}
+country_event = { # The Belka Problem
+	id = sapin_diplomacy.3
+	title = sapin_diplomacy.3.t
+	desc = sapin_diplomacy.3.desc
+	picture = GFX_report_event_german_troops
+	
+	is_triggered_only = yes
+
+	option = { # Begin war preparations (Canonical)
+		name = sapin_diplomacy.3.a
+		add_timed_idea = {
+			idea = sap_pre_belkan_war_mobilization
+			days = 365
+		}
+	}
+	option = { # Seek peace with the Belkans
+		name = sapin_diplomacy.3.b
+		remove_state_core = 604
+		BLK = {
+			country_event = sapin_diplomacy.4
+		}
+	}
+}
+country_event = { # Sapin forgoes Futuro claims
+	id = sapin_diplomacy.4
+	title = sapin_diplomacy.4.t
+	desc = sapin_diplomacy.4.desc
+	picture = GFX_report_event_gre_diplomacy
+	
+	is_triggered_only = yes
+
+	option = {
+		name = sapin_diplomacy.4.a
+		add_stability = 0.01
+	}
+}
+country_event = { # Our friends in Oured
+	id = sapin_diplomacy.5
+	title = sapin_diplomacy.5.t
+	desc = sapin_diplomacy.5.desc
+	picture = GFX_report_event_generic_handshake
+	
+	is_triggered_only = yes
+
+	option = { # We stand by our historic ally
+		name = sapin_diplomacy.5.a
+		ai_chance = {
+			base = 1000
+		}
+		set_country_flag = sap_stayed_with_osea_flag
+		OSE =  {
+			news_event = sapin_diplomacy.6
+		}
+	}
+	option = { # We must go on our own path
+		name = sapin_diplomacy.5.b
+		ai_chance = {
+			base = 0
+		}
+		set_country_flag = sap_on_its_own_path_flag
+		remove_opinion_modifier = {
+			target = OSE
+			modifier = historical_friends
+		}
+		OSE =  {
+			news_event = sapin_diplomacy.7
+		}
+	}
+}
+news_event = { # Sapin announces further cooperation with Osea
+	id = sapin_diplomacy.6
+	title = sapin_diplomacy.6.t
+	desc = sapin_diplomacy.6.desc
+	picture = GFX_news_event_canadian_soldiers
+
+	is_triggered_only = yes
+
+	option = { # Good news!
+		name = sapin_diplomacy.6.a
+	}
+}
+news_event = { # Sapin announces independent foreign policy
+	id = sapin_diplomacy.7
+	title = sapin_diplomacy.7.t
+	desc = sapin_diplomacy.7.desc
+	picture = GFX_news_event_spr_francoist_civil_war_victory
+	
+	is_triggered_only = yes
+
+	option = { # Not good...
+		name = sapin_diplomacy.7.a
+		remove_opinion_modifier = {
+			target = SAP
+			modifier = historical_friends
+		}
+	}
+}
+news_event = { # Sapin announces NOTO
+	id = sapin_diplomacy.8
+	title = sapin_diplomacy.8.t
+	desc = sapin_diplomacy.8.desc
+	picture = GFX_news_event_generic_sign_treaty1
+	
+	is_triggered_only = yes
+
+	option = { # Interesting development
+		name = sapin_diplomacy.8.a
+		trigger = {
+			NOT = {
+				original_tag = OSE
+			}
+		}
+	}
+	option = { # This is our backyard!
+		name = sapin_diplomacy.8.b
+		trigger = {
+			original_tag = OSE
+		}
+	}
+}
+country_event = { # Joining NOTO?
+	id = sapin_diplomacy.9
+	title = sapin_diplomacy.9.t
+	desc = sapin_diplomacy.9.desc
+	picture = GFX_report_event_gre_allied_diplomacy_military
+	
+	is_triggered_only = yes
+
+	option = { # We shall join
+		name = sapin_diplomacy.9.a
+		ai_chance = {
+			base = 0
+			modifier = {
+				country_exists = SAP
+				add = opinion@SAP
+			}
+			modifier = {
+				is_ai = yes
+				add = 60
+			}
+		}
+		trigger = {
+			NOT = {
+				is_in_faction = yes
+			}
+		}
+		FROM = {
+			add_to_faction = ROOT
+			country_event = sapin_diplomacy.13
+		}
+	}
+	option = { # Thanks but no thanks
+		name = sapin_diplomacy.9.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				has_opinion = {
+					target = FROM
+					value < 0
+				}
+				set_temp_variable = { negative_sap_opinion = opinion@SAP }
+				multiply_temp_variable = { negative_sap_opinion = -1 }
+				add = negative_sap_opinion
+			}
+			modifier = {
+				is_ai = yes
+				add = 10
+			}
+			modifier = {
+				NOT = {
+					country_exists = SAP
+				}
+				add = 100
+			}
+		}
+		FROM = {
+			country_event = sapin_diplomacy.12
+		}
+	}
+}
+country_event = { # Our Perbla Position
+	id = sapin_diplomacy.10
+	title = sapin_diplomacy.10.t
+	desc = sapin_diplomacy.10.desc
+	picture = GFX_report_event_generic_military_parade
+	
+	is_triggered_only = yes
+
+	option = { # They are a menace
+		name = sapin_diplomacy.10.a
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = opinion@OSE
+				country_exists = OSE
+			}
+		}
+		send_embargo = PBL
+	}
+	option = { # They are a fellow monarchy
+		name = sapin_diplomacy.10.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = opinion@PBL
+				country_exists = PBL
+			}
+		}
+		give_market_access = PBL
+	}
+}
+country_event = { # Our Border Policy
+	id = sapin_diplomacy.11
+	title = sapin_diplomacy.11.t
+	desc = sapin_diplomacy.11.desc
+	picture = GFX_report_event_riot_police_poland
+	
+	is_triggered_only = yes
+
+	option = { # Loosen our immigration restrictions
+		name = sapin_diplomacy.11.a
+		add_ideas = sap_increased_immigration
+	}
+	option = { # Tighten our immigration restrictions
+		name = sapin_diplomacy.11.b
+		add_ideas = sap_decreased_immigration
+	}
+}
+country_event = { # NOTO Invitee Says No
+	id = sapin_diplomacy.12
+	title = sapin_diplomacy.12.t
+	desc = sapin_diplomacy.12.desc
+	picture = GFX_report_event_riot_police_poland
+	
+	is_triggered_only = yes
+
+	option = {
+		name = sapin_diplomacy.12.a
+	}
+}
+country_event = { # NOTO Invitee Says Yes
+	id = sapin_diplomacy.13
+	title = sapin_diplomacy.13.t
+	desc = sapin_diplomacy.13.desc
+	picture = GFX_report_event_riot_police_poland
+	
+	is_triggered_only = yes
+
+	option = {
+		name = sapin_diplomacy.13.a
+	}
+}
+country_event = { # Republican Revolt
+	id = sapin_civil_war.1
+	title = sapin_civil_war.1.t
+	desc = sapin_civil_war.1.desc
+	picture = GFX_report_event_spain_civil_war_volunteers_01
+	
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					has_country_flag = sap_republicans_split # liberals and socialists have split
+				}
+				start_civil_war = {
+					ideology = communism
+					size = party_popularity@communism
+					set_country_flag = SAP_REPUBLICAN_REVOLT
+				}
+				SAR = {
+					set_cosmetic_tag = SAP_REPUBLIC
+					add_ideas = sap_milicia_popular
+				}
+			}
+			else = {
+				set_temp_variable = { republican_revolt_size = party_popularity@communism }
+				add_to_temp_variable = { republican_revolt_size = party_popularity@democratic }
+				set_temp_variable = { sap_republican_revolt_communism_size = party_popularity@communism }
+				divide_temp_variable = { sap_republican_revolt_communism_size = republican_revolt_size }
+				start_civil_war = {
+					ideology = democratic
+					size = republican_revolt_size
+					set_country_flag = SAP_REPUBLICAN_REVOLT
+				}
+				SAR = {
+					set_cosmetic_tag = SAP_REPUBLIC
+					add_popularity = {
+						ideology = communism
+						popularity = sap_republican_revolt_communism_size
+					}
+					add_ideas = {
+						sap_fuerzas_de_defensa_local
+						sap_milicia_popular
+					}
+				}
+				set_temp_variable = { communism_pop_loss = party_popularity@communism }
+				multiply_temp_variable = { communism_pop_loss = -1 }
+				set_temp_variable = { democratic_pop_loss = party_popularity@democratic }
+				multiply_temp_variable = { democratic_pop_loss = -1 }
+				SAP = {
+					add_popularity = {
+						ideology = democratic
+						popularity = democratic_pop_loss
+					}
+					add_popularity = {
+						ideology = communism
+						popularity = communism_pop_loss
+					}
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = sap_nationalists_split
+					}
+				}
+				SAP = {
+					add_ideas = sap_los_cruzados
+				}
+			}
+		}
+	}
+	option = { # Stay with government
+		name = sapin_civil_war.1.a
+	}
+	option = { # Join republicans
+		name = sapin_civil_war.1.b
+		SAR = {
+			change_tag_from = ROOT
+		}
+	}
+}
+country_event = { # Nationalist Revolt
+	id = sapin_civil_war.2
+	title = sapin_civil_war.2.t
+	desc = sapin_civil_war.2.desc
+	picture = GFX_report_event_saf_civil_war
+	
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					has_country_flag = sap_nationalists_split # monarchists and fascists have split
+				}
+				start_civil_war = {
+					ideology = fascism
+					size = party_popularity@fascism
+					set_country_flag = SAP_NATIONALIST_REVOLT
+				}
+				SAR = {
+					add_ideas = sap_los_cruzados
+				}
+			}
+			else = {
+				set_temp_variable = { nationalist_revolt_size = party_popularity@fascism }
+				add_to_temp_variable = { nationalist_revolt_size = party_popularity@monarchism }
+				set_temp_variable = { sap_republican_revolt_fascism_size = party_popularity@fascism }
+				divide_temp_variable = { sap_republican_revolt_fascism_size = nationalist_revolt_size }
+				start_civil_war = {
+					ideology = monarchism
+					size = nationalist_revolt_size
+					set_country_flag = SAP_NATIONALIST_REVOLT
+				}
+				SAM = {
+					add_popularity = {
+						ideology = fascism
+						popularity = sap_republican_revolt_fascism_size
+					}
+					add_ideas = {
+						sap_los_cruzados
+						sap_guardia_real
+					}
+				}
+				set_temp_variable = { monarchism_pop_loss = party_popularity@monarchism }
+				multiply_temp_variable = { monarchism_pop_loss = -1 }
+				set_temp_variable = { fascism_pop_loss = party_popularity@fascism }
+				multiply_temp_variable = { fascism_pop_loss = -1 }
+				SAP = {
+					add_popularity = {
+						ideology = monarchism
+						popularity = monarchism_pop_loss
+					}
+					add_popularity = {
+						ideology = fascism
+						popularity = fascism_pop_loss
+					}
+				}
+			}
+		}
+	}
+
+	option = { # Stay with government
+		name = sapin_civil_war.2.a
+	}
+	option = { # Join monarchists
+		name = sapin_civil_war.2.b
+		SAM = {
+			change_tag_from = ROOT
+		}
+	}
+}

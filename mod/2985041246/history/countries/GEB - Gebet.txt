@@ -1,0 +1,174 @@
+﻿capital = 312
+
+set_research_slots = 3
+starting_train_buffer = 1
+
+set_technology = {
+	infantry_weapons = 1
+	tech_mountaineers = 1
+	tech_support = 1		
+	tech_engineers = 1
+	tech_recon = 1
+	trench_warfare = 1
+	basic_train = 1
+	
+	antiair_1 = 1
+	gw_artillery = 1
+	motorised_infantry = 1
+	imv1 = 1
+	mechanised_infantry = 1
+	basic_light_tank = 1
+	main_battle_tank_0 = 1
+
+	iw_medium_airframe = 1
+	early_bombs = 1
+	engines_1 = 1
+}
+
+if = {
+	limit = { has_dlc = "By Blood Alone" }
+		set_air_oob = "GEB_air_dlc"
+		set_technology = {
+			iw_small_airframe = 1
+			aa_lmg = 1
+			iw_medium_airframe = 1
+			early_bombs = 1
+			engines_1 = 1
+			engines_2 = 1
+			range_improvements = 1
+		}
+	else = {
+		set_air_oob = "GEB_air"
+		set_technology = {
+			early_fighter = 1
+			early_bomber = 1
+		}
+	}
+}
+
+set_variable = { geb_mobilization_round_cost = 25 }
+
+set_politics = {
+	ruling_party = democratic
+	last_election = "1987.10.20"
+	election_frequency = 48
+	elections_allowed = yes
+}
+
+set_popularities = {
+	neutrality = 14
+	monarchism = 11
+	democratic = 50
+	communism = 25
+}
+
+set_party_name = {
+    ideology = democratic
+    long_name = GEB_social_democratic_union_long
+    name = GEB_social_democratic_union
+}
+set_party_name = {
+    ideology = communism
+    long_name = GEB_gebetian_peoples_party_long
+    name = GEB_gebetian_peoples_party
+}
+set_party_name = {
+    ideology = fascism
+    long_name = GEB_gebetian_freedom_party_long
+    name = GEB_gebetian_freedom_party
+}
+set_party_name = {
+    ideology = neutrality
+    long_name = GEB_progress_and_prosperity_party_long
+    name = GEB_progress_and_prosperity_party
+}
+set_party_name = {
+    ideology = monarchism
+    long_name = GEB_national_dignity_party_long
+    name = GEB_national_dignity_party
+}
+
+set_stability = 0.5
+set_war_support = 0.2
+
+add_ideas = {
+	geb_canton_system
+	geb_anti_belka
+	geb_nonexistent_air_force
+	geb_unindustrialized_economy_3
+	geb_unmechanized_agriculture
+	
+	nuke_lvl_1
+	generic_defensive_army_1
+}
+
+set_variable = { land_reform_time = 180 }
+
+################################
+recruit_character = GEB_ilse_ebner
+recruit_character = GEB_rafael_albrecht
+recruit_character = GEB_christian_burger
+recruit_character = GEB_janis_haller
+recruit_character = GEB_elli_jung
+recruit_character = GEB_emilia_knoll
+recruit_character = GEB_horscht_fischer
+recruit_character = GEB_eric_allemann
+
+add_ace = {
+	name = "Jakob"
+	surname = "Faulmann"
+	callsign = "Raider"
+	type = support_genius
+}
+################################
+
+set_oob = "GEB_land"
+
+########################################################
+
+if = {
+	limit = {
+		NOT = {
+			has_dlc = "By Blood Alone"
+		}
+	}
+	create_equipment_variant = {
+		name = "Guinevere Mark I"
+		type = fighter_equipment_1
+		upgrades = {
+			plane_tac_bomb_upgrade = 5
+			plane_range_upgrade = 5
+			plane_engine_upgrade = 5
+			plane_reliability_upgrade = 5
+		}
+		obsolete = no
+	}
+}
+
+if = {
+	limit = {
+		has_dlc = "By Blood Alone"
+	}
+	create_equipment_variant = {
+		name = "Igraine Mark III" #
+		type = small_plane_airframe_0
+		modules = {
+			fixed_main_weapon_slot = light_mg_2x
+			fixed_auxiliary_weapon_slot_1 = qaam_1_1x
+			engine_type_slot = engine_2_1x
+			special_type_slot_1 = airframe_delta_wing
+		}
+	}
+	create_equipment_variant = {
+		name = "Merlin Mark I" #
+		type = medium_plane_airframe_0
+		modules = {
+			fixed_main_weapon_slot = medium_bomb_bay
+			fixed_auxiliary_weapon_slot_1 = lagm_1_1x
+			fixed_auxiliary_weapon_slot_2 = lagm_1_1x
+			engine_type_slot = engine_2_4x
+			special_type_slot_1 = airframe_delta_wing
+		}
+		icon = "xxx"
+	}
+}

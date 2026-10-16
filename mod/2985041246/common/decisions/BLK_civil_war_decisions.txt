@@ -1,0 +1,381 @@
+BLK_civil_war_cat = {	
+	BLK_expand_influence_in_the_hugelse_garrison = {
+
+		icon = {
+			key = BLK_garrison_control_none
+			trigger = {
+				#has_completed_focus = BLK_commies
+				272 = { check_variable = { var = BLK_garrison_control value = 0 compare = equals } }
+			}
+		}
+		icon = {
+			key = BLK_garrison_control_low
+			trigger = {
+				#has_completed_focus = BLK_commies
+				272 = {
+					check_variable = { var = BLK_garrison_control value = 1 compare = equals }
+				}
+			}
+		}
+		icon = {
+			key = BLK_garrison_control_mid
+			trigger = {
+				#has_completed_focus = BLK_commies
+				272 = {
+					check_variable = { var = BLK_garrison_control value = 2 compare = equals }
+				}
+			}
+		}
+		icon = {
+			key = BLK_garrison_control_big
+			trigger = {
+				#has_completed_focus = BLK_commies
+				272 = {
+					check_variable = { var = BLK_garrison_control value = 3 compare = equals }
+				}
+			}
+		}
+
+		available = {
+			has_full_control_of_state = 272
+			custom_trigger_tooltip = {
+				tooltip = BLK_expand_influence_trigger_tt
+				272 = { check_variable = { var = BLK_garrison_control value = 3 compare = less_than } }
+			}
+
+			NOT = {
+				has_country_flag = BLK_already_expanding_influence_flag
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 272 } 
+		}
+
+		on_map_mode = map_only
+
+		cost = 25
+
+		fire_only_once = no
+
+		days_remove = 14
+
+		visible = {
+			#NOT = { has_global_flag = spanish_civil_war }
+			has_country_flag = SPR_spanish_elections_flag
+		}
+
+		cancel_if_not_visible = yes
+
+		complete_effect = {
+			set_country_flag = BLK_already_expanding_influence_flag
+		}
+
+		remove_effect = {
+			272 = {
+				custom_effect_tooltip = BLK_expand_influence_nationalists_tt
+				set_state_flag = { flag = SPR_recently_expanded_influence_flag value = 1 days = 15 }
+				hidden_effect = {
+					if = {
+						limit = {
+							NOT = { has_variable = BLK_garrison_control }
+						}
+						set_variable = { BLK_garrison_control = 1 }
+					}
+					else_if = {
+						limit = { 
+							check_variable = { BLK_garrison_control < 3 }
+						}
+						
+						add_to_variable = { var = BLK_garrison_control value = 1 }
+						#BLK = { add_to_variable = { var = spa_civil_war_divisions_counter_var value = 1 } }
+						#BLK = { subtract_from_variable = { var = spr_civil_war_divisions_counter_var value = 1 } }
+					}
+				}
+				BLK_garrison_control_tooltip = yes
+				BLK_garrison_control_cost_calculation = yes
+			}
+			clr_country_flag = BLK_already_expanding_influence_flag
+		}
+
+		ai_will_do = {
+			base = 110
+			modifier = {
+				272 = { has_state_flag = SPR_recently_expanded_influence_flag }
+				factor = 10
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				NOT = { has_completed_focus = BLK_secure_the_northern_garrisons }
+				factor = 0
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				272 = { check_variable = { var = BLK_garrison_control value = 2 compare = greater_than_or_equals } }
+				factor = 5
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				272 = { check_variable = { var = BLK_garrison_control value = 3 compare = greater_than_or_equals } }
+				factor = 5
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				is_historical_focus_on = yes
+				factor = 10
+			}
+		}
+	}
+	BLK_expand_influence_in_the_hoffnung_garrison = {
+
+		icon = {
+			key = BLK_garrison_control_none
+			trigger = {
+				#has_completed_focus = BLK_commies
+				602 = { check_variable = { var = BLK_garrison_control value = 0 compare = equals } }
+			}
+		}
+		icon = {
+			key = BLK_garrison_control_low
+			trigger = {
+				#has_completed_focus = BLK_commies
+				602 = {
+					check_variable = { var = BLK_garrison_control value = 1 compare = equals }
+				}
+			}
+		}
+		icon = {
+			key = BLK_garrison_control_mid
+			trigger = {
+				#has_completed_focus = BLK_commies
+				602 = {
+					check_variable = { var = BLK_garrison_control value = 2 compare = equals }
+				}
+			}
+		}
+		icon = {
+			key = BLK_garrison_control_big
+			trigger = {
+				#has_completed_focus = BLK_commies
+				602 = {
+					check_variable = { var = BLK_garrison_control value = 3 compare = equals }
+				}
+			}
+		}
+
+		available = {
+			has_full_control_of_state = 602
+			custom_trigger_tooltip = {
+				tooltip = BLK_expand_influence_trigger_tt
+				602 = { check_variable = { var = BLK_garrison_control value = 3 compare = less_than } }
+			}
+			NOT = {
+				has_country_flag = BLK_already_expanding_influence_flag
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 602 } 
+		}
+
+		on_map_mode = map_only
+
+		cost = 25
+
+		fire_only_once = no
+
+		days_remove = 14
+
+		visible = {
+			#NOT = { has_global_flag = spanish_civil_war }
+			has_country_flag = SPR_spanish_elections_flag
+		}
+
+		cancel_if_not_visible = yes
+
+		complete_effect = {
+			set_country_flag = BLK_already_expanding_influence_flag
+		}
+
+		remove_effect = {
+			602 = {
+				custom_effect_tooltip = BLK_expand_influence_nationalists_tt
+				set_state_flag = { flag = SPR_recently_expanded_influence_flag value = 1 days = 15 }
+				hidden_effect = {
+					if = {
+						limit = {
+							NOT = { has_variable = BLK_garrison_control }
+						}
+						set_variable = { BLK_garrison_control = 1 }
+					}
+					else_if = {
+						limit = { 
+							check_variable = { BLK_garrison_control < 3 }
+						}
+						
+						add_to_variable = { var = BLK_garrison_control value = 1 }
+						#BLK = { add_to_variable = { var = spa_civil_war_divisions_counter_var value = 1 } }
+						#BLK = { subtract_from_variable = { var = spr_civil_war_divisions_counter_var value = 1 } }
+					}
+				}
+				BLK_garrison_control_tooltip = yes
+				BLK_garrison_control_cost_calculation = yes
+			}
+			clr_country_flag = BLK_already_expanding_influence_flag
+		}
+
+		ai_will_do = {
+			base = 110
+			modifier = {
+				602 = { has_state_flag = SPR_recently_expanded_influence_flag }
+				factor = 10
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				NOT = { has_completed_focus = BLK_secure_the_northern_garrisons }
+				factor = 0
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				602 = { check_variable = { var = BLK_garrison_control value = 2 compare = greater_than_or_equals } }
+				factor = 5
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				602 = { check_variable = { var = BLK_garrison_control value = 3 compare = greater_than_or_equals } }
+				factor = 5
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				is_historical_focus_on = yes
+				factor = 10
+			}
+		}
+	}
+	BLK_expand_influence_in_the_friede_garrison = {
+
+		icon = {
+			key = BLK_garrison_control_none
+			trigger = {
+				#has_completed_focus = BLK_commies
+				293 = { check_variable = { var = BLK_garrison_control value = 0 compare = equals } }
+			}
+		}
+		icon = {
+			key = BLK_garrison_control_low
+			trigger = {
+				#has_completed_focus = BLK_commies
+				293 = {
+					check_variable = { var = BLK_garrison_control value = 1 compare = equals }
+				}
+			}
+		}
+		icon = {
+			key = BLK_garrison_control_mid
+			trigger = {
+				#has_completed_focus = BLK_commies
+				293 = {
+					check_variable = { var = BLK_garrison_control value = 2 compare = equals }
+				}
+			}
+		}
+		icon = {
+			key = BLK_garrison_control_big
+			trigger = {
+				#has_completed_focus = BLK_commies
+				293 = {
+					check_variable = { var = BLK_garrison_control value = 3 compare = equals }
+				}
+			}
+		}
+
+		available = {
+			has_full_control_of_state = 293
+			custom_trigger_tooltip = {
+				tooltip = BLK_expand_influence_trigger_tt
+				293 = { check_variable = { var = BLK_garrison_control value = 3 compare = less_than } }
+			}
+			NOT = {
+				has_country_flag = BLK_already_expanding_influence_flag
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 293 } 
+		}
+
+		on_map_mode = map_only
+
+		cost = 25
+
+		fire_only_once = no
+
+		days_remove = 14
+
+		visible = {
+			#NOT = { has_global_flag = spanish_civil_war }
+			has_country_flag = SPR_spanish_elections_flag
+		}
+
+		cancel_if_not_visible = yes
+
+		complete_effect = {
+			set_country_flag = BLK_already_expanding_influence_flag
+		}
+
+		remove_effect = {
+			293 = {
+				custom_effect_tooltip = BLK_expand_influence_nationalists_tt
+				set_state_flag = { flag = SPR_recently_expanded_influence_flag value = 1 days = 15 }
+				hidden_effect = {
+					if = {
+						limit = {
+							NOT = { has_variable = BLK_garrison_control }
+						}
+						set_variable = { BLK_garrison_control = 1 }
+					}
+					else_if = {
+						limit = { 
+							check_variable = { BLK_garrison_control < 3 }
+						}
+						
+						add_to_variable = { var = BLK_garrison_control value = 1 }
+						#BLK = { add_to_variable = { var = spa_civil_war_divisions_counter_var value = 1 } }
+						#BLK = { subtract_from_variable = { var = spr_civil_war_divisions_counter_var value = 1 } }
+					}
+				}
+				BLK_garrison_control_tooltip = yes
+				BLK_garrison_control_cost_calculation = yes
+			}
+			clr_country_flag = BLK_already_expanding_influence_flag
+		}
+
+		ai_will_do = {
+			base = 110
+			modifier = {
+				293 = { has_state_flag = SPR_recently_expanded_influence_flag }
+				factor = 10
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				NOT = { has_completed_focus = BLK_secure_the_northern_garrisons }
+				factor = 0
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				293 = { check_variable = { var = BLK_garrison_control value = 2 compare = greater_than_or_equals } }
+				factor = 5
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				293 = { check_variable = { var = BLK_garrison_control value = 3 compare = greater_than_or_equals } }
+				factor = 5
+			}
+			modifier = {
+				has_completed_focus = BLK_commies
+				is_historical_focus_on = yes
+				factor = 10
+			}
+		}
+	}
+}

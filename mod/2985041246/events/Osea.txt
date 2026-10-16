@@ -1,0 +1,1735 @@
+add_namespace = osea
+add_namespace = osea_startup
+add_namespace = osea_politics
+add_namespace = osea_election
+add_namespace = osea_congress
+add_namespace = osea_glrdc
+add_namespace = osea_belka_land
+add_namespace = osea_gwot
+add_namespace = osea_oia
+
+country_event = { #cold war buildup plan
+	id = osea.1
+	title = osea.1.t
+	desc = osea.1.d
+	picture = GFX_report_event_defense_white_paper
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.1.a
+	}
+}
+
+country_event = { #pre elections start
+	id = osea.20
+	title = osea.20.t
+	desc = osea.20.d
+	picture = GFX_report_event_political_campaign
+	
+	fire_only_once = yes
+	
+	trigger = {
+		tag = OSE
+		date > 1991.12.5
+	}
+
+	option = {
+		name = osea.20.a
+		set_country_flag = ose_pre_election_start_flag
+		hidden_effect = {
+			country_event = { id = osea.23 days = 45 }
+		}
+	}
+}
+
+country_event = { #meance of perbla
+	id = osea.21
+	title = osea.21.t
+	desc = osea.21.d
+	picture = GFX_report_event_flag_perbla
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.21.a
+	}
+}
+
+country_event = { #speach
+	id = osea.22
+	title = osea.22.t
+	desc = osea.22.d
+	picture = GFX_report_event_ose_president
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.22.a
+	}
+}
+
+country_event = { #flavour election event 1
+	id = osea.23
+	title = osea.23.t
+	desc = osea.23.d
+	picture = GFX_report_event_political_campaign
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.23.a
+		hidden_effect = {
+			country_event = { id = osea.24 days = 45 }
+		}
+	}
+}
+
+country_event = { #flavour election event 2
+	id = osea.24
+	title = osea.24.t
+	desc = osea.24.d
+	picture = GFX_report_event_political_campaign
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.24.a
+		hidden_effect = {
+			country_event = { id = osea.25 days = 45 }
+		}
+	}
+}
+
+country_event = { #flavour election event 3
+	id = osea.25
+	title = osea.25.t
+	desc = osea.25.d
+	picture = GFX_report_event_political_campaign
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.25.a
+	}
+}
+
+country_event = { #mackenzie anti GLRDC campaign
+	id = osea.30
+	title = osea.30.t
+	desc = osea.30.d
+	picture = GFX_report_event_political_campaign
+	
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = {
+				id = osea.40
+				days = 15
+			}
+			country_event = {
+				id = osea_election.1
+				days = 15
+			}
+		}
+	}
+	option = {
+		name = osea.30.a
+		set_variable = { osea_party_pop_loss_var = 10 }
+		OSE_unity_party_pop_loss_effect = yes
+	}
+}
+
+country_event = { #elections event
+	id = osea.40
+	title = osea.40.t
+	desc = osea.40.d
+	picture = GFX_report_event_ose_election
+
+	is_triggered_only = yes
+	
+	fire_only_once = yes
+
+	option = {
+		name = osea.40.a
+		hidden_effect = {
+			country_event = osea.41
+		}
+	}
+}
+
+country_event = { #mackenzie won
+	id = osea.41
+	title = osea.41.t
+	desc = osea.41.d
+	picture = GFX_report_event_ose_election_liberty_win
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.41.a
+		set_country_flag = mackenzie_won
+		retire_country_leader = yes
+		add_country_leader_role = {
+			character = OSE_tyler_mackenzie
+			promote_leader = yes
+			country_leader = {
+				ideology=liberalism  
+				traits = { }
+				expire="2050.1.1.1"
+				id=-1
+			}
+		}
+		set_party_name = {
+			ideology = democratic
+			long_name = OSE_liberty_party_long
+			name = OSE_liberty_party
+		}
+		load_focus_tree = { tree = ose_mac_won keep_completed = yes }
+		hidden_effect = {
+			country_event = utility.1
+		}
+	}
+}
+
+country_event = { #mackenzie presidency event
+	id = osea.50
+	title = osea.50.t
+	desc = osea.50.d
+	picture = GFX_report_event_ose_president
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.50.a
+	}
+}
+
+country_event = { #belka problem event
+	id = osea.51
+	title = osea.51.t
+	desc = osea.51.d
+	picture = GFX_report_event_flag_belka_1
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.51.a
+		add_stability = 0.025
+		add_war_support = 0.025
+	}
+}
+
+country_event = { #perbla problem event
+	id = osea.52
+	title = osea.52.t
+	desc = osea.52.d
+	picture = GFX_report_event_flag_perbla
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.52.a
+		add_stability = 0.025
+		add_war_support = 0.025
+	}
+}
+
+country_event = { #yukto problem event
+	id = osea.53
+	title = osea.53.t
+	desc = osea.53.d
+	picture = GFX_report_event_flag_yuktobania
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.53.a
+		add_stability = 0.025
+		add_war_support = 0.025
+	}
+}
+
+
+country_event = { #doctrine vent
+	id = osea.54
+	title = osea.54.t
+	desc = osea.54.d
+	picture = GFX_report_event_ose_president
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.54.a
+		add_stability = 0.1
+		add_war_support = 0.1
+		add_ideas = OSE_mackenzie_doctrine_idea
+	}
+}
+
+############################################################
+
+country_event = { ### event about belka becoming democratic
+	id = osea_glrdc.1
+	title = osea_glrdc.1.t
+	desc = osea_glrdc.1.d
+	picture = GFX_report_event_blk_parliament
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea_glrdc.1.a
+		country_event = osea_glrdc.2
+	}
+}
+
+country_event = { ### osea forms GLRDC plan
+	id = osea_glrdc.2
+	title = osea_glrdc.2.t
+	desc = osea_glrdc.2.d
+	picture = GFX_report_event_ose_grelarede
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea_glrdc.2.a
+		hidden_effect = {
+			BLK = {
+				country_event = { id = belka.8 days = 1 }
+			}
+			UST = {
+				country_event = { id = ustio.2 days = 1 }
+			}
+		}
+	}
+}
+
+country_event = { ### decision to destroy belka with GLRDC or to save  it
+	id = osea_glrdc.3
+	title = osea_glrdc.3.t
+	desc = osea_glrdc.3.d
+	picture = GFX_report_event_ose_grelarede
+	
+	is_triggered_only = yes
+
+	option = { ###kill belka
+		name = osea_glrdc.3.a
+		set_global_flag = glrdc_bad_flag
+	}
+	#option = { ### save Belka
+	#	name = osea_glrdc.3.b
+	#	set_global_flag = glrdc_good_flag
+	#}
+}
+
+############################################################
+
+country_event = {
+	id = osea_belka_land.1
+	title = osea_belka_land.1.t
+	desc = osea_belka_land.1.d
+	picture = GFX_report_event_protests_2
+
+	is_triggered_only = yes
+
+	option = {
+		name = osea_belka_land.1.a
+		set_country_flag = got_belka_land
+		add_ideas = ose_belkan_protests_1
+		if = {
+			limit = {
+				OSE = {
+					is_ai = no
+				}
+			}
+			269 = {
+				add_dynamic_modifier = { modifier = ose_integrate_administration_blk_land }
+				add_dynamic_modifier = { modifier = ose_integrate_industry_blk_land }
+				add_dynamic_modifier = { modifier = ose_deal_with_the_protests_blk_land }
+			}
+			296 = {
+				add_dynamic_modifier = { modifier = ose_integrate_administration_blk_land }
+				add_dynamic_modifier = { modifier = ose_integrate_industry_blk_land }
+				add_dynamic_modifier = { modifier = ose_deal_with_the_protests_blk_land }
+			}
+			324 = {
+				add_dynamic_modifier = { modifier = ose_integrate_administration_blk_land }
+				add_dynamic_modifier = { modifier = ose_integrate_industry_blk_land }
+				add_dynamic_modifier = { modifier = ose_deal_with_the_protests_blk_land }
+			}
+			357 = {
+				add_dynamic_modifier = { modifier = ose_integrate_administration_blk_land }
+				add_dynamic_modifier = { modifier = ose_integrate_industry_blk_land }
+				add_dynamic_modifier = { modifier = ose_deal_with_the_protests_blk_land }
+			}
+			211 = {
+				add_dynamic_modifier = { modifier = ose_integrate_administration_blk_land }
+				add_dynamic_modifier = { modifier = ose_integrate_industry_blk_land }
+				add_dynamic_modifier = { modifier = ose_deal_with_the_protests_blk_land }
+			}
+		}
+		if = {
+			limit = {
+				OSE = {
+					is_ai = yes
+				}
+			}
+			country_event = { id = osea_belka_land.2 days = 1000 }
+		}
+	}
+}
+
+country_event = {
+	id = osea_belka_land.2
+	title = osea_belka_land.2.t
+	desc = osea_belka_land.2.d
+	picture = GFX_report_event_flag_osea_1
+
+	is_triggered_only = yes
+
+	option = {
+		name = osea_belka_land.2.a
+		add_political_power = 200
+		add_stability = 0.05
+		add_war_support = 0.1
+	}
+}
+
+country_event = {
+	id = osea_belka_land.3
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		269 = {
+			add_core_of = OSE
+		}
+		296 = {
+			add_core_of = OSE
+		}
+		324 = {
+			add_core_of = OSE
+		}
+		357 = {
+			add_core_of = OSE
+		}
+		211 = {
+			add_core_of = OSE
+		}
+	}
+}
+
+#####################################################################################
+
+country_event = { #Rald coup
+	id = osea.74
+	title = osea.74.t
+	desc = osea.74.d
+	picture = GFX_report_event_blk_parliament
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.74.a
+	}
+}
+
+country_event = { #Belka is getting ready for war
+	id = osea.75
+	title = osea.75.t
+	desc = osea.75.d
+	picture = GFX_report_event_blk_army_buildup
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.75.a
+		set_country_flag = unlock_uwc
+	}
+}
+
+country_event = { #uwc event
+	id = osea.76
+	title = osea.76.t
+	desc = osea.76.d
+	picture = GFX_report_event_ose_war_committee
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.76.a
+	}
+}
+
+country_event = { #belka attacks
+	id = osea.77
+	title = osea.77.t
+	desc = osea.77.d
+	picture = GFX_report_event_blk_army_attack
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.77.a
+		hidden_effect = {
+			country_event = osea.81
+		}
+	}
+}
+
+country_event = { #belka attacks
+	id = osea.81
+	title = osea.81.t
+	desc = osea.81.d
+	picture = GFX_report_event_blk_army_attack
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.81.a
+		if = {
+			limit = {
+				OSE = { is_ai = no }
+			}
+			add_ideas = ose_the_belkan_war
+			activate_mission = ose_domestic_sytuation_opposed_to_war
+		}
+	}
+}
+
+country_event = { #belka eco and army dead
+	id = osea.78
+	title = osea.78.t
+	desc = osea.78.d
+	picture = GFX_report_event_army_issues_1
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.78.a
+	}
+}
+
+country_event = { #domestic sytuation very bad
+	id = osea.79
+	title = osea.79.t
+	desc = osea.79.d
+	picture = GFX_report_event_protest_1
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.79.a
+		country_event = { id = osea.80 days = 1 }
+	}
+}
+
+country_event = { #we are forced to make peace
+	id = osea.80
+	title = osea.80.t
+	desc = osea.80.d
+	picture = GFX_report_event_protest_1
+	
+	is_triggered_only = yes
+
+	option = {
+		name = osea.80.a
+		custom_effect_tooltip = ose_lost_war_coz_civilians_have_skill_issue
+		set_global_flag = ose_lost_belkan_war
+		hidden_effect = {
+				if = {
+					limit = {
+						PBL = { has_war = yes }
+					}
+					white_peace = PBL
+				}
+			BLK = {
+				transfer_state = 269
+				transfer_state = 296 
+				transfer_state = 357 
+				transfer_state = 215
+				transfer_state = 229 
+				transfer_state = 324
+				transfer_state = 211
+				transfer_state = 604
+				white_peace = SAP
+				white_peace = OSE
+			}
+			UST = {
+				leave_faction = yes
+			}
+		}
+	}
+}
+
+#################
+### POLITICKS ###
+#################
+
+country_event = { # Which chamber to introduce bill in? (Incomplete)
+	id = osea_congress.1
+	title = osea_congress.1.t
+	desc = osea_congress.1.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	option = { # Senate
+		name = osea_congress.1.a
+	}
+	option = { # House
+		name = osea_congress.1.b
+	}
+}
+
+country_event = { # Bill passes Senate
+	id = osea_congress.2
+	title = osea_congress.2.t
+	desc = osea_congress.2.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	option = { # "Ok"
+		name = osea_congress.2.a
+	}
+}
+
+country_event = { # Bill passes House
+	id = osea_congress.3
+	title = osea_congress.3.t
+	desc = osea_congress.3.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	option = { # "Ok"
+		name = osea_congress.3.a
+	}
+}
+
+country_event = { # Bill passes Congress
+	id = osea_congress.4
+	title = osea_congress.4.t
+	desc = osea_congress.4.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	option = { # Sign
+		name = osea_congress.4.a
+		ai_chance = {
+			base = 100
+		}
+		if = { # Cut Taxes
+			limit = {
+				check_variable = { ose_current_bill = 1 }
+			}
+			OSE_decrease_taxes = yes
+			clear_variable = ose_current_bill
+		}
+		else_if = { # Raise Taxes
+			limit = {
+				check_variable = { ose_current_bill = 2 }
+			}
+			OSE_increase_taxes = yes
+			clear_variable = ose_current_bill
+		}
+		else_if = { # Increase Defense Forces Budget
+			limit = {
+				check_variable = { ose_current_bill = 3 }
+			}
+			OSE_congress_bill_3_pass = yes
+			add_timed_idea = {
+				idea = OSE_increase_defense_forces_budget_idea
+				days = 365
+			}
+			OSE_land_army_debuff_down = yes
+			clear_variable = ose_current_bill
+		}
+		else_if = { # Pay Farm Subsidies
+			limit = {
+				check_variable = { ose_current_bill = 4 }
+			}
+			OSE_congress_bill_4_pass = yes
+			add_timed_idea = {
+				idea = OSE_pay_farm_subsidies_idea
+				days = 365
+			}
+			clear_variable = ose_current_bill
+		}
+		else_if = { # Award Research Grants
+			limit = {
+				check_variable = { ose_current_bill = 5 }
+			}
+			OSE_congress_bill_5_pass = yes
+			add_timed_idea = {
+				idea = OSE_award_research_grants_idea
+				days = 365
+			}
+			clear_variable = ose_current_bill
+		}
+	}
+	# option = { # Veto
+	# 	name = osea_congress.4.b
+	# }
+}
+
+country_event = { # Bill fails to pass Senate
+	id = osea_congress.5
+	title = osea_congress.5.t
+	desc = osea_congress.5.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	option = { # "Ok"
+		name = osea_congress.5.a
+	}
+}
+
+country_event = { # Bill fails to pass House
+	id = osea_congress.6
+	title = osea_congress.6.t
+	desc = osea_congress.6.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	option = { # "Ok"
+		name = osea_congress.6.a
+	}
+}
+
+# Random Bill Events #
+country_event = { # House Unity Members Speak Against Bill
+	id = osea_congress.7
+	title = osea_congress.7.t
+	desc = osea_congress.7.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_unity_percentage = -0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Traitors!"
+		trigger = { has_country_leader_ideology = conservatism }
+		name = osea_congress.7.a
+		custom_effect_tooltip = OSE_opposition_house_unity_tt
+	}
+	option = { # "They'll come around"
+		trigger = {
+			NOT = {
+				has_country_leader_ideology = conservatism
+			}
+		}
+		name = osea_congress.7.b
+		custom_effect_tooltip = OSE_opposition_house_unity_tt
+	}
+}
+country_event = { # House Liberty Members Speak Against Bill
+	id = osea_congress.8
+	title = osea_congress.8.t
+	desc = osea_congress.8.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_liberty_percentage = -0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Traitors!"
+		trigger = { has_country_leader_ideology = liberalism }
+		name = osea_congress.8.a
+		custom_effect_tooltip = OSE_opposition_house_liberty_tt
+	}
+	option = { # "They'll come around"
+		trigger = {
+			NOT = {
+				has_country_leader_ideology = liberalism
+			}
+		}
+		name = osea_congress.8.b
+		custom_effect_tooltip = OSE_opposition_house_liberty_tt
+	}
+}
+country_event = { # House Nationalist Members Speak Against Bill
+	id = osea_congress.9
+	title = osea_congress.9.t
+	desc = osea_congress.9.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_brotherhood_percentage = -0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Traitors!"
+		trigger = { has_government = fascism }
+		name = osea_congress.9.a
+		custom_effect_tooltip = OSE_opposition_house_brotherhood_tt
+	}
+	option = { # "They'll come around"
+		trigger = {
+			NOT = {
+				has_government = fascism
+			}
+		}
+		name = osea_congress.9.b
+		custom_effect_tooltip = OSE_opposition_house_brotherhood_tt
+	}
+}
+country_event = { # House Socialist Members Speak Against Bill
+	id = osea_congress.10
+	title = osea_congress.10.t
+	desc = osea_congress.10.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_socialist_percentage = -0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Traitors!"
+		trigger = { has_government = communism }
+		name = osea_congress.10.a
+		custom_effect_tooltip = OSE_opposition_house_socialist_tt
+	}
+	option = { # "They'll come around"
+		trigger = {
+			NOT = {
+				has_government = communism
+			}
+		}
+		name = osea_congress.10.b
+		custom_effect_tooltip = OSE_opposition_house_socialist_tt
+	}
+}
+country_event = { # House Monarchist Members Speak Against Bill
+	id = osea_congress.11
+	title = osea_congress.11.t
+	desc = osea_congress.11.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_monarchist_percentage = -0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Traitors!"
+		trigger = { has_government = monarchism }
+		name = osea_congress.11.a
+		custom_effect_tooltip = OSE_opposition_house_monarchist_tt
+	}
+	option = { # "They'll come around"
+		trigger = {
+			NOT = {
+				has_government = monarchism
+			}
+		}
+		name = osea_congress.11.b
+		custom_effect_tooltip = OSE_opposition_house_monarchist_tt
+	}
+}
+country_event = { # House Independent Members Speak Against Bill
+	id = osea_congress.12
+	title = osea_congress.12.t
+	desc = osea_congress.12.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_independent_percentage = -0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "They'll come around"
+		name = osea_congress.12.a
+		custom_effect_tooltip = OSE_opposition_house_independent_tt
+	}
+}
+country_event = { # Senate Unity Members Speak Against Bill
+	id = osea_congress.13
+	title = osea_congress.13.t
+	desc = osea_congress.13.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_unity_percentage = -0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Traitors!"
+		trigger = { has_country_leader_ideology = conservatism }
+		name = osea_congress.13.a
+		custom_effect_tooltip = OSE_opposition_senate_unity_tt
+	}
+	option = { # "They'll come around"
+		trigger = {
+			NOT = {
+				has_country_leader_ideology = conservatism
+			}
+		}
+		name = osea_congress.13.b
+		custom_effect_tooltip = OSE_opposition_senate_unity_tt
+	}
+}
+country_event = { # Senate Liberty Members Speak Against Bill
+	id = osea_congress.14
+	title = osea_congress.14.t
+	desc = osea_congress.14.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_liberty_percentage = -0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Traitors!"
+		trigger = { has_country_leader_ideology = liberalism }
+		name = osea_congress.14.a
+		custom_effect_tooltip = OSE_opposition_senate_liberty_tt
+	}
+	option = { # "They'll come around"
+		trigger = {
+			NOT = {
+				has_country_leader_ideology = liberalism
+			}
+		}
+		name = osea_congress.14.b
+		custom_effect_tooltip = OSE_opposition_senate_liberty_tt
+	}
+}
+country_event = { # Senate Nationalist Members Speak Against Bill
+	id = osea_congress.15
+	title = osea_congress.15.t
+	desc = osea_congress.15.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_brotherhood_percentage = -0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Traitors!"
+		trigger = { has_government = fascism }
+		name = osea_congress.15.a
+		custom_effect_tooltip = OSE_opposition_senate_brotherhood_tt
+	}
+	option = { # "They'll come around"
+		trigger = {
+			NOT = {
+				has_government = fascism
+			}
+		}
+		name = osea_congress.15.b
+		custom_effect_tooltip = OSE_opposition_senate_brotherhood_tt
+	}
+}
+country_event = { # Senate Socialist Members Speak Against Bill
+	id = osea_congress.16
+	title = osea_congress.16.t
+	desc = osea_congress.16.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_socialist_percentage = -0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Traitors!"
+		trigger = { has_government = communism }
+		name = osea_congress.16.a
+		custom_effect_tooltip = OSE_opposition_senate_socialist_tt
+	}
+	option = { # "They'll come around"
+		trigger = {
+			NOT = {
+				has_government = communism
+			}
+		}
+		name = osea_congress.16.b
+		custom_effect_tooltip = OSE_opposition_senate_socialist_tt
+	}
+}
+country_event = { # Senate Monarchist Members Speak Against Bill
+	id = osea_congress.17
+	title = osea_congress.17.t
+	desc = osea_congress.17.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_monarchist_percentage = -0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Traitors!"
+		trigger = { has_government = monarchism }
+		name = osea_congress.17.a
+		custom_effect_tooltip = OSE_opposition_senate_monarchist_tt
+	}
+	option = { # "They'll come around"
+		trigger = {
+			NOT = {
+				has_government = monarchism
+			}
+		}
+		name = osea_congress.17.b
+		custom_effect_tooltip = OSE_opposition_senate_monarchist_tt
+	}
+}
+country_event = { # Senate Independents Speak Against Bill
+	id = osea_congress.18
+	title = osea_congress.18.t
+	desc = osea_congress.18.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_independent_percentage = -0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "They'll come around"
+		name = osea_congress.18.a
+		custom_effect_tooltip = OSE_opposition_senate_independent_tt
+	}
+}
+country_event = { # House Unity Members Speak In Favor Of Bill
+	id = osea_congress.19
+	title = osea_congress.19.t
+	desc = osea_congress.19.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_unity_percentage = 0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Welcome news"
+		trigger = { has_country_leader_ideology = conservatism }
+		name = osea_congress.19.a
+		custom_effect_tooltip = OSE_support_house_unity_tt
+	}
+	option = { # "Told you they'd come around"
+		trigger = {
+			NOT = {
+				has_country_leader_ideology = conservatism
+			}
+		}
+		name = osea_congress.19.b
+		custom_effect_tooltip = OSE_support_house_unity_tt
+	}
+}
+country_event = { # House Liberty Members Speak In Favor Of Bill
+	id = osea_congress.20
+	title = osea_congress.20.t
+	desc = osea_congress.20.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_liberty_percentage = 0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Welcome news"
+		trigger = { has_country_leader_ideology = liberalism }
+		name = osea_congress.20.a
+		custom_effect_tooltip = OSE_support_house_liberty_tt
+	}
+	option = { # "Told you they'd come around"
+		trigger = {
+			NOT = {
+				has_country_leader_ideology = liberalism
+			}
+		}
+		name = osea_congress.20.b
+		custom_effect_tooltip = OSE_support_house_liberty_tt
+	}
+}
+country_event = { # House Nationalist Members Speak In Favor Of Bill
+	id = osea_congress.21
+	title = osea_congress.21.t
+	desc = osea_congress.21.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_brotherhood_percentage = 0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Welcome news"
+		trigger = { has_government = fascism }
+		name = osea_congress.21.a
+		custom_effect_tooltip = OSE_support_house_brotherhood_tt
+	}
+	option = { # "Told you they'd come around"
+		trigger = {
+			NOT = {
+				has_government = fascism
+			}
+		}
+		name = osea_congress.21.b
+		custom_effect_tooltip = OSE_support_house_brotherhood_tt
+	}
+}
+country_event = { # House Socialist Members Speak In Favor Of Bill
+	id = osea_congress.22
+	title = osea_congress.22.t
+	desc = osea_congress.22.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_socialist_percentage = 0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Welcome news"
+		trigger = { has_government = communism }
+		name = osea_congress.22.a
+		custom_effect_tooltip = OSE_support_house_socialist_tt
+	}
+	option = { # "Told you they'd come around"
+		trigger = {
+			NOT = {
+				has_government = communism
+			}
+		}
+		name = osea_congress.22.b
+		custom_effect_tooltip = OSE_support_house_socialist_tt
+	}
+}
+country_event = { # House Monarchist Members Speak In Favor Of Bill
+	id = osea_congress.23
+	title = osea_congress.23.t
+	desc = osea_congress.23.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_monarchist_percentage = 0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Welcome news"
+		trigger = { has_government = monarchism }
+		name = osea_congress.23.a
+		custom_effect_tooltip = OSE_support_house_monarchist_tt
+	}
+	option = { # "Told you they'd come around"
+		trigger = {
+			NOT = {
+				has_government = monarchism
+			}
+		}
+		name = osea_congress.23.b
+		custom_effect_tooltip = OSE_support_house_monarchist_tt
+	}
+}
+country_event = { # House Independents Speak In Favor Of Bill
+	id = osea_congress.24
+	title = osea_congress.24.t
+	desc = osea_congress.24.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_house_support_independent_percentage = 0.10 }
+			OSE_calc_house_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Told you they'd come around"
+		name = osea_congress.24.a
+		custom_effect_tooltip = OSE_support_house_independent_tt
+	}
+}
+country_event = { # Senate Unity Members Speak In Favor Of Bill
+	id = osea_congress.25
+	title = osea_congress.25.t
+	desc = osea_congress.25.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_unity_percentage = 0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Welcome news"
+		trigger = { has_country_leader_ideology = conservatism }
+		name = osea_congress.25.a
+		custom_effect_tooltip = OSE_support_senate_unity_tt
+	}
+	option = { # "Told you they'd come around"
+		trigger = {
+			NOT = {
+				has_country_leader_ideology = conservatism
+			}
+		}
+		name = osea_congress.25.b
+		custom_effect_tooltip = OSE_support_senate_unity_tt
+	}
+}
+country_event = { # Senate Liberty Members Speak In Favor Of Bill
+	id = osea_congress.26
+	title = osea_congress.26.t
+	desc = osea_congress.26.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_liberty_percentage = 0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Welcome news"
+		trigger = { has_country_leader_ideology = liberalism }
+		name = osea_congress.26.a
+		custom_effect_tooltip = OSE_support_senate_liberty_tt
+	}
+	option = { # "Told you they'd come around"
+		trigger = {
+			NOT = {
+				has_country_leader_ideology = liberalism
+			}
+		}
+		name = osea_congress.26.b
+		custom_effect_tooltip = OSE_support_senate_liberty_tt
+	}
+}
+country_event = { # Senate Nationalist Members Speak In Favor Of Bill
+	id = osea_congress.27
+	title = osea_congress.27.t
+	desc = osea_congress.27.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_brotherhood_percentage = 0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Welcome news"
+		trigger = { has_government = fascism }
+		name = osea_congress.27.a
+		custom_effect_tooltip = OSE_support_senate_brotherhood_tt
+	}
+	option = { # "Told you they'd come around"
+		trigger = {
+			NOT = {
+				has_government = fascism
+			}
+		}
+		name = osea_congress.27.b
+		custom_effect_tooltip = OSE_support_senate_brotherhood_tt
+	}
+}
+country_event = { # Senate Socialist Members Speak In Favor Of Bill
+	id = osea_congress.28
+	title = osea_congress.28.t
+	desc = osea_congress.28.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_socialist_percentage = 0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Welcome news"
+		trigger = { has_government = communism }
+		name = osea_congress.28.a
+		custom_effect_tooltip = OSE_support_senate_socialist_tt
+	}
+	option = { # "Told you they'd come around"
+		trigger = {
+			NOT = {
+				has_government = communism
+			}
+		}
+		name = osea_congress.28.b
+		custom_effect_tooltip = OSE_support_senate_socialist_tt
+	}
+}
+country_event = { # Senate Monarchist Members Speak In Favor Of Bill
+	id = osea_congress.29
+	title = osea_congress.29.t
+	desc = osea_congress.29.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_monarchist_percentage = 0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Welcome news"
+		trigger = { has_government = monarchism }
+		name = osea_congress.29.a
+		custom_effect_tooltip = OSE_support_senate_monarchist_tt
+	}
+	option = { # "Told you they'd come around"
+		trigger = {
+			NOT = {
+				has_government = monarchism
+			}
+		}
+		name = osea_congress.29.b
+		custom_effect_tooltip = OSE_support_senate_monarchist_tt
+	}
+}
+country_event = { # Senate Independents Speak In Favor Of Bill
+	id = osea_congress.30
+	title = osea_congress.30.t
+	desc = osea_congress.30.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_to_variable = { osea_senate_support_independent_percentage = 0.10 }
+			OSE_calc_senate_support = yes
+			OSE_random_congressional_support_event = yes
+		}
+	}
+
+	option = { # "Told you they'd come around"
+		name = osea_congress.30.a
+		custom_effect_tooltip = OSE_support_senate_independent_tt
+	}
+}
+
+country_event = { # National Mood Swings
+	id = osea_politics.1
+	title = osea_politics.1.t
+	desc = osea_politics.1.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			OSE_national_mood_swing_hawkish = yes
+			OSE_national_mood_swing_libertarian = yes
+			OSE_national_mood_swing_capitalist = yes
+			OSE_national_mood_swing_imperialist = yes
+			OSE_national_mood_swing_xenophobic = yes
+			OSE_national_mood_swing_protectionist = yes
+		}
+		country_event = {
+			id = osea_politics.1
+			days = 180
+		}
+	}
+
+	option = { # Interesting
+		name = osea_politics.1.a
+		custom_effect_tooltip = osea_national_mood_shift_tt
+		custom_effect_tooltip = osea_national_mood_shift_hawkish_tt
+		custom_effect_tooltip = osea_national_mood_shift_libertarian_tt
+		custom_effect_tooltip = osea_national_mood_shift_imperialist_tt
+		custom_effect_tooltip = osea_national_mood_shift_capitalist_tt
+		custom_effect_tooltip = osea_national_mood_shift_xenophobic_tt
+		custom_effect_tooltip = osea_national_mood_shift_protectionist_tt
+		clear_variable = osea_national_mood_hawkish_swing_loc
+		clear_variable = osea_national_mood_libertarian_swing_loc
+		clear_variable = osea_national_mood_capitalist_swing_loc
+		clear_variable = osea_national_mood_imperialist_swing_loc
+		clear_variable = osea_national_mood_xenophobic_swing_loc
+		clear_variable = osea_national_mood_protectionist_swing_loc
+	}
+}
+
+country_event = { # Unity Party Platform Published
+	id = osea_politics.2
+	title = osea_politics.2.t
+	desc = osea_politics.2.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	option = { # Interesting
+		name = osea_politics.2.a
+		OSE_unity_party_ideology_shift = yes
+	}
+}
+
+country_event = { # Liberty Party Platform Published
+	id = osea_politics.3
+	title = osea_politics.3.t
+	desc = osea_politics.3.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	option = { # Interesting
+		name = osea_politics.3.a
+		OSE_liberty_party_ideology_shift = yes
+	}
+}
+
+country_event = { # Nationalist Party Platform Published
+	id = osea_politics.4
+	title = osea_politics.4.t
+	desc = osea_politics.4.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	option = { # Interesting
+		name = osea_politics.4.a
+		OSE_brotherhood_party_ideology_shift = yes
+	}
+}
+
+country_event = { # Socialist Party Platform Published
+	id = osea_politics.5
+	title = osea_politics.5.t
+	desc = osea_politics.5.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	option = { # Interesting
+		name = osea_politics.5.a
+		OSE_socialist_party_ideology_shift = yes
+	}
+}
+
+country_event = { # Monarchist Party Platform Published
+	id = osea_politics.6
+	title = osea_politics.6.t
+	desc = osea_politics.6.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	option = { # Interesting
+		name = osea_politics.6.a
+		OSE_monarchist_party_ideology_shift = yes
+	}
+}
+
+country_event = { # Fire Party Platform Hidden Event
+	id = osea_politics.7
+	title = osea_politics.7.t
+	desc = osea_politics.7.desc
+	picture = placeholder
+	hidden = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			OSE_fire_party_ideology_shift_events = yes
+			country_event = {
+				id = osea_politics.7
+				days = 365
+			}
+		}
+	}
+}
+
+country_event = { # Liberty Party Loses Popularity (debug event)
+	id = osea_politics.8
+	title = osea_politics.8.t
+	desc = osea_politics.8.desc
+	picture = placeholder
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			set_variable = { osea_party_pop_loss_var = 10 }
+			OSE_liberty_party_pop_loss_effect = yes
+		}
+	}
+
+	option = { # Interesting
+		name = osea_politics.8.a
+	}
+}
+
+country_event = { # New Fiscal Year
+	id = osea_politics.9
+	title = osea_politics.9.t
+	desc = osea_politics.9.desc
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			OSE_annual_budget_gain = yes
+			if = {
+				limit = {
+					check_variable = { osea_budget_gain < 0 }
+				}
+				add_stability = -0.05
+			}
+		}
+	}
+
+	option = {
+		name = osea_politics.9.a
+		effect_tooltip = {
+			OSE_annual_budget_gain = yes
+			if = {
+				limit = {
+					check_variable = { osea_budget_gain < 0 }
+				}
+				add_stability = -0.05
+			}
+		}
+	}
+}
+
+### PRESIDENTIAL ELECTIONS ###
+country_event = { # Congressional/Midterm Elections
+	id = osea_election.1
+	title = osea_election.1.t
+	desc = osea_election.1.desc
+	picture = GFX_report_event_ose_election
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			OSE_congressional_election = yes
+			country_event = {
+				id = osea_election.1
+				days = 730
+			}
+		}
+	}
+
+	option = {
+		name = osea_election.1.a
+	}
+}
+
+### GREAT WAR ON TERROR ###
+country_event = { # AWWNB rises up in Belka
+	id = osea_gwot.1
+	title = osea_gwot.1.t
+	desc = osea_gwot.1.desc
+	picture = placeholder
+	is_triggered_only = yes
+
+	option = { # Stay out of it
+		name = osea_gwot.1.a
+		add_stability = 0.01
+		add_political_power = 50
+	}
+	option = { # Send aid to the Belkan government
+		name = osea_gwot.1.b
+		add_political_power = -25
+		add_ideas = OSE_gwot_lend_lease
+		set_country_flag = ose_gwot_lend_lease_flag
+	}
+	option = { # Intervene!
+		name = osea_gwot.1.c
+		ai_chance = {
+			base = 100
+		}
+		add_stability = -0.02
+		add_political_power = -50
+		add_ideas = OSE_gwot_intervention
+		add_ideas = OSE_gwot_lend_lease
+		set_country_flag = ose_gwot_interventionist_flag
+		set_country_flag = ose_gwot_lend_lease_flag
+	}
+}
+
+### OIA OPERATIONS ###
+country_event = { # Belkan WMD Protocol Discovered
+	id = osea_oia.1
+	title = osea_oia.1.t
+	desc = osea_oia.1.desc
+	picture = placeholder
+	is_triggered_only = yes
+
+	option = { # We need to tell the world about this now
+		name = osea_oia.1.a
+		add_political_power = -50
+		add_stability = -0.05
+		news_event = osea_oia.2
+	}
+	option = { # We don't want to scare anyone, send a mission to look for their cache
+		name = osea_oia.1.b
+		ai_chance = {
+			base = 50
+		}
+		add_political_power = 50
+	}
+}
+news_event = { # Osea reveals Belkan WMD protocol
+	id = osea_oia.2
+	title = osea_oia.2.t
+	desc = osea_oia.2.desc
+	picture = placeholder
+	is_triggered_only = yes
+
+	option = { # Oh god...
+		name = osea_oia.2.a
+		trigger = {
+			NOT = {
+				OR = {
+					original_tag = OSE
+					original_tag = BLK
+				}
+			}
+		}
+		add_opinion_modifier = {
+			target = BLK
+			modifier = wmd_plan
+		}
+	}
+	option = { # Hopefully the pressure mounts against them
+		name = osea_oia.2.b
+		trigger = {
+			original_tag = OSE
+		}
+		add_war_support	= 0.05
+		add_days_mission_timeout = {
+			mission = ose_domestic_sytuation_opposed_to_war
+			days = 150
+		}
+	}
+	option = { # How did they know?!
+		name = osea_oia.2.c
+		trigger = {
+			original_tag = BLK
+		}
+		every_controlled_state = {
+			limit = {
+				NOT = {
+					is_core_of = ROOT
+				}
+			}
+			add_resistance = 20
+		}
+	}
+}
+country_event = { # Belkan Details About Excalibur
+	id = osea_oia.3
+	title = osea_oia.3.t
+	desc = osea_oia.3.d
+	picture = placeholder
+	is_triggered_only = yes
+
+	option = {
+		name = osea_oia.3.a
+		
+	}
+}

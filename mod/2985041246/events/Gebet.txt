@@ -1,0 +1,519 @@
+add_namespace = gebet
+add_namespace = gebet_startup
+add_namespace = gebet_election
+add_namespace = gebet_belkan_war
+
+country_event  = {
+    id = gebet_startup.1
+    title = gebet_startup.1.t
+    desc = gebet_startup.1.desc
+    is_triggered_only = yes
+    hidden = yes
+    immediate = {
+        312 = {
+            add_dynamic_modifier = { modifier = geb_aristocrat_held_land_2 }
+        }
+        281 = {
+            add_dynamic_modifier = { modifier = geb_aristocrat_held_land_2 }
+        }
+        263 = {
+            add_dynamic_modifier = { modifier = geb_aristocrat_held_land_2 }
+        }
+    }
+}
+
+state_event = {
+    id = gebet.1
+    title = gebet.1.t
+    desc = gebet.1.desc
+    is_triggered_only = yes
+    hidden = yes
+    immediate = {
+        hidden_effect = {
+            if = {
+                limit = {
+                    NOT = {
+                        OR = {
+                            owner = {
+                                has_government = communism
+                            }
+                            #might add other possible triggers here
+                        }
+                    }
+                }
+            }
+            else = {
+                owner = {
+                    country_event = gebet.2
+                }
+            }
+        }
+    }
+}
+
+country_event = { # Philanthropy
+    id = gebet.2
+    title = gebet.2.t
+    desc = gebet.2.desc
+    is_triggered_only = yes
+    picture = GFX_report_event_business
+    immediate = {
+        hidden_effect = {
+            random_list = {
+                20 = {
+                    set_variable = { gebet_philanthropy_building = gebet_philanthropy_building_1 }
+                }
+                20 = {
+                    set_variable = { gebet_philanthropy_building = gebet_philanthropy_building_2 }
+                }
+                20 = {
+                    set_variable = { gebet_philanthropy_building = gebet_philanthropy_building_3 }
+                }
+                20 = {
+                    set_variable = { gebet_philanthropy_building = gebet_philanthropy_building_4 }
+                }
+                20 = {
+                    if = {
+                        limit = {
+                            has_tech = radio_detection
+                        }
+                        set_variable = { gebet_philanthropy_building = gebet_philanthropy_building_5 }
+                    }
+                    else = {
+                        set_variable = { gebet_philanthropy_building = gebet_philanthropy_building_1 }
+                    }
+                }
+            }
+            country_event = {
+                id = gebet.2
+                days = 180
+            }
+        }
+    }
+    option = {
+        name = gebet.2.a
+        if = {
+            limit = {
+                check_variable = { gebet_philanthropy_building = gebet_philanthropy_building_1 }
+            }
+            random_owned_controlled_state = {
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 1
+                    instant_build = yes
+                }
+            }
+        }
+        else_if = {
+            limit = {
+                check_variable = { gebet_philanthropy_building = gebet_philanthropy_building_2 }
+            }
+            random_owned_state = {
+                add_building_construction = {
+                    type = arms_factory
+                    level = 1
+                    instant_build = yes
+                }
+            }
+        }
+        else_if = {
+            limit = {
+                check_variable = { gebet_philanthropy_building = gebet_philanthropy_building_3 }
+            }
+            random_owned_state = {
+                add_building_construction = {
+                    type = infrastructure
+                    level = 1
+                    instant_build = yes
+                }
+            }
+        }
+        else_if = {
+            limit = {
+                check_variable = { gebet_philanthropy_building = gebet_philanthropy_building_4 }
+            }
+            random_owned_state = {
+                add_building_construction = {
+                    type = dockyard
+                    level = 1
+                    instant_build = yes
+                }
+            }
+        }
+        else_if = {
+            limit = {
+                check_variable = { gebet_philanthropy_building = gebet_philanthropy_building_5 }
+            }
+            random_owned_state = {
+                owner = {
+                    set_variable = { gebet_philanthropy_state = PREV }
+                }
+                add_building_construction = {
+                    type = radar_station
+                    level = 1
+                    instant_build = yes
+                }
+            }
+        }
+        clear_variable = gebet_philanthropy_building
+    }
+}
+
+country_event = { # Capital Flight
+    id = gebet.3
+    title = gebet.3.t
+    desc = gebet.3.desc
+    is_triggered_only = yes
+    picture = GFX_report_event_airliner
+    option = {
+        name = gebet.3.a
+        add_timed_idea = {
+            idea = geb_capital_flight
+            days = 180
+        }
+    }
+}
+
+country_event = { # Growing Wealth Inequality
+    id = gebet.4
+    title = gebet.4.t
+    desc = gebet.4.desc
+    is_triggered_only = yes
+    picture = GFX_report_event_economy_collapse
+    option = {
+        name = gebet.4.a
+        add_ideas = geb_rampant_wealth_inequality
+    }
+}
+
+country_event = { # Integration of Belkan Land
+    id = gebet.5
+    title = gebet.5.t
+    desc = gebet.5.desc
+    is_triggered_only = yes
+    picture = GFX_report_event_flag_belka_1
+    option = { # Don't deport anyone
+        name = gebet.5.a
+        FROM = {
+            add_dynamic_modifier = { modifier = geb_aristocrat_held_land_2 }
+        }
+        add_popularity = {
+            ideology = fascism
+            popularity = 0.25
+        }
+        add_popularity = {
+            ideology = monarchism
+            popularity = 0.25
+        }
+    }
+    option = { # Deport the Belkan aristocracy
+        name = gebet.5.b
+        add_political_power = -50
+        FROM = {
+            set_temp_variable = { state_belkan_deportation_pop = state_population_k }
+            multiply_temp_variable = { state_belkan_deportation_pop = -0.01 }
+            add_manpower = var:state_belkan_deportation_pop
+        }
+        add_popularity = {
+            ideology = fascism
+            popularity = 0.25
+        }
+        add_popularity = {
+            ideology = monarchism
+            popularity = 0.25
+        }
+    }
+    option = { # Deport all Belkans
+        name = gebet.5.c
+        add_political_power = -150
+        FROM = {
+            set_temp_variable = { state_belkan_deportation_pop = state_population_k }
+            multiply_temp_variable = { state_belkan_deportation_pop = -0.45 }
+            add_manpower = var:state_belkan_deportation_pop
+        }
+    }
+}
+
+country_event = { # 1992 Elections
+    id = gebet_election.1
+    title = gebet_election.1.t
+    desc = gebet_election.1.desc
+    is_triggered_only = yes
+    picture = GFX_report_event_geb_parliament
+    option = { # Ilse Ebner
+        name = gebet_election.1.a
+		ai_chance = {
+			factor = 85
+			modifier = {
+				factor = 0		
+				has_game_rule = {
+					rule = GEB_ai_behavior
+					option = DEMOCRATIC_ALTERNATE
+				}
+			}
+		}
+        complete_national_focus = GEB_1992_elections
+        set_country_flag = election_1992_winner_sdu
+    }
+    option = { # Rafael Albrecht
+        name = gebet_election.1.b
+		ai_chance = {
+			factor = 15
+			modifier = {
+				factor = 0		
+				OR = {
+					AND = {
+						is_historical_focus_on = yes
+						has_game_rule = {
+							rule = GEB_ai_behavior
+							option = DEFAULT
+						}
+					}
+					has_game_rule = {
+						rule = GEB_ai_behavior
+						option = DEMOCRATIC_HISTORICAL
+					}
+				}
+			}
+		}
+        complete_national_focus = GEB_1992_elections
+        GEB_ilse_ebner = {
+            remove_country_leader_role = { ideology = social_democracy }
+        }
+        GEB_rafael_albrecht = {
+            add_country_leader_role = {
+                promote_leader = yes
+                country_leader = {
+                    ideology = liberalism
+                    expire = "2040.1.1.1"
+                    traits = { }
+                }
+            }
+        }
+        set_party_name = {
+            ideology = democratic
+            long_name = GEB_progressive_democratic_party_long
+            name = GEB_progressive_democratic_party
+        }
+        set_country_flag = election_1992_winner_pdp
+    }
+}
+
+country_event = { # 1996 Elections
+    id = gebet_election.2
+    title = gebet_election.2.t
+    desc = gebet_election.2.desc
+    is_triggered_only = yes
+    picture = GFX_report_event_geb_parliament
+    option = { # GPP Candidate (Wanda Spitz)
+        name = gebet_election.2.a
+        #complete_national_focus = GEB_1996_elections
+        set_country_flag = election_1996_winner_gpp
+    }
+    option = { # SDU Candidate (Wilhelm Gerver)
+        name = gebet_election.2.b
+        #complete_national_focus = GEB_1996_elections
+        set_country_flag = election_1996_winner_sdu
+    }
+    option = { # PDP Candidate (Rafael Albrecht)
+        name = gebet_election.2.c
+        #complete_national_focus = GEB_1996_elections
+        set_country_flag = election_1996_winner_pdp
+    }
+    option = { # PPP Candidate (Heiden Stroman)
+        name = gebet_election.2.d
+        #complete_national_focus = GEB_1996_elections
+        set_country_flag = election_1996_winner_ppp
+    }
+}
+
+country_event = { # Faulmann Raid Start
+	id = gebet_belkan_war.1
+	title = gebet_belkan_war.1.t
+	desc = gebet_belkan_war.1.desc
+	picture = GFX_report_event_geb_faulmann_raid
+	trigger = {
+        tag = GEB
+        has_defensive_war_with = BLK
+    }
+    fire_only_once = yes
+
+	option = { # "Godspeed, Taube 1"
+		name = gebet_belkan_war.1.a
+        country_event = gebet_belkan_war.2
+	}
+}
+
+country_event = { # Faulmann Raid (Faulmann's Perspective)
+	id = gebet_belkan_war.2
+	title = gebet_belkan_war.2.t
+	desc = gebet_belkan_war.2.desc
+	picture = GFX_report_event_geb_faulmann_raid
+	
+	is_triggered_only = yes
+
+    immediate = {
+        hidden_effect = {
+            if = {
+                limit = {
+                    BLK = {
+                        controls_state = 224
+                    }
+                }
+                224 = {
+                    save_global_event_target_as = faulmann_raid_victim
+                }
+            }
+            else = {
+                BLK = {
+                    random_owned_controlled_state = {
+                        limit = {
+                            OR = {
+                                has_state_category = large_city
+                                has_state_category = city
+                            }
+                        }
+                        save_global_event_target_as = faulmann_raid_victim
+                    }
+                }
+            }
+        }
+    }
+
+	option = { # "Can't handle your own medicine, Belkan scum?"
+		name = gebet_belkan_war.2.a
+        if = {
+            limit = {
+                BLK = {
+                    controls_state = 224
+                }
+            }
+            damage_units = {
+                state = 224
+                damage = 0.20
+                ratio = yes
+                army = yes
+                navy = yes
+            }
+            224 = {
+                damage_building = {
+                    type = arms_factory
+                    damage = 1
+                }
+                damage_building = {
+                    type = supply_node
+                    damage = 1
+                }
+                damage_building = {
+                    type = rail_way
+                    damage = 1
+                }
+                damage_building = {
+                    type = anti_air_building
+                    damage = 1
+                }
+                damage_building = {
+                    type = air_base
+                    damage = 1
+                }
+                damage_building = {
+                    type = radar_station
+                    damage = 1
+                }
+            }
+        }
+        else = {
+            event_target:faulmann_raid_victim = {
+                damage_units = {
+                    state = THIS
+                    damage = 0.20
+                    ratio = yes
+                    army = yes
+                    navy = yes
+                }
+                damage_building = {
+                    type = arms_factory
+                    damage = 1
+                }
+                damage_building = {
+                    type = supply_node
+                    damage = 1
+                }
+                damage_building = {
+                    type = rail_way
+                    damage = 1
+                }
+                damage_building = {
+                    type = anti_air_building
+                    damage = 1
+                }
+                damage_building = {
+                    type = air_base
+                    damage = 1
+                }
+                damage_building = {
+                    type = radar_station
+                    damage = 1
+                }
+            }
+        }
+        if = {
+            limit = {
+                224 = {
+                    has_event_target = faulmann_raid_victim
+                }
+            }
+            BLK = {
+                country_event = gebet_belkan_war.3
+            }
+        }
+        else = {
+            BLK = {
+                country_event = gebet_belkan_war.4
+            }
+        }
+	}
+}
+
+country_event = { # Faulmann Raid (Belkan Perspective, Dinsmark In Flames)
+	id = gebet_belkan_war.3
+	title = gebet_belkan_war.3.t
+	desc = gebet_belkan_war.3.desc
+	picture = GFX_report_event_geb_faulmann_raid
+	
+	is_triggered_only = yes
+
+	option = { # "Fire the head of the capital's air defense!"
+		name = gebet_belkan_war.3.a
+        add_political_power = -25
+        add_war_support = -0.01
+        add_manpower = -50
+	}
+}
+
+country_event = { # Faulmann Raid (Belkan Perspective)
+	id = gebet_belkan_war.4
+	title = gebet_belkan_war.4.t
+	desc = gebet_belkan_war.4.desc
+	picture = GFX_report_event_geb_faulmann_raid
+	
+	is_triggered_only = yes
+
+	option = { # "How did this happen?!"
+		name = gebet_belkan_war.4.a
+        add_war_support = -0.01
+	}
+}
+
+country_event = {
+	id = gebet_belkan_war.5
+	title = gebet_belkan_war.5.t
+	desc = gebet_belkan_war.5.desc
+	picture = xxx
+	
+	is_triggered_only = yes
+
+	option = {
+		name = gebet_belkan_war.5.a
+	}
+}

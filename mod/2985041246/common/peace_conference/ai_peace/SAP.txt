@@ -1,0 +1,79 @@
+# Scripted AI desire for peace actions.
+# See documentation.info file for more detailed scripting information.
+
+peace_ai_desires = {
+    # Don't annex Ustio or Ratio if not fascist
+    SAP_dont_annex_ustio_or_ratio = {
+        peace_action_type = { take_states }
+        enable = {
+            FROM.FROM.FROM = {
+                OR = {
+                    is_core_of = UST
+                    is_core_of = RAT
+                }
+                NOT = {
+                    state = 489
+                }
+            }
+            ROOT = {
+                original_tag = SAP
+                NOT = {
+                    has_government = fascism
+                }
+            }
+        }
+        ai_desire = -100
+    }
+    SAP_take_ratio_coast = {
+        peace_action_type = { take_states }
+        enable = {
+            FROM.FROM.FROM = {
+                state = 489
+            }
+            ROOT = {
+                original_tag = SAP
+            }
+        }
+        ai_desire = 100
+    }
+    SAP_dont_take_ustio_claims = {
+        peace_action_type = { take_states }
+        enable = {
+            FROM.FROM.FROM = {
+                is_core_of = UST
+            }
+            ROOT = {
+                original_tag = SAP
+                OR = {
+                    has_guaranteed = UST
+                    is_in_faction_with = UST
+                    has_war_together_with = UST
+                    UST = {
+                        is_subject_of = ROOT
+                    }
+                }
+            }
+        }
+        ai_desire = -100
+    }
+    SAP_dont_take_ratio_claims = {
+        peace_action_type = { take_states }
+        enable = {
+            FROM.FROM.FROM = {
+                is_core_of = RAT
+            }
+            ROOT = {
+                original_tag = SAP
+                OR = {
+                    has_guaranteed = RAT
+                    is_in_faction_with = RAT
+                    has_war_together_with = RAT
+                    RAT = {
+                        is_subject_of = ROOT
+                    }
+                }
+            }
+        }
+        ai_desire = -100
+    }
+}

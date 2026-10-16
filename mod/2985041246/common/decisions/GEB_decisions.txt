@@ -1,0 +1,856 @@
+GEB_national_defense = {
+    GEB_mobilize_reserves = {
+        icon = placeholder 
+        state_target = yes
+        target_root_trigger = {
+			has_completed_focus = GEB_reinstate_conscription
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+                is_core_of = ROOT
+				NOT = { has_state_flag = state_infantry_mobilized }
+			}
+		}
+        available = {
+            OR = {
+                has_defensive_war = yes
+                any_other_country = {
+                    OR = {
+                        is_justifying_wargoal_against = ROOT
+                        has_wargoal_against = ROOT
+                    }
+                }
+            }
+        }
+        ai_will_do = {
+            base = 100
+        }
+        on_map_mode = map_and_decisions_view
+        days_remove = 14
+        complete_effect = {
+            set_country_flag = GEB_has_mobilized
+        }
+        remove_effect = {
+            FROM = {
+                if = {
+                    limit = {
+                        state_population_k < 900
+                    }
+                    create_unit = {
+                        division = "name = \"Conscript Division\" division_template = \"Conscript Division\" start_experience_factor = 0.2"
+                        allow_spawning_on_enemy_provs = no
+                        owner = ROOT
+                        id = geb_draft_infantry_id
+                    }
+                }
+                else = {
+                    set_variable = { recruitable_pop = state_population_k }
+                    multiply_variable = { recruitable_pop = 0.01 }
+                    set_variable = { units_to_spawn = recruitable_pop }
+                    divide_variable = { units_to_spawn = 9 }
+                    for_loop_effect = {
+                        start = 1
+                        end = units_to_spawn
+                        compare = less_than_or_equals
+                        create_unit = {
+                            division = "name = \"Conscript Division\" division_template = \"Conscript Division\" start_experience_factor = 0.2"
+                            allow_spawning_on_enemy_provs = no
+                            owner = ROOT
+                            id = geb_draft_infantry_id
+                        }
+                    }
+                }
+                set_state_flag = state_infantry_mobilized
+            }
+        }
+    }
+    GEB_begin_new_round_of_mobilization = {
+		icon = placeholder
+        available = {
+			AND = {
+				any_owned_state = {
+					limit = {
+						is_controlled_by = ROOT
+                		is_core_of = ROOT
+					}
+					has_state_flag = state_infantry_mobilized
+				}
+				OR = {
+					has_defensive_war = yes
+					any_other_country = {
+						OR = {
+							is_justifying_wargoal_against = ROOT
+							has_wargoal_against = ROOT
+						}
+					}
+				}
+			}
+        }
+        visible = { has_completed_focus = GEB_reinstate_conscription }
+        cost = var:geb_mobilization_round_cost
+        days_remove = 30
+		complete_effect = {
+			add_to_variable = { geb_mobilization_round_cost = 25 }
+		}
+		remove_effect = {
+			every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					is_core_of = ROOT
+					has_state_flag = state_infantry_mobilized
+				}
+				clr_state_flag = state_infantry_mobilized
+			}
+		}
+	}
+    GEB_demobilize = {
+		icon = placeholder
+		is_good = yes
+		days_mission_timeout = 30
+		selectable_mission = yes
+		activation = {
+            AND = {
+                has_country_flag = GEB_has_mobilized
+                has_war = no
+            }
+        }
+		cancel_trigger = {
+            OR = {
+                NOT = {
+                    has_country_flag = GEB_has_mobilized
+                    has_defensive_war = yes
+                }
+            }
+		}
+        complete_effect = {
+            clr_country_flag = GEB_has_mobilized
+            delete_unit = { id = geb_draft_infantry_id }
+            every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					is_core_of = ROOT
+					has_state_flag = state_infantry_mobilized
+				}
+				clr_state_flag = state_infantry_mobilized
+			}
+        }
+		timeout_effect = {
+			clr_country_flag = GEB_has_mobilized
+            delete_unit = { id = geb_draft_infantry_id }
+            every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					is_core_of = ROOT
+					has_state_flag = state_infantry_mobilized
+				}
+				clr_state_flag = state_infantry_mobilized
+			}
+		}
+	}
+    GEB_plant_land_mines = {
+        icon = placeholder 
+        state_target = yes
+        target_root_trigger = {
+			has_completed_focus = GEB_mine_the_desert
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+				NOT = { has_state_flag = state_land_mines_10 }
+			}
+		}
+        available = {
+            OR = {
+                has_war_support > 0.20
+                has_defensive_war = yes
+                any_other_country = {
+                    OR = {
+                        is_justifying_wargoal_against = ROOT
+                        has_wargoal_against = ROOT
+                    }
+                }
+            }
+        }
+        on_map_mode = map_and_decisions_view
+        days_remove = 30
+        custom_cost_trigger = {
+            command_power > 14
+        }
+        custom_cost_text = decision_cost_CP_15
+        ai_will_do = {
+            base = 0
+            modifier = {
+                add = 50
+                any_other_country = {
+                    is_justifying_wargoal_against = ROOT
+                }
+            }
+        }
+        ai_will_do = {
+            base = 0
+            modifier = {
+                add = 50
+                any_other_country = {
+                    has_wargoal_against = ROOT
+                }
+            }
+        }
+        ai_will_do = {
+            base = 0
+            modifier = {
+                add = 50
+                has_war = yes
+            }
+        }
+        complete_effect = {
+            add_command_power = -15
+        }
+        remove_effect = {
+            FROM = {
+                state_increase_land_mines = yes
+            }
+        }
+    }
+    # GEB_purchase_osean_guns = {
+    #     icon = placeholder
+    #     available = {
+    #         AND = {
+    #             has_completed_focus = GEB_purchase_osean_arms
+    #             OSE = {
+    #                 exists = yes
+    #             }
+    #             stockpile_ratio = {
+    #                 archetype = infantry_equipment
+    #                 ratio < 0.5
+    #             }
+    #         }    
+    #     }
+    #     visible = { has_completed_focus = GEB_purchase_osean_arms }
+    #     cost = 30
+    #     days_remove = 30
+    #     modifier = {
+    #         consumer_goods_factor = 0.075
+    #     }
+    #     ai_will_do = {
+    #         base = 10
+    #         modifier = {
+    #             add = 90
+    #             stockpile_ratio = {
+    #                 archetype = infantry_equipment
+    #                 ratio < 0.5
+    #             }
+    #         }
+    #     }
+    #     complete_effect = {
+    #         add_equipment_to_stockpile = {
+    #             type = infantry_equipment
+    #             amount = 1000
+    #             producer = OSE
+    #         }
+    #     }
+    # }
+}
+GEB_land_reform = {
+    GEB_land_reform_in_state = {
+        icon = placeholder
+        cost = 100
+        state_target = yes
+        target_root_trigger = {
+			has_completed_focus = GEB_continue_land_reform
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+				OR = {
+                    has_dynamic_modifier = { modifier = geb_aristocrat_held_land_2 }
+                    has_dynamic_modifier = { modifier = geb_aristocrat_held_land_1 }
+                }
+			}
+		}
+        days_remove = var:land_reform_time
+        modifier = {
+            political_power_factor = -0.10
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            FROM = {
+                add_extra_state_shared_building_slots = 1
+                if = {
+                    limit = {
+                        FROM = {
+                            has_dynamic_modifier = { modifier = geb_aristocrat_held_land_2 }
+                        }
+                    }
+                    remove_dynamic_modifier = { modifier = geb_aristocrat_held_land_2 }
+                }
+                else = {
+                    remove_dynamic_modifier = { modifier = geb_aristocrat_held_land_1 }
+                }
+            }
+            add_to_variable = { land_reform_points = 1 }
+            if = {
+                limit = {
+                    land_reform_points > 2
+                }
+                set_country_flag = GEB_land_reform_complete
+            }
+        }
+    }
+}
+GEB_granley_mountains_excavations = {
+    GEB_expand_iron_mines_1 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+        available = {
+			NOT = {
+                has_country_flag = GEB_iron_mines_expanded_1
+            }
+		}
+        visible = {
+			NOT = {
+                has_country_flag = GEB_iron_mines_expanded_1
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_iron_mines_expanded_1
+            FROM = {
+                add_resource = {
+                    type = steel
+                    amount = 7
+                }
+            }
+        }
+    }
+    GEB_expand_iron_mines_2 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+        available = {
+            NOT = {
+                has_country_flag = GEB_iron_mines_expanded_2
+            }
+			has_country_flag = GEB_iron_mines_expanded_1
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_iron_mines_expanded_2
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_iron_mines_expanded_2
+            FROM = {
+                add_resource = {
+                    type = steel
+                    amount = 7
+                }
+            }
+        }
+    }
+    GEB_expand_iron_mines_3 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+        available = {
+            NOT = {
+                has_country_flag = GEB_iron_mines_expanded_3
+            }
+			has_country_flag = GEB_iron_mines_expanded_2
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_iron_mines_expanded_3
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_iron_mines_expanded_3
+            FROM = {
+                add_resource = {
+                    type = steel
+                    amount = 7
+                }
+            }
+        }
+    }
+    GEB_dig_deeper_1 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+        available = {
+            NOT = {
+                has_country_flag = GEB_granley_excavation_level_2
+            }
+			has_country_flag = GEB_iron_mines_expanded_3
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_granley_excavation_level_2
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 2
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_granley_excavation_level_2
+            custom_effect_tooltip = GEB_dig_deeper_1_tt
+        }
+    }
+    GEB_expand_aluminum_mines_1 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+		available = {
+            NOT = {
+                has_country_flag = GEB_aluminum_mines_expanded_1
+            }
+			has_country_flag = GEB_granley_excavation_level_2
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_aluminum_mines_expanded_1
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_aluminum_mines_expanded_1
+            FROM = {
+                add_resource = {
+                    type = aluminum
+                    amount = 7
+                }
+            }
+        }
+    }
+    GEB_expand_aluminum_mines_2 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+        available = {
+            NOT = {
+                has_country_flag = GEB_aluminum_mines_expanded_2
+            }
+			has_country_flag = GEB_aluminum_mines_expanded_1
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_aluminum_mines_expanded_2
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_aluminum_mines_expanded_2
+            FROM = {
+                add_resource = {
+                    type = aluminum
+                    amount = 7
+                }
+            }
+        }
+    }
+    GEB_expand_aluminum_mines_3 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+        available = {
+            NOT = {
+                has_country_flag = GEB_aluminum_mines_expanded_3
+            }
+			has_country_flag = GEB_aluminum_mines_expanded_2
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_aluminum_mines_expanded_3
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_aluminum_mines_expanded_3
+            FROM = {
+                add_resource = {
+                    type = aluminum
+                    amount = 7
+                }
+            }
+        }
+    }
+    GEB_expand_tungsten_mines_1 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+		available = {
+            NOT = {
+                has_country_flag = GEB_tungsten_mines_expanded_1
+            }
+			has_country_flag = GEB_granley_excavation_level_2
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_tungsten_mines_expanded_1
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_tungsten_mines_expanded_1
+            FROM = {
+                add_resource = {
+                    type = tungsten
+                    amount = 7
+                }
+            }
+        }
+    }
+    GEB_expand_tungsten_mines_2 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+        available = {
+            NOT = {
+                has_country_flag = GEB_tungsten_mines_expanded_2
+            }
+			has_country_flag = GEB_tungsten_mines_expanded_1
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_tungsten_mines_expanded_2
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_tungsten_mines_expanded_2
+            FROM = {
+                add_resource = {
+                    type = tungsten
+                    amount = 7
+                }
+            }
+        }
+    }
+    GEB_expand_tungsten_mines_3 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+        available = {
+            NOT = {
+                has_country_flag = GEB_tungsten_mines_expanded_3
+            }
+			has_country_flag = GEB_tungsten_mines_expanded_2
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_tungsten_mines_expanded_3
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_tungsten_mines_expanded_3
+            FROM = {
+                add_resource = {
+                    type = tungsten
+                    amount = 7
+                }
+            }
+        }
+    }
+    GEB_dig_deeper_2 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+        available = {
+            NOT = {
+                has_country_flag = GEB_granley_excavation_level_3
+            }
+            AND = {
+                has_country_flag = GEB_tungsten_mines_expanded_3
+                has_country_flag = GEB_aluminum_mines_expanded_3
+            }
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_granley_excavation_level_3
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 2
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_granley_excavation_level_3
+            custom_effect_tooltip = GEB_dig_deeper_2_tt
+        }
+    }
+    GEB_expand_chromium_mines_1 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+		available = {
+            NOT = {
+                has_country_flag = GEB_chromium_mines_expanded_1
+            }
+			has_country_flag = GEB_granley_excavation_level_3
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_chromium_mines_expanded_1
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_chromium_mines_expanded_1
+            FROM = {
+                add_resource = {
+                    type = chromium
+                    amount = 7
+                }
+            }
+        }
+    }
+    GEB_expand_chromium_mines_2 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+        available = {
+            NOT = {
+                has_country_flag = GEB_chromium_mines_expanded_2
+            }
+			has_country_flag = GEB_chromium_mines_expanded_1
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_chromium_mines_expanded_2
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_chromium_mines_expanded_2
+            FROM = {
+                add_resource = {
+                    type = chromium
+                    amount = 7
+                }
+            }
+        }
+    }
+    GEB_expand_chromium_mines_3 = {
+        icon = placeholder
+        cost = 25
+        state_target = yes
+        available = {
+            NOT = {
+                has_country_flag = GEB_chromium_mines_expanded_3
+            }
+			has_country_flag = GEB_chromium_mines_expanded_2
+		}
+        visible = {
+            NOT = {
+                has_country_flag = GEB_chromium_mines_expanded_3
+            }
+		}
+		target_trigger = {
+			FROM = {
+				state = 263
+			}
+		}
+        days_remove = 100
+        modifier = {
+            civilian_factory_use = 1
+        }
+        ai_will_do = {
+            base = 100
+        }
+        remove_effect = {
+            set_country_flag = GEB_chromium_mines_expanded_3
+            FROM = {
+                add_resource = {
+                    type = chromium
+                    amount = 7
+                }
+            }
+        }
+    }
+}
+GEB_belkan_land = {
+    GEB_integrate_belkan_state = {
+        icon = GFX_decision_infiltrate_state
+        cost = 100
+        state_target = yes
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+                is_core_of = BLK
+				NOT = {
+                    is_core_of = ROOT
+                }
+			}
+		}
+        cancel_trigger = {
+            FROM = {
+                NOT = {
+                    is_controlled_by = ROOT
+                }
+			}
+        }
+        ai_will_do = {
+            base = 0
+            modifier = {
+                date > 1995.6.20
+                add = 100
+            }
+        }
+        days_remove = 1825
+        modifier = {
+            political_power_gain = -0.10
+        }
+        remove_effect = {
+            FROM = {
+                add_core_of = ROOT
+                owner = {
+                    country_event = gebet.5
+                }
+            }
+        }
+    }
+}

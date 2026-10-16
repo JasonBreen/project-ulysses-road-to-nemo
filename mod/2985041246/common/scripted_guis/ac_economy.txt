@@ -1,0 +1,37 @@
+scripted_gui = {
+	project_ulysses_economy_screen_open_button = {
+		window_name = "project_ulysses_economy_screen_open_button"
+		context_type = player_context
+		parent_window_token = politics_tab
+		visible = {
+			always = yes
+		}
+		
+		effects = {
+			button_open_click = {
+				if = {
+					limit = { NOT = { has_variable = project_ulysses_economy_screen_open } }
+					set_variable = { project_ulysses_economy_screen_open = 1 }
+				}
+				else = {
+					clear_variable = project_ulysses_economy_screen_open
+				}
+			}
+		}
+	}
+	
+	project_ulysses_economy_screen = {
+		window_name = "project_ulysses_economy_screen"
+		context_type = player_context
+	
+		visible = {
+			has_variable = project_ulysses_economy_screen_open
+		}
+		
+		effects = {
+			close_button_click = {
+				clear_variable = project_ulysses_economy_screen_open
+			}
+		}
+	}
+}

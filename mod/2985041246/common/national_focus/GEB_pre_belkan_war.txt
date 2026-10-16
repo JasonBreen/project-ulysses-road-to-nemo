@@ -1,0 +1,2009 @@
+shared_focus = {
+    id = GEB_1992_elections
+    icon = GFX_goal_GEB_elections
+    cost = 0
+    ai_will_do = {
+        factor = 90
+    }
+    x = 7
+    y = 0
+	available = { always = no } # Elections by event on October 20, 1992
+    completion_reward = {
+        
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_second_ebner_administration
+    icon = GFX_goal_GEB_election_ilse_ebner
+    relative_position_id = GEB_1992_elections
+    available = {
+        has_country_flag = election_1992_winner_sdu
+        has_country_leader_ideology = social_democracy
+    }
+    prerequisite = { focus = GEB_1992_elections }
+    cost = 3
+    ai_will_do = {
+        factor = 90
+    }
+    x = -2
+    y = 1
+    completion_reward = {
+        add_political_power = 150
+        add_popularity = {
+            ideology = democratic
+            popularity = 0.05
+        }
+        add_popularity = {
+            ideology = communism
+            popularity = 0.05
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_continue_land_reform
+    icon = GFX_goal_GEB_continue_land_reform
+    relative_position_id = GEB_second_ebner_administration
+    available = { has_country_leader_ideology = social_democracy }
+    prerequisite = { focus = GEB_second_ebner_administration }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = -1
+    y = 1
+    completion_reward = {
+        unlock_decision_category_tooltip = GEB_land_reform
+        set_variable = { land_reform_points = 0 }
+        add_popularity = {
+            ideology = neutrality
+            popularity = 0.02
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_develop_the_countryside
+    icon = GFX_goal_generic_construction
+    relative_position_id = GEB_continue_land_reform
+    available = { has_country_leader_ideology = social_democracy }
+    prerequisite = { focus = GEB_continue_land_reform }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+    completion_reward = {
+        281 = {
+            add_building_construction = {
+                type = industrial_complex
+                level = 1
+                instant_build = yes
+            }
+            add_extra_state_shared_building_slots = 1
+        }
+        263 = {
+            add_building_construction = {
+                type = industrial_complex
+                level = 1
+                instant_build = yes
+            }
+            add_extra_state_shared_building_slots = 1
+        }
+        add_popularity = {
+            ideology = neutrality
+            popularity = 0.02
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_implement_a_progressive_tax_system
+    icon = GFX_goal_generic_neutrality_focus
+    relative_position_id = GEB_second_ebner_administration
+    available = { has_country_leader_ideology = social_democracy }
+    prerequisite = { focus = GEB_second_ebner_administration }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+    completion_reward = {
+        add_ideas = geb_progressive_tax_system
+        add_popularity = {
+            ideology = neutrality
+            popularity = 0.02
+        }
+        hidden_effect = {
+            country_event = {
+                id = gebet.3
+                days = 1825
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_liquidate_aristocrat_assets
+    icon = GFX_goal_generic_forceful_treaty
+    relative_position_id = GEB_implement_a_progressive_tax_system
+    available = {
+        has_country_leader_ideology = social_democracy
+        custom_trigger_tooltip = {
+            tooltip = GEB_liquidate_aristocrat_assets_trigger_tt		
+            check_variable = {
+                land_reform_points > 0
+            }
+        }
+    }
+    prerequisite = { focus = GEB_implement_a_progressive_tax_system }
+    cost = 10
+    ai_will_do = {
+        base = 10
+        modifier = {
+            factor = 10
+            check_variable = {
+                land_reform_points > 0
+            }
+        }
+    }
+    x = 0
+    y = 1
+    completion_reward = {
+        custom_effect_tooltip = GEB_liquidate_aristocrat_assets_tt
+        set_variable = { land_reform_time = 90 }
+        add_offsite_building = { type = industrial_complex level = var:land_reform_points }
+        add_popularity = {
+            ideology = neutrality
+            popularity = 0.02
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_small_businesses_subsidization
+    icon = GFX_goal_GEB_small_business_subsidization
+    relative_position_id = GEB_develop_the_countryside
+    available = { has_country_leader_ideology = social_democracy }
+    prerequisite = { focus = GEB_liquidate_aristocrat_assets }
+    prerequisite = { focus = GEB_develop_the_countryside }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+    completion_reward = {
+        every_owned_state = {
+            limit = {
+                NOT = {
+                    has_dynamic_modifier = { modifier = geb_aristocrat_held_land }
+                }
+            }
+            add_dynamic_modifier = {
+                modifier = GEB_small_businesses_subsidization_modifier
+                days = 365
+            }
+        }
+        add_popularity = {
+            ideology = neutrality
+            popularity = 0.02
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_albrecht_administration
+    icon = GFX_goal_GEB_election_rafael_albrecht
+    relative_position_id = GEB_1992_elections
+    available = {
+        has_country_flag = election_1992_winner_pdp
+        has_country_leader_ideology = liberalism
+    }
+    prerequisite = { focus = GEB_1992_elections }
+    cost = 3
+    ai_will_do = {
+        factor = 90
+    }
+    x = 2
+    y = 1
+    completion_reward = {
+        add_political_power = 150
+        add_popularity = {
+            ideology = democratic
+            popularity = 0.05
+        }
+        add_popularity = {
+            ideology = neutrality
+            popularity = 0.05
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_negotiate_with_aristocrats
+    icon = GFX_focus_eng_concessions_to_the_trade_unions
+    relative_position_id = GEB_albrecht_administration
+    available = { has_country_leader_ideology = liberalism }
+    prerequisite = { focus = GEB_albrecht_administration }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = -1
+    y = 1
+    completion_reward = {
+        add_political_power = 150
+        every_owned_state = {
+            limit = {
+                has_dynamic_modifier = { modifier = geb_aristocrat_held_land_2 }
+            }
+            hidden_effect = {
+                ROOT = {
+                    add_political_power = 50
+                }
+            }
+            remove_dynamic_modifier = { modifier = geb_aristocrat_held_land_2 }
+            add_dynamic_modifier = { modifier = geb_aristocrat_held_land_1 }
+        }
+        add_popularity = {
+            ideology = communism
+            popularity = 0.02
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_encourage_philanthropy
+    icon = GFX_goal_GEB_encourage_philanthropy
+    relative_position_id = GEB_negotiate_with_aristocrats
+    available = { has_country_leader_ideology = liberalism }
+    prerequisite = { focus = GEB_negotiate_with_aristocrats }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+    completion_reward = {
+        custom_effect_tooltip = GEB_encourage_philanthropy_tt
+        hidden_effect = {
+            random_owned_controlled_state = {
+                state_event = {
+                    id = gebet.1
+                    days = 180
+                }
+            }
+        }
+        add_popularity = {
+            ideology = communism
+            popularity = 0.02
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_trickle_down_economics
+    icon = GFX_goal_GEB_trickle_down_economics
+    relative_position_id = GEB_albrecht_administration
+    available = { has_country_leader_ideology = liberalism }
+    prerequisite = { focus = GEB_albrecht_administration }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+    completion_reward = {
+        add_offsite_building = { type = industrial_complex level = 3 }
+        add_popularity = {
+            ideology = communism
+            popularity = 0.02
+        }
+        hidden_effect = {
+            country_event = {
+                id = gebet.4
+                days = 1825
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_open_up_trade
+    icon = GFX_goal_generic_positive_trade_relations
+    relative_position_id = GEB_trickle_down_economics
+    available = { has_country_leader_ideology = liberalism }
+    prerequisite = { focus = GEB_trickle_down_economics }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+    completion_reward = {
+        add_ideas = free_trade
+        add_popularity = {
+            ideology = communism
+            popularity = 0.02
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_regional_prosperity
+    icon = GFX_goal_GEB_regional_prosperity
+    relative_position_id = GEB_encourage_philanthropy
+    available = { has_country_leader_ideology = liberalism }
+    prerequisite = { focus = GEB_encourage_philanthropy }
+    prerequisite = { focus = GEB_open_up_trade }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+    completion_reward = {
+        add_timed_idea = {
+            idea = geb_year_of_prosperity
+            days = 365
+        }
+        every_neighbor_country = {
+			limit = {
+				NOT = { original_tag = BLK }
+			}
+            add_timed_idea = {
+                idea = geb_shared_prosperity
+                days = 365
+            }
+        }
+        add_popularity = {
+            ideology = communism
+            popularity = 0.02
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_phase_one_of_industrialization
+    icon = GFX_goal_GEB_phase_1_industrialization
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 16
+    y = 0
+	available = {
+		
+	}
+    completion_reward = {
+        add_tech_bonus = {
+            bonus = 0.5
+            uses = 1
+            category = industry
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_investment_in_the_capital
+    icon = GFX_goal_generic_construction
+    relative_position_id = GEB_phase_one_of_industrialization
+    prerequisite = { focus = GEB_phase_one_of_industrialization }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = -2
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        312 = {
+            add_building_construction = {
+                type = industrial_complex
+                level = 2
+                instant_build = yes
+            }
+            add_extra_state_shared_building_slots = 2
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_expand_the_road_system
+    icon = GFX_goal_generic_construct_infrastructure
+    relative_position_id = GEB_phase_one_of_industrialization
+    prerequisite = { focus = GEB_phase_one_of_industrialization }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        312 = {
+            add_building_construction = {
+                type = infrastructure
+                level = 1
+                instant_build = yes
+            }
+        }
+        add_timed_idea = {
+            idea = geb_road_expansion
+            days = 365
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_mons_railway_station
+    icon = GFX_focus_POL_warsaw_main_station
+    relative_position_id = GEB_investment_in_the_capital
+    prerequisite = { focus = GEB_investment_in_the_capital }
+    prerequisite = { focus = GEB_expand_the_road_system }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        312 = {
+            add_building_construction = {
+                type = infrastructure
+                level = 1
+                instant_build = yes
+            }
+        }
+        add_tech_bonus = {
+            bonus = 0.5
+            uses = 1
+            category = train_tech
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_gebadia_engineering_school
+    icon = GFX_focus_research
+    relative_position_id = GEB_mons_railway_station
+    prerequisite = { focus = GEB_mons_railway_station }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        312 = {
+            add_building_construction = {
+                type = industrial_complex
+                level = 1
+                instant_build = yes
+            }
+            add_extra_state_shared_building_slots = 1
+        }
+        add_tech_bonus = {
+            bonus = 1
+            uses = 1
+            category = electronics
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_subsidize_internal_trade
+    icon = GFX_goal_generic_consumer_goods
+    relative_position_id = GEB_phase_one_of_industrialization
+    prerequisite = { focus = GEB_phase_one_of_industrialization }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 2
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        263 = {
+            add_building_construction = {
+                type = infrastructure
+                level = 1
+                instant_build = yes
+            }
+        }
+        add_timed_idea = {
+            idea = geb_internal_trade_subsidies
+            days = 365
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_silvia_passenger_rail
+    icon = GFX_focus_generic_railroad
+    relative_position_id = GEB_expand_the_road_system
+    prerequisite = { focus = GEB_expand_the_road_system }
+    prerequisite = { focus = GEB_subsidize_internal_trade }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        263 = {
+            add_building_construction = {
+                type = infrastructure
+                level = 1
+                instant_build = yes
+            }
+        }
+        add_tech_bonus = {
+            bonus = 0.5
+            uses = 1
+            category = train_tech
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_granley_mountains_iron_mines
+    icon = GFX_focus_generic_extract_steel
+    relative_position_id = GEB_silvia_passenger_rail
+    prerequisite = { focus = GEB_silvia_passenger_rail }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        263 = {
+            add_building_construction = {
+                type = industrial_complex
+                level = 1
+                instant_build = yes
+            }
+            add_resource = {
+                type = steel
+                amount = 10
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_complete_phase_one_of_industrialization
+    icon = GFX_focus_generic_industry_1
+    relative_position_id = GEB_gebadia_engineering_school
+    prerequisite = { focus = GEB_gebadia_engineering_school }
+    prerequisite = { focus = GEB_granley_mountains_iron_mines }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		num_of_factories > 20
+	}
+    completion_reward = {
+        swap_ideas = {
+            remove_idea = geb_unindustrialized_economy_3
+            add_idea = geb_unindustrialized_economy_2
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_phase_two_of_industrialization
+    icon = GFX_goal_GEB_phase_2_industrialization
+    relative_position_id = GEB_complete_phase_one_of_industrialization
+    prerequisite = { focus = GEB_complete_phase_one_of_industrialization }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        add_tech_bonus = {
+            bonus = 0.5
+            uses = 1
+            category = industry
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_north_gebadia_factories
+    icon = GFX_goal_generic_construct_civ_factory
+    relative_position_id = GEB_phase_two_of_industrialization
+    prerequisite = { focus = GEB_phase_two_of_industrialization }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = -1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        312 = {
+            add_building_construction = {
+                type = industrial_complex
+                level = 2
+                instant_build = yes
+            }
+            add_extra_state_shared_building_slots = 2
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_new_production_tools
+    icon = GFX_goal_generic_production
+    relative_position_id = GEB_north_gebadia_factories
+    prerequisite = { focus = GEB_north_gebadia_factories }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        add_tech_bonus = {
+            bonus = 0.5
+            uses = 1
+            category = cat_production
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_expand_granley_mountains_excavations
+    icon = GFX_goal_generic_construction2
+    relative_position_id = GEB_phase_two_of_industrialization
+    prerequisite = { focus = GEB_phase_two_of_industrialization }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        unlock_decision_category_tooltip = GEB_granley_mountains_excavations
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_albrecht_steelworks
+    icon = GFX_focus_generic_steel
+    relative_position_id = GEB_expand_granley_mountains_excavations
+    prerequisite = { focus = GEB_expand_granley_mountains_excavations }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        312 = {
+            add_building_construction = {
+                type = industrial_complex
+                level = 1
+                instant_build = yes
+            }
+            add_extra_state_shared_building_slots = 1
+            add_resource = {
+                type = steel
+                amount = 10
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_electrify_the_cities
+    icon = GFX_focus_generic_energy
+    relative_position_id = GEB_new_production_tools
+    prerequisite = { focus = GEB_new_production_tools }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = -1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        every_owned_state = {
+            limit = {
+                OR = {
+                    has_state_category = city
+                    has_state_category = large_city
+                }
+            }
+            add_extra_state_shared_building_slots = 2
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_mons_central_blast_furnace
+    icon = GFX_goal_GEB_blast_furnace
+    relative_position_id = GEB_new_production_tools
+    prerequisite = { focus = GEB_new_production_tools }
+    prerequisite = { focus = GEB_albrecht_steelworks }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        312 = {
+            add_building_construction = {
+                type = industrial_complex
+                level = 1
+                instant_build = yes
+            }
+            add_extra_state_shared_building_slots = 1
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_silvia_smelting
+    icon = GFX_focus_generic_aluminum
+    relative_position_id = GEB_albrecht_steelworks
+    prerequisite = { focus = GEB_albrecht_steelworks }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        263 = {
+            add_resource = {
+                type = aluminium
+                amount = 15
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_complete_phase_two_of_industrialization
+    icon = GFX_focus_generic_industry_2
+    relative_position_id = GEB_mons_central_blast_furnace
+    prerequisite = { focus = GEB_electrify_the_cities }
+    prerequisite = { focus = GEB_mons_central_blast_furnace }
+    prerequisite = { focus = GEB_silvia_smelting }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        swap_ideas = {
+            remove_idea = geb_unindustrialized_economy_2
+            add_idea = geb_unindustrialized_economy_1
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_phase_three_of_industrialization
+    icon = GFX_goal_GEB_phase_3_industrialization
+    relative_position_id = GEB_complete_phase_two_of_industrialization
+    prerequisite = { focus = GEB_complete_phase_two_of_industrialization }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        add_tech_bonus = {
+            bonus = 0.5
+            uses = 1
+            category = industry
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_haas_and_kranz_rifle_company
+    icon = GFX_focus_secret_rearmament
+    relative_position_id = GEB_phase_three_of_industrialization
+    prerequisite = { focus = GEB_phase_three_of_industrialization }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = -1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        312 = {
+            add_building_construction = {
+                type = arms_factory
+                level = 1
+                instant_build = yes
+            }
+            add_extra_state_shared_building_slots = 1
+        }
+        add_tech_bonus = {
+            uses = 1
+            bonus = 0.5
+            category = infantry_weapons
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_baumann_munitions_factory
+    icon = GFX_goal_generic_army_artillery
+    relative_position_id = GEB_phase_three_of_industrialization
+    prerequisite = { focus = GEB_phase_three_of_industrialization }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        312 = {
+            add_building_construction = {
+                type = arms_factory
+                level = 1
+                instant_build = yes
+            }
+            add_extra_state_shared_building_slots = 1
+        }
+        add_tech_bonus = {
+            uses = 1
+            bonus = 0.5
+            category = artillery
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_mons_polytechnic_university
+    icon = GFX_goal_tfv_generic_tech_sharing
+    relative_position_id = GEB_haas_and_kranz_rifle_company
+    prerequisite = { focus = GEB_haas_and_kranz_rifle_company }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = -1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        add_tech_bonus = {
+            uses = 3
+            bonus = 0.25
+            category = industry
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_mechanize_agriculture
+    icon = GFX_goal_GEB_mechanize_agriculture
+    relative_position_id = GEB_haas_and_kranz_rifle_company
+    prerequisite = { focus = GEB_haas_and_kranz_rifle_company }
+    prerequisite = { focus = GEB_baumann_munitions_factory }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        remove_ideas = geb_unmechanized_agriculture
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_hydroelectric_dam
+    icon = GFX_focus_generic_hydroelectric_energy
+    relative_position_id = GEB_baumann_munitions_factory
+    prerequisite = { focus = GEB_baumann_munitions_factory }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        312 = {
+            add_dynamic_modifier = { modifier = GEB_hydro_electric_dam }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_improve_rural_roads
+    icon = GFX_goal_generic_construct_civilian
+    relative_position_id = GEB_mons_polytechnic_university
+    prerequisite = { focus = GEB_mons_polytechnic_university }
+    prerequisite = { focus = GEB_mechanize_agriculture }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        every_owned_state = {
+            limit = {
+                NOT = {
+                    OR = {
+                        has_state_category = city
+                        has_state_category = large_city
+                    }
+                }
+            }
+            312 = {
+                add_building_construction = {
+                    type = infrastructure
+                    level = 1
+                    instant_build = yes
+                }
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_electrify_the_countryside
+    icon = GFX_focus_generic_energy
+    relative_position_id = GEB_mechanize_agriculture
+    prerequisite = { focus = GEB_mechanize_agriculture }
+    prerequisite = { focus = GEB_hydroelectric_dam }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        every_owned_state = {
+            limit = {
+                NOT = {
+                    OR = {
+                        has_state_category = city
+                        has_state_category = large_city
+                    }
+                }
+            }
+            add_extra_state_shared_building_slots = 2
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_complete_phase_three_of_industrialization
+    icon = GFX_focus_generic_industry_3
+    relative_position_id = GEB_mechanize_agriculture
+    prerequisite = { focus = GEB_improve_rural_roads }
+    prerequisite = { focus = GEB_electrify_the_countryside }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 2
+	available = {
+		
+	}
+    completion_reward = {
+        remove_ideas = geb_unindustrialized_economy_1
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_form_gebetian_air_force
+    icon = GFX_goal_GEB_form_gebetian_air_force
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 21
+    y = 0
+	available = {
+		has_deployed_air_force_size = {
+            size > 100
+        }
+	}
+    completion_reward = {
+        air_experience = 25
+        remove_ideas = geb_nonexistent_air_force
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_faulmann_doctrine
+    icon = GFX_goal_GEB_faulmann_doctrine
+    relative_position_id = GEB_form_gebetian_air_force
+    prerequisite = { focus = GEB_form_gebetian_air_force }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        add_doctrine_cost_reduction = {
+            cost_reduction = 0.5
+            uses = 1
+            category = cat_battlefield_support
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_develop_new_strike_aircraft
+    icon = GFX_goal_GEB_develop_new_strike_aircraft
+    relative_position_id = GEB_faulmann_doctrine
+    prerequisite = { focus = GEB_faulmann_doctrine }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = -1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        add_tech_bonus = {
+            bonus = 0.5
+            uses = 1
+            category = tactical_bomber
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_purchase_osean_strike_aircraft
+    icon = GFX_goal_GEB_purchase_osean_strike_aircraft
+    relative_position_id = GEB_faulmann_doctrine
+    prerequisite = { focus = GEB_faulmann_doctrine }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        if = {
+            limit = {
+                NOT = {
+                    has_dlc = "By Blood Alone"
+                }
+            }
+            add_equipment_to_stockpile = {
+                type = tac_bomber_equipment_1
+                amount = 100
+                producer = OSE
+            }
+        }
+        else = {
+            add_equipment_to_stockpile = {
+                type = medium_plane_airframe_1
+                amount = 100
+                producer = OSE
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_granley_mountains_exercises
+    icon = GFX_goal_GEB_granley_mountains_exercises
+    relative_position_id = GEB_faulmann_doctrine
+    prerequisite = { focus = GEB_develop_new_strike_aircraft }
+    prerequisite = { focus = GEB_purchase_osean_strike_aircraft }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 2
+    completion_reward = {
+        air_experience = 50
+        add_ideas = geb_precision_bombing_1
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_our_violent_brothers
+    icon = GFX_goal_OSE_belka_problem
+    cost = 6
+    ai_will_do = {
+        factor = 90
+    }
+    x = 29
+    y = 0
+	available = {
+		BLK = {
+            has_government = fascism
+        }
+	}
+    completion_reward = {
+        unlock_decision_category_tooltip = GEB_national_defense
+		add_war_support = 0.05
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_reopen_arms_factories
+    icon = GFX_goal_generic_construct_mil_factory
+    relative_position_id = GEB_our_violent_brothers
+    prerequisite = { focus = GEB_our_violent_brothers }
+    cost = 6
+    ai_will_do = {
+        factor = 90
+    }
+    x = -2
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+		312 = {
+            add_building_construction = {
+                type = arms_factory
+                level = 2
+                instant_build = yes
+            }
+            add_extra_state_shared_building_slots = 2
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_purchase_osean_arms
+    icon = GFX_focus_generic_purchase_osean_arms
+    relative_position_id = GEB_our_violent_brothers
+    prerequisite = { focus = GEB_our_violent_brothers }
+    cost = 6
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        #unlock_decision_tooltip = GEB_purchase_osean_guns
+        add_political_power = -50
+		add_equipment_to_stockpile = {
+            type = infantry_equipment
+            amount = 5000
+            producer = OSE
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_develop_a_new_rifle
+    icon = GFX_focus_generic_infantry_equipment_research
+    relative_position_id = GEB_our_violent_brothers
+    prerequisite = { focus = GEB_our_violent_brothers }
+    cost = 6
+    ai_will_do = {
+        factor = 90
+    }
+    x = 2
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+		add_tech_bonus = {
+            bonus = 1.0
+            uses = 1
+            category = infantry_weapons
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_reinstate_conscription
+    icon = GFX_focus_generic_manpower
+    relative_position_id = GEB_our_violent_brothers
+    prerequisite = { focus = GEB_reopen_arms_factories }
+    prerequisite = { focus = GEB_purchase_osean_arms }
+    prerequisite = { focus = GEB_develop_a_new_rifle }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 2
+	available = {
+		
+	}
+    completion_reward = {
+        custom_effect_tooltip = GEB_reinstate_conscription_tt
+		add_ideas = limited_conscription
+        division_template = {
+            name = "Conscript Division"
+            is_locked = yes
+            division_names_group = GEB_INF_01
+            priority = 0
+            regiments = {
+                infantry = { x = 0 y = 0 }
+                infantry = { x = 0 y = 1 }
+                infantry = { x = 0 y = 2 }
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_the_haller_plan
+    icon = GFX_goal_GEB_the_haller_plan
+    mutually_exclusive = {
+        focus = GEB_the_jung_plan
+        focus = GEB_the_burger_plan
+    }
+    relative_position_id = GEB_reinstate_conscription
+    prerequisite = { focus = GEB_reinstate_conscription }
+    cost = 6
+    ai_will_do = {
+        factor = 0
+    }
+    x = -4
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        GEB_janis_haller = {
+            promote_leader = yes
+            add_advisor_role = {
+                advisor = {
+                    slot = army_chief
+                    cost = 60
+                    idea_token = GEB_character_token_army_chief
+                    traits = { army_chief_defensive_1 }
+                }
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_the_meike_line
+    icon = GFX_goal_generic_construct_military
+    relative_position_id = GEB_the_haller_plan
+    prerequisite = { focus = GEB_the_haller_plan }
+    cost = 6
+    ai_will_do = {
+        factor = 90
+    }
+    x = -1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        if = {
+            limit = {
+                263 = {
+                    is_owned_by = ROOT
+                }
+            }
+            263 = {
+                add_building_construction = {
+                    type = bunker
+                    level = 1
+                    instant_build = yes
+                    province = {
+                        id = 1835
+                        id = 3002
+                        id = 7298
+                        id = 3148
+                        id = 3976
+                        id = 2344
+                        id = 2476
+                        id = 7463
+                    }
+                }
+            }
+        }
+        if = {
+            limit = {
+                312 = {
+                    is_owned_by = ROOT
+                }
+            }
+            312 = {
+                add_building_construction = {
+                    type = bunker
+                    level = 1
+                    instant_build = yes
+                    province = {
+                        id = 1891
+                        id = 5483
+                        id = 7582
+                        id = 7578
+                        id = 3982
+                        id = 5321
+                        id = 7659
+                        id = 3928
+                    }
+                }
+            }
+        }
+        if = {
+            limit = {
+                345 = {
+                    is_owned_by = ROOT
+                }
+            }
+            345 = {
+                add_building_construction = {
+                    type = bunker
+                    level = 1
+                    instant_build = yes
+                    province = {
+                        id = 7784
+                        id = 3133
+                        id = 3048
+                    }
+                }
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_form_the_gebetian_rangers
+    icon = GFX_goal_GEB_gebetian_rangers
+    relative_position_id = GEB_the_haller_plan
+    prerequisite = { focus = GEB_the_haller_plan }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 2
+	available = {
+		
+	}
+    completion_reward = {
+		if = {
+            limit = {
+                NOT = {
+                    has_tech = tech_mountaineers
+                }
+            }
+            set_technology = {
+                tech_mountaineers = 1
+            }
+        }
+        else_if = {
+            limit = {
+                has_tech = tech_mountaineers
+            }
+            set_technology = {
+                tech_mountaineers2 = 1
+            }
+        }
+        else_if = {
+            limit = {
+                has_tech = tech_mountaineers2
+            }
+            set_technology = {
+                tech_mountaineers3 = 1
+            }
+        }
+        division_template = {
+            name = "Gebetian Rangers"
+            division_names_group = GEB_INF_01
+            priority = 1
+            regiments = {
+                mountaineers = { x = 0 y = 0 }
+                mountaineers = { x = 0 y = 1 }
+                mountaineers = { x = 0 y = 2 }
+                mountaineers = { x = 1 y = 0 }
+                mountaineers = { x = 1 y = 1 }
+            }
+            support = {
+                engineer = { x = 0 y = 0 }
+                artillery = { x = 0 y = 1 }
+            }
+        }
+        every_owned_state = {
+            limit = {
+                is_capital = yes
+            }
+            create_unit = {
+                division = "name = \"Gebetian Rangers\" division_template = \"Gebetian Rangers\" start_experience_factor = 0.5"
+                allow_spawning_on_enemy_provs = yes
+                owner = ROOT
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_rail_line_defenses
+    icon = GFX_goal_generic_construct_military
+    relative_position_id = GEB_the_haller_plan
+    prerequisite = { focus = GEB_the_haller_plan }
+    cost = 6
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        if = {
+            limit = {
+                263 = {
+                    is_owned_by = ROOT
+                }
+            }
+            263 = {
+                add_building_construction = {
+                    type = bunker
+                    level = 1
+                    instant_build = yes
+                    province = {
+                        id = 5643
+                        id = 2149
+                        id = 2344
+                        id = 2476
+                        id = 7463
+                    }
+                }
+            }
+        }
+        if = {
+            limit = {
+                281 = {
+                    is_owned_by = ROOT
+                }
+            }
+            281 = {
+                add_building_construction = {
+                    type = bunker
+                    level = 1
+                    instant_build = yes
+                    province = {
+                        id = 3413
+                    }
+                }
+            }
+        }
+        if = {
+            limit = {
+                312 = {
+                    is_owned_by = ROOT
+                }
+            }
+            281 = {
+                add_building_construction = {
+                    type = bunker
+                    level = 1
+                    instant_build = yes
+                    province = {
+                        id = 5483
+                        id = 4002
+                    }
+                }
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_expand_kuhn_air_force_base
+    icon = GFX_goal_generic_air_production
+    relative_position_id = GEB_reinstate_conscription
+    prerequisite = {
+        focus = GEB_festung_mons
+        focus = GEB_mine_the_desert
+        focus = GEB_establish_burger_towns
+    }
+    cost = 5
+    ai_will_do = {
+        factor = 95
+    }
+    x = 0
+    y = 5
+	available = {
+		
+	}
+    completion_reward = {
+		263 = {
+            add_building_construction = {
+                type = air_base
+                level = 2
+                instant_build = yes
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_festung_mons
+    icon = GFX_goal_generic_fortify_city
+    relative_position_id = GEB_the_haller_plan
+    prerequisite = { focus = GEB_the_meike_line }
+    prerequisite = { focus = GEB_form_the_gebetian_rangers }
+    prerequisite = { focus = GEB_rail_line_defenses }
+    cost = 6
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 3
+	available = {
+		controls_state = 312
+	}
+    completion_reward = {
+        312 = {
+            add_building_construction = {
+                type = anti_air_building
+                level = 2
+                instant_build = yes
+            }
+            add_building_construction = {
+                type = bunker
+                level = 2
+                instant_build = yes
+                province = 4002
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_the_burger_plan
+    icon = GFX_goal_GEB_the_burger_plan
+    mutually_exclusive = {
+        focus = GEB_the_haller_plan
+        focus = GEB_the_jung_plan
+    }
+    relative_position_id = GEB_reinstate_conscription
+    prerequisite = { focus = GEB_reinstate_conscription }
+    cost = 6
+    ai_will_do = {
+        factor = 100
+    }
+    x = 0
+    y = 1
+	available = {
+		controls_state = 256
+	}
+    completion_reward = {
+        add_political_power = 150
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_the_burger_line
+    icon = GFX_goal_generic_construct_military
+    relative_position_id = GEB_the_burger_plan
+    prerequisite = { focus = GEB_the_burger_plan }
+    cost = 6
+    ai_will_do = {
+        factor = 90
+    }
+    x = -1
+    y = 1
+	available = {
+		controls_state = 256
+	}
+    completion_reward = {
+        256 = {
+            add_building_construction = {
+                type = bunker
+                level = 2
+                instant_build = yes
+                province = {
+                    id = 7361
+                    id = 1864
+                    id = 3766
+                    id = 7281
+                    id = 1028
+                    id = 4931
+                    id = 7213
+                    id = 7179
+                    id = 7158
+                    id = 7117
+                    id = 7127
+                    id = 7113
+                    id = 7119
+                    id = 6093
+                    id = 5412
+                }
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_fortify_rotwald
+    icon = GFX_goal_generic_fortify_city
+    relative_position_id = GEB_the_burger_plan
+    prerequisite = { focus = GEB_the_burger_plan }
+    cost = 6
+    ai_will_do = {
+        factor = 90
+    }
+    x = 1
+    y = 1
+	available = {
+		controls_state = 256
+	}
+    completion_reward = {
+        256 = {
+            add_building_construction = {
+                type = bunker
+                level = 4
+                instant_build = yes
+                province = 7248
+            }
+            add_building_construction = {
+                type = anti_air_building
+                level = 2
+                instant_build = yes
+                province = 7248
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_urban_combat_training
+    icon = GFX_goal_GEB_urban_combat_training
+    relative_position_id = GEB_the_burger_plan
+    prerequisite = { focus = GEB_the_burger_plan }
+    prerequisite = { focus = GEB_the_burger_line }
+    prerequisite = { focus = GEB_fortify_rotwald }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 2
+    completion_reward = {
+        every_unit_leader = {
+            add_unit_leader_trait = urban_assault_specialist
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_establish_burger_towns
+    icon = GFX_goal_generic_fortify_city
+    relative_position_id = GEB_urban_combat_training
+    prerequisite = { focus = GEB_urban_combat_training }
+    cost = 6
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+    completion_reward = {
+        256 = {
+            add_building_construction = {
+                type = bunker
+                level = 2
+                instant_build = yes
+                province = {
+                    id = 2492
+                    id = 288
+                    id = 7256
+                    id = 7257
+                }
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_the_jung_plan
+    icon = GFX_goal_GEB_the_jung_plan
+    mutually_exclusive = {
+        focus = GEB_the_haller_plan
+        focus = GEB_the_burger_plan
+    }
+    relative_position_id = GEB_reinstate_conscription
+    prerequisite = { focus = GEB_reinstate_conscription }
+    cost = 6
+    ai_will_do = {
+        factor = 0
+    }
+    x = 4
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+		GEB_elli_jung = {
+            promote_leader = yes
+            add_advisor_role = {
+                advisor = {
+                    slot = army_chief
+                    cost = 50
+                    idea_token = GEB_character_token_army_chief
+                    traits = { army_logistics_1 }
+                }
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_baiting_fortifications
+    icon = GFX_goal_GEB_baiting_fortifications
+    relative_position_id = GEB_the_jung_plan
+    prerequisite = { focus = GEB_the_jung_plan }
+    cost = 6
+    ai_will_do = {
+        factor = 100
+    }
+    x = -1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        if = {
+            limit = {
+                263 = {
+                    is_owned_by = ROOT
+                }
+            }
+            263 = {
+                add_building_construction = {
+                    type = bunker
+                    level = 1
+                    instant_build = yes
+                    province = {
+                        id = 1835
+                        id = 3002
+                        id = 7298
+                    }
+                }
+            }
+        }
+        add_timed_idea = {
+            idea = fortification_effort_idea
+            days = 1825
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_desert_training
+    icon = GFX_goal_GEB_desert_training
+    relative_position_id = GEB_the_jung_plan
+    prerequisite = { focus = GEB_the_jung_plan }
+    cost = 10
+    ai_will_do = {
+        factor = 100
+    }
+    x = 0
+    y = 2
+	available = {
+		
+	}
+    completion_reward = {
+        add_ideas = geb_desert_training_idea
+        set_technology = {
+            camelry = 1
+        }
+        #Send event to Belka about recon planes spotting troops moving equipment in the desert
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_stauss_logistics_center
+    icon = GFX_focus_generic_truck
+    relative_position_id = GEB_the_jung_plan
+    prerequisite = { focus = GEB_the_jung_plan }
+    cost = 6
+    ai_will_do = {
+        factor = 100
+    }
+    x = 1
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        281 = {
+            add_building_construction = {
+                type = supply_node
+                level = 1
+                instant_build = yes
+                province = 3188
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_mine_the_desert
+    icon = GFX_goal_GEB_mine_the_desert
+    relative_position_id = GEB_the_jung_plan
+    prerequisite = { focus = GEB_baiting_fortifications }
+    prerequisite = { focus = GEB_desert_training }
+    prerequisite = { focus = GEB_stauss_logistics_center }
+    cost = 6
+    ai_will_do = {
+        factor = 100
+    }
+    x = 0
+    y = 3
+	available = {
+		
+	}
+    completion_reward = {
+        unlock_decision_tooltip = GEB_plant_land_mines
+        if = {
+            limit = {
+                owns_state = 281
+            }
+            281 = {
+                state_increase_land_mines = yes
+            }
+        }
+        if = {
+            limit = {
+                owns_state = 300
+            }
+            300 = {
+                state_increase_land_mines = yes
+            }
+        }
+    }
+    search_filters = { }
+}
+shared_focus = {
+    id = GEB_defensive_militarism
+    icon = GFX_goal_generic_small_arms
+    relative_position_id = GEB_expand_kuhn_air_force_base
+    prerequisite = { focus = GEB_expand_kuhn_air_force_base }
+    cost = 10
+    ai_will_do = {
+        factor = 90
+    }
+    x = 0
+    y = 1
+	available = {
+		
+	}
+    completion_reward = {
+        add_ideas = geb_defensive_militarism
+    }
+    search_filters = { }
+}
+# shared_focus = {
+#     id = GEB_under_the_boot_again
+#     icon = placeholder
+#     cost = 10
+#     ai_will_do = {
+#         factor = 90
+#     }
+#     x = 7
+#     y = 5
+# 	available = {
+
+#     }
+#     completion_reward = {
+        
+#     }
+#     search_filters = { }
+# }
+# shared_focus = { # Siegfried Böhm
+#     id = GEB_governor_bohm
+#     icon = placeholder
+#     relative_position_id = GEB_under_the_boot_again
+#     available = {
+
+#     }
+#     prerequisite = { focus = GEB_under_the_boot_again }
+#     cost = 3
+#     ai_will_do = {
+#         factor = 90
+#     }
+#     x = 0
+#     y = 1
+#     completion_reward = {
+        
+#     }
+#     search_filters = { }
+# }

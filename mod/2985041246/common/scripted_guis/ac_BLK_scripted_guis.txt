@@ -1,0 +1,46 @@
+scripted_gui = {
+
+	BLK_fire_excalibur = {
+		window_name = "BLK_fire_excalibur_con"
+		context_type = selected_state_context
+		parent_window_token = selected_state_view
+		
+		visible = {
+			ROOT = {
+				has_country_flag = BLK_excalibur_anti_land
+				original_tag = BLK
+				NOT = { has_active_mission = BLK_excalibur_cooling_after_bombing }
+				NOT = { has_global_flag = excalibur_destroyed }
+			}				
+			OR = {
+				owner = {
+					has_war_with = BLK
+				}
+				controller = {
+					has_war_with = BLK
+				}
+			}
+		}
+		effects = {
+            BLK_fire_excalibur_button_clickable_click = {
+                damage_units = {
+                    state = FROM
+                    limit = {
+                        NOT = { tag = BLK }
+                    }
+					damage = 0.2
+					org_damage = 0.2
+					str_damage = 0.2
+                    army = yes
+                }
+				ROOT = {
+					activate_mission = BLK_excalibur_cooling_after_bombing
+					add_to_variable = {
+						var = BLK_excalibur_destruction_meter
+						value = 2
+					}
+				}
+			}
+        }
+	}
+}

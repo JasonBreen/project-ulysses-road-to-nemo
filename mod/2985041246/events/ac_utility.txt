@@ -1,0 +1,221 @@
+add_namespace = utility
+
+country_event = { #reload focus tree
+	id = utility.1
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = utility.1.a
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+country_event = { #delete civs
+	id = utility.2
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = utility.2.a
+		random_owned_controlled_state = {
+			limit = {
+				industrial_complex > 0
+			}
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+		}
+		country_event = { id = utility.3 hours = 6 }
+	}
+}
+country_event = { #delete civs
+	id = utility.3
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = utility.3.a
+		subtract_from_variable = {
+			var = civs_to_delete
+			value = 1
+		}
+		if = {
+			limit = {
+				check_variable = { civs_to_delete > 0 }
+			}
+			country_event = { id = utility.2 hours = 1 }
+		}
+		else = {
+			clear_variable = civs_to_delete
+		}
+	}
+}
+country_event = { #delete mils
+	id = utility.4
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = utility.4.a
+		random_owned_controlled_state = {
+			limit = {
+				arms_factory > 0
+			}
+			remove_building = {
+				type = arms_factory
+				level = 1
+			}
+		}
+		country_event = { id = utility.5 hours = 6 }
+	}
+}
+country_event = { #delete mils
+	id = utility.5
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = utility.5.a
+		subtract_from_variable = {
+			var = mils_to_delete
+			value = 1
+		}
+		if = {
+			limit = {
+				check_variable = { mils_to_delete > 0 }
+			}
+			country_event = { id = utility.4 hours = 1 }
+		}
+		else = {
+			clear_variable = mils_to_delete
+		}
+	}
+}
+country_event = { #delete docks
+	id = utility.6
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = utility.6.a
+		random_owned_controlled_state = {
+			limit = {
+				dockyard > 0
+			}
+			remove_building = {
+				type = dockyard
+				level = 1
+			}
+		}
+		country_event = { id = utility.7 hours = 6 }
+	}
+}
+country_event = { #delete docks
+	id = utility.7
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = utility.7.a
+		subtract_from_variable = {
+			var = docks_to_delete
+			value = 1
+		}
+		if = {
+			limit = {
+				check_variable = { docks_to_delete > 0 }
+			}
+			country_event = { id = utility.6 hours = 1 }
+		}
+		else = {
+			clear_variable = docks_to_delete
+		}
+	}
+}
+country_event = { #delete army
+	id = utility.8
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = utility.8.a
+		if = {
+			limit = {
+				meta_trigger = {
+					text = {
+						has_army_manpower = { size > [ARMY_TO_LEFT] } 
+					}
+					ARMY_TO_LEFT = "[?army_to_left]"
+				}
+			}
+			ROOT = {
+				transfer_units_fraction = {
+					target = PLH
+					target_organization = 1
+					source_organization = 1
+					keep_unit_leaders_trigger = { always = yes }
+					size = 0.05
+				}
+			}
+			PLH = {
+				delete_unit = {
+					state = 171
+					disband = no
+				}
+				add_manpower = -1000000
+			}
+			country_event = { id = utility.9 hours = 6 }
+		}
+		else = {
+			clear_variable = army_to_left
+		}
+	}
+}
+country_event = { #delete army
+	id = utility.9
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = utility.9.a
+		country_event = { id = utility.8 hours = 6 }
+	}
+}
+country_event = { #delete army by %%%
+	id = utility.10
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = utility.10.a
+		ROOT = {
+			transfer_units_fraction = {
+				target = PLH
+				target_organization = 1
+				source_organization = 1
+				keep_unit_leaders_trigger = { always = yes }
+				size = army_to_delete
+			}
+			clear_variable = army_to_delete
+		}
+		PLH = {
+			delete_unit = {
+				state = 171
+				disband = no
+			}
+			add_manpower = -10000000
+		}
+	}
+}

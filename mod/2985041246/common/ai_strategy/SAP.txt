@@ -1,0 +1,106 @@
+# befriend
+# conquer
+# antagonize
+# build_ship
+# build_army
+# unit_ratio
+# build_building
+# research_tech
+# garrison
+# protect
+# influence
+# contain
+# area_priority
+
+do_not_protect_ustio_sap = {
+	allowed = {
+		tag = SAP
+	}
+	enable = {
+		#date < 1995.7.1
+		BLK = { is_ai = yes }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = dont_defend_ally_borders
+		id = "UST"
+		value = 100
+	}
+}
+
+do_not_hold_ose_sap = {
+	allowed = {
+		tag = SAP
+	}
+	enable = {
+		date > 1995.1.1
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = dont_defend_ally_borders
+		id = "OSE"
+		value = 100
+	}
+}
+
+SAP_send_volunteers_ustio = {
+	allowed = {
+		tag = SAP
+	}
+	enable = {
+		has_idea = sap_supported_ustio
+		UST = {
+			has_war_with = RAT
+		}
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = send_volunteers_desire
+		id = UST
+		value = 100
+	}
+}
+
+SAP_send_volunteers_ratio = {
+	allowed = {
+		tag = SAP
+	}
+	enable = {
+		has_idea = sap_supported_ratio
+		UST = {
+			has_war_with = RAT
+		}
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = send_volunteers_desire
+		id = RAT
+		value = 100
+	}
+}
+
+SAP_defend_vs_belka  = {
+	allowed = {
+		original_tag = SAP
+	}
+
+	enable = {
+		has_war_with = BLK
+		#BLK = { is_ai = yes }
+		#date < 1995.8.1
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = front_control
+		tag = BLK
+
+		priority = 100
+		
+		ordertype = front
+		execution_type = careful
+		#manual_attack = yes
+	}
+}

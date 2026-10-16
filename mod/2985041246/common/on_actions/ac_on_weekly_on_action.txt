@@ -1,0 +1,187 @@
+on_actions = {
+	on_weekly = {
+		effect = {
+			###############################################
+			set_variable = {
+				var = mils_amount_cost_rise
+				value = num_of_military_factories
+			}
+			multiply_variable = {
+				var = mils_amount_cost_rise
+				value = -0.01
+			}
+			if = {
+				limit = {
+					check_variable = { mils_amount_cost_rise <-0.75 }
+				}
+				set_variable = {
+					var = mils_amount_cost_rise
+					value = -0.75
+				}
+			}
+			###############################################
+			set_variable = {
+				var = civs_amount_cost_rise
+				value = num_of_civilian_factories
+			}
+			multiply_variable = {
+				var = civs_amount_cost_rise
+				value = -0.01
+			}
+			if = {
+				limit = {
+					check_variable = { civs_amount_cost_rise <-0.75 }
+				}
+				set_variable = {
+					var = civs_amount_cost_rise
+					value = -0.75
+				}
+			}
+			##############################################
+			set_variable = {
+				var = docks_amount_cost_rise
+				value = num_of_naval_factories
+			}
+			multiply_variable = {
+				var = docks_amount_cost_rise
+				value = -0.02
+			}
+			if = {
+				limit = {
+					check_variable = { docks_amount_cost_rise <-0.5 }
+				}
+				set_variable = {
+					var = docks_amount_cost_rise
+					value = -0.5
+				}
+			}
+			##############################################
+		}
+	}
+	on_weekly = {
+		effect = {
+			if = {
+				limit = {
+					date > 1995.01.15
+				}
+				every_country = {
+					limit = {
+						controls_state = 358
+					}
+					country_event = { id = world_event.1 }
+				}
+			}
+			if = {
+				every_country = {
+					limit = {
+						has_war = yes
+						is_ai = yes
+						NOT = {
+							has_idea = ai_uber_buff_idea
+						}
+					}
+					add_ideas = ai_uber_buff_idea
+				}
+			}
+		}
+	}
+	on_weekly_BLK = {
+		effect = {
+			if = {
+				limit = {
+					has_global_flag = belkan_war_is_happening
+					surrender_progress > 0.2
+					is_ai = no
+					has_war_with = OSE
+				}
+				country_event = { id = south_belka.2 days = 7 }
+			}
+			if = {
+				limit = {
+					has_global_flag = belkan_war_is_happening
+					is_ai = yes
+					has_war_with = OSE
+					OR = {
+						AND = {
+							has_country_flag = BLK_belkan_war_collapse_AI_flag
+							surrender_progress > 0.25
+						}
+						AND = {
+							surrender_progress > 0.15
+							NOT = {
+								controls_state = 302
+								controls_state = 364
+							}
+						}
+					}
+				}
+				country_event = { id = south_belka.4 }
+			}
+			if = {
+				limit = {
+					date > 1995.01.1
+					has_government = fascism
+					has_idea = BLK_eco_crisis_5_2
+				}
+				country_event = { id = belka_dlp_war_crisis.1 }
+			}
+			if = {
+				limit = {
+					check_variable = {	BLK_excalibur_destruction_meter = 2 }
+				}
+				clear_variable = BLK_excalibur_destruction_meter
+				country_event = { id = belka_dlp_war.4 days = 40 }	
+			}
+		}
+	}
+	on_weekly_GEB = {
+		effect = {
+			if = {
+				limit = {
+					is_ai = yes
+					has_war_with = BLK
+					has_global_flag = belkan_war_is_happening
+					BLK = {
+						controls_state = 256
+						is_ai = yes
+					}
+				}
+				ROOT = {
+					white_peace = BLK
+					if = { 
+						limit = { is_in_faction_with = FAT }
+						leave_faction = yes
+					}
+				}
+				BLK = {
+					puppet = GEB
+					transfer_state = 256
+				}
+			}
+		}
+	}
+	on_weekly_UST = {
+		effect = {
+			if = {
+				limit = {
+					has_war_with = RAT
+					has_global_flag = first_ustian_war
+					UST = {
+						controls_state = 306
+					}
+				}
+				country_event = ustio.19
+			}
+			if = {
+				limit = {
+					has_war_with = RAT
+					has_global_flag = first_ustian_war
+					RAT = {
+						controls_state = 365
+					}
+				}
+				country_event = ustio.20
+			}
+		}
+	}
+}

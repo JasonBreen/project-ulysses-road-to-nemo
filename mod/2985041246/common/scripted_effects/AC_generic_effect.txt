@@ -1,0 +1,31 @@
+SAP_mobilize_state_national_guard_effect = {
+    if = {
+        limit = {
+            state_population_k < 900
+        }
+        create_unit = {
+            division = "name = \"National Guard Division\" division_template = \"National Guard Division\" start_experience_factor = 0.0 start_manpower_factor = 0.01"
+            allow_spawning_on_enemy_provs = no
+            owner = ROOT
+            id = draft_infantry_id
+        }
+    }
+    else = {
+        set_variable = { recruitable_pop = state_population_k }
+        multiply_variable = { recruitable_pop = 0.01 }
+        set_variable = { units_to_spawn = recruitable_pop }
+        divide_variable = { units_to_spawn = 9 }
+        for_loop_effect = {
+            start = 1
+            end = units_to_spawn
+            compare = less_than_or_equals
+            create_unit = {
+                division = "name = \"National Guard Division\" division_template = \"National Guard Division\" start_experience_factor = 0.0 start_manpower_factor = 0.01"
+                allow_spawning_on_enemy_provs = no
+                owner = ROOT
+                id = draft_infantry_id
+            }
+        }
+    }
+    set_state_flag = sap_state_mobilized
+}

@@ -1,0 +1,205 @@
+shared_focus = {
+    id = BLK_the_crisis_continues
+    icon = GFX_focus_CZE_german_puppet
+    cost = 4.3
+    ai_will_do = {
+        factor = 90
+    }
+    x = 8
+    y = 0
+    completion_reward = {
+		country_event = { id = belka.1 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_country_wide_protests
+    icon = GFX_focus_BLK_country_wide_protests
+    cost = 5.8
+    ai_will_do = {
+        factor = 90
+    }
+    prerequisite = {
+        focus = BLK_the_crisis_continues
+		
+    }
+    relative_position_id = BLK_the_crisis_continues
+    x = -2
+    y = 1
+
+    completion_reward = {
+		country_event = { id = belka.2 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_economy_in_pieces
+    icon = GFX_goal_generic_trade
+    cost = 5.8
+    ai_will_do = {
+        factor = 90
+    }
+    prerequisite = {
+        focus = BLK_the_crisis_continues
+    }
+    relative_position_id = BLK_the_crisis_continues
+    x = 2
+    y = 1
+
+    completion_reward = {
+		country_event = { id = belka.3 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_no_work_place
+    icon = GFX_goal_generic_construction
+    cost = 5.8
+    ai_will_do = {
+        factor = 90
+    }
+    prerequisite = {
+        focus = BLK_the_crisis_continues
+    }
+    relative_position_id = BLK_the_crisis_continues
+    x = 0
+    y = 1
+
+    completion_reward = {
+		country_event = { id = belka.4 }
+	}
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_no_money
+    icon = GFX_focus_ETH_adopt_the_lira
+    cost = 8.6
+    ai_will_do = {
+        factor = 90
+    }
+    prerequisite = {
+        focus = BLK_country_wide_protests
+    }
+	prerequisite = {
+        focus = BLK_economy_in_pieces
+    }
+	prerequisite = {
+        focus = BLK_no_work_place
+    }
+    relative_position_id = BLK_no_work_place
+    x = 0
+    y = 1
+
+    completion_reward = {
+		country_event = { id = belka.5 }
+		#add_ideas = BLK_no_money_idea
+	}
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_sell_the_land
+    icon = GFX_focus_hol_the_foundations_of_defense
+    cost = 2.9
+    ai_will_do = {
+        factor = 90
+    }
+    prerequisite = {
+        focus = BLK_no_money
+    }
+	available = {
+		has_country_flag = BLK_flag_sell_lands_yes
+	}
+    relative_position_id = BLK_no_money
+    x = 0
+    y = 1
+
+    completion_reward = {
+		country_event = { id = belka.9 }
+	}
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_osean_prop
+    icon = GFX_focus_BLK_great_lakes_resource_development_company
+    cost = 4.3
+    ai_will_do = {
+        factor = 90
+    }
+    prerequisite = {
+        focus = BLK_sell_the_land
+    }
+    relative_position_id = BLK_sell_the_land
+    x = 0
+    y = 1
+
+    completion_reward = {
+		country_event = { id = belka.10 }
+	}
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_wait_for_profit
+    icon = GFX_goal_generic_intelligence_exchange
+    cost = 4.3
+    ai_will_do = {
+        factor = 90
+    }
+    prerequisite = {
+        focus = BLK_osean_prop
+    }
+    relative_position_id = BLK_osean_prop
+    x = 0
+    y = 1
+
+    completion_reward = {
+		if = {
+			limit = {
+				has_global_flag = glrdc_bad_flag
+			}
+			country_event = { id = belka.11 }
+		}
+		if = {
+			limit = {
+				has_global_flag = glrdc_good_flag
+			}
+			country_event = { id = xxx }
+		}
+	}
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_dark_times
+    icon = GFX_goal_tfv_saf_anti_colonialist_crusade
+    cost = 4.3
+    ai_will_do = {
+        factor = 90
+    }
+	dynamic = yes
+    prerequisite = {
+        focus = BLK_wait_for_profit
+    }
+    relative_position_id = BLK_wait_for_profit
+    x = 0
+    y = 1
+
+    completion_reward = {
+		if = {
+			limit = {
+				has_global_flag = great_lakes_went_bad
+			}
+			country_event = { id = belka.12 }
+		}
+		else = {
+			custom_effect_tooltip = BLK_dark_times_tt
+		}
+	}
+    search_filters = { }
+}

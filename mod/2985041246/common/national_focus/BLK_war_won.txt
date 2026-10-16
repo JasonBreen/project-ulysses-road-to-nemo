@@ -1,0 +1,651 @@
+shared_focus = {
+    id = BLK_war_won
+    icon = GFX_focus_smiling_buddha
+    cost = 1
+    ai_will_do = {
+        factor = 50
+    }
+    x = 8
+    y = 0
+	available = {
+
+	}
+    completion_reward = {
+		country_event = belka_dlp_won.1
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_celebration
+    icon = GFX_goal_generic_propaganda
+    cost = 1
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_war_won
+    }
+    relative_position_id = BLK_war_won
+    x = 0
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		country_event = belka_dlp_won.2
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_the_parade
+    icon = GFX_focus_SOV_restore_cossack_units
+    cost = 1
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_celebration
+    }
+    relative_position_id = BLK_celebration
+    x = -2
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		country_event = belka_dlp_won.3
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_rald_speech
+    icon = GFX_focus_generic_fascist_propaganda
+    cost = 1
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_celebration
+    }
+    relative_position_id = BLK_celebration
+    x = 2
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		country_event = belka_dlp_won.4
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_grand_pardon
+    icon = GFX_goal_tripartite_pact
+    cost = 1
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_celebration
+    }
+    relative_position_id = BLK_celebration
+    x = 0
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		country_event = belka_dlp_won.10
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_belka_above_all
+    icon = GFX_focus_generic_fascist_troops
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_the_parade
+    }
+	prerequisite = {
+        focus = BLK_grand_pardon
+    }
+	prerequisite = {
+        focus = BLK_rald_speech
+    }
+    relative_position_id = BLK_the_parade
+    x = 1
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		if = {
+			limit = {
+				has_idea = BLK_army_with_state_idea
+			}
+			swap_ideas = { remove_idea = BLK_army_with_state_idea add_idea = BLK_army_with_state_2 }
+		}
+		if = {
+			limit = {
+				has_idea = BLK_army_with_state_quality_idea
+			}
+			swap_ideas = { remove_idea = BLK_army_with_state_quality_idea add_idea = BLK_army_with_state_2 }
+		}
+		if = {
+			limit = {
+				has_idea = BLK_army_with_state_quantity_penal_idea
+			}
+			swap_ideas = { remove_idea = BLK_army_with_state_quantity_penal_idea add_idea = BLK_army_with_state_2 }
+		}
+		if = {
+			limit = {
+				has_idea = BLK_army_with_state_quantity_idea
+			}
+			swap_ideas = { remove_idea = BLK_army_with_state_quantity_idea add_idea = BLK_army_with_state_2 }
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_army_stands_undefeated
+    icon = GFX_focus_SOV_the_glory_of_the_red_army_alternative
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_the_parade
+    }
+	prerequisite = {
+        focus = BLK_grand_pardon
+    }
+	prerequisite = {
+        focus = BLK_rald_speech
+    }
+    relative_position_id = BLK_rald_speech
+    x = -1
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		swap_ideas = { remove_idea = BLK_echos_of_history add_idea = BLK_echos_of_history_2 }
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_send_veterans_home
+    icon = GFX_focus_POL_beck_ribbentrop
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_belka_above_all
+    }
+	prerequisite = {
+        focus = BLK_army_stands_undefeated
+    }
+    relative_position_id = BLK_belka_above_all
+    x = -2
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+	
+		###################################
+		custom_effect_tooltip = BLK_send_veterans_home_tt
+		set_variable = {
+			var = army_to_delete
+			value = 0.5 
+		}
+		hidden_effect = {
+			country_event = utility.10
+		}
+		#hidden_effect = {
+		#	ROOT = {
+		#		transfer_units_fraction = {
+		#			target = PLH
+		#			target_organization = 1
+		#			source_organization = 1
+		#			keep_unit_leaders_trigger = { always = yes }
+		#			size = 0.5
+		#		}
+		#	}
+		#	PLH = {
+		#		delete_unit = {
+		#			state = 171
+		#			disband = no
+		#		}
+		#		add_manpower = -10000000
+		#	}
+		#}
+		###################################
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_exhausted_army
+    icon = GFX_focus_generic_manpower
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_send_veterans_home
+    }
+    relative_position_id = BLK_send_veterans_home
+    x = -1
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		custom_effect_tooltip = BLK_exhausted_army_tt
+		if = {
+			limit = {
+				has_idea = BLK_eco_crisis_army_1
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_army_1 add_idea = BLK_army_crisis_won }
+		}
+		else_if = {
+			limit = {
+				has_idea = BLK_eco_crisis_army_2
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_army_2 add_idea = BLK_army_crisis_won }
+		}
+		else_if = {
+			limit = {
+				has_idea = BLK_eco_crisis_army_3
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_army_3 add_idea = BLK_army_crisis_won }
+		}
+		else_if = {
+			limit = {
+				has_idea = BLK_eco_crisis_army_4
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_army_4 add_idea = BLK_army_crisis_won }
+		}
+		
+		hidden_effect = {
+			remove_ideas = BLK_repair_squads_idea
+			remove_ideas = BLK_finest_pilots_idea
+			remove_ideas = BLK_strat_bomber_idea
+			remove_ideas = BLK_strat_bomber_finest_pilots_idea
+			remove_ideas = BLK_air_constest_lakes
+			remove_ideas = BLK_woman_in_army_idea
+			remove_ideas = BLK_new_blood_1_idea
+			remove_ideas = BLK_new_blood_2_idea
+			remove_ideas = BLK_new_blood_3_idea
+			remove_ideas = BLK_modern_army_idea
+			remove_ideas = BLK_infantry_army_idea
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_home_front
+    icon = GFX_focus_generic_military_academy
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_belka_above_all
+    }
+	prerequisite = {
+        focus = BLK_army_stands_undefeated
+    }
+    relative_position_id = BLK_belka_above_all
+    x = 0
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		country_event = belka_dlp_won.5
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_end_the_martial_law
+    icon = GFX_focus_generic_military_dictatorship
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_home_front
+    }
+    relative_position_id = BLK_home_front
+    x = -1
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		remove_ideas = BLK_martial_law_idea
+		hidden_effect = {
+			country_event = { id = belka_dlp_won.12 days = 15 }
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_new_land_to_occupy
+    icon = GFX_goal_tfv_saf_anti_colonialist_crusade
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_belka_above_all
+    }
+	prerequisite = {
+        focus = BLK_army_stands_undefeated
+    }
+    relative_position_id = BLK_belka_above_all
+    x = 2
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		country_event = belka_dlp_won.6
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_reform_occupation_gov
+    icon = GFX_focus_generic_improve_the_administration
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_new_land_to_occupy
+    }
+    relative_position_id = BLK_new_land_to_occupy
+    x = 1
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		FAT = { set_cosmetic_tag = FAT_BLK }
+		GEB = { set_cosmetic_tag = GEB_BLK }
+		REC = { set_cosmetic_tag = REC_BLK }
+		hidden_effect = {
+			country_event = { id = belka_dlp_won.13 days = 15 }
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_demob_economy
+    icon = GFX_goal_generic_consumer_goods
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_belka_above_all
+    }
+	prerequisite = {
+        focus = BLK_army_stands_undefeated
+    }
+    relative_position_id = BLK_belka_above_all
+    x = 4
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		add_ideas = civilian_economy
+		custom_effect_tooltip = BLK_demob_economy_tt
+		
+		hidden_effect = {
+			#########################################
+			set_variable = {
+				var = civs_to_delete
+				value = num_of_civilian_factories
+			}
+			multiply_variable = {
+				var = civs_to_delete
+				value = 0.25
+			}
+			round_variable = civs_to_delete
+			country_event = utility.2
+			######################################
+			set_variable = {
+				var = mils_to_delete
+				value = num_of_military_factories
+			}
+			multiply_variable = {
+				var = mils_to_delete
+				value = 0.5
+			}
+			round_variable = mils_to_delete
+			country_event = utility.4
+			#####################################
+			set_variable = {
+				var = docks_to_delete
+				value = num_of_naval_factories
+			}
+			multiply_variable = {
+				var = docks_to_delete
+				value = 0.25
+			}
+			round_variable = docks_to_delete
+			country_event = utility.6
+			###################################
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_exhausted_industry
+    icon = GFX_goal_generic_construct_mil_factory
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_demob_economy
+    }
+    relative_position_id = BLK_demob_economy
+    x = 1
+    y = 1
+	available = {
+
+	}
+    completion_reward = {
+		custom_effect_tooltip = BLK_exhausted_industry_tt
+		if = {
+			limit = {
+				has_idea = BLK_eco_crisis_6
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_6 add_idea = BLK_industry_crisis_won }
+		}
+		else_if = {
+			limit = {
+				has_idea = BLK_eco_crisis_7
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_7 add_idea = BLK_industry_crisis_won }
+		}
+		else_if = {
+			limit = {
+				has_idea = BLK_eco_crisis_8
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_8 add_idea = BLK_industry_crisis_won }
+		}
+		else_if = {
+			limit = {
+				has_idea = BLK_eco_crisis_9
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_9 add_idea = BLK_industry_crisis_won }
+		}
+		else_if = {
+			limit = {
+				has_idea = BLK_eco_crisis_10
+			}
+			swap_ideas = { remove_idea = BLK_eco_crisis_10 add_idea = BLK_industry_crisis_won }
+		}
+		
+		hidden_effect = {
+			remove_ideas = BLK_master_of_the_craft_idea
+			remove_ideas = BLK_scrap_idea
+			remove_ideas = BLK_use_scrap_idea
+			remove_ideas = BLK_crush_unemploy_idea
+			remove_ideas = BLK_mili_civ_infr_idea
+			remove_ideas = BLK_expand_supply_idea
+			remove_ideas = BLK_woman_in_industry_idea
+			remove_ideas = BLK_build_up_navy_idea
+			remove_ideas = BLK_overspending_for_military_2
+		}
+		hidden_effect = {
+			country_event = { id = belka_dlp_won.14 days = 10 }
+		}
+    }
+    search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_home_repair_plan
+    icon = GFX_goal_continuous_non_factory_construct
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_belka_above_all
+    }
+	prerequisite = {
+        focus = BLK_army_stands_undefeated
+    }
+    relative_position_id = BLK_belka_above_all
+    x = 1
+    y = 2
+	available = {
+
+	}
+	completion_reward = {
+		add_timed_idea = { idea = BLK_home_repair_plan_idea days = 365 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_matter_of_ustio
+    icon = GFX_goal_continuous_suppression
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_exhausted_army
+    }
+	prerequisite = {
+        focus = BLK_end_the_martial_law
+    }
+	prerequisite = {
+        focus = BLK_home_repair_plan
+    }
+	prerequisite = {
+        focus = BLK_reform_occupation_gov
+    }
+	prerequisite = {
+        focus = BLK_exhausted_industry
+    }
+    relative_position_id = BLK_belka_above_all
+    x = 0
+    y = 3
+	available = {
+
+	}
+	completion_reward = {
+		country_event = belka_dlp_won.7
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_matter_of_excalibur
+    icon = GFX_focus_generic_strike_at_democracy1
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_exhausted_army
+    }
+	prerequisite = {
+        focus = BLK_end_the_martial_law
+    }
+	prerequisite = {
+        focus = BLK_home_repair_plan
+    }
+	prerequisite = {
+        focus = BLK_reform_occupation_gov
+    }
+	prerequisite = {
+        focus = BLK_exhausted_industry
+    }
+    relative_position_id = BLK_belka_above_all
+    x = 2
+    y = 3
+	available = {
+
+	}
+	completion_reward = {
+		country_event = belka_dlp_won.8
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+    id = BLK_project_rhongomyniad
+    icon = GFX_goal_BLK_project_rhongomyniad
+    cost = 2.9
+    ai_will_do = {
+        factor = 50
+    }
+	prerequisite = {
+        focus = BLK_matter_of_ustio
+    }
+	prerequisite = {
+        focus = BLK_matter_of_excalibur
+    }
+    relative_position_id = BLK_matter_of_ustio
+    x = 1
+    y = 2
+	available = {
+
+	}
+	completion_reward = {
+		country_event = belka_dlp_won.9
+		hidden_effect = {
+			country_event = { id = world_event.2 days = 1 }
+		}
+		custom_effect_tooltip = BLK_project_rhongomyniad_1_focus_tt
+	}
+	search_filters = { }
+}

@@ -1,0 +1,304 @@
+on_actions = {
+	# on_new_term_election = { # we should use this - Maid
+		
+	# }
+	on_startup = {
+		effect = {
+			every_possible_country = {
+			#####################################################################################
+				###############################################
+				set_variable = {
+					var = mils_amount_cost_rise
+					value = num_of_military_factories
+				}
+				multiply_variable = {
+					var = mils_amount_cost_rise
+					value = -0.01
+				}
+				if = {
+					limit = {
+						check_variable = { mils_amount_cost_rise <-0.75 }
+					}
+					set_variable = {
+						var = mils_amount_cost_rise
+						value = -0.75
+					}
+				}
+				###############################################
+				set_variable = {
+					var = civs_amount_cost_rise
+					value = num_of_civilian_factories
+				}
+				multiply_variable = {
+					var = civs_amount_cost_rise
+					value = -0.01
+				}
+				if = {
+					limit = {
+						check_variable = { civs_amount_cost_rise <-0.75 }
+					}
+					set_variable = {
+						var = civs_amount_cost_rise
+						value = -0.75
+					}
+				}
+				##############################################
+				set_variable = {
+					var = docks_amount_cost_rise
+					value = num_of_naval_factories
+				}
+				multiply_variable = {
+					var = docks_amount_cost_rise
+					value = -0.02
+				}
+				if = {
+					limit = {
+						check_variable = { docks_amount_cost_rise <-0.5 }
+					}
+					set_variable = {
+						var = docks_amount_cost_rise
+						value = -0.5
+					}
+				}
+				##############################################
+				add_dynamic_modifier = { modifier = const_amount_cost_rise_modifier }
+			#####################################################################################
+				set_rule = {
+					can_join_factions = no
+				}
+				if = {
+					limit = {
+						is_ai = no
+					}
+					set_variable = { project_ulysses_welcome_screen_var = 1 }
+				}
+			}
+			GIB = {
+				give_resource_rights = { receiver = ARK state = 610 }
+				give_resource_rights = { receiver = AUR state = 118 }
+			}
+			BLK = {
+				add_opinion_modifier = { target = OSE modifier = historical_enemies }
+				add_opinion_modifier = { target = PBL modifier = historical_friends }
+			}
+			FRU = {
+				add_opinion_modifier = { target = DOR modifier = historical_enemies }
+			}
+			OSE = {
+				add_opinion_modifier = { target = BLK modifier = historical_enemies }
+				add_opinion_modifier = { target = PBL modifier = historical_enemies }
+				if = {
+					limit = {
+						is_ai = yes
+					}
+					load_oob = "OSE_land_ai"
+					add_ideas = ose_small_ai_buff
+				}
+				country_event = {
+					id = osea.30
+					days = 548
+				}
+				country_event = {
+					id = osea_politics.9
+					days = 274
+				}
+				country_event = {
+					id = osea_election.1
+					days = 673
+				}
+			}
+			SAP = {
+				country_event = {
+					id = sapin_politics.3
+					days = 35
+				}
+			}
+			BLK = {
+				add_opinion_modifier = { target = PBL modifier = historical_friends }
+			}
+			PBL = {
+				add_opinion_modifier = { target = BLK modifier = historical_friends }
+				add_opinion_modifier = { target = OSE modifier = historical_enemies }
+				random_list = {
+					99 = { }
+					1 = { set_country_flag = pbl_help_belka_flag }
+				}
+			}
+			GEB = {
+				country_event = gebet_startup.1
+				country_event = {
+					id = gebet_election.1
+					days = 659
+				}
+			}
+			336 = { add_dynamic_modifier = { modifier = UST_vs_RAT_resistance } }
+			365 = { add_dynamic_modifier = { modifier = UST_vs_RAT_resistance } }
+			if = {
+				limit = {
+					BLK = {
+						is_ai = no
+					}
+				}
+				237 = { add_building_construction = { type = arms_factory level = 1 instant_build = yes } }
+				611 = { add_building_construction = { type = arms_factory level = 1 instant_build = yes } }
+				594 = { add_building_construction = { type = arms_factory level = 1 instant_build = yes } }
+				297 = { add_building_construction = { type = arms_factory level = 1 instant_build = yes } }
+			}
+		}
+	}
+	on_daily_SBK = {
+		effect = {
+			if = {
+				limit = {
+					has_global_flag = belkan_war_is_happening
+					has_global_flag = wacht_am_wal_is_happening
+					BLK = {
+						has_completed_focus = BLK_plan_oberon
+					}
+					surrender_progress > 0.5
+				}
+				BLK = {
+					country_event = { id = south_belka.5 }
+				}
+			}
+		}
+	}
+	on_capitulation = {
+		effect = {
+			if = {
+				limit = {
+					is_in_faction = yes
+					all_allied_country = {
+						NOT = {
+							has_war_with = FROM
+						}
+					}
+				}
+				leave_faction = yes
+			}
+			if = {
+				limit = {
+					ROOT = {
+						original_tag = BLK
+						has_global_flag = wacht_am_wal_is_happening
+					}
+				}
+				GEB = {
+					transfer_state = 256
+				}
+				REC = {
+					transfer_state = 293
+					transfer_state = 316
+				}
+				FAT = {
+					transfer_state = 220
+				}
+				OSE = {
+					annex_country = {
+						target = ROOT
+					}
+				}
+			}
+			else_if = { #Ustio resistance
+				limit = {
+					ROOT = {
+						original_tag = UST
+						has_war_with = BLK
+						has_global_flag = belkan_war_is_happening
+					}
+				}
+				every_owned_state = {
+					limit = {
+						is_core_of = ROOT
+					}
+					add_dynamic_modifier = { modifier = UST_vs_belka_resistance }
+				}
+			}
+			else_if = { #Recta peace with belka
+				limit = {
+					ROOT = {
+						original_tag = REC
+						has_war_with = BLK
+						has_global_flag = belkan_war_is_happening
+					}
+				}
+				ROOT = {
+					white_peace = BLK
+					give_military_access = BLK
+					if = { limit = { is_in_faction_with = FAT }
+						leave_faction = yes
+					}
+				}
+				#BLK = {
+				#	transfer_state = 293
+				#	transfer_state = 316
+				#	#puppet = ROOT
+				#}
+			}
+			else_if = { #FATO peace with belka
+				limit = {
+					ROOT = {
+						original_tag = FAT
+						has_war_with = BLK
+						has_global_flag = belkan_war_is_happening
+					}
+				}
+				GEB = {
+					if = { limit = { is_in_faction_with = ROOT }
+						leave_faction = yes
+					}
+				}
+				REC = {
+					if = { limit = { is_in_faction_with = ROOT }
+						leave_faction = yes
+					}
+				}
+				ROOT = {
+					white_peace = BLK
+					give_military_access = BLK
+					dismantle_faction = yes
+				}
+				#BLK = {
+				#	transfer_state = 220
+				#	#puppet = ROOT
+				#}
+			}
+			else_if = { #Gebet peace with belka
+				limit = {
+					ROOT = {
+						original_tag = GEB
+						has_war_with = BLK
+						has_global_flag = belkan_war_is_happening
+					}
+				}
+				ROOT = {
+					white_peace = BLK
+					give_military_access = BLK
+					if = { limit = { is_in_faction_with = FAT }
+						leave_faction = yes
+					}
+				}
+				#BLK = {
+				#	transfer_state = 256
+				#	puppet = ROOT
+				#}
+			}
+		}
+	}
+	on_state_control_changed = {
+		effect = {
+			if = {
+				limit = {
+					FROM.FROM = { state = 309 }
+				}
+				set_province_controller = 7570
+				set_province_controller = 7545
+				set_province_controller = 7569
+				set_province_controller = 7595
+				set_province_controller = 7603
+				set_province_controller = 1939
+				set_province_controller = 5906
+			}
+		}
+	}
+}

@@ -1,0 +1,584 @@
+SAP_civil_war = {
+	SAP_imminent_republican_revolt = {
+		icon = placeholder
+		is_good = no
+		days_mission_timeout = 100
+		selectable_mission = no
+		activation = { has_country_flag = sap_imminent_republican_revolt_flag }
+		cancel_trigger = {
+			NOT = {
+				has_country_flag = sap_imminent_republican_revolt_flag
+			}
+		}
+		timeout_effect = {
+			set_temp_variable = { urf_popularity = popularity@democratc }
+			add_to_temp_variable = { urf_popularity = popularity@communism }
+			if = {
+				limit = {
+					has_country_flag = sap_urf_split_flag
+				}
+				start_civil_war = {
+					ruling_party = ROOT
+					ideology = communism
+					size = popularity@communism
+					capital = 14
+					keep_unit_leaders_trigger = {
+						NOT = {
+							has_trait = SAP_socialist_sympathies
+						}
+					}
+					set_country_flag = SAP_REPUBLICAN_REVOLT
+				}
+			}
+			else = {
+				start_civil_war = {
+					ruling_party = ROOT
+					ideology = democratic
+					size = urf_popularity
+					capital = 14
+					keep_unit_leaders_trigger = {
+						NOT = {
+							has_trait = SAP_socialist_sympathies
+							has_trait = SAP_liberal_sympathies
+						}
+					}
+					set_country_flag = SAP_REPUBLICAN_REVOLT
+				}
+			}
+		}
+	}
+	SAP_civil_war_recruitment = {
+		icon = placeholder 
+        state_target = yes
+        target_root_trigger = {
+			has_civil_war = yes
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+                is_core_of = ROOT
+				NOT = { has_state_flag = civil_war_state_infantry_mobilized }
+			}
+		}
+        on_map_mode = map_and_decisions_view
+        days_remove = 7
+        remove_effect = {
+            FROM = {
+                if = {
+                    limit = {
+                        state_population_k < 999
+                    }
+                    create_unit = {
+                        division = "name = \"División Guardia Nacional\" division_template = \"División Guardia Nacional\" start_experience_factor = 0.2"
+                        allow_spawning_on_enemy_provs = no
+                        owner = ROOT
+                        id = draft_infantry_id
+                    }
+                }
+                else = {
+                    set_variable = { recruitable_pop = state_population_k }
+                    multiply_variable = { recruitable_pop = 0.01 }
+                    set_variable = { units_to_spawn = recruitable_pop }
+                    divide_variable = { units_to_spawn = 9 }
+                    for_loop_effect = {
+                        start = 1
+                        end = units_to_spawn
+                        compare = less_than_or_equals
+                        create_unit = {
+                            division = "name = \"División Guardia Nacional\" division_template = \"División Guardia Nacional\" start_experience_factor = 0.2"
+                            allow_spawning_on_enemy_provs = no
+                            owner = ROOT
+                            id = sap_draft_infantry_id
+                        }
+                    }
+                }
+                set_state_flag = {
+					flag = civil_war_state_infantry_mobilized
+					days = 60
+					value = 1
+				}
+            }
+        }
+	}
+}
+SAP_national_politics = {
+    SAP_call_1991_elections = {
+		icon = placeholder
+		is_good = yes
+		days_mission_timeout = 200
+		selectable_mission = yes
+		ai_will_do = {
+			base = 100
+		}
+		activation = {
+			NOT = {
+				has_completed_focus = sap_1991_parliamentary_elections
+			}
+		}
+		available = {
+			NOT = {
+                has_completed_focus = sap_1991_parliamentary_elections
+            }
+		}
+		cancel_trigger = {
+			always = no
+		}
+		timeout_effect = {
+			country_event = sapin_politics.1
+		}
+        complete_effect = {
+            complete_national_focus = sap_1991_parliamentary_elections
+            country_event = sapin_politics.1
+        }
+	}
+	SAP_anti_republican_raids = {
+		available = {
+			has_idea = sap_republican_agitation
+        }
+		visible = {
+			has_idea = sap_republican_agitation
+		}
+		ai_will_do = {
+			base = 100
+		}
+        cost = 50
+		days_remove = 120
+		modifier = {
+			stability_weekly = 0.007
+			democratic_drift = -0.05
+			communism_drift = -0.10
+		}
+		remove_effect = {
+			remove_ideas = sap_republican_agitation
+		}
+		complete_effect = {
+			add_stability = -0.10
+		}
+	}
+}
+SAP_national_guard = {
+	SAP_mobilize_state_national_guard = {
+		icon = placeholder 
+        state_target = yes
+        target_root_trigger = {
+			has_completed_focus = sap_sapinish_national_guard
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+                is_core_of = ROOT
+				NOT = { has_state_flag = state_infantry_mobilized }
+			}
+		}
+        available = {
+            has_defensive_war = yes
+        }
+		visible = {
+            has_defensive_war = yes
+        }
+		ai_will_do = {
+			base = 100
+		}
+        on_map_mode = map_and_decisions_view
+        days_remove = 14
+		cost = 15
+        remove_effect = {
+            FROM = {
+                if = {
+                    limit = {
+                        state_population_k < 999
+                    }
+                    create_unit = {
+                        division = "name = \"División Guardia Nacional\" division_template = \"División Guardia Nacional\" start_experience_factor = 0.2"
+                        allow_spawning_on_enemy_provs = no
+                        owner = ROOT
+                        id = draft_infantry_id
+                    }
+                }
+                else = {
+                    set_variable = { recruitable_pop = state_population_k }
+                    multiply_variable = { recruitable_pop = 0.01 }
+                    set_variable = { units_to_spawn = recruitable_pop }
+                    divide_variable = { units_to_spawn = 12 }
+                    for_loop_effect = {
+                        start = 1
+                        end = units_to_spawn
+                        compare = less_than_or_equals
+                        create_unit = {
+                            division = "name = \"División Guardia Nacional\" division_template = \"División Guardia Nacional\" start_experience_factor = 0.2"
+                            allow_spawning_on_enemy_provs = no
+                            owner = ROOT
+                            id = sap_draft_infantry_id
+                        }
+                    }
+                }
+                set_state_flag = state_infantry_mobilized
+            }
+        }
+	}
+	SAP_begin_new_round_of_mobilization = {
+		icon = placeholder
+        available = { has_completed_focus = sap_sapinish_national_guard }
+        visible = {
+			AND = {
+				all_owned_state = {
+					limit = {
+						is_controlled_by = ROOT
+                		is_core_of = ROOT
+					}
+					has_state_flag = state_infantry_mobilized
+				}
+				OR = {
+					has_defensive_war = yes
+					any_other_country = {
+						OR = {
+							is_justifying_wargoal_against = ROOT
+							has_wargoal_against = ROOT
+						}
+					}
+				}
+			}
+		}
+        cost = var:sap_mobilization_round_cost
+        days_remove = 90
+		complete_effect = {
+			add_to_variable = { sap_mobilization_round_cost = 25 }
+		}
+		remove_effect = {
+			every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					is_core_of = ROOT
+					has_state_flag = state_infantry_mobilized
+				}
+				clr_state_flag = state_infantry_mobilized
+			}
+		}
+	}
+	SAP_demobilize = {
+		icon = placeholder
+		is_good = yes
+		days_mission_timeout = 30
+		selectable_mission = yes
+		activation = {
+            AND = {
+                has_country_flag = SAP_has_mobilized
+                has_war = no
+            }
+        }
+		cancel_trigger = {
+            OR = {
+                NOT = {
+                    has_country_flag = SAP_has_mobilized
+                }
+				has_defensive_war = yes
+            }
+		}
+        complete_effect = {
+            clr_country_flag = SAP_has_mobilized
+            delete_unit = { id = sap_draft_infantry_id }
+			every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					is_core_of = ROOT
+					has_state_flag = state_infantry_mobilized
+				}
+				clr_state_flag = state_infantry_mobilized
+			}
+        }
+		timeout_effect = {
+			clr_country_flag = SAP_has_mobilized
+            delete_unit = { id = sap_draft_infantry_id }
+			every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					is_core_of = ROOT
+					has_state_flag = state_infantry_mobilized
+				}
+				clr_state_flag = state_infantry_mobilized
+			}
+		}
+	}
+}
+SAP_noto_category = {
+	SAP_invite_nation_to_noto = {
+		icon = placeholder
+		target_root_trigger = {
+			has_completed_focus = sap_north_osean_treaty_organization
+		}
+		targets_dynamic = yes
+		target_trigger = {
+			FROM = {
+				capital_scope = {
+					is_on_continent = north_osea
+				}
+				AND = {
+					NOT = {
+						is_in_faction_with = ROOT
+						has_country_flag = invited_to_noto_recently_flag
+						original_tag = BLK
+						original_tag = FAT
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 100
+		}
+        cost = 100
+		complete_effect = {
+			FROM = {
+				country_event = sapin_diplomacy.9
+				set_country_flag = {
+					flag = invited_to_noto_recently_flag
+					days = 1825
+					value = 1
+				}
+			}
+		}
+	}
+}
+SAP_balance_of_power_category = {
+	SAP_court_socialist_support = {
+		available = {
+			NOT = {
+				has_idea = sap_dysfunctional_coalition
+			}
+        }
+		ai_will_do = {
+			base = 0
+			modifier = {
+				AND = {
+					OR = {
+						has_government = democratic
+						has_government = communism
+					}
+					power_balance_value = {
+						id = SAP_power_balance
+						value > 0.25
+					}
+				}
+				add = 150
+			}
+		}
+        cost = 25
+		days_remove = 30
+		remove_effect = {
+			clr_country_flag = sap_national_politics_decision_in_progress
+		}
+		complete_effect = {
+			set_country_flag = sap_national_politics_decision_in_progress
+			add_stability = -0.02
+			add_power_balance_value = {
+				id = SAP_power_balance
+				value = -0.05
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = 0.025
+			}
+		}
+	}
+	SAP_court_liberal_support = {
+		available = {
+			NOT = {
+				has_idea = sap_dysfunctional_coalition
+			}
+        }
+		ai_will_do = {
+			base = 0
+			modifier = {
+				AND = {
+					OR = {
+						has_government = democratic
+						has_government = communism
+					}
+					power_balance_value = {
+						id = SAP_power_balance
+						value > 0.0
+					}
+				}
+				add = 100
+			}
+		}
+        cost = 25
+		days_remove = 30
+		remove_effect = {
+			clr_country_flag = sap_national_politics_decision_in_progress
+		}
+		complete_effect = {
+			set_country_flag = sap_national_politics_decision_in_progress
+			add_stability = -0.01
+			add_power_balance_value = {
+				id = SAP_power_balance
+				value = -0.025
+			}
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.025
+			}
+		}
+	}
+	SAP_court_monarchist_support = {
+		available = {
+			NOT = {
+				has_idea = sap_dysfunctional_coalition
+			}
+        }
+		ai_will_do = {
+			base = 0
+			modifier = {
+				AND = {
+					OR = {
+						has_government = monarchism
+						has_government = fascism
+					}
+					power_balance_value = {
+						id = SAP_power_balance
+						value < 0.0
+					}
+				}
+				add = 100
+			}
+		}
+        cost = 25
+		days_remove = 30
+		remove_effect = {
+			clr_country_flag = sap_national_politics_decision_in_progress
+		}
+		complete_effect = {
+			set_country_flag = sap_national_politics_decision_in_progress
+			add_stability = -0.01
+			add_power_balance_value = {
+				id = SAP_power_balance
+				value = 0.025
+			}
+			add_popularity = {
+				ideology = monarchism
+				popularity = 0.025
+			}
+		}
+	}
+	SAP_court_falangist_support = {
+		available = {
+			NOT = {
+				has_idea = sap_dysfunctional_coalition
+			}
+        }
+		ai_will_do = {
+			base = 0
+			modifier = {
+				AND = {
+					OR = {
+						has_government = monarchism
+						has_government = fascism
+					}
+					power_balance_value = {
+						id = SAP_power_balance
+						value < -0.25
+					}
+				}
+				add = 150
+			}
+		}
+        cost = 25
+		days_remove = 30
+		remove_effect = {
+			clr_country_flag = sap_national_politics_decision_in_progress
+		}
+		complete_effect = {
+			set_country_flag = sap_national_politics_decision_in_progress
+			add_stability = -0.02
+			add_power_balance_value = {
+				id = SAP_power_balance
+				value = 0.05
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.025
+			}
+		}
+	}
+	SAP_court_moderate_support = {
+		available = {
+			NOT = {
+				has_idea = sap_dysfunctional_coalition
+			}
+        }
+        cost = 50
+		days_remove = 30
+		remove_effect = {
+			clr_country_flag = sap_national_politics_decision_in_progress
+		}
+		complete_effect = {
+			set_country_flag = sap_national_politics_decision_in_progress
+			add_stability = 0.01
+			if = {
+				limit = {
+					if = {
+						limit = {
+							power_balance_value = {
+								id = SAP_power_balance
+								value > 0
+							}
+						}
+						add_power_balance_value = {
+							id = SAP_power_balance
+							value = -0.025
+						}
+					}
+					else = {
+						add_power_balance_value = {
+							id = SAP_power_balance
+							value = 0.025
+						}
+					}
+				}
+			}
+		}
+	}
+	SAP_attempt_to_mediate_differences = {
+		available = {
+			NOT = {
+				has_idea = sap_dysfunctional_coalition
+			}
+        }
+        cost = 25
+		days_remove = 30
+		remove_effect = {
+			clr_country_flag = sap_national_politics_decision_in_progress
+		}
+		complete_effect = {
+			set_country_flag = sap_national_politics_decision_in_progress
+			random = {
+				chance = 45
+				add_stability = 0.025
+			}
+			random = {
+				chance = 15
+				add_stability = -0.025
+			}
+		}
+	}
+	SAP_unite_the_center = {
+		available = {
+			NOT = {
+				has_idea = sap_dysfunctional_coalition
+			}
+			has_stability > 0.90
+        }
+        cost = 100
+		days_remove = 30
+		remove_effect = {
+			clr_country_flag = sap_national_politics_decision_in_progress
+		}
+		complete_effect = {
+			set_country_flag = sap_national_politics_decision_in_progress
+			custom_effect_tooltip = sap_republicans_split_tt
+			set_country_flag = sap_republicans_split
+			custom_effect_tooltip = sap_nationalists_split_tt
+			set_country_flag = sap_nationalists_split
+			set_country_flag = sap_center_united
+		}
+	}
+}

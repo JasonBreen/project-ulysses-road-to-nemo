@@ -1,0 +1,58 @@
+add_namespace = perbla_intervention
+
+country_event = { #perbla intervention trigger
+	id = perbla_intervention.1
+	title = perbla_intervention.1.t
+	desc = perbla_intervention.1.d
+	picture = GFX_report_event_belka_meme_read_write
+	
+	is_triggered_only = yes
+
+	option = {
+		name = perbla_intervention.1.a
+		BLK = {
+			country_event = perbla_intervention.2
+		}
+	}
+}
+
+country_event = { ### event for Belka
+	id = perbla_intervention.2
+	title = perbla_intervention.2.t
+	desc = perbla_intervention.2.d
+	picture = GFX_report_event_belka_meme_read_write
+	
+	is_triggered_only = yes
+
+	option = {
+		name = perbla_intervention.2.a
+		set_global_flag = prb_intervention
+		BLK = {
+			create_faction = PAN_OSEAN_AXIS
+			add_to_faction = PBL
+		}
+		PBL = {
+			declare_war_on = {
+				target = OSE
+				type = take_state
+			}
+		}
+		OSE = {
+			country_event = perbla_intervention.3 
+		}
+		news_event = { id = ac_news_event.19 days = 1 }
+	}
+}
+
+country_event = { ### event for Osea
+	id = perbla_intervention.3
+	title = perbla_intervention.3.t
+	desc = perbla_intervention.3.d
+	picture = GFX_report_event_belka_meme_read_write
+	
+	is_triggered_only = yes
+
+	option = {
+		name = perbla_intervention.3.a
+	}
+}

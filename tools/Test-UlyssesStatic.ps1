@@ -82,5 +82,11 @@ foreach ($property in @('DuplicateEventDefinitions', 'MalformedEventReferences')
     }
 }
 
+$referenceMissingFocus = [int]$referenceReport.Summary.MissingFocusReferences
+if ($referenceMissingFocus -ne 0) {
+    Write-Error "Reference audit regression: MissingFocusReferences expected 0 for owned focus namespaces, got $referenceMissingFocus."
+    exit 1
+}
+
 Write-Output 'Static regression checks passed.'
 exit 0

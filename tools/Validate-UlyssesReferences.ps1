@@ -30,28 +30,64 @@ $localisationFiles = @(Get-ChildItem -LiteralPath (Join-Path $root 'localisation
 
 $focusIds = New-Object System.Collections.Generic.HashSet[string]
 foreach ($file in $focusFiles) {
+    $braceDepth = 0
+    $focusStartDepth = $null
+    $pendingFocusId = $null
     foreach ($line in Get-Content -LiteralPath $file.FullName) {
         $clean = Strip-Comment $line
-        if ($clean -match '^\s*id\s*=\s*([A-Za-z0-9_]+)\s*$') { Add-SetValue $focusIds $Matches[1] }
+        $depthBefore = $braceDepth
+        if ($null -eq $focusStartDepth -and $clean -match '^\s*(?:focus|shared_focus)\s*=\s*\{') {
+            $focusStartDepth = $depthBefore + 1
+            $pendingFocusId = $null
+        }
+        if ($null -ne $focusStartDepth -and $null -eq $pendingFocusId -and $clean -match '^\s*id\s*=\s*([A-Za-z0-9_]+)\s*$') {
+            $pendingFocusId = $Matches[1]
+        }
+        $braceDepth += ([regex]::Matches($clean, '\{')).Count
+        $braceDepth -= ([regex]::Matches($clean, '\}')).Count
+        if ($braceDepth -lt 0) { $braceDepth = 0 }
+        if ($null -ne $focusStartDepth -and $braceDepth -lt $focusStartDepth) {
+            if ($pendingFocusId) { Add-SetValue $focusIds $pendingFocusId }
+            $focusStartDepth = $null
+            $pendingFocusId = $null
+        }
     }
+    if ($pendingFocusId) { Add-SetValue $focusIds $pendingFocusId }
 }
 
 $focusRefs = New-Object System.Collections.Generic.List[object]
-foreach ($file in $focusFiles) {
+foreach ($file in $codeFiles) {
     $lineNumber = 0
     foreach ($line in Get-Content -LiteralPath $file.FullName) {
         $lineNumber++
         $clean = Strip-Comment $line
+        $isFocusFile = $file.FullName -match '\\common\\national_focus\\'
+        $hasFocusConsumer = $clean -match '\bhas_completed_focus\b'
+        if (-not $isFocusFile -and -not $hasFocusConsumer) { continue }
         foreach ($match in [regex]::Matches($clean, '(?:^|\s)(?:focus|relative_position_id|shared_focus)\s*=\s*([A-Za-z0-9_]+)')) {
             $value = $match.Groups[1].Value
             if ($value -ne 'focus' -and $value -ne 'none') {
                 $focusRefs.Add([pscustomobject]@{ Id = $value; File = $file.FullName; Line = $lineNumber })
             }
         }
+        foreach ($match in [regex]::Matches($clean, '\bhas_completed_focus\s*=\s*([A-Za-z0-9_]+)')) {
+            $value = $match.Groups[1].Value
+            if ($value -ne 'none') { $focusRefs.Add([pscustomobject]@{ Id = $value; File = $file.FullName; Line = $lineNumber }) }
+        }
     }
 }
-$missingFocusRefs = @($focusRefs | Where-Object { -not $focusIds.Contains($_.Id) } | Sort-Object Id,File,Line -Unique)
-foreach ($reference in $missingFocusRefs) { Add-ReferenceError "Focus reference '$($reference.Id)' is not defined ($($reference.File):$($reference.Line))" }
+$ownedFocusPrefixes = New-Object System.Collections.Generic.HashSet[string]
+foreach ($id in $focusIds) {
+    if ($id -match '^([A-Za-z0-9]+)_') { Add-SetValue $ownedFocusPrefixes $Matches[1] }
+}
+$missingFocusRefs = @($focusRefs | Where-Object { -not $focusIds.Contains($_.Id) -and (($ownedFocusPrefixes.Contains(($_.Id -split '_')[0])) -or ($_.Id -notmatch '_')) } | Sort-Object Id,File,Line -Unique)
+foreach ($reference in $missingFocusRefs) { Add-ReferenceError "Owned focus reference '$($reference.Id)' is not defined ($($reference.File):$($reference.Line))" }
+$missingFocusIds = New-Object System.Collections.Generic.HashSet[string]
+foreach ($reference in $missingFocusRefs) { Add-SetValue $missingFocusIds $reference.Id }
+$externalFocusRefs = @($focusRefs | Where-Object { -not $focusIds.Contains($_.Id) -and -not $missingFocusIds.Contains($_.Id) } | Sort-Object Id,File,Line -Unique)
+if ($externalFocusRefs.Count -gt 0) {
+    Add-ReferenceNote "External/vanilla focus references intentionally not resolved: $(($externalFocusRefs | Select-Object -ExpandProperty Id | Sort-Object -Unique) -join ', ')"
+}
 
 $eventIds = New-Object System.Collections.Generic.HashSet[string]
 $eventLocations = @{}
@@ -135,10 +171,10 @@ $locKeys = New-Object System.Collections.Generic.HashSet[string]
 $emptyLocKeys = New-Object System.Collections.Generic.HashSet[string]
 foreach ($file in $localisationFiles) {
     foreach ($line in Get-Content -LiteralPath $file.FullName) {
-        if ($line -match '^\s*([A-Za-z0-9_.-]+):\d+\s+') {
+        if ($line -match '^\s*([A-Za-z0-9_.-]+):(?:\d+)?\s+') {
             $key = $Matches[1]
             Add-SetValue $locKeys $key
-            if ($line -match ':\d+\s*""\s*$') { Add-SetValue $emptyLocKeys $key }
+            if ($line -match ':(?:\d+)?\s*""\s*$') { Add-SetValue $emptyLocKeys $key }
         }
     }
 }
@@ -151,7 +187,7 @@ foreach ($file in $eventFiles) {
         $clean = Strip-Comment $line
         if ($clean -match '^\s*(?:title|desc|name|custom_effect_tooltip)\s*=\s*([A-Za-z0-9_.-]+)') {
             $key = $Matches[1]
-            if ($key -match '\.') { $eventLocRefs.Add([pscustomobject]@{ Key = $key; File = $file.FullName; Line = $lineNumber }) }
+            $eventLocRefs.Add([pscustomobject]@{ Key = $key; File = $file.FullName; Line = $lineNumber })
         }
     }
 }

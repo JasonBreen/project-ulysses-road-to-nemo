@@ -50,5 +50,15 @@ if ($failures.Count -gt 0) {
     Write-Error ("Static regression checks failed:`n- " + ($failures -join "`n- "))
     exit 1
 }
+
+$referenceValidator = Join-Path $PSScriptRoot 'Validate-UlyssesReferences.ps1'
+$referenceJson = (& pwsh -NoProfile -ExecutionPolicy Bypass -File $referenceValidator -ModRoot $ModRoot -Json | Out-String)
+$referenceExitCode = $LASTEXITCODE
+if ($referenceExitCode -ne 0) {
+    Write-Error "Reference validator exited with code $referenceExitCode.`n$referenceJson"
+    exit $referenceExitCode
+}
+$referenceReport = $referenceJson | ConvertFrom-Json
+Write-Output "Reference audit: $($referenceReport.Summary.FocusDefinitions) focus definitions, $($referenceReport.Summary.EventDefinitions) event definitions, $($referenceReport.Summary.Warnings) warnings."
 Write-Output 'Static regression checks passed.'
 exit 0

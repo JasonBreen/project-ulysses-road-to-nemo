@@ -14,6 +14,8 @@
 - Removed the historical workshop `remote_file_id` from the editable private descriptor.
 - Kept the outer descriptor's local repository path unchanged.
 - Kept the immutable baseline untouched for source comparison.
+- Replaced the preserved demo-end option's no-op body with `set_global_flag = ac_continuation_active`; this is a static continuation hook, not proof that downstream content is playable.
+- Added static checks for province RGB coverage, placement-coordinate bounds, railway/supply-node references, and an installed-reference comparison for the empty `map/positions.txt` format.
 
 ## Not assumed
 

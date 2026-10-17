@@ -34,8 +34,12 @@ Exit criteria: every supported demo branch has a declared postwar destination an
 ## Phase 3 — Wider Usea and later wars
 
 1. Expand Recta/Yuktobania and other Usean content only after their branch contracts are written.
-2. Reconcile the 1991–2005 technology span, inherited armor/naval dates, and any later-war equipment gates.
+2. Reconcile the 1991–2005 technology span, inherited armor/naval dates, properly localized technology/equipment names, and any later-war equipment gates against the 2065-12-31 inclusive campaign contract.
 3. Replace placeholder art, names, leaders, advisors, and ship names in priority order of player visibility.
-4. Add long-run AI, supply, diplomacy, peace conference, and save stability coverage.
+4. Compile Sam's established Joker 1 continuity as a separately attributed user-authored source before implementing it; do not invent future lore to fill the 2065 horizon.
+5. Integrate the child task's Markdown economy model and portable VS Code/Antigravity-compatible workspace only after reviewing its separate branch/worktree and static assumptions.
+6. Add long-run AI, supply, diplomacy, peace conference, and save stability coverage.
 
 Exit criteria: later-war content is reachable from validated prior branches and does not require undocumented assumptions.
+
+The 2065 target has two separate exit questions: (a) the engine/scripts permit advancement through 2065-12-31, and (b) the authored content and canon/provenance ledger provide meaningful, tested content through that date. Passing (a) never implies (b).

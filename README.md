@@ -19,6 +19,8 @@ Original-content parity for the 1.19 migration is tracked in [docs/PARITY_AUDIT_
 
 The project is intentionally separate from `G:\Project-Swallow`.
 
+Canon and authorship rules are in [docs/CANON_POLICY.md](docs/CANON_POLICY.md), with the current source/provenance queue in [docs/CANON_LEDGER.md](docs/CANON_LEDGER.md). Sam's established Joker 1 continuity is tracked as an explicitly allowed user-authored layer, separate from official Project Aces canon.
+
 ## Source evidence
 
 - Source archive: `2985041246_Project_Ulysses.zip`

@@ -83,6 +83,16 @@ foreach ($property in @('DuplicateEventDefinitions', 'MalformedEventReferences')
     }
 }
 
+$technologyValidator = Join-Path $PSScriptRoot 'Validate-UlyssesTechnologies.ps1'
+$technologyJson = (& $scriptHost -NoProfile -ExecutionPolicy Bypass -File $technologyValidator -ModRoot $ModRoot -Json | Out-String)
+$technologyExitCode = $LASTEXITCODE
+if ($technologyExitCode -ne 0) {
+    Write-Error "Technology validator exited with code $technologyExitCode.`n$technologyJson"
+    exit $technologyExitCode
+}
+$technologyReport = $technologyJson | ConvertFrom-Json
+Write-Output "Technology audit: $($technologyReport.Summary.DateLiterals) date literals, $($technologyReport.Summary.StartYearLiterals) start years, $($technologyReport.Summary.Warnings) warnings."
+
 if ($BaselineRoot) {
     if (-not $ReferenceGameRoot) {
         Write-Error 'BaselineRoot requires ReferenceGameRoot for the no-vanilla-assets audit.'

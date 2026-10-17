@@ -25,9 +25,10 @@ The current repository is packaged as a standalone local mod wrapper: `298504124
 ## Content-family status
 
 - **Preserved:** map rasters/definitions, country histories, country definitions, focus/event families, country art, characters, equipment, and most localization content remain present or hash-adapted.
-- **Adapted:** descriptors, interfaces, localization paths, technologies, histories, and selected map/building content were changed for the 1.19 port and continuation repairs.
+- **Adapted:** descriptors, interfaces, localization paths, technologies, histories, and selected map/building content were changed for the 1.19 port and continuation repairs. Two inherited armor AI date literals were corrected from `20001.1.1`/`1.1.1` to the evidence-supported `2001.1.1`/`1997.1.1`; the technology validator now rejects malformed or out-of-horizon dates without asserting authored coverage through 2065.
 - **Disabled:** generic vanilla UI/gameplay overrides and copied aircraft art listed above.
 - **Broken defects repaired:** four floating-harbor province associations (`11565`, `12098`, `11683`, `12493`) were mapped from their recorded coordinates to valid province IDs (`10388`, `10703`, `9582`, `10971`); four active `country_event = xxx` calls were removed; duplicate top-level `war_event.1` was renamed to `war_event.2`; and the new Belkan continuation localization was saved with a UTF-8 BOM.
 - **Unverified:** parser compatibility, UI fallback behavior, DLC assumptions, focus reachability, event outcomes, AI, save/load stability, and long-run campaign behavior. No HOI4 runtime was launched.
+- **Unverified:** parser compatibility, UI fallback behavior, DLC assumptions, focus reachability, event outcomes, AI, save/load stability, long-run campaign behavior, meaningful authored content through 2065, and completeness of technology/equipment naming/localization. No HOI4 runtime was launched.
 
 The parity requirement for future work is: preserve every original Ulysses content family, adapt only with a documented 1.19 reason, and distinguish engine fallback from lost content. Do not copy old files wholesale over newer compatible implementations.

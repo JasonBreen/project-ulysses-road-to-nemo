@@ -10,6 +10,8 @@ This is a test plan, not a report of passed tests. No runtime tests have been ru
 - [ ] Check duplicate IDs for focuses, events, decisions, ideas, characters, technologies, states, and strategic regions.
 - [ ] Check references to country tags, focus IDs, event IDs, scripted effects/triggers, technologies, equipment, GFX, sounds, and localization keys.
 - [ ] Check dates, bookmark definitions, state ownership/core assignments, province membership, and map definitions.
+- [x] Validate all technology date literals and `start_year` values against the 1900–2065 static horizon; record inherited date repairs separately from authored content.
+- [ ] Audit technology/equipment names and localization keys, classifying base-game inherited names, mod provenance, canon-backed names, and provisional gameplay abstractions.
 - [ ] Check all `replace_path` targets and all absolute paths.
 
 ## Controlled runtime smoke tests (future, with separate approval)
@@ -27,6 +29,8 @@ This is a test plan, not a report of passed tests. No runtime tests have been ru
 - [ ] Advance to 1992 and 1995 checkpoints with AI on; record deadlocks, runaway wars, supply collapse, and focus stalls.
 - [ ] Exercise peace conferences, faction changes, occupation, capitulation, and state transfers.
 - [ ] Exercise later technology gates and ensure 1991–2005 content does not unlock unexpectedly.
+- [ ] Advance a controlled run through 2065-12-31 when runtime approval exists; separately report clock reachability, authored content coverage, and canon/provenance status.
+- [ ] Verify Joker 1 content only against the compiled user-authored continuity source; do not treat it as official Project Aces canon.
 - [ ] Repeat a representative run after every compatibility or map change.
 
 ## Evidence to retain

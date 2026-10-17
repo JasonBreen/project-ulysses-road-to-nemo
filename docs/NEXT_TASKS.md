@@ -7,7 +7,9 @@
 5. **Belkan War branch graph** — trace all `world_event.2` callers, Rhongomyniad outcomes, and event/focus consequences; mark the demo terminal as a phase-2 replacement target.
 6. **Osea continuity** — decide which election tree is canonical, make its focus-tree selection and AI plan agree, and document any intentionally deferred content.
 7. **Placeholder triage** — classify the 157 static placeholder matches into gameplay blockers, visible polish, and intentional generic fallbacks.
-8. **Technology pass** — review the 15 technology files and explicitly define the intended 1991–2005 unlock model before changing inherited dates.
-9. **Approved runtime smoke test** — only after the static blockers above are addressed and separate permission is given to launch the local mod; record logs and saves, and do not install or run downloaded code.
+8. **Technology/name provenance pass** — review the 15 technology files, properly name/localize authored technology and equipment, classify inherited engine IDs, and reconcile the 1991–2005 content against the inclusive 2065 campaign contract.
+9. **Canon ledger and Joker 1 compilation** — collect primary Project Aces citations for lore-sensitive claims and Sam's established Joker 1 source material separately; do not invent missing dates or future events.
+10. **Economy/IDE integration** — review the child task's separate Markdown economy model and portable VS Code/Antigravity-compatible workspace, then integrate only its documented IDs and validation assumptions.
+11. **Approved runtime smoke test** — only after the static blockers above are addressed and separate permission is given to launch the local mod; record logs and saves, and do not install or run downloaded code.
 
 The next safe action is task 1, followed by tasks 2–4. Runtime validation is intentionally later.

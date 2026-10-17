@@ -75,7 +75,17 @@ The archive supplies January 1, 1991 bookmarks. The existing Belkan War content 
 
 - Whether the final project should support both archive bookmarks or designate one as primary.
 - Which later wars are in scope and their authoritative start dates.
-- Whether the 2005 technology horizon is an intentional campaign boundary or inherited unfinished content.
+- Which technologies/equipment should receive authored names and localization rather than resolving from inherited engine IDs.
+
+### Inclusive campaign cutoff
+
+The continuation target is an inclusive playable campaign horizon through **2065-12-31**. This is an engine/content contract to audit, not a claim that the archive contains authored events or canon-backed history for every year. No demo-end event, scripted transition, focus gate, technology date, or equipment progression may silently terminate the campaign before the cutoff once later-era work is implemented. The project must separately report:
+
+- whether the engine and scripts permit the campaign clock to reach 2065-12-31;
+- which authored content is actually present and tested through that date; and
+- which later content is only a placeholder, gameplay abstraction, inherited base-game definition, or open decision.
+
+Every technology and equipment name added or changed for the continuation needs a stable localization key and a provenance classification. Official Project Aces material is the source of truth for lore-sensitive facts; user-authored Joker 1 continuity is a separate approved creative layer and must never be represented as official canon. Future dates or events without either source-backed support or an explicit provisional-gameplay label remain open decisions.
 
 ## 5. Geography and shared identifiers
 
@@ -128,7 +138,7 @@ Country-specific IDs should use stable tag-prefixed names. Shared systems should
 
 **Inherited:** the archive contains 15 technology files and a mixture of 1991–2005 and inherited armor/naval dates.
 
-**Proposed:** first classify technologies into starting-era, war-era, postwar, and later-content groups. Preserve existing names and effects where possible; repair only parser-invalid or clearly unreachable definitions. Equipment balance should be evaluated after a stable 1991 supply/AI baseline, not by changing every inherited date at once.
+**Proposed:** first classify technologies into starting-era, war-era, postwar, and later-content groups, then audit dates, names, localization, and provenance through the 2065 cutoff. Preserve existing names and effects where possible; repair only parser-invalid or clearly unreachable definitions. Equipment balance should be evaluated after a stable 1991 supply/AI baseline, not by changing every inherited date at once.
 
 **Open decisions:** target research speed, historical versus gameplay abstraction, and whether later equipment is available through a single continuous tree or separate era gates.
 
@@ -138,7 +148,7 @@ Country-specific IDs should use stable tag-prefixed names. Shared systems should
 
 **Proposed:** use the Belkan War and its aftermath as the first economy test: mobilization, wartime strain, reconstruction, occupation costs, and demobilization should create meaningful tradeoffs without requiring new lore.
 
-**Open decisions:** the intended economic difficulty and the extent to which postwar industry should be transferred, damaged, or rebuilt.
+**Open decisions:** the intended economic difficulty and the extent to which postwar industry should be transferred, damaged, or rebuilt; how the child economy implementation will integrate with the static design ledger without competing edits to the repair branch.
 
 ### Diplomacy and factions
 
@@ -193,6 +203,12 @@ Use `ac_continuation_active` as a stable contract for future postwar systems. A 
 
 Runtime gates remain open. No runtime success is claimed by this document.
 
+## 11. Canon and authorship policy
+
+Official Project Aces/ACE COMBAT sources are authoritative for lore-sensitive facts such as dates, borders, country/faction names, characters, and named equipment. The official ACES site describes the shared Strangereal setting and its series chronology; repository content and the April 2024 archive are provenance for this mod, not proof of official canon. See [docs/CANON_POLICY.md](CANON_POLICY.md) and [docs/CANON_LEDGER.md](CANON_LEDGER.md).
+
+Sam's established Joker 1 continuity is an explicitly permitted user-authored layer alongside official canon. It is not to be discarded as unofficial, but it must be compiled from Sam's established material before implementation. The current planning note records only the unverified outline: Ustian-born Joker 1; Belkan connections; history with Moon11/Shadow22; Watchtowerorganization; connection with Cope; and Tasha's mother as the pilot who shot him down. Dates, details, and causal links remain unverified and must not be invented or promoted into the official canon ledger.
+
 ## 10. Coordinated agent development
 
 Agents should work in narrow, reviewable slices:
@@ -205,3 +221,9 @@ Agents should work in narrow, reviewable slices:
 - **Testing:** static regression, isolated runtime, save/load, and long-run AI checks when authorized.
 
 Every agent should state whether a change is implemented, proposed, or an open decision; preserve the baseline; add or update a regression check when practical; and leave unresolved design questions explicit for Sam.
+
+### Economy and portable workspace integration
+
+The economy/IDE work is owned by a separate child task and worktree. This repair branch must not edit that child implementation in place. The integration contract is to review and merge the child task's Markdown economy model, assumptions, IDs, and validation notes into the shared design/roadmap after the child reports its exact branch and files. The final workspace should remain portable for VS Code and Antigravity-compatible agents: repository-relative paths, PowerShell entry points, no machine-local editor settings as requirements, no hard-coded developer paths, and a concise handoff document for each agent-owned slice.
+
+The child work is **in progress and unverified** until its branch is reviewed. The integration issue must track dependencies on the 1.19 descriptor, country/economy IDs, technology naming, canon provenance, and static validation. Runtime economy balance remains open.

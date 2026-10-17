@@ -26,7 +26,7 @@ The inherited exact matches were classified as follows:
 
 | Count | Files | Purpose | Repair decision |
 | ---: | --- | --- | --- |
-| 59 | `gfx/interface/equipmentdesigner/planes/modules/*.dds` | Visible aircraft-module UI art; 58 were referenced by the historical module sprite file, one (`airplane_armor_plate_medium_icon.dds`) was unused | Removed the copied art; restored custom `GFX_EMI_*` aliases point explicitly to engine textures in `interface/plane_modules_icons.gfx`. No suitable Strangereal replacements exist in the archive. |
+| 59 | `gfx/interface/equipmentdesigner/planes/modules/*.dds` | Visible aircraft-module UI art; 58 were referenced by the historical module sprite file, one (`airplane_armor_plate_medium_icon.dds`) was unused | Removed the copied art; restored custom `GFX_EMI_*` aliases point explicitly to engine textures in `interface/ac_plane_modules_icons.gfx`. No suitable Strangereal replacements exist in the archive. |
 | 4 | `gfx/interface/technologies/jet_{strategic,tactical}_bomber*.dds` | Visible technology-tree icons, all referenced by the mod’s sprite override | Removed the copied art and four override blocks; the game engine supplies the base definitions. No suitable Strangereal replacements exist in the archive. |
 | 1 | `map/positions.txt` | Empty engine/config file; not visible, audio, or game-world art | Retained because it matches the installed game’s empty format and preserves the map contract. |
 

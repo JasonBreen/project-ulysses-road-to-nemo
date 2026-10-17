@@ -12,6 +12,10 @@ This document separates three states:
 
 No section of this document authorizes changing the immutable archive, installing downloaded code, launching HOI4, changing user saves/settings, contacting upstream developers, merging the draft PR, or publishing a release.
 
+### 1.19 port asset boundary
+
+The current continuation target is HOI4 `1.19.*`, based on the explicit target in the isolated port candidate. The target descriptor is not runtime evidence. The port may use engine-compatible configuration and interface definitions where needed, but it must not deliver copied vanilla HOI4 assets or content. The repair branch enforces this with a hash comparison against the installed reference and the last verified Ulysses working copy; inherited baseline matches are reported separately from newly introduced matches.
+
 ## 2. Simulator vision
 
 ### Proposed target

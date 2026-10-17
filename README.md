@@ -13,6 +13,8 @@ This is a private continuation workspace for Sam's Project Ulysses HOI4 Stranger
 
 The design contract is [docs/DESIGN.md](docs/DESIGN.md). It separates inherited behavior, proposed implementation, and open user decisions.
 
+The isolated 1.19 port repair is kept in `G:\Project-Ulysses-Continuation-1.19-repair` on branch `codex/1.19-no-vanilla-assets`. Its no-vanilla-assets policy and audit are documented in [docs/NO_VANILLA_ASSETS.md](docs/NO_VANILLA_ASSETS.md). The repair worktree does not modify the active Claude worktree.
+
 The project is intentionally separate from `G:\Project-Swallow`.
 
 ## Source evidence

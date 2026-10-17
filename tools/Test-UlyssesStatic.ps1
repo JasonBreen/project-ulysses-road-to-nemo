@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [string]$ModRoot = (Join-Path $PSScriptRoot '..\mod\2985041246'),
-    [string]$ReferenceGameRoot
+    [string]$ReferenceGameRoot,
+    [string]$BaselineRoot
 )
 
 $ErrorActionPreference = 'Stop'
@@ -60,5 +61,21 @@ if ($referenceExitCode -ne 0) {
 }
 $referenceReport = $referenceJson | ConvertFrom-Json
 Write-Output "Reference audit: $($referenceReport.Summary.FocusDefinitions) focus definitions, $($referenceReport.Summary.EventDefinitions) event definitions, $($referenceReport.Summary.Warnings) warnings."
+
+if ($BaselineRoot) {
+    if (-not $ReferenceGameRoot) {
+        Write-Error 'BaselineRoot requires ReferenceGameRoot for the no-vanilla-assets audit.'
+        exit 1
+    }
+    $vanillaValidator = Join-Path $PSScriptRoot 'Validate-NoVanillaAssets.ps1'
+    Write-Output 'No-vanilla-assets audit:'
+    & pwsh -NoProfile -ExecutionPolicy Bypass -File $vanillaValidator -ModRoot $ModRoot -ReferenceGameRoot $ReferenceGameRoot -BaselineRoot $BaselineRoot
+    $vanillaExitCode = $LASTEXITCODE
+    if ($vanillaExitCode -ne 0) {
+        Write-Error "No-vanilla-assets validator exited with code $vanillaExitCode."
+        exit $vanillaExitCode
+    }
+}
+
 Write-Output 'Static regression checks passed.'
 exit 0

@@ -1,5 +1,5 @@
-version="0.1"
-name="Project Ulysses"
+version="0.3-dev"
+name="Project Ulysses: Continuation"
 picture="Thumbnail.png"
 tags={
 	"Alternative History"
@@ -7,7 +7,7 @@ tags={
 	"Gameplay"
 	"National Focuses"
 }
-supported_version="1.13.*"
+supported_version="1.19.*"
 
 replace_path="map/strategicregions"
 replace_path="map/supplyareas"

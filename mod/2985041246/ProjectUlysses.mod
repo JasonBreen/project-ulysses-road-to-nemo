@@ -1,5 +1,5 @@
-version="0.1"
-name="Project Ulysses"
+version="0.3-dev"
+name="Project Ulysses: Continuation"
 picture="Thumbnail.png"
 tags={
 	"Alternative History"
@@ -20,6 +20,6 @@ replace_path="common/characters"
 replace_path="gfx/loadingscreens"
 replace_path="common/units"
 replace_path="common/units/equipment"
-supported_version="1.14.3"
+supported_version="1.19.*"
 # The repository copy intentionally omits the historical developer-local path.
 # The outer descriptor supplies the local launcher path when a runtime test is approved.

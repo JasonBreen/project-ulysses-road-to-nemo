@@ -47,7 +47,7 @@ Additional observations:
 - 69 country history files under `history\countries`.
 - 326 strategic-region files under `map\strategicregions`.
 - 356 map files total, including terrain/raster assets, `definition.csv`, railways, supply nodes, airports, and province/building data.
-- `map\positions.txt` exists but is zero bytes and must be treated as a compatibility risk until the target game proves it is unused or supplies a safe fallback.
+- `map\positions.txt` exists but is zero bytes; HOI4 1.19.3 vanilla ships it empty too, so it is not a blocker.
 - 15 technology files under `common\technologies`; static date markers span approximately 1910–2005 depending on file, including inherited armor/naval dates that need deliberate review before being called defects.
 - `history\states\171-State_171.txt` assigns owner/core `PLH`, manpower `1`, zero resources, zero listed buildings, `state_category=town`, and a large province list. Geography and intended ownership are not established.
 

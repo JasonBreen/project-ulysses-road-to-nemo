@@ -1,3 +1,4 @@
+# Project Ulysses original layout; 1.19-required elements added as hidden stubs (see restore_original_gui.py)
 guiTypes = {
 
 	containerWindowType = {
@@ -161,6 +162,13 @@ guiTypes = {
 			format = center
 			Orientation = "UPPER_LEFT"
 		}
+	
+		iconType = {
+			name = "new_content"
+			position = { x = -20000 y = -20000 } # 1.19 compatibility stub, intentionally hidden
+			spriteType = "GFX_unplayed_content_notification"
+			alwaystransparent = yes
+		}
 	}
 
 	### country entry
@@ -182,6 +190,13 @@ guiTypes = {
 			position = { x=0 y =0 }
 			clicksound = click_checkbox
 		}
+	
+		iconType = {
+			name = "new_content"
+			position = { x = -20000 y = -20000 } # 1.19 compatibility stub, intentionally hidden
+			spriteType = "GFX_unplayed_content_notification"
+			alwaystransparent = yes
+		}
 	}
 
 	### country entry
@@ -201,6 +216,13 @@ guiTypes = {
 			quadTextureSprite = "GFX_mini_country_selector"
 			position = { x=0 y =0 }
 			clicksound = click_checkbox
+		}
+	
+		iconType = {
+			name = "new_content"
+			position = { x = -20000 y = -20000 } # 1.19 compatibility stub, intentionally hidden
+			spriteType = "GFX_unplayed_content_notification"
+			alwaystransparent = yes
 		}
 	}
 
@@ -892,6 +914,67 @@ guiTypes = {
 			maxWidth = 380
 			maxHeight = 30	
 			format = left
+		}
+	
+		dropDownBoxType = {
+			name = "more_countries"
+			position = { x = -20000 y = -20000 } # 1.19 compatibility stub, intentionally hidden
+
+			expandButton = {
+				name = "expand_button"
+				position = { x = 1168 y = -4 }
+				quadTextureSprite = "GFX_peace_drop_down_button"
+				clicksound = click_default
+			}
+
+			expandedWindow = {
+				name = "expanded_window"
+				position = { x=0 y= -300 }
+				show_position = { x = 0 y = 25 }
+				show_animation_type = decelerated
+				hide_animation_type = accelerated
+				animation_time = 300
+				size = { width=1205 height=58 }	# dynamically resized in code using countries_mini_expanded's slot size
+				verticalScrollbar = "right_vertical_slider"
+				scroll_wheel_factor = 50
+				smooth_scrolling = yes
+				margin = { top = 7 bottom = 7 right = 6 }
+
+				background = {
+					name = "Background"
+					quadTextureSprite ="GFX_tiled_window_1b_thin_border"
+				}
+
+				gridBoxType = {
+					name = "countries_mini_expanded"
+					position = { x = 8 y = 0 }
+					size = { width = 199 height = 100%% }
+					slotsize = { width = 52 height = 38 }
+					add_horizontal = yes
+					max_slots_horizontal = 22
+					format = "UPPER_LEFT"
+				}
+			}
+		}
+	
+		OverlappingElementsBoxType = {
+			name = "filters"
+			position = { x = -20000 y = -20000 } # 1.19 compatibility stub, intentionally hidden
+			size = { x = 1181 y = 32 }
+			format = center
+			spacing = 14.0
+		}
+	
+		instantTextBoxType = {
+			name = "title"
+			position = { x = -20000 y = -20000 } # 1.19 compatibility stub, intentionally hidden
+			textureFile = ""
+			font = "hoi_24header"
+			borderSize = {x = 0 y = 0}
+			text = "FE_SELECT_COUNTRY"
+			maxWidth = 340
+			maxHeight = 30
+			format = centre
 		}
 	}
 
@@ -2118,7 +2201,19 @@ guiTypes = {
 				Orientation = "UPPER_RIGHT"
 			}
 
-		}
+		
+		containerWindowType = {
+		position = { x = -20000 y = -20000 } # 1.19 compatibility stub, intentionally hidden
+                name = background
+                size = { width=102% height=100% }
+                Background =
+                {
+                    name ="top_bg"
+                    spriteType = "GFX_tiled_frontend_upper_bar"
+                    position = { x=-10 y=0 }
+                }
+			}
+	}
 
 		containerWindowType = {
 			name ="bottom"
@@ -2210,6 +2305,33 @@ guiTypes = {
 				alwaystransparent = yes
 			}
 
+		
+		containerWindowType = {
+		position = { x = -20000 y = -20000 } # 1.19 compatibility stub, intentionally hidden
+                name = background
+                size = { width=102% height=100% }
+                Background ={
+                    name ="bottom_win"
+                    spriteType = "GFX_tiled_frontend_lower_bar"
+                    position = { x=-10 y =0}
+                }
+			}
+	}
+	}
+
+	# ---- HOI4 1.19 GUI types required by the engine ----
+	containerWindowType = {
+		name = "country_filter"
+		size = { width = 149 height = 33 }
+
+		buttonType = {
+			name = "button"
+			quadTextureSprite = "GFX_country_filter_entry"
+			buttonText = "FILTER"
+			buttonFont = "hoi_16mbs"
+			clicksound = click_default
+			oversound = ui_menu_over
+			frame = 2
 		}
 	}
 }

@@ -5,8 +5,8 @@ Status legend: `[ ]` not checked, `[S]` static-only evidence collected, `[R]` re
 ## Descriptor and path resolution
 
 - [S] Preserve and compare both descriptors; they disagree on supported version (`1.13.*` vs `1.14.3`).
-- [ ] Choose and document the target HOI4 branch/build; local Steam build evidence is appmanifest build ID `25205862`.
-- [ ] Remove or quarantine the obsolete absolute developer path before any launcher/runtime use.
+- [x] Choose and document the target HOI4 branch/build: **1.19.3 Operation Postern**; descriptors say `1.19.*`.
+- [x] Remove or quarantine the obsolete absolute developer path before any launcher/runtime use.
 - [ ] Decide whether the wrapper `replace_path` set is intentional for the target branch and whether each path still exists.
 - [ ] Confirm the launcher resolves the wrapper and content directory exactly once, with no duplicate mod registration.
 
@@ -19,10 +19,10 @@ Status legend: `[ ]` not checked, `[S]` static-only evidence collected, `[R]` re
 
 ## Scenario and map integrity
 
-- [ ] Verify both 1991 bookmarks load the expected start date, countries, wars, focus trees, OOBs, and AI plans.
+- [~] Verify both 1991 bookmarks load the expected start date, countries, wars, focus trees, OOBs, and AI plans. (Belka start verified at runtime; the two bookmarks are duplicates)
 - [ ] Resolve `PLH`/state 171 placeholder ownership, core, manpower, and geography.
-- [ ] Verify every province belongs to exactly one state and every state references valid provinces/strategic regions.
-- [ ] Investigate empty `map\positions.txt` before runtime testing.
+- [x] Verify every province belongs to exactly one state and every state references valid provinces/strategic regions. (static check 2026-10-17; 6 lakes removed from state 541)
+- [x] Investigate empty `map\positions.txt` before runtime testing. (vanilla 1.19 ships an empty positions.txt too — not a blocker)
 - [ ] Verify strategic regions, supply areas/nodes, railways, airports, naval bases, and map rasters agree with province definitions.
 
 ## Focus/event/AI continuity

@@ -1,6 +1,6 @@
 # Project Ulysses continuation groundwork
 
-This is a local-only continuation workspace for Sam's private Project Ulysses HOI4 Strangereal mod work. No remote repository, publishing, developer contact, release, installation change, or downloaded-code execution is part of this workspace.
+This is a private continuation workspace for Sam's Project Ulysses HOI4 Strangereal mod work. The repository and draft PR are private; no public release, developer contact, installation change, or downloaded-code execution is part of this workspace.
 
 ## Local layout
 
@@ -10,6 +10,8 @@ This is a local-only continuation workspace for Sam's private Project Ulysses HO
 - `G:\Project-Ulysses-Continuation\mod\2985041246.mod` — working descriptor wrapper.
 - `G:\Project-Ulysses-Continuation\docs\` — development plan and checklists.
 - `G:\Project-Ulysses-Continuation\inventory\` — source and inventory evidence.
+
+The design contract is [docs/DESIGN.md](docs/DESIGN.md). It separates inherited behavior, proposed implementation, and open user decisions.
 
 The project is intentionally separate from `G:\Project-Swallow`.
 
@@ -39,3 +41,4 @@ See:
 - [Compatibility checklist](docs/COMPATIBILITY_CHECKLIST.md)
 - [Testing checklist](docs/TESTING_CHECKLIST.md)
 - [Prioritized next tasks](docs/NEXT_TASKS.md)
+- [Continuation design document](docs/DESIGN.md)

@@ -11,6 +11,7 @@
 - Added a conservative static reference audit for focus/event IDs, country-history localization coverage, and event/focus localization keys.
 - Repaired two demonstrated stale references to fully commented-out Ustio content and documented the Belkan War continuation trace.
 - Added repository-grounded English labels/descriptions for the seven Belkan defeat-branch events; broader missing localization remains an explicit inventory item.
+- Added the repository design contract in `docs/DESIGN.md` and linked it from the README.
 
 ## Next implementation slices
 

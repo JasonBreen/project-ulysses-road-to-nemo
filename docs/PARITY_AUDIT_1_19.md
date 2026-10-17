@@ -28,8 +28,15 @@ The current repository is packaged as a standalone local mod wrapper: `298504124
 - **Adapted:** descriptors, interfaces, localization paths, technologies, histories, and selected map/building content were changed for the 1.19 port and continuation repairs. Two inherited armor AI date literals were corrected from `20001.1.1`/`1.1.1` to the evidence-supported `2001.1.1`/`1997.1.1`; the technology validator now rejects malformed or out-of-horizon dates without asserting authored coverage through 2065.
 - **Disabled:** generic vanilla UI/gameplay overrides and copied aircraft art listed above.
 - **Broken defects repaired:** four floating-harbor province associations (`11565`, `12098`, `11683`, `12493`) were mapped from their recorded coordinates to valid province IDs (`10388`, `10703`, `9582`, `10971`); four active `country_event = xxx` calls were removed; duplicate top-level `war_event.1` was renamed to `war_event.2`; and the new Belkan continuation localization was saved with a UTF-8 BOM.
-- **Unverified:** parser compatibility, UI fallback behavior, DLC assumptions, focus reachability, event outcomes, AI, save/load stability, and long-run campaign behavior. No HOI4 runtime was launched.
 - **Implemented but runtime-unverified:** `common/defines/ac_defines.lua` now sets the next-boundary `NDefines.NGame.END_DATE` to `2066.1.1.1`, intended to permit all of 2065-12-31; the static wrapper asserts this value.
 - **Unverified:** parser compatibility, UI fallback behavior, DLC assumptions, focus reachability, event outcomes, AI, save/load stability, long-run campaign behavior, actual runtime acceptance of the 2065-12-31 boundary, meaningful authored content through 2065, and completeness of technology/equipment naming/localization. No HOI4 runtime was launched.
+
+### Substantive remaining parity gaps
+
+- The 135 intentionally removed graphics files have no archive-provided Strangereal replacements: 131 aircraft-module files and 4 copied jet-technology icons. Engine fallback is expected, but UI behavior is not runtime-verified.
+- Eleven generic/vanilla interface overrides and four generic common definitions remain disabled or delegated to the base game; this is a packaging choice, not proof that every downstream screen or rule behaves identically.
+- Seven localization files are represented under adapted `localisation/english/replace/pu_*.yml` paths rather than their original archive paths.
+- Placeholder art, leaders/advisors, and ship names remain; North Point's focus file is fully commented, Recta/Yuktobania lack dedicated focus files, Osea elections and Canon AI focuses contain unfinished content, and state 171 remains a `PLH` placeholder.
+- The archive's 1991–2005 technology content is not yet a complete authored path to 2065; names, localization, dates, and later equipment provenance remain open work.
 
 The parity requirement for future work is: preserve every original Ulysses content family, adapt only with a documented 1.19 reason, and distinguish engine fallback from lost content. Do not copy old files wholesale over newer compatible implementations.

@@ -16,6 +16,10 @@ The candidate contained 12 newly changed files that exactly matched installed HO
 
 The candidate also changed the three existing Ulysses loading screens and added seven `_small.dds` files. The three full-size files were restored from the verified working copy; the seven unverified thumbnails were not carried into the repair branch. The 1.19 background-manager configuration now lists only the three existing mod textures. Thumbnail availability remains a runtime warning, not a claim of runtime compatibility.
 
+The candidate's inherited exact-match count was **64**: 59 aircraft-module DDS files, 4 jet-technology DDS files, and 1 empty `map/positions.txt`. The current repair reports **1** inherited exact match, the retained engine/config `map/positions.txt`; the 63 visible copied-asset matches were removed, and the validator reports 0 new exact matches. This hash audit does not prove that a visually similar or version-mismatched derivative is absent; it proves the documented exact-match boundary only.
+
+Remaining fallback dependencies are deliberate but runtime-unverified: the base game is expected to supply the aircraft-module UI after the copied module art/override was removed, the base technology UI after the four copied jet icon blocks were removed, and generic interface/common definitions that were disabled. The mod still delivers its remaining Ulysses/adapted art and definitions. The background manager depends on `gfx/loadingscreens/load_1.dds` through `load_3.dds`; their `_small.dds` picker thumbnails are absent and remain warnings.
+
 The inherited exact matches were classified as follows:
 
 | Count | Files | Purpose | Repair decision |

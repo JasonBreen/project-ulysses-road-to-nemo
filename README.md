@@ -26,6 +26,8 @@ The project is intentionally separate from `G:\Project-Swallow`.
 This repository is the **Continuation fork**. It picks up the April 2024 open alpha (v0.2, *Under Our Treads*), rebuilds it for **HOI4 1.19.3**, and carries the war forward. Like a pilot pulled from the sea and handed a new callsign, the mod gets a second sortie.
 
 > This fork is not made by, or affiliated with, the original Project Ulysses team. All credit for the original mod belongs to them. *Ace Combat* and Strangereal belong to Bandai Namco Entertainment.
+
+Open [Project-Ulysses.code-workspace](Project-Ulysses.code-workspace) in VS Code for portable, manual validation tasks; see [workspace instructions](docs/IDE_WORKSPACE.md). Antigravity has not been verified. The additive, default-off [experimental economy](docs/ECONOMY.md) provides treasury, budgets, bounded debt and a basic procurement contract with explicitly non-canonical calibration. Its runtime integration requires the separate repaired 1.19 port and original-content parity work. [Source attribution](docs/ECONOMY_PROVENANCE.md) is scoped to the new economy adaptation.
 Open [Project-Ulysses.code-workspace](Project-Ulysses.code-workspace) in VS Code for portable, manual validation tasks; see [workspace instructions](docs/IDE_WORKSPACE.md). Antigravity has not been verified. The additive, default-off [experimental economy](docs/ECONOMY.md) provides treasury, budgets, bounded debt and a basic procurement contract with explicitly non-canonical calibration. Its runtime integration requires the separate repaired 1.19 port and original-content parity work. [Source attribution](docs/ECONOMY_PROVENANCE.md) is scoped to the new economy adaptation.
 
 ---

@@ -1,5 +1,19 @@
 # Implementation roadmap
 
+## Economic foundation and IDE workspace
+
+Implemented in the isolated `codex/strangereal-economic-core` slice from exact base `c72422d96f6bd9b33e61f725c2cdc8fe198a51d8`:
+
+- Default-off fiscal prototype: weekly revenue/spending, treasury, interest, bounded borrowing, repayment, unpaid bills, guarded policy decisions and one prepaid domestic infantry contract.
+- Additive namespaced files; original country/focus/event/technology/map content is preserved. Calibration is explicitly non-canonical, with no invented GDP, currency, companies, borders or future Project Aces history.
+- Dependency/provenance/acceptance contracts in [ECONOMY.md](ECONOMY.md) and [ECONOMY_PROVENANCE.md](ECONOMY_PROVENANCE.md), plus actual-script offline regression and deliberate-error tests.
+- Full-horizon offline stress tests through end-2065 (3,914 weekly pulses per scenario); bounded capacity/credit and non-compounding unpaid bills. Native fixed-point behavior is still untested.
+- Portable [VS Code workspace](../Project-Ulysses.code-workspace), manual validation tasks, and [opening instructions](IDE_WORKSPACE.md). Antigravity compatibility is unverified.
+
+Integration order: freeze/review the separate 1.19 port, asset cleanup and original-content parity restoration; apply this additive slice; reconcile shared docs; run both static workflows and the port's no-vanilla-assets checks; then perform coordinated native parser/UI/save/load/AI tests. Do not replace original technology or descriptor files with this branch's inherited base. The separate port/roadmap task owns technology names, end dates and roadmap issues; this slice does not duplicate those issues.
+
+Next economy slices remain proposed: native 1.19 acceptance, AI and campaign balance, canon-evidence-backed country calibration, richer revenue bases, and aircraft/international procurement after equipment and technology dependencies are stable. Existing content remains the campaign foundation. No future canon is inferred from the requested 2065 horizon. A ready-for-review tracking PR is not merge authority or runtime acceptance.
+
 ## Completed in this session
 
 - Created and verified the private GitHub repository.

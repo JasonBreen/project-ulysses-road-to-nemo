@@ -10,6 +10,7 @@
 - Replaced the preserved demo-end event's no-op option with an explicit `ac_continuation_active` global handoff flag and neutral continuation wording. Existing gameplay continuation remains unverified.
 - Added a conservative static reference audit for focus/event IDs, country-history localization coverage, and event/focus localization keys.
 - Repaired two demonstrated stale references to fully commented-out Ustio content and documented the Belkan War continuation trace.
+- Added repository-grounded English labels/descriptions for the seven Belkan defeat-branch events; broader missing localization remains an explicit inventory item.
 
 ## Next implementation slices
 

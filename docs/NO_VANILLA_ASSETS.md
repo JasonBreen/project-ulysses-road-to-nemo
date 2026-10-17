@@ -4,8 +4,9 @@ The 1.19 port must not ship copied vanilla HOI4 content or assets. This policy i
 
 ## Audit scope
 
-- Candidate inspected: `G:\Project-Ulysses-Continuation\.claude\worktrees\playable-state-ace-combat-readme-73a736`
-- Repair branch/worktree: `codex/1.19-no-vanilla-assets` at `G:\Project-Ulysses-Continuation-1.19-repair`
+- Candidate inspected: PR #9 Claude baseline at `G:\Project-Ulysses-Continuation\.claude\worktrees\playable-state-ace-combat-readme-73a736`
+- Isolated integration worktree: `G:\Project-Ulysses-Continuation-integration`
+- Repair source retained separately at `G:\Project-Ulysses-Continuation-1.19-repair`; this integration does not modify that worktree.
 - Comparison baseline for this repair: immutable April extraction at `G:\Project-Ulysses-Continuation\source\baseline\2985041246`
 - The economy branch's separate ledger used the older frozen `c72422d96f6bd9b33e61f725c2cdc8fe198a51d8` working-copy baseline. That snapshot reported 13 inherited plaintext/config matches (12 also matched the April archive); it is not the current repair baseline.
 - Installed reference: `G:\steamlbirary\steamapps\common\Hearts of Iron IV`
@@ -15,11 +16,11 @@ The 1.19 port must not ship copied vanilla HOI4 content or assets. This policy i
 
 The candidate contained 12 newly changed files that exactly matched installed HOI4 files: `common/units/equipment/convoys.txt`, `common/units/equipment/upgrades/air_upgrades.txt`, seven vanilla division-name files, and `map/cities.txt`, `map/colors.txt`, and `map/seasons.txt`. They were restored from the verified Ulysses working copy in the repair branch.
 
-The candidate also changed the three existing Ulysses loading screens and added seven `_small.dds` files. The three full-size files were restored from the verified working copy; the seven unverified thumbnails were not carried into the repair branch. The 1.19 background-manager configuration now lists only the three existing mod textures. Thumbnail availability remains a runtime warning, not a claim of runtime compatibility.
+The integrated port retains PR #9's seven full-size loading screens and seven `_small.dds` picker thumbnails because no exact installed-game match was found for them. The background-manager configuration lists `load_1.dds` through `load_7.dds`. Their presence is a packaging result, not proof that the loading-screen UI or runtime picker works; PR #9's loading-screen behavior remains author-reported evidence and was not reproduced locally in this integration pass.
 
 The candidate's inherited exact-match count was **64**: 59 aircraft-module DDS files, 4 jet-technology DDS files, and 1 empty `map/positions.txt`. A second audit found **21 additional inherited visible/audio assets** whose filenames or directories differed from the installed reference, including generic industry/model textures, Osea navy portraits, the empty-leader texture, and Ustian infantry material maps. Those 21 files were removed after their references were either re-pointed to explicit engine paths, removed as unused, or documented as an art gap. The current repair reports **1** inherited exact path match, the retained engine/config `map/positions.txt`; it reports **0** new exact path matches and **0** path-independent exact asset matches. This hash audit does not prove that a visually similar or version-mismatched derivative is absent; it proves the documented exact-match boundary only.
 
-Remaining fallback dependencies are deliberate but runtime-unverified: the base game is expected to supply the aircraft-module textures referenced by the restored custom aliases, the base technology UI after the four copied jet icon blocks were removed, the two technology-specialization tag textures, and generic interface/common definitions that were disabled. The mod still delivers its remaining Ulysses/adapted art and definitions. The background manager depends on `gfx/loadingscreens/load_1.dds` through `load_3.dds`; their `_small.dds` picker thumbnails are absent and remain warnings.
+Remaining fallback dependencies are deliberate but runtime-unverified: the base game is expected to supply the aircraft-module textures referenced by the restored custom aliases, the base technology UI after the four copied jet icon blocks were removed, the two technology-specialization tag textures, and generic interface/common definitions that were disabled. The mod still delivers its remaining Ulysses/adapted art and definitions. The background manager depends on `gfx/loadingscreens/load_1.dds` through `load_7.dds`; the integrated worktree retains their `_small.dds` picker thumbnails. Their picker/runtime behavior remains unverified.
 
 The inherited exact matches were classified as follows:
 
@@ -42,7 +43,7 @@ The additional path-independent matches removed from the repair branch were:
 
 The remaining art gaps are therefore explicit decisions, not hidden vanilla fallbacks: Osea generic navy portrait art, Ustian material-map art, and the 50 custom aircraft-module icons need future Strangereal designs if those assets are required. Until then, the module aliases use 17 existing base-game icon paths grouped by function (radar, weapons, armor, and airframe category); this is a visible temporary fallback and remains runtime-unverified.
 
-The candidate also changed the three existing Ulysses loading screens and added seven `_small.dds` files. The three full-size files were restored from the verified working copy; the seven unverified thumbnails were not carried into the repair branch. The 1.19 background-manager configuration now lists only the three existing mod textures. Thumbnail availability remains a runtime warning, not a claim of runtime compatibility.
+The integrated candidate keeps the seven PR #9 thumbnail files alongside the seven full-size loading screens. They are not exact installed-game matches in the static audit, but their picker/runtime behavior remains unverified.
 
 ## Regression check
 
@@ -56,4 +57,4 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File .\tools\Validate-NoVanillaAssets.p
   -Json
 ```
 
-The check fails on any exact installed-reference match that was not already present in the baseline, fails if an inherited visible/audio asset remains even when it was renamed, and fails on missing or absolute installed-game references. It allows the documented engine/config `map/positions.txt` match. The current result is `InheritedVanillaMatches=1`, `NewVanillaMatches=0`, `PathIndependentVanillaMatches=0`, and three missing-thumbnail warnings. It does not prove that the game parses or runs the mod.
+The check fails on any exact installed-reference match that was not already present in the baseline, fails if an inherited visible/audio asset remains even when it was renamed, and fails on missing or absolute installed-game references. It allows the documented engine/config `map/positions.txt` match. The isolated integration result is `InheritedVanillaMatches=1`, `NewVanillaMatches=0`, `PathIndependentVanillaMatches=0`, and `Warnings=0`. The one inherited match is the retained engine/config `map/positions.txt`; the seven loading thumbnails are present and therefore do not generate missing-thumbnail warnings. This does not prove that the game parses or runs the mod.

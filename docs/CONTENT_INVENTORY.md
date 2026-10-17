@@ -12,7 +12,7 @@ Inventory subject: `G:\Project-Ulysses-Continuation\mod\2985041246\` (editable c
   - `version="0.1"`
   - `supported_version="1.14.3"`
   - the historical archive contained an obsolete absolute developer path; it has been removed from the editable continuation descriptor while the immutable baseline retains the original.
-  - `remote_file_id="2985041246"`
+  - the historical `remote_file_id="2985041246"` was also removed from the editable private descriptor; the immutable baseline retains the source value.
 - Archive: 3,104 files in the extracted mod tree; 1,524 are text-like source/localization files.
 
 ## Focus and scenario content

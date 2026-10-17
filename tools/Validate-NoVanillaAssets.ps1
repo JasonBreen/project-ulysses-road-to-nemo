@@ -48,6 +48,12 @@ foreach ($file in $modFiles) {
 
 $errors = New-Object System.Collections.Generic.List[string]
 $warnings = New-Object System.Collections.Generic.List[string]
+$assetExtensions = @('.dds', '.png', '.tga', '.wav', '.ogg', '.mp3', '.asset')
+foreach ($inherited in @($inheritedMatches)) {
+    if ([IO.Path]::GetExtension($inherited) -in $assetExtensions) {
+        [void]$errors.Add("Inherited vanilla asset remains in the mod: $inherited")
+    }
+}
 if ($newMatches.Count -gt 0) {
     [void]$errors.Add("New files exactly matching the installed HOI4 reference: $($newMatches -join ', ')")
 }

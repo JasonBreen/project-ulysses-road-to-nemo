@@ -16,7 +16,15 @@ The candidate contained 12 newly changed files that exactly matched installed HO
 
 The candidate also changed the three existing Ulysses loading screens and added seven `_small.dds` files. The three full-size files were restored from the verified working copy; the seven unverified thumbnails were not carried into the repair branch. The 1.19 background-manager configuration now lists only the three existing mod textures. Thumbnail availability remains a runtime warning, not a claim of runtime compatibility.
 
-The audit still reports 64 exact matches inherited from the original baseline, consisting of 63 interface/technology icon files and the empty `map/positions.txt`. These are recorded as inherited matches rather than silently deleted. They are not newly introduced by the 1.19 port.
+The inherited exact matches were classified as follows:
+
+| Count | Files | Purpose | Repair decision |
+| ---: | --- | --- | --- |
+| 59 | `gfx/interface/equipmentdesigner/planes/modules/*.dds` | Visible aircraft-module UI art; 58 were referenced by `plane_modules_icons.gfx`, one (`airplane_armor_plate_medium_icon.dds`) was unused | Removed the copied art and redundant override; the game engine supplies its own module UI. No suitable Strangereal replacements exist in the archive. |
+| 4 | `gfx/interface/technologies/jet_{strategic,tactical}_bomber*.dds` | Visible technology-tree icons, all referenced by the mod’s sprite override | Removed the copied art and four override blocks; the game engine supplies the base definitions. No suitable Strangereal replacements exist in the archive. |
+| 1 | `map/positions.txt` | Empty engine/config file; not visible, audio, or game-world art | Retained because it matches the installed game’s empty format and preserves the map contract. |
+
+The candidate also changed the three existing Ulysses loading screens and added seven `_small.dds` files. The three full-size files were restored from the verified working copy; the seven unverified thumbnails were not carried into the repair branch. The 1.19 background-manager configuration now lists only the three existing mod textures. Thumbnail availability remains a runtime warning, not a claim of runtime compatibility.
 
 ## Regression check
 
@@ -30,4 +38,4 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File .\tools\Validate-NoVanillaAssets.p
   -Json
 ```
 
-The check fails on any exact installed-reference match that was not already present in the baseline. It also checks 1.19 descriptors, absolute installed-game paths, and background-manager references. It does not prove that the game parses or runs the mod.
+The check fails on any exact installed-reference match that was not already present in the baseline, and now also fails if an inherited visible/audio asset remains. It allows the documented engine/config `map/positions.txt` match. It also checks 1.19 descriptors, absolute installed-game paths, and background-manager references. It does not prove that the game parses or runs the mod.

@@ -24,6 +24,8 @@ Exit criteria: the 1991 scenario reaches the first major branch without parse er
 
 ## Phase 2 — Postwar continuity after demo branches
 
+Current slice: world_event.2 now dispatches branch-aware postwar handoff events for conventional victory, Wacht am Wal, and defeat. Provisional reconstruction, demobilization, political-settlement, and affected-country administration decisions are available from the handoff flags. Native reachability, save/load, and long-run behavior remain unverified.
+
 1. Replace the demo-only `world_event.2` terminal outcome with explicit, branch-aware continuation states.
 2. Preserve Belkan victory/defeat, Rhongomyniad, Osea election, Sapin, Gebet, and Ustio consequences in a shared continuity ledger.
 3. Make postwar focus trees, events, AI plans, decisions, and country history agree on ownership, cores, governments, and dates.

@@ -4,6 +4,8 @@ Status as of 2026-10-17: the mod loads, starts the 1991 campaign and runs for ov
 
 Standing rules: keep the original Project Ulysses look and layouts; **no HOI4 vanilla (WWII) visuals** anywhere; 1.15–1.19 mechanics are welcome.
 
+Current continuation slice: the former demo handoff now consumes conventional victory, Wacht am Wal, and defeat outcome flags. It exposes provisional reconstruction, demobilization, political-settlement, and affected-country administration decisions. See [LORE_EVENT_COVERAGE_BACKLOG.md](LORE_EVENT_COVERAGE_BACKLOG.md). Static validation is required; native reachability remains unverified.
+
 1. **Vanilla-visuals audit**
    - List every sprite on screen that resolves to a vanilla texture: continuous focuses, grand doctrines, 1.15+ buildings, special projects, appended `.gfx` entries, MIO icons.
    - Replace each with Strangereal art, or with mod placeholders until art exists.

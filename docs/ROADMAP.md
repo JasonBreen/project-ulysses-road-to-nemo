@@ -27,6 +27,14 @@ Next economy slices remain proposed: native 1.19 acceptance, AI and campaign bal
 - Added repository-grounded English labels/descriptions for the seven Belkan defeat-branch events; broader missing localization remains an explicit inventory item.
 - Added the repository design contract in `docs/DESIGN.md` and linked it from the README.
 
+## Continuation and agent tooling added in the postwar slice
+
+- Added docs/LORE_EVENT_COVERAGE_BACKLOG.md with source layers, nation/character/organization/conflict coverage, and explicit 2065/Joker 1 gaps.
+- Added root AGENTS.md and five project-local skills under .agents/skills/ for canon research, HOI4 scripting, map/assets, localization, and validation/integration.
+- Connected world_event.2 to branch-aware postwar handoff events for conventional victory, Wacht am Wal, and defeat.
+- Added provisional reconstruction, demobilization, political-settlement, and affected-country settlement decisions. These are gameplay branches, not official canon claims.
+- Restored twelve pre-existing exact vanilla-file matches from the immutable Ulysses baseline; the no-vanilla audit now reports one allowed inherited map/positions.txt match and zero new matches.
+
 ## Next implementation slices
 
 1. Extend the reference audit to scripted effect/trigger calls and country-tag consumers; keep inherited vanilla namespaces explicitly allowlisted.
@@ -34,4 +42,5 @@ Next economy slices remain proposed: native 1.19 acceptance, AI and campaign bal
 3. Resolve state 171 only after Sam supplies intended geography/ownership; do not invent a replacement.
 4. Classify the 203 `XXX` strategic regions and rename only where lore-backed intent is established.
 5. Trace the 1991 Belkan War event/focus graph beyond the new handoff contract and replace remaining demo-terminal transitions with explicit continuation contracts.
-6. Run the approved isolated runtime smoke test once a safe non-destructive HOI4 launch method is verified.
+6. Resolve state 171 and the 203 XXX strategic regions only after source-backed geography decisions.
+7. Run the approved isolated runtime smoke test once a safe non-destructive HOI4 launch method is verified.

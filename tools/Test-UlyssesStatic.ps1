@@ -6,10 +6,12 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$scriptHost = if ($PSVersionTable.PSEdition -eq 'Core') { Join-Path $PSHOME 'pwsh.exe' } else { Join-Path $PSHOME 'powershell.exe' }
+if (-not (Test-Path -LiteralPath $scriptHost -PathType Leaf)) { throw "Could not locate the current PowerShell host executable: $scriptHost" }
 $validator = Join-Path $PSScriptRoot 'Validate-UlyssesMap.ps1'
 $arguments = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $validator, '-ModRoot', $ModRoot, '-Json')
 if ($ReferenceGameRoot) { $arguments += @('-ReferenceGameRoot', $ReferenceGameRoot) }
-$jsonText = (& pwsh @arguments | Out-String)
+$jsonText = (& $scriptHost @arguments | Out-String)
 $validatorExitCode = $LASTEXITCODE
 if ($validatorExitCode -ne 0) {
     Write-Error "Static map validator exited with code $validatorExitCode.`n$jsonText"
@@ -23,6 +25,7 @@ foreach ($property in @(
     @{ Name = 'UnassignedNonLakeLandDefinitions'; Expected = 0 },
     @{ Name = 'ExtraRasterColors'; Expected = 0 },
     @{ Name = 'OutOfBoundsBuildingCoordinates'; Expected = 0 },
+    @{ Name = 'InvalidBuildingProvinceAssociations'; Expected = 0 },
     @{ Name = 'OutOfBoundsUnitStackCoordinates'; Expected = 0 }
 )) {
     $actual = [int]$report.Summary.($property.Name)
@@ -52,8 +55,20 @@ if ($failures.Count -gt 0) {
     exit 1
 }
 
+$belkanLocalization = Join-Path $ModRoot 'localisation\english\country_BLK_continuation_l_english.yml'
+if (Test-Path -LiteralPath $belkanLocalization -PathType Leaf) {
+    $bytes = [IO.File]::ReadAllBytes($belkanLocalization)
+    if ($bytes.Length -lt 3 -or $bytes[0] -ne 0xEF -or $bytes[1] -ne 0xBB -or $bytes[2] -ne 0xBF) {
+        Write-Error "Belkan continuation localization is missing a UTF-8 BOM: $belkanLocalization"
+        exit 1
+    }
+} else {
+    Write-Error "Belkan continuation localization is missing: $belkanLocalization"
+    exit 1
+}
+
 $referenceValidator = Join-Path $PSScriptRoot 'Validate-UlyssesReferences.ps1'
-$referenceJson = (& pwsh -NoProfile -ExecutionPolicy Bypass -File $referenceValidator -ModRoot $ModRoot -Json | Out-String)
+$referenceJson = (& $scriptHost -NoProfile -ExecutionPolicy Bypass -File $referenceValidator -ModRoot $ModRoot -Json | Out-String)
 $referenceExitCode = $LASTEXITCODE
 if ($referenceExitCode -ne 0) {
     Write-Error "Reference validator exited with code $referenceExitCode.`n$referenceJson"
@@ -61,6 +76,12 @@ if ($referenceExitCode -ne 0) {
 }
 $referenceReport = $referenceJson | ConvertFrom-Json
 Write-Output "Reference audit: $($referenceReport.Summary.FocusDefinitions) focus definitions, $($referenceReport.Summary.EventDefinitions) event definitions, $($referenceReport.Summary.Warnings) warnings."
+foreach ($property in @('DuplicateEventDefinitions', 'MalformedEventReferences')) {
+    if ([int]$referenceReport.Summary.$property -ne 0) {
+        Write-Error "Reference audit regression: $property expected 0, got $($referenceReport.Summary.$property)."
+        exit 1
+    }
+}
 
 if ($BaselineRoot) {
     if (-not $ReferenceGameRoot) {
@@ -69,7 +90,7 @@ if ($BaselineRoot) {
     }
     $vanillaValidator = Join-Path $PSScriptRoot 'Validate-NoVanillaAssets.ps1'
     Write-Output 'No-vanilla-assets audit:'
-    & pwsh -NoProfile -ExecutionPolicy Bypass -File $vanillaValidator -ModRoot $ModRoot -ReferenceGameRoot $ReferenceGameRoot -BaselineRoot $BaselineRoot
+    & $scriptHost -NoProfile -ExecutionPolicy Bypass -File $vanillaValidator -ModRoot $ModRoot -ReferenceGameRoot $ReferenceGameRoot -BaselineRoot $BaselineRoot
     $vanillaExitCode = $LASTEXITCODE
     if ($vanillaExitCode -ne 0) {
         Write-Error "No-vanilla-assets validator exited with code $vanillaExitCode."

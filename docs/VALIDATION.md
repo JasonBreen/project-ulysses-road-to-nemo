@@ -21,4 +21,6 @@ The validator fails for structural errors such as duplicate IDs, unknown provinc
 
 The static regression script treats structural errors, non-lake land omissions, extra raster colors, and out-of-bounds placement coordinates as failures. It also asserts that the preserved demo-end event exposes the `ac_continuation_active` handoff flag. The validator is not a substitute for the HOI4 parser, a launcher test, a save/load test, or a long-run AI campaign.
 
+`tools\Test-UlyssesStatic.ps1` launches its child validators with the same PowerShell edition used to launch the wrapper, so the documented `powershell.exe` command does not require a separate PowerShell 7 installation. It also fails on invalid building province associations, duplicate event definitions, malformed event targets, and a missing BOM on the added Belkan continuation localization.
+
 `tools\Validate-UlyssesReferences.ps1` separately audits focus prerequisites/position references, owned event references, country-history localization coverage, and event/focus localization keys. Missing localization is reported as an inventory warning because the archive contains substantial unfinished content; unresolved owned focus/event references are structural errors. The current audit identifies the remaining localization gaps without fabricating text.

@@ -55,24 +55,45 @@ foreach ($reference in $missingFocusRefs) { Add-ReferenceError "Focus reference 
 
 $eventIds = New-Object System.Collections.Generic.HashSet[string]
 $eventLocations = @{}
+$eventDefinitionRows = New-Object System.Collections.Generic.List[object]
 foreach ($file in $eventFiles) {
     $lineNumber = 0
+    $braceDepth = 0
     foreach ($line in Get-Content -LiteralPath $file.FullName) {
         $lineNumber++
         $clean = Strip-Comment $line
-        if ($clean -match '^\s*id\s*=\s*([A-Za-z0-9_]+\.\d+)') {
+        if ($braceDepth -eq 1 -and $clean -match '^\s*id\s*=\s*([A-Za-z0-9_]+\.\d+)') {
             $id = $Matches[1]
             Add-SetValue $eventIds $id
+            [void]$eventDefinitionRows.Add([pscustomobject]@{ Id = $id; File = $file.FullName; Line = $lineNumber })
             if (-not $eventLocations.ContainsKey($id)) { $eventLocations[$id] = "{0}:{1}" -f $file.FullName,$lineNumber }
         }
+        $braceDepth += ([regex]::Matches($clean, '\{')).Count
+        $braceDepth -= ([regex]::Matches($clean, '\}')).Count
+        if ($braceDepth -lt 0) { $braceDepth = 0 }
     }
+}
+$duplicateEventDefinitions = @($eventDefinitionRows | Group-Object Id | Where-Object Count -gt 1)
+foreach ($duplicate in $duplicateEventDefinitions) {
+    $locations = ($duplicate.Group | ForEach-Object { "{0}:{1}" -f $_.File,$_.Line }) -join ', '
+    Add-ReferenceError "Duplicate event definition '$($duplicate.Name)' at $locations"
 }
 $ownedEventNamespaces = New-Object System.Collections.Generic.HashSet[string]
 foreach ($id in $eventIds) { Add-SetValue $ownedEventNamespaces ($id -split '\.')[0] }
 
 $eventRefs = New-Object System.Collections.Generic.List[object]
+$malformedEventRefs = New-Object System.Collections.Generic.List[object]
 foreach ($file in $codeFiles) {
-    $text = Get-Content -LiteralPath $file.FullName -Raw
+    $lines = @(Get-Content -LiteralPath $file.FullName)
+    $lineNumber = 0
+    foreach ($sourceLine in $lines) {
+        $lineNumber++
+        $cleanLine = Strip-Comment $sourceLine
+        if ($cleanLine -match '(?:country_event|news_event|trigger_event|fire_event)\s*=\s*([^\s#]+)' -and $Matches[1] -ne '{' -and $Matches[1] -notmatch '^[A-Za-z0-9_]+\.\d+$') {
+            [void]$malformedEventRefs.Add([pscustomobject]@{ Target = $Matches[1]; File = $file.FullName; Line = $lineNumber })
+        }
+    }
+    $text = $lines -join "`n"
     if ($null -eq $text) { $text = '' }
     $cleanText = [regex]::Replace($text, '(?m)#.*$', '')
     foreach ($match in [regex]::Matches($cleanText, '(?:country_event|news_event|trigger_event|fire_event)\s*=\s*(?:\{\s*)?(?:id\s*=\s*)?([A-Za-z0-9_]+\.\d+)')) {
@@ -82,6 +103,8 @@ foreach ($file in $codeFiles) {
         $eventRefs.Add([pscustomobject]@{ Id = $id; File = $file.FullName; Line = $line })
     }
 }
+$malformedEventRefs = @($malformedEventRefs | Sort-Object Target,File,Line -Unique)
+foreach ($reference in $malformedEventRefs) { Add-ReferenceError "Malformed event target '$($reference.Target)' ($($reference.File):$($reference.Line))" }
 $missingEventRefs = @($eventRefs | Where-Object { $ownedEventNamespaces.Contains(($_.Id -split '\.')[0]) -and -not $eventIds.Contains($_.Id) } | Sort-Object Id,File,Line -Unique)
 foreach ($reference in $missingEventRefs) { Add-ReferenceError "Owned event reference '$($reference.Id)' is not defined ($($reference.File):$($reference.Line))" }
 $externalEventNamespaces = @($eventRefs | Where-Object { -not $ownedEventNamespaces.Contains(($_.Id -split '\.')[0]) } | ForEach-Object { ($_.Id -split '\.')[0] } | Sort-Object -Unique)
@@ -164,8 +187,10 @@ $summary = [ordered]@{
     FocusReferences = $focusRefs.Count
     MissingFocusReferences = $missingFocusRefs.Count
     EventDefinitions = $eventIds.Count
+    DuplicateEventDefinitions = $duplicateEventDefinitions.Count
     EventReferences = $eventRefs.Count
     MissingOwnedEventReferences = $missingEventRefs.Count
+    MalformedEventReferences = $malformedEventRefs.Count
     ScriptedDefinitions = $scriptedDefinitions.Count
     ScriptedReferences = $scriptedReferences.Count
     LocalizationKeys = $locKeys.Count

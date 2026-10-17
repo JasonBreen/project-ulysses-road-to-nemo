@@ -277,19 +277,27 @@ if (Test-Path -LiteralPath $provinceMapPath -PathType Leaf) {
 
 $outOfBoundsBuildingCoordinates = 0
 $malformedBuildingRows = 0
+$invalidBuildingProvinceAssociations = 0
+$invalidBuildingProvinceIds = New-Object System.Collections.Generic.HashSet[int]
 $outOfBoundsUnitStackCoordinates = 0
 $malformedUnitStackRows = 0
 if ($provinceRaster) {
     foreach ($line in $buildingRows) {
         $parts = $line -split ';'
-        if ($parts.Count -lt 5) { $malformedBuildingRows++; continue }
+        if ($parts.Count -lt 7) { $malformedBuildingRows++; continue }
         $x = 0.0; $z = 0.0
         if (-not (Try-ReadInvariantDouble $parts[2].Trim() ([ref]$x)) -or -not (Try-ReadInvariantDouble $parts[4].Trim() ([ref]$z))) { $malformedBuildingRows++; continue }
         if ($x -lt 0 -or $x -ge $provinceRaster.Width -or $z -lt 0 -or $z -ge [math]::Abs($provinceRaster.Height)) { $outOfBoundsBuildingCoordinates++ }
+        $provinceAssociation = $parts[6].Trim()
+        if ($provinceAssociation -notmatch '^\d+$' -or -not $definitionSet.Contains([int]$provinceAssociation)) {
+            $invalidBuildingProvinceAssociations++
+            if ($provinceAssociation -match '^\d+$') { [void]$invalidBuildingProvinceIds.Add([int]$provinceAssociation) }
+        }
     }
 }
 if ($malformedBuildingRows -gt 0) { Add-ValidationError "Malformed buildings.txt placement rows: $malformedBuildingRows" }
 if ($outOfBoundsBuildingCoordinates -gt 0) { Add-ValidationError "buildings.txt coordinates outside provinces.bmp bounds: $outOfBoundsBuildingCoordinates" }
+if ($invalidBuildingProvinceAssociations -gt 0) { Add-ValidationError "buildings.txt rows reference invalid province associations: $invalidBuildingProvinceAssociations (IDs: $($invalidBuildingProvinceIds -join ', '))" }
 
 $unitstacksPath = Assert-File 'map/unitstacks.txt'
 $unitstackRows = @(Get-Content -LiteralPath $unitstacksPath | Where-Object { $_ -match ';' })
@@ -357,6 +365,7 @@ $summary = [ordered]@{
     MissingRasterColors = $missingRasterColors.Count
     ExtraRasterColors = $extraRasterColors.Count
     OutOfBoundsBuildingCoordinates = $outOfBoundsBuildingCoordinates
+    InvalidBuildingProvinceAssociations = $invalidBuildingProvinceAssociations
     OutOfBoundsUnitStackCoordinates = $outOfBoundsUnitStackCoordinates
     Errors = $errors.Count
     Warnings = $warnings.Count

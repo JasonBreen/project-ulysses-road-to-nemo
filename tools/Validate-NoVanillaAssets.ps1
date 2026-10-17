@@ -26,8 +26,10 @@ if (-not (Test-Path -LiteralPath $ModRoot -PathType Container)) { throw "Mod roo
 if (-not (Test-Path -LiteralPath $ReferenceGameRoot -PathType Container)) { throw "Reference game root does not exist: $ReferenceGameRoot" }
 if (-not (Test-Path -LiteralPath $BaselineRoot -PathType Container)) { throw "Baseline root does not exist: $BaselineRoot" }
 
+$assetExtensions = @('.dds', '.png', '.tga', '.wav', '.ogg', '.mp3', '.asset')
 $inheritedMatches = New-Object System.Collections.Generic.List[string]
 $newMatches = New-Object System.Collections.Generic.List[string]
+$pathIndependentMatches = New-Object System.Collections.Generic.List[object]
 $modFiles = Get-ChildItem -LiteralPath $ModRoot -File -Recurse
 foreach ($file in $modFiles) {
     $relative = Get-NormalizedRelativePath ([IO.Path]::GetRelativePath((Resolve-Path -LiteralPath $ModRoot), $file.FullName))
@@ -46,9 +48,36 @@ foreach ($file in $modFiles) {
     }
 }
 
+# Build a path-independent hash index for visible/audio assets. Size is used as
+# a prefilter so the audit does not hash unrelated files in a large installation.
+$assetFiles = @($modFiles | Where-Object { [IO.Path]::GetExtension($_.Name).ToLowerInvariant() -in $assetExtensions })
+$assetSizes = New-Object System.Collections.Generic.HashSet[string]
+foreach ($file in $assetFiles) { [void]$assetSizes.Add([string]$file.Length) }
+$referenceAssetCandidates = @(
+    Get-ChildItem -LiteralPath $ReferenceGameRoot -File -Recurse -ErrorAction SilentlyContinue |
+        Where-Object {
+            [IO.Path]::GetExtension($_.Name).ToLowerInvariant() -in $assetExtensions -and
+            $assetSizes.Contains([string]$_.Length)
+        }
+)
+$referenceHashes = @{}
+foreach ($file in $referenceAssetCandidates) {
+    $hash = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToUpperInvariant()
+    if (-not $referenceHashes.ContainsKey($hash)) { $referenceHashes[$hash] = $file.FullName }
+}
+foreach ($file in $assetFiles) {
+    $hash = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToUpperInvariant()
+    if ($referenceHashes.ContainsKey($hash)) {
+        $relative = Get-NormalizedRelativePath ([IO.Path]::GetRelativePath((Resolve-Path -LiteralPath $ModRoot), $file.FullName))
+        [void]$pathIndependentMatches.Add([pscustomobject]@{
+            ModPath = $relative
+            ReferencePath = $referenceHashes[$hash]
+        })
+    }
+}
+
 $errors = New-Object System.Collections.Generic.List[string]
 $warnings = New-Object System.Collections.Generic.List[string]
-$assetExtensions = @('.dds', '.png', '.tga', '.wav', '.ogg', '.mp3', '.asset')
 foreach ($inherited in @($inheritedMatches)) {
     if ([IO.Path]::GetExtension($inherited) -in $assetExtensions) {
         [void]$errors.Add("Inherited vanilla asset remains in the mod: $inherited")
@@ -56,6 +85,10 @@ foreach ($inherited in @($inheritedMatches)) {
 }
 if ($newMatches.Count -gt 0) {
     [void]$errors.Add("New files exactly matching the installed HOI4 reference: $($newMatches -join ', ')")
+}
+if ($pathIndependentMatches.Count -gt 0) {
+    $details = ($pathIndependentMatches | ForEach-Object { "$($_.ModPath) == $($_.ReferencePath)" }) -join ', '
+    [void]$errors.Add("Mod assets exactly match installed HOI4 assets regardless of relative path: $details")
 }
 
 $descriptorPaths = @(
@@ -105,11 +138,13 @@ $result = [ordered]@{
         ModFiles = $modFiles.Count
         InheritedVanillaMatches = $inheritedMatches.Count
         NewVanillaMatches = $newMatches.Count
+        PathIndependentVanillaMatches = $pathIndependentMatches.Count
         Errors = $errors.Count
         Warnings = $warnings.Count
     }
     InheritedVanillaMatches = @($inheritedMatches | Sort-Object)
     NewVanillaMatches = @($newMatches | Sort-Object)
+    PathIndependentVanillaMatches = @($pathIndependentMatches | Sort-Object ModPath)
     Errors = @($errors)
     Warnings = @($warnings)
 }

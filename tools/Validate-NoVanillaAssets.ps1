@@ -26,7 +26,7 @@ if (-not (Test-Path -LiteralPath $ModRoot -PathType Container)) { throw "Mod roo
 if (-not (Test-Path -LiteralPath $ReferenceGameRoot -PathType Container)) { throw "Reference game root does not exist: $ReferenceGameRoot" }
 if (-not (Test-Path -LiteralPath $BaselineRoot -PathType Container)) { throw "Baseline root does not exist: $BaselineRoot" }
 
-$assetExtensions = @('.dds', '.png', '.tga', '.wav', '.ogg', '.mp3', '.asset')
+$assetExtensions = @('.dds', '.png', '.tga', '.wav', '.ogg', '.mp3', '.asset', '.mesh', '.bmp')
 $inheritedMatches = New-Object System.Collections.Generic.List[string]
 $newMatches = New-Object System.Collections.Generic.List[string]
 $pathIndependentMatches = New-Object System.Collections.Generic.List[object]

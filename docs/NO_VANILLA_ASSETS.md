@@ -40,7 +40,7 @@ The additional path-independent matches removed from the repair branch were:
 | 8 | Generic building/map-object `nonormal.dds` and `nospec.dds` pairs | Re-pointed map-object definitions to explicit engine model paths and removed copied pairs. |
 | 2 | Ustian infantry normal/spec material maps | Removed exact copied maps; custom Ustian mesh/diffuse assets remain, while replacement material-map art is an open design task. |
 
-The remaining art gaps are therefore explicit decisions, not hidden vanilla fallbacks: Osea generic navy portrait art and Ustian material-map art need future Strangereal designs if those assets are required. The engine-fallback paths above remain runtime-unverified.
+The remaining art gaps are therefore explicit decisions, not hidden vanilla fallbacks: Osea generic navy portrait art, Ustian material-map art, and the 50 custom aircraft-module icons need future Strangereal designs if those assets are required. Until then, the module aliases use 17 existing base-game icon paths grouped by function (radar, weapons, armor, and airframe category); this is a visible temporary fallback and remains runtime-unverified.
 
 The candidate also changed the three existing Ulysses loading screens and added seven `_small.dds` files. The three full-size files were restored from the verified working copy; the seven unverified thumbnails were not carried into the repair branch. The 1.19 background-manager configuration now lists only the three existing mod textures. Thumbnail availability remains a runtime warning, not a claim of runtime compatibility.
 

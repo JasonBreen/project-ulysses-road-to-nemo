@@ -34,6 +34,7 @@ The current repository is packaged as a standalone local mod wrapper: `298504124
 ### Substantive remaining parity gaps
 
 - The 156 intentionally removed graphics files have no archive-provided Strangereal replacements: 131 aircraft-module files, 4 copied jet-technology icons, 3 Osea generic navy portraits, 2 Ustian infantry material maps, 6 generic industry textures, 1 copied tile, 1 empty-leader texture, and 8 generic model textures. Engine fallback is expected only where an explicit engine path is documented; Osea and Ustian art remain open replacement tasks. UI/model behavior is not runtime-verified.
+- The 50 custom aircraft-module aliases are retained in `interface/plane_modules_icons.gfx` and currently map to 17 existing base-game icon paths by function. This is an explicit temporary fallback, not authored Strangereal art; replace it as a dedicated art task before any release-quality packaging.
 - Ten generic/vanilla interface overrides and four generic common definitions remain disabled or delegated to the base game; this is a packaging choice, not proof that every downstream screen or rule behaves identically.
 - Seven localization files are represented under adapted `localisation/english/replace/pu_*.yml` paths rather than their original archive paths.
 - Placeholder art, leaders/advisors, and ship names remain; North Point's focus file is fully commented, Recta/Yuktobania lack dedicated focus files, Osea elections and Canon AI focuses contain unfinished content, and state 171 remains a `PLH` placeholder.

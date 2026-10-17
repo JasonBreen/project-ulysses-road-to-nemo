@@ -43,7 +43,7 @@ For clarity, the following newly authored economy adaptation files and supportin
 - `mod/2985041246/common/decisions/categories/ac_economy_categories.txt`;
 - `mod/2985041246/localisation/english/ac_economy_l_english.yml`;
 - `tools/economy_script.py`, `tools/test_economy.py`, `tools/Test-UlyssesEconomy.ps1`;
-- `docs/ECONOMY.md`, `docs/ECONOMY_VALIDATION.md` and this provenance notice.
+- `docs/ECONOMY.md`, `docs/ECONOMY_VALIDATION.md`, `docs/ECONOMY_INTEGRATION.md` and this provenance notice.
 
 Retain source/creator credit, the license link/text, and the modification notice when sharing the adaptation. Share adapted material under the same or a compatible license and do not add restrictions that negate the licensed freedoms. These conditions follow the [Creative Commons deed](https://creativecommons.org/licenses/by-sa/4.0/) and accompanying legal code; private repository visibility does not change the license terms or grant rights to unrelated content. There is no MD or Project Aces endorsement.
 

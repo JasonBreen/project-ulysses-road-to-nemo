@@ -75,6 +75,8 @@ Current estimates and the last settled week have separate variables. Refreshing 
 
 Captured local results and long-run maxima are in [ECONOMY_VALIDATION.md](ECONOMY_VALIDATION.md).
 
+A later detached assessment against port head `92173286b8315e22b3949a98ad6b559225fd0a15`, including the README insertion-conflict fix and the differing asset-audit baseline results, is recorded in [ECONOMY_INTEGRATION.md](ECONOMY_INTEGRATION.md). Issue [#7](https://github.com/JasonBreen/project-ulysses-continuation/issues/7) now tracks this integration; native acceptance remains separate.
+
 Run `tools/Test-UlyssesEconomy.ps1` with an installed Python 3.9+ executable, or `python -m unittest discover -s tools -p test_economy.py -v`. See [IDE_WORKSPACE.md](IDE_WORKSPACE.md) for manual IDE tasks.
 
 The stdlib harness reads the actual authored scripts, retains repeated keys and rejects unknown script commands. It is an intentionally limited interpreter, not Paradox's parser. It checks disabled no-op behavior, initialization, country pulse scope, quote purity, cash/debt conservation, partial credit, arrears priority, AI reserves, tax/service cooldowns, prerequisite failures, duplicate orders, partial repayment, cancellation and one-time delivery. Deliberately malformed braces, misspelled calls, undefined variables, missing English keys and a broken technology-to-equipment binding must fail.

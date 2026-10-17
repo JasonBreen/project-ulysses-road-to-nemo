@@ -1,5 +1,7 @@
 # Economic foundation validation evidence
 
+For the later PR review/CI snapshot and detached combination with the repaired port, including its asset-policy limitations, see [ECONOMY_INTEGRATION.md](ECONOMY_INTEGRATION.md). The results below describe the original economy-only baseline.
+
 Local execution on 2026-10-17, from the isolated economy worktree based on `c72422d96f6bd9b33e61f725c2cdc8fe198a51d8`:
 
 - Python 3.9.13: `python -m unittest discover -s tools -p test_economy.py -v` passed all 27 checks.

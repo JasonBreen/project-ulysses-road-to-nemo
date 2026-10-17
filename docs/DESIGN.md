@@ -136,6 +136,12 @@ Country-specific IDs should use stable tag-prefixed names. Shared systems should
 
 **Open decisions:** the intended economic difficulty and the extent to which postwar industry should be transferred, damaged, or rebuilt.
 
+**Implemented experimental slice:** the default-off `ac_economy` game rule adds an additive weekly treasury/budget ledger, bounded debt, unpaid bills, tax/service decisions and a prepaid basic infantry contract. [ECONOMY.md](ECONOMY.md) defines the dependency map, all provisional coefficients, integration order and acceptance checks. [ECONOMY_PROVENANCE.md](ECONOMY_PROVENANCE.md) records the pinned MD reference and scoped attribution/license. Existing country, map, event, focus and technology files are untouched by this slice. No Earth-country setup, art or vanilla assets are imported.
+
+The implementation uses abstract fiscal units and existing controlled industry, not invented canon GDP, currencies, tax histories, companies or borders. Every economic coefficient and policy effect is gameplay calibration. Factual additions require primary Project Aces evidence in the coordinated canon ledger; archive content alone is not proof of canon. The requested campaign horizon is the existing 1991 start through the end of 2065; this does not authorize fabricated future canon. Offline stress tests cover 3,914 weekly pulses, including war, industry loss, credit exhaustion and accumulating unpaid bills. Native 1.19 numeric precision, UI, save/load, civil-war inheritance, AI behavior and balance remain open gates.
+
+Runtime integration depends on the separately repaired 1.19/no-vanilla-assets port and its original-content parity restorations. The economy branch deliberately starts from `c72422d96f6bd9b33e61f725c2cdc8fe198a51d8`; it does not claim the inherited descriptor or asset baseline is repaired. Preserve original Ulysses content while integrating the additive files. Aircraft procurement, canon-backed national calibration, richer revenue models and international arms trading remain proposed.
+
 ### Diplomacy and factions
 
 **Inherited:** existing events and country content reference Osea, Sapin, Ustio, Gebet, Yuktobania, Recta, and other Strangereal actors; current faction and treaty behavior is not runtime-verified.

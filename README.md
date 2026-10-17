@@ -13,6 +13,8 @@ This is a private continuation workspace for Sam's Project Ulysses HOI4 Stranger
 
 The design contract is [docs/DESIGN.md](docs/DESIGN.md). It separates inherited behavior, proposed implementation, and open user decisions.
 
+Open [Project-Ulysses.code-workspace](Project-Ulysses.code-workspace) in VS Code for portable, manual validation tasks; see [workspace instructions](docs/IDE_WORKSPACE.md). Antigravity has not been verified. The additive, default-off [experimental economy](docs/ECONOMY.md) provides treasury, budgets, bounded debt and a basic procurement contract with explicitly non-canonical calibration. Its runtime integration requires the separate repaired 1.19 port and original-content parity work. [Source attribution](docs/ECONOMY_PROVENANCE.md) is scoped to the new economy adaptation.
+
 The project is intentionally separate from `G:\Project-Swallow`.
 
 ## Source evidence

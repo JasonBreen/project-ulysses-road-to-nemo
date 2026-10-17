@@ -21,6 +21,12 @@ Logs from these runs were kept outside the repo (scratchpad); counts are summari
 - [ ] Check references to country tags, focus IDs, event IDs, scripted effects/triggers, technologies, equipment, GFX, sounds, and localization keys.
 - [ ] Check dates, bookmark definitions, state ownership/core assignments, province membership, and map definitions.
 - [ ] Check all `replace_path` targets and all absolute paths.
+- [x] Validate all technology date literals and `start_year` values against the 1900–2065 static horizon; record inherited date repairs separately from authored content.
+- [ ] Audit technology/equipment names and localization keys, classifying base-game inherited names, mod provenance, canon-backed names, and provisional gameplay abstractions.
+- [ ] Advance a controlled run through 2065-12-31; separately report clock reachability, authored content coverage, and canon/provenance status.
+- [ ] Verify Joker 1 content only against the compiled user-authored continuity source; do not treat it as official Project Aces canon.
+
+Static checks are automated by `tools/Test-UlyssesStatic.ps1` (CI: `.github/workflows/static-validation.yml`); see [VALIDATION.md](VALIDATION.md).
 
 ## Controlled runtime smoke tests (future, with separate approval)
 

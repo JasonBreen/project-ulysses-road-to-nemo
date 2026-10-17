@@ -1,5 +1,6 @@
 NDefines.NGame.START_DATE = "1991.1.1.12"
-NDefines.NGame.END_DATE = "2005.1.1.1"
+-- HOI4 ends the game at this boundary; "2066.1.1.1" keeps all of 2065-12-31 playable (project cutoff: 2065).
+NDefines.NGame.END_DATE = "2066.1.1.1"
 
 NDefines_Graphics.NGraphics.GRADIENT_BORDERS_THICKNESS_COUNTRY_LOW = 0.5
 NDefines_Graphics.NGraphics.GRADIENT_BORDERS_THICKNESS_COUNTRY_HIGH = 5

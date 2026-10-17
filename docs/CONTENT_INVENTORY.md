@@ -11,7 +11,7 @@ Inventory subject: `G:\Project-Ulysses-Continuation\mod\2985041246\` (editable c
 - Embedded descriptor: `G:\Project-Ulysses-Continuation\mod\2985041246\ProjectUlysses.mod`
   - `version="0.1"`
   - `supported_version="1.14.3"`
-  - obsolete developer path: `C:/Users/Adam/Documents/Paradox Interactive/Hearts of Iron IV/mod/ProjectUlyssesMain`
+  - the historical archive contained an obsolete absolute developer path; it has been removed from the editable continuation descriptor while the immutable baseline retains the original.
   - `remote_file_id="2985041246"`
 - Archive: 3,104 files in the extracted mod tree; 1,524 are text-like source/localization files.
 

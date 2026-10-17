@@ -21,5 +21,5 @@ replace_path="gfx/loadingscreens"
 replace_path="common/units"
 replace_path="common/units/equipment"
 supported_version="1.14.3"
-path="C:/Users/Adam/Documents/Paradox Interactive/Hearts of Iron IV/mod/ProjectUlyssesMain"
-remote_file_id="2985041246"
+# The repository copy intentionally omits the historical developer-local path.
+# The outer descriptor supplies the local launcher path when a runtime test is approved.

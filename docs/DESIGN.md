@@ -79,7 +79,7 @@ The archive supplies January 1, 1991 bookmarks. The existing Belkan War content 
 
 ### Inclusive campaign cutoff
 
-The continuation target is an inclusive playable campaign horizon through **2065-12-31**. This is an engine/content contract to audit, not a claim that the archive contains authored events or canon-backed history for every year. No demo-end event, scripted transition, focus gate, technology date, or equipment progression may silently terminate the campaign before the cutoff once later-era work is implemented. The project must separately report:
+The continuation target is an inclusive playable campaign horizon through **2065-12-31**. The current implementation sets HOI4's next-boundary `NDefines.NGame.END_DATE` to `2066.1.1.1`, which is intended to permit the complete 2065-12-31 calendar day; this is statically asserted by the regression wrapper but remains runtime-unverified. This is an engine/content contract to audit, not a claim that the archive contains authored events or canon-backed history for every year. No demo-end event, scripted transition, focus gate, technology date, or equipment progression may silently terminate the campaign before the cutoff once later-era work is implemented. The project must separately report:
 
 - whether the engine and scripts permit the campaign clock to reach 2065-12-31;
 - which authored content is actually present and tested through that date; and

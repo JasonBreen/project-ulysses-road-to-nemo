@@ -93,6 +93,18 @@ if ($technologyExitCode -ne 0) {
 $technologyReport = $technologyJson | ConvertFrom-Json
 Write-Output "Technology audit: $($technologyReport.Summary.DateLiterals) date literals, $($technologyReport.Summary.StartYearLiterals) start years, $($technologyReport.Summary.Warnings) warnings."
 
+$definesFile = Join-Path $ModRoot 'common\defines\ac_defines.lua'
+if (-not (Test-Path -LiteralPath $definesFile -PathType Leaf)) {
+    Write-Error "Campaign defines file is missing: $definesFile"
+    exit 1
+}
+$definesText = Get-Content -LiteralPath $definesFile -Raw
+if ($definesText -notmatch '(?m)^\s*NDefines\.NGame\.END_DATE\s*=\s*"2066\.1\.1\.1"\s*$') {
+    Write-Error 'Campaign end boundary must be 2066.1.1.1 so the inclusive 2065-12-31 cutoff remains playable.'
+    exit 1
+}
+Write-Output 'Campaign horizon: END_DATE=2066.1.1.1 (permits through 2065-12-31).'
+
 if ($BaselineRoot) {
     if (-not $ReferenceGameRoot) {
         Write-Error 'BaselineRoot requires ReferenceGameRoot for the no-vanilla-assets audit.'

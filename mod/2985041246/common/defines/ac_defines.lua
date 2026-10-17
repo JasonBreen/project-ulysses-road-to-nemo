@@ -1,5 +1,7 @@
 NDefines.NGame.START_DATE = "1991.1.1.12"
-NDefines.NGame.END_DATE = "2005.1.1.1"
+# HOI4's end date is the next boundary after the final playable day. This
+# permits the complete 2065-12-31 calendar day under the project cutoff.
+NDefines.NGame.END_DATE = "2066.1.1.1"
 
 NDefines_Graphics.NGraphics.GRADIENT_BORDERS_THICKNESS_COUNTRY_LOW = 0.5
 NDefines_Graphics.NGraphics.GRADIENT_BORDERS_THICKNESS_COUNTRY_HIGH = 5

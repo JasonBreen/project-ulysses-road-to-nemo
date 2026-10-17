@@ -1,0 +1,206 @@
+# Millennium Dawn-inspired adaptation; see docs/ECONOMY_PROVENANCE.md.
+# All fiscal units and coefficients are provisional gameplay calibration, not GDP.
+
+ac_econ_initialize = {
+	if = {
+		limit = {
+			ac_econ_enabled = yes
+			NOT = { has_country_flag = ac_econ_initialized }
+		}
+		set_country_flag = ac_econ_initialized
+		set_variable = { ac_econ_tax_level = 1 }
+		set_variable = { ac_econ_civilian_level = 0 }
+		ac_econ_refresh_budget = yes
+		set_variable = { ac_econ_treasury = ac_econ_capacity }
+		multiply_variable = { ac_econ_treasury = 2 }
+	}
+}
+
+# Recomputes a quote; never settles cash, debt, arrears, or an order.
+ac_econ_refresh_budget = {
+	if = {
+		limit = { ac_econ_ready = yes }
+		set_variable = { ac_econ_capacity = num_of_controlled_factories }
+		add_to_variable = { ac_econ_capacity = 5 }
+		if = {
+			limit = { check_variable = { ac_econ_capacity > 1000 } }
+			set_variable = { ac_econ_capacity = 1000 }
+		}
+		set_variable = { ac_econ_tax_rate = 0.20 }
+		set_variable = { ac_econ_stability = 0 }
+		if = {
+			limit = { check_variable = { ac_econ_tax_level = 0 } }
+			set_variable = { ac_econ_tax_rate = 0.15 }
+			set_variable = { ac_econ_stability = 0.02 }
+		}
+		else_if = {
+			limit = { check_variable = { ac_econ_tax_level = 2 } }
+			set_variable = { ac_econ_tax_rate = 0.25 }
+			set_variable = { ac_econ_stability = -0.03 }
+		}
+		set_variable = { ac_econ_revenue = ac_econ_capacity }
+		multiply_variable = { ac_econ_revenue = ac_econ_tax_rate }
+		set_variable = { ac_econ_civilian_spending = ac_econ_capacity }
+		set_variable = { ac_econ_construction = 0 }
+		if = {
+			limit = { check_variable = { ac_econ_civilian_level = 1 } }
+			multiply_variable = { ac_econ_civilian_spending = 0.16 }
+			set_variable = { ac_econ_construction = 0.05 }
+		}
+		else = { multiply_variable = { ac_econ_civilian_spending = 0.12 } }
+		set_variable = { ac_econ_military_spending = ac_econ_capacity }
+		if = {
+			limit = { has_war = yes }
+			multiply_variable = { ac_econ_military_spending = 0.10 }
+		}
+		else = { multiply_variable = { ac_econ_military_spending = 0.04 } }
+		set_variable = { ac_econ_spending = ac_econ_civilian_spending }
+		add_to_variable = { ac_econ_spending = ac_econ_military_spending }
+		set_variable = { ac_econ_interest = ac_econ_debt }
+		multiply_variable = { ac_econ_interest = 0.001 }
+		set_variable = { ac_econ_balance = ac_econ_revenue }
+		subtract_from_variable = { ac_econ_balance = ac_econ_spending }
+		subtract_from_variable = { ac_econ_balance = ac_econ_interest }
+		set_variable = { ac_econ_debt_limit = ac_econ_revenue }
+		multiply_variable = { ac_econ_debt_limit = 26 }
+		set_variable = { ac_econ_credit_room = ac_econ_debt_limit }
+		subtract_from_variable = { ac_econ_credit_room = ac_econ_debt }
+		if = {
+			limit = { check_variable = { ac_econ_credit_room < 0 } }
+			set_variable = { ac_econ_credit_room = 0 }
+		}
+		if = {
+			limit = { check_variable = { ac_econ_arrears > 0 } }
+			add_to_variable = { ac_econ_stability = -0.05 }
+			add_to_variable = { ac_econ_construction = -0.05 }
+		}
+		if = {
+			limit = { NOT = { has_dynamic_modifier = { modifier = ac_econ_budget_modifier } } }
+			add_dynamic_modifier = { modifier = ac_econ_budget_modifier }
+		}
+	}
+}
+
+ac_econ_weekly_settlement = {
+	if = {
+		limit = { ac_econ_ready = yes }
+		ac_econ_refresh_budget = yes
+		set_variable = { ac_econ_last_revenue = ac_econ_revenue }
+		set_variable = { ac_econ_last_spending = ac_econ_spending }
+		set_variable = { ac_econ_last_interest = ac_econ_interest }
+		set_variable = { ac_econ_last_balance = ac_econ_balance }
+		set_variable = { ac_econ_last_borrowed = 0 }
+		set_variable = { ac_econ_last_arrears_added = 0 }
+		set_variable = { ac_econ_last_arrears_paid = 0 }
+		add_to_variable = { ac_econ_treasury = ac_econ_balance }
+		if = {
+			limit = { check_variable = { ac_econ_treasury < 0 } }
+			set_temp_variable = { ac_econ_shortfall = ac_econ_treasury }
+			multiply_temp_variable = { ac_econ_shortfall = -1 }
+			if = {
+				limit = { check_variable = { ac_econ_shortfall > ac_econ_credit_room } }
+				set_temp_variable = { ac_econ_shortfall = ac_econ_credit_room }
+			}
+			add_to_variable = { ac_econ_debt = ac_econ_shortfall }
+			add_to_variable = { ac_econ_treasury = ac_econ_shortfall }
+			set_variable = { ac_econ_last_borrowed = ac_econ_shortfall }
+			if = {
+				limit = { check_variable = { ac_econ_treasury < 0 } }
+				set_variable = { ac_econ_last_arrears_added = ac_econ_treasury }
+				multiply_variable = { ac_econ_last_arrears_added = -1 }
+				add_to_variable = { ac_econ_arrears = ac_econ_last_arrears_added }
+				set_variable = { ac_econ_treasury = 0 }
+			}
+		}
+		if = {
+			limit = {
+				check_variable = { ac_econ_treasury > 0 }
+				check_variable = { ac_econ_arrears > 0 }
+			}
+			set_temp_variable = { ac_econ_payment = ac_econ_treasury }
+			if = {
+				limit = { check_variable = { ac_econ_payment > ac_econ_arrears } }
+				set_temp_variable = { ac_econ_payment = ac_econ_arrears }
+			}
+			subtract_from_variable = { ac_econ_treasury = ac_econ_payment }
+			subtract_from_variable = { ac_econ_arrears = ac_econ_payment }
+			set_variable = { ac_econ_last_arrears_paid = ac_econ_payment }
+		}
+		if = {
+			limit = { is_ai = yes }
+			set_temp_variable = { ac_econ_ai_reserve = ac_econ_spending }
+			multiply_temp_variable = { ac_econ_ai_reserve = 2 }
+			add_to_temp_variable = { ac_econ_ai_reserve = 5 }
+			if = {
+				limit = { check_variable = { ac_econ_treasury >= ac_econ_ai_reserve } }
+				ac_econ_repay = yes
+			}
+		}
+		ac_econ_progress_procurement = yes
+		ac_econ_refresh_budget = yes
+	}
+}
+
+ac_econ_borrow = {
+	ac_econ_refresh_budget = yes
+	if = {
+		limit = { ac_econ_can_borrow = yes }
+		add_to_variable = { ac_econ_debt = 5 }
+		add_to_variable = { ac_econ_treasury = 5 }
+		ac_econ_refresh_budget = yes
+	}
+}
+
+ac_econ_repay = {
+	if = {
+		limit = { ac_econ_can_repay = yes }
+		set_temp_variable = { ac_econ_payment = 5 }
+		if = {
+			limit = { check_variable = { ac_econ_payment > ac_econ_treasury } }
+			set_temp_variable = { ac_econ_payment = ac_econ_treasury }
+		}
+		if = {
+			limit = { check_variable = { ac_econ_payment > ac_econ_debt } }
+			set_temp_variable = { ac_econ_payment = ac_econ_debt }
+		}
+		subtract_from_variable = { ac_econ_treasury = ac_econ_payment }
+		subtract_from_variable = { ac_econ_debt = ac_econ_payment }
+		ac_econ_refresh_budget = yes
+	}
+}
+
+ac_econ_order_infantry = {
+	if = {
+		limit = { ac_econ_can_order = yes }
+		subtract_from_variable = { ac_econ_treasury = 5 }
+		set_variable = { ac_econ_procurement_escrow = 5 }
+		set_variable = { ac_econ_procurement_weeks = 4 }
+	}
+}
+
+ac_econ_cancel_procurement = {
+	if = {
+		limit = {
+			ac_econ_ready = yes
+			check_variable = { ac_econ_procurement_weeks > 0 }
+		}
+		add_to_variable = { ac_econ_treasury = ac_econ_procurement_escrow }
+		set_variable = { ac_econ_procurement_escrow = 0 }
+		set_variable = { ac_econ_procurement_weeks = 0 }
+	}
+}
+
+ac_econ_progress_procurement = {
+	if = {
+		limit = {
+			ac_econ_can_produce = yes
+			check_variable = { ac_econ_procurement_weeks > 0 }
+		}
+		subtract_from_variable = { ac_econ_procurement_weeks = 1 }
+		if = {
+			limit = { check_variable = { ac_econ_procurement_weeks = 0 } }
+			set_variable = { ac_econ_procurement_escrow = 0 }
+			add_equipment_to_stockpile = { type = infantry_equipment_0 amount = 100 producer = ROOT }
+		}
+	}
+}

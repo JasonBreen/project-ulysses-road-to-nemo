@@ -5,7 +5,7 @@
 | Field | Value |
 | --- | --- |
 | Filename | `2985041246_Project_Ulysses.zip` |
-| Local source | `C:\Users\New\Downloads\2985041246_Project_Ulysses.zip` |
+| Pre-existing source | Local archive copied into the preserved project source area before this repository was created |
 | Preserved copy | `G:\Project-Ulysses-Continuation\source\archive-original\2985041246_Project_Ulysses.zip` |
 | Size | 166,822,410 bytes |
 | SHA-256 | `e3e2ec384e3f0e4dba6678f76f2520822f85d677be47f418dfc1e39c738c9071` |

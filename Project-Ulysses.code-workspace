@@ -1,0 +1,69 @@
+{
+  "folders": [
+    {
+      "name": "Project Ulysses",
+      "path": "."
+    }
+  ],
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Ulysses: static validation",
+        "type": "process",
+        "command": "pwsh",
+        "args": [
+          "-NoProfile",
+          "-File",
+          "${workspaceFolder}/tools/Test-UlyssesStatic.ps1"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": [],
+        "group": "test"
+      },
+      {
+        "label": "Ulysses: economy validation",
+        "type": "process",
+        "command": "${input:pythonCommand}",
+        "args": [
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "${workspaceFolder}/tools",
+          "-p",
+          "test_economy.py",
+          "-v"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": [],
+        "group": "test"
+      },
+      {
+        "label": "Ulysses: validate all",
+        "dependsOn": [
+          "Ulysses: static validation",
+          "Ulysses: economy validation"
+        ],
+        "dependsOrder": "sequence",
+        "problemMatcher": [],
+        "group": {
+          "kind": "test",
+          "isDefault": true
+        }
+      }
+    ],
+    "inputs": [
+      {
+        "id": "pythonCommand",
+        "type": "promptString",
+        "description": "Installed Python 3.9+ executable (command or path); no installation is performed",
+        "default": "python"
+      }
+    ]
+  }
+}

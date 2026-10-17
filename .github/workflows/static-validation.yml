@@ -1,0 +1,15 @@
+name: Static validation
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  map-validation:
+    runs-on: windows-latest
+    steps:
+      - name: Check out private project
+        uses: actions/checkout@v4
+      - name: Run static regression checks
+        shell: pwsh
+        run: .\tools\Test-UlyssesStatic.ps1 -ModRoot .\mod\2985041246

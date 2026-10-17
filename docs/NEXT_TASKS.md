@@ -1,13 +1,30 @@
-# Prioritized next Codex tasks
+# Prioritized next tasks
 
-1. **Descriptor reconciliation** — decide target HOI4 branch; remove the stale absolute path from the working descriptor only; document the packaging contract.
-2. **Static reference graph** — build non-executing checks for duplicate/missing country, focus, event, scripted-effect, localization, GFX, and equipment references.
-3. **Map/state triage** — investigate empty `map\positions.txt`, validate map definitions, and resolve state 171/`PLH` intent before any runtime launch.
-4. **1991 scenario contract** — document expected bookmark date, starting wars, OOBs, owners/cores, focus trees, AI plans, and early events for Belka/Ustio/Sapin/Gebet/Osea.
-5. **Belkan War branch graph** — trace all `world_event.2` callers, Rhongomyniad outcomes, and event/focus consequences; mark the demo terminal as a phase-2 replacement target.
-6. **Osea continuity** — decide which election tree is canonical, make its focus-tree selection and AI plan agree, and document any intentionally deferred content.
-7. **Placeholder triage** — classify the 157 static placeholder matches into gameplay blockers, visible polish, and intentional generic fallbacks.
-8. **Technology pass** — review the 15 technology files and explicitly define the intended 1991–2005 unlock model before changing inherited dates.
-9. **Approved runtime smoke test** — only after the static blockers above are addressed and separate permission is given to launch the local mod; record logs and saves, and do not install or run downloaded code.
+Status as of 2026-10-17: the mod loads, starts the 1991 campaign and runs for over a year on HOI4 1.19.3. See [PORT_1_19.md](PORT_1_19.md) for what was done.
 
-The next safe action is task 1, followed by tasks 2–4. Runtime validation is intentionally later.
+Standing rules: keep the original Project Ulysses look and layouts; **no HOI4 vanilla (WWII) visuals** anywhere; 1.15–1.19 mechanics are welcome.
+
+1. **Vanilla-visuals audit**
+   - List every sprite on screen that resolves to a vanilla texture: continuous focuses, grand doctrines, 1.15+ buildings, special projects, appended `.gfx` entries, MIO icons.
+   - Replace each with Strangereal art, or with mod placeholders until art exists.
+2. **Silence vanilla content**
+   - Empty-override the Earth-country focus, event, decision, scripted-effect and MIO files that error against the Strangereal setup (~3,300 log lines).
+   - Keep generic files that 1.19 systems rely on.
+3. **Strangereal special projects.** Replace vanilla WWII projects with Ace Combat superweapons: Excalibur, V2, Stonehenge, Megalith, Arkbird and others. These build on the new `special_project_facility_spawn` positions.
+4. **AI templates and doctrines**
+   - Rewrite `common/ai_templates/generic.txt` in 1.19 syntax.
+   - Retarget subdoctrine unit bonuses to the mod's modern unit types.
+5. **History cleanup**
+   - Ship name groups (Sapin, FATO).
+   - `xxx` equipment icons.
+   - P-3 Orion module layout.
+   - Nordennavic popularities.
+   - DEL/SHI character conflict.
+   - Duplicate unit id `48100001`.
+6. **Bookmarks.** Merge or differentiate the two identical Jan 1, 1991 bookmarks.
+7. **Belkan War branch graph and postwar continuity.** Unchanged from the phased plan; replace the `world_event.2` demo terminal.
+8. **Long-run test.** Run to 1995 with AI on: save and reload at each checkpoint, check other nations (Osea, Ustio, Sapin, Gebet), and log results in the testing checklist.
+9. **Technology/name provenance pass.** Name and localize authored technology and equipment, classify inherited engine IDs, and reconcile 1991–2005 content with the inclusive 2065 campaign end (`END_DATE = 2066.1.1.1`).
+10. **Canon ledger and Joker 1 compilation.** Collect primary Project Aces citations for lore-sensitive claims ([CANON_POLICY.md](CANON_POLICY.md), [CANON_LEDGER.md](CANON_LEDGER.md)) and Sam's Joker 1 source material separately; do not invent missing dates or future events.
+11. **Economy/IDE integration.** Review the separate economy model and portable workspace work, then integrate only its documented IDs and validation assumptions.
+12. **Keep static validation green.** Run `tools/Test-UlyssesStatic.ps1` before every runtime test; CI runs it on every push.

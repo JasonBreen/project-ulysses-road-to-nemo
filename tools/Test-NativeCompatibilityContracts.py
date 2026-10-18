@@ -96,7 +96,52 @@ def main() -> int:
         block = braced_block(ustio, start.start())
         require("type = anti_tank_equipment_1" in block, f"{focus_id} does not stock anti-tank equipment")
 
-    print("Native compatibility contracts passed: mapper IDs, Osea division names, tech rows, Sapin bonus, and MANPATS rewards.")
+    # Visible compatibility technologies need names and descriptions.
+    localization = "".join(read(p) for p in (mod_root / "localisation").rglob("*.yml"))
+    for tech in re.findall(r"(?m)^\t(\w+)\s*=\s*\{", compat):
+        for key in (tech, f"{tech}_desc"):
+            require(re.search(rf'(?m)^\s*{key}:\d+\s+"[^"]+"', localization), f"compatibility tech localization missing: {key}")
+
+    # Script-created advisor roles cannot carry triggers or effects in 1.19, so
+    # the focus-unlocked Crown Regents keep their hire guard in the database role.
+    characters = re.sub(r"#[^\n]*", "", read(mod_root / "common" / "characters" / "SAP.txt"))
+    regents = ("SAP_alphonso_espinal", "SAP_domingo_escalona", "SAP_ramira_arguijo", "SAP_raul_de_haro")
+    for regent, focus in (("SAP_alphonso_espinal", "sap_regent_alphonso_espinal"), ("SAP_domingo_escalona", "sap_regent_domingo_escalona")):
+        start = re.search(rf"(?m)^\t{regent}\s*=\s*\{{", characters)
+        require(start is not None, f"{regent} character is missing")
+        role = braced_block(characters, start.start())
+        available = re.search(r"available\s*=\s*\{", role)
+        require(available is not None, f"{regent} database role has no available guard")
+        guard = braced_block(role, available.start())
+        require(f"has_completed_focus = {focus}" in guard, f"{regent} role is not unlocked by {focus}")
+        for other in regents:
+            if other != regent:
+                require(other in guard, f"{regent} role does not exclude {other}")
+        require("on_add" in role, f"{regent} role lost its power-balance on_add")
+    sapin_focus = read(mod_root / "common" / "national_focus" / "SAP_pre_belkan_war.txt")
+    for regent in ("SAP_alphonso_espinal", "SAP_domingo_escalona"):
+        require(f"character = {regent}" not in sapin_focus, f"{regent} is still added through an unguarded script role")
+
+    # SAP_court_moderate_support: the else branch must be a sibling of its if.
+    decisions = read(mod_root / "common" / "decisions" / "SAP_decisions.txt")
+    decision = re.search(r"(?m)^\s*SAP_court_moderate_support\s*=\s*\{", decisions)
+    require(decision is not None, "SAP_court_moderate_support is missing")
+    complete = braced_block(decisions, decisions.find("complete_effect", decision.start()))
+    depth = 0
+    depths = {}
+    for token in re.finditer(r"\{|\}|\b(if|else)\s*=", complete):
+        if token.group(0) == "{":
+            depth += 1
+        elif token.group(0) == "}":
+            depth -= 1
+        else:
+            depths.setdefault(token.group(1), depth)
+    require(depths.get("if") is not None and depths.get("if") == depths.get("else"), "SAP_court_moderate_support else is nested inside its if")
+
+    print(
+        "Native compatibility contracts passed: mapper IDs, Osea division names, tech rows, Sapin bonus, "
+        "MANPATS rewards, tech localization, regent guards, and Sapin decision structure."
+    )
     return 0
 
 

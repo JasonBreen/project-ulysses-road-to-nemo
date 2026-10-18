@@ -124,15 +124,37 @@ characters = { #placeholder advisors
 				small ="GFX_portrait_empty_advisor"
 			}
 		}
-		# advisor = {
-		# 	slot = political_advisor
-		# 	idea_token = SAP_alphonso_espinal
-		# 	can_be_fired = no
-		# 	available = {
-		# 		has_completed_focus = sap_regent_alphonso_espinal
-		# 	}
-		# 	traits = { SAP_cardinal_regent }
-		# }
+		advisor = {
+			slot = political_advisor
+			idea_token = SAP_alphonso_espinal
+			can_be_fired = no
+			visible = {
+				has_completed_focus = sap_regent_alphonso_espinal
+			}
+			available = {
+				has_completed_focus = sap_regent_alphonso_espinal
+				NOT = {
+					OR = {
+						SAP_domingo_escalona = {
+							is_political_advisor = yes
+						}
+						SAP_ramira_arguijo = {
+							is_political_advisor = yes
+						}
+						SAP_raul_de_haro = {
+							is_political_advisor = yes
+						}
+					}
+				}
+			}
+			traits = { SAP_cardinal_regent }
+			on_add = {
+				add_power_balance_value = {
+					id = SAP_power_balance
+					value = 0.05
+				}
+			}
+		}
 	}
 	SAP_domingo_escalona = { #democratic regent
 		name = "Domingo Escalona"
@@ -141,16 +163,37 @@ characters = { #placeholder advisors
 				small ="GFX_portrait_empty_advisor"
 			}
 		}
-		# advisor = {
-		# 	slot = political_advisor
-		# 	idea_token = SAP_domingo_escalona
-		# 	can_be_fired = no
-		# 	available = {
-		# 		always = no # temporary  line
-		# 		#has_completed_focus = sap_regent_domingo_escalona
-		# 	}
-		# 	traits = { SAP_enlightened_regent }
-		# }
+		advisor = {
+			slot = political_advisor
+			idea_token = SAP_domingo_escalona
+			can_be_fired = no
+			visible = {
+				has_completed_focus = sap_regent_domingo_escalona
+			}
+			available = {
+				has_completed_focus = sap_regent_domingo_escalona
+				NOT = {
+					OR = {
+						SAP_alphonso_espinal = {
+							is_political_advisor = yes
+						}
+						SAP_ramira_arguijo = {
+							is_political_advisor = yes
+						}
+						SAP_raul_de_haro = {
+							is_political_advisor = yes
+						}
+					}
+				}
+			}
+			traits = { SAP_enlightened_regent }
+			on_add = {
+				add_power_balance_value = {
+					id = SAP_power_balance
+					value = -0.05
+				}
+			}
+		}
 	}
 	SAP_ramira_arguijo = { #monarchist regent
 		name = "Ramira Arguijo"

@@ -62,13 +62,17 @@ def main() -> int:
     moderate = decisions[decisions.index("SAP_court_moderate_support") : decisions.index("SAP_attempt_to_mediate_differences")]
     assert "value = -0.025\n\t\t\t\t}\n\t\t\t}\n\t\t\telse =" in moderate
 
-    regents = read("common/national_focus/SAP_pre_belkan_war.txt")
+    # 1.19 rejects triggers in script-created advisor roles, so the guard lives
+    # in the database role (common/characters/SAP.txt), not in add_advisor_role.
+    focus_regents = read("common/national_focus/SAP_pre_belkan_war.txt")
+    characters = read("common/characters/SAP.txt")
     for character, other in (
         ("SAP_domingo_escalona", ("SAP_ramira_arguijo", "SAP_raul_de_haro", "SAP_alphonso_espinal")),
         ("SAP_alphonso_espinal", ("SAP_domingo_escalona", "SAP_ramira_arguijo", "SAP_raul_de_haro")),
     ):
-        start = regents.index(f"character = {character}")
-        block = regents[start : regents.index("traits =", start)]
+        assert f"character = {character}" not in focus_regents
+        start = re.search(rf"(?m)^\t{character} = \{{", characters).start()
+        block = characters[start : re.compile(r"\btraits\s*=").search(characters, start).start()]
         assert "available =" in block
         for rival in other:
             assert rival in block

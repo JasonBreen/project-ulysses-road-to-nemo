@@ -261,12 +261,11 @@ Three triggers lead to the same follow-up `belka_dlp_war.99`:
 - **Forced route.** Option b also needs FAT, GEB and REC to be subjects of
   Belka, which `event south_belka.3 BLK` from `pt3_war_day1` does not set up.
   Start from a save where they were puppeted in play (or puppet them with a
-  console command confirmed in preflight), then fire `event south_belka.3 BLK`
-  so SBK gets its states and joins Osea, as in the natural route. Then run
+  console command confirmed in preflight). Run
   `set_var BLK_wacht_am_wal_var 5` if the build has it, otherwise replay the
-  coup options, and pick b when `belka_dlp_war.99` appears (fired by the split
-  the next day). Confirm with `get_var` that the counter is 5 before it
-  fires.
+  coup options, and confirm the counter is 5 with `get_var`. Then fire
+  `event south_belka.3 BLK` so SBK gets its states and joins Osea, as in the
+  natural route, and pick b when `belka_dlp_war.99` appears the next day.
 - Save `pt5_o4_wacht_start` and `pt5_o4_handoff`.
 
 ### O5. Defeat flag (forced only)

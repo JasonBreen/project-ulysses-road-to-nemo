@@ -12,6 +12,12 @@ and native validation pass. The six `*.equipment_variants.txt` files preserve
 the 91 country-history aircraft-variant blocks removed from active setup after
 native startup reported invalid 1.14-era modules and name groups.
 
+`common/units/names_divisions/OSE_names_divisions.txt` was returned to the
+active payload: active Osea OOBs use its `OSE_Inf_01`, `OSE_Arm_01`, and
+`OSE_MOT_01` groups, vanilla 1.19 has no Osea definitions, and every
+`division_types` entry in it is a native 1.19 sub-unit. GER groups resolve from
+the installed game's own `GER_names_divisions.txt`.
+
 The following additional exact files are preserved here after the compatibility
 pass:
 

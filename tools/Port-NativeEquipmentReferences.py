@@ -16,6 +16,7 @@ REPLACEMENTS = {
     "basic_light_tank_chassis_chassis": "basic_light_tank",
     "basic_light_tank_chassis": "basic_light_tank",
     "basic_light_tank": "basic_light_tank",
+    # Land anti-air (subunit, equipment, buildings); aa_lmg is an aircraft module tech.
     "antiair_1": "interwar_antiair",
     "spg_artillery_1": "basic_medium_art",
     "imv1": "armored_car1",
@@ -23,6 +24,15 @@ REPLACEMENTS = {
     "infantry_manpats": "infantry_at",
     "infantry_weapons1": "infantry_weapons",
 }
+
+# These IDs remain defined by active technology overrides; their grants must
+# stay intact rather than being rewritten to unrelated native technologies.
+PRESERVED_ACTIVE_IDS = (
+    "basic_medium_battery",
+    "improved_airplane_launcher",
+    "air_tank_buster_1",
+)
+assert not set(PRESERVED_ACTIVE_IDS) & set(REPLACEMENTS)
 
 
 def iter_targets(mod_root: Path):

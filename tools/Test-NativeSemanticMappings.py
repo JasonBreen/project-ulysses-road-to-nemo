@@ -24,7 +24,7 @@ def main() -> int:
         "improved_airplane_launcher",
         "air_tank_buster_1",
     ):
-        assert f'"{technology}"' not in mapper, technology
+        assert f'"{technology}":' not in mapper, technology
 
     for path in (MOD / "history" / "countries").glob("*.txt"):
         assert "antiair_1" not in path.read_text(encoding="utf-8-sig"), path

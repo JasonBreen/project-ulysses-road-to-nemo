@@ -119,8 +119,10 @@ focus_tree = {
 	shared_focus = ac_postwar_demobilization
 	shared_focus = ac_postwar_victory_settlement
 	shared_focus = ac_postwar_defeat_settlement
+	shared_focus = ac_postwar_unclassified_settlement
 	shared_focus = ac_postwar_victory_legacy
 	shared_focus = ac_postwar_defeat_legacy
+	shared_focus = ac_postwar_unclassified_legacy
 }
 
 shared_focus = {
@@ -220,6 +222,23 @@ shared_focus = {
 }
 
 shared_focus = {
+	id = ac_postwar_unclassified_settlement
+	icon = GFX_focus_generic_diplomatic_treaty
+	cost = 2
+	ai_will_do = { base = 80 }
+	prerequisite = { focus = ac_postwar_demobilization }
+	relative_position_id = ac_postwar_demobilization
+	x = 2
+	y = 1
+	available = { has_global_flag = ac_postwar_unclassified }
+	completion_reward = {
+		set_country_flag = ac_postwar_focus_settlement_complete
+		country_event = { id = ac_campaign.35 days = 1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
 	id = ac_postwar_victory_legacy
 	icon = GFX_goal_generic_propaganda
 	cost = 2
@@ -249,6 +268,23 @@ shared_focus = {
 		set_country_flag = ac_postwar_arc_complete
 		add_timed_idea = { idea = ac_postwar_survivor_state days = 730 }
 		country_event = { id = ac_campaign.34 days = 1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_postwar_unclassified_legacy
+	icon = GFX_goal_generic_political_reform
+	cost = 2
+	ai_will_do = { base = 70 }
+	prerequisite = { focus = ac_postwar_unclassified_settlement }
+	relative_position_id = ac_postwar_unclassified_settlement
+	x = 0
+	y = 1
+	completion_reward = {
+		set_country_flag = ac_postwar_arc_complete
+		add_timed_idea = { idea = ac_postwar_unclassified_legacy days = 730 }
+		country_event = { id = ac_campaign.36 days = 1 }
 	}
 	search_filters = { }
 }

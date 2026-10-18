@@ -89,11 +89,21 @@ country_event = {
 	}
 
 	option = {
+		trigger = {
+			NOT = {
+				OR = {
+					has_global_flag = belka_won_belkan_war
+					has_global_flag = belka_won_belkan_war_wacht_am_wal
+					has_global_flag = belka_lost_belkan_war
+				}
+			}
+		}
 		name = ac_continuation.1.d
+		set_global_flag = ac_postwar_unclassified
 		set_global_flag = ac_postwar_contract_started
 		set_country_flag = ac_postwar_ready
 		load_focus_tree = { tree = ac_belkan_postwar keep_completed = yes }
-		add_timed_idea = { idea = ac_postwar_defeat_settlement days = 365 }
+		add_timed_idea = { idea = ac_postwar_unclassified_settlement days = 365 }
 	}
 }
 
@@ -139,5 +149,35 @@ country_event = {
 		name = ac_continuation.11.a
 		add_political_power = 25
 		add_stability = 0.02
+	}
+}
+
+country_event = {
+	id = ac_campaign.35
+	title = ac_campaign.35.t
+	desc = ac_campaign.35.d
+	picture = GFX_report_event_treaty_2
+
+	is_triggered_only = yes
+
+	option = {
+		name = ac_campaign.35.a
+		add_political_power = 25
+		add_stability = 0.02
+	}
+}
+
+country_event = {
+	id = ac_campaign.36
+	title = ac_campaign.36.t
+	desc = ac_campaign.36.d
+	picture = GFX_report_event_treaty_2
+
+	is_triggered_only = yes
+
+	option = {
+		name = ac_campaign.36.a
+		set_country_flag = ac_postwar_arc_complete
+		add_timed_idea = { idea = ac_postwar_unclassified_legacy days = 730 }
 	}
 }

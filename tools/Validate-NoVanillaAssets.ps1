@@ -19,6 +19,22 @@ function Get-NormalizedRelativePath {
 function Get-HashOrNull {
     param([string]$Path)
     if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { return $null }
+    $textExtensions = @('.txt', '.lua', '.yml', '.yaml', '.gfx', '.gui', '.asset', '.mod', '.info')
+    if ([IO.Path]::GetExtension($Path).ToLowerInvariant() -in $textExtensions) {
+        # Git checkout normalization can make an otherwise identical source
+        # file differ only by CRLF versus LF. Provenance checks should detect
+        # content changes, not line-ending policy; binary assets still use raw
+        # byte hashes below.
+        $text = [IO.File]::ReadAllText($Path)
+        $normalized = $text.Replace("`r`n", "`n").Replace("`r", "`n")
+        $sha = [Security.Cryptography.SHA256]::Create()
+        try {
+            return ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($normalized))) -replace '-', '').ToUpperInvariant()
+        }
+        finally {
+            $sha.Dispose()
+        }
+    }
     return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToUpperInvariant()
 }
 

@@ -22,7 +22,8 @@ FOCUSES = {
     "ac_postwar_reconstruction", "ac_postwar_recovery_budget",
     "ac_postwar_demobilization", "ac_postwar_victory_settlement",
     "ac_postwar_defeat_settlement", "ac_postwar_victory_legacy",
-    "ac_postwar_defeat_legacy", "ac_belkan_postwar",
+    "ac_postwar_unclassified_settlement", "ac_postwar_defeat_legacy",
+    "ac_postwar_unclassified_legacy", "ac_belkan_postwar",
 }
 DECISIONS = {
     "ac_belkan_war_council", "ac_belkan_logistics_requisition",
@@ -33,9 +34,10 @@ IDEAS = {
     "ac_prewar_cabinet", "ac_industrial_preparations", "ac_frontline_logistics",
     "ac_security_mandate", "ac_war_supply_drive", "ac_war_civilian_reserve",
     "ac_war_front_command", "ac_war_endurance", "ac_postwar_civic_legacy",
-    "ac_postwar_survivor_state",
+    "ac_postwar_survivor_state", "ac_postwar_unclassified_settlement",
+    "ac_postwar_unclassified_legacy",
 }
-EVENTS = {f"ac_campaign.{number}" for number in (1, 2, 3, 4, 5, 6, 20, 21, 22, 23, 30, 31, 32, 33, 34)}
+EVENTS = {f"ac_campaign.{number}" for number in (1, 2, 3, 4, 5, 6, 20, 21, 22, 23, 30, 31, 32, 33, 34, 35, 36)}
 
 
 def read(path: Path) -> str:
@@ -94,8 +96,12 @@ def main() -> int:
     decision_text = texts.get(required[1], "")
     continuation_decisions = mod / "common" / "decisions" / "ac_continuation_decisions.txt"
     continuation_text = read(continuation_decisions) if continuation_decisions.is_file() else ""
-    idea_text = texts.get(required[3], "")
-    event_text = texts.get(required[4], "")
+    continuation_ideas = mod / "common" / "ideas" / "ac_continuation.txt"
+    continuation_events = mod / "events" / "ac_continuation.txt"
+    continuation_idea_text = read(continuation_ideas) if continuation_ideas.is_file() else ""
+    continuation_event_text = read(continuation_events) if continuation_events.is_file() else ""
+    idea_text = texts.get(required[3], "") + "\n" + continuation_idea_text
+    event_text = texts.get(required[4], "") + "\n" + continuation_event_text
     loc_text = texts.get(required[5], "")
     loc = loc_keys(loc_text)
 
@@ -140,8 +146,19 @@ def main() -> int:
             errors.append(f"AI pacing hook missing from weekly on_action: {token}")
     if "set_country_flag = ac_postwar_ready" not in read(mod / "events" / "ac_continuation.txt"):
         errors.append("postwar handoff no longer sets ac_postwar_ready")
-    if "load_focus_tree = { tree = ac_belkan_postwar" not in read(mod / "events" / "ac_continuation.txt"):
+    continuation_event_text = read(mod / "events" / "ac_continuation.txt")
+    if "load_focus_tree = { tree = ac_belkan_postwar" not in continuation_event_text:
         errors.append("postwar handoff no longer loads ac_belkan_postwar")
+    for token in (
+        "set_global_flag = ac_postwar_unclassified",
+        "add_timed_idea = { idea = ac_postwar_unclassified_settlement",
+        "has_global_flag = ac_postwar_unclassified",
+        "has_global_flag = belka_won_belkan_war",
+        "has_global_flag = belka_won_belkan_war_wacht_am_wal",
+        "has_global_flag = belka_lost_belkan_war",
+    ):
+        if token not in continuation_event_text and token not in focus_text:
+            errors.append(f"unclassified postwar fallback coverage missing: {token}")
 
     all_new_files = required + [weekly, mod / "events" / "ac_continuation.txt", mod / "common" / "decisions" / "ac_continuation_decisions.txt", mod / "common" / "national_focus" / "BLK.txt"]
     for path in all_new_files:

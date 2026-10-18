@@ -12,7 +12,8 @@ ideas, on_actions, or their localization.
 2. Run `python tools/analysis/campaign_path_report.py --mod-root mod/2985041246`.
 3. Run `powershell -NoProfile -ExecutionPolicy Bypass -File tools/Test-UlyssesStatic.ps1 -ModRoot mod/2985041246`.
 4. Run `python tools/test_economy.py` when economy hooks are touched.
-5. Inspect the diff for duplicate IDs, missing localization, developer paths,
+5. Run `powershell -NoProfile -ExecutionPolicy Bypass -File tools/Test-NoVanillaProvenance.ps1` when provenance tooling changes.
+6. Inspect the diff for duplicate IDs, missing localization, developer paths,
    and unguarded repeat effects.
 
 These checks are static/offline. They do not establish that HOI4 can load the

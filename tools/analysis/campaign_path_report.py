@@ -25,7 +25,14 @@ def main() -> int:
     mod = args.mod_root.resolve()
     focus = read(mod / "common" / "national_focus" / "ac_belkan_campaign.txt")
     decisions = read(mod / "common" / "decisions" / "ac_belkan_campaign.txt")
-    events = read(mod / "events" / "ac_belkan_campaign.txt")
+    events = "\n".join(
+        read(path)
+        for path in (
+            mod / "events" / "ac_belkan_campaign.txt",
+            mod / "events" / "ac_continuation.txt",
+        )
+        if path.is_file()
+    )
     result = {
         "focuses": sorted(set(re.findall(r"^\s*id\s*=\s*(ac_[A-Za-z0-9_]+)", focus, re.MULTILINE))),
         "focus_event_refs": sorted(set(re.findall(r"country_event\s*=\s*\{\s*id\s*=\s*(ac_campaign\.\d+)", focus))),

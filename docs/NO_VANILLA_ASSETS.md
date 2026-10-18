@@ -14,7 +14,7 @@ The 1.19 port must not ship copied vanilla HOI4 content or assets. This policy i
 
 ## Findings and repairs
 
-The candidate contained 12 newly changed files that exactly matched installed HOI4 files: `common/units/equipment/convoys.txt`, `common/units/equipment/upgrades/air_upgrades.txt`, seven vanilla division-name files, and `map/cities.txt`, `map/colors.txt`, and `map/seasons.txt`. They were restored from the verified Ulysses working copy in the repair branch.
+The candidate contained 12 newly changed files that exactly matched installed HOI4 files: `common/units/equipment/convoys.txt`, `common/units/equipment/upgrades/air_upgrades.txt`, seven vanilla division-name files, and `map/cities.txt`, `map/colors.txt`, and `map/seasons.txt`. They were restored from the verified Ulysses working copy in the repair branch. The current campaign checkout is compared against the immutable April baseline with normalized text hashing, so line-ending differences do not create false "new vanilla" findings.
 
 The integrated port retains PR #9's seven full-size loading screens and seven `_small.dds` picker thumbnails because no exact installed-game match was found for them. The background-manager configuration lists `load_1.dds` through `load_7.dds`. Their presence is a packaging result, not proof that the loading-screen UI or runtime picker works; PR #9's loading-screen behavior remains author-reported evidence and was not reproduced locally in this integration pass.
 
@@ -57,4 +57,4 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File .\tools\Validate-NoVanillaAssets.p
   -Json
 ```
 
-The check fails on any exact installed-reference match that was not already present in the baseline, fails if an inherited visible/audio asset remains even when it was renamed, and fails on missing or absolute installed-game references. It allows the documented engine/config `map/positions.txt` match. The isolated integration result is `InheritedVanillaMatches=1`, `NewVanillaMatches=0`, `PathIndependentVanillaMatches=0`, and `Warnings=0`. The one inherited match is the retained engine/config `map/positions.txt`; the seven loading thumbnails are present and therefore do not generate missing-thumbnail warnings. This does not prove that the game parses or runs the mod.
+The check fails on any exact installed-reference match that was not already present in the baseline, fails if an inherited visible/audio asset remains even when it was renamed, and fails on missing or absolute installed-game references. It allows the documented engine/config `map/positions.txt` match. The current authorized-reference result is `InheritedVanillaMatches=13`, `NewVanillaMatches=0`, `PathIndependentVanillaMatches=0`, and `Warnings=0`. The 13 inherited matches are the 12 listed text/config files plus the retained engine/config `map/positions.txt`; all are present in the immutable baseline. This does not prove that the game parses or runs the mod.

@@ -136,10 +136,10 @@ def main() -> int:
     require(not re.search(r"ai_will_do\s*=\s*\{\s*base\s*=", focus), "focus AI weights still use decision syntax")
 
     for event_id, stage_flag in (
-        ("ac_campaign.20", "ac_campaign_stage_one", 1),
-        ("ac_campaign.21", "ac_campaign_stage_one", 1),
-        ("ac_campaign.22", "ac_campaign_stage_two", 2),
-        ("ac_campaign.23", "ac_campaign_stage_three", 3),
+        ("ac_campaign.20", "ac_campaign_stage_one"),
+        ("ac_campaign.21", "ac_campaign_stage_one"),
+        ("ac_campaign.22", "ac_campaign_stage_two"),
+        ("ac_campaign.23", "ac_campaign_stage_three"),
     ):
         block = event_block(read("events/ac_belkan_campaign.txt"), event_id)
         require("set_variable = { ac_campaign_war_weeks = 0 }" in block, f"{event_id} does not reset stage timing")

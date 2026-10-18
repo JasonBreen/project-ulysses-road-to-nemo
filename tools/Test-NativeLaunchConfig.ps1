@@ -89,11 +89,23 @@ if ($PlanOnly) {
     exit 0
 }
 
-$descriptor = Resolve-ExistingPath ($DescriptorPath ?? (Join-Path $profile 'mod\ProjectUlysses_native_reviewfix_20261018.mod'))
-$payload = Resolve-ExistingPath ($PayloadRoot ?? (Join-Path $profile 'mod\ProjectUlysses_native_reviewfix_20261018'))
-$dlcLoad = Resolve-ExistingPath ($DlcLoadPath ?? (Join-Path $profile 'dlc_load.json'))
+# Unbound [string] parameters are empty strings, not $null, so `??` cannot supply defaults.
+function Get-PathOrDefault {
+    param([string]$Path, [Parameter(Mandatory = $true)][string]$Default)
+    if ([string]::IsNullOrWhiteSpace($Path)) { return $Default }
+    return $Path
+}
+$descriptor = Resolve-ExistingPath (Get-PathOrDefault $DescriptorPath (Join-Path $profile 'mod\ProjectUlysses_native_reviewfix_20261018.mod'))
+$payload = Resolve-ExistingPath (Get-PathOrDefault $PayloadRoot (Join-Path $profile 'mod\ProjectUlysses_native_reviewfix_20261018'))
+$dlcLoad = Resolve-ExistingPath (Get-PathOrDefault $DlcLoadPath (Join-Path $profile 'dlc_load.json'))
 Assert-Under -Child $descriptor -Parent (Join-Path $profile 'mod') -Label 'Descriptor'
 Assert-Under -Child $payload -Parent (Join-Path $profile 'mod') -Label 'Payload'
+# HOI4 reads the selection from <userdir>\dlc_load.json, so any other file is not
+# evidence about what the -userdir profile will load.
+$profileDlcLoad = Normalize-Path (Join-Path $profile 'dlc_load.json')
+if (-not (Normalize-Path $dlcLoad).Equals($profileDlcLoad, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "dlc_load.json is not the profile-local selection file: $dlcLoad (expected $profileDlcLoad)"
+}
 
 $descriptorText = Get-Content -LiteralPath $descriptor -Raw
 $pathMatch = [regex]::Match($descriptorText, '(?m)^path\s*=\s*"([^"]+)"\s*$')

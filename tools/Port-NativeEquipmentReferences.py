@@ -22,15 +22,16 @@ REPLACEMENTS = {
     "imv1": "armored_car1",
     "ifv1": "mechanised_infantry",
     "infantry_manpats": "infantry_at",
-    "infantry_weapons1": "infantry_weapons",
 }
 
-# These IDs remain defined by active technology overrides; their grants must
+# These IDs remain defined by active technology overrides or by the installed
+# 1.19 game (infantry_weapons1 unlocks infantry_equipment_1); their grants must
 # stay intact rather than being rewritten to unrelated native technologies.
 PRESERVED_ACTIVE_IDS = (
     "basic_medium_battery",
     "improved_airplane_launcher",
     "air_tank_buster_1",
+    "infantry_weapons1",
 )
 assert not set(PRESERVED_ACTIVE_IDS) & set(REPLACEMENTS)
 

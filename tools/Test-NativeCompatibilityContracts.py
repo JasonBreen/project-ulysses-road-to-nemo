@@ -138,9 +138,56 @@ def main() -> int:
             depths.setdefault(token.group(1), depth)
     require(depths.get("if") is not None and depths.get("if") == depths.get("else"), "SAP_court_moderate_support else is nested inside its if")
 
+    # infantry_weapons1 is a native 1.19 tech (infantry_equipment_1) and must keep its grants.
+    require("infantry_weapons1" not in mapper.REPLACEMENTS, "mapper rewrites the native infantry_weapons1 technology")
+    histories = {p.name: read(p) for p in (mod_root / "history" / "countries").glob("*.txt")}
+    require(
+        any(re.search(r"(?m)^\s*infantry_weapons1\s*=\s*1", text) for text in histories.values()),
+        "no country history grants infantry_weapons1",
+    )
+
+    # BLK and OSE are mod-only tags, so their unit/ship name pools must stay active,
+    # keyed only by 1.19 types (no pre-By Blood Alone aircraft archetypes).
+    legacy_air_keys = ("fighter_equipment", "CAS_equipment", "nav_bomber_equipment", "cv_fighter_equipment",
+                       "cv_CAS_equipment", "cv_nav_bomber_equipment", "heavy_fighter_equipment",
+                       "tac_bomber_equipment", "strat_bomber_equipment")
+    for tag in ("BLK", "OSE"):
+        names_file = mod_root / "common" / "units" / "names" / f"00_{tag}_names.txt"
+        require(names_file.exists(), f"{tag} unit name list is not active")
+        names_text = re.sub(r"#[^\n]*", "", read(names_file))
+        stale = [key for key in legacy_air_keys if re.search(rf"(?m)^\t{key}\s*=\s*\{{", names_text)]
+        require(not stale, f"{tag} name list uses removed aircraft archetypes: {stale}")
+
+    # Equipment variants keep their archive has_dlc wrappers and precede nothing unguarded:
+    # a bare top-level block would load DLC-only and legacy designs in every configuration.
+    for name, text in histories.items():
+        code = re.sub(r"#[^\n]*", "", text)
+        depth = 0
+        for token in re.finditer(r"\{|\}|\bcreate_equipment_variant\s*=", code):
+            if token.group(0) == "{":
+                depth += 1
+            elif token.group(0) == "}":
+                depth -= 1
+            else:
+                require(depth > 0, f"{name}: create_equipment_variant outside its has_dlc wrapper")
+    referenced = set()
+    for path in (mod_root / "history" / "units").glob("*.txt"):
+        referenced.update(re.findall(r'\bversion_name\s*=\s*"([^"]+)"', read(path)))
+    defined = set()
+    # Some designs (e.g. BLK's "Placeholder Class" ships) are created by decisions.
+    scripts = [read(p) for folder in ("common", "events", "history") for p in (mod_root / folder).rglob("*.txt")]
+    for text in scripts:
+        for match in re.finditer(r"create_equipment_variant\s*=\s*\{", text):
+            variant = re.search(r'\bname\s*=\s*"([^"]+)"', braced_block(text, match.start()))
+            if variant:
+                defined.add(variant.group(1))
+    missing_variants = sorted(referenced - defined)
+    require(not missing_variants, f"OOBs reference undefined equipment variants: {missing_variants[:5]}")
+
     print(
         "Native compatibility contracts passed: mapper IDs, Osea division names, tech rows, Sapin bonus, "
-        "MANPATS rewards, tech localization, regent guards, and Sapin decision structure."
+        "MANPATS rewards, tech localization, regent guards, Sapin decision structure, infantry grants, "
+        "BLK/OSE name lists, and variant DLC wrappers."
     )
     return 0
 

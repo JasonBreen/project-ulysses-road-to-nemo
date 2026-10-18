@@ -114,12 +114,16 @@ def restore_referenced_variants(apply: bool) -> int:
             print(f"{name}: referenced variants already active")
             continue
         restored += len(blocks)
-        print(f"{name}: restoring {len(blocks)} referenced variant block(s)")
+        print(f"{name}: {len(blocks)} referenced variant block(s) are not active")
         if apply:
-            original = target.read_text(encoding="utf-8")
-            separator = "\n" if original.endswith("\n") else "\n\n"
-            with target.open("w", encoding="utf-8", newline="") as handle:
-                handle.write(original + separator + "\n".join(blocks) + "\n")
+            # The archive files hold bare blocks without their has_dlc wrappers, so
+            # appending them would create DLC-only and legacy designs unconditionally
+            # after the OOB lines. Restore them inside their original wrappers (see the
+            # pre-quarantine history at 4df1f0d), and port any 1.14 aircraft modules first.
+            raise SystemExit(
+                f"{name}: refusing to append bare variants; restore them inside their "
+                "original has_dlc wrappers before set_air_oob/set_naval_oob."
+            )
     return restored
 
 

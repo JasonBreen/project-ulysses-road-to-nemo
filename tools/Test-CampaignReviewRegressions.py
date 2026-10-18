@@ -135,24 +135,28 @@ def main() -> int:
     require(all(token in weekly for token in ("ac_campaign_war_weeks > 18", "ac_campaign_war_weeks > 22", "ac_campaign_war_weeks > 26")), "AI fallback thresholds are not stage-relative")
     require(not re.search(r"ai_will_do\s*=\s*\{\s*base\s*=", focus), "focus AI weights still use decision syntax")
 
-    for event_id, stage_flag in (
-        ("ac_campaign.20", "ac_campaign_stage_one"),
-        ("ac_campaign.21", "ac_campaign_stage_one"),
-        ("ac_campaign.22", "ac_campaign_stage_two"),
-        ("ac_campaign.23", "ac_campaign_stage_three"),
+    campaign_events = read("events/ac_belkan_campaign.txt")
+    for event_id, stage_flag, pending_flag in (
+        ("ac_campaign.20", "ac_campaign_stage_one", "ac_campaign_stage_one_pending"),
+        ("ac_campaign.21", "ac_campaign_stage_one", "ac_campaign_stage_one_pending"),
+        ("ac_campaign.22", "ac_campaign_stage_two", "ac_campaign_stage_two_pending"),
+        ("ac_campaign.23", "ac_campaign_stage_three", "ac_campaign_stage_three_pending"),
     ):
-        block = event_block(read("events/ac_belkan_campaign.txt"), event_id)
+        block = event_block(campaign_events, event_id)
         require("set_variable = { ac_campaign_war_weeks = 0 }" in block, f"{event_id} does not reset stage timing")
         require(f"NOT = {{ has_country_flag = {stage_flag} }}" in block, f"{event_id} is not idempotently guarded")
-    for decision_id, event_id in (
-        ("ac_belkan_logistics_requisition", "ac_campaign.20"),
-        ("ac_belkan_civilian_reserve", "ac_campaign.21"),
-        ("ac_belkan_front_command", "ac_campaign.22"),
-        ("ac_belkan_endurance_program", "ac_campaign.23"),
+        require(f"NOT = {{ has_country_flag = ac_postwar_ready }}" in block, f"{event_id} can mutate a postwar handoff")
+        require(f"clr_country_flag = {pending_flag}" in block, f"{event_id} does not clear its pending lock")
+    for decision_id, event_id, pending_flag in (
+        ("ac_belkan_logistics_requisition", "ac_campaign.20", "ac_campaign_stage_one_pending"),
+        ("ac_belkan_civilian_reserve", "ac_campaign.21", "ac_campaign_stage_one_pending"),
+        ("ac_belkan_front_command", "ac_campaign.22", "ac_campaign_stage_two_pending"),
+        ("ac_belkan_endurance_program", "ac_campaign.23", "ac_campaign_stage_three_pending"),
     ):
         complete = named_block(named_block(decisions, decision_id), "complete_effect")
         require(f"country_event = {{ id = {event_id} days = 1 }}" in complete, f"{decision_id} no longer dispatches its stage event")
-        require("set_country_flag = ac_campaign_stage_" not in complete and "add_ideas = ac_war_" not in complete, f"{decision_id} duplicates stage effects before its guarded event")
+        require(f"set_country_flag = {pending_flag}" in complete, f"{decision_id} does not lock the transition before dispatch")
+        require(not re.search(r"set_country_flag = ac_campaign_stage_(?:one|two|three)(?:\s|$)", complete) and "add_ideas = ac_war_" not in complete, f"{decision_id} duplicates stage effects before its guarded event")
 
     require("ac_postwar_continuation = {" in categories, "postwar continuation category is missing")
     require("ac_postwar_local_settlement = {" in categories, "local settlement category is missing")
@@ -160,7 +164,7 @@ def main() -> int:
     require("remove_ideas = ac_postwar_unclassified_settlement" in continuation, "neutral settlement does not clear its penalty")
     require("ac_continuation.1.e" in localization and "ac_continuation.1.d" in localization, "continuation event description/option keys are not distinct")
     require("ac_postwar_demobilization = {" in continuation_decisions, "stable demobilization decision ID was removed")
-    require("id = ac_postwar_demobilize_establishment" in focus, "demobilization focus ID was not separated from the stable decision ID")
+    require("id = ac_postwar_demobilization" in focus and "shared_focus = ac_postwar_demobilization" in focus, "stable demobilization focus ID was removed")
 
     positions = focus_positions([inherited_focus, focus])
     inherited_positions = {position for focus_id, position in positions.items() if focus_id.startswith("BLK_")}

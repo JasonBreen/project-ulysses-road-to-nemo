@@ -21,7 +21,7 @@ FOCUSES = {
     "ac_belkan_logistics_network", "ac_belkan_security_mandate",
     "ac_belkan_ultimatum", "ac_belkan_council_mandate",
     "ac_postwar_reconstruction", "ac_postwar_recovery_budget",
-    "ac_postwar_demobilize_establishment", "ac_postwar_victory_settlement",
+    "ac_postwar_demobilization", "ac_postwar_victory_settlement",
     "ac_postwar_defeat_settlement", "ac_postwar_victory_legacy",
     "ac_postwar_unclassified_settlement", "ac_postwar_defeat_legacy",
     "ac_postwar_unclassified_legacy", "ac_belkan_postwar",
@@ -201,8 +201,18 @@ def main() -> int:
     for token in ("has_decision = ac_belkan_civilian_reserve", "has_decision = ac_belkan_logistics_requisition"):
         if token not in decision_text:
             errors.append(f"opening-stage mutual exclusion missing: {token}")
+    if not re.search(r"^\s*id\s*=\s*ac_postwar_demobilization(?:\s|$)", focus_text, re.MULTILINE):
+        errors.append("stable demobilization focus ID is missing")
     weekly = mod / "common" / "on_actions" / "ac_on_weekly_on_action.txt"
     weekly_text = read(weekly) if weekly.is_file() else ""
+    for token in (
+        "ac_campaign_stage_one_pending", "ac_campaign_stage_two_pending",
+        "ac_campaign_stage_three_pending",
+    ):
+        if token not in decision_text:
+            errors.append(f"pending transition lock missing from decisions: {token}")
+        if token not in weekly_text:
+            errors.append(f"pending transition lock missing from weekly fallback: {token}")
     for token in ("ac_campaign_war_weeks", "ac_campaign.20", "ac_campaign.22", "ac_campaign.23"):
         if token not in weekly_text:
             errors.append(f"AI pacing hook missing from weekly on_action: {token}")
@@ -225,7 +235,13 @@ def main() -> int:
             errors.append(f"unclassified postwar fallback coverage missing: {token}")
 
     effects_text = texts.get(mod / "common" / "scripted_effects" / "ac_campaign_effects.txt", "")
-    for token in ("ac_clear_belkan_campaign_ideas = yes", "ac_war_supply_drive", "ac_war_civilian_reserve", "ac_war_front_command", "ac_war_endurance"):
+    for token in (
+        "ac_clear_belkan_campaign_ideas = yes", "ac_war_supply_drive",
+        "ac_war_civilian_reserve", "ac_war_front_command", "ac_war_endurance",
+        "clr_country_flag = ac_campaign_stage_one_pending",
+        "clr_country_flag = ac_campaign_stage_two_pending",
+        "clr_country_flag = ac_campaign_stage_three_pending",
+    ):
         if token not in continuation_event_text and token not in effects_text:
             errors.append(f"postwar campaign cleanup coverage missing: {token}")
 

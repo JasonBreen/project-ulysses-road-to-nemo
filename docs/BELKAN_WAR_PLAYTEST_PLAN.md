@@ -80,8 +80,8 @@ Postwar: world_event.2 → ac_continuation.1 → one of four outcomes → ac_bel
 - **Check.** Events `ac_campaign.1` to `.6` fire once each. Ideas
   `ac_prewar_cabinet`, `ac_industrial_preparations`, `ac_frontline_logistics`,
   `ac_security_mandate` appear. Country flags `ac_campaign_started`,
-  `ac_campaign_ultimatum_issued`, `ac_campaign_prepared` are set (hover the
-  flag in debug mode).
+  `ac_campaign_ultimatum_issued`, `ac_campaign_prepared` are set (check with
+  `list_flags` while playing BLK; see the cheat sheet).
 - **Forced route.** `focus.autocomplete`, then click each focus in order.
 - **Risk to watch.** The crisis chain ends in `belka.13`, which loads
   `belka_dlp_pre_war` with `keep_completed = yes`. Any campaign focus not yet
@@ -110,7 +110,7 @@ Postwar: world_event.2 → ac_continuation.1 → one of four outcomes → ac_bel
   `belka_won_belkan_war_wacht_am_wal`.
 - **Check.**
   1. Flags `ac_campaign_war_committed` (country) and `ac_campaign_arc_started`
-     (global) set; variable `ac_campaign_war_weeks = 0`.
+     (global) set (`list_flags`); variable `ac_campaign_war_weeks = 0` (`get_var`).
   2. `belka_dlp_war.1` fires exactly once and starts mission
      `BLK_war_start_timer_dec` (60 days). `osea.75` fires for Osea.
   3. On timeout: wars on OSE, UST, SAP, FAT, GEB, REC; `belka_dlp_war.2`
@@ -156,7 +156,12 @@ All from `pt3_war_day1` with Belka played by a human.
 
 ### W4. AI fallback
 
-- Run Belka as AI (`observe`, or `tag OSE` from `pt3_war_day1`).
+- Run Belka as AI from a separate prewar save, switching away (`observe`,
+  or `tag OSE`) before the 60-day `BLK_war_start_timer_dec` mission expires.
+  Its timeout checks `is_ai` once: it schedules the AI-only events below and
+  picks the player or AI collapse mission. A save made after the war starts
+  under human control keeps the player mission and lacks the AI events, so
+  it cannot test this step.
 - main: fallback events fire after more than 6, 12 and 20 war-weeks.
 - PR #13: more than 18 weeks for stage one, then 22 and 26 weeks with the
   counter reset each stage.
@@ -246,9 +251,13 @@ Three triggers lead to the same follow-up `belka_dlp_war.99`:
   - Skipping plan focuses for 75 days: `.4` failure event.
   - SBK surrender above 50% after `BLK_plan_oberon`: `south_belka.5`, Belka
     annexes SBK.
-- **Forced route.** Run `set_var BLK_wacht_am_wal_var 5` if the build has it
-  (confirm in preflight); otherwise replay the coup options. Then
-  `event belka_dlp_war.99 BLK` and pick b.
+- **Forced route.** Option b also needs FAT, GEB and REC to be subjects of
+  Belka, which `event south_belka.3 BLK` from `pt3_war_day1` does not set up.
+  Start from a save where they were puppeted in play (or puppet them with a
+  console command confirmed in preflight). Then run
+  `set_var BLK_wacht_am_wal_var 5` if the build has it, otherwise replay the
+  coup options, and run `event belka_dlp_war.99 BLK` and pick b. Confirm
+  with `get_var` that the counter is 5 before firing `.99`.
 - Save `pt5_o4_wacht_start` and `pt5_o4_handoff`.
 
 ### O5. Defeat flag (forced only)
@@ -267,9 +276,12 @@ unreachable in normal play. Confirm in game, then test the content:
 
 ### O6. Unclassified fallback
 
-Reached naturally by O3. Also force it from `pt3_war_day1` with
-`event world_event.2 BLK` while no outcome flag is set. Confirm option d shows,
-and that the unclassified settlement and legacy focuses complete.
+Reached naturally by O3; use the post-`belka_dlp_war.101` save for postwar
+continuity. Forcing it from `pt3_war_day1` with `event world_event.2 BLK`
+only checks that option d shows. The war is still running and
+`belkan_war_is_happening` is still set, so the collapse mission can fire the
+South Belka split over the postwar tree. Do not count anything downstream of
+that forced run as a postwar pass.
 
 ## 6. Static findings to confirm in game
 
@@ -297,12 +309,18 @@ From each handoff save (`pt5_o1_handoff`, O3, `pt5_o4_handoff`, O5, O6):
    (fires `ac_continuation.2`, one factory) → `ac_postwar_demobilization`.
    Then only the matching settlement is available:
    victory and Wacht → `ac_postwar_victory_settlement` → legacy;
-   defeat → `ac_postwar_defeat_settlement` → legacy;
-   unclassified → `ac_postwar_unclassified_settlement` → legacy.
+   unclassified → `ac_postwar_unclassified_settlement` → legacy;
+   defeat → `ac_postwar_defeat_settlement` → legacy. The defeat settlement
+   needs only `ac_postwar_recovery_budget`, not demobilization, so check it
+   right after the recovery budget and record whether that earlier opening
+   is intended.
    The other two settlement focuses stay locked.
 3. Decisions: `ac_postwar_reconstruction_program`, then
-   `ac_postwar_demobilization`, and `ac_postwar_ratify_victory` (victory or
-   Wacht) or `ac_postwar_political_settlement` (defeat). Each fires once.
+   `ac_postwar_demobilization` and, for victory or Wacht,
+   `ac_postwar_ratify_victory`. On defeat, `ac_postwar_political_settlement`
+   needs only `ac_postwar_ready`, so check it on the handoff day, before
+   reconstruction, and record whether it running in parallel is intended.
+   Each decision fires once.
 4. Affected countries: on victory or Wacht, FAT, GEB, REC get
    `ac_postwar_occupation_burden`, `ac_continuation.10` after 7 days, and the
    `ac_postwar_local_recovery` decision. Switch with `tag FAT` and take it.
@@ -329,7 +347,9 @@ Confirm each in preflight; mark missing ones in the run log.
 | `event <id> BLK` | Fire an event for Belka |
 | `focus.autocomplete` | Focuses complete instantly |
 | `pp <n>` | Afford decisions |
-| `debug_mode` | Show IDs, flags and variables on hover |
+| `debug_mode` | Show IDs and object data on hover (not flags or variables) |
+| `list_flags` | List active flags; run while playing BLK for country flags |
+| `get_var <var>` / `list_vars` | Read `ac_campaign_war_weeks`, `BLK_wacht_am_wal_var` |
 | `set_var <var> <value>` | Set the Wacht counter (may not exist) |
 | `occupy` or equivalent | Force state control for O1 (name unverified) |
 | `help` | List commands available in this build |

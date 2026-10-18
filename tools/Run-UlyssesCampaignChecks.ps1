@@ -1,10 +1,14 @@
 [CmdletBinding()]
 param(
-    [string]$ModRoot = (Join-Path $PSScriptRoot '..\mod\2985041246')
+    [string]$ModRoot
 )
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
+if ([string]::IsNullOrWhiteSpace($ModRoot)) {
+    $ModRoot = Join-Path $repoRoot 'mod\2985041246'
+}
+$ModRoot = (Resolve-Path -LiteralPath $ModRoot).Path
 $scriptHost = if ($PSVersionTable.PSEdition -eq 'Core') { Join-Path $PSHOME 'pwsh.exe' } else { Join-Path $PSHOME 'powershell.exe' }
 if (-not (Test-Path -LiteralPath $scriptHost -PathType Leaf)) { throw "Could not locate the current PowerShell host executable: $scriptHost" }
 

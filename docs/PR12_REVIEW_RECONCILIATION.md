@@ -8,7 +8,7 @@ This record reconciles the review findings against merged head `2a55a2f1128e3439
 | New opening branch bypassed established chronology | Confirmed and fixed | `ac_belkan_prewar_briefing` now requires `BLK_the_crisis_continues`. |
 | Postwar decision categories were missing | Confirmed and fixed | Added `ac_postwar_continuation` and `ac_postwar_local_settlement` categories and localization. |
 | Neutral fallback was unguarded and could dead-end | Superseded by merged fix | The merged code already restricts it to unknown outcome flags and supplies a neutral settlement/legacy path. The follow-up regression locks this behavior. |
-| Demobilization focus/decision localization collision | Confirmed and fixed | Renamed the decision to `ac_postwar_demobilize_establishment`; focus and decision keys no longer collide. |
+| Demobilization focus/decision localization collision | Confirmed and fixed | Restored the established decision ID `ac_postwar_demobilization` for save compatibility and gave the newer focus the separate ID `ac_postwar_demobilize_establishment`. |
 | Duplicate continuation description/option key | Confirmed and fixed | The neutral option now uses `ac_continuation.1.e`; `.d` remains the event description. |
 | Opening-stage decisions could run simultaneously | Confirmed and fixed | Each opening decision excludes the other with `has_decision`. |
 | Local recovery `allowed` depended on a late flag | Confirmed and fixed | `allowed` uses stable FAT/GEB/REC tags; dynamic settlement flags remain in visibility/availability. |
@@ -31,3 +31,12 @@ This record reconciles the review findings against merged head `2a55a2f1128e3439
 - Wrapper negative regression: passed.
 
 Native parser, launch, save/load, AI long-run, and gameplay acceptance remain unverified by design.
+
+## PR #13 review reconciliation
+
+- Stable decision ID: restored `ac_postwar_demobilization`; the focus uses the separate `ac_postwar_demobilize_establishment` ID.
+- AI fallback timing: `ac_campaign_war_weeks` resets inside each guarded stage event; later fallbacks use relative thresholds `>22` and `>26` after the initial `>18` threshold.
+- Idempotency: stage decisions dispatch their guarded events instead of duplicating stage flags, ideas, and economy effects in the decision completion block.
+- Validator coverage: all five continuation decisions are enforced, and mutation tests prove removed decision/localization entries fail validation.
+- PowerShell portability: the negative wrapper test resolves the current host and also exercises the available alternate supported host.
+- Focus layout: the inherited `(8,0)` anchor now places the campaign opening at `(12,1)` with non-overlapping child nodes; structural regression coverage computes absolute positions.

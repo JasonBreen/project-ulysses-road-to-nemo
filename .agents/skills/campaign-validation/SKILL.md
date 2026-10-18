@@ -13,7 +13,7 @@ ideas, on_actions, or their localization.
 3. Run `powershell -NoProfile -ExecutionPolicy Bypass -File tools/Test-UlyssesStatic.ps1 -ModRoot mod/2985041246`.
 4. Run `python tools/test_economy.py` when economy hooks are touched.
 5. Run `powershell -NoProfile -ExecutionPolicy Bypass -File tools/Test-NoVanillaProvenance.ps1` when provenance tooling changes.
-6. Run `python tools/Test-CampaignReviewRegressions.py` and the negative wrapper test when campaign handoff, decision, AI, or aggregate-check tooling changes.
+6. Run `python tools/Test-CampaignReviewRegressions.py`, `python tools/Test-CampaignContractMutations.py`, and the negative wrapper test when campaign handoff, decision, AI, focus layout, or aggregate-check tooling changes.
 7. Inspect the diff for duplicate IDs, missing localization, developer paths,
    and unguarded repeat effects.
 

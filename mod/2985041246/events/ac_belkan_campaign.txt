@@ -94,15 +94,19 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = ac_campaign.20.a
-		set_country_flag = ac_campaign_stage_one
-		set_country_flag = ac_campaign_military_economy
-		remove_ideas = ac_war_civilian_reserve
-		add_ideas = ac_war_supply_drive
 		if = {
-			limit = { ac_econ_ready = yes }
-			ac_econ_set_high_tax = yes
+			limit = { NOT = { has_country_flag = ac_campaign_stage_one } }
+			set_country_flag = ac_campaign_stage_one
+			set_variable = { ac_campaign_war_weeks = 0 }
+			set_country_flag = ac_campaign_military_economy
+			remove_ideas = ac_war_civilian_reserve
+			add_ideas = ac_war_supply_drive
+			if = {
+				limit = { ac_econ_ready = yes }
+				ac_econ_set_high_tax = yes
+			}
+			add_war_support = 0.05
 		}
-		add_war_support = 0.05
 	}
 }
 
@@ -114,15 +118,19 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = ac_campaign.21.a
-		set_country_flag = ac_campaign_stage_one
-		set_country_flag = ac_campaign_civilian_reserve
-		remove_ideas = ac_war_supply_drive
-		add_ideas = ac_war_civilian_reserve
 		if = {
-			limit = { ac_econ_ready = yes }
-			ac_econ_set_basic_services = yes
+			limit = { NOT = { has_country_flag = ac_campaign_stage_one } }
+			set_country_flag = ac_campaign_stage_one
+			set_variable = { ac_campaign_war_weeks = 0 }
+			set_country_flag = ac_campaign_civilian_reserve
+			remove_ideas = ac_war_supply_drive
+			add_ideas = ac_war_civilian_reserve
+			if = {
+				limit = { ac_econ_ready = yes }
+				ac_econ_set_basic_services = yes
+			}
+			add_stability = 0.03
 		}
-		add_stability = 0.03
 	}
 }
 
@@ -134,9 +142,16 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = ac_campaign.22.a
-		set_country_flag = ac_campaign_stage_two
-		add_ideas = ac_war_front_command
-		add_war_support = 0.05
+		if = {
+			limit = {
+				has_country_flag = ac_campaign_stage_one
+				NOT = { has_country_flag = ac_campaign_stage_two }
+			}
+			set_country_flag = ac_campaign_stage_two
+			set_variable = { ac_campaign_war_weeks = 0 }
+			add_ideas = ac_war_front_command
+			add_war_support = 0.05
+		}
 	}
 }
 
@@ -148,10 +163,17 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = ac_campaign.23.a
-		set_country_flag = ac_campaign_stage_three
-		add_ideas = ac_war_endurance
-		add_stability = -0.02
-		add_war_support = 0.05
+		if = {
+			limit = {
+				has_country_flag = ac_campaign_stage_two
+				NOT = { has_country_flag = ac_campaign_stage_three }
+			}
+			set_country_flag = ac_campaign_stage_three
+			set_variable = { ac_campaign_war_weeks = 0 }
+			add_ideas = ac_war_endurance
+			add_stability = -0.02
+			add_war_support = 0.05
+		}
 	}
 }
 

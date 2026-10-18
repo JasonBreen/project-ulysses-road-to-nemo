@@ -21,7 +21,7 @@ FOCUSES = {
     "ac_belkan_logistics_network", "ac_belkan_security_mandate",
     "ac_belkan_ultimatum", "ac_belkan_council_mandate",
     "ac_postwar_reconstruction", "ac_postwar_recovery_budget",
-    "ac_postwar_demobilization", "ac_postwar_victory_settlement",
+    "ac_postwar_demobilize_establishment", "ac_postwar_victory_settlement",
     "ac_postwar_defeat_settlement", "ac_postwar_victory_legacy",
     "ac_postwar_unclassified_settlement", "ac_postwar_defeat_legacy",
     "ac_postwar_unclassified_legacy", "ac_belkan_postwar",
@@ -30,7 +30,8 @@ DECISIONS = {
     "ac_belkan_war_council", "ac_belkan_logistics_requisition",
     "ac_belkan_civilian_reserve", "ac_belkan_front_command",
     "ac_belkan_endurance_program", "ac_postwar_ratify_victory",
-    "ac_postwar_demobilize_establishment",
+    "ac_postwar_reconstruction_program", "ac_postwar_political_settlement",
+    "ac_postwar_local_recovery", "ac_postwar_demobilization",
 }
 CATEGORIES = {
     "ac_belkan_campaign", "ac_postwar_continuation", "ac_postwar_local_settlement",
@@ -205,7 +206,7 @@ def main() -> int:
     for token in ("ac_campaign_war_weeks", "ac_campaign.20", "ac_campaign.22", "ac_campaign.23"):
         if token not in weekly_text:
             errors.append(f"AI pacing hook missing from weekly on_action: {token}")
-    for token in ("ac_campaign_war_weeks > 18", "ac_campaign_war_weeks > 24", "ac_campaign_war_weeks > 30"):
+    for token in ("ac_campaign_war_weeks > 18", "ac_campaign_war_weeks > 22", "ac_campaign_war_weeks > 26"):
         if token not in weekly_text:
             errors.append(f"AI fallback timing guard missing: {token}")
     if "set_country_flag = ac_postwar_ready" not in continuation_event_text:

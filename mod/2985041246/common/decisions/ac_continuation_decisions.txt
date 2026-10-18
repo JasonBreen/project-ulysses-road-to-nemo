@@ -1,0 +1,163 @@
+ac_postwar_continuation = {
+	ac_postwar_reconstruction_program = {
+		allowed = {
+			original_tag = BLK
+		}
+		visible = {
+			has_country_flag = ac_postwar_ready
+		}
+		available = {
+			has_country_flag = ac_postwar_ready
+			NOT = { has_country_flag = ac_postwar_reconstruction_complete }
+		}
+		fire_only_once = yes
+		days_remove = 180
+		cost = 75
+		modifier = {
+			stability_weekly = -0.001
+			production_speed_buildings_factor = -0.05
+		}
+		complete_effect = {
+			set_country_flag = ac_postwar_reconstruction_complete
+			remove_ideas = ac_postwar_victory_settlement
+			remove_ideas = ac_postwar_wacht_settlement
+			remove_ideas = ac_postwar_defeat_settlement
+			add_timed_idea = { idea = ac_postwar_reconstruction days = 365 }
+			add_stability = 0.05
+			random_owned_controlled_state = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			if = {
+				limit = { ac_econ_ready = yes }
+				ac_econ_set_reconstruction = yes
+			}
+			country_event = { id = ac_continuation.2 days = 1 }
+		}
+		remove_effect = {
+			add_political_power = -25
+		}
+		ai_will_do = { base = 1 }
+	}
+
+	ac_postwar_ratify_victory = {
+		allowed = {
+			original_tag = BLK
+		}
+		visible = {
+			OR = {
+				has_global_flag = ac_postwar_victory
+				has_global_flag = ac_postwar_wacht_am_wal
+			}
+		}
+		available = {
+			has_country_flag = ac_postwar_reconstruction_complete
+			NOT = { has_country_flag = ac_postwar_political_settlement_complete }
+		}
+		fire_only_once = yes
+		days_remove = 120
+		cost = 50
+		modifier = {
+			stability_weekly = 0.001
+			political_power_factor = -0.05
+		}
+		complete_effect = {
+			set_country_flag = ac_postwar_political_settlement_complete
+			remove_ideas = ac_postwar_victory_settlement
+			remove_ideas = ac_postwar_wacht_settlement
+			add_stability = 0.05
+			add_political_power = 50
+		}
+		ai_will_do = { base = 1 }
+	}
+
+	ac_postwar_demobilization = {
+		allowed = {
+			original_tag = BLK
+		}
+		visible = {
+			has_country_flag = ac_postwar_reconstruction_complete
+		}
+		available = {
+			has_country_flag = ac_postwar_reconstruction_complete
+			NOT = { has_country_flag = ac_postwar_demobilization_complete }
+		}
+		fire_only_once = yes
+		days_remove = 120
+		cost = 50
+		modifier = {
+			stability_weekly = 0.001
+			war_support_factor = -0.05
+		}
+		complete_effect = {
+			set_country_flag = ac_postwar_demobilization_complete
+			add_political_power = 50
+			add_stability = 0.03
+			add_war_support = -0.05
+		}
+		ai_will_do = { base = 1 }
+	}
+
+	ac_postwar_political_settlement = {
+		allowed = {
+			original_tag = BLK
+		}
+		visible = {
+			has_global_flag = ac_postwar_defeat
+		}
+		available = {
+			has_country_flag = ac_postwar_ready
+			NOT = { has_country_flag = ac_postwar_political_settlement_complete }
+		}
+		fire_only_once = yes
+		days_remove = 120
+		cost = 50
+		modifier = {
+			stability_weekly = 0.001
+			political_power_factor = -0.05
+		}
+		complete_effect = {
+			set_country_flag = ac_postwar_political_settlement_complete
+			remove_ideas = ac_postwar_defeat_settlement
+			add_political_power = 75
+			add_stability = 0.08
+		}
+		ai_will_do = { base = 1 }
+	}
+}
+
+ac_postwar_local_settlement = {
+	ac_postwar_local_recovery = {
+		allowed = {
+			has_country_flag = ac_postwar_settlement_pending
+		}
+		visible = {
+			has_country_flag = ac_postwar_settlement_pending
+		}
+		available = {
+			has_country_flag = ac_postwar_settlement_pending
+			NOT = { has_country_flag = ac_postwar_settlement_complete }
+		}
+		fire_only_once = yes
+		days_remove = 120
+		cost = 25
+		modifier = {
+			stability_weekly = -0.001
+			consumer_goods_factor = 0.02
+		}
+		complete_effect = {
+			set_country_flag = ac_postwar_settlement_complete
+			clr_country_flag = ac_postwar_settlement_pending
+			remove_ideas = ac_postwar_occupation_burden
+			add_stability = 0.05
+			add_political_power = 25
+		}
+		remove_effect = {
+			add_stability = -0.02
+		}
+		ai_will_do = { base = 0.5 }
+	}
+}

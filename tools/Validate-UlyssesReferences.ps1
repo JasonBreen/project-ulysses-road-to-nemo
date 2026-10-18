@@ -126,8 +126,15 @@ foreach ($file in $scriptCallFiles) {
     $scriptText = Get-Content -LiteralPath $file.FullName -Raw
     if ($null -eq $scriptText) { $scriptText = '' }
     $cleanText = [regex]::Replace($scriptText, '(?m)#.*$', '')
-    foreach ($definition in $scriptedDefinitions) {
-        if ($cleanText -match "(?m)^\s*$([regex]::Escape($definition))\s*=\s*\{") { Add-SetValue $scriptedReferences $definition }
+    # The previous implementation tested every scripted definition against
+    # every call file. On this mod that becomes an O(definitions * files)
+    # regex loop and can appear hung for several minutes. Scan each file once
+    # for the same line-start assignment shape, then retain only known
+    # scripted definitions. This preserves the audit's scope while making the
+    # cost linear in the amount of source text.
+    foreach ($match in [regex]::Matches($cleanText, '(?m)^\s*([A-Za-z][A-Za-z0-9_]*)\s*=\s*\{')) {
+        $candidate = $match.Groups[1].Value
+        if ($scriptedDefinitions.Contains($candidate)) { Add-SetValue $scriptedReferences $candidate }
     }
 }
 

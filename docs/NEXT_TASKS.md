@@ -4,6 +4,8 @@ Status as of 2026-10-17: the mod loads, starts the 1991 campaign and runs for ov
 
 Standing rules: keep the original Project Ulysses look and layouts; **no HOI4 vanilla (WWII) visuals** anywhere; 1.15–1.19 mechanics are welcome.
 
+Current continuation slice: the former demo handoff now consumes conventional victory, Wacht am Wal, and defeat outcome flags. It exposes provisional reconstruction, demobilization, political-settlement, and affected-country administration decisions. See [LORE_EVENT_COVERAGE_BACKLOG.md](LORE_EVENT_COVERAGE_BACKLOG.md). Static validation is required; native reachability remains unverified.
+
 1. **Vanilla-visuals audit**
    - List every sprite on screen that resolves to a vanilla texture: continuous focuses, grand doctrines, 1.15+ buildings, special projects, appended `.gfx` entries, MIO icons.
    - Replace each with Strangereal art, or with mod placeholders until art exists.
@@ -22,9 +24,10 @@ Standing rules: keep the original Project Ulysses look and layouts; **no HOI4 va
    - DEL/SHI character conflict.
    - Duplicate unit id `48100001`.
 6. **Bookmarks.** Merge or differentiate the two identical Jan 1, 1991 bookmarks.
-7. **Belkan War branch graph and postwar continuity.** Unchanged from the phased plan; replace the `world_event.2` demo terminal.
-8. **Long-run test.** Run to 1995 with AI on: save and reload at each checkpoint, check other nations (Osea, Ustio, Sapin, Gebet), and log results in the testing checklist.
-9. **Technology/name provenance pass.** Name and localize authored technology and equipment, classify inherited engine IDs, and reconcile 1991–2005 content with the inclusive 2065 campaign end (`END_DATE = 2066.1.1.1`).
-10. **Canon ledger and Joker 1 compilation.** Collect primary Project Aces citations for lore-sensitive claims ([CANON_POLICY.md](CANON_POLICY.md), [CANON_LEDGER.md](CANON_LEDGER.md)) and Sam's Joker 1 source material separately; do not invent missing dates or future events.
-11. **Economy/IDE integration.** Review the separate economy model and portable workspace work, then integrate only its documented IDs and validation assumptions.
-12. **Keep static validation green.** Run `tools/Test-UlyssesStatic.ps1` before every runtime test; CI runs it on every push.
+7. **Belkan War branch graph and postwar continuity.** Static campaign arc is now implemented on the campaign branch: prewar preparation, war start, three war-stage decisions/AI fallbacks, existing outcome branches, and postwar focus/decision continuity. Native reachability and balance are still open.
+8. **Native playtest when approved.** Follow [NATIVE_PLAYTEST_CHECKLIST.md](NATIVE_PLAYTEST_CHECKLIST.md); do not treat this branch as playtested until the user approves an isolated HOI4 run.
+9. **Long-run test.** Run to 1995 with AI on: save and reload at each checkpoint, check other nations (Osea, Ustio, Sapin, Gebet), and log results in the testing checklist.
+10. **Technology/name provenance pass.** Name and localize authored technology and equipment, classify inherited engine IDs, and reconcile 1991–2005 content with the inclusive 2065 campaign end (`END_DATE = 2066.1.1.1`).
+11. **Canon ledger and Joker 1 compilation.** Collect primary Project Aces citations for lore-sensitive claims ([CANON_POLICY.md](CANON_POLICY.md), [CANON_LEDGER.md](CANON_LEDGER.md)) and Sam's Joker 1 source material separately; do not invent missing dates or future events.
+12. **Economy/IDE integration.** Review the separate economy model and portable workspace work, then integrate only its documented IDs and validation assumptions.
+13. **Keep static validation green.** Run `tools/Test-UlyssesStatic.ps1` before every runtime test; CI runs it on every push.

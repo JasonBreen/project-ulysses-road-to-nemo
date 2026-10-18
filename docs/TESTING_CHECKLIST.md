@@ -2,6 +2,13 @@
 
 Runtime results are recorded inline with dates. Static inspection is never counted as a runtime result.
 
+## Current campaign branch status
+
+The Belkan campaign-arc branch has not been launched or playtested in HOI4 in
+this task. Its evidence is limited to offline static contract, path-reference,
+repository, economy, and no-vanilla checks. The checklist below is the required
+native handoff, not a claim that any item has passed on this branch.
+
 ## Runtime results — 2026-10-17, HOI4 1.19.3 (Operation Postern), mod 0.3-dev, debug mode, mod enabled alone
 
 - [x] Main menu loads and stays stable (no GPU device-removed crash) — original Project Ulysses menu.

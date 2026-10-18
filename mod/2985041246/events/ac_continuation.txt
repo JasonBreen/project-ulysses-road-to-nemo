@@ -1,0 +1,183 @@
+add_namespace = ac_continuation
+
+country_event = {
+	id = ac_continuation.1
+	title = ac_continuation.1.t
+	desc = ac_continuation.1.d
+	picture = GFX_report_event_treaty_2
+
+	trigger = {
+		NOT = { has_global_flag = ac_postwar_contract_started }
+	}
+	is_triggered_only = yes
+
+	option = {
+		trigger = {
+			has_global_flag = belka_won_belkan_war
+		}
+		name = ac_continuation.1.a
+		set_global_flag = ac_postwar_victory
+		set_global_flag = ac_postwar_contract_started
+		set_country_flag = ac_postwar_ready
+		load_focus_tree = { tree = ac_belkan_postwar keep_completed = yes }
+		add_timed_idea = { idea = ac_postwar_victory_settlement days = 365 }
+		hidden_effect = {
+			FAT = {
+				set_country_flag = ac_postwar_settlement_pending
+				add_timed_idea = { idea = ac_postwar_occupation_burden days = 365 }
+				country_event = { id = ac_continuation.10 days = 7 }
+			}
+			GEB = {
+				set_country_flag = ac_postwar_settlement_pending
+				add_timed_idea = { idea = ac_postwar_occupation_burden days = 365 }
+				country_event = { id = ac_continuation.10 days = 7 }
+			}
+			REC = {
+				set_country_flag = ac_postwar_settlement_pending
+				add_timed_idea = { idea = ac_postwar_occupation_burden days = 365 }
+				country_event = { id = ac_continuation.10 days = 7 }
+			}
+		}
+	}
+
+	option = {
+		trigger = {
+			has_global_flag = belka_won_belkan_war_wacht_am_wal
+		}
+		name = ac_continuation.1.b
+		set_global_flag = ac_postwar_wacht_am_wal
+		set_global_flag = ac_postwar_contract_started
+		set_country_flag = ac_postwar_ready
+		load_focus_tree = { tree = ac_belkan_postwar keep_completed = yes }
+		add_timed_idea = { idea = ac_postwar_wacht_settlement days = 365 }
+		hidden_effect = {
+			FAT = {
+				set_country_flag = ac_postwar_settlement_pending
+				add_timed_idea = { idea = ac_postwar_occupation_burden days = 365 }
+				country_event = { id = ac_continuation.10 days = 7 }
+			}
+			GEB = {
+				set_country_flag = ac_postwar_settlement_pending
+				add_timed_idea = { idea = ac_postwar_occupation_burden days = 365 }
+				country_event = { id = ac_continuation.10 days = 7 }
+			}
+			REC = {
+				set_country_flag = ac_postwar_settlement_pending
+				add_timed_idea = { idea = ac_postwar_occupation_burden days = 365 }
+				country_event = { id = ac_continuation.10 days = 7 }
+			}
+		}
+	}
+
+	option = {
+		trigger = {
+			has_global_flag = belka_lost_belkan_war
+		}
+		name = ac_continuation.1.c
+		set_global_flag = ac_postwar_defeat
+		set_global_flag = ac_postwar_contract_started
+		set_country_flag = ac_postwar_ready
+		load_focus_tree = { tree = ac_belkan_postwar keep_completed = yes }
+		add_timed_idea = { idea = ac_postwar_defeat_settlement days = 365 }
+		hidden_effect = {
+			OSE = {
+				set_country_flag = ac_postwar_guarantor
+				add_timed_idea = { idea = ac_postwar_guarantor days = 365 }
+				country_event = { id = ac_continuation.11 days = 7 }
+			}
+		}
+	}
+
+	option = {
+		trigger = {
+			NOT = {
+				OR = {
+					has_global_flag = belka_won_belkan_war
+					has_global_flag = belka_won_belkan_war_wacht_am_wal
+					has_global_flag = belka_lost_belkan_war
+				}
+			}
+		}
+		name = ac_continuation.1.d
+		set_global_flag = ac_postwar_unclassified
+		set_global_flag = ac_postwar_contract_started
+		set_country_flag = ac_postwar_ready
+		load_focus_tree = { tree = ac_belkan_postwar keep_completed = yes }
+		add_timed_idea = { idea = ac_postwar_unclassified_settlement days = 365 }
+	}
+}
+
+country_event = {
+	id = ac_continuation.2
+	title = ac_continuation.2.t
+	desc = ac_continuation.2.d
+	picture = GFX_report_event_economy_collapse
+
+	is_triggered_only = yes
+
+	option = {
+		name = ac_continuation.2.a
+		add_political_power = 50
+		add_stability = 0.03
+	}
+}
+
+country_event = {
+	id = ac_continuation.10
+	title = ac_continuation.10.t
+	desc = ac_continuation.10.d
+	picture = GFX_report_event_treaty_2
+
+	is_triggered_only = yes
+
+	option = {
+		name = ac_continuation.10.a
+		add_political_power = -25
+		add_stability = -0.03
+	}
+}
+
+country_event = {
+	id = ac_continuation.11
+	title = ac_continuation.11.t
+	desc = ac_continuation.11.d
+	picture = GFX_report_event_treaty_2
+
+	is_triggered_only = yes
+
+	option = {
+		name = ac_continuation.11.a
+		add_political_power = 25
+		add_stability = 0.02
+	}
+}
+
+country_event = {
+	id = ac_campaign.35
+	title = ac_campaign.35.t
+	desc = ac_campaign.35.d
+	picture = GFX_report_event_treaty_2
+
+	is_triggered_only = yes
+
+	option = {
+		name = ac_campaign.35.a
+		add_political_power = 25
+		add_stability = 0.02
+	}
+}
+
+country_event = {
+	id = ac_campaign.36
+	title = ac_campaign.36.t
+	desc = ac_campaign.36.d
+	picture = GFX_report_event_treaty_2
+
+	is_triggered_only = yes
+
+	option = {
+		name = ac_campaign.36.a
+		set_country_flag = ac_postwar_arc_complete
+		add_timed_idea = { idea = ac_postwar_unclassified_legacy days = 730 }
+	}
+}

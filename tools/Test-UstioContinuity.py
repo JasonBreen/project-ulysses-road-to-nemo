@@ -76,6 +76,8 @@ def main() -> int:
     shared_focus = read(mod_root, "common/national_focus/UST_shared.txt")
     continuation = read(mod_root, "events/ac_continuation.txt")
     ustio = read(mod_root, "events/ac_ustio_continuation.txt")
+    legacy_ustio = read(mod_root, "events/Ustio.txt")
+    default_ai = read(mod_root, "common/ai_strategy/default.txt")
     localization = read(mod_root, "localisation/english/country_UST_l_english.yml")
 
     for focus_id in (
@@ -121,6 +123,10 @@ def main() -> int:
     )
     require(len(guarded_dispatches) == 3, "every Ustio dispatch must be guarded by country_exists = UST")
     require("belka_dlp_war.102" in continuation, "annexation guard is not documented at the conventional victory handoff")
+    require("target = UST" in legacy_ustio, "Ustio opinion target must use the uppercase country tag")
+    require("target = ust" not in legacy_ustio, "lowercase Ustio country tag remains")
+    require("id = cv_nav_bomber" in default_ai, "default AI uses the obsolete air_cv_naval_bomber identifier")
+    require("id = air_cv_naval_bomber" not in default_ai, "obsolete air_cv_naval_bomber identifier remains")
 
     handoff = event_block(ustio, "ac_ustio.1")
     require(handoff, "Ustio continuation event is missing")

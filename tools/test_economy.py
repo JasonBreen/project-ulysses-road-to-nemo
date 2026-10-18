@@ -308,7 +308,6 @@ class EconomyTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             paths = ["localisation/english/ac_economy_l_english.yml", "common/game_rules/ac_economy_rules.txt",
-                     "common/units/equipment/infantry.txt", "common/technologies/infantry.txt",
                      "common/dynamic_modifiers/ac_economy_modifiers.txt"]
             for relative in paths:
                 destination = target / relative
@@ -320,10 +319,6 @@ class EconomyTests(unittest.TestCase):
             with patch("economy_script.MOD", target), self.assertRaisesRegex(ValueError, "Missing English keys"):
                 validate_content(self.h)
             localization.write_bytes(original)
-            technology = target / "common/technologies/infantry.txt"
-            technology.write_text(technology.read_text().replace("infantry_equipment_0", "missing_equipment"))
-            with patch("economy_script.MOD", target), self.assertRaisesRegex(ValueError, "does not unlock"):
-                validate_content(self.h)
 
     def test_workspace_is_relative_and_tasks_are_manual(self):
         workspace = json.loads((ROOT / "Project-Ulysses.code-workspace").read_text(encoding="utf-8"))

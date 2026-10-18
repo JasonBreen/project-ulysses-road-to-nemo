@@ -1,0 +1,254 @@
+shared_focus = {
+	id = ac_belkan_prewar_briefing
+	icon = GFX_focus_CZE_german_puppet
+	cost = 2.5
+	ai_will_do = { base = 100 }
+	x = 0
+	y = 0
+	available = {
+		original_tag = BLK
+		NOT = { has_global_flag = belkan_war_is_happening }
+	}
+	completion_reward = {
+		set_country_flag = ac_campaign_started
+		set_variable = { ac_campaign_war_weeks = 0 }
+		add_ideas = ac_prewar_cabinet
+		country_event = { id = ac_campaign.1 days = 1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_belkan_industrial_mobilization
+	icon = GFX_goal_generic_construct_civilian
+	cost = 3
+	ai_will_do = { base = 80 }
+	prerequisite = { focus = ac_belkan_prewar_briefing }
+	relative_position_id = ac_belkan_prewar_briefing
+	x = -3
+	y = 1
+	completion_reward = {
+		add_ideas = ac_industrial_preparations
+		country_event = { id = ac_campaign.2 days = 1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_belkan_logistics_network
+	icon = GFX_goal_generic_construct_infrastructure
+	cost = 3
+	ai_will_do = { base = 80 }
+	prerequisite = { focus = ac_belkan_prewar_briefing }
+	relative_position_id = ac_belkan_prewar_briefing
+	x = 0
+	y = 1
+	completion_reward = {
+		add_ideas = ac_frontline_logistics
+		country_event = { id = ac_campaign.3 days = 1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_belkan_security_mandate
+	icon = GFX_focus_generic_military_dictatorship
+	cost = 3
+	ai_will_do = { base = 70 }
+	prerequisite = { focus = ac_belkan_prewar_briefing }
+	relative_position_id = ac_belkan_prewar_briefing
+	x = 3
+	y = 1
+	completion_reward = {
+		add_ideas = ac_security_mandate
+		country_event = { id = ac_campaign.4 days = 1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_belkan_ultimatum
+	icon = GFX_focus_generic_major_war
+	cost = 3
+	ai_will_do = { base = 100 }
+	prerequisite = { focus = ac_belkan_industrial_mobilization }
+	prerequisite = { focus = ac_belkan_logistics_network }
+	prerequisite = { focus = ac_belkan_security_mandate }
+	relative_position_id = ac_belkan_logistics_network
+	x = 0
+	y = 2
+	available = { NOT = { has_global_flag = belkan_war_is_happening } }
+	completion_reward = {
+		set_country_flag = ac_campaign_ultimatum_issued
+		add_timed_idea = { idea = ac_security_mandate days = 180 }
+		country_event = { id = ac_campaign.5 days = 1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_belkan_council_mandate
+	icon = GFX_focus_generic_political_pressure
+	cost = 2
+	ai_will_do = { base = 100 }
+	prerequisite = { focus = ac_belkan_ultimatum }
+	relative_position_id = ac_belkan_ultimatum
+	x = 0
+	y = 1
+	completion_reward = {
+		set_country_flag = ac_campaign_prepared
+		add_political_power = 25
+		country_event = { id = ac_campaign.6 days = 1 }
+	}
+	search_filters = { }
+}
+
+focus_tree = {
+	id = ac_belkan_postwar
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = BLK
+		}
+	}
+	default = no
+	continuous_focus_position = { x = 1700 y = 100 }
+	shared_focus = ac_postwar_reconstruction
+	shared_focus = ac_postwar_recovery_budget
+	shared_focus = ac_postwar_demobilization
+	shared_focus = ac_postwar_victory_settlement
+	shared_focus = ac_postwar_defeat_settlement
+	shared_focus = ac_postwar_victory_legacy
+	shared_focus = ac_postwar_defeat_legacy
+}
+
+shared_focus = {
+	id = ac_postwar_reconstruction
+	icon = GFX_goal_generic_construct_civilian
+	cost = 2
+	ai_will_do = { base = 100 }
+	x = 0
+	y = 0
+	available = { has_country_flag = ac_postwar_ready }
+	completion_reward = { country_event = { id = ac_campaign.30 days = 1 } }
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_postwar_recovery_budget
+	icon = GFX_goal_generic_construct_infrastructure
+	cost = 3
+	ai_will_do = { base = 90 }
+	prerequisite = { focus = ac_postwar_reconstruction }
+	relative_position_id = ac_postwar_reconstruction
+	x = -2
+	y = 1
+	completion_reward = {
+		set_country_flag = ac_postwar_focus_recovery_complete
+		add_timed_idea = { idea = ac_postwar_reconstruction days = 365 }
+		if = {
+			limit = { ac_econ_ready = yes }
+			ac_econ_set_reconstruction = yes
+		}
+		random_owned_controlled_state = {
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		country_event = { id = ac_continuation.2 days = 1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_postwar_demobilization
+	icon = GFX_goal_generic_demobilization
+	cost = 2
+	ai_will_do = { base = 85 }
+	prerequisite = { focus = ac_postwar_recovery_budget }
+	relative_position_id = ac_postwar_recovery_budget
+	x = 0
+	y = 1
+	completion_reward = {
+		set_country_flag = ac_postwar_focus_demobilized
+		add_stability = 0.03
+		add_war_support = -0.05
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_postwar_victory_settlement
+	icon = GFX_focus_generic_diplomatic_treaty
+	cost = 2
+	ai_will_do = { base = 80 }
+	prerequisite = { focus = ac_postwar_demobilization }
+	relative_position_id = ac_postwar_demobilization
+	x = -2
+	y = 1
+	available = {
+		OR = {
+			has_global_flag = ac_postwar_victory
+			has_global_flag = ac_postwar_wacht_am_wal
+		}
+	}
+	completion_reward = {
+		set_country_flag = ac_postwar_focus_settlement_complete
+		country_event = { id = ac_campaign.31 days = 1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_postwar_defeat_settlement
+	icon = GFX_focus_generic_political_pressure
+	cost = 2
+	ai_will_do = { base = 80 }
+	prerequisite = { focus = ac_postwar_recovery_budget }
+	relative_position_id = ac_postwar_recovery_budget
+	x = 2
+	y = 2
+	available = { has_global_flag = ac_postwar_defeat }
+	completion_reward = {
+		set_country_flag = ac_postwar_focus_settlement_complete
+		country_event = { id = ac_campaign.32 days = 1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_postwar_victory_legacy
+	icon = GFX_goal_generic_propaganda
+	cost = 2
+	ai_will_do = { base = 70 }
+	prerequisite = { focus = ac_postwar_victory_settlement }
+	relative_position_id = ac_postwar_victory_settlement
+	x = 0
+	y = 1
+	completion_reward = {
+		set_country_flag = ac_postwar_arc_complete
+		add_timed_idea = { idea = ac_postwar_civic_legacy days = 730 }
+		country_event = { id = ac_campaign.33 days = 1 }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = ac_postwar_defeat_legacy
+	icon = GFX_goal_generic_political_reform
+	cost = 2
+	ai_will_do = { base = 70 }
+	prerequisite = { focus = ac_postwar_defeat_settlement }
+	relative_position_id = ac_postwar_defeat_settlement
+	x = 0
+	y = 1
+	completion_reward = {
+		set_country_flag = ac_postwar_arc_complete
+		add_timed_idea = { idea = ac_postwar_survivor_state days = 730 }
+		country_event = { id = ac_campaign.34 days = 1 }
+	}
+	search_filters = { }
+}

@@ -37,6 +37,15 @@ This is a source-traceable coverage backlog for the private continuation. It is 
 | Geography | 11,352 provinces, 612 states, 326 regions | Resolve state 171 and 203 XXX regions; source every later border | Open geography decisions |
 | 2065 horizon | Engine cutoff contract through 2065-12-31 | Authored, source-backed content is not established for every year; do not fill with invented history | Engineering target only |
 
+## Campaign arc implementation record
+
+| Slice | Source layer | Static implementation | Native status |
+| --- | --- | --- | --- |
+| Belka prewar preparation and war-stage mechanics | Mod provenance context plus provisional gameplay | `ac_belkan_campaign.txt` focus/decision/event/idea files, attached to the existing BLK tree and war-start contract | Not tested in HOI4 |
+| AI war-stage fallback | Provisional gameplay | `ac_on_weekly_on_action.txt` increments a bounded campaign-week variable and fires each missing stage once | Not tested in HOI4 |
+| Victory, Wacht am Wal, and defeat postwar focus arc | Existing outcome flags plus provisional gameplay | `ac_belkan_postwar` focus tree and branch-gated events/decisions; no new borders or canon claims | Not tested in HOI4 |
+| Economy integration | Existing repository economy prototype | All campaign economy effects are guarded by `ac_econ_ready` | Offline economy tests pass; native balance unverified |
+
 ## Coverage contract for new work
 
 Every new lore/event slice should record:

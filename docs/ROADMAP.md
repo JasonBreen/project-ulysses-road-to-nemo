@@ -35,6 +35,26 @@ Next economy slices remain proposed: native 1.19 acceptance, AI and campaign bal
 - Added provisional reconstruction, demobilization, political-settlement, and affected-country settlement decisions. These are gameplay branches, not official canon claims.
 - Restored twelve pre-existing exact vanilla-file matches from the immutable Ulysses baseline; the no-vanilla audit now reports one allowed inherited map/positions.txt match and zero new matches.
 
+## Belkan campaign arc slice
+
+On the isolated campaign branch, the static campaign contract now covers:
+
+- a six-focus prewar preparation path attached to Belka's existing focus tree;
+- a War Council decision that calls the existing Belkan War start event;
+- three war-stage decisions with guarded economy hooks and AI weekly fallbacks;
+- branch-aware postwar focus progression for reconstruction, demobilization,
+  victory/defeat settlements, and legacy outcomes;
+- complete English localization, a native playtest checklist, and a static path
+  report that distinguishes references from engine reachability.
+
+The MD-OEM audit pattern was ported selectively as dependency-free repository
+tooling: `tools/validate_campaign.py`,
+`tools/analysis/campaign_path_report.py`, and
+`tools/Run-UlyssesCampaignChecks.ps1`. Repo-local agent profiles and skills now
+live under `.agents/agents/` and `.agents/skills/`. MD-OEM gameplay or executable
+code was not copied. The campaign branch has not been native-playtested in this
+task.
+
 ## Next implementation slices
 
 1. Extend the reference audit to scripted effect/trigger calls and country-tag consumers; keep inherited vanilla namespaces explicitly allowlisted.

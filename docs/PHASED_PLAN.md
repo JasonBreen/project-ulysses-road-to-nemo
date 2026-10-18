@@ -14,6 +14,12 @@ Exit criteria: one documented target branch, no ambiguous descriptor/path behavi
 
 ## Phase 1 — Viable 1991 Belkan War campaign
 
+Campaign groundwork delivered on the isolated campaign branch: Belka now has a
+reachable prewar preparation sequence, a war-council decision that calls the
+existing war-start event, three bounded wartime stage choices, and an AI weekly
+fallback for those stages. This is static implementation evidence only; native
+focus reachability, AI behavior, supply, and save/load remain unverified.
+
 1. Make the two Jan 1, 1991 bookmarks deterministic and selectable.
 2. Make Belka, Ustio, Sapin, Gebet, Osea, and A World With No Boundaries focus trees loadable and reachable from their country setup.
 3. Verify initial country histories, OOBs, leaders/advisors, diplomacy, starting wars, and AI strategy plans as one coherent scenario.
@@ -24,7 +30,7 @@ Exit criteria: the 1991 scenario reaches the first major branch without parse er
 
 ## Phase 2 — Postwar continuity after demo branches
 
-Current slice: world_event.2 now dispatches branch-aware postwar handoff events for conventional victory, Wacht am Wal, and defeat. Provisional reconstruction, demobilization, political-settlement, and affected-country administration decisions are available from the handoff flags. Native reachability, save/load, and long-run behavior remain unverified.
+Current slice: world_event.2 now dispatches branch-aware postwar handoff events for conventional victory, Wacht am Wal, and defeat. Provisional reconstruction, demobilization, political-settlement, and affected-country administration decisions are available from the handoff flags. The campaign branch adds a postwar focus tree with reconstruction, demobilization, victory/defeat settlement, and legacy outcomes. Native reachability, save/load, and long-run behavior remain unverified.
 
 1. Replace the demo-only `world_event.2` terminal outcome with explicit, branch-aware continuation states.
 2. Preserve Belkan victory/defeat, Rhongomyniad, Osea election, Sapin, Gebet, and Ustio consequences in a shared continuity ledger.

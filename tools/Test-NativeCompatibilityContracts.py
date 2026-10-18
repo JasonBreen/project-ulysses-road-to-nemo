@@ -11,6 +11,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TECH_FOLDER_ROW_LIMIT = 40
+# Vanilla 1.19 infantry_folder ends at @1946 = row 20; compatibility nodes go below it.
+VANILLA_INFANTRY_LAST_ROW = 20
 
 
 def read(path: Path) -> str:
@@ -57,7 +59,7 @@ def main() -> int:
 
     # The mapper must not rewrite IDs the active technology overrides still define.
     mapper = load_mapper()
-    still_defined = sorted(set(mapper.REPLACEMENTS) & defined_technologies(mod_root) - {"ifv1", "imv1", "infantry_manpats"})
+    still_defined = sorted(set(mapper.REPLACEMENTS) & defined_technologies(mod_root) - {"infantry_manpats"})
     require(not still_defined, f"mapper rewrites actively defined technologies: {still_defined}")
     require(mapper.REPLACEMENTS.get("antiair_1") == "interwar_antiair", "antiair_1 must map to the land anti-air technology")
 
@@ -74,7 +76,7 @@ def main() -> int:
     compat = read(mod_root / "common" / "technologies" / "ac_native_compatibility.txt")
     rows = [int(value) for value in re.findall(r"position\s*=\s*\{\s*x\s*=\s*-?\d+\s+y\s*=\s*(-?\d+)", compat)]
     require(len(rows) == 3, "expected three compatibility technology positions")
-    require(all(0 <= row <= TECH_FOLDER_ROW_LIMIT for row in rows), f"compatibility tech rows out of folder range: {rows}")
+    require(all(VANILLA_INFANTRY_LAST_ROW < row <= TECH_FOLDER_ROW_LIMIT for row in rows), f"compatibility tech rows overlap the vanilla infantry tree or leave the folder: {rows}")
 
     # Sapin's IFV production idea must not list an equipment key twice.
     sapin = read(mod_root / "common" / "ideas" / "sapin.txt")
@@ -95,6 +97,16 @@ def main() -> int:
         require(start is not None, f"{focus_id} is missing")
         block = braced_block(ustio, start.start())
         require("type = anti_tank_equipment_1" in block, f"{focus_id} does not stock anti-tank equipment")
+    arm_the_man = braced_block(ustio, re.search(r"(?m)^shared_focus = \{\s*\n\s*id = UST_to_arm_the_man\b", ustio).start())
+    stock = re.findall(r"type\s*=\s*(\w+)", arm_the_man)
+    require(stock.count("anti_tank_equipment_1") == 1 and "support_equipment" in stock,
+            f"UST_to_arm_the_man must keep one anti-tank and one support-equipment reward: {stock}")
+
+    # sap_protecting_our_infantry's bonus targets the mod-defined cat_imvs category; the
+    # quarantined armor tree held its other members, so imv1 must carry it.
+    tech_text = "".join(read(p) for p in (mod_root / "common" / "technologies").glob("*.txt"))
+    if "category = cat_imvs" in read(mod_root / "common" / "national_focus" / "SAP_pre_belkan_war.txt"):
+        require(re.search(r"(?m)^\s*cat_imvs\s*$", tech_text), "cat_imvs research bonus has no active technology")
 
     # Visible compatibility technologies need names and descriptions.
     localization = "".join(read(p) for p in (mod_root / "localisation").rglob("*.yml"))
@@ -145,6 +157,16 @@ def main() -> int:
         any(re.search(r"(?m)^\s*infantry_weapons1\s*=\s*1", text) for text in histories.values()),
         "no country history grants infantry_weapons1",
     )
+
+    # ifv1/imv1 are the only unlocks for the custom ifv/imv battalions in starting OOBs
+    # (set_oob in country history; event-loaded OOBs are outside this contract).
+    for unit, tech in (("ifv", "ifv1"), ("imv", "imv1")):
+        for name, history in histories.items():
+            for oob in set(re.findall(r'(?m)^\s*set_oob\s*=\s*"?(\w+)"?', re.sub(r"#[^\n]*", "", history))):
+                path = mod_root / "history" / "units" / f"{oob}.txt"
+                if not path.exists() or not re.search(rf"(?m)^\s*{unit}\s*=\s*\{{", re.sub(r"#[^\n]*", "", read(path))):
+                    continue
+                require(re.search(rf"(?m)^\s*{tech}\s*=\s*1", history), f"{name[:3]} OOB {path.name} uses {unit} but history lacks {tech}")
 
     # BLK and OSE are mod-only tags, so their unit/ship name pools must stay active,
     # keyed only by 1.19 types (no pre-By Blood Alone aircraft archetypes).

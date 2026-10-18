@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import importlib.util
 from pathlib import Path
 
 
@@ -14,6 +15,14 @@ def read(relative: str) -> str:
     return (MOD / relative).read_text(encoding="utf-8-sig")
 
 
+def load_variant_tool():
+    path = ROOT / "tools" / "Quarantine-LegacyEquipmentVariants.py"
+    spec = importlib.util.spec_from_file_location("variant_port", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def main() -> int:
     mapper = (ROOT / "tools" / "Port-NativeEquipmentReferences.py").read_text(
         encoding="utf-8"
@@ -23,11 +32,13 @@ def main() -> int:
         "basic_medium_battery",
         "improved_airplane_launcher",
         "air_tank_buster_1",
+        "infantry_weapons1",
     ):
         assert f'"{technology}":' not in mapper, technology
 
     for path in (MOD / "history" / "countries").glob("*.txt"):
         assert "antiair_1" not in path.read_text(encoding="utf-8-sig"), path
+    assert any("infantry_weapons1" in path.read_text(encoding="utf-8-sig") for path in (MOD / "history" / "countries").glob("*.txt"))
 
     for relative, technology in (
         ("history/countries/BLK - Belka.txt", "basic_medium_battery"),
@@ -88,6 +99,30 @@ def main() -> int:
 
     for name in ("Deutschland Class", "Guinevere Mark I", "Guinevere Mark II"):
         assert name in read("history/countries/BLK - Belka.txt"), name
+
+    # Archived variants are active only after the explicit native-port rules;
+    # invalid aircraft modules and unavailable FAT/SAP name groups stay out.
+    variant_tool = load_variant_tool()
+    active_country_text = "\n".join(
+        path.read_text(encoding="utf-8-sig") for path in (MOD / "history" / "countries").glob("*.txt")
+    )
+    for token in (*variant_tool.UNSUPPORTED_MODULES, *variant_tool.MODULE_REPLACEMENTS):
+        assert token not in active_country_text, token
+    for token in variant_tool.TYPE_REPLACEMENTS:
+        assert token not in active_country_text, token
+    assert not re.search(r"(?m)^\s*name_group\s*=\s*(?:FAT|SAP)_", active_country_text)
+    assert not re.search(r"(?m)^\s*name_group\s*=\s*\w+_HISTORICAL", active_country_text)
+    assert all(
+        group in {"GER", "USA", "BLK", "OSE"}
+        for group in re.findall(r"(?m)^\s*name_group\s*=\s*([A-Za-z0-9_]+)", active_country_text)
+    )
+    assert "if = {\n\tlimit = { has_dlc = \"By Blood Alone\" }" in active_country_text
+    assert "if = {\n\tlimit = { has_dlc = \"Man the Guns\" }" in active_country_text
+    assert "if = {\n\tlimit = { not = { has_dlc = \"Man the Guns\" } }" in active_country_text
+    for filename, tag in (("00_BLK_names.txt", "BLK"), ("00_OSE_names.txt", "OSE")):
+        names = (MOD / "common" / "units" / "names" / filename).read_text(encoding="utf-8-sig")
+        assert len(names) > 1000, filename
+        assert re.search(rf"(?m)^{tag}\s*=\s*\{{", names), tag
 
     print("native semantic mapping regression checks passed")
     return 0

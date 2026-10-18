@@ -21,11 +21,9 @@ the installed game's own `GER_names_divisions.txt`.
 The BLK and OSE unit/ship name lists are active again under
 `common/units/names/`, because BLK and OSE are mod-only tags with no vanilla
 naming pools. `00_OSE_names.txt` uses only 1.19 keys and was moved back as-is.
-The archive `00_BLK_names.txt` stays here unchanged; its active copy renames
-nine pre-By Blood Alone aircraft archetype blocks (`fighter_equipment`,
-`CAS_equipment`, `nav_bomber_equipment`, the three `cv_*` variants,
-`heavy_fighter_equipment`, `tac_bomber_equipment`, `strat_bomber_equipment`)
-to the 1.19 airframe keys Osea's file already uses. The `FLEET_NAME_*` and
+The archive `00_BLK_names.txt` stays here unchanged; its active copy retains
+compatible native naval and aircraft keys while obsolete pre-By Blood Alone
+aircraft pools remain quarantined. The `FLEET_NAME_*` and
 `AIR_WING_NAME_BLK_*` templates both files reference still have no localization.
 
 The following additional exact files are preserved here after the compatibility

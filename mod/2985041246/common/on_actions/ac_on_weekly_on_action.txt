@@ -88,8 +88,9 @@ on_actions = {
 	on_weekly_BLK = {
 		effect = {
 			# Provisional campaign pacing hook: the AI receives the same three
-			# war-stage choices as a player if it does not act in time. This is
-			# intentionally bounded and only applies after the campaign handoff.
+			# war-stage choices as a player if it does not act in time. Thresholds
+			# are beyond each decision's 120/150/180-day expiry, so the fallback
+			# cannot race an active decision.
 			if = {
 				limit = {
 					has_global_flag = belkan_war_is_happening
@@ -103,7 +104,7 @@ on_actions = {
 					has_global_flag = belkan_war_is_happening
 					has_country_flag = ac_campaign_war_committed
 					NOT = { has_country_flag = ac_campaign_stage_one }
-					check_variable = { ac_campaign_war_weeks > 6 }
+					check_variable = { ac_campaign_war_weeks > 18 }
 				}
 				country_event = { id = ac_campaign.20 }
 			}
@@ -114,7 +115,7 @@ on_actions = {
 					has_country_flag = ac_campaign_war_committed
 					has_country_flag = ac_campaign_stage_one
 					NOT = { has_country_flag = ac_campaign_stage_two }
-					check_variable = { ac_campaign_war_weeks > 12 }
+					check_variable = { ac_campaign_war_weeks > 24 }
 				}
 				country_event = { id = ac_campaign.22 }
 			}
@@ -125,7 +126,7 @@ on_actions = {
 					has_country_flag = ac_campaign_war_committed
 					has_country_flag = ac_campaign_stage_two
 					NOT = { has_country_flag = ac_campaign_stage_three }
-					check_variable = { ac_campaign_war_weeks > 20 }
+					check_variable = { ac_campaign_war_weeks > 30 }
 				}
 				country_event = { id = ac_campaign.23 }
 			}

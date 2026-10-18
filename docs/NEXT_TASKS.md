@@ -25,7 +25,7 @@ Current continuation slice: the former demo handoff now consumes conventional vi
    - Duplicate unit id `48100001`.
 6. **Bookmarks.** Merge or differentiate the two identical Jan 1, 1991 bookmarks.
 7. **Belkan War branch graph and postwar continuity.** Static campaign arc is now implemented on the campaign branch: prewar preparation, war start, three war-stage decisions/AI fallbacks, existing outcome branches, and postwar focus/decision continuity. Native reachability and balance are still open.
-8. **Native playtest when approved.** Follow [NATIVE_PLAYTEST_CHECKLIST.md](NATIVE_PLAYTEST_CHECKLIST.md); do not treat this branch as playtested until the user approves an isolated HOI4 run.
+8. **Native playtest when approved.** Follow [NATIVE_PLAYTEST_CHECKLIST.md](NATIVE_PLAYTEST_CHECKLIST.md) and the per-branch routes in [BELKAN_WAR_PLAYTEST_PLAN.md](BELKAN_WAR_PLAYTEST_PLAN.md); do not treat this branch as playtested until the user approves an isolated HOI4 run.
 9. **Long-run test.** Run to 1995 with AI on: save and reload at each checkpoint, check other nations (Osea, Ustio, Sapin, Gebet), and log results in the testing checklist.
 10. **Technology/name provenance pass.** Name and localize authored technology and equipment, classify inherited engine IDs, and reconcile 1991–2005 content with the inclusive 2065 campaign end (`END_DATE = 2066.1.1.1`).
 11. **Canon ledger and Joker 1 compilation.** Collect primary Project Aces citations for lore-sensitive claims ([CANON_POLICY.md](CANON_POLICY.md), [CANON_LEDGER.md](CANON_LEDGER.md)) and Sam's Joker 1 source material separately; do not invent missing dates or future events.

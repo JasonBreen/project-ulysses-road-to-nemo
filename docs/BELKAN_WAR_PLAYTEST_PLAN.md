@@ -32,14 +32,15 @@ side by side. Test whichever head the owner approves, and record its SHA.
    that contains only this descriptor. Do not touch existing saves or settings.
 2. Record: HOI4 build (1.19.3 checksum), DLC list, mod commit SHA, game rules,
    OS, and the playset contents.
-3. Launch with `-debug` so the console and `error.log` are available, then
+3. Delete or empty `error.log` before launching, because mod scripts are
+   parsed during load. Launch with `-debug` so the console and `error.log` are available, then
    open the console (`` ` `` or `~`).
 4. **Confirm the console commands.** Run `help` and check that each command in
    the [cheat sheet](#console-cheat-sheet) exists in this build. Note any
    substitute before using it. The command names below are standard HOI4
    commands but were not checked against 1.19.3 here.
-5. Clear `error.log`, start the 1991 Belka bookmark, pause on day one and save
-   as `pt0_start`.
+5. Start the 1991 Belka bookmark, pause on day one, check `error.log`, and
+   save as `pt0_start`.
 6. Pass: no parser errors from `ac_*` files, Belka focus tree shows both
    `BLK_the_crisis_continues` and the campaign opening, no missing icons or
    localisation keys on the campaign focuses.
@@ -185,7 +186,10 @@ All from `pt3_war_day1` with Belka played by a human.
   `BLK_war_won` fires `belka_dlp_won.1` → ... → `BLK_project_rhongomyniad`
   fires `belka_dlp_won.9` → `world_event.2` → `ac_continuation.1` option a.
 - **Forced route.** From `pt3_war_day1`: `event belka_dlp_war.102 BLK`, then
-  `focus.autocomplete` through the won tree. To test the decision itself, use
+  `focus.autocomplete` through the won tree. `.102` only makes peace with SAP
+  and OSE and annexes UST, so FAT, GEB and REC are still at war with Belka.
+  Use this forced run for won-tree checks only; postwar results (section 7)
+  count only from a save where those three were puppeted or at peace. To test the decision itself, use
   a state-control command (for example `occupy`, confirm in preflight) on the
   listed states. The north set also needs FAT, GEB and REC as puppets, and
   the Ustio set needs UST capitulated, so record how much of this the forced
@@ -201,7 +205,7 @@ Three triggers lead to the same follow-up `belka_dlp_war.99`:
 | Event | Condition |
 | --- | --- |
 | `south_belka.2` | Player Belka, at war with OSE, surrender progress above 20% (weekly) |
-| `south_belka.3` | Player mission `BLK_belkan_war_collapse` times out (180 days, extended by `BLK_use_locals`) |
+| `south_belka.3` | Player mission `BLK_belkan_war_collapse` times out (180 days, plus 30 days for each pillage or war-reparations decision and 10 per `BLK_use_locals`; record the actual expiry date) |
 | `south_belka.4` | AI Belka at war with OSE, and either collapse flag plus surrender above 25%, or surrender above 15% without states 302 and 364 |
 
 - **Check.** SBK receives states 330, 369, 302, 8, 364 and part of the army;

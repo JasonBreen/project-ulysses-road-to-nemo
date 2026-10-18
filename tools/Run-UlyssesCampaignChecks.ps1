@@ -28,6 +28,9 @@ function Invoke-CheckedCommand {
 Write-Host '== Project Ulysses campaign contract ==' -ForegroundColor Cyan
 Invoke-CheckedCommand 'Campaign contract' { python (Join-Path $PSScriptRoot 'validate_campaign.py') --mod-root $ModRoot }
 
+Write-Host '== Project Ulysses Ustio continuity regressions ==' -ForegroundColor Cyan
+Invoke-CheckedCommand 'Ustio continuity regressions' { python (Join-Path $PSScriptRoot 'Test-UstioContinuity.py') }
+
 Write-Host '== Project Ulysses static validation ==' -ForegroundColor Cyan
 Invoke-CheckedCommand 'Static validation' { & $scriptHost -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'Test-UlyssesStatic.ps1') -ModRoot $ModRoot }
 

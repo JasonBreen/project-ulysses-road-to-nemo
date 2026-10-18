@@ -14,3 +14,4 @@ Available campaign workflows:
 - `localization-evidence`: localization integrity and source evidence.
 - `map-asset-provenance`: map and asset provenance constraints.
 - `validation-integration`: worktree, checks, and PR handoff rules.
+- `ustio-continuity`: provenance-aware repair of the inherited Ustio focus/event handoff.

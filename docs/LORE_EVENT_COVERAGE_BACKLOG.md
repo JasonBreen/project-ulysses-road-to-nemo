@@ -23,7 +23,7 @@ This is a source-traceable coverage backlog for the private continuation. It is 
 | Postwar handoff | world_event.2 previously only set ac_continuation_active | Consume the flag exactly once and expose follow-on systems | Implemented; native reachability unverified |
 | Occupied/affected states | Existing transfers to South Belka, Gebet, Recta, FATO | Source-backed borders, cores, administration, resistance, and local consequences | Existing state effects are mod provenance; decisions are provisional |
 | Osea politics | Election content and AI references exist; some branches were commented in the archive | Verify election reachability and postwar coalition/guarantor behavior | Static references; native unverified |
-| Ustio | Shared focus/events, occupation and reconstruction hooks | Trace postwar sovereignty, resistance, and diplomacy | Existing scaffold; chronology open |
+| Ustio | Shared focus/events, occupation and reconstruction hooks; repaired initial focus exposure and guarded postwar tree handoff | Trace postwar sovereignty, resistance, and diplomacy; native focus reachability | Static implementation in this slice; mod provenance only, chronology open |
 | Sapin | Prewar tree, politics, revolt/demobilization content | Connect postwar government and war-cost consequences | Existing scaffold; chronology open |
 | Gebet | Prewar tree, decisions, industrial/resource content | Connect settlement, reconstruction, and diplomatic effects | Existing scaffold; chronology open |
 | Recta | Country history, events, decisions, capitulation hooks; no dedicated focus tree | Write a branch contract before adding a tree or border | Open decision |
@@ -45,6 +45,7 @@ This is a source-traceable coverage backlog for the private continuation. It is 
 | AI war-stage fallback | Provisional gameplay | `ac_on_weekly_on_action.txt` increments a bounded campaign-week variable and fires each missing stage once | Not tested in HOI4 |
 | Victory, Wacht am Wal, and defeat postwar focus arc | Existing outcome flags plus provisional gameplay | `ac_belkan_postwar` focus tree and branch-gated events/decisions; no new borders or canon claims | Not tested in HOI4 |
 | Economy integration | Existing repository economy prototype | All campaign economy effects are guarded by `ac_econ_ready` | Offline economy tests pass; native balance unverified |
+| Ustio scaffold reconnection | Inherited Ustio focus/event files and existing Ratio outcome flags | Restored the initial child focuses, repaired one malformed coordinate, and reloaded the existing branch tree after the shared postwar contract | Static-validated; no new borders/cores; native reachability unverified |
 
 ## Coverage contract for new work
 

@@ -1,0 +1,30 @@
+add_namespace = ac_ustio
+
+country_event = {
+	id = ac_ustio.1
+	title = ac_ustio.1.t
+	desc = ac_ustio.1.d
+	picture = GFX_report_event_treaty_2
+
+	trigger = {
+		has_global_flag = ac_postwar_contract_started
+		NOT = { has_country_flag = ac_ustio_continuation_started }
+	}
+	is_triggered_only = yes
+
+	option = {
+		name = ac_ustio.1.a
+		set_country_flag = ac_ustio_continuation_started
+		if = {
+			limit = { has_country_flag = UST_sold_land_to_ratio_flag }
+			load_focus_tree = { tree = ustio_democracy keep_completed = yes }
+		}
+		else_if = {
+			limit = { has_country_flag = UST_not_sold_land_to_ratio_flag }
+			load_focus_tree = { tree = ustio_non_ali keep_completed = yes }
+		}
+		else = {
+			load_focus_tree = { tree = ustio_start keep_completed = yes }
+		}
+	}
+}

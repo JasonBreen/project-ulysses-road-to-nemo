@@ -48,6 +48,9 @@ Invoke-CheckedCommand 'Pull-request text checks' {
 Write-Host '== Project Ulysses Ustio continuity regressions ==' -ForegroundColor Cyan
 Invoke-CheckedCommand 'Ustio continuity regressions' { & $pythonHost (Join-Path $PSScriptRoot 'Test-UstioContinuity.py') --mod-root $ModRoot }
 
+Write-Host '== Project Ulysses native compatibility contracts ==' -ForegroundColor Cyan
+Invoke-CheckedCommand 'Native compatibility contracts' { & $pythonHost (Join-Path $PSScriptRoot 'Test-NativeCompatibilityContracts.py') --mod-root $ModRoot }
+
 Write-Host '== Project Ulysses static validation ==' -ForegroundColor Cyan
 Invoke-CheckedCommand 'Static validation' { & $scriptHost -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'Test-UlyssesStatic.ps1') -ModRoot $ModRoot }
 

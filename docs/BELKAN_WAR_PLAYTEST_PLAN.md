@@ -157,8 +157,9 @@ All from `pt3_war_day1` with Belka played by a human.
 
 ### W4. AI fallback
 
-- Run Belka as AI from a separate prewar save, switching away (`observe`,
-  or `tag OSE`) before the 60-day `BLK_war_start_timer_dec` mission expires.
+- Run Belka as AI from `pt1_prepared`: take `ac_belkan_war_council` first
+  (the weekly fallback needs `ac_campaign_war_committed`, which the legacy
+  start in W2 never sets), then switch away (`observe`, or `tag OSE`) before the 60-day `BLK_war_start_timer_dec` mission expires.
   Its timeout checks `is_ai` once: it schedules the AI-only events below and
   picks the player or AI collapse mission. A save made after the war starts
   under human control keeps the player mission and lacks the AI events, so
@@ -205,8 +206,8 @@ Three triggers lead to the same follow-up `belka_dlp_war.99`:
 | Event | Condition |
 | --- | --- |
 | `south_belka.2` | Player Belka, at war with OSE, surrender progress above 20% (weekly) |
-| `south_belka.3` | Player mission `BLK_belkan_war_collapse` times out (180 days, plus 30 days for each pillage or war-reparations decision and 10 per `BLK_use_locals`; record the actual expiry date) |
-| `south_belka.4` | AI Belka at war with OSE, and either collapse flag plus surrender above 25%, or surrender above 15% without states 302 and 364 |
+| `south_belka.3` | Player mission `BLK_belkan_war_collapse` times out (180 days, extended by several decisions and event options, for example pillage and war-reparations decisions, `BLK_use_locals`, and option a of `belka_dlp_coup.14`; record the actual expiry date) |
+| `south_belka.4` | AI Belka at war with OSE, and either collapse flag plus surrender above 25%, or surrender above 15% and neither state 302 nor 364 controlled (script uses `NOT` over both, which reads as NOR; record whether it fires after losing one or both) |
 
 - **Check.** SBK receives states 330, 369, 302, 8, 364 and part of the army;
   `south_belka.1` adds SBK to Osea's faction (`.4` does this directly);
@@ -252,16 +253,20 @@ Three triggers lead to the same follow-up `belka_dlp_war.99`:
   - Losing a held state cancels the mission: `.7` adds
     `BLK_last_order_lost_hope`. No scripted ending follows; record how the war
     ends and which postwar option (if any) appears.
-  - Skipping plan focuses for 75 days: `.4` failure event.
+  - Skipping plan focuses for 75 days: `.4` failure event. Its option has no
+    effect, so as with `.7` record how the war ends and which postwar option
+    (if any) appears.
   - SBK surrender above 50% after `BLK_plan_oberon`: `south_belka.5`, Belka
     annexes SBK.
 - **Forced route.** Option b also needs FAT, GEB and REC to be subjects of
   Belka, which `event south_belka.3 BLK` from `pt3_war_day1` does not set up.
   Start from a save where they were puppeted in play (or puppet them with a
-  console command confirmed in preflight). Then run
+  console command confirmed in preflight), then fire `event south_belka.3 BLK`
+  so SBK gets its states and joins Osea, as in the natural route. Then run
   `set_var BLK_wacht_am_wal_var 5` if the build has it, otherwise replay the
-  coup options, and run `event belka_dlp_war.99 BLK` and pick b. Confirm
-  with `get_var` that the counter is 5 before firing `.99`.
+  coup options, and pick b when `belka_dlp_war.99` appears (fired by the split
+  the next day). Confirm with `get_var` that the counter is 5 before it
+  fires.
 - Save `pt5_o4_wacht_start` and `pt5_o4_handoff`.
 
 ### O5. Defeat flag (forced only)
@@ -295,7 +300,7 @@ that forced run as a postwar pass.
 | 2 | On main, the nuclear ending fires `world_event.2` right after loading the lost tree, and the postwar tree replaces it | `events/Belka.txt` (`belka_dlp_war.101`) | O3; fixed by PR #13 |
 | 3 | Uncompleted campaign opening focuses vanish when `belka.13` loads the DLP tree | `events/Belka.txt` (`belka.13`), `common/national_focus/BLK.txt` | P1 |
 | 4 | The legacy war start (`world_event.1`, 1995+) skips the campaign stage decisions | `events/ac_world_events.txt`, `common/decisions/ac_belkan_campaign.txt` | W2 |
-| 5 | Wacht am Wal failure (`belka_wacht_am_wal.7`) has no scripted ending | `events/Belka.txt` | O4 |
+| 5 | Wacht am Wal failures (`belka_wacht_am_wal.4` and `.7`) have no scripted ending | `events/Belka.txt` | O4 |
 | 6 | `world_event.2` is `fire_only_once` and `ac_continuation.1` is blocked once the contract starts, so only the first ending reaches the postwar tree | `events/ac_world_events.txt`, `events/ac_continuation.txt` | all outcomes |
 
 These are read from the scripts, not observed in game. Each needs a native

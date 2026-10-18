@@ -4,15 +4,13 @@
 from __future__ import annotations
 
 import re
+import argparse
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / "mod" / "2985041246"
-
-
-def read(relative: str) -> str:
-    return (MOD / relative).read_text(encoding="utf-8-sig")
+def read(mod_root: Path, relative: str) -> str:
+    return (mod_root / relative).read_text(encoding="utf-8-sig")
 
 
 def event_block(text: str, event_id: str) -> str:
@@ -40,11 +38,16 @@ def require(condition: bool, message: str) -> None:
 
 
 def main() -> int:
-    focus_tree = read("common/national_focus/UST.txt")
-    shared_focus = read("common/national_focus/UST_shared.txt")
-    continuation = read("events/ac_continuation.txt")
-    ustio = read("events/ac_ustio_continuation.txt")
-    localization = read("localisation/english/country_UST_l_english.yml")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--mod-root", type=Path, default=ROOT / "mod" / "2985041246")
+    args = parser.parse_args()
+    mod_root = args.mod_root.resolve()
+
+    focus_tree = read(mod_root, "common/national_focus/UST.txt")
+    shared_focus = read(mod_root, "common/national_focus/UST_shared.txt")
+    continuation = read(mod_root, "events/ac_continuation.txt")
+    ustio = read(mod_root, "events/ac_ustio_continuation.txt")
+    localization = read(mod_root, "localisation/english/country_UST_l_english.yml")
 
     for focus_id in (
         "UST_start",
@@ -69,11 +72,13 @@ def main() -> int:
         shared_focus,
     )
     require(army_debate is not None, "UST_army_debate definition is missing")
+    require("has_global_flag = ac_postwar_contract_started" in army_debate.group(0), "army branch bypasses the postwar handoff gate")
     require("UST_sold_land_to_ratio_flag" in army_debate.group(0), "democracy handoff cannot reach UST_army_debate")
     require("UST_not_sold_land_to_ratio_flag" in army_debate.group(0), "non-aligned handoff cannot reach UST_army_debate")
 
     require("UST = {" in continuation and "id = ac_ustio.1" in continuation, "victory handoff does not dispatch Ustio")
-    require(continuation.count("id = ac_ustio.1 days = 7") == 4, "all four settlement outcomes must dispatch Ustio once")
+    require(continuation.count("id = ac_ustio.1 days = 7") == 3, "only live Ustio settlement outcomes may dispatch Ustio")
+    require("belka_dlp_war.102" in continuation, "annexation guard is not documented at the conventional victory handoff")
 
     handoff = event_block(ustio, "ac_ustio.1")
     require(handoff, "Ustio continuation event is missing")

@@ -45,7 +45,7 @@ This is a source-traceable coverage backlog for the private continuation. It is 
 | AI war-stage fallback | Provisional gameplay | `ac_on_weekly_on_action.txt` increments a bounded campaign-week variable and fires each missing stage once | Not tested in HOI4 |
 | Victory, Wacht am Wal, and defeat postwar focus arc | Existing outcome flags plus provisional gameplay | `ac_belkan_postwar` focus tree and branch-gated events/decisions; no new borders or canon claims | Not tested in HOI4 |
 | Economy integration | Existing repository economy prototype | All campaign economy effects are guarded by `ac_econ_ready` | Offline economy tests pass; native balance unverified |
-| Ustio scaffold reconnection | Inherited Ustio focus/event files and existing Ratio outcome flags | Restored the initial child focuses, repaired one malformed coordinate, and reloaded the existing branch tree after the shared postwar contract | Static-validated; no new borders/cores; native reachability unverified |
+| Ustio scaffold reconnection | Inherited Ustio focus/event files and existing Ratio outcome flags | Restored the initial child focuses, repaired one malformed coordinate, and reloaded the existing branch tree after live postwar outcomes; conventional victory is excluded because the inherited outcome annexes Ustio before handoff | Static-validated; no new borders/cores; native reachability unverified |
 
 ## Coverage contract for new work
 

@@ -33,7 +33,8 @@ Invoke-CheckedCommand 'Pull-request text checks' {
     python (Join-Path $PSScriptRoot 'Test-PullRequestText.py') `
         (Join-Path $repoRoot '.github\pull_request_template.md') `
         (Join-Path $repoRoot '.github\pr-bodies\pr-13.md') `
-        (Join-Path $repoRoot '.github\pr-bodies\pr-14.md')
+        (Join-Path $repoRoot '.github\pr-bodies\pr-14.md') `
+        --self-test
 }
 
 Write-Host '== Project Ulysses Ustio continuity regressions ==' -ForegroundColor Cyan

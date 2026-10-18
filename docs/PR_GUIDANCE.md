@@ -19,7 +19,7 @@ literal escaped newlines or disallowed control characters in prose.
 Before updating a PR body, run:
 
 ```powershell
-py tools\Test-PullRequestText.py .github\pull_request_template.md .github\pr-bodies\pr-13.md .github\pr-bodies\pr-14.md
+py tools\Test-PullRequestText.py --self-test .github\pull_request_template.md .github\pr-bodies\pr-13.md .github\pr-bodies\pr-14.md
 ```
 
 PR descriptions must preserve substantive changes, exact validation evidence,

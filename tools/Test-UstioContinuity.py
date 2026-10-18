@@ -3,12 +3,14 @@
 
 from __future__ import annotations
 
-import re
 import argparse
+import re
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
 def read(mod_root: Path, relative: str) -> str:
     return (mod_root / relative).read_text(encoding="utf-8-sig")
 
@@ -32,9 +34,36 @@ def event_block(text: str, event_id: str) -> str:
     return ""
 
 
+def focus_block(text: str, focus_id: str) -> str:
+    match = re.search(
+        rf"(?m)^shared_focus = \{{\s*\n\s*id = {re.escape(focus_id)}(?:\s|$)",
+        text,
+    )
+    if match is None:
+        return ""
+    opening = text.find("{", match.start())
+    depth = 0
+    for index in range(opening, len(text)):
+        if text[index] == "{":
+            depth += 1
+        elif text[index] == "}":
+            depth -= 1
+            if depth == 0:
+                return text[match.start() : index + 1]
+    return ""
+
+
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise AssertionError(message)
+
+
+def assert_focus_coordinate(text: str, focus_id: str, expected_x: int) -> None:
+    block = focus_block(text, focus_id)
+    require(block, f"focus block is missing: {focus_id}")
+    coordinate = re.search(r"(?m)^\s*x\s*=\s*(-?\d+)\s*$", block)
+    require(coordinate is not None, f"focus coordinate is missing: {focus_id}")
+    require(int(coordinate.group(1)) == expected_x, f"unexpected x coordinate for {focus_id}")
 
 
 def main() -> int:
@@ -65,7 +94,15 @@ def main() -> int:
         )
 
     require("x = -1experience_gain_factor" not in shared_focus, "corrupt Ustio focus coordinate remains")
-    require("x = -1" in shared_focus, "repaired Ustio focus coordinate is missing")
+    assert_focus_coordinate(shared_focus, "UST_to_modernise_fully", -1)
+    mutated_focus = focus_block(shared_focus, "UST_to_modernise_fully").replace("x = -1", "x = 999", 1)
+    mutated_source = shared_focus.replace(focus_block(shared_focus, "UST_to_modernise_fully"), mutated_focus, 1)
+    try:
+        assert_focus_coordinate(mutated_source, "UST_to_modernise_fully", -1)
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("focus-specific coordinate mutation was accepted")
 
     army_debate = re.search(
         r"(?ms)^shared_focus = \{\s*id = UST_army_debate.*?(?=^shared_focus = \{|\Z)",

@@ -78,6 +78,11 @@ def main() -> int:
 
     require("UST = {" in continuation and "id = ac_ustio.1" in continuation, "victory handoff does not dispatch Ustio")
     require(continuation.count("id = ac_ustio.1 days = 7") == 3, "only live Ustio settlement outcomes may dispatch Ustio")
+    guarded_dispatches = re.findall(
+        r"limit = \{ country_exists = UST \}\s*UST = \{\s*country_event = \{ id = ac_ustio\.1 days = 7 \}",
+        continuation,
+    )
+    require(len(guarded_dispatches) == 3, "every Ustio dispatch must be guarded by country_exists = UST")
     require("belka_dlp_war.102" in continuation, "annexation guard is not documented at the conventional victory handoff")
 
     handoff = event_block(ustio, "ac_ustio.1")
@@ -92,8 +97,12 @@ def main() -> int:
     ):
         require(token in handoff, f"Ustio handoff lacks {token}")
 
-    for key in ("ac_ustio.1.t:", "ac_ustio.1.d:", "ac_ustio.1.a:"):
-        require(key in localization, f"Ustio localization key missing: {key}")
+    for key in ("ac_ustio.1.t", "ac_ustio.1.d", "ac_ustio.1.a"):
+        # The reference validator only indexes versioned `key:0 "..."` entries.
+        require(
+            re.search(rf'(?m)^\s*{re.escape(key)}:\d+\s+"[^"]+"', localization) is not None,
+            f"Ustio localization key missing or unversioned: {key}",
+        )
 
     print("Ustio continuity regressions passed: restored scaffold, repaired coordinate, guarded handoff, and localization.")
     return 0

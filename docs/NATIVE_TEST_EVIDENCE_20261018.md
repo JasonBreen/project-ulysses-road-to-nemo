@@ -1,5 +1,12 @@
 # Native HOI4 checkpoint — 2026-10-18
 
+> **REVOKED as acceptance evidence.** The native runs recorded below are quarantined
+> pending a separately coordinated, verified isolated configuration. The wrapper's
+> `gameDataPath` override did not prevent the executable from writing to the normal
+> C: user-data tree, and the review-fix attempt did not produce an isolated
+> `system.log`. Do not use any Millennium Dawn, vanilla, or otherwise unproven
+> run as Ulysses runtime evidence.
+
 This is a compatibility checkpoint, not a claim that the campaign is runtime-complete or release-ready.
 
 ## Source and environment
@@ -22,9 +29,14 @@ This is a compatibility checkpoint, not a claim that the campaign is runtime-com
 - Hardened `tools/Port-NativeEquipmentReferences.py` to use whole-token, idempotent replacements after detecting a repeated `basic_light_tank` rewrite during controlled testing.
 - Removed obsolete descriptor replace paths for quarantined legacy AI/unit schemas.
 
-## Final native checkpoint
+## Prior native observations (quarantined)
 
-The mod activated and reached `[1991.01.01.12]` in the final17 profile. Fresh `error.log` filters reported:
+The final17 profile contained a Ulysses marker and reached `[1991.01.01.12]`, but the
+configuration path was not independently proven at the executable boundary. These
+observations are retained for forensic context only and do not establish Ulysses
+startup compatibility. The later review-fix attempt created no isolated `system.log`.
+
+The prior targeted filters reported:
 
 | Filter | Count |
 |---|---:|
@@ -34,11 +46,11 @@ The mod activated and reached `[1991.01.01.12]` in the final17 profile. Fresh `e
 | Map/state load errors | 0 |
 | Unexpected-token diagnostics | 26 |
 
-The 26 parser diagnostics resolve to installed/base files (`common/doctrines/subdoctrines/sea/*`, `portraits/998_scientist_portraits.txt`, and `gfx/loadingscreens/load_7.dds`), not Ulysses-owned source paths. The exact HOI4 process was closed gracefully, no process remained, and the launcher-settings backup hash was restored.
+The 26 parser diagnostics were attributed to installed/base files (`common/doctrines/subdoctrines/sea/*`, `portraits/998_scientist_portraits.txt`, and `gfx/loadingscreens/load_7.dds`) in the prior log, but that attribution is also quarantined until the isolated configuration is rebuilt. The exact test process was closed gracefully, no process remains, and the launcher-settings backup hash was restored.
 
 ## Controlled no-mod comparison
 
-The no-mod profile `G:\Project-Ulysses-Continuation-native-test-20261018\userdir-native-baseline-20261018` reached `[1936.01.01.12]`. Its observed diagnostics were environment/base-game remote-file allocation exceptions; it produced no invalid-tech, invalid-module, invalid-category, map, or parser matches in the same targeted filters. This control separates the zero Ulysses-owned compatibility counts from general installation diagnostics; it does not make the entire installed-game log clean.
+The no-mod profile reached `[1936.01.01.12]` in the prior run, but it is not an acceptance control while the profile-selection boundary remains unproven. Millennium Dawn or vanilla startup cannot substitute for a verified Ulysses-only run.
 
 ## Static checks
 
@@ -50,4 +62,4 @@ The no-mod profile `G:\Project-Ulysses-Continuation-native-test-20261018\userdir
 
 ## Boundaries
 
-This checkpoint does not validate save/reload, bookmark selection, focus reachability, event reachability, economy on/off behavior in native runtime, representative AI, DLC permutations, or long-run continuity. Those remain the next acceptance gates. No downloaded mod code or executable was installed or run; only the local installed HOI4 executable was used in isolated native startup checks.
+This record does not validate save/reload, bookmark selection, focus reachability, event reachability, economy on/off behavior in native runtime, representative AI, DLC permutations, or long-run continuity. Those remain the next acceptance gates. No downloaded mod code or executable was installed. Further native launches are held pending a verified isolated Ulysses-only configuration.

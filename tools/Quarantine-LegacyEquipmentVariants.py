@@ -61,10 +61,83 @@ def strip_variants(text: str) -> tuple[str, list[str]]:
     return text, removed
 
 
+def variant_blocks(text: str) -> list[tuple[str, str]]:
+    blocks = []
+    for match in START.finditer(text):
+        end = block_end(text, match.start())
+        block = text[match.start():end]
+        name = re.search(r'(?m)^[ \t]*name\s*=\s*"([^"]+)"', block)
+        if name:
+            blocks.append((name.group(1), block))
+    return blocks
+
+
+def referenced_variant_names() -> dict[str, set[str]]:
+    references: dict[str, set[str]] = {}
+    for path in (COUNTRY_DIR.parent / "units").glob("*.txt"):
+        tag = path.name[:3]
+        names = {
+            match.group(2)
+            for match in re.finditer(
+                r'\b(version_name|variant_name)\s*=\s*"([^"]+)"',
+                path.read_text(encoding="utf-8-sig"),
+            )
+        }
+        if names:
+            references.setdefault(tag, set()).update(names)
+    return references
+
+
+def restore_referenced_variants(apply: bool) -> int:
+    references = referenced_variant_names()
+    restored = 0
+    for name in FILES:
+        tag = name[:3]
+        wanted = references.get(tag, set())
+        if not wanted:
+            continue
+        source = ARCHIVE_DIR / f"{Path(name).stem}.equipment_variants.txt"
+        target = COUNTRY_DIR / name
+        if not source.exists():
+            print(f"{name}: archive missing for {sorted(wanted)}")
+            continue
+        existing = {
+            variant_name
+            for variant_name, _ in variant_blocks(target.read_text(encoding="utf-8"))
+        }
+        blocks = [
+            block
+            for variant_name, block in variant_blocks(source.read_text(encoding="utf-8"))
+            if variant_name in wanted and variant_name not in existing
+        ]
+        if not blocks:
+            print(f"{name}: referenced variants already active")
+            continue
+        restored += len(blocks)
+        print(f"{name}: restoring {len(blocks)} referenced variant block(s)")
+        if apply:
+            original = target.read_text(encoding="utf-8")
+            separator = "\n" if original.endswith("\n") else "\n\n"
+            with target.open("w", encoding="utf-8", newline="") as handle:
+                handle.write(original + separator + "\n".join(blocks) + "\n")
+    return restored
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--apply", action="store_true")
+    parser.add_argument(
+        "--restore-referenced",
+        action="store_true",
+        help="restore only variants requested by active unit OOBs",
+    )
     args = parser.parse_args()
+    if args.restore_referenced:
+        restored = restore_referenced_variants(args.apply)
+        print(f"Referenced equipment blocks restored: {restored}")
+        if not args.apply and restored:
+            print("Dry run only; rerun with --restore-referenced --apply to write changes.")
+        return 0
     total = 0
     for name in FILES:
         path = COUNTRY_DIR / name

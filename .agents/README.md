@@ -15,3 +15,4 @@ Available campaign workflows:
 - `map-asset-provenance`: map and asset provenance constraints.
 - `validation-integration`: worktree, checks, and PR handoff rules.
 - `ustio-continuity`: provenance-aware repair of the inherited Ustio focus/event handoff.
+- `native-compatibility`: idempotent native-schema porting, isolated startup evidence, and base-vs-mod diagnostics.

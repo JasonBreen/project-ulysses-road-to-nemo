@@ -133,12 +133,27 @@ def main() -> int:
     for token in (
         "has_global_flag = ac_postwar_contract_started",
         "NOT = { has_country_flag = ac_ustio_continuation_started }",
-        "set_country_flag = ac_ustio_continuation_started",
         "tree = ustio_democracy keep_completed = yes",
         "tree = ustio_non_ali keep_completed = yes",
-        "tree = ustio_start keep_completed = yes",
     ):
         require(token in handoff, f"Ustio handoff lacks {token}")
+    # The one-shot guard may only be consumed once a Ratio outcome exists, and
+    # the no-outcome path must not reload a tree (ustio.1 can still resolve later).
+    for flag in ("UST_sold_land_to_ratio_flag", "UST_not_sold_land_to_ratio_flag"):
+        require(
+            re.search(
+                rf"limit = \{{ has_country_flag = {flag} \}}\s*set_country_flag = ac_ustio_continuation_started",
+                handoff,
+            )
+            is not None,
+            f"handoff guard is not tied to {flag}",
+        )
+    require(handoff.count("set_country_flag = ac_ustio_continuation_started") == 2, "handoff guard is set outside the Ratio branches")
+    require("tree = ustio_start" not in handoff and "else = {" not in handoff, "no-outcome handoff must stay retryable")
+    require(
+        re.search(r"(?m)^\s*country_event\s*=\s*\{\s*id\s*=\s*ustio\.1\b", read(mod_root, "events/Belka.txt")) is not None,
+        "belka.9 no longer schedules the Ratio choice event ustio.1",
+    )
 
     for key in ("ac_ustio.1.t", "ac_ustio.1.d", "ac_ustio.1.a"):
         # The reference validator only indexes versioned `key:0 "..."` entries.

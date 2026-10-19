@@ -150,7 +150,9 @@ def main() -> int:
             f"handoff guard is not tied to {flag}",
         )
     non_ali_branch = re.search(
-        r"limit = \{(?P<body>.*?)\}\s*set_country_flag = ac_ustio_continuation_started\s*load_focus_tree = \{ tree = ustio_non_ali",
+        r"else_if\s*=\s*\{\s*limit = \{(?P<body>.*?)\}\s*"
+        r"set_country_flag = ac_ustio_continuation_started\s*"
+        r"load_focus_tree = \{ tree = ustio_non_ali",
         handoff,
         re.DOTALL,
     )

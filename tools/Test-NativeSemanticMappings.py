@@ -67,7 +67,16 @@ def main() -> int:
     continuation = (MOD / "events" / "ac_ustio_continuation.txt").read_text(encoding="utf-8-sig")
     option = continuation[continuation.index("option = {") :]
     assert "has_country_flag = UST_sold_land_to_ratio_flag }\n\t\t\tset_country_flag = ac_ustio_continuation_started" in option
-    assert "has_country_flag = UST_not_sold_land_to_ratio_flag }\n\t\t\tset_country_flag = ac_ustio_continuation_started" in option
+    non_ali_branch = re.search(
+        r"else_if\s*=\s*\{\s*limit\s*=\s*\{(?P<body>.*?)\}\s*"
+        r"set_country_flag\s*=\s*ac_ustio_continuation_started\s*"
+        r"load_focus_tree\s*=\s*\{\s*tree\s*=\s*ustio_non_ali",
+        option,
+        re.DOTALL,
+    )
+    assert non_ali_branch is not None
+    assert "has_country_flag = UST_not_sold_land_to_ratio_flag" in non_ali_branch.group("body")
+    assert "NOT = { has_country_flag = UST_lost_ratio_war_flag }" in non_ali_branch.group("body")
 
     decisions = read("common/decisions/SAP_decisions.txt")
     moderate = decisions[decisions.index("SAP_court_moderate_support") : decisions.index("SAP_attempt_to_mediate_differences")]

@@ -142,9 +142,9 @@ def main() -> int:
     for flag in ("UST_sold_land_to_ratio_flag", "UST_not_sold_land_to_ratio_flag"):
         require(
             re.search(
-            rf"limit = \{{.*?has_country_flag = {flag}.*?set_country_flag = ac_ustio_continuation_started",
+                rf"limit = \{{.*?has_country_flag = {flag}.*?set_country_flag = ac_ustio_continuation_started",
                 handoff,
-            re.DOTALL,
+                re.DOTALL,
             )
             is not None,
             f"handoff guard is not tied to {flag}",

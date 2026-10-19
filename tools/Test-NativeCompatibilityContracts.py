@@ -158,6 +158,12 @@ def main() -> int:
         "no country history grants infantry_weapons1",
     )
 
+    # The archive's own By Blood Alone aa_lmg grants unlock the light MG modules those
+    # countries' designer aircraft use; only the separate antiair_1 grant maps to land AA.
+    for tag in ("BLK", "FAT", "GEB", "OSE", "SAP", "UST"):
+        history = next((text for name, text in histories.items() if name.startswith(f"{tag} ")), "")
+        require(re.search(r"(?m)^\s*aa_lmg\s*=\s*1", history), f"{tag} lost its By Blood Alone aa_lmg grant")
+
     # ifv1/imv1 are the only unlocks for the custom ifv/imv battalions in starting OOBs
     # (set_oob in country history; event-loaded OOBs are outside this contract).
     for unit, tech in (("ifv", "ifv1"), ("imv", "imv1")):

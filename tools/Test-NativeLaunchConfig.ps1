@@ -134,6 +134,34 @@ foreach ($required in @('descriptor.mod', 'common', 'history', 'map', 'localisat
     }
 }
 
+if ($ExpectedSourceRoot) {
+    # The payload must be a byte-identical copy of the expected source, or the recorded
+    # commit does not identify what was launched.
+    function Get-Manifest {
+        param([Parameter(Mandatory = $true)][string]$Root)
+        $rootPath = (Resolve-Path -LiteralPath $Root).Path.TrimEnd('\')
+        $manifest = @{}
+        foreach ($file in Get-ChildItem -LiteralPath $rootPath -Recurse -File -Force) {
+            $relative = $file.FullName.Substring($rootPath.Length + 1).Replace('\', '/')
+            $manifest[$relative] = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash
+        }
+        return $manifest
+    }
+    $sourceManifest = Get-Manifest $source
+    $payloadManifest = Get-Manifest $payload
+    $missing = @($sourceManifest.Keys | Where-Object { -not $payloadManifest.ContainsKey($_) } | Sort-Object)
+    $extra = @($payloadManifest.Keys | Where-Object { -not $sourceManifest.ContainsKey($_) } | Sort-Object)
+    $changed = @($sourceManifest.Keys | Where-Object { $payloadManifest.ContainsKey($_) -and $payloadManifest[$_] -ne $sourceManifest[$_] } | Sort-Object)
+    if ($missing.Count -or $extra.Count -or $changed.Count) {
+        $sample = @($missing | Select-Object -First 3 | ForEach-Object { "missing:$_" }) +
+            @($extra | Select-Object -First 3 | ForEach-Object { "extra:$_" }) +
+            @($changed | Select-Object -First 3 | ForEach-Object { "changed:$_" })
+        throw "Profile payload does not match ExpectedSourceRoot ($($missing.Count) missing, $($extra.Count) extra, $($changed.Count) changed): $($sample -join ', ')"
+    }
+    Write-Output "PayloadMatchesSource=True"
+    Write-Output "PayloadFiles=$($sourceManifest.Count)"
+}
+
 Write-Output "Profile=$profile"
 Write-Output "Descriptor=$descriptor"
 Write-Output "Payload=$payload"

@@ -142,12 +142,23 @@ def main() -> int:
     for flag in ("UST_sold_land_to_ratio_flag", "UST_not_sold_land_to_ratio_flag"):
         require(
             re.search(
-                rf"limit = \{{ has_country_flag = {flag} \}}\s*set_country_flag = ac_ustio_continuation_started",
+                rf"limit = \{{.*?has_country_flag = {flag}.*?set_country_flag = ac_ustio_continuation_started",
                 handoff,
+                re.DOTALL,
             )
             is not None,
             f"handoff guard is not tied to {flag}",
         )
+    non_ali_branch = re.search(
+        r"limit = \{(?P<body>.*?)\}\s*set_country_flag = ac_ustio_continuation_started\s*load_focus_tree = \{ tree = ustio_non_ali",
+        handoff,
+        re.DOTALL,
+    )
+    require(non_ali_branch is not None, "non-aligned handoff branch is missing")
+    require(
+        "NOT = { has_country_flag = UST_lost_ratio_war_flag }" in non_ali_branch.group("body"),
+        "lost-Ratio-war outcome may reload the non-aligned Ustio tree",
+    )
     require(handoff.count("set_country_flag = ac_ustio_continuation_started") == 2, "handoff guard is set outside the Ratio branches")
     require("tree = ustio_start" not in handoff and "else = {" not in handoff, "no-outcome handoff must stay retryable")
     require(

@@ -132,6 +132,13 @@ def main() -> int:
     require("prerequisite = { focus = BLK_the_crisis_continues }" in focus, "campaign opening is not attached to the inherited prewar focus")
     require("NOT = { has_decision = ac_belkan_civilian_reserve }" in decisions, "logistics decision is not mutually exclusive")
     require("NOT = { has_decision = ac_belkan_logistics_requisition }" in decisions, "civilian-reserve decision is not mutually exclusive")
+    for decision_id in ("ac_belkan_logistics_requisition", "ac_belkan_civilian_reserve"):
+        opening_decision = named_block(decisions, decision_id)
+        require(opening_decision, f"{decision_id} is missing")
+        require(
+            opening_decision.count("NOT = { has_country_flag = ac_campaign_stage_one_pending }") >= 2,
+            f"{decision_id} can reopen during the delayed stage-one dispatch",
+        )
     require(all(token in weekly for token in ("ac_campaign_war_weeks > 18", "ac_campaign_war_weeks > 22", "ac_campaign_war_weeks > 26")), "AI fallback thresholds are not stage-relative")
     require(not re.search(r"ai_will_do\s*=\s*\{\s*base\s*=", focus), "focus AI weights still use decision syntax")
 

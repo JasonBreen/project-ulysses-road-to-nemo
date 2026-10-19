@@ -14,7 +14,7 @@ This record reconciles the review findings against merged head `2a55a2f1128e3439
 | Local recovery `allowed` depended on a late flag | Confirmed and fixed | `allowed` uses stable FAT/GEB/REC tags; dynamic settlement flags remain in visibility/availability. |
 | Continuation idea descriptions were missing | Confirmed and fixed | Added descriptions for narrow peace, occupation burden, and guarantor ideas. |
 | Wartime ideas survived the postwar handoff | Confirmed and fixed | Added shared `ac_clear_belkan_campaign_ideas` cleanup to all four handoff outcomes. |
-| AI fallbacks raced active decisions | Confirmed and fixed | Weekly thresholds are now 18/24/30 weeks, beyond the 120/150/180-day decision windows. |
+| AI fallbacks raced active decisions | Confirmed and fixed | Weekly thresholds are now `>18`, `>22`, and `>26` weeks, with stage-relative resets and pending locks preventing a fallback or sibling decision during the one-day delayed dispatch. `days_remove` is decision cleanup timing after completion, not an expiry window. |
 | Validator omitted continuation coverage | Confirmed and fixed | Contract now covers continuation decisions, ideas, scripted effects, events, localization, categories, old defeat-story handoff, duplicate keys, AI syntax, and fallback timing. |
 | Aggregate PowerShell wrapper swallowed child failures | Confirmed and fixed | `Run-UlyssesCampaignChecks.ps1` checks `$LASTEXITCODE` after every child; `Test-RunUlyssesCampaignChecks.ps1` injects a failing child and verifies nonzero propagation. |
 | Neutral settlement penalty was not removed | Confirmed and fixed | `ac_campaign.35` removes `ac_postwar_unclassified_settlement`. |
@@ -37,7 +37,7 @@ Native parser, launch, save/load, AI long-run, and gameplay acceptance remain un
 - Stable IDs: preserved `ac_postwar_demobilization` for both the focus and decision objects; the shared localization label avoids renaming either save key.
 - AI fallback timing: `ac_campaign_war_weeks` resets inside each guarded stage event; later fallbacks use relative thresholds `>22` and `>26` after the initial `>18` threshold.
 - Idempotency: stage decisions set a pending transition lock, dispatch their guarded events, and avoid duplicating stage flags, ideas, and economy effects in the decision completion block.
-- Pending transitions: sibling decisions and weekly fallbacks stay blocked until the stage event clears the pending lock; postwar cleanup clears stranded locks.
+- Pending transitions: both opening decisions set and check the shared stage-one pending lock before their one-day delayed dispatch; later decisions and weekly fallbacks remain blocked until the stage event clears its lock, and postwar cleanup clears stranded locks.
 - Validator coverage: all five continuation decisions are enforced, and mutation tests prove removed decision/localization entries fail validation.
 - PowerShell portability: the negative wrapper test resolves the current host and also exercises the available alternate supported host.
 - Focus layout: the inherited `(8,0)` anchor now places the campaign opening at `(12,1)` with non-overlapping child nodes; structural regression coverage computes absolute positions.

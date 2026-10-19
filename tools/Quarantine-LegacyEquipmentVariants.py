@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import textwrap
 from pathlib import Path
 
 
@@ -27,11 +28,21 @@ START = re.compile(r"(?m)^[ \t]*create_equipment_variant\s*=\s*\{")
 
 # Explicit native-port rules.  These are deliberately narrow: unknown legacy
 # tokens remain quarantined instead of being guessed into the active payload.
+# Variant types must be concrete equipment, not archetypes. 1.19 generates
+# medium_plane_scout_plane_airframe_1, small_plane_cas_airframe_1..3 and
+# small_plane_naval_bomber_airframe_1..3 via for_each in x_plane_airframes.txt;
+# there is no small_plane_cas_airframe_0. The archetype keys are mapped back so
+# earlier normalized output is repaired on the next run.
 TYPE_REPLACEMENTS = {
-    "medium_plane_scout_plane_airframe_1": "medium_plane_scout_plane_airframe",
-    "small_plane_cas_airframe_0": "small_plane_cas_airframe",
-    "small_plane_cas_airframe_1": "small_plane_cas_airframe",
-    "small_plane_naval_bomber_airframe_1": "small_plane_naval_bomber_airframe",
+    "small_plane_cas_airframe_0": "small_plane_cas_airframe_1",
+    "medium_plane_scout_plane_airframe": "medium_plane_scout_plane_airframe_1",
+    "small_plane_cas_airframe": "small_plane_cas_airframe_1",
+    "small_plane_naval_bomber_airframe": "small_plane_naval_bomber_airframe_1",
+}
+# OOB wings request a variant by equipment type and version_name, so the same
+# type mapping must reach history/units or the names stop matching.
+OOB_TYPE_REPLACEMENTS = {
+    "small_plane_cas_airframe_0": "small_plane_cas_airframe_1",
 }
 MODULE_REPLACEMENTS = {
     "qaam_1_1x": "rocket_rails",
@@ -186,13 +197,53 @@ def guarded_blocks(blocks: list[str]) -> str:
 
 
 def indent_block(block: str, prefix: str) -> str:
-    return "\n".join(prefix + line if line else line for line in block.rstrip("\r\n").splitlines())
+    # Dedent first so re-running on already-wrapped blocks keeps one level.
+    lines = textwrap.dedent(block.rstrip("\r\n").expandtabs(4)).splitlines()
+    lines = [re.sub(r"^((?:    )+)", lambda m: "\t" * (len(m.group(1)) // 4), line) for line in lines]
+    return "\n".join(prefix + line if line else line for line in lines)
+
+
+# A top-level `if` left holding only its `limit` once its variants were stripped.
+EMPTY_WRAPPER = re.compile(
+    r"(?m)^if\s*=\s*\{\s*limit\s*=\s*\{(?:[^{}]|\{[^{}]*\})*\}\s*\}[ \t]*\r?\n?"
+)
+
+
+OOB_EFFECT = re.compile(r"\bset_(?:air|naval)_oob\b")
+
+
+def first_oob_statement(text: str) -> int:
+    """Start of the top-level statement that first loads an air or naval OOB."""
+    match = OOB_EFFECT.search(text)
+    if match is None:
+        return len(text)
+    depth = 0
+    statement_start = 0
+    index = 0
+    while index < match.start():
+        char = text[index]
+        if char == "#":
+            newline = text.find("\n", index)
+            index = match.start() if newline < 0 else newline
+            continue
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+        elif char == "\n" and depth == 0:
+            statement_start = index + 1
+        index += 1
+    return statement_start
 
 
 def replace_active_variants(target: Path, blocks: list[str], apply: bool) -> int:
     original = target.read_text(encoding="utf-8-sig")
     stripped, _ = strip_variants(original)
-    rendered = stripped.rstrip() + "\n\n" + guarded_blocks(blocks)
+    stripped = EMPTY_WRAPPER.sub("", stripped)
+    # Variants must exist before the OOBs that request them by version_name.
+    insert_at = first_oob_statement(stripped)
+    head, tail = stripped[:insert_at].rstrip(), stripped[insert_at:]
+    rendered = head + "\n\n" + guarded_blocks(blocks) + "\n" + tail
     print(f"{target.name}: native-porting {len(blocks)} variant block(s)")
     if apply:
         with target.open("w", encoding="utf-8", newline="") as handle:
@@ -217,6 +268,7 @@ def referenced_variant_names() -> dict[str, set[str]]:
 
 
 def restore_referenced_variants(apply: bool) -> int:
+    rewrite_oob_types(apply)
     references = referenced_variant_names()
     restored = 0
     for name in FILES:
@@ -241,7 +293,26 @@ def restore_referenced_variants(apply: bool) -> int:
     return restored
 
 
+def rewrite_oob_types(apply: bool) -> int:
+    """Apply OOB_TYPE_REPLACEMENTS to unit OOBs as whole tokens."""
+    changed = 0
+    for path in sorted((COUNTRY_DIR.parent / "units").glob("*.txt")):
+        raw = path.read_bytes()
+        bom = raw.startswith(b"\xef\xbb\xbf")
+        text = raw.decode("utf-8-sig")
+        updated = text
+        for old, new in OOB_TYPE_REPLACEMENTS.items():
+            updated = re.sub(rf"(?<![A-Za-z0-9_]){re.escape(old)}(?![A-Za-z0-9_])", new, updated)
+        if updated != text:
+            changed += 1
+            print(f"{path.name}: OOB equipment types ported")
+            if apply:
+                path.write_bytes((b"\xef\xbb\xbf" if bom else b"") + updated.encode("utf-8"))
+    return changed
+
+
 def normalize_active_variants(apply: bool) -> int:
+    rewrite_oob_types(apply)
     total = 0
     for name in FILES:
         target = COUNTRY_DIR / name

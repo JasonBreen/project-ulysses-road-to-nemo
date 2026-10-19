@@ -11,6 +11,22 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TECH_FOLDER_ROW_LIMIT = 40
+# Modules defined only by the quarantined 1.14 module files (inventory/inherited-legacy/
+# common/units/equipment/modules), i.e. absent from the installed 1.19 game and the mod.
+ARCHIVE_ONLY_MODULES = frozenset("""
+air_air_radar_0 air_air_radar_3 air_ground_radar_3 airframe_delta_wing airframe_flying_wing
+airframe_mod_canards airframe_mod_continuous_curvature airframe_mod_dihedral_wings
+airframe_mod_faceted_frame airframe_mod_folding_wings airframe_reverse_swept_wing
+airframe_straight_wing airframe_swept_wing airframe_variable_swept_wing awacs_radar awacs_radar_2
+awacs_radar_3 awacs_radar_4 awacs_radar_5 awacs_radar_6 awacs_radar_7 gun_pods_1_1x gun_pods_1_2x
+gun_pods_2_1x gun_pods_2_2x hpaa_1_2x hpaa_2_2x hvaa_1_1x hvaa_2_1x lagm_1_1x lagm_2_1x napalm_bombs
+qaam_1_1x qaam_2_1x saam_1_2x saam_2_2x sasm_1_1x sasm_2_1x stealth_coating_1_large
+stealth_coating_1_medium stealth_coating_1_small tank_buster_3 tank_buster_4 tank_buster_5
+tank_buster_6 titanium_armor_large titanium_armor_medium titanium_armor_small unguided_bomb
+unguided_bomb_large
+""".split())
+# Vanilla category tokens the archive copied into enable_equipment_modules lists.
+MISPLACED_CATEGORY_TOKENS = frozenset({"cat_ship_medium_battery", "ship_modules_tech"})
 # Vanilla 1.19 infantry_folder ends at @1946 = row 20; compatibility nodes go below it.
 VANILLA_INFANTRY_LAST_ROW = 20
 
@@ -204,6 +220,23 @@ def main() -> int:
                 depth -= 1
             else:
                 require(depth > 0, f"{name}: create_equipment_variant outside its has_dlc wrapper")
+        # OOBs request designs by version_name, so every variant must precede the
+        # first air/naval OOB load in the same history.
+        oob = re.search(r"\bset_(?:air|naval)_oob\b", code)
+        variants_at = [m.start() for m in re.finditer(r"\bcreate_equipment_variant\s*=", code)]
+        if oob and variants_at:
+            require(max(variants_at) < oob.start(), f"{name}: equipment variants are created after set_air_oob/set_naval_oob")
+        # Variant types are concrete equipment, never archetypes such as small_plane_cas_airframe.
+        for archetype in ("medium_plane_scout_plane_airframe", "small_plane_cas_airframe", "small_plane_naval_bomber_airframe"):
+            require(not re.search(rf"(?m)^\s*type\s*=\s*{archetype}\s*$", code), f"{name}: variant uses archetype {archetype} as its type")
+
+    # Active technologies must not unlock modules (or categories) with no active definition.
+    for path in (mod_root / "common" / "technologies").glob("*.txt"):
+        code = re.sub(r"#[^\n]*", "", read(path))
+        for block in re.findall(r"enable_equipment_modules\s*=\s*\{([^}]*)\}", code):
+            stale = sorted(set(block.split()) & (ARCHIVE_ONLY_MODULES | MISPLACED_CATEGORY_TOKENS))
+            require(not stale, f"{path.name} unlocks modules with no active definition: {stale}")
+
     referenced = set()
     for path in (mod_root / "history" / "units").glob("*.txt"):
         referenced.update(re.findall(r'\bversion_name\s*=\s*"([^"]+)"', read(path)))

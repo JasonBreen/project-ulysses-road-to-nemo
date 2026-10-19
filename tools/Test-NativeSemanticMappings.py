@@ -113,7 +113,8 @@ def main() -> int:
 }
 """
     normalized_sample = variant_tool.normalize_variant_block(legacy_sample)
-    assert "type = medium_plane_scout_plane_airframe" in normalized_sample
+    # Variant types must stay concrete equipment (1.19 generates the _1 airframes), not archetypes.
+    assert re.search(r"type = medium_plane_scout_plane_airframe_1\b", normalized_sample)
     assert "fixed_auxiliary_weapon_slot_1 = rocket_rails" in normalized_sample
     for token in ("qaam_1_1x", "airframe_swept_wing", "airframe_mod_faceted_frame"):
         assert token not in normalized_sample, token
@@ -123,7 +124,10 @@ def main() -> int:
     for token in (*variant_tool.UNSUPPORTED_MODULES, *variant_tool.MODULE_REPLACEMENTS):
         assert token not in active_country_text, token
     for token in variant_tool.TYPE_REPLACEMENTS:
-        assert token not in active_country_text, token
+        assert not re.search(rf"(?m)^\s*type\s*=\s*{re.escape(token)}\s*$", active_country_text), token
+    units_text = "\n".join(path.read_text(encoding="utf-8-sig") for path in (MOD / "history" / "units").glob("*.txt"))
+    for token in variant_tool.OOB_TYPE_REPLACEMENTS:
+        assert not re.search(rf"(?<![A-Za-z0-9_]){re.escape(token)}(?![A-Za-z0-9_])", units_text), token
     assert not re.search(r"(?m)^\s*name_group\s*=\s*(?:FAT|SAP)_", active_country_text)
     assert not re.search(r"(?m)^\s*name_group\s*=\s*\w+_HISTORICAL", active_country_text)
     assert all(

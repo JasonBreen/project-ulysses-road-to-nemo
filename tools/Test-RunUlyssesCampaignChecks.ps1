@@ -18,8 +18,14 @@ if ($alternateHost -and (Test-Path -LiteralPath $alternateHost -PathType Leaf) -
 
 try {
     # Force the first child command to fail. The aggregate wrapper must return
-    # nonzero instead of continuing to later checks and reporting success.
-    Set-Content -LiteralPath (Join-Path $fixture 'python.cmd') -Value "@echo off`r`nexit /b 17" -Encoding ascii
+    # nonzero instead of continuing to later checks and reporting success. On
+    # Windows the wrapper deliberately prefers the `py` launcher, so shadow
+    # both spellings and let normal command precedence select `py.cmd` when
+    # that launcher is available. Shadowing only python.cmd would accidentally
+    # execute the real py.exe and make this negative test pass falsely.
+    $failingLauncher = "@echo off`r`nexit /b 17"
+    Set-Content -LiteralPath (Join-Path $fixture 'py.cmd') -Value $failingLauncher -Encoding ascii
+    Set-Content -LiteralPath (Join-Path $fixture 'python.cmd') -Value $failingLauncher -Encoding ascii
     $env:PATH = "$fixture;$oldPath"
     foreach ($scriptHost in $hostCandidates) {
         Write-Output "Testing aggregate wrapper host: $scriptHost"

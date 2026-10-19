@@ -1,0 +1,31 @@
+add_namespace = ac_ustio
+
+country_event = {
+	id = ac_ustio.1
+	title = ac_ustio.1.t
+	desc = ac_ustio.1.d
+	picture = GFX_report_event_treaty_2
+
+	trigger = {
+		has_global_flag = ac_postwar_contract_started
+		NOT = { has_country_flag = ac_ustio_continuation_started }
+	}
+	is_triggered_only = yes
+
+	option = {
+		name = ac_ustio.1.a
+		if = {
+			limit = { has_country_flag = UST_sold_land_to_ratio_flag }
+			set_country_flag = ac_ustio_continuation_started
+			load_focus_tree = { tree = ustio_democracy keep_completed = yes }
+		}
+		else_if = {
+			limit = { has_country_flag = UST_not_sold_land_to_ratio_flag }
+			set_country_flag = ac_ustio_continuation_started
+			load_focus_tree = { tree = ustio_non_ali keep_completed = yes }
+		}
+		# Without a Ratio outcome (belka.9 -> ustio.1 has not resolved), keep the
+		# current tree and leave the guard unset. A later ustio.1 loads its own
+		# tree and sets the flags UST_army_debate checks after the handoff.
+	}
+}

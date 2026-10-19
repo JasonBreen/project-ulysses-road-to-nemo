@@ -19,14 +19,17 @@ REPLACEMENTS = {
     # Land anti-air (subunit, equipment, buildings); aa_lmg is an aircraft module tech.
     "antiair_1": "interwar_antiair",
     "spg_artillery_1": "basic_medium_art",
-    "infantry_manpats": "infantry_at",
+    # Archive-only equipment; the native anti_air support company uses anti_air_equipment.
+    "mobile_anti_air_equipment_1": "anti_air_equipment_1",
 }
 
 # These IDs remain defined by active technology overrides, by the installed
 # 1.19 game (infantry_weapons1 unlocks infantry_equipment_1), or by
 # ac_native_compatibility.txt (ifv1/imv1 are the only unlocks for the custom
-# ifv/imv battalions in starting OOBs); their grants must stay intact.
-# Histories keep the native mechanised_infantry/armored_car1 grants beside them.
+# ifv/imv battalions in starting OOBs, and infantry_manpats unlocks
+# anti_tank_equipment_1, which vanilla otherwise grants only via
+# interwar_antitank); their grants must stay intact. Histories keep the native
+# mechanised_infantry, armored_car1 and infantry_at grants beside them.
 PRESERVED_ACTIVE_IDS = (
     "basic_medium_battery",
     "improved_airplane_launcher",
@@ -34,6 +37,7 @@ PRESERVED_ACTIVE_IDS = (
     "infantry_weapons1",
     "ifv1",
     "imv1",
+    "infantry_manpats",
 )
 assert not set(PRESERVED_ACTIVE_IDS) & set(REPLACEMENTS)
 

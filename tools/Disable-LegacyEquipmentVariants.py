@@ -1,9 +1,11 @@
-"""Disable inherited pre-1.19 aircraft variants without deleting provenance.
+"""RETIRED: disable inherited pre-1.19 aircraft variants without deleting provenance.
 
-The archive's By Blood Alone branches reference custom aircraft modules that
-are not present in the installed 1.19 schema. The blocks stay in place for a
-future migration, but a contradictory DLC limit prevents them from executing
-while the continuation uses vanilla equipment definitions.
+The archive's By Blood Alone branches once referenced custom aircraft modules
+absent from the installed 1.19 schema, and this tool made them unreachable with
+a contradictory DLC limit. Those variants are now native-ported by
+Quarantine-LegacyEquipmentVariants.py --normalize-active, and the BBA OOBs
+request them by version_name, so applying this transform would disable valid
+designs in every configuration. Only the dry-run report remains.
 """
 
 from __future__ import annotations
@@ -30,6 +32,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--apply", action="store_true", help="write the guarded files")
     args = parser.parse_args()
+    if args.apply:
+        raise SystemExit(
+            "Retired: the BBA variant branches are native-ported; use "
+            "Quarantine-LegacyEquipmentVariants.py --normalize-active instead."
+        )
 
     changed = 0
     for path in sorted(COUNTRY_DIR.glob("*.txt")):

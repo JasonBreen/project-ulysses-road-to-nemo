@@ -75,7 +75,7 @@ def main() -> int:
 
     # The mapper must not rewrite IDs the active technology overrides still define.
     mapper = load_mapper()
-    still_defined = sorted(set(mapper.REPLACEMENTS) & defined_technologies(mod_root) - {"infantry_manpats"})
+    still_defined = sorted(set(mapper.REPLACEMENTS) & defined_technologies(mod_root) )
     require(not still_defined, f"mapper rewrites actively defined technologies: {still_defined}")
     require(mapper.REPLACEMENTS.get("antiair_1") == "interwar_antiair", "antiair_1 must map to the land anti-air technology")
 
@@ -179,6 +179,18 @@ def main() -> int:
         any(re.search(r"(?m)^\s*infantry_weapons1\s*=\s*1", text) for text in histories.values()),
         "no country history grants infantry_weapons1",
     )
+
+    # infantry_manpats is the only active unlock of anti_tank_equipment_1 for starting AT companies.
+    require(
+        sum(len(re.findall(r"(?m)^\s*infantry_manpats\s*=\s*1", text)) for text in histories.values()) >= 18,
+        "infantry_manpats starting grants were rewritten",
+    )
+    # 1.19 accepts air_ground_radar only in special slots; scout planes carry recon_camera as main module.
+    for name, text in histories.items():
+        require(not re.search(r"(?m)^\s*fixed_main_weapon_slot\s*=\s*air_ground_radar_\d", text),
+                f"{name}: air_ground_radar module placed in fixed_main_weapon_slot")
+    units_text = "".join(read(p) for p in (mod_root / "history" / "units").glob("*.txt"))
+    require("mobile_anti_air_equipment_1" not in units_text, "OOB still forces archive-only mobile_anti_air_equipment_1")
 
     # The archive's own By Blood Alone aa_lmg grants unlock the light MG modules those
     # countries' designer aircraft use; only the separate antiair_1 grant maps to land AA.

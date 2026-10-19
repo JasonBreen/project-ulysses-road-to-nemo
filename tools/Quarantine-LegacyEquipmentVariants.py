@@ -170,7 +170,28 @@ def normalize_variant_block(block: str) -> str:
         else:
             line = line.rstrip(" \t")
         lines.append(line)
-    return "".join(lines)
+    return relocate_slot_modules("".join(lines))
+
+
+# Modules whose 1.19 category only fits special_type_slot_N; the main weapon slot
+# then takes the vanilla scout-plane module (see generic_planes.txt AI designs).
+SPECIAL_SLOT_ONLY_MODULES = {"air_ground_radar_1": "recon_camera"}
+
+
+def relocate_slot_modules(block: str) -> str:
+    for module, main_weapon in SPECIAL_SLOT_ONLY_MODULES.items():
+        main = re.search(rf"(?m)^([ \t]*)fixed_main_weapon_slot\s*=\s*{module}\b[^\n]*\n?", block)
+        if not main:
+            continue
+        used = set(re.findall(r"(?m)^\s*(special_type_slot_\d)\s*=", block))
+        free = next((f"special_type_slot_{n}" for n in range(1, 5) if f"special_type_slot_{n}" not in used), None)
+        if free is None:
+            raise ValueError(f"No free special slot for {module}")
+        indent = main.group(1)
+        newline = "\r\n" if main.group(0).endswith("\r\n") else "\n"
+        replacement = f"{indent}fixed_main_weapon_slot = {main_weapon}{newline}{indent}{free} = {module}{newline}"
+        block = block[: main.start()] + replacement + block[main.end():]
+    return block
 
 
 def guard_for_block(block: str) -> str:

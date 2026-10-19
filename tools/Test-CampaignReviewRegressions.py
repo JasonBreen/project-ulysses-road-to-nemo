@@ -143,6 +143,8 @@ def main() -> int:
     require(not re.search(r"ai_will_do\s*=\s*\{\s*base\s*=", focus), "focus AI weights still use decision syntax")
 
     campaign_events = read("events/ac_belkan_campaign.txt")
+    for event_id in ("ac_campaign.20", "ac_campaign.21", "ac_campaign.22", "ac_campaign.23"):
+        require("has_global_flag = belkan_war_is_happening" in event_block(campaign_events, event_id), f"{event_id} can apply stage effects after the war ends")
     for event_id, stage_flag, pending_flag in (
         ("ac_campaign.20", "ac_campaign_stage_one", "ac_campaign_stage_one_pending"),
         ("ac_campaign.21", "ac_campaign_stage_one", "ac_campaign_stage_one_pending"),

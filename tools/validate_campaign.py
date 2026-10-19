@@ -259,6 +259,8 @@ def main() -> int:
             errors.append(f"inherited defeat-story handoff coverage missing: {token}")
     if "country_event = { id = world_event.2 days = 1 }" in nuclear_block:
         errors.append("nuclear ending still fires world_event.2 before the inherited defeat tree")
+    if "country_event = belka_dlp_lost.7" not in lost_focus:
+        errors.append("inherited final defeat focus no longer dispatches belka_dlp_lost.7")
 
     all_new_files = all_required + [weekly, mod / "common" / "national_focus" / "BLK.txt"]
     for path in all_new_files:

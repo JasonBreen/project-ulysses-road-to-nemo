@@ -142,10 +142,12 @@ $locKeys = New-Object System.Collections.Generic.HashSet[string]
 $emptyLocKeys = New-Object System.Collections.Generic.HashSet[string]
 foreach ($file in $localisationFiles) {
     foreach ($line in Get-Content -LiteralPath $file.FullName) {
-        if ($line -match '^\s*([A-Za-z0-9_.-]+):\d+\s+') {
+        # HOI4 accepts both versioned `key:0 "text"` and versionless
+        # `key: "text"` entries; inherited archive files use the latter.
+        if ($line -match '^\s*([A-Za-z0-9_.-]+):\d*\s*"') {
             $key = $Matches[1]
             Add-SetValue $locKeys $key
-            if ($line -match ':\d+\s*""\s*$') { Add-SetValue $emptyLocKeys $key }
+            if ($line -match ':\d*\s*""\s*$') { Add-SetValue $emptyLocKeys $key }
         }
     }
 }

@@ -89,6 +89,12 @@ def main() -> int:
     keys = re.findall(r"(?m)^\s*(\w+)\s*=\s*\{", bonus)[1:]
     require(len(keys) == len(set(keys)), f"duplicate equipment bonus keys: {keys}")
     require("armored_car_equipment" in keys, "IMV production bonus must target armored_car_equipment")
+    # The archive's mot_rockets key meant motorized rocket systems, not towed rockets.
+    artillery = re.search(r"(?m)^\s*sap_concentrated_artillery_production\s*=\s*\{", sapin)
+    require(artillery is not None, "sap_concentrated_artillery_production is missing")
+    artillery_block = braced_block(sapin, artillery.start())
+    require("motorized_rocket_equipment = {" in artillery_block and "rocket_artillery_equipment" not in artillery_block,
+            "artillery production idea must target motorized_rocket_equipment")
 
     # Ustio's MANPATS rewards must stock equipment usable by anti-tank battalions.
     ustio = read(mod_root / "common" / "national_focus" / "UST_shared.txt")

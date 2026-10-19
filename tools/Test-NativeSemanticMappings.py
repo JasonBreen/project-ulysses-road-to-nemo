@@ -103,6 +103,20 @@ def main() -> int:
     # Archived variants are active only after the explicit native-port rules;
     # invalid aircraft modules and unavailable FAT/SAP name groups stay out.
     variant_tool = load_variant_tool()
+    legacy_sample = """create_equipment_variant = {
+\ttype = medium_plane_scout_plane_airframe_1
+\tmodules = {
+\t\tfixed_auxiliary_weapon_slot_1 = qaam_1_1x
+\t\tspecial_type_slot_1 = airframe_swept_wing
+\t\tspecial_type_slot_2 = airframe_mod_faceted_frame
+\t}
+}
+"""
+    normalized_sample = variant_tool.normalize_variant_block(legacy_sample)
+    assert "type = medium_plane_scout_plane_airframe" in normalized_sample
+    assert "fixed_auxiliary_weapon_slot_1 = rocket_rails" in normalized_sample
+    for token in ("qaam_1_1x", "airframe_swept_wing", "airframe_mod_faceted_frame"):
+        assert token not in normalized_sample, token
     active_country_text = "\n".join(
         path.read_text(encoding="utf-8-sig") for path in (MOD / "history" / "countries").glob("*.txt")
     )

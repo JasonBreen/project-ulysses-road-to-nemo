@@ -180,6 +180,30 @@ def main() -> int:
         "no country history grants infantry_weapons1",
     )
 
+    # Compatibility techs stay standalone so they never gate native research.
+    require(not re.search(r"leads_to_tech", compat), "compatibility technologies must not lead into native technologies")
+
+    # Airframe slot rules the blanket module mapping cannot see (plane_airframes.txt):
+    # small/carrier airframes reject strat_weapon bomb bays, carrier small airframes
+    # have two special slots, medium main slots reject CAS modules, large airframes
+    # need the large flying-boat hull.
+    for name, text in histories.items():
+        code = re.sub(r"#[^\n]*", "", text)
+        for match in re.finditer(r"create_equipment_variant\s*=\s*\{", code):
+            block = braced_block(code, match.start())
+            kind = re.search(r"\btype\s*=\s*(\w+)", block)
+            kind = kind.group(1) if kind else ""
+            design = re.search(r'name\s*=\s*"([^"]+)"', block)
+            label = f"{name}: {design.group(1) if design else kind}"
+            if re.match(r"(?:cv_)?small_plane_", kind):
+                require("large_bomb_bay" not in block, f"{label} puts a strat_weapon bomb bay on a small airframe")
+            if kind.startswith("cv_small_plane_airframe"):
+                require(not re.search(r"special_type_slot_[3-9]", block), f"{label} uses a special slot carrier airframes lack")
+            if kind.startswith("medium_plane_airframe"):
+                require(not re.search(r"fixed_main_weapon_slot\s*=\s*tank_buster_", block), f"{label} puts a CAS module in a medium main slot")
+            if kind.startswith("large_plane_"):
+                require("flying_boat_medium" not in block, f"{label} uses the medium flying-boat hull on a large airframe")
+
     # infantry_manpats is the only active unlock of anti_tank_equipment_1 for starting AT companies.
     require(
         sum(len(re.findall(r"(?m)^\s*infantry_manpats\s*=\s*1", text)) for text in histories.values()) >= 18,

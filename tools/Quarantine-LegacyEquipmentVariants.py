@@ -191,6 +191,63 @@ def relocate_slot_modules(block: str) -> str:
         newline = "\r\n" if main.group(0).endswith("\r\n") else "\n"
         replacement = f"{indent}fixed_main_weapon_slot = {main_weapon}{newline}{indent}{free} = {module}{newline}"
         block = block[: main.start()] + replacement + block[main.end():]
+    return fix_airframe_slots(block)
+
+
+# 1.19 slot/category rules (common/units/equipment/plane_airframes.txt) that the
+# blanket module mapping above cannot see, because they depend on the airframe:
+# - small and carrier airframes take cas_weapon, not strat_weapon, in the
+#   auxiliary slot, so the large bomb bay becomes bomb_locks;
+# - carrier small airframes have only special_type_slot_1..2;
+# - a medium airframe's main slot takes fighter/tac weapons only, so a CAS tank
+#   buster moves to a free auxiliary slot behind an aircraft cannon;
+# - large airframes take the large flying-boat hull, not the medium one.
+SMALL_AIRFRAME = re.compile(r"^(?:cv_)?small_plane_")
+SPECIAL_SLOT_COUNT = {"cv_small_plane_airframe": 2}
+
+
+def set_module(block: str, slot: str, module: str) -> str:
+    return re.sub(rf"(?m)^(\s*{slot}\s*=\s*)\w+", rf"\g<1>{module}", block, count=1)
+
+
+def fix_airframe_slots(block: str) -> str:
+    type_match = re.search(r"(?m)^\s*type\s*=\s*(\w+)", block)
+    if not type_match:
+        return block
+    equipment = type_match.group(1)
+    modules = dict(re.findall(r"(?m)^\s*(\w+_slot(?:_\d+)?)\s*=\s*(\w+)", block))
+
+    if SMALL_AIRFRAME.match(equipment):
+        for slot, module in modules.items():
+            if slot.startswith("fixed_auxiliary_weapon_slot") and module == "large_bomb_bay":
+                block = set_module(block, slot, "bomb_locks")
+
+    family = re.sub(r"_\d+$", "", equipment)
+    limit = SPECIAL_SLOT_COUNT.get(family)
+    if limit:
+        used = {int(n) for n in re.findall(r"(?m)^\s*special_type_slot_(\d+)\s*=", block)}
+        for number in sorted(n for n in used if n > limit):
+            free = next((n for n in range(1, limit + 1) if n not in used), None)
+            if free is None:
+                block = re.sub(rf"(?m)^[ \t]*special_type_slot_{number}\s*=[^\n]*\n?", "", block)
+            else:
+                block = re.sub(rf"(?m)^(\s*)special_type_slot_{number}(\s*=)", rf"\g<1>special_type_slot_{free}\2", block)
+                used = (used - {number}) | {free}
+
+    if family == "medium_plane_airframe" and modules.get("fixed_main_weapon_slot") == "tank_buster_1":
+        used = set(modules)
+        free = next((f"fixed_auxiliary_weapon_slot_{n}" for n in range(1, 4) if f"fixed_auxiliary_weapon_slot_{n}" not in used), None)
+        if free is None:
+            raise ValueError("No free auxiliary slot for tank_buster_1")
+        main = re.search(r"(?m)^([ \t]*)fixed_main_weapon_slot\s*=\s*tank_buster_1[^\n]*(\r?\n)", block)
+        indent, newline = main.group(1), main.group(2)
+        block = (block[: main.start()] + f"{indent}fixed_main_weapon_slot = aircraft_cannon_1_2x{newline}"
+                 f"{indent}{free} = tank_buster_1{newline}" + block[main.end():])
+
+    if family.startswith("large_plane_"):
+        for slot, module in modules.items():
+            if slot.startswith("special_type_slot") and module == "flying_boat_medium":
+                block = set_module(block, slot, "flying_boat_large")
     return block
 
 

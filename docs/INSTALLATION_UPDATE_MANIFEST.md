@@ -1,12 +1,12 @@
 # Deferred installation update manifest
 
 This is a source-side checklist only. It deliberately does not modify the
-active HOI4 Documents installation while the user is in multiplayer.
+active HOI4 Documents installation; installation waits for an approved window.
 
 ## Source to install later
 
-- Source worktree: `G:\Project-Ulysses-Continuation-campaign`
-- Branch: `codex/ustio-continuity-slice`
+- Source: a clean checkout of this repository on `main` (or the reviewed
+  branch named in the installation request).
 - Current source head: record the final commit hash immediately before the
   approved installation window.
 - Target mod payload: `mod\2985041246`
@@ -15,7 +15,7 @@ active HOI4 Documents installation while the user is in multiplayer.
 
 ## Deferred copy checklist
 
-1. Confirm the user is out of HOI4 multiplayer and has approved a local
+1. Confirm HOI4 is not running and the user has approved a local
    installation sync.
 2. Re-run `tools\Run-UlyssesCampaignChecks.ps1` against the exact source head.
 3. Copy only the reviewed `mod\2985041246` payload into the private local mod

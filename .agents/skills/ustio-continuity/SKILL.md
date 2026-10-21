@@ -23,7 +23,7 @@ postwar handoffs.
 Minimum checks:
 
 ```powershell
-py tools/Test-UstioContinuity.py
-py tools/validate_campaign.py --mod-root mod\2985041246
-pwsh tools/Run-UlyssesCampaignChecks.ps1
+python tools/Test-UstioContinuity.py
+python tools/validate_campaign.py --mod-root mod\2985041246
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\Run-UlyssesCampaignChecks.ps1
 ```

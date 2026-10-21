@@ -25,5 +25,5 @@ Minimum checks:
 ```powershell
 python tools/Test-UstioContinuity.py
 python tools/validate_campaign.py --mod-root mod\2985041246
-powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\Run-UlyssesCampaignChecks.ps1
+pwsh -NoProfile -File tools/Run-UlyssesCampaignChecks.ps1
 ```

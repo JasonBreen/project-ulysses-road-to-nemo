@@ -160,7 +160,10 @@ foreach ($file in $eventFiles) {
         $clean = Strip-Comment $line
         if ($clean -match '^\s*(?:title|desc|name|custom_effect_tooltip)\s*=\s*([A-Za-z0-9_.-]+)') {
             $key = $Matches[1]
-            if ($key -match '\.') { $eventLocRefs.Add([pscustomobject]@{ Key = $key; File = $file.FullName; Line = $lineNumber }) }
+            # Event localization IDs are not required to contain a dot.  The
+            # original audit silently skipped underscore-only keys such as
+            # custom_effect_tooltip IDs, allowing missing UI text to pass.
+            $eventLocRefs.Add([pscustomobject]@{ Key = $key; File = $file.FullName; Line = $lineNumber })
         }
     }
 }

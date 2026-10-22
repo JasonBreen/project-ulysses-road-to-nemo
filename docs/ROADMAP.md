@@ -30,7 +30,7 @@ Next economy slices remain proposed: native 1.19 acceptance, AI and campaign bal
 ## Continuation and agent tooling added in the postwar slice
 
 - Added docs/LORE_EVENT_COVERAGE_BACKLOG.md with source layers, nation/character/organization/conflict coverage, and explicit 2065/Joker 1 gaps.
-- Added root AGENTS.md and six project-local skills under .agents/skills/ for canon research, HOI4 scripting, map/assets, localization, validation/integration, and Ustio continuity.
+- Added root AGENTS.md and project-local skills under .agents/skills/ for canon research, HOI4 scripting, map/assets, localization, validation/integration, campaign path audit and validation, native compatibility, and Ustio continuity.
 - Added a Ustio-specific continuity agent and skill, plus a dependency-free Ustio regression check wired into the campaign wrapper; this is the repo-local MD-OEM-style tooling requested for the continuation.
 - Connected world_event.2 to branch-aware postwar handoff events for conventional victory, Wacht am Wal, and defeat.
 - Reconnected the inherited Ustio opening focus nodes, repaired a malformed focus coordinate, and added a guarded postwar event that reloads the existing Ustio branch based on its pre-existing Ratio outcome flags. No new Ustio border or core was authored.

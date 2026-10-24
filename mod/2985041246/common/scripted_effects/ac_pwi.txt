@@ -1,0 +1,850 @@
+# Authored gameplay; source: tools/build_peace_we_inherit.py.
+ac_pwi_bound_pressures = {
+	if = { limit = { has_variable = ac_pwi_recovery } clamp_variable = { var = ac_pwi_recovery min = 0 max = 100 } }
+	if = { limit = { has_variable = ac_pwi_confidence } clamp_variable = { var = ac_pwi_confidence min = 0 max = 100 } }
+	if = { limit = { has_variable = ac_pwi_tension } clamp_variable = { var = ac_pwi_tension min = 0 max = 100 } }
+	if = { limit = { has_variable = ac_pwi_preparedness } clamp_variable = { var = ac_pwi_preparedness min = 0 max = 100 } }
+}
+
+ac_pwi_start = {
+	if = {
+		limit = { ac_pwi_participant = yes
+		has_global_flag = ac_postwar_contract_started
+		has_war = no
+		has_capitulated = no
+		OR = { NOT = { original_tag = BLK } has_country_flag = ac_postwar_ready } NOT = { has_country_flag = ac_pwi_started } }
+		set_country_flag = ac_pwi_started
+		set_country_flag = { flag = ac_pwi_first_quarter value = 1 days = 90 }
+		set_variable = { ac_pwi_recovery = 40 }
+		set_variable = { ac_pwi_confidence = 50 }
+		set_variable = { ac_pwi_tension = 30 }
+		if = {
+		    limit = { original_tag = BLK }
+		    if = { limit = { has_global_flag = ac_postwar_defeat } set_variable = { ac_pwi_recovery = 20 } set_variable = { ac_pwi_confidence = 25 } set_variable = { ac_pwi_tension = 65 } }
+		    else_if = { limit = { has_global_flag = ac_postwar_victory } set_variable = { ac_pwi_recovery = 45 } set_variable = { ac_pwi_confidence = 65 } set_variable = { ac_pwi_tension = 55 } }
+		    else_if = { limit = { has_global_flag = ac_postwar_wacht_am_wal } set_variable = { ac_pwi_recovery = 35 } set_variable = { ac_pwi_confidence = 45 } set_variable = { ac_pwi_tension = 40 } }
+		    else = { set_variable = { ac_pwi_recovery = 30 } set_variable = { ac_pwi_confidence = 35 } }
+		}
+		country_event = { id = ac_pwi.1 days = 1 }
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_2_0_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_veterans_resolved } }
+		set_country_flag = ac_pwi_veterans_resolved
+		add_to_variable = { ac_pwi_recovery = 10 }
+		add_to_variable = { ac_pwi_confidence = 8 }
+		add_to_variable = { ac_pwi_tension = -5 }
+		add_political_power = -25
+		add_war_support = -0.02
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_2_1_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_veterans_resolved } }
+		set_country_flag = ac_pwi_veterans_resolved
+		add_to_variable = { ac_pwi_recovery = 2 }
+		add_to_variable = { ac_pwi_confidence = 4 }
+		add_to_variable = { ac_pwi_tension = 8 }
+		add_political_power = -25
+		army_experience = 10
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_3_0_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_emergency_resolved } }
+		set_country_flag = ac_pwi_emergency_resolved
+		add_to_variable = { ac_pwi_recovery = 3 }
+		add_to_variable = { ac_pwi_confidence = 10 }
+		add_to_variable = { ac_pwi_tension = -8 }
+		add_political_power = -35
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_3_1_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_emergency_resolved } }
+		set_country_flag = ac_pwi_emergency_resolved
+		add_to_variable = { ac_pwi_recovery = 5 }
+		add_to_variable = { ac_pwi_confidence = 5 }
+		add_to_variable = { ac_pwi_tension = 7 }
+		add_stability = 0.01
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_50_0_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_tension_incident_resolved } }
+		set_country_flag = ac_pwi_tension_incident_resolved
+		add_to_variable = { ac_pwi_confidence = -5 }
+		add_to_variable = { ac_pwi_tension = -15 }
+		add_political_power = -50
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_50_1_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_tension_incident_resolved } }
+		set_country_flag = ac_pwi_tension_incident_resolved
+		add_to_variable = { ac_pwi_recovery = -5 }
+		add_to_variable = { ac_pwi_confidence = 5 }
+		add_to_variable = { ac_pwi_tension = 5 }
+		add_stability = -0.02
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_51_0_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_confidence_incident_resolved } }
+		set_country_flag = ac_pwi_confidence_incident_resolved
+		add_to_variable = { ac_pwi_recovery = 5 }
+		add_to_variable = { ac_pwi_confidence = 15 }
+		add_to_variable = { ac_pwi_tension = -3 }
+		add_political_power = -75
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_51_1_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_confidence_incident_resolved } }
+		set_country_flag = ac_pwi_confidence_incident_resolved
+		add_to_variable = { ac_pwi_recovery = 3 }
+		add_to_variable = { ac_pwi_confidence = 8 }
+		add_to_variable = { ac_pwi_tension = 5 }
+		add_stability = -0.02
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_blk_ose_accept = {
+	if = {
+		limit = { original_tag = OSE ac_pwi_blk_ose_answerable = yes }
+		clr_global_flag = ac_pwi_blk_ose_pending
+		set_global_flag = ac_pwi_blk_ose_accepted
+		set_global_flag = ac_pwi_blk_ose_active
+		BLK = {
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = OSE modifier = ac_pwi_reconstruction_accord }
+		}
+
+		OSE = {
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = BLK modifier = ac_pwi_reconstruction_accord }
+		}
+
+		BLK = { country_event = { id = ac_pwi.101 days = 1 } }
+	}
+}
+
+ac_pwi_blk_ose_refused = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_ose_pending }
+		clr_global_flag = ac_pwi_blk_ose_pending
+		set_global_flag = ac_pwi_blk_ose_refused
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.102 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_ose_withdrawn = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_ose_pending }
+		clr_global_flag = ac_pwi_blk_ose_pending
+		set_global_flag = ac_pwi_blk_ose_withdrawn
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.102 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_ose_timeout = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_ose_pending }
+		clr_global_flag = ac_pwi_blk_ose_pending
+		set_global_flag = ac_pwi_blk_ose_timeout
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.102 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_ose_invalid = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_ose_pending }
+		clr_global_flag = ac_pwi_blk_ose_pending
+		set_global_flag = ac_pwi_blk_ose_invalid
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.102 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_ose_send = {
+	if = {
+		limit = { original_tag = BLK ac_pwi_blk_ose_eligible = yes NOT = { has_global_flag = ac_pwi_blk_ose_attempted } }
+		set_global_flag = ac_pwi_blk_ose_attempted
+		set_global_flag = ac_pwi_blk_ose_pending
+		set_country_flag = { flag = ac_pwi_blk_ose_window value = 1 days = 60 }
+		OSE = { country_event = { id = ac_pwi.100 days = 1 } }
+	}
+}
+
+ac_pwi_blk_ose_tick = {
+	if = {
+	    limit = { has_global_flag = ac_pwi_blk_ose_pending }
+	    if = { limit = { ac_pwi_blk_ose_eligible = no } ac_pwi_blk_ose_invalid = yes }
+	    else_if = { limit = { NOT = { BLK = { has_country_flag = ac_pwi_blk_ose_window } } } ac_pwi_blk_ose_timeout = yes }
+	}
+	if = {
+	    limit = { has_global_flag = ac_pwi_blk_ose_active ac_pwi_blk_ose_eligible = no }
+	    clr_global_flag = ac_pwi_blk_ose_active
+	    set_global_flag = ac_pwi_blk_ose_ended
+	    if = { limit = { country_exists = BLK } BLK = { remove_opinion_modifier = { target = OSE modifier = ac_pwi_reconstruction_accord } country_event = { id = ac_pwi.103 days = 1 } } }
+	    if = { limit = { country_exists = OSE } OSE = { remove_opinion_modifier = { target = BLK modifier = ac_pwi_reconstruction_accord } } }
+	}
+}
+
+ac_pwi_ose_ust_accept = {
+	if = {
+		limit = { original_tag = UST ac_pwi_ose_ust_answerable = yes }
+		clr_global_flag = ac_pwi_ose_ust_pending
+		set_global_flag = ac_pwi_ose_ust_accepted
+		set_global_flag = ac_pwi_ose_ust_active
+		OSE = {
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = UST modifier = ac_pwi_reconstruction_accord }
+		}
+
+		UST = {
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = OSE modifier = ac_pwi_reconstruction_accord }
+		}
+
+		OSE = { country_event = { id = ac_pwi.105 days = 1 } }
+	}
+}
+
+ac_pwi_ose_ust_refused = {
+	if = {
+		limit = { has_global_flag = ac_pwi_ose_ust_pending }
+		clr_global_flag = ac_pwi_ose_ust_pending
+		set_global_flag = ac_pwi_ose_ust_refused
+		if = { limit = { country_exists = OSE } OSE = { country_event = { id = ac_pwi.106 days = 1 } } }
+	}
+}
+
+ac_pwi_ose_ust_withdrawn = {
+	if = {
+		limit = { has_global_flag = ac_pwi_ose_ust_pending }
+		clr_global_flag = ac_pwi_ose_ust_pending
+		set_global_flag = ac_pwi_ose_ust_withdrawn
+		if = { limit = { country_exists = OSE } OSE = { country_event = { id = ac_pwi.106 days = 1 } } }
+	}
+}
+
+ac_pwi_ose_ust_timeout = {
+	if = {
+		limit = { has_global_flag = ac_pwi_ose_ust_pending }
+		clr_global_flag = ac_pwi_ose_ust_pending
+		set_global_flag = ac_pwi_ose_ust_timeout
+		if = { limit = { country_exists = OSE } OSE = { country_event = { id = ac_pwi.106 days = 1 } } }
+	}
+}
+
+ac_pwi_ose_ust_invalid = {
+	if = {
+		limit = { has_global_flag = ac_pwi_ose_ust_pending }
+		clr_global_flag = ac_pwi_ose_ust_pending
+		set_global_flag = ac_pwi_ose_ust_invalid
+		if = { limit = { country_exists = OSE } OSE = { country_event = { id = ac_pwi.106 days = 1 } } }
+	}
+}
+
+ac_pwi_ose_ust_send = {
+	if = {
+		limit = { original_tag = OSE ac_pwi_ose_ust_eligible = yes NOT = { has_global_flag = ac_pwi_ose_ust_attempted } }
+		set_global_flag = ac_pwi_ose_ust_attempted
+		set_global_flag = ac_pwi_ose_ust_pending
+		set_country_flag = { flag = ac_pwi_ose_ust_window value = 1 days = 60 }
+		UST = { country_event = { id = ac_pwi.104 days = 1 } }
+	}
+}
+
+ac_pwi_ose_ust_tick = {
+	if = {
+	    limit = { has_global_flag = ac_pwi_ose_ust_pending }
+	    if = { limit = { ac_pwi_ose_ust_eligible = no } ac_pwi_ose_ust_invalid = yes }
+	    else_if = { limit = { NOT = { OSE = { has_country_flag = ac_pwi_ose_ust_window } } } ac_pwi_ose_ust_timeout = yes }
+	}
+	if = {
+	    limit = { has_global_flag = ac_pwi_ose_ust_active ac_pwi_ose_ust_eligible = no }
+	    clr_global_flag = ac_pwi_ose_ust_active
+	    set_global_flag = ac_pwi_ose_ust_ended
+	    if = { limit = { country_exists = OSE } OSE = { remove_opinion_modifier = { target = UST modifier = ac_pwi_reconstruction_accord } country_event = { id = ac_pwi.107 days = 1 } } }
+	    if = { limit = { country_exists = UST } UST = { remove_opinion_modifier = { target = OSE modifier = ac_pwi_reconstruction_accord } } }
+	}
+}
+
+ac_pwi_blk_geb_accept = {
+	if = {
+		limit = { original_tag = GEB ac_pwi_blk_geb_answerable = yes }
+		clr_global_flag = ac_pwi_blk_geb_pending
+		set_global_flag = ac_pwi_blk_geb_accepted
+		set_global_flag = ac_pwi_blk_geb_active
+		BLK = {
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = GEB modifier = ac_pwi_reconstruction_accord }
+		}
+
+		GEB = {
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = BLK modifier = ac_pwi_reconstruction_accord }
+		}
+
+		BLK = { country_event = { id = ac_pwi.109 days = 1 } }
+	}
+}
+
+ac_pwi_blk_geb_refused = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_geb_pending }
+		clr_global_flag = ac_pwi_blk_geb_pending
+		set_global_flag = ac_pwi_blk_geb_refused
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.110 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_geb_withdrawn = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_geb_pending }
+		clr_global_flag = ac_pwi_blk_geb_pending
+		set_global_flag = ac_pwi_blk_geb_withdrawn
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.110 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_geb_timeout = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_geb_pending }
+		clr_global_flag = ac_pwi_blk_geb_pending
+		set_global_flag = ac_pwi_blk_geb_timeout
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.110 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_geb_invalid = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_geb_pending }
+		clr_global_flag = ac_pwi_blk_geb_pending
+		set_global_flag = ac_pwi_blk_geb_invalid
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.110 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_geb_send = {
+	if = {
+		limit = { original_tag = BLK ac_pwi_blk_geb_eligible = yes NOT = { has_global_flag = ac_pwi_blk_geb_attempted } }
+		set_global_flag = ac_pwi_blk_geb_attempted
+		set_global_flag = ac_pwi_blk_geb_pending
+		set_country_flag = { flag = ac_pwi_blk_geb_window value = 1 days = 60 }
+		GEB = { country_event = { id = ac_pwi.108 days = 1 } }
+	}
+}
+
+ac_pwi_blk_geb_tick = {
+	if = {
+	    limit = { has_global_flag = ac_pwi_blk_geb_pending }
+	    if = { limit = { ac_pwi_blk_geb_eligible = no } ac_pwi_blk_geb_invalid = yes }
+	    else_if = { limit = { NOT = { BLK = { has_country_flag = ac_pwi_blk_geb_window } } } ac_pwi_blk_geb_timeout = yes }
+	}
+	if = {
+	    limit = { has_global_flag = ac_pwi_blk_geb_active ac_pwi_blk_geb_eligible = no }
+	    clr_global_flag = ac_pwi_blk_geb_active
+	    set_global_flag = ac_pwi_blk_geb_ended
+	    if = { limit = { country_exists = BLK } BLK = { remove_opinion_modifier = { target = GEB modifier = ac_pwi_reconstruction_accord } country_event = { id = ac_pwi.111 days = 1 } } }
+	    if = { limit = { country_exists = GEB } GEB = { remove_opinion_modifier = { target = BLK modifier = ac_pwi_reconstruction_accord } } }
+	}
+}
+
+ac_pwi_blk_sap_accept = {
+	if = {
+		limit = { original_tag = SAP ac_pwi_blk_sap_answerable = yes }
+		clr_global_flag = ac_pwi_blk_sap_pending
+		set_global_flag = ac_pwi_blk_sap_accepted
+		set_global_flag = ac_pwi_blk_sap_active
+		BLK = {
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = SAP modifier = ac_pwi_reconstruction_accord }
+		}
+
+		SAP = {
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = BLK modifier = ac_pwi_reconstruction_accord }
+		}
+
+		BLK = { country_event = { id = ac_pwi.113 days = 1 } }
+	}
+}
+
+ac_pwi_blk_sap_refused = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_sap_pending }
+		clr_global_flag = ac_pwi_blk_sap_pending
+		set_global_flag = ac_pwi_blk_sap_refused
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.114 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_sap_withdrawn = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_sap_pending }
+		clr_global_flag = ac_pwi_blk_sap_pending
+		set_global_flag = ac_pwi_blk_sap_withdrawn
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.114 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_sap_timeout = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_sap_pending }
+		clr_global_flag = ac_pwi_blk_sap_pending
+		set_global_flag = ac_pwi_blk_sap_timeout
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.114 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_sap_invalid = {
+	if = {
+		limit = { has_global_flag = ac_pwi_blk_sap_pending }
+		clr_global_flag = ac_pwi_blk_sap_pending
+		set_global_flag = ac_pwi_blk_sap_invalid
+		if = { limit = { country_exists = BLK } BLK = { country_event = { id = ac_pwi.114 days = 1 } } }
+	}
+}
+
+ac_pwi_blk_sap_send = {
+	if = {
+		limit = { original_tag = BLK ac_pwi_blk_sap_eligible = yes NOT = { has_global_flag = ac_pwi_blk_sap_attempted } }
+		set_global_flag = ac_pwi_blk_sap_attempted
+		set_global_flag = ac_pwi_blk_sap_pending
+		set_country_flag = { flag = ac_pwi_blk_sap_window value = 1 days = 60 }
+		SAP = { country_event = { id = ac_pwi.112 days = 1 } }
+	}
+}
+
+ac_pwi_blk_sap_tick = {
+	if = {
+	    limit = { has_global_flag = ac_pwi_blk_sap_pending }
+	    if = { limit = { ac_pwi_blk_sap_eligible = no } ac_pwi_blk_sap_invalid = yes }
+	    else_if = { limit = { NOT = { BLK = { has_country_flag = ac_pwi_blk_sap_window } } } ac_pwi_blk_sap_timeout = yes }
+	}
+	if = {
+	    limit = { has_global_flag = ac_pwi_blk_sap_active ac_pwi_blk_sap_eligible = no }
+	    clr_global_flag = ac_pwi_blk_sap_active
+	    set_global_flag = ac_pwi_blk_sap_ended
+	    if = { limit = { country_exists = BLK } BLK = { remove_opinion_modifier = { target = SAP modifier = ac_pwi_reconstruction_accord } country_event = { id = ac_pwi.115 days = 1 } } }
+	    if = { limit = { country_exists = SAP } SAP = { remove_opinion_modifier = { target = BLK modifier = ac_pwi_reconstruction_accord } } }
+	}
+}
+
+ac_pwi_sap_ose_accept = {
+	if = {
+		limit = { original_tag = OSE ac_pwi_sap_ose_answerable = yes }
+		clr_global_flag = ac_pwi_sap_ose_pending
+		set_global_flag = ac_pwi_sap_ose_accepted
+		set_global_flag = ac_pwi_sap_ose_active
+		SAP = {
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = OSE modifier = ac_pwi_reconstruction_accord }
+		}
+
+		OSE = {
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = SAP modifier = ac_pwi_reconstruction_accord }
+		}
+
+		SAP = { country_event = { id = ac_pwi.117 days = 1 } }
+	}
+}
+
+ac_pwi_sap_ose_refused = {
+	if = {
+		limit = { has_global_flag = ac_pwi_sap_ose_pending }
+		clr_global_flag = ac_pwi_sap_ose_pending
+		set_global_flag = ac_pwi_sap_ose_refused
+		if = { limit = { country_exists = SAP } SAP = { country_event = { id = ac_pwi.118 days = 1 } } }
+	}
+}
+
+ac_pwi_sap_ose_withdrawn = {
+	if = {
+		limit = { has_global_flag = ac_pwi_sap_ose_pending }
+		clr_global_flag = ac_pwi_sap_ose_pending
+		set_global_flag = ac_pwi_sap_ose_withdrawn
+		if = { limit = { country_exists = SAP } SAP = { country_event = { id = ac_pwi.118 days = 1 } } }
+	}
+}
+
+ac_pwi_sap_ose_timeout = {
+	if = {
+		limit = { has_global_flag = ac_pwi_sap_ose_pending }
+		clr_global_flag = ac_pwi_sap_ose_pending
+		set_global_flag = ac_pwi_sap_ose_timeout
+		if = { limit = { country_exists = SAP } SAP = { country_event = { id = ac_pwi.118 days = 1 } } }
+	}
+}
+
+ac_pwi_sap_ose_invalid = {
+	if = {
+		limit = { has_global_flag = ac_pwi_sap_ose_pending }
+		clr_global_flag = ac_pwi_sap_ose_pending
+		set_global_flag = ac_pwi_sap_ose_invalid
+		if = { limit = { country_exists = SAP } SAP = { country_event = { id = ac_pwi.118 days = 1 } } }
+	}
+}
+
+ac_pwi_sap_ose_send = {
+	if = {
+		limit = { original_tag = SAP ac_pwi_sap_ose_eligible = yes NOT = { has_global_flag = ac_pwi_sap_ose_attempted } }
+		set_global_flag = ac_pwi_sap_ose_attempted
+		set_global_flag = ac_pwi_sap_ose_pending
+		set_country_flag = { flag = ac_pwi_sap_ose_window value = 1 days = 60 }
+		OSE = { country_event = { id = ac_pwi.116 days = 1 } }
+	}
+}
+
+ac_pwi_sap_ose_tick = {
+	if = {
+	    limit = { has_global_flag = ac_pwi_sap_ose_pending }
+	    if = { limit = { ac_pwi_sap_ose_eligible = no } ac_pwi_sap_ose_invalid = yes }
+	    else_if = { limit = { NOT = { SAP = { has_country_flag = ac_pwi_sap_ose_window } } } ac_pwi_sap_ose_timeout = yes }
+	}
+	if = {
+	    limit = { has_global_flag = ac_pwi_sap_ose_active ac_pwi_sap_ose_eligible = no }
+	    clr_global_flag = ac_pwi_sap_ose_active
+	    set_global_flag = ac_pwi_sap_ose_ended
+	    if = { limit = { country_exists = SAP } SAP = { remove_opinion_modifier = { target = OSE modifier = ac_pwi_reconstruction_accord } country_event = { id = ac_pwi.119 days = 1 } } }
+	    if = { limit = { country_exists = OSE } OSE = { remove_opinion_modifier = { target = SAP modifier = ac_pwi_reconstruction_accord } } }
+	}
+}
+
+ac_pwi_sap_geb_accept = {
+	if = {
+		limit = { original_tag = GEB ac_pwi_sap_geb_answerable = yes }
+		clr_global_flag = ac_pwi_sap_geb_pending
+		set_global_flag = ac_pwi_sap_geb_accepted
+		set_global_flag = ac_pwi_sap_geb_active
+		SAP = {
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = GEB modifier = ac_pwi_reconstruction_accord }
+		}
+
+		GEB = {
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			ac_pwi_bound_pressures = yes
+			add_opinion_modifier = { target = SAP modifier = ac_pwi_reconstruction_accord }
+		}
+
+		SAP = { country_event = { id = ac_pwi.121 days = 1 } }
+	}
+}
+
+ac_pwi_sap_geb_refused = {
+	if = {
+		limit = { has_global_flag = ac_pwi_sap_geb_pending }
+		clr_global_flag = ac_pwi_sap_geb_pending
+		set_global_flag = ac_pwi_sap_geb_refused
+		if = { limit = { country_exists = SAP } SAP = { country_event = { id = ac_pwi.122 days = 1 } } }
+	}
+}
+
+ac_pwi_sap_geb_withdrawn = {
+	if = {
+		limit = { has_global_flag = ac_pwi_sap_geb_pending }
+		clr_global_flag = ac_pwi_sap_geb_pending
+		set_global_flag = ac_pwi_sap_geb_withdrawn
+		if = { limit = { country_exists = SAP } SAP = { country_event = { id = ac_pwi.122 days = 1 } } }
+	}
+}
+
+ac_pwi_sap_geb_timeout = {
+	if = {
+		limit = { has_global_flag = ac_pwi_sap_geb_pending }
+		clr_global_flag = ac_pwi_sap_geb_pending
+		set_global_flag = ac_pwi_sap_geb_timeout
+		if = { limit = { country_exists = SAP } SAP = { country_event = { id = ac_pwi.122 days = 1 } } }
+	}
+}
+
+ac_pwi_sap_geb_invalid = {
+	if = {
+		limit = { has_global_flag = ac_pwi_sap_geb_pending }
+		clr_global_flag = ac_pwi_sap_geb_pending
+		set_global_flag = ac_pwi_sap_geb_invalid
+		if = { limit = { country_exists = SAP } SAP = { country_event = { id = ac_pwi.122 days = 1 } } }
+	}
+}
+
+ac_pwi_sap_geb_send = {
+	if = {
+		limit = { original_tag = SAP ac_pwi_sap_geb_eligible = yes NOT = { has_global_flag = ac_pwi_sap_geb_attempted } }
+		set_global_flag = ac_pwi_sap_geb_attempted
+		set_global_flag = ac_pwi_sap_geb_pending
+		set_country_flag = { flag = ac_pwi_sap_geb_window value = 1 days = 60 }
+		GEB = { country_event = { id = ac_pwi.120 days = 1 } }
+	}
+}
+
+ac_pwi_sap_geb_tick = {
+	if = {
+	    limit = { has_global_flag = ac_pwi_sap_geb_pending }
+	    if = { limit = { ac_pwi_sap_geb_eligible = no } ac_pwi_sap_geb_invalid = yes }
+	    else_if = { limit = { NOT = { SAP = { has_country_flag = ac_pwi_sap_geb_window } } } ac_pwi_sap_geb_timeout = yes }
+	}
+	if = {
+	    limit = { has_global_flag = ac_pwi_sap_geb_active ac_pwi_sap_geb_eligible = no }
+	    clr_global_flag = ac_pwi_sap_geb_active
+	    set_global_flag = ac_pwi_sap_geb_ended
+	    if = { limit = { country_exists = SAP } SAP = { remove_opinion_modifier = { target = GEB modifier = ac_pwi_reconstruction_accord } country_event = { id = ac_pwi.123 days = 1 } } }
+	    if = { limit = { country_exists = GEB } GEB = { remove_opinion_modifier = { target = SAP modifier = ac_pwi_reconstruction_accord } } }
+	}
+}
+
+ac_pwi_calendar_start = {
+	if = {
+	    limit = { NOT = { has_country_flag = ac_pwi_calendar_started } }
+	    set_country_flag = ac_pwi_calendar_started
+	    set_variable = { ac_pwi_preparedness = 0 }
+	    set_variable = { ac_pwi_relief_capacity = 0 }
+	    set_variable = { ac_pwi_recovery = 0 }
+	    set_variable = { ac_pwi_confidence = 0 }
+	    set_variable = { ac_pwi_tension = 0 }
+	    # Old saves first loaded after a milestone record it as past, never replay it.
+	    if = { limit = { date > 1999.7.7 } set_country_flag = ac_pwi_warning_seen set_country_flag = ac_pwi_crisis_resolved set_country_flag = ac_pwi_late_calendar }
+	    if = { limit = { date > 1999.11.30 } set_country_flag = ac_pwi_assessment_done }
+	}
+}
+
+ac_pwi_resolve_ulysses = {
+	if = {
+	    limit = { NOT = { has_country_flag = ac_pwi_crisis_resolved } }
+	    set_country_flag = ac_pwi_crisis_resolved
+	    set_variable = { ac_pwi_relief_capacity = ac_pwi_preparedness }
+	    if = { limit = { has_country_flag = ac_pwi_started check_variable = { ac_pwi_recovery > 59 } } add_to_variable = { ac_pwi_relief_capacity = 10 } }
+	    if = { limit = { ac_pwi_has_relief_partner = yes } add_to_variable = { ac_pwi_relief_capacity = 20 } }
+	    if = {
+	        limit = { check_variable = { ac_pwi_relief_capacity > 59 } }
+	        set_country_flag = ac_pwi_relief_resilient
+	        add_timed_idea = { idea = ac_pwi_relief_resilience days = 180 }
+	        if = { limit = { has_country_flag = ac_pwi_started } add_to_variable = { ac_pwi_confidence = 8 } }
+	    }
+	    else = {
+	        set_country_flag = ac_pwi_relief_strained
+	        add_timed_idea = { idea = ac_pwi_relief_strain days = 180 }
+	        if = { limit = { has_country_flag = ac_pwi_started } add_to_variable = { ac_pwi_confidence = -8 } }
+	    }
+	    ac_pwi_bound_pressures = yes
+	    country_event = { id = ac_pwi.71 days = 1 }
+	}
+}
+
+ac_pwi_weekly = {
+	ac_pwi_calendar_start = yes
+	ac_pwi_start = yes
+	ac_pwi_apply_cabinet_choices = yes
+	if = {
+	    limit = { date > 1996.4.19 date < 1999.7.8 NOT = { has_country_flag = ac_pwi_warning_seen } }
+	    set_country_flag = ac_pwi_warning_seen
+	    country_event = { id = ac_pwi.70 days = 1 }
+	}
+	if = { limit = { date > 1999.7.7 NOT = { has_country_flag = ac_pwi_crisis_resolved } } ac_pwi_resolve_ulysses = yes }
+	if = {
+	    limit = { date > 1999.11.30 NOT = { has_country_flag = ac_pwi_assessment_done } }
+	    set_country_flag = ac_pwi_assessment_done
+	    country_event = { id = ac_pwi.72 days = 1 }
+	}
+	if = {
+	    limit = { ac_pwi_active = yes check_variable = { ac_pwi_tension > 74 } NOT = { has_country_flag = ac_pwi_tension_incident_sent } }
+	    set_country_flag = ac_pwi_tension_incident_sent
+	    country_event = { id = ac_pwi.50 days = 1 }
+	}
+	if = {
+	    limit = { ac_pwi_active = yes check_variable = { ac_pwi_confidence < 25 } NOT = { has_country_flag = ac_pwi_confidence_incident_sent } }
+	    set_country_flag = ac_pwi_confidence_incident_sent
+	    country_event = { id = ac_pwi.51 days = 1 }
+	}
+	if = {
+	    limit = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_defeat date > 1996.1.16 date < 1997.1.1 NOT = { has_country_flag = ac_pwi_reform_briefed } }
+	    set_country_flag = ac_pwi_reform_briefed
+	    country_event = { id = ac_pwi.73 days = 1 }
+	}
+	if = {
+	    limit = { original_tag = BLK has_country_flag = ac_pwi_started NOT = { has_country_flag = ac_pwi_aww_observed } OR = { country_exists = AWW has_idea = BLK_awwnb_rebelion } }
+	    set_country_flag = ac_pwi_aww_observed
+	    country_event = { id = ac_pwi.74 days = 1 }
+	}
+	if = {
+	    limit = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_defeat date > 1997.12.31 date < 1999.1.1 NOT = { has_country_flag = ac_pwi_aggressors_briefed } }
+	    set_country_flag = ac_pwi_aggressors_briefed
+	    country_event = { id = ac_pwi.75 days = 1 }
+	}
+	if = {
+	    limit = { OR = { original_tag = FAT original_tag = REC original_tag = SBK } ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_local_briefed } }
+	    set_country_flag = ac_pwi_local_briefed
+	    country_event = { id = ac_pwi.76 days = 1 }
+	}
+	ac_pwi_bound_pressures = yes
+}
+
+ac_pwi_choice_73_0_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_reform_resolved } }
+		set_country_flag = ac_pwi_reform_resolved
+		add_to_variable = { ac_pwi_recovery = 4 }
+		add_to_variable = { ac_pwi_confidence = 6 }
+		add_to_variable = { ac_pwi_tension = -4 }
+		add_political_power = -25
+		air_experience = 10
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_73_1_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_reform_resolved } }
+		set_country_flag = ac_pwi_reform_resolved
+		add_to_variable = { ac_pwi_confidence = 3 }
+		add_to_variable = { ac_pwi_tension = 5 }
+		air_experience = 5
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_74_0_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_aww_response } }
+		set_country_flag = ac_pwi_aww_response
+		add_to_variable = { ac_pwi_confidence = 6 }
+		add_to_variable = { ac_pwi_tension = -5 }
+		add_political_power = -25
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_74_1_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_aww_response } }
+		set_country_flag = ac_pwi_aww_response
+		add_to_variable = { ac_pwi_confidence = 2 }
+		add_to_variable = { ac_pwi_tension = 3 }
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_75_0_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_aggressors_resolved } }
+		set_country_flag = ac_pwi_aggressors_resolved
+		add_to_variable = { ac_pwi_recovery = 5 }
+		add_to_variable = { ac_pwi_confidence = 4 }
+		add_to_variable = { ac_pwi_tension = -5 }
+		air_experience = 5
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_75_1_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_aggressors_resolved } }
+		set_country_flag = ac_pwi_aggressors_resolved
+		add_to_variable = { ac_pwi_recovery = -2 }
+		add_to_variable = { ac_pwi_confidence = 4 }
+		add_to_variable = { ac_pwi_tension = 5 }
+		air_experience = 10
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_76_0_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_local_response } }
+		set_country_flag = ac_pwi_local_response
+		add_to_variable = { ac_pwi_recovery = 10 }
+		add_to_variable = { ac_pwi_confidence = 4 }
+		add_to_variable = { ac_pwi_tension = -5 }
+		add_political_power = -25
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_choice_76_1_apply = {
+	if = {
+		limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_local_response } }
+		set_country_flag = ac_pwi_local_response
+		add_to_variable = { ac_pwi_recovery = 4 }
+		add_to_variable = { ac_pwi_confidence = 6 }
+		add_to_variable = { ac_pwi_tension = 5 }
+		ac_pwi_bound_pressures = yes
+	}
+}
+
+ac_pwi_apply_cabinet_choices = {
+	if = {
+		limit = { ac_pwi_active = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_2_0 } ac_pwi_choice_2_0_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_2_1 } ac_pwi_choice_2_1_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_3_0 } ac_pwi_choice_3_0_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_3_1 } ac_pwi_choice_3_1_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_50_0 } ac_pwi_choice_50_0_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_50_1 } ac_pwi_choice_50_1_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_51_0 } ac_pwi_choice_51_0_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_51_1 } ac_pwi_choice_51_1_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_73_0 } ac_pwi_choice_73_0_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_73_1 } ac_pwi_choice_73_1_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_74_0 } ac_pwi_choice_74_0_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_74_1 } ac_pwi_choice_74_1_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_75_0 } ac_pwi_choice_75_0_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_75_1 } ac_pwi_choice_75_1_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_76_0 } ac_pwi_choice_76_0_apply = yes }
+		if = { limit = { has_country_flag = ac_pwi_choice_76_1 } ac_pwi_choice_76_1_apply = yes }
+	}
+}

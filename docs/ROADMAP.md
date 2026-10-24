@@ -1,5 +1,14 @@
 # Implementation roadmap
 
+## The Peace We Inherit — authored expansion
+
+All four approved slices are present in source: Belka's outcome and policy
+branches; Osea/Ustio; Sapin/Gebet and local responses; and the 1996–1999
+preparedness/relief arc. [Content, provenance, coefficients and acceptance](PEACE_WE_INHERIT.md).
+Static tests cover transitions and references; native parsing, rendering,
+save/load, AI and balance remain open under issue #8. No game installation or
+playset has been changed by this content work.
+
 ## Economic foundation and IDE workspace
 
 Implemented in the isolated `codex/strangereal-economic-core` slice from exact base `c72422d96f6bd9b33e61f725c2cdc8fe198a51d8`:

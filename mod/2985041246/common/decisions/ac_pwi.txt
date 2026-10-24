@@ -1,0 +1,363 @@
+# Authored gameplay; source: tools/build_peace_we_inherit.py.
+ac_pwi_aftermath = {
+	ac_pwi_repair_program = {
+		allowed = { ac_pwi_participant = yes }
+		visible = {  }
+		available = { ac_pwi_active = yes check_variable = { ac_pwi_recovery < 75 } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes check_variable = { ac_pwi_recovery < 75 } }
+				add_to_variable = { ac_pwi_recovery = 8 }
+				add_to_variable = { ac_pwi_confidence = 3 }
+				if = { limit = { ac_econ_ready = yes } ac_econ_set_reconstruction = yes }
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_public_accounts = {
+		allowed = { ac_pwi_participant = yes }
+		visible = {  }
+		available = { ac_pwi_active = yes check_variable = { ac_pwi_confidence < 70 } }
+		cost = 60
+		ai_will_do = { base = 1 }
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes check_variable = { ac_pwi_confidence < 70 } }
+				add_to_variable = { ac_pwi_confidence = 8 }
+				add_to_variable = { ac_pwi_tension = -3 }
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_deescalate = {
+		allowed = { ac_pwi_participant = yes }
+		visible = {  }
+		available = { ac_pwi_active = yes check_variable = { ac_pwi_tension > 49 } }
+		cost = 75
+		ai_will_do = { base = 1 }
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes check_variable = { ac_pwi_tension > 49 } }
+				add_to_variable = { ac_pwi_confidence = -3 }
+				add_to_variable = { ac_pwi_tension = -15 }
+				add_war_support = -0.02
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_rearm = {
+		allowed = { ac_pwi_participant = yes }
+		visible = {  }
+		available = { ac_pwi_active = yes OR = { has_country_flag = ac_pwi_path_revanchist has_country_flag = ac_pwi_containment } check_variable = { ac_pwi_recovery > 24 } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes OR = { has_country_flag = ac_pwi_path_revanchist has_country_flag = ac_pwi_containment } check_variable = { ac_pwi_recovery > 24 } }
+				add_to_variable = { ac_pwi_recovery = -5 }
+				add_to_variable = { ac_pwi_confidence = 3 }
+				add_to_variable = { ac_pwi_tension = 10 }
+				army_experience = 10
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_blk_ose_offer = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = BLK has_country_flag = ac_pwi_started }
+		available = { ac_pwi_active = yes ac_pwi_blk_ose_eligible = yes NOT = { has_global_flag = ac_pwi_blk_ose_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_blk_ose_eligible = yes NOT = { has_global_flag = ac_pwi_blk_ose_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } NOT = { has_country_flag = ac_pwi_blk_ose_offer_taken } }
+				set_country_flag = ac_pwi_blk_ose_offer_taken
+				ac_pwi_blk_ose_send = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_blk_ose_withdraw = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = BLK has_global_flag = ac_pwi_blk_ose_pending }
+		available = { ac_pwi_active = yes ac_pwi_blk_ose_answerable = yes }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_blk_ose_answerable = yes NOT = { has_country_flag = ac_pwi_blk_ose_withdraw_taken } }
+				set_country_flag = ac_pwi_blk_ose_withdraw_taken
+				ac_pwi_blk_ose_withdrawn = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_ose_ust_offer = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = OSE has_country_flag = ac_pwi_started }
+		available = { ac_pwi_active = yes ac_pwi_ose_ust_eligible = yes NOT = { has_global_flag = ac_pwi_ose_ust_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_ose_ust_eligible = yes NOT = { has_global_flag = ac_pwi_ose_ust_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } NOT = { has_country_flag = ac_pwi_ose_ust_offer_taken } }
+				set_country_flag = ac_pwi_ose_ust_offer_taken
+				ac_pwi_ose_ust_send = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_ose_ust_withdraw = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = OSE has_global_flag = ac_pwi_ose_ust_pending }
+		available = { ac_pwi_active = yes ac_pwi_ose_ust_answerable = yes }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_ose_ust_answerable = yes NOT = { has_country_flag = ac_pwi_ose_ust_withdraw_taken } }
+				set_country_flag = ac_pwi_ose_ust_withdraw_taken
+				ac_pwi_ose_ust_withdrawn = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_blk_geb_offer = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = BLK has_country_flag = ac_pwi_started }
+		available = { ac_pwi_active = yes ac_pwi_blk_geb_eligible = yes NOT = { has_global_flag = ac_pwi_blk_geb_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_blk_geb_eligible = yes NOT = { has_global_flag = ac_pwi_blk_geb_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } NOT = { has_country_flag = ac_pwi_blk_geb_offer_taken } }
+				set_country_flag = ac_pwi_blk_geb_offer_taken
+				ac_pwi_blk_geb_send = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_blk_geb_withdraw = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = BLK has_global_flag = ac_pwi_blk_geb_pending }
+		available = { ac_pwi_active = yes ac_pwi_blk_geb_answerable = yes }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_blk_geb_answerable = yes NOT = { has_country_flag = ac_pwi_blk_geb_withdraw_taken } }
+				set_country_flag = ac_pwi_blk_geb_withdraw_taken
+				ac_pwi_blk_geb_withdrawn = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_blk_sap_offer = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = BLK has_country_flag = ac_pwi_started }
+		available = { ac_pwi_active = yes ac_pwi_blk_sap_eligible = yes NOT = { has_global_flag = ac_pwi_blk_sap_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_blk_sap_eligible = yes NOT = { has_global_flag = ac_pwi_blk_sap_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } NOT = { has_country_flag = ac_pwi_blk_sap_offer_taken } }
+				set_country_flag = ac_pwi_blk_sap_offer_taken
+				ac_pwi_blk_sap_send = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_blk_sap_withdraw = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = BLK has_global_flag = ac_pwi_blk_sap_pending }
+		available = { ac_pwi_active = yes ac_pwi_blk_sap_answerable = yes }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_blk_sap_answerable = yes NOT = { has_country_flag = ac_pwi_blk_sap_withdraw_taken } }
+				set_country_flag = ac_pwi_blk_sap_withdraw_taken
+				ac_pwi_blk_sap_withdrawn = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_sap_ose_offer = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = SAP has_country_flag = ac_pwi_started }
+		available = { ac_pwi_active = yes ac_pwi_sap_ose_eligible = yes NOT = { has_global_flag = ac_pwi_sap_ose_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_sap_ose_eligible = yes NOT = { has_global_flag = ac_pwi_sap_ose_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } NOT = { has_country_flag = ac_pwi_sap_ose_offer_taken } }
+				set_country_flag = ac_pwi_sap_ose_offer_taken
+				ac_pwi_sap_ose_send = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_sap_ose_withdraw = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = SAP has_global_flag = ac_pwi_sap_ose_pending }
+		available = { ac_pwi_active = yes ac_pwi_sap_ose_answerable = yes }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_sap_ose_answerable = yes NOT = { has_country_flag = ac_pwi_sap_ose_withdraw_taken } }
+				set_country_flag = ac_pwi_sap_ose_withdraw_taken
+				ac_pwi_sap_ose_withdrawn = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_sap_geb_offer = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = SAP has_country_flag = ac_pwi_started }
+		available = { ac_pwi_active = yes ac_pwi_sap_geb_eligible = yes NOT = { has_global_flag = ac_pwi_sap_geb_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_sap_geb_eligible = yes NOT = { has_global_flag = ac_pwi_sap_geb_attempted } NOT = { has_country_flag = ac_pwi_path_revanchist } check_variable = { ac_pwi_tension < 75 } NOT = { has_country_flag = ac_pwi_sap_geb_offer_taken } }
+				set_country_flag = ac_pwi_sap_geb_offer_taken
+				ac_pwi_sap_geb_send = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_sap_geb_withdraw = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { original_tag = SAP has_global_flag = ac_pwi_sap_geb_pending }
+		available = { ac_pwi_active = yes ac_pwi_sap_geb_answerable = yes }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_active = yes ac_pwi_sap_geb_answerable = yes NOT = { has_country_flag = ac_pwi_sap_geb_withdraw_taken } }
+				set_country_flag = ac_pwi_sap_geb_withdraw_taken
+				ac_pwi_sap_geb_withdrawn = yes
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_civil_defense = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { has_country_flag = ac_pwi_calendar_started date > 1996.4.19 date < 1999.7.8 }
+		available = { ac_pwi_calendar_peace = yes date > 1996.4.19 date < 1999.7.8 NOT = { has_country_flag = ac_pwi_crisis_resolved } NOT = { has_country_flag = ac_pwi_capacity_committed } NOT = { has_country_flag = ac_pwi_civil_defense } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_calendar_peace = yes date > 1996.4.19 date < 1999.7.8 NOT = { has_country_flag = ac_pwi_crisis_resolved } NOT = { has_country_flag = ac_pwi_capacity_committed } NOT = { has_country_flag = ac_pwi_civil_defense } NOT = { has_country_flag = ac_pwi_civil_defense_taken } }
+				set_country_flag = ac_pwi_civil_defense_taken
+				set_country_flag = ac_pwi_civil_defense
+				set_country_flag = { flag = ac_pwi_capacity_committed value = 1 days = 180 }
+				add_to_variable = { ac_pwi_preparedness = 25 }
+				add_timed_idea = { idea = ac_pwi_civil_preparation days = 180 }
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_logistics = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { has_country_flag = ac_pwi_calendar_started date > 1996.4.19 date < 1999.7.8 }
+		available = { ac_pwi_calendar_peace = yes date > 1996.4.19 date < 1999.7.8 NOT = { has_country_flag = ac_pwi_crisis_resolved } NOT = { has_country_flag = ac_pwi_capacity_committed } NOT = { has_country_flag = ac_pwi_logistics } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_calendar_peace = yes date > 1996.4.19 date < 1999.7.8 NOT = { has_country_flag = ac_pwi_crisis_resolved } NOT = { has_country_flag = ac_pwi_capacity_committed } NOT = { has_country_flag = ac_pwi_logistics } NOT = { has_country_flag = ac_pwi_logistics_taken } }
+				set_country_flag = ac_pwi_logistics_taken
+				set_country_flag = ac_pwi_logistics
+				set_country_flag = { flag = ac_pwi_capacity_committed value = 1 days = 180 }
+				add_to_variable = { ac_pwi_preparedness = 20 }
+				add_timed_idea = { idea = ac_pwi_civil_preparation days = 180 }
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_cooperate = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { has_country_flag = ac_pwi_calendar_started date > 1996.4.19 date < 1999.7.8 }
+		available = { ac_pwi_calendar_peace = yes date > 1996.4.19 date < 1999.7.8 NOT = { has_country_flag = ac_pwi_crisis_resolved } NOT = { has_country_flag = ac_pwi_capacity_committed } NOT = { has_country_flag = ac_pwi_cooperate } ac_pwi_has_relief_partner = yes }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_calendar_peace = yes date > 1996.4.19 date < 1999.7.8 NOT = { has_country_flag = ac_pwi_crisis_resolved } NOT = { has_country_flag = ac_pwi_capacity_committed } NOT = { has_country_flag = ac_pwi_cooperate } ac_pwi_has_relief_partner = yes NOT = { has_country_flag = ac_pwi_cooperate_taken } }
+				set_country_flag = ac_pwi_cooperate_taken
+				set_country_flag = ac_pwi_cooperate
+				set_country_flag = { flag = ac_pwi_capacity_committed value = 1 days = 180 }
+				add_to_variable = { ac_pwi_preparedness = 25 }
+				add_timed_idea = { idea = ac_pwi_civil_preparation days = 180 }
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+
+	ac_pwi_readiness = {
+		allowed = { ac_pwi_participant = yes }
+		visible = { has_country_flag = ac_pwi_calendar_started date > 1996.4.19 date < 1999.7.8 }
+		available = { ac_pwi_calendar_peace = yes date > 1996.4.19 date < 1999.7.8 NOT = { has_country_flag = ac_pwi_crisis_resolved } NOT = { has_country_flag = ac_pwi_capacity_committed } NOT = { has_country_flag = ac_pwi_readiness } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_pwi_calendar_peace = yes date > 1996.4.19 date < 1999.7.8 NOT = { has_country_flag = ac_pwi_crisis_resolved } NOT = { has_country_flag = ac_pwi_capacity_committed } NOT = { has_country_flag = ac_pwi_readiness } NOT = { has_country_flag = ac_pwi_readiness_taken } }
+				set_country_flag = ac_pwi_readiness_taken
+				set_country_flag = ac_pwi_readiness
+				set_country_flag = { flag = ac_pwi_capacity_committed value = 1 days = 180 }
+				add_to_variable = { ac_pwi_preparedness = 10 }
+				add_timed_idea = { idea = ac_pwi_military_preparation days = 180 }
+				army_experience = 10
+				ac_pwi_bound_pressures = yes
+			}
+		}
+	}
+}

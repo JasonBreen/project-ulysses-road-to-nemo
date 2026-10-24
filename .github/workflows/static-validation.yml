@@ -10,6 +10,10 @@ jobs:
     steps:
       - name: Check out private project
         uses: actions/checkout@v4
+      - name: Set up offline contract test runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Run static regression checks
         shell: pwsh
         run: .\tools\Test-UlyssesStatic.ps1 -ModRoot .\mod\2985041246

@@ -7,6 +7,8 @@ without them being visible (no vanilla visuals on screen).
 import os, re, subprocess, sys
 sys.path.insert(0, os.path.dirname(__file__))
 import pdx
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'frontend_briefing'))
+from style_gui import style as briefing_style
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')).replace(os.sep, '/')
 BASELINE = 'c452cf3'  # 'Establish Project Ulysses continuation baseline' (original v0.2 files)
 
@@ -116,6 +118,6 @@ def menu_fixes(s):
 
 
 restore('frontendmainview.gui', {'mainmenu_dlc_ownership', 'change_background'}, menu_fixes)
-restore("frontendgamesetupview.gui", set())
+restore("frontendgamesetupview.gui", set(), briefing_style)
 restore("countrytechtreeview.gui", set())
 

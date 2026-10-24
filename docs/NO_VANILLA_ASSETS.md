@@ -2,6 +2,13 @@
 
 The 1.19 port must not ship copied vanilla HOI4 content or assets. This policy is about files delivered by the mod, not the game engine's normal ability to supply vanilla functionality when the mod does not replace it.
 
+The separate [country-selection briefing repair](FRONTEND_BRIEFING_REPAIR.md)
+replaces visible inherited/fallback chrome on the reported frontend screen with
+original artwork. Its manifest checks actual engine-selected ideology paths,
+transparent flag/value apertures and original layout preservation. A clean copy
+audit alone does not establish that all reachable game visuals are non-vanilla;
+the repair report lists the native screens exercised and remaining coverage.
+
 ## Audit scope
 
 - Candidate inspected: PR #9 Claude baseline at `G:\Project-Ulysses-Continuation\.claude\worktrees\playable-state-ace-combat-readme-73a736`

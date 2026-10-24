@@ -135,5 +135,12 @@ if ($aftermathExitCode -ne 0) {
     exit $aftermathExitCode
 }
 
+Write-Output 'Focus art and Economy Dashboard visual contract audit'
+& $pythonHost (Join-Path $PSScriptRoot 'audit_visual_dependencies.py')
+if ($LASTEXITCODE -ne 0) {
+    Write-Error 'Focus/economy artwork contract audit failed.'
+    exit 1
+}
+
 Write-Output 'Static regression checks passed.'
 exit 0

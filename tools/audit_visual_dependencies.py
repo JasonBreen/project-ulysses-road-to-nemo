@@ -56,7 +56,7 @@ def main():
         # Ignore commented-out definitions; historical #SpriteType blocks
         # must not register as active sprites or engine dependencies.
         source = path.read_text(encoding="utf-8-sig")
-        active = "\\n".join(line.split("#", 1)[0] for line in source.splitlines())
+        active = "\n".join(line.split("#", 1)[0] for line in source.splitlines())
         for block in blocks(active):
             name = NAME_RE.search(block)
             texture = GFX_RE.search(block)

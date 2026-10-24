@@ -115,7 +115,7 @@ def build_core():
     effect("ac_pwi_bound_pressures", "\n".join(
         "if = { limit = { has_variable = ac_pwi_%s } clamp_variable = { var = ac_pwi_%s min = 0 max = 100 } }" % (name, name)
         for name in ("recovery", "confidence", "tension", "preparedness")))
-    effect("ac_pwi_start", once("ac_pwi_started", """set_country_flag = { flag = ac_pwi_first_quarter days = 90 }
+    effect("ac_pwi_start", once("ac_pwi_started", """set_country_flag = { flag = ac_pwi_first_quarter value = 1 days = 90 }
 set_variable = { ac_pwi_recovery = 40 }
 set_variable = { ac_pwi_confidence = 50 }
 set_variable = { ac_pwi_tension = 30 }
@@ -312,7 +312,7 @@ def build_diplomacy():
             block(target, changes(8, 5, -8) + "\nac_pwi_bound_pressures = yes\nadd_opinion_modifier = { target = %s modifier = ac_pwi_reconstruction_accord }" % sender), sender, first + 1)))
         for outcome in ("refused", "withdrawn", "timeout", "invalid"):
             effect(key + "_" + outcome, block("if", "limit = { has_global_flag = %s_pending }\nclr_global_flag = %s_pending\nset_global_flag = %s_%s\nif = { limit = { country_exists = %s } %s = { country_event = { id = ac_pwi.%s days = 1 } } }" % (key, key, key, outcome, sender, sender, first + 2)))
-        effect(key + "_send", block("if", "limit = { original_tag = %s %s_eligible = yes NOT = { has_global_flag = %s_attempted } }\nset_global_flag = %s_attempted\nset_global_flag = %s_pending\nset_country_flag = { flag = %s_window days = 60 }\n%s = { country_event = { id = ac_pwi.%s days = 1 } }" % (sender, key, key, key, key, key, target, first)))
+        effect(key + "_send", block("if", "limit = { original_tag = %s %s_eligible = yes NOT = { has_global_flag = %s_attempted } }\nset_global_flag = %s_attempted\nset_global_flag = %s_pending\nset_country_flag = { flag = %s_window value = 1 days = 60 }\n%s = { country_event = { id = ac_pwi.%s days = 1 } }" % (sender, key, key, key, key, key, target, first)))
         # The country scope is fixed per dyad; no FROM saved-target assumptions.
         effect(key + "_tick", """if = {
     limit = { has_global_flag = KEY_pending }
@@ -373,7 +373,7 @@ def build_calendar():
         condition = before_crisis + " NOT = { has_country_flag = ac_pwi_capacity_committed } NOT = { has_country_flag = ac_pwi_" + suffix + " }"
         if suffix == "cooperate":
             condition += " ac_pwi_has_relief_partner = yes"
-        body = "set_country_flag = ac_pwi_%s\nset_country_flag = { flag = ac_pwi_capacity_committed days = 180 }\nadd_to_variable = { ac_pwi_preparedness = %s }\nadd_timed_idea = { idea = %s days = 180 }" % (suffix, amount, idea)
+        body = "set_country_flag = ac_pwi_%s\nset_country_flag = { flag = ac_pwi_capacity_committed value = 1 days = 180 }\nadd_to_variable = { ac_pwi_preparedness = %s }\nadd_timed_idea = { idea = %s days = 180 }" % (suffix, amount, idea)
         if suffix == "readiness":
             body += "\narmy_experience = 10"
         decision("ac_pwi_" + suffix, title, desc, condition, body, cost=cost,
@@ -487,7 +487,71 @@ def build_ideas():
     OUTPUT["common/ideas/ac_pwi.txt"] = block("ideas", block("country", "\n".join(bodies)))
 
 
+def build_flag_localization():
+    """Engine-generated prerequisite tooltips must not expose script IDs."""
+    labels = {
+        "ac_postwar_contract_started": "The Belkan settlement has been reached",
+        "ac_postwar_ready": "The inherited postwar government is ready",
+        "ac_postwar_defeat": "The war ended in Belkan defeat",
+        "ac_postwar_victory": "The war ended in conventional Belkan victory",
+        "ac_postwar_wacht_am_wal": "The war ended with Wacht am Wal",
+        "ac_postwar_unclassified": "The settlement outcome remains unclassified",
+        "ac_pwi_started": "A postwar reconstruction program has begun",
+        "ac_pwi_calendar_started": "World-crisis monitoring has begun",
+        "ac_pwi_first_quarter": "The first 90 days of reconstruction are still underway",
+        "ac_pwi_capacity_committed": "National emergency capacity is already committed for 180 days",
+        "ac_pwi_outcome_reviewed": "The government has reviewed its war settlement",
+        "ac_pwi_path_negotiated": "The government has committed to negotiated recovery",
+        "ac_pwi_path_authoritarian": "The government has committed to authoritarian consolidation",
+        "ac_pwi_path_revanchist": "The government has committed to revanchist preparation",
+        "ac_pwi_containment": "The government has adopted containment policy",
+        "ac_pwi_warning_seen": "The Ulysses warning has been received",
+        "ac_pwi_crisis_resolved": "The Ulysses relief assessment has been completed",
+        "ac_pwi_assessment_done": "The end-of-1999 assessment has been issued",
+        "ac_pwi_veterans_resolved": "The returning-personnel policy has been resolved",
+        "ac_pwi_emergency_resolved": "The emergency-powers policy has been resolved",
+        "ac_pwi_reform_briefed": "The air-force reform briefing has been issued",
+        "ac_pwi_reform_resolved": "The air-force reform policy has been resolved",
+        "ac_pwi_aggressors_briefed": "The retained-cadres briefing has been issued",
+        "ac_pwi_aggressors_resolved": "The retained-cadres policy has been resolved",
+        "ac_pwi_aww_observed": "The inherited rebellion has been reported",
+        "ac_pwi_aww_response": "The response to the inherited rebellion has been recorded",
+        "ac_pwi_local_briefed": "The regional settlement briefing has been issued",
+        "ac_pwi_local_response": "The regional settlement response has been recorded",
+        "ac_pwi_tension_incident_sent": "A settlement-tension incident has been raised",
+        "ac_pwi_tension_incident_resolved": "The settlement-tension incident has been resolved",
+        "ac_pwi_confidence_incident_sent": "A confidence review has been raised",
+        "ac_pwi_confidence_incident_resolved": "The confidence review has been resolved",
+    }
+    for sender, target in PAIRS:
+        key = "ac_pwi_" + sender.lower() + "_" + target.lower()
+        pair = NAMES[sender] + " and " + NAMES[target]
+        labels.update({
+            key + "_active": pair + " maintain a reconstruction accord",
+            key + "_attempted": "A reconstruction negotiation between " + pair + " has already been attempted",
+            key + "_pending": "The reconstruction offer between " + pair + " awaits a response",
+            key + "_window": "The 60-day response window for " + pair + " remains open",
+        })
+    text = "\n".join(FOCUSES + EFFECTS + TRIGGERS + EVENTS + DECISIONS
+                     + [value for relative, value in OUTPUT.items() if relative.endswith("/ac_pwi.txt")])
+    for key in sorted(set(re.findall(r"has_(?:country|global)_flag\s*=\s*(\w+)", text))):
+        if key in LOC:
+            continue
+        if key.endswith("_done") and key[:-5] in LOC:
+            title = "Completed: " + LOC[key[:-5]]
+        elif key.endswith("_taken") and key[:-6] in LOC:
+            title = "Already authorized: " + LOC[key[:-6]]
+        elif re.fullmatch(r"ac_pwi_choice_\d+_\d+", key):
+            number, index = key.rsplit("_", 2)[1:]
+            title = "Recorded policy: " + LOC["ac_pwi." + number + "." + chr(97 + int(index))]
+        else:
+            assert key in labels, "Missing readable flag requirement: " + key
+            title = labels[key]
+        loc(key, title)
+
+
 def render():
+    build_flag_localization()
     OUTPUT["common/national_focus/ac_pwi.txt"] = "\n".join(FOCUSES)
     OUTPUT["common/scripted_effects/ac_pwi.txt"] = "\n".join(EFFECTS)
     OUTPUT["common/scripted_triggers/ac_pwi.txt"] = "\n".join(TRIGGERS)

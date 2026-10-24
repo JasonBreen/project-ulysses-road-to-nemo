@@ -39,6 +39,7 @@ class Country:
     war: bool = False
     capitulated: bool = False
     flags: dict = field(default_factory=dict)
+    flag_values: dict = field(default_factory=dict)
     variables: dict = field(default_factory=dict)
     ideas: dict = field(default_factory=dict)
     focuses: set = field(default_factory=set)
@@ -68,7 +69,8 @@ class World:
         self.weekly = mapping(load("common/on_actions/ac_pwi.txt")[0][2])
 
     def flag(self, country, key):
-        return key in country.flags and (country.flags[key] is None or country.flags[key] > self.today)
+        return (key in country.flags and country.flag_values.get(key, 1) != 0
+                and (country.flags[key] is None or country.flags[key] > self.today))
 
     def number(self, value, country):
         try:
@@ -141,10 +143,15 @@ class World:
                 if isinstance(value, list):
                     data = fields(value)
                     country.flags[data["flag"]] = self.today + int(data["days"])
+                    # Native 1.19.3 saves an omitted block-form value as zero;
+                    # has_country_flag then fails even before the timer expires.
+                    country.flag_values[data["flag"]] = int(data.get("value", 0))
                 else:
                     country.flags[value] = None
+                    country.flag_values[value] = 1
             elif key == "clr_country_flag":
                 country.flags.pop(value, None)
+                country.flag_values.pop(value, None)
             elif key == "set_global_flag":
                 self.globals.add(value)
             elif key == "clr_global_flag":
@@ -223,6 +230,26 @@ class World:
 
 
 class AftermathTests(unittest.TestCase):
+    def test_block_flags_require_a_nonzero_value_and_keep_their_expiry(self):
+        world = World()
+        country = world.countries["BLK"]
+        world.execute(parse("set_country_flag = { flag = test_timer days = 60 }"), country)
+        self.assertFalse(world.flag(country, "test_timer"))
+        world.execute(parse("set_country_flag = { flag = test_timer value = 1 days = 60 }"), country)
+        self.assertTrue(world.flag(country, "test_timer"))
+        world.today += 60
+        self.assertFalse(world.flag(country, "test_timer"))
+
+    def test_all_shipped_timed_flags_are_explicitly_nonzero(self):
+        def visit(nodes):
+            for key, _, value in nodes:
+                if key == "set_country_flag" and isinstance(value, list):
+                    self.assertEqual("1", fields(value).get("value"), fields(value))
+                if isinstance(value, list):
+                    visit(value)
+        for relative in ("common/scripted_effects/ac_pwi.txt", "common/decisions/ac_pwi.txt", "events/ac_pwi.txt"):
+            visit(load(relative))
+
     def test_nine_outcome_policy_routes_and_duplicate_completion(self):
         endings = {"defeat": ("obligations", "repair", "reform", "neighbors"), "victory": ("administration", "costs", "expectations", "dividend"), "wacht_am_wal": ("terms", "frontier", "recognition", "restraint")}
         for outcome, suffixes in endings.items():
@@ -492,6 +519,8 @@ class AftermathTests(unittest.TestCase):
                 if kind == "option":
                     self.assertIn(mapping(option)["name"], keys)
         new_text = "\n".join(path.read_text(encoding="utf-8-sig") for path in MOD.rglob("ac_pwi.txt"))
+        for flag in set(re.findall(r"has_(?:country|global)_flag\s*=\s*(\w+)", new_text)):
+            self.assertIn(flag, keys, "Raw flag ID in an engine-generated tooltip: " + flag)
         for forbidden in ("declare_war_on", "add_wargoal", "transfer_state", "annex_country", "set_politics", "load_focus_tree", "every_country", "every_state", "launch_nuke"):
             self.assertNotRegex(new_text, r"\b" + forbidden + r"\s*=")
         self.assertNotIn("awwnb.1", new_text)

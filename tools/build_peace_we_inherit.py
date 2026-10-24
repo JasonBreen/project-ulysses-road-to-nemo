@@ -73,7 +73,17 @@ def focus(tag, suffix, title, desc, x, y, prerequisite=None, available="", rewar
     FOCUS_IDS[tag].append(ident)
     loc(ident, title)
     loc(ident + "_desc", desc)
-    body = "id = %s\nicon = GFX_goal_generic_political_reform\nx = %s\ny = %s\ncost = %s\nai_will_do = { factor = 20 }\n" % (ident, x, y, cost)
+    # Use shipped Strangereal art. The old political_reform identifier is not
+    # defined and silently renders the engine's question-mark fallback.
+    subject = (suffix + " " + title).lower()
+    icon = "GFX_focus_generic_globe_osea"
+    if any(word in subject for word in ("military", "forces", "cadres", "frontier", "readiness", "containment")):
+        icon = "GFX_focus_generic_army_defensive"
+    elif any(word in subject for word in ("security", "central", "authoritarian", "emergency")):
+        icon = "GFX_focus_generic_army_internal_security"
+    elif any(word in subject for word in ("agreement", "recognition", "diploma", "dialogue", "neighbors", "commitments")):
+        icon = "GFX_focus_generic_diplomacy_osea"
+    body = "id = %s\nicon = %s\nx = %s\ny = %s\ncost = %s\nai_will_do = { factor = 20 }\n" % (ident, icon, x, y, cost)
     if prerequisite:
         body += "prerequisite = { %s }\n" % " ".join("focus = " + item for item in prerequisite)
     if excludes:

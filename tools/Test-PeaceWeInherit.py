@@ -518,6 +518,20 @@ class AftermathTests(unittest.TestCase):
     def test_generated_files_match_authoring_source(self):
         subprocess.run([sys.executable, str(ROOT / "tools/build_peace_we_inherit.py"), "--check"], check=True)
 
+    def test_focus_art_resolves_to_shipped_strangereal_sprites(self):
+        # spriteType is repeated; preserve every definition rather than the
+        # last entry from a dictionary keyed by the block type.
+        sprites = {mapping(v)["name"].strip('"'): mapping(v)
+                   for k, _, v in load("interface/ac_goals.gfx")[0][2]
+                   if k == "spriteType"}
+        shine = (MOD / "interface/ac_goals_shine.gfx").read_text(encoding="utf-8-sig")
+        for ident, nodes in World().focuses.items():
+            icon = mapping(nodes)["icon"]
+            self.assertIn(icon, sprites, ident)
+            texture = sprites[icon]["texturefile"].strip('"')
+            self.assertTrue((MOD / texture).is_file(), (ident, texture))
+            self.assertIn(icon + "_shine", shine, ident)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

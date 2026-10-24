@@ -4,6 +4,9 @@ This is a future, separately approved HOI4 test plan. It must be run in an
 isolated local environment and recorded as native evidence. Do not infer a pass
 from `Test-UlyssesStatic.ps1`, the campaign contract checker, or the path report.
 
+Routes, conditions and console steps for each branch are in
+[BELKAN_WAR_PLAYTEST_PLAN.md](BELKAN_WAR_PLAYTEST_PLAN.md).
+
 ## Launch and baseline
 
 - [ ] Record HOI4 executable/build, descriptor hash, branch commit, DLC/rules, and clean save/playset context.

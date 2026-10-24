@@ -57,6 +57,9 @@ for source entries, affected namespaces, balance values, compatibility contracts
 and the native acceptance checklist. It extends the existing postwar handoff
 without replacing inherited governments or Ustio branches. The matrix above is
 the earlier coverage baseline; these additions do not establish native reachability.
+The authorized isolated [24 October native session](NATIVE_PEACE_WE_INHERIT_20261024.md)
+adds engine observations and an explicit coverage CSV; seeded aftermath contexts
+do not establish the natural war-to-settlement handoff.
 
 ## Coverage contract for new work
 

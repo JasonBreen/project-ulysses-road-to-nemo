@@ -1,10 +1,14 @@
 # The Peace We Inherit
 
-Implementation of the approved Belkan aftermath expansion, based on main
-`33df8a288be02c1937612847d221224254b48ea9`. All four slices are authored in
-source. Static/offline checks exercise the authored contracts. Native parsing,
-rendering, reachability, AI focus selection, save serialization and balance
-remain unverified. No game installation, playset or user save is changed.
+Implementation of the approved Belkan aftermath expansion, based on verified main
+`3be18ca29d51a295e54d7df6340864be038106bc` (which includes planning reference
+`33df8a288be02c1937612847d221224254b48ea9`). All four slices are authored in
+source. Static/offline checks exercise the authored contracts. The authorized
+isolated native session has exercised startup, presentation, aftermath
+initialization, AI progression, diplomacy and saved state; the detailed evidence
+and unrun acceptance cases are recorded separately below. Full gameplay
+acceptance remains open. The normal installation, playset and user saves are
+protected by before/after preservation checks.
 
 ## Delivered slices
 
@@ -146,7 +150,7 @@ remain outside this expansion. Existing issues #6 (canon), #7 (fiscal), #8
 ## Recorded static evidence — 24 October 2026
 
 - Aggregate campaign checks pass; campaign contract: zero errors and warnings.
-- Aftermath transition suite: 21 tests pass, including nine outcome/policy routes
+- Aftermath transition suite: 24 tests pass, including nine outcome/policy routes
   and all six diplomatic dyads with five terminal results each.
 - Existing campaign review/mutation, Ustio continuity, native compatibility and
   native semantic mapping regressions pass. These are offline/static checks.
@@ -157,7 +161,9 @@ remain outside this expansion. Existing issues #6 (canon), #7 (fiscal), #8
 - Installed-reference asset audit against a frozen `33df8a2` mod snapshot:
   four inherited map text/config matches, zero new vanilla matches, zero
   path-independent asset matches, zero errors and zero warnings.
-- No native HOI4 launch, rendered-UI, save/load, AI or balance acceptance is claimed.
+- Native follow-up on 24 October is recorded in
+  [NATIVE_PEACE_WE_INHERIT_20261024.md](NATIVE_PEACE_WE_INHERIT_20261024.md).
+  Its engine observations are separate from these static checks.
 
 ## Acceptance checklist
 
@@ -169,7 +175,10 @@ preparation locks, pressure bounds, fiscal on/off, deferred cabinet choices,
 focus imports/coordinates, localization and regeneration parity. This is a
 contract harness, not a HOI4 parser or saved-game emulator.
 
-Before claiming playable/native acceptance, separately authorize and perform:
+Native testing was separately authorized on 24 October 2026. The linked native
+report and coverage matrix distinguish completed observations, fixture failures
+and remaining work. Full playable acceptance still requires the applicable
+checks below to pass; authorization is already present for this isolated session:
 
 - Verify isolated payload/source manifests and the actual game configuration.
 - Render each national tree, pressure panel, event options and inherited artwork.
@@ -181,5 +190,10 @@ Before claiming playable/native acceptance, separately authorize and perform:
 - Compare preparedness and partner-loss outcomes; verify late-war calendar behavior.
 - Run an AI campaign through December 1999 and inspect logs and progression.
 
-Native tests have not been run for this expansion. Preserve the normal playset
-and saves; use the approved isolated workflow for any later test.
+The initial authorized native session has completed in the disposable setup,
+including a repaired-build AI run through March 2000 and four save/reload
+milestones. The [native coverage matrix](NATIVE_PEACE_WE_INHERIT_20261024.csv)
+records 12 passed cases, eight partial cases and 46 unrun cases. All 81 normal
+saves and eight protected configurations retain their hashes; normal diagnostic
+logs were refreshed during one launch attempt, as detailed in the report.
+The full branch matrix and balance remain open.

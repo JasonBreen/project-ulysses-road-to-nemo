@@ -21,7 +21,9 @@ instructors and Ulysses in July 1999. All four slices are authored in source;
 postwar policy, pressure indices, reconstruction accords and humanitarian response
 calculations are **provisional gameplay**. Existing victory/Wacht/defeat, monarchy,
 Ratio and annexation behavior remains **mod provenance**. Native gameplay and
-save/load acceptance remain open. No Joker 1 details, future wars, new borders,
+save/load acceptance remain open; the [24 October native report](NATIVE_PEACE_WE_INHERIT_20261024.md)
+records isolated fixture coverage and remaining gaps without changing source layers.
+No Joker 1 details, future wars, new borders,
 or unsourced local impact zones were inferred.
 
 ## Citation rule

@@ -12,6 +12,18 @@ This ledger is a work queue, not a claim that the entries below are settled. Off
 | 2065-12-31 inclusive campaign cutoff | Project requirement / provisional engineering contract | `docs/DESIGN.md` | Engine permission, authored content, and runtime coverage must be reported separately. No invented future lore. |
 | Technology/equipment names through 2065 | Mixed / pending | Current files are mostly inherited IDs with 1991–2005 dates; date syntax validator now covers 1900–2065 | Audit names, localization, provenance, and canon conflicts before adding later-era content. |
 
+## The Peace We Inherit expansion
+
+The [expansion source and implementation ledger](PEACE_WE_INHERIT.md#sources-and-authored-branches)
+records exact official Chronicle entries, affected IDs and adaptations for Lumen,
+AWWNB, the 1996 Rald/Blauvelt reference, the FCU warning, former Belkan aggressor
+instructors and Ulysses in July 1999. All four slices are authored in source;
+postwar policy, pressure indices, reconstruction accords and humanitarian response
+calculations are **provisional gameplay**. Existing victory/Wacht/defeat, monarchy,
+Ratio and annexation behavior remains **mod provenance**. Native gameplay and
+save/load acceptance remain open. No Joker 1 details, future wars, new borders,
+or unsourced local impact zones were inferred.
+
 ## Citation rule
 
 Do not promote a row from pending to official based only on a wiki, fan archive, old mod file, or an unreferenced comment. If no primary source is available, retain the row as user-authored, mod provenance, or provisional gameplay and say so in the implementation note.

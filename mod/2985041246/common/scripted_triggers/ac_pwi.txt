@@ -1,0 +1,104 @@
+# Authored gameplay; source: tools/build_peace_we_inherit.py.
+ac_pwi_participant = {
+	OR = { original_tag = BLK original_tag = OSE original_tag = UST original_tag = SAP original_tag = GEB original_tag = FAT original_tag = REC original_tag = SBK }
+}
+
+ac_pwi_active = {
+	has_country_flag = ac_pwi_started
+	has_war = no
+	has_capitulated = no
+}
+
+ac_pwi_blk_ose_eligible = {
+	country_exists = BLK
+	BLK = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+	country_exists = OSE
+	OSE = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+}
+
+ac_pwi_blk_ose_answerable = {
+	has_global_flag = ac_pwi_blk_ose_pending
+	ac_pwi_blk_ose_eligible = yes
+	BLK = { has_country_flag = ac_pwi_blk_ose_window }
+}
+
+ac_pwi_ose_ust_eligible = {
+	country_exists = OSE
+	OSE = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+	country_exists = UST
+	UST = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+}
+
+ac_pwi_ose_ust_answerable = {
+	has_global_flag = ac_pwi_ose_ust_pending
+	ac_pwi_ose_ust_eligible = yes
+	OSE = { has_country_flag = ac_pwi_ose_ust_window }
+}
+
+ac_pwi_blk_geb_eligible = {
+	country_exists = BLK
+	BLK = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+	country_exists = GEB
+	GEB = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+}
+
+ac_pwi_blk_geb_answerable = {
+	has_global_flag = ac_pwi_blk_geb_pending
+	ac_pwi_blk_geb_eligible = yes
+	BLK = { has_country_flag = ac_pwi_blk_geb_window }
+}
+
+ac_pwi_blk_sap_eligible = {
+	country_exists = BLK
+	BLK = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+	country_exists = SAP
+	SAP = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+}
+
+ac_pwi_blk_sap_answerable = {
+	has_global_flag = ac_pwi_blk_sap_pending
+	ac_pwi_blk_sap_eligible = yes
+	BLK = { has_country_flag = ac_pwi_blk_sap_window }
+}
+
+ac_pwi_sap_ose_eligible = {
+	country_exists = SAP
+	SAP = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+	country_exists = OSE
+	OSE = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+}
+
+ac_pwi_sap_ose_answerable = {
+	has_global_flag = ac_pwi_sap_ose_pending
+	ac_pwi_sap_ose_eligible = yes
+	SAP = { has_country_flag = ac_pwi_sap_ose_window }
+}
+
+ac_pwi_sap_geb_eligible = {
+	country_exists = SAP
+	SAP = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+	country_exists = GEB
+	GEB = { has_country_flag = ac_pwi_started has_war = no has_capitulated = no is_subject = no }
+}
+
+ac_pwi_sap_geb_answerable = {
+	has_global_flag = ac_pwi_sap_geb_pending
+	ac_pwi_sap_geb_eligible = yes
+	SAP = { has_country_flag = ac_pwi_sap_geb_window }
+}
+
+ac_pwi_has_relief_partner = {
+	OR = {
+	AND = { original_tag = BLK OR = { AND = { has_global_flag = ac_pwi_blk_ose_active ac_pwi_blk_ose_eligible = yes } AND = { has_global_flag = ac_pwi_blk_geb_active ac_pwi_blk_geb_eligible = yes } AND = { has_global_flag = ac_pwi_blk_sap_active ac_pwi_blk_sap_eligible = yes } } }
+	AND = { original_tag = OSE OR = { AND = { has_global_flag = ac_pwi_blk_ose_active ac_pwi_blk_ose_eligible = yes } AND = { has_global_flag = ac_pwi_ose_ust_active ac_pwi_ose_ust_eligible = yes } AND = { has_global_flag = ac_pwi_sap_ose_active ac_pwi_sap_ose_eligible = yes } } }
+	AND = { original_tag = UST OR = { AND = { has_global_flag = ac_pwi_ose_ust_active ac_pwi_ose_ust_eligible = yes } } }
+	AND = { original_tag = SAP OR = { AND = { has_global_flag = ac_pwi_blk_sap_active ac_pwi_blk_sap_eligible = yes } AND = { has_global_flag = ac_pwi_sap_ose_active ac_pwi_sap_ose_eligible = yes } AND = { has_global_flag = ac_pwi_sap_geb_active ac_pwi_sap_geb_eligible = yes } } }
+	AND = { original_tag = GEB OR = { AND = { has_global_flag = ac_pwi_blk_geb_active ac_pwi_blk_geb_eligible = yes } AND = { has_global_flag = ac_pwi_sap_geb_active ac_pwi_sap_geb_eligible = yes } } }
+	}
+}
+
+ac_pwi_calendar_peace = {
+	has_country_flag = ac_pwi_calendar_started
+	has_war = no
+	has_capitulated = no
+}

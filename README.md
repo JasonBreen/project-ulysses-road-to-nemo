@@ -151,6 +151,13 @@ This is a **private development fork**, not a packaged public release.
 
 ## ▌ ENGINEERING HANGAR
 
+**Authored aftermath expansion — The Peace We Inherit:** 58 additional focuses
+connect Belka's victory, Wacht am Wal and defeat to political programs, recovery
+and diplomacy with Osea, Ustio, Sapin and Gebet. Preparedness choices lead into
+the 1999 Ulysses relief assessment. [Content and source ledger](docs/PEACE_WE_INHERIT.md).
+The package has offline/static transition coverage; native gameplay, rendering,
+save/load, AI progression and balance remain unverified.
+
 **Compatibility:** HOI4 1.19 mechanics are welcome; Earth/WWII artwork is not. New doctrines, experimental facilities and building types must fit the setting rather than remain visible as vanilla placeholders.
 
 **Experimental economy:** a separately developed, default-off [fiscal prototype](docs/ECONOMY.md) covers budgets, treasury, bounded debt and basic procurement. Its coefficients are provisional gameplay abstractions, **not canonical Strangereal economic data**. Offline/static checks do **not** establish that it has passed HOI4 native runtime and integration tests. [Provenance and attribution](docs/ECONOMY_PROVENANCE.md).

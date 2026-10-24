@@ -120,5 +120,20 @@ if ($BaselineRoot) {
     }
 }
 
+$pythonHost = if ($env:OS -eq 'Windows_NT' -and (Get-Command py -ErrorAction SilentlyContinue)) {
+    'py'
+} elseif (Get-Command python -ErrorAction SilentlyContinue) {
+    'python'
+} else {
+    throw 'Could not locate Python for aftermath contract checks.'
+}
+Write-Output 'The Peace We Inherit: offline transition and content checks'
+& $pythonHost (Join-Path $PSScriptRoot 'Test-PeaceWeInherit.py') --mod-root $ModRoot
+$aftermathExitCode = $LASTEXITCODE
+if ($aftermathExitCode -ne 0) {
+    Write-Error "Aftermath contract checks failed with exit code $aftermathExitCode."
+    exit $aftermathExitCode
+}
+
 Write-Output 'Static regression checks passed.'
 exit 0

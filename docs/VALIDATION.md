@@ -1,5 +1,18 @@
 # Static validation
 
+## Aftermath transition checks
+
+`Test-UlyssesStatic.ps1` also runs `tools/Test-PeaceWeInherit.py`, including the
+read-only authoring/output parity check. Python 3.9+ is required; Windows prefers
+the existing `py` launcher, with `python` as the fallback. Static CI declares its
+Python runtime explicitly. The offline harness executes the shipped aftermath
+script subset and rejects unknown syntax; it does not emulate the HOI4 engine.
+See [the expansion checklist](PEACE_WE_INHERIT.md#acceptance-checklist).
+
+The before/after reference inventory for this expansion is 666→724 focuses,
+620→662 events, and **2,011→2,011 warnings**. Existing map and technology warnings
+remain design inventory. Native acceptance remains unrun.
+
 The repository includes `tools/Validate-UlyssesMap.ps1`. It reads the mod as text and binary metadata only; it does not load, launch, or execute HOI4 or mod code.
 
 From the repository root:

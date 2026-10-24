@@ -1,0 +1,1353 @@
+# Authored gameplay; source: tools/build_peace_we_inherit.py.
+shared_focus = {
+	id = ac_pwi_missing
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 0
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_postwar_reconstruction }
+	available = { original_tag = BLK ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_missing_done } }
+			set_country_flag = ac_pwi_missing_done
+			add_to_variable = { ac_pwi_recovery = 3 }
+			add_to_variable = { ac_pwi_confidence = 7 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_soldiers
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 1
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_missing }
+	available = { original_tag = BLK ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_soldiers_done } }
+			set_country_flag = ac_pwi_soldiers_done
+			country_event = { id = ac_pwi.2 days = 1 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_services
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 2
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_soldiers }
+	available = { original_tag = BLK ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_services_done } }
+			set_country_flag = ac_pwi_services_done
+			add_to_variable = { ac_pwi_recovery = 10 }
+			add_to_variable = { ac_pwi_confidence = 3 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_powers
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 3
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_services }
+	available = { original_tag = BLK ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_powers_done } }
+			set_country_flag = ac_pwi_powers_done
+			country_event = { id = ac_pwi.3 days = 1 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_commission
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 4
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_powers }
+	available = { original_tag = BLK ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_commission_done } }
+			set_country_flag = ac_pwi_commission_done
+			add_to_variable = { ac_pwi_recovery = 7 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_political_power = -25
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_program
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 5
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_commission }
+	available = { original_tag = BLK ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_program_done } }
+			set_country_flag = ac_pwi_program_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 7 }
+			set_country_flag = ac_pwi_program_published
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_defeat_obligations
+	icon = GFX_goal_generic_political_reform
+	x = 24
+	y = 6
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_program }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_defeat }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_defeat_obligations_done } }
+			set_country_flag = ac_pwi_defeat_obligations_done
+			add_to_variable = { ac_pwi_recovery = 3 }
+			add_to_variable = { ac_pwi_confidence = 3 }
+			add_to_variable = { ac_pwi_tension = -7 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_defeat_repair
+	icon = GFX_goal_generic_political_reform
+	x = 24
+	y = 7
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_defeat_obligations }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_defeat }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_defeat_repair_done } }
+			set_country_flag = ac_pwi_defeat_repair_done
+			add_to_variable = { ac_pwi_recovery = 10 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_political_power = -25
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_defeat_reform
+	icon = GFX_goal_generic_political_reform
+	x = 24
+	y = 8
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_defeat_repair }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_defeat }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_defeat_reform_done } }
+			set_country_flag = ac_pwi_defeat_reform_done
+			add_to_variable = { ac_pwi_recovery = 3 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			army_experience = 5
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_defeat_neighbors
+	icon = GFX_goal_generic_political_reform
+	x = 24
+	y = 9
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_defeat_reform }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_defeat }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_defeat_neighbors_done } }
+			set_country_flag = ac_pwi_defeat_neighbors_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			set_country_flag = ac_pwi_outcome_reviewed
+			country_event = { id = ac_pwi.4 days = 1 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_victory_administration
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 6
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_program }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_victory }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_victory_administration_done } }
+			set_country_flag = ac_pwi_victory_administration_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = 3 }
+			set_country_flag = ac_pwi_ustian_administration
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_victory_costs
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 7
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_victory_administration }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_victory }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_victory_costs_done } }
+			set_country_flag = ac_pwi_victory_costs_done
+			add_to_variable = { ac_pwi_recovery = 7 }
+			add_to_variable = { ac_pwi_confidence = -3 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_victory_expectations
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 8
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_victory_costs }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_victory }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_victory_expectations_done } }
+			set_country_flag = ac_pwi_victory_expectations_done
+			add_to_variable = { ac_pwi_recovery = 4 }
+			add_to_variable = { ac_pwi_confidence = 8 }
+			add_to_variable = { ac_pwi_tension = -3 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_victory_dividend
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 9
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_victory_expectations }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_victory }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_victory_dividend_done } }
+			set_country_flag = ac_pwi_victory_dividend_done
+			add_to_variable = { ac_pwi_recovery = 7 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			set_country_flag = ac_pwi_outcome_reviewed
+			country_event = { id = ac_pwi.5 days = 1 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_wacht_terms
+	icon = GFX_goal_generic_political_reform
+	x = 36
+	y = 6
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_program }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_wacht_am_wal }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_wacht_terms_done } }
+			set_country_flag = ac_pwi_wacht_terms_done
+			add_to_variable = { ac_pwi_recovery = 3 }
+			add_to_variable = { ac_pwi_confidence = 6 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_wacht_frontier
+	icon = GFX_goal_generic_political_reform
+	x = 36
+	y = 7
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_wacht_terms }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_wacht_am_wal }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_wacht_frontier_done } }
+			set_country_flag = ac_pwi_wacht_frontier_done
+			add_to_variable = { ac_pwi_recovery = 3 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = 5 }
+			army_experience = 5
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_wacht_recognition
+	icon = GFX_goal_generic_political_reform
+	x = 36
+	y = 8
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_wacht_frontier }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_wacht_am_wal }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_wacht_recognition_done } }
+			set_country_flag = ac_pwi_wacht_recognition_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = -7 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_wacht_restraint
+	icon = GFX_goal_generic_political_reform
+	x = 36
+	y = 9
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_wacht_recognition }
+	available = { original_tag = BLK ac_pwi_active = yes has_global_flag = ac_postwar_wacht_am_wal }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_wacht_restraint_done } }
+			set_country_flag = ac_pwi_wacht_restraint_done
+			add_to_variable = { ac_pwi_recovery = 7 }
+			add_to_variable = { ac_pwi_confidence = 6 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			set_country_flag = ac_pwi_outcome_reviewed
+			country_event = { id = ac_pwi.6 days = 1 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_negotiated_1
+	icon = GFX_goal_generic_political_reform
+	x = 24
+	y = 10
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_program }
+	mutually_exclusive = { focus = ac_pwi_authoritarian_1 focus = ac_pwi_revanchist_1 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_authoritarian } NOT = { has_country_flag = ac_pwi_path_revanchist } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_negotiated_1_done } }
+			set_country_flag = ac_pwi_negotiated_1_done
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -10 }
+			set_country_flag = ac_pwi_path_negotiated
+			add_ideas = ac_pwi_accommodation
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_negotiated_2
+	icon = GFX_goal_generic_political_reform
+	x = 24
+	y = 11
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_negotiated_1 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_authoritarian } NOT = { has_country_flag = ac_pwi_path_revanchist } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_negotiated_2_done } }
+			set_country_flag = ac_pwi_negotiated_2_done
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -10 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_negotiated_3
+	icon = GFX_goal_generic_political_reform
+	x = 24
+	y = 12
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_negotiated_2 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_authoritarian } NOT = { has_country_flag = ac_pwi_path_revanchist } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_negotiated_3_done } }
+			set_country_flag = ac_pwi_negotiated_3_done
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -10 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_negotiated_4
+	icon = GFX_goal_generic_political_reform
+	x = 24
+	y = 13
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_negotiated_3 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_authoritarian } NOT = { has_country_flag = ac_pwi_path_revanchist } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_negotiated_4_done } }
+			set_country_flag = ac_pwi_negotiated_4_done
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -10 }
+			set_country_flag = ac_pwi_national_settlement
+			country_event = { id = ac_pwi.10 days = 1 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_authoritarian_1
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 10
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_program }
+	mutually_exclusive = { focus = ac_pwi_negotiated_1 focus = ac_pwi_revanchist_1 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_negotiated } NOT = { has_country_flag = ac_pwi_path_revanchist } NOT = { has_global_flag = ac_postwar_unclassified } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_authoritarian_1_done } }
+			set_country_flag = ac_pwi_authoritarian_1_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 10 }
+			add_to_variable = { ac_pwi_tension = 7 }
+			set_country_flag = ac_pwi_path_authoritarian
+			add_ideas = ac_pwi_central_authority
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_authoritarian_2
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 11
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_authoritarian_1 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_negotiated } NOT = { has_country_flag = ac_pwi_path_revanchist } NOT = { has_global_flag = ac_postwar_unclassified } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_authoritarian_2_done } }
+			set_country_flag = ac_pwi_authoritarian_2_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 10 }
+			add_to_variable = { ac_pwi_tension = 7 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_authoritarian_3
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 12
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_authoritarian_2 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_negotiated } NOT = { has_country_flag = ac_pwi_path_revanchist } NOT = { has_global_flag = ac_postwar_unclassified } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_authoritarian_3_done } }
+			set_country_flag = ac_pwi_authoritarian_3_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 10 }
+			add_to_variable = { ac_pwi_tension = 7 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_authoritarian_4
+	icon = GFX_goal_generic_political_reform
+	x = 30
+	y = 13
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_authoritarian_3 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_negotiated } NOT = { has_country_flag = ac_pwi_path_revanchist } NOT = { has_global_flag = ac_postwar_unclassified } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_authoritarian_4_done } }
+			set_country_flag = ac_pwi_authoritarian_4_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 10 }
+			add_to_variable = { ac_pwi_tension = 7 }
+			set_country_flag = ac_pwi_national_settlement
+			country_event = { id = ac_pwi.11 days = 1 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_revanchist_1
+	icon = GFX_goal_generic_political_reform
+	x = 36
+	y = 10
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_program }
+	mutually_exclusive = { focus = ac_pwi_negotiated_1 focus = ac_pwi_authoritarian_1 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_negotiated } NOT = { has_country_flag = ac_pwi_path_authoritarian } NOT = { has_global_flag = ac_postwar_unclassified } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_revanchist_1_done } }
+			set_country_flag = ac_pwi_revanchist_1_done
+			add_to_variable = { ac_pwi_recovery = -5 }
+			add_to_variable = { ac_pwi_confidence = 8 }
+			add_to_variable = { ac_pwi_tension = 12 }
+			set_country_flag = ac_pwi_path_revanchist
+			add_ideas = ac_pwi_armed_revision
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_revanchist_2
+	icon = GFX_goal_generic_political_reform
+	x = 36
+	y = 11
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_revanchist_1 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_negotiated } NOT = { has_country_flag = ac_pwi_path_authoritarian } NOT = { has_global_flag = ac_postwar_unclassified } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_revanchist_2_done } }
+			set_country_flag = ac_pwi_revanchist_2_done
+			add_to_variable = { ac_pwi_recovery = -5 }
+			add_to_variable = { ac_pwi_confidence = 8 }
+			add_to_variable = { ac_pwi_tension = 12 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_revanchist_3
+	icon = GFX_goal_generic_political_reform
+	x = 36
+	y = 12
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_revanchist_2 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_negotiated } NOT = { has_country_flag = ac_pwi_path_authoritarian } NOT = { has_global_flag = ac_postwar_unclassified } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_revanchist_3_done } }
+			set_country_flag = ac_pwi_revanchist_3_done
+			add_to_variable = { ac_pwi_recovery = -5 }
+			add_to_variable = { ac_pwi_confidence = 8 }
+			add_to_variable = { ac_pwi_tension = 12 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = ac_pwi_revanchist_4
+	icon = GFX_goal_generic_political_reform
+	x = 36
+	y = 13
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = ac_pwi_revanchist_3 }
+	available = { original_tag = BLK ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_first_quarter } OR = { has_country_flag = ac_pwi_outcome_reviewed has_global_flag = ac_postwar_unclassified } NOT = { has_country_flag = ac_pwi_path_negotiated } NOT = { has_country_flag = ac_pwi_path_authoritarian } NOT = { has_global_flag = ac_postwar_unclassified } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = ac_pwi_revanchist_4_done } }
+			set_country_flag = ac_pwi_revanchist_4_done
+			add_to_variable = { ac_pwi_recovery = -5 }
+			add_to_variable = { ac_pwi_confidence = 8 }
+			add_to_variable = { ac_pwi_tension = 12 }
+			set_country_flag = ac_pwi_national_settlement
+			country_event = { id = ac_pwi.12 days = 1 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_pwi_brief
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 0
+	cost = 5
+	ai_will_do = { factor = 20 }
+	available = { original_tag = OSE ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = OSE_pwi_brief_done } }
+			set_country_flag = OSE_pwi_brief_done
+			add_to_variable = { ac_pwi_recovery = 3 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_pwi_accounts
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 1
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = OSE_pwi_brief }
+	available = { original_tag = OSE ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = OSE_pwi_accounts_done } }
+			set_country_flag = OSE_pwi_accounts_done
+			add_to_variable = { ac_pwi_recovery = 6 }
+			add_to_variable = { ac_pwi_confidence = 3 }
+			add_political_power = -25
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_pwi_oversight
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 2
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = OSE_pwi_accounts }
+	available = { original_tag = OSE ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = OSE_pwi_oversight_done } }
+			set_country_flag = OSE_pwi_oversight_done
+			add_to_variable = { ac_pwi_recovery = 2 }
+			add_to_variable = { ac_pwi_confidence = 7 }
+			add_to_variable = { ac_pwi_tension = -3 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_pwi_guarantor
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 3
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = OSE_pwi_oversight }
+	available = { original_tag = OSE ac_pwi_active = yes has_global_flag = ac_postwar_defeat is_subject = no }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = OSE_pwi_guarantor_done } }
+			set_country_flag = OSE_pwi_guarantor_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = -3 }
+			set_country_flag = OSE_pwi_guarantor
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_pwi_constraints
+	icon = GFX_goal_generic_political_reform
+	x = 64
+	y = 3
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = OSE_pwi_oversight }
+	available = { original_tag = OSE ac_pwi_active = yes NOT = { has_global_flag = ac_postwar_defeat } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = OSE_pwi_constraints_done } }
+			set_country_flag = OSE_pwi_constraints_done
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_pwi_commitments
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 4
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = OSE_pwi_guarantor focus = OSE_pwi_constraints }
+	available = { original_tag = OSE ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = OSE_pwi_commitments_done } }
+			set_country_flag = OSE_pwi_commitments_done
+			add_to_variable = { ac_pwi_recovery = 3 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			set_country_flag = OSE_pwi_diplomacy
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_pwi_dialogue
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 5
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = OSE_pwi_commitments }
+	mutually_exclusive = { focus = OSE_pwi_containment }
+	available = { original_tag = OSE ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = OSE_pwi_dialogue_done } }
+			set_country_flag = OSE_pwi_dialogue_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = -8 }
+			set_country_flag = ac_pwi_accommodating
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_pwi_containment
+	icon = GFX_goal_generic_political_reform
+	x = 64
+	y = 5
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = OSE_pwi_commitments }
+	mutually_exclusive = { focus = OSE_pwi_dialogue }
+	available = { original_tag = OSE ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = OSE_pwi_containment_done } }
+			set_country_flag = OSE_pwi_containment_done
+			add_to_variable = { ac_pwi_recovery = -3 }
+			add_to_variable = { ac_pwi_confidence = 6 }
+			add_to_variable = { ac_pwi_tension = 8 }
+			set_country_flag = ac_pwi_containment
+			army_experience = 10
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = UST_pwi_brief
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 0
+	cost = 5
+	ai_will_do = { factor = 20 }
+	available = { original_tag = UST ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = UST_pwi_brief_done } }
+			set_country_flag = UST_pwi_brief_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = UST_pwi_personnel
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 1
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = UST_pwi_brief }
+	available = { original_tag = UST ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = UST_pwi_personnel_done } }
+			set_country_flag = UST_pwi_personnel_done
+			add_to_variable = { ac_pwi_recovery = 6 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_political_power = -25
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = UST_pwi_institutions
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 2
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = UST_pwi_personnel }
+	available = { original_tag = UST ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = UST_pwi_institutions_done } }
+			set_country_flag = UST_pwi_institutions_done
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 3 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = UST_pwi_sovereignty
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 3
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = UST_pwi_institutions }
+	available = { original_tag = UST ac_pwi_active = yes is_subject = no }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = UST_pwi_sovereignty_done } }
+			set_country_flag = UST_pwi_sovereignty_done
+			add_to_variable = { ac_pwi_recovery = 4 }
+			add_to_variable = { ac_pwi_confidence = 6 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			set_country_flag = UST_pwi_independent_program
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = UST_pwi_subject
+	icon = GFX_goal_generic_political_reform
+	x = 64
+	y = 3
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = UST_pwi_institutions }
+	available = { original_tag = UST ac_pwi_active = yes is_subject = yes }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = UST_pwi_subject_done } }
+			set_country_flag = UST_pwi_subject_done
+			add_to_variable = { ac_pwi_recovery = 7 }
+			add_to_variable = { ac_pwi_confidence = 3 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = UST_pwi_expertise
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 4
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = UST_pwi_sovereignty focus = UST_pwi_subject }
+	available = { original_tag = UST ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = UST_pwi_expertise_done } }
+			set_country_flag = UST_pwi_expertise_done
+			add_to_variable = { ac_pwi_recovery = 3 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = 2 }
+			army_experience = 10
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = UST_pwi_security
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 5
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = UST_pwi_expertise }
+	available = { original_tag = UST ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = UST_pwi_security_done } }
+			set_country_flag = UST_pwi_security_done
+			add_to_variable = { ac_pwi_recovery = 4 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -4 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = UST_pwi_legacy
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 6
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = UST_pwi_security }
+	available = { original_tag = UST ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = UST_pwi_legacy_done } }
+			set_country_flag = UST_pwi_legacy_done
+			add_to_variable = { ac_pwi_recovery = 8 }
+			add_to_variable = { ac_pwi_confidence = 7 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			set_country_flag = ac_pwi_national_settlement
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = SAP_pwi_brief
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 0
+	cost = 5
+	ai_will_do = { factor = 20 }
+	available = { original_tag = SAP ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = SAP_pwi_brief_done } }
+			set_country_flag = SAP_pwi_brief_done
+			add_to_variable = { ac_pwi_recovery = 4 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = SAP_pwi_costs
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 1
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = SAP_pwi_brief }
+	available = { original_tag = SAP ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = SAP_pwi_costs_done } }
+			set_country_flag = SAP_pwi_costs_done
+			add_to_variable = { ac_pwi_recovery = 7 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_political_power = -25
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = SAP_pwi_demobilize
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 2
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = SAP_pwi_costs }
+	available = { original_tag = SAP ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = SAP_pwi_demobilize_done } }
+			set_country_flag = SAP_pwi_demobilize_done
+			add_to_variable = { ac_pwi_recovery = 6 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			add_war_support = -0.02
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = SAP_pwi_loyalty
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 3
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = SAP_pwi_demobilize }
+	available = { original_tag = SAP ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = SAP_pwi_loyalty_done } }
+			set_country_flag = SAP_pwi_loyalty_done
+			add_to_variable = { ac_pwi_recovery = 2 }
+			add_to_variable = { ac_pwi_confidence = 7 }
+			add_to_variable = { ac_pwi_tension = -3 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = SAP_pwi_commitments
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 4
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = SAP_pwi_loyalty }
+	available = { original_tag = SAP ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = SAP_pwi_commitments_done } }
+			set_country_flag = SAP_pwi_commitments_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			add_to_variable = { ac_pwi_tension = -4 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = SAP_pwi_legacy
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 5
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = SAP_pwi_commitments }
+	available = { original_tag = SAP ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = SAP_pwi_legacy_done } }
+			set_country_flag = SAP_pwi_legacy_done
+			add_to_variable = { ac_pwi_recovery = 7 }
+			add_to_variable = { ac_pwi_confidence = 7 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			set_country_flag = ac_pwi_national_settlement
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = GEB_pwi_brief
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 0
+	cost = 5
+	ai_will_do = { factor = 20 }
+	available = { original_tag = GEB ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = GEB_pwi_brief_done } }
+			set_country_flag = GEB_pwi_brief_done
+			add_to_variable = { ac_pwi_recovery = 5 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = GEB_pwi_industry
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 1
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = GEB_pwi_brief }
+	available = { original_tag = GEB ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = GEB_pwi_industry_done } }
+			set_country_flag = GEB_pwi_industry_done
+			add_to_variable = { ac_pwi_recovery = 9 }
+			add_to_variable = { ac_pwi_confidence = 3 }
+			add_political_power = -25
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = GEB_pwi_resources
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 2
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = GEB_pwi_industry }
+	available = { original_tag = GEB ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = GEB_pwi_resources_done } }
+			set_country_flag = GEB_pwi_resources_done
+			add_to_variable = { ac_pwi_recovery = 7 }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = GEB_pwi_security
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 3
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = GEB_pwi_resources }
+	available = { original_tag = GEB ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = GEB_pwi_security_done } }
+			set_country_flag = GEB_pwi_security_done
+			add_to_variable = { ac_pwi_recovery = 3 }
+			add_to_variable = { ac_pwi_confidence = 6 }
+			add_to_variable = { ac_pwi_tension = -3 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = GEB_pwi_neighbors
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 4
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = GEB_pwi_security }
+	available = { original_tag = GEB ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = GEB_pwi_neighbors_done } }
+			set_country_flag = GEB_pwi_neighbors_done
+			add_to_variable = { ac_pwi_recovery = 4 }
+			add_to_variable = { ac_pwi_confidence = 5 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = GEB_pwi_legacy
+	icon = GFX_goal_generic_political_reform
+	x = 60
+	y = 5
+	cost = 5
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = GEB_pwi_neighbors }
+	available = { original_tag = GEB ac_pwi_active = yes  }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes NOT = { has_country_flag = GEB_pwi_legacy_done } }
+			set_country_flag = GEB_pwi_legacy_done
+			add_to_variable = { ac_pwi_recovery = 7 }
+			add_to_variable = { ac_pwi_confidence = 7 }
+			add_to_variable = { ac_pwi_tension = -5 }
+			set_country_flag = ac_pwi_national_settlement
+			ac_pwi_bound_pressures = yes
+		}
+	}
+}

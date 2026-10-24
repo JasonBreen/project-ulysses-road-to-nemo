@@ -53,7 +53,11 @@ def main():
     missing_textures = []
     count = 0
     for path in sorted(MOD.rglob("*.gfx")):
-        for block in blocks(path.read_text(encoding="utf-8-sig")):
+        # Ignore commented-out definitions; historical #SpriteType blocks
+        # must not register as active sprites or engine dependencies.
+        source = path.read_text(encoding="utf-8-sig")
+        active = "\\n".join(line.split("#", 1)[0] for line in source.splitlines())
+        for block in blocks(active):
             name = NAME_RE.search(block)
             texture = GFX_RE.search(block)
             if not name or not texture:
@@ -66,7 +70,7 @@ def main():
             if sprite not in artwork or locally_owned:
                 artwork[sprite] = (locally_owned, asset)
             if not locally_owned:
-                missing_textures.append((str(path.relative_to(MOD)), sprite, asset))
+                missing_textures.append((path.relative_to(MOD).as_posix(), sprite, asset))
 
     # Completed graphical families may not regain engine-supplied artwork.
     clean_art_files = {

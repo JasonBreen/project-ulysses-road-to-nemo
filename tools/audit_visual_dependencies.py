@@ -14,9 +14,9 @@ from collections import Counter
 from pathlib import Path
 
 MOD = Path(__file__).resolve().parents[1] / "mod" / "2985041246"
-GFX_RE = re.compile(r"(?im)^\s*(?:textureFile)\s*=\s*[\"']?([A-Za-z0-9_./ -]+?)(?:[\"']|\s*$)")
+GFX_RE = re.compile(r'\btexturefile\s*=\s*(?:"([^"]+)"|([^\s}#]+))', re.I)
 SPRITE_RE = re.compile(r"(?i)\bspriteType\s*=\s*\{")
-NAME_RE = re.compile(r"(?im)^\s*name\s*=\s*[\"']?(GFX_[A-Za-z0-9_]+)")
+NAME_RE = re.compile(r'\bname\s*=\s*"?(GFX_[A-Za-z0-9_]+)', re.I)
 FOCUS_RE = re.compile(r"(?m)^\s*icon\s*=\s*(GFX_[A-Za-z0-9_]+)\s*(?:#.*)?$")
 GUI_SPRITE_RE = re.compile(r'\b(?:spriteType|quadTextureSprite)\s*=\s*"(GFX_[A-Za-z0-9_]+)"')
 
@@ -52,7 +52,7 @@ def main():
     artwork = {}
     missing_textures = []
     count = 0
-    for path in sorted((MOD / "interface").glob("*.gfx")):
+    for path in sorted(MOD.rglob("*.gfx")):
         for block in blocks(path.read_text(encoding="utf-8-sig")):
             name = NAME_RE.search(block)
             texture = GFX_RE.search(block)
@@ -60,13 +60,31 @@ def main():
                 continue
             count += 1
             sprite = name.group(1)
-            asset = normal(texture.group(1))
+            asset = normal(texture.group(1) or texture.group(2))
             # Multiple definitions can coexist. Prefer one with local artwork.
             locally_owned = asset in images
             if sprite not in artwork or locally_owned:
                 artwork[sprite] = (locally_owned, asset)
             if not locally_owned:
-                missing_textures.append((path.name, sprite, asset))
+                missing_textures.append((str(path.relative_to(MOD)), sprite, asset))
+
+    # Completed graphical families may not regain engine-supplied artwork.
+    clean_art_files = {
+        "interface/Technologies.gfx",
+        "interface/ac_tech_icons.gfx",
+        "interface/ac_goals.gfx",
+    }
+    visual_regressions = [x for x in missing_textures if x[0] in clean_art_files]
+    # Four inherited aircraft-role and multi-frame niche strip entries still
+    # require purpose-built sprite sheets; do not allow any new fallbacks.
+    plane_remainder = [x for x in missing_textures if x[0] == "interface/ac_plane_modules_icons.gfx"]
+    if len(plane_remainder) > 4:
+        visual_regressions.extend(plane_remainder)
+    # All land counters should use mod art; unconverted naval counters remain.
+    visual_regressions.extend(x for x in missing_textures
+                              if x[0] == "interface/subuniticons.gfx"
+                              and not (x[2].startswith("gfx/interface/counters/ships_small/")
+                                       or x[2].startswith("gfx/interface/navalcombat/ships/")))
 
     focus_icons = []
     bad_focus = []
@@ -109,6 +127,7 @@ def main():
     report = {
         "authored_sprite_definitions": count,
         "focus_icons_checked": len(focus_icons),
+        "regressions_in_cleaned_visual_families": visual_regressions,
         "focus_icons_borrowing_vanilla_or_missing": bad_focus,
         "economy_ui_sprites": economy_visuals,
         "economy_ui_missing_or_vanilla_sprites": bad_economy_visuals,
@@ -125,7 +144,7 @@ def main():
                 print(key, "=", value)
         for item in bad_focus[:20]:
             print("UNRESOLVED FOCUS", *item)
-    if bad_focus or bad_economy_visuals or problems:
+    if bad_focus or bad_economy_visuals or problems or visual_regressions:
         raise SystemExit(1)
     if args.strict_all and missing_textures:
         raise SystemExit(1)

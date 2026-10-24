@@ -58,16 +58,17 @@ def main():
         source = path.read_text(encoding="utf-8-sig")
         active = "\n".join(line.split("#", 1)[0] for line in source.splitlines())
         for block in blocks(active):
-            name = NAME_RE.search(block)
             texture = GFX_RE.search(block)
-            if not name or not texture:
+            if not texture:
                 continue
+            name = NAME_RE.search(block)
             count += 1
-            sprite = name.group(1)
+            sprite = name.group(1) if name else "<unnamed-sprite>"
             asset = normal(texture.group(1) or texture.group(2))
-            # Multiple definitions can coexist. Prefer one with local artwork.
+            # Count even unnamed/non-GFX sprites: the engine can still display
+            # their texture, and silently omitting them makes strict scans lie.
             locally_owned = asset in images
-            if sprite not in artwork or locally_owned:
+            if name and (sprite not in artwork or locally_owned):
                 artwork[sprite] = (locally_owned, asset)
             if not locally_owned:
                 missing_textures.append((path.relative_to(MOD).as_posix(), sprite, asset))

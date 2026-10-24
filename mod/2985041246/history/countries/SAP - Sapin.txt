@@ -1,4 +1,4 @@
-﻿capital = 415
+capital = 415
 
 set_research_slots = 3
 set_convoys = 200
@@ -93,6 +93,7 @@ recruit_character = SAP_theorist_2
 set_technology = {
 	infantry_weapons = 1
 	infantry_weapons1 = 1
+	infantry_at = 1
 	infantry_manpats = 1
 	tech_recon = 1
 	tech_support = 1		
@@ -101,13 +102,14 @@ set_technology = {
 	basic_train = 1
 	
 	gw_artillery  = 1
-	antiair_1 = 1
-	spg_artillery_1 = 1
+	interwar_antiair = 1
+	basic_medium_art = 1
 	motorised_infantry = 1
+	armored_car1 = 1
 	imv1 = 1
 	mechanised_infantry = 1
 	basic_light_tank = 1
-	main_battle_tank_0 = 1
+	main_battle_tank = 1
 }
 
 
@@ -168,33 +170,12 @@ set_oob = "SAP_land"
 
 if = {
 	limit = { has_dlc = "By Blood Alone" }
-		set_air_oob = "SAP_air_dlc"
-	else = {
-		set_air_oob = "SAP_air"
-	}
-}
-
-if = {
-	limit = { has_dlc = "Man the Guns" }
-		set_naval_oob = "SAP_navy_dlc"
-	else = {
-		set_naval_oob = "SAP_navy"
-	}
-}
-
-#########################
-
-if = {
-	limit = {
-		has_dlc = "By Blood Alone"
-	}
 	create_equipment_variant = {
 		name = "Sapin Fighter 1"
 		type = small_plane_airframe_1
 		modules = {
 			fixed_main_weapon_slot = light_mg_4x
 			engine_type_slot = engine_2_1x
-			special_type_slot_1 = airframe_swept_wing
 		}
 	}
 	create_equipment_variant = {
@@ -203,16 +184,12 @@ if = {
 		modules = {
 			fixed_main_weapon_slot = light_mg_2x
 			engine_type_slot = engine_1_1x
-			special_type_slot_1 = airframe_swept_wing
 		}
 	}
 }
 
-### VARIANTS ###
-# 1936 Start #
 if = {
 	limit = { not = { has_dlc = "Man the Guns" } }
-	### Ship Variants ###
 	create_equipment_variant = {
 		name = "C Class"
 		type = submarine_1
@@ -234,14 +211,13 @@ if = {
 		}
 	}
 }
+
 if = {
 	limit = { has_dlc = "Man the Guns" }
-	# Submarines #
 	create_equipment_variant = {
-		name = "B Class"				
+		name = "B Class"
 		type = ship_hull_submarine_1
 		parent_version = 0
-		name_group = SAP_SS_HISTORICAL
 		modules = {
 			fixed_ship_torpedo_slot = ship_torpedo_sub_1
 			fixed_ship_engine_slot = sub_ship_engine_1
@@ -250,9 +226,8 @@ if = {
 		obsolete = yes
 	}
 	create_equipment_variant = {
-		name = "C Class"				
+		name = "C Class"
 		type = ship_hull_submarine_2
-		name_group = SAP_SS_HISTORICAL
 		parent_version = 0
 		modules = {
 			fixed_ship_torpedo_slot = ship_torpedo_sub_1
@@ -260,11 +235,9 @@ if = {
 			rear_1_custom_slot = empty
 		}
 	}
-	# Destroyers #
 	create_equipment_variant = {
-		name = "Alsedo Class"				
+		name = "Alsedo Class"
 		type = ship_hull_light_1
-		name_group = SAP_DD_HISTORICAL
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_battery_1
@@ -279,9 +252,8 @@ if = {
 		obsolete = yes
 	}
 	create_equipment_variant = {
-		name = "Churucca Class"	
+		name = "Churucca Class"
 		type = ship_hull_light_2
-		name_group = SAP_DD_HISTORICAL
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_battery_1
@@ -295,26 +267,8 @@ if = {
 		}
 	}
 	create_equipment_variant = {
-		name = "Júpiter Class"					# minelayers
-		type = ship_hull_light_2
-		name_group = SAP_DD_HISTORICAL
-		parent_version = 0
-		modules = {
-			fixed_ship_battery_slot = ship_light_battery_1
-			fixed_ship_anti_air_slot = ship_anti_air_1
-			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
-			fixed_ship_radar_slot = empty
-			fixed_ship_engine_slot = light_ship_engine_1
-			fixed_ship_torpedo_slot = empty
-			mid_1_custom_slot = ship_mine_layer_1
-			rear_1_custom_slot = ship_depth_charge_1
-		}
-	}
-	# Light Cruisers #
-	create_equipment_variant = {
 		name = "República Class"
 		type = ship_hull_cruiser_1
-		name_group = SAP_CL_HISTORICAL
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_medium_battery_1
@@ -331,7 +285,6 @@ if = {
 	create_equipment_variant = {
 		name = "Méndez Núñes Class"
 		type = ship_hull_cruiser_1
-		name_group = SAP_CL_HISTORICAL
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_medium_battery_1
@@ -349,7 +302,6 @@ if = {
 	create_equipment_variant = {
 		name = "Príncipe Alfonso Class"
 		type = ship_hull_cruiser_2
-		name_group = SAP_CL_HISTORICAL
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_medium_battery_1
@@ -364,29 +316,9 @@ if = {
 			rear_1_custom_slot = ship_light_medium_battery_1
 		}
 	}
-	# Heavy Cruisers #
 	create_equipment_variant = {
-		name = "Canarias Class"				
-		type = ship_hull_cruiser_2
-		name_group = SAP_CA_HISTORICAL
-		parent_version = 0
-		modules = {
-			fixed_ship_battery_slot = ship_medium_battery_2
-			fixed_ship_anti_air_slot = ship_anti_air_1
-			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
-			fixed_ship_radar_slot = empty
-			fixed_ship_engine_slot = cruiser_ship_engine_2
-			fixed_ship_armor_slot = empty
-			mid_1_custom_slot = ship_medium_battery_2
-			mid_2_custom_slot = empty
-			rear_1_custom_slot = ship_depth_charge_1
-		}
-	}
-	# Battleships #
-	create_equipment_variant = {
-		name = "España Class"	
+		name = "España Class"
 		type = ship_hull_heavy_1
-		name_group = SAP_BB_HISTORICAL
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_heavy_battery_1
@@ -404,6 +336,40 @@ if = {
 	}
 }
 
+if = {
+	limit = { has_dlc = "By Blood Alone" }
+		set_air_oob = "SAP_air_dlc"
+	else = {
+		set_air_oob = "SAP_air"
+	}
+}
+
+if = {
+	limit = { has_dlc = "Man the Guns" }
+		set_naval_oob = "SAP_navy_dlc"
+	else = {
+		set_naval_oob = "SAP_navy"
+	}
+}
+
+#########################
+
+
+### VARIANTS ###
+# 1936 Start #
+if = {
+	limit = { not = { has_dlc = "Man the Guns" } }
+	### Ship Variants ###
+}
+if = {
+	limit = { has_dlc = "Man the Guns" }
+	# Submarines #
+	# Destroyers #
+	# Light Cruisers #
+	# Heavy Cruisers #
+	# Battleships #
+}
+
 ### STOCKPILE ###
 #add_equipment_to_stockpile = {
 #	type = motorized_equipment_1
@@ -412,4 +378,4 @@ if = {
 #add_equipment_to_stockpile = {
 #	type = gw_armored_car_equipment
 #	amount = 150
-#} 
+#}

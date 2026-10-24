@@ -6,7 +6,8 @@ postwar branches in `mod/2985041246` are reachable. It expands
 routes, conditions and console steps for issue #8.
 
 **Status: plan only.** Written from static reading of `main` at
-`2a55a2f`. HOI4 was not launched. Per `AGENTS.md`, nothing here is run until
+`2a55a2f` and refreshed against `main` at `3be18ca` after PRs #13, #14, #19
+and #20 merged. HOI4 was not launched. Per `AGENTS.md`, nothing here is run until
 the owner approves an isolated native test. Every result below starts as
 "not exercised".
 
@@ -20,11 +21,11 @@ the owner approves an isolated native test. Every result below starts as
 - **Check**: what to inspect before calling the step a pass.
 - File references are relative to `mod/2985041246/`.
 
-### Open PR #13 changes some of this
+### Tested head
 
-PR #13 (`codex/review-reconciliation`) is open and edits the same campaign
-files. Where it changes a condition, the step shows **main** and **PR #13**
-side by side. Test whichever head the owner approves, and record its SHA.
+The steps below describe current `main`, which includes the PR #13 campaign
+fixes and the PR #14/#19 Ustio handoff. Test whichever head the owner
+approves, and record its SHA.
 
 ## 0. Preflight
 
@@ -75,9 +76,8 @@ Postwar: world_event.2 → ac_continuation.1 → one of four outcomes → ac_bel
   `ac_belkan_industrial_mobilization`, `ac_belkan_logistics_network`,
   `ac_belkan_security_mandate`, then `ac_belkan_ultimatum`, then
   `ac_belkan_council_mandate`. Total cost 16.5 focus-weeks (about 116 days).
-- **Conditions.** BLK, war not yet happening.
-  - main: the briefing has no prerequisite and sits at the tree root.
-  - PR #13: the briefing requires `BLK_the_crisis_continues`.
+- **Conditions.** BLK, war not yet happening, and `BLK_the_crisis_continues`
+  completed (the briefing's prerequisite).
 - **Check.** Events `ac_campaign.1` to `.6` fire once each. Ideas
   `ac_prewar_cabinet`, `ac_industrial_preparations`, `ac_frontline_logistics`,
   `ac_security_mandate` appear. Country flags `ac_campaign_started`,
@@ -152,8 +152,9 @@ All from `pt3_war_day1` with Belka played by a human.
   military economy in one run and civilian reserve in another; confirm the
   other stage-one decision disappears. Economy effects apply only when
   `ac_econ_ready` is true. No idea is added twice.
-- main: both stage-one decisions can be taken at once; record if that
-  happens. PR #13 blocks the sibling with a pending flag.
+- Taking one stage decision sets a `_pending` flag that hides its sibling and
+  the matching AI fallback until the stage event runs; confirm the sibling
+  cannot be taken in the gap.
 
 ### W4. AI fallback
 
@@ -164,9 +165,8 @@ All from `pt3_war_day1` with Belka played by a human.
   picks the player or AI collapse mission. A save made after the war starts
   under human control keeps the player mission and lacks the AI events, so
   it cannot test this step.
-- main: fallback events fire after more than 6, 12 and 20 war-weeks.
-- PR #13: more than 18 weeks for stage one, then 22 and 26 weeks with the
-  counter reset each stage.
+- Fallback events fire after more than 18 war-weeks for stage one, then 22
+  and 26 weeks, with the counter reset by each stage event.
 - **Check.** Each fallback event fires once; no spam once the stage flag is
   set. Record dates and the war state at 30, 90 and 180 days (supply,
   equipment, stability, war support).
@@ -222,18 +222,13 @@ Three triggers lead to the same follow-up `belka_dlp_war.99`:
 - **Chain.** `BLK_cook_nukes_timer_dec` (14 days) → `belka_dlp_war.100`
   (nuclear strikes) → `belka_dlp_war.101` (white peace, puppets released,
   states to SBK/GEB/REC/FAT, loads `belka_belkan_war_lost`).
-  - main: `.101` also fires `world_event.2` the next day.
-  - PR #13: `.101` sets `ac_postwar_wait_for_defeat_tree`; `world_event.2`
-    waits for `belka_dlp_lost.7` at the end of the lost tree.
-- **Check on main.** Watch for the postwar tree replacing
-  `belka_belkan_war_lost` about two days after it loads, before the player can
-  take `BLK_war_lost`. If that happens, record it as a native fail matching
-  the PR #13 finding.
-- **Check on PR #13.** The lost tree stays; complete it with
+  `.101` sets `ac_postwar_wait_for_defeat_tree`; `world_event.2` waits for
+  `belka_dlp_lost.7` at the end of the lost tree.
+- **Check.** The lost tree stays; complete it with
   `focus.autocomplete` up to the Return of the King (`belka_dlp_lost.7`), then
   confirm `world_event.2` fires once.
 - **Outcome.** Either way `belka_lost_belkan_war` is not set, so
-  `ac_continuation.1` takes option d (unclassified). Confirm which option
+  `ac_continuation.1` takes the unclassified option (`ac_continuation.1.e`). Confirm which option
   actually shows.
 
 ### O4. Wacht am Wal (option b)
@@ -286,7 +281,7 @@ unreachable in normal play. Confirm in game, then test the content:
 
 Reached naturally by O3; use the post-`belka_dlp_war.101` save for postwar
 continuity. Forcing it from `pt3_war_day1` with `event world_event.2 BLK`
-only checks that option d shows. The war is still running and
+only checks that the unclassified option shows. The war is still running and
 `belkan_war_is_happening` is still set, so the collapse mission can fire the
 South Belka split over the postwar tree. Do not count anything downstream of
 that forced run as a postwar pass.
@@ -296,7 +291,7 @@ that forced run as a postwar pass.
 | # | Finding | Where | Affects |
 | --- | --- | --- | --- |
 | 1 | `belka_dlp_war.103` has no caller, so the defeat outcome flag is never set naturally | `events/Belka.txt`, `events/ac_continuation.txt` | O5, defeat postwar branch |
-| 2 | On main, the nuclear ending fires `world_event.2` right after loading the lost tree, and the postwar tree replaces it | `events/Belka.txt` (`belka_dlp_war.101`) | O3; fixed by PR #13 |
+| 2 | Fixed by PR #13: the nuclear ending used to fire `world_event.2` right after loading the lost tree; confirm the lost tree now survives | `events/Belka.txt` (`belka_dlp_war.101`) | O3 |
 | 3 | Uncompleted campaign opening focuses vanish when `belka.13` loads the DLP tree | `events/Belka.txt` (`belka.13`), `common/national_focus/BLK.txt` | P1 |
 | 4 | The legacy war start (`world_event.1`, 1995+) skips the campaign stage decisions | `events/ac_world_events.txt`, `common/decisions/ac_belkan_campaign.txt` | W2 |
 | 5 | Wacht am Wal failures (`belka_wacht_am_wal.4` and `.7`) have no scripted ending | `events/Belka.txt` | O4 |
@@ -333,6 +328,11 @@ From each handoff save (`pt5_o1_handoff`, O3, `pt5_o4_handoff`, O5, O6):
    `ac_postwar_occupation_burden`, `ac_continuation.10` after 7 days, and the
    `ac_postwar_local_recovery` decision. Switch with `tag FAT` and take it.
    No new wars, ownership changes or deadlocks.
+   On Wacht, defeat or unclassified outcomes, UST (if it exists) gets
+   `ac_ustio.1` after 7 days: it loads `ustio_democracy` with the sold-land
+   flag, `ustio_non_ali` with the not-sold flag unless Ustio lost the Ratio
+   war, and otherwise keeps its current tree. Conventional victory annexes UST,
+   so no event is expected there.
 5. Save and reload after the handoff and after the legacy focus. Flags, ideas
    and focus progress persist.
 

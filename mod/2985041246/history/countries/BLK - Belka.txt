@@ -1,4 +1,4 @@
-﻿capital = 224
+capital = 224
 
 set_research_slots = 4
 
@@ -119,6 +119,7 @@ set_grand_doctrine = new_strategic_destruction
 set_technology = {
 	infantry_weapons = 1
 	infantry_weapons1 = 1
+	infantry_at = 1
 	infantry_manpats = 1
 	tech_recon = 1
 	tech_support = 1		
@@ -129,19 +130,21 @@ set_technology = {
 	fuel_silos = 1
 	fuel_refining = 1
 	basic_machine_tools = 1
-	marines = 1
-	
-	antiair_1 = 1
-	gw_artillery = 1
-	spg_artillery_1 = 1
+		marines = 1
+		
+		interwar_antiair = 1
+		gw_artillery = 1
+	basic_medium_art = 1
 	motorized_rocket_unit = 1
 	motorised_infantry = 1
+	armored_car1 = 1
 	imv1 = 1
 	mechanised_infantry = 1
 	ifv1 = 1
+	mechanised_infantry = 1
 	basic_light_tank = 1
 	basic_light_td = 1
-	main_battle_tank_0 = 1
+	main_battle_tank = 1
 	main_battle_tank = 1
 }
 ########################################################
@@ -178,49 +181,20 @@ if = {
 
 ########################################################
 
-if = {
-	limit = {
-		NOT = {
-			has_dlc = "By Blood Alone"
-		}
-	}
-	create_equipment_variant = {
-		name = "Ju 86"
-		type = tac_bomber_equipment_0
-		upgrades = {
-			plane_tac_bomb_upgrade = 5
-			plane_range_upgrade = 5
-			plane_engine_upgrade = 5
-			plane_reliability_upgrade = 5
-		}
-		obsolete = yes
-	}
-	
-	create_equipment_variant = {
-		name = "Do 17"
-		type = tac_bomber_equipment_0
-		upgrades = {
-			plane_tac_bomb_upgrade = 5
-			plane_range_upgrade = 1
-			plane_engine_upgrade = 1
-			plane_reliability_upgrade = 5
-		}
-		obsolete = yes
-	}
-}
+
+#############################################################
+set_oob = "BLK_land"
+################################################################
 
 if = {
-	limit = {
-		has_dlc = "By Blood Alone"
-	}
+	limit = { has_dlc = "By Blood Alone" }
 	create_equipment_variant = {
 		name = "Guinevere Mark I"
 		type = small_plane_airframe_1
 		modules = {
 			fixed_main_weapon_slot = light_mg_2x
-			fixed_auxiliary_weapon_slot_1 = qaam_1_1x
+			fixed_auxiliary_weapon_slot_1 = rocket_rails
 			engine_type_slot = engine_2_1x
-			special_type_slot_1 = airframe_swept_wing
 		}
 		icon = "GFX_BLK_iw_light_plane_medium"
 	}
@@ -230,9 +204,8 @@ if = {
 		type = small_plane_airframe_1
 		modules = {
 			fixed_main_weapon_slot = light_mg_4x
-			fixed_auxiliary_weapon_slot_1 = qaam_1_1x
+			fixed_auxiliary_weapon_slot_1 = rocket_rails
 			engine_type_slot = engine_2_1x
-			special_type_slot_1 = airframe_swept_wing
 		}
 		icon = "GFX_BLK_iw_light_plane_medium"
 	}
@@ -241,10 +214,8 @@ if = {
 		type = small_plane_airframe_1
 		modules = {
 			fixed_main_weapon_slot = aircraft_cannon_1_2x
-			fixed_auxiliary_weapon_slot_1 = sasm_1_1x
+			fixed_auxiliary_weapon_slot_1 = rocket_rails
 			engine_type_slot = engine_2_2x
-			special_type_slot_1 = airframe_reverse_swept_wing
-			special_type_slot_2 = airframe_mod_canards
 		}
 		icon = "GFX_BLK_basic_small_airframe_medium"
 	}
@@ -254,11 +225,9 @@ if = {
 		modules = {
 			fixed_main_weapon_slot = medium_bomb_bay
 			fixed_auxiliary_weapon_slot_1 = light_mg_2x
-			fixed_auxiliary_weapon_slot_2 = saam_1_2x
-			fixed_auxiliary_weapon_slot_3 = lagm_1_1x
+			fixed_auxiliary_weapon_slot_2 = rocket_rails
+			fixed_auxiliary_weapon_slot_3 = rocket_rails
 			engine_type_slot = engine_2_2x
-			special_type_slot_1 = airframe_swept_wing
-			special_type_slot_2 = stealth_coating_1_medium
 		}
 		icon = "GFX_BLK_iw_medium_plane_medium"
 	}
@@ -267,12 +236,10 @@ if = {
 		type = medium_plane_airframe_1
 		modules = {
 			fixed_main_weapon_slot = medium_bomb_bay
-			fixed_auxiliary_weapon_slot_1 = lagm_1_1x
-			fixed_auxiliary_weapon_slot_2 = lagm_1_1x
-			fixed_auxiliary_weapon_slot_3 = lagm_1_1x
+			fixed_auxiliary_weapon_slot_1 = rocket_rails
+			fixed_auxiliary_weapon_slot_2 = rocket_rails
+			fixed_auxiliary_weapon_slot_3 = rocket_rails
 			engine_type_slot = engine_2_4x
-			special_type_slot_1 = airframe_flying_wing
-			special_type_slot_2 = stealth_coating_1_medium
 			special_type_slot_3 = non_strategic_materials_medium
 		}
 		icon = "xxx"
@@ -284,7 +251,6 @@ if = {
 			fixed_main_weapon_slot = medium_bomb_bay
 			fixed_auxiliary_weapon_slot_1 = torpedo_mounting
 			engine_type_slot = engine_2_2x
-			special_type_slot_1 = airframe_straight_wing
 		}
 		icon = "GFX_BLK_medium_plane_1_medium"
 	}
@@ -295,7 +261,6 @@ if = {
 			fixed_main_weapon_slot = large_bomb_bay
 			fixed_auxiliary_weapon_slot_1 = large_bomb_bay
 			engine_type_slot = engine_2_4x
-			special_type_slot_1 = airframe_swept_wing
 		}
 		icon = "GFX_BLK_iw_heavy_plane_medium"
 	}
@@ -303,34 +268,17 @@ if = {
 		name = "E-767"
 		type = medium_plane_scout_plane_airframe_1
 		modules = {
-			fixed_main_weapon_slot = awacs_radar
+			fixed_main_weapon_slot = recon_camera
+			special_type_slot_1 = air_ground_radar_1
 			engine_type_slot = engine_2_2x
-			special_type_slot_1 = airframe_swept_wing
 		}
 		obsolete = no
 		icon = "GFX_scout_plane3_medium"
 	}
 }
-#############################################################
-set_oob = "BLK_land"
-################################################################
+
 if = {
-	limit = {
-		has_dlc = "By Blood Alone"
-	}
-	set_air_oob = "BLK_air_dlc"
-	else = {
-		set_air_oob = "BLK_air"
-	}
-}
-#########################################################
-if = {
-	limit = {
-		not = { has_dlc = "Man the Guns" }
-	}
-	### Ship Variants ###
-	## 1936 Start ##
-	# Light Cruisers #
+	limit = { not = { has_dlc = "Man the Guns" } }
 	create_equipment_variant = {
 		name = "Königsberg Class"
 		type = light_cruiser_1
@@ -343,7 +291,6 @@ if = {
 		}
 		obsolete = yes
 	}
-	# Heavy Cruisers #
 	create_equipment_variant = {
 		name = "Deutschland Class"
 		type = heavy_cruiser_1
@@ -356,15 +303,16 @@ if = {
 		}
 	}
 }
+
 if = {
 	limit = { has_dlc = "Man the Guns" }
 	create_equipment_variant = {
 		name = "Deutschland Class"
 		type = ship_hull_cruiser_panzerschiff
-		name_group = GER_CA_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
-        	fixed_ship_anti_air_slot = ship_anti_air_1
+	fixed_ship_anti_air_slot = ship_anti_air_1
 			fixed_ship_battery_slot = ship_heavy_battery_2
 			fixed_ship_secondaries_slot = ship_secondaries_1
 			fixed_ship_armor_slot = ship_armor_cruiser_1
@@ -372,12 +320,12 @@ if = {
 			fixed_ship_engine_slot = cruiser_ship_engine_2
 			rear_1_custom_slot = ship_torpedo_1
 			mid_1_custom_slot = ship_airplane_launcher_1
-    	}
+	}
 	}
 	create_equipment_variant = {
 		name = "Type 24 Class"
 		type = ship_hull_light_1
-		name_group = GER_TB_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_battery_1
@@ -393,7 +341,7 @@ if = {
 	create_equipment_variant = {
 		name = "Zerstörer 1934 Class"
 		type = ship_hull_light_2
-		name_group = GER_DD_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_battery_2
@@ -410,7 +358,7 @@ if = {
 	create_equipment_variant = {
 		name = "Zerstörer 1934A Class"
 		type = ship_hull_light_2
-		name_group = GER_DD_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_battery_2
@@ -426,7 +374,7 @@ if = {
 	create_equipment_variant = {
 		name = "Type II Class"
 		type = ship_hull_submarine_1
-		name_group = GER_SS_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
 			fixed_ship_torpedo_slot = ship_torpedo_sub_1
@@ -436,20 +384,9 @@ if = {
 		obsolete = yes
 	}
 	create_equipment_variant = {
-		name = "Type VII Class"
-		type = ship_hull_submarine_2
-		name_group = GER_SS_HISTORICAL
-		parent_version = 0
-		modules = {
-			fixed_ship_torpedo_slot = ship_torpedo_sub_2
-			fixed_ship_engine_slot = sub_ship_engine_1
-			rear_1_custom_slot = empty
-		}
-	}
-	create_equipment_variant = {
 		name = "Königsberg Class"
 		type = ship_hull_cruiser_2
-		name_group = GER_CL_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_medium_battery_1
@@ -467,7 +404,7 @@ if = {
 	create_equipment_variant = {
 		name = "Emden Class"
 		type = ship_hull_cruiser_1
-		name_group = GER_CL_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_medium_battery_1
@@ -485,7 +422,7 @@ if = {
 	create_equipment_variant = {
 		name = "Bremse Class"
 		type = ship_hull_cruiser_1
-		name_group = GER_CL_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_battery_1
@@ -502,7 +439,7 @@ if = {
 	create_equipment_variant = {
 		name = "Leipzig Class"
 		type = ship_hull_cruiser_2
-		name_group = GER_CL_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_light_medium_battery_1
@@ -520,7 +457,7 @@ if = {
 	create_equipment_variant = {
 		name = "Admiral Hipper Class"
 		type = ship_hull_cruiser_2
-		name_group = GER_CA_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_medium_battery_2
@@ -538,7 +475,7 @@ if = {
 	create_equipment_variant = {
 		name = "Scharnhorst Class"
 		type = ship_hull_heavy_2
-		name_group = GER_BB_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_heavy_battery_2
@@ -557,7 +494,7 @@ if = {
 	create_equipment_variant = {
 		name = "Deutschland Class"
 		type = ship_hull_pre_dreadnought
-		name_group = GER_BB_HISTORICAL
+		name_group = GER
 		parent_version = 0
 		modules = {
 			fixed_ship_battery_slot = ship_heavy_battery_1
@@ -573,6 +510,26 @@ if = {
 		}
 		obsolete = yes
 	}
+}
+
+if = {
+	limit = {
+		has_dlc = "By Blood Alone"
+	}
+	set_air_oob = "BLK_air_dlc"
+	else = {
+		set_air_oob = "BLK_air"
+	}
+}
+#########################################################
+if = {
+	limit = {
+		not = { has_dlc = "Man the Guns" }
+	}
+	### Ship Variants ###
+	## 1936 Start ##
+	# Light Cruisers #
+	# Heavy Cruisers #
 }
 ########################################################
 if = {

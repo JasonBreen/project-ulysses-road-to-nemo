@@ -146,9 +146,23 @@ class Harness:
             elif key == "has_dynamic_modifier":
                 answers.append(fields(value)["modifier"] in country.modifiers)
             elif key == "check_variable":
-                if len(value) != 1:
-                    raise ValueError("Expected shorthand comparison")
-                variable, comparison, operand = value[0]
+                if len(value) == 1 and value[0][0] not in {"var", "value", "compare"}:
+                    variable, comparison, operand = value[0]
+                else:
+                    comparison_fields = fields(value)
+                    if set(comparison_fields) != {"var", "value", "compare"}:
+                        raise ValueError("Expected shorthand comparison or var/value/compare form")
+                    variable = comparison_fields["var"]
+                    operand = comparison_fields["value"]
+                    comparison = {
+                        "equals": "=",
+                        "greater_than": ">",
+                        "less_than": "<",
+                        "greater_than_or_equals": ">=",
+                        "less_than_or_equals": "<=",
+                    }.get(comparison_fields["compare"])
+                    if comparison is None:
+                        raise ValueError("Unsupported variable comparison: " + comparison_fields["compare"])
                 left = self.number(variable, country, temporary)
                 right = self.number(operand, country, temporary)
                 answers.append({"=": left == right, ">": left > right, "<": left < right,
@@ -266,6 +280,22 @@ def validate_content(harness):
                     check(child[2] if child[0] == "limit" else [child], child[0] == "limit")
             elif key in ("NOT", "OR", "any_owned_state"):
                 check(value, True)
+            elif key == "check_variable":
+                if len(value) == 1 and value[0][0] not in {"var", "value", "compare"}:
+                    variable, _, operand = value[0]
+                else:
+                    comparison_fields = fields(value)
+                    if set(comparison_fields) != {"var", "value", "compare"}:
+                        raise ValueError("Invalid variable comparison")
+                    variable = comparison_fields["var"]
+                    operand = comparison_fields["value"]
+                if not variable.startswith("ac_econ_"):
+                    raise ValueError("Invalid economy variable")
+                used.add(variable)
+                if operand.startswith("ac_econ_"):
+                    used.add(operand)
+                if not (re.fullmatch(r"-?\d+(?:\.\d+)?", operand) or operand.startswith("ac_econ_") or operand == "num_of_controlled_factories"):
+                    raise ValueError("Unknown numeric symbol: " + operand)
             elif "variable" in key:
                 if len(value) != 1 or not value[0][0].startswith("ac_econ_"):
                     raise ValueError("Invalid economy variable")
@@ -320,13 +350,20 @@ def validate_content(harness):
     rules = fields(definitions("common/game_rules")["ac_economy"])
     if fields(rules["default"])["name"] != "disabled":
         raise ValueError("Economy must be default-off")
-    equipment = fields(read(MOD / "common/units/equipment/infantry.txt"))["equipments"]
-    if "infantry_equipment_0" not in fields(equipment):
-        raise ValueError("Procurement equipment is not defined")
-    technologies = fields(read(MOD / "common/technologies/infantry.txt"))["technologies"]
-    technology = fields(fields(technologies)["infantry_weapons"])
-    if "infantry_equipment_0" not in {key for key, _, _ in technology["enable_equipments"]}:
-        raise ValueError("Procurement technology does not unlock the equipment")
+    equipment_path = MOD / "common/units/equipment/infantry.txt"
+    if equipment_path.exists():
+        equipment = fields(read(equipment_path))["equipments"]
+        if "infantry_equipment_0" not in fields(equipment):
+            raise ValueError("Procurement equipment is not defined")
+    # The 1.19 continuation deliberately uses the installed game's current
+    # equipment schema. The inherited 1.14 unit file is preserved outside the
+    # active payload, so only validate it when a mod explicitly supplies one.
+    technology_path = MOD / "common/technologies/infantry.txt"
+    if technology_path.exists():
+        technologies = fields(read(technology_path))["technologies"]
+        technology = fields(fields(technologies)["infantry_weapons"])
+        if "infantry_equipment_0" not in {key for key, _, _ in technology["enable_equipments"]}:
+            raise ValueError("Procurement technology does not unlock the equipment")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,159 @@
+"""Regression checks for native-schema migration semantics reviewed on PR #14."""
+
+from __future__ import annotations
+
+import re
+import importlib.util
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+MOD = ROOT / "mod" / "2985041246"
+
+
+def read(relative: str) -> str:
+    return (MOD / relative).read_text(encoding="utf-8-sig")
+
+
+def load_variant_tool():
+    path = ROOT / "tools" / "Quarantine-LegacyEquipmentVariants.py"
+    spec = importlib.util.spec_from_file_location("variant_port", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def main() -> int:
+    mapper = (ROOT / "tools" / "Port-NativeEquipmentReferences.py").read_text(
+        encoding="utf-8"
+    )
+    assert '"antiair_1": "interwar_antiair"' in mapper
+    for technology in (
+        "basic_medium_battery",
+        "improved_airplane_launcher",
+        "air_tank_buster_1",
+        "infantry_weapons1",
+    ):
+        assert f'"{technology}":' not in mapper, technology
+
+    for path in (MOD / "history" / "countries").glob("*.txt"):
+        assert "antiair_1" not in path.read_text(encoding="utf-8-sig"), path
+    assert any("infantry_weapons1" in path.read_text(encoding="utf-8-sig") for path in (MOD / "history" / "countries").glob("*.txt"))
+
+    for relative, technology in (
+        ("history/countries/BLK - Belka.txt", "basic_medium_battery"),
+        ("history/countries/OSE - Osea.txt", "basic_medium_battery"),
+        ("history/countries/OSE - Osea.txt", "improved_airplane_launcher"),
+        ("history/countries/OSE - Osea.txt", "air_tank_buster_1"),
+        ("history/countries/SAP - Sapin.txt", "basic_medium_battery"),
+    ):
+        assert technology in read(relative), (relative, technology)
+
+    compatibility = read("common/technologies/ac_native_compatibility.txt")
+    assert "start_year = 1991" in compatibility
+    assert not re.search(r"position\s*=\s*\{[^}]*y\s*=\s*1991", compatibility)
+
+    sapin = read("common/ideas/sapin.txt")
+    idea = sapin[sapin.index("sap_concentrated_ifv_production") : sapin.index("# sap_overwhelming_advance_idea")]
+    assert idea.count("mechanized_equipment = {") == 1
+    assert idea.count("armored_car_equipment = {") == 1
+
+    ustio = read("common/national_focus/UST_shared.txt")
+    manpats = ustio[ustio.index("id = UST_import_MANPATS") : ustio.index("id = UST_ask_ratio_for_help")]
+    arm_the_man = ustio[ustio.index("id = UST_to_arm_the_man") : ustio.index("id = UST_last_second_mobilization")]
+    assert "type = anti_tank_equipment_1" in manpats
+    assert "type = anti_tank_equipment_1" in arm_the_man
+
+    continuation = (MOD / "events" / "ac_ustio_continuation.txt").read_text(encoding="utf-8-sig")
+    option = continuation[continuation.index("option = {") :]
+    assert "has_country_flag = UST_sold_land_to_ratio_flag }\n\t\t\tset_country_flag = ac_ustio_continuation_started" in option
+    non_ali_branch = re.search(
+        r"else_if\s*=\s*\{\s*limit\s*=\s*\{(?P<body>.*?)\}\s*"
+        r"set_country_flag\s*=\s*ac_ustio_continuation_started\s*"
+        r"load_focus_tree\s*=\s*\{\s*tree\s*=\s*ustio_non_ali",
+        option,
+        re.DOTALL,
+    )
+    assert non_ali_branch is not None
+    assert "has_country_flag = UST_not_sold_land_to_ratio_flag" in non_ali_branch.group("body")
+    assert "NOT = { has_country_flag = UST_lost_ratio_war_flag }" in non_ali_branch.group("body")
+
+    decisions = read("common/decisions/SAP_decisions.txt")
+    moderate = decisions[decisions.index("SAP_court_moderate_support") : decisions.index("SAP_attempt_to_mediate_differences")]
+    assert "value = -0.025\n\t\t\t\t}\n\t\t\t}\n\t\t\telse =" in moderate
+
+    # 1.19 rejects triggers in script-created advisor roles, so the guard lives
+    # in the database role (common/characters/SAP.txt), not in add_advisor_role.
+    focus_regents = read("common/national_focus/SAP_pre_belkan_war.txt")
+    characters = read("common/characters/SAP.txt")
+    for character, other in (
+        ("SAP_domingo_escalona", ("SAP_ramira_arguijo", "SAP_raul_de_haro", "SAP_alphonso_espinal")),
+        ("SAP_alphonso_espinal", ("SAP_domingo_escalona", "SAP_ramira_arguijo", "SAP_raul_de_haro")),
+    ):
+        assert f"character = {character}" not in focus_regents
+        start = re.search(rf"(?m)^\t{character} = \{{", characters).start()
+        block = characters[start : re.compile(r"\btraits\s*=").search(characters, start).start()]
+        assert "available =" in block
+        for rival in other:
+            assert rival in block
+
+    localization = (MOD / "localisation" / "english" / "ac_native_compatibility_l_english.yml").read_text(encoding="utf-8-sig")
+    for key in ("ifv1", "imv1", "infantry_manpats"):
+        assert f"{key}:0" in localization
+
+    ose_names = MOD / "common" / "units" / "names_divisions" / "OSE_names_divisions.txt"
+    assert "OSE_MOT_01" in ose_names.read_text(encoding="utf-8-sig")
+    assert "OSE_MOT_01" in read("history/units/OSE_land.txt")
+    assert "OSE_MOT_01" in read("history/units/OSE_land_ai.txt")
+
+    for name in ("Deutschland Class", "Guinevere Mark I", "Guinevere Mark II"):
+        assert name in read("history/countries/BLK - Belka.txt"), name
+
+    # Archived variants are active only after the explicit native-port rules;
+    # invalid aircraft modules and unavailable FAT/SAP name groups stay out.
+    variant_tool = load_variant_tool()
+    legacy_sample = """create_equipment_variant = {
+\ttype = medium_plane_scout_plane_airframe_1
+\tmodules = {
+\t\tfixed_auxiliary_weapon_slot_1 = qaam_1_1x
+\t\tspecial_type_slot_1 = airframe_swept_wing
+\t\tspecial_type_slot_2 = airframe_mod_faceted_frame
+\t}
+}
+"""
+    normalized_sample = variant_tool.normalize_variant_block(legacy_sample)
+    # Variant types must stay concrete equipment (1.19 generates the _1 airframes), not archetypes.
+    assert re.search(r"type = medium_plane_scout_plane_airframe_1\b", normalized_sample)
+    assert "fixed_auxiliary_weapon_slot_1 = rocket_rails" in normalized_sample
+    for token in ("qaam_1_1x", "airframe_swept_wing", "airframe_mod_faceted_frame"):
+        assert token not in normalized_sample, token
+    active_country_text = "\n".join(
+        path.read_text(encoding="utf-8-sig") for path in (MOD / "history" / "countries").glob("*.txt")
+    )
+    for token in (*variant_tool.UNSUPPORTED_MODULES, *variant_tool.MODULE_REPLACEMENTS):
+        assert token not in active_country_text, token
+    for token in variant_tool.TYPE_REPLACEMENTS:
+        assert not re.search(rf"(?m)^\s*type\s*=\s*{re.escape(token)}\s*$", active_country_text), token
+    units_text = "\n".join(path.read_text(encoding="utf-8-sig") for path in (MOD / "history" / "units").glob("*.txt"))
+    for token in variant_tool.OOB_TYPE_REPLACEMENTS:
+        assert not re.search(rf"(?<![A-Za-z0-9_]){re.escape(token)}(?![A-Za-z0-9_])", units_text), token
+    assert not re.search(r"(?m)^\s*name_group\s*=\s*(?:FAT|SAP)_", active_country_text)
+    assert not re.search(r"(?m)^\s*name_group\s*=\s*\w+_HISTORICAL", active_country_text)
+    assert all(
+        group in {"GER", "USA", "BLK", "OSE"}
+        for group in re.findall(r"(?m)^\s*name_group\s*=\s*([A-Za-z0-9_]+)", active_country_text)
+    )
+    assert "if = {\n\tlimit = { has_dlc = \"By Blood Alone\" }" in active_country_text
+    assert "if = {\n\tlimit = { has_dlc = \"Man the Guns\" }" in active_country_text
+    assert "if = {\n\tlimit = { not = { has_dlc = \"Man the Guns\" } }" in active_country_text
+    for filename, tag in (("00_BLK_names.txt", "BLK"), ("00_OSE_names.txt", "OSE")):
+        names = (MOD / "common" / "units" / "names" / filename).read_text(encoding="utf-8-sig")
+        assert len(names) > 1000, filename
+        assert re.search(rf"(?m)^{tag}\s*=\s*\{{", names), tag
+
+    print("native semantic mapping regression checks passed")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

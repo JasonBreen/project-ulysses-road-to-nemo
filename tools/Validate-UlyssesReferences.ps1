@@ -142,10 +142,12 @@ $locKeys = New-Object System.Collections.Generic.HashSet[string]
 $emptyLocKeys = New-Object System.Collections.Generic.HashSet[string]
 foreach ($file in $localisationFiles) {
     foreach ($line in Get-Content -LiteralPath $file.FullName) {
-        if ($line -match '^\s*([A-Za-z0-9_.-]+):\d+\s+') {
+        # HOI4 accepts both versioned `key:0 "text"` and versionless
+        # `key: "text"` entries; inherited archive files use the latter.
+        if ($line -match '^\s*([A-Za-z0-9_.-]+):\d*\s*"') {
             $key = $Matches[1]
             Add-SetValue $locKeys $key
-            if ($line -match ':\d+\s*""\s*$') { Add-SetValue $emptyLocKeys $key }
+            if ($line -match ':\d*\s*""\s*$') { Add-SetValue $emptyLocKeys $key }
         }
     }
 }
@@ -158,7 +160,10 @@ foreach ($file in $eventFiles) {
         $clean = Strip-Comment $line
         if ($clean -match '^\s*(?:title|desc|name|custom_effect_tooltip)\s*=\s*([A-Za-z0-9_.-]+)') {
             $key = $Matches[1]
-            if ($key -match '\.') { $eventLocRefs.Add([pscustomobject]@{ Key = $key; File = $file.FullName; Line = $lineNumber }) }
+            # Event localization IDs are not required to contain a dot.  The
+            # original audit silently skipped underscore-only keys such as
+            # custom_effect_tooltip IDs, allowing missing UI text to pass.
+            $eventLocRefs.Add([pscustomobject]@{ Key = $key; File = $file.FullName; Line = $lineNumber })
         }
     }
 }

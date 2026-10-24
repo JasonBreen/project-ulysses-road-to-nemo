@@ -1,6 +1,6 @@
 <div align="center">
 
-# PROJECT ULYSSES: CONTINUATION
+# PROJECT ULYSSES: ROAD TO NEMO
 
 ### THE BELKAN PRELUDE · v0.3-dev
 

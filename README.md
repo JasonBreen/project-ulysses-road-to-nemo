@@ -6,7 +6,7 @@
 
 **A Strangereal grand-strategy campaign for Hearts of Iron IV 1.19.3 “Operation Postern”**
 
-`PRIVATE CONTINUATION FORK` · `1 JANUARY 1991` · `PRELUDE TO THE BELKAN WAR`
+`UNOFFICIAL CONTINUATION` · `1 JANUARY 1991` · `PRELUDE TO THE BELKAN WAR`
 
 ![Project Ulysses main menu](docs/screenshots/main-menu.jpg)
 
@@ -30,7 +30,7 @@ Far beyond the continent, another crisis approaches. The asteroid Ulysses will b
 
 **The campaign begins before those events. What happens next is the point of the game.**
 
-**Project Ulysses: Continuation** is a private, unofficial continuation of the original *Project Ulysses* Hearts of Iron IV total conversion. It preserves the original Strangereal map, country content, events and distinctive presentation while repairing the April 2024 open alpha (v0.2, *Under Our Treads*) for modern HOI4. The long-term ambition is a coherent historical and alternate-history campaign, beginning with the Belkan crisis and extending into later eras of Strangereal.
+**Project Ulysses: Road to Nemo** is an unofficial continuation of the original *Project Ulysses* Hearts of Iron IV total conversion. It preserves the original Strangereal map, country content, events and distinctive presentation while repairing the April 2024 open alpha (v0.2, *Under Our Treads*) for modern HOI4. The long-term ambition is a coherent historical and alternate-history campaign, beginning with the Belkan crisis and extending into later eras of Strangereal.
 
 **Current reality:** the 1991 opening has passed an initial live runtime test on HOI4 1.19.3. The complete Belkan War, its alternate outcomes, the postwar years and later conflicts are **not yet finished or fully validated**.
 
@@ -138,11 +138,11 @@ Candidate superweapon systems include **Excalibur, V2, Stonehenge, Megalith and 
 
 ## ▌ SORTIE PROCEDURE
 
-This is a **private development fork**, not a packaged public release.
+This is a **development build**, not a packaged release.
 
 1. Place `mod/2985041246/` in `Documents\Paradox Interactive\Hearts of Iron IV\mod\`, or use a development descriptor that points at this checkout. See the [workspace instructions](docs/WORKSPACE.md).
 2. Place the `mod/2985041246.mod` descriptor in the same mod directory, and ensure its path resolves to the installed mod folder.
-3. In the launcher, enable **Project Ulysses: Continuation** in a **dedicated playset**. Do **not** enable it alongside another total conversion.
+3. In the launcher, enable **Project Ulysses: Road to Nemo** in a **dedicated playset**. Do **not** enable it alongside another total conversion.
 4. Start **Single Player → New Game → 1 January 1991**, select a nation and launch the campaign.
 
 > **[ AWACS ]** The mod replaces the map, history, country setup, AI templates and much of the presentation. Keep a separate playset and preserve existing saves.

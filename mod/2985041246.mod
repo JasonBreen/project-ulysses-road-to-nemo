@@ -1,5 +1,5 @@
 version="0.3-dev"
-name="Project Ulysses: Continuation"
+name="Project Ulysses: Road to Nemo"
 picture="Thumbnail.png"
 tags={
 	"Alternative History"

@@ -1,112 +1,411 @@
 guiTypes = {
+	# Independent quick launcher, anchored to the game HUD instead of politics_tab.
 	containerWindowType = {
 		name = "project_ulysses_economy_screen_open_button"
-		position = { x = 100 y = 4 }
-
-		buttonType = { # Main
+		position = { x = -96 y = -96 }
+		orientation = LOWER_RIGHT
+		size = { width = 64 height = 64 }
+		buttonType = {
 			name = "button_open"
-			spriteType = "GFX_browser_forward"
-			position = { x = 380 y = 468 }
+			position = { x = 0 y = 0 }
+			spriteType = "GFX_icon_button_60x60"
+			text = "AC_ECON_UI_OPEN"
+			buttonFont = "Aces16"
 			clicksound = "click_ok"
 		}
-		instantTextboxType = {
-			name = "button_open_text"
-			position = { x = 295 y = 470 }
-			font = "hoi_18mbs"
-			text = "Economy Status"
-			maxWidth = 100
-			maxHeight = 20
-			format = center
-		}
 	}
+	# No borrowed HOI4 chrome or Millennium Dawn textures: both sprites below
+	# are shipped by Project Ulysses. All numbers are live ac_econ variables.
 	containerWindowType = {
 		name = "project_ulysses_economy_screen"
-		size = { width = 600 height = 350 }
-		position = { x = -356 y = 80 }
-		show_position = { x = 540 y = 80 }
-		show_animation_type = decelerated
-		hide_animation_type = accelerated
-		animation_time = 300
-
+		size = { width = 860 height = 600 }
+		position = { x = 0 y = 0 }
+		orientation = center
+		origo = center
+		moveable = yes
 		click_to_front = yes
 		clipping = no
 		show_sound = menu_open_window
 		hide_sound = menu_close_window
-		moveable = no
-		
-		background = {
-			name = "background"		
-			quadTextureSprite ="GFX_tiled_plain_bg"
+		background = { name = "dashboard_bg" quadTextureSprite = "GFX_new_tile" }
+		instantTextboxType = {
+			name = "dashboard_title"
+			position = { x = 24 y = 13 }
+			font = "Aces20"
+			text = "AC_ECON_UI_TITLE"
+			format = left
+			maxWidth = 580
+			maxHeight = 28
 		}
-		
+		instantTextboxType = {
+			name = "dashboard_subtitle"
+			position = { x = 24 y = 43 }
+			font = "Aces16"
+			text = "AC_ECON_UI_SUBTITLE"
+			format = left
+			maxWidth = 720
+			maxHeight = 28
+		}
 		buttonType = {
 			name = "close_button"
-			position = { x = -35 y = 2 }
-			quadTextureSprite ="GFX_closebutton"
-			Orientation = UPPER_RIGHT
-			clicksound = click_close
-			pdx_tooltip = "CLOSE"
+			position = { x = 794 y = 10 }
+			spriteType = "GFX_icon_button_60x60"
+			text = "AC_ECON_UI_CLOSE"
+			buttonFont = "Aces16"
+			clicksound = "click_ok"
 		}
-		
-		instantTextboxType = {
-			name = "title"
-			position = { x = 0 y = 10 }
-			font = "Aces20"
-			text = "ECONOMY STATUS"
-			maxWidth = 600
-			maxHeight = 20
-			format = center
+		buttonType = {
+			name = "tab_overview"
+			position = { x = 36 y = 83 }
+			spriteType = "GFX_icon_button_60x60"
+			text = "AC_ECON_UI_TAB_OVERVIEW"
+			buttonFont = "Aces16"
+			clicksound = "click_ok"
 		}
-#######################################################################
+		buttonType = {
+			name = "tab_budget"
+			position = { x = 133 y = 83 }
+			spriteType = "GFX_icon_button_60x60"
+			text = "AC_ECON_UI_TAB_POLICY"
+			buttonFont = "Aces16"
+			clicksound = "click_ok"
+		}
+		buttonType = {
+			name = "tab_contracts"
+			position = { x = 229 y = 83 }
+			spriteType = "GFX_icon_button_60x60"
+			text = "AC_ECON_UI_TAB_CONTRACTS"
+			buttonFont = "Aces16"
+			clicksound = "click_ok"
+		}
+		containerWindowType = {
+			name = "overview_panel"
+			position = { x = 0 y = 0 }
+			size = { width = 860 height = 600 }
+			instantTextboxType = {
+				name = "ov_title"
+				position = { x = 42 y = 170 }
+				font = "Aces20"
+				text = "AC_ECON_UI_OVERVIEW_HEADER"
+				format = left
+				maxWidth = 740
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_treasury"
+				position = { x = 42 y = 210 }
+				font = "Aces16"
+				text = "AC_ECON_UI_TREASURY"
+				format = left
+				maxWidth = 370
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_debt"
+				position = { x = 442 y = 210 }
+				font = "Aces16"
+				text = "AC_ECON_UI_DEBT"
+				format = left
+				maxWidth = 370
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_arrears"
+				position = { x = 42 y = 249 }
+				font = "Aces16"
+				text = "AC_ECON_UI_ARREARS"
+				format = left
+				maxWidth = 370
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_credit"
+				position = { x = 442 y = 249 }
+				font = "Aces16"
+				text = "AC_ECON_UI_CREDIT"
+				format = left
+				maxWidth = 370
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_capacity"
+				position = { x = 42 y = 288 }
+				font = "Aces16"
+				text = "AC_ECON_UI_CAPACITY"
+				format = left
+				maxWidth = 370
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_current_balance"
+				position = { x = 442 y = 288 }
+				font = "Aces16"
+				text = "AC_ECON_UI_CURRENT_BALANCE"
+				format = left
+				maxWidth = 370
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_budget_header"
+				position = { x = 42 y = 337 }
+				font = "Aces20"
+				text = "AC_ECON_UI_CASHFLOW_HEADER"
+				format = left
+				maxWidth = 730
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_revenue"
+				position = { x = 42 y = 382 }
+				font = "Aces16"
+				text = "AC_ECON_UI_REVENUE"
+				format = left
+				maxWidth = 370
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_civil"
+				position = { x = 442 y = 382 }
+				font = "Aces16"
+				text = "AC_ECON_UI_CIVIL"
+				format = left
+				maxWidth = 370
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_military"
+				position = { x = 42 y = 420 }
+				font = "Aces16"
+				text = "AC_ECON_UI_MILITARY"
+				format = left
+				maxWidth = 370
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_interest"
+				position = { x = 442 y = 420 }
+				font = "Aces16"
+				text = "AC_ECON_UI_INTEREST"
+				format = left
+				maxWidth = 370
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "ov_last"
+				position = { x = 42 y = 464 }
+				font = "Aces16"
+				text = "AC_ECON_UI_LAST_WEEK"
+				format = left
+				maxWidth = 740
+				maxHeight = 28
+			}
+			buttonType = {
+				name = "refresh_button"
+				position = { x = 42 y = 510 }
+				spriteType = "GFX_icon_button_60x60"
+				text = "AC_ECON_UI_REFRESH"
+				buttonFont = "Aces16"
+				clicksound = "click_ok"
+			}
+		}
+		containerWindowType = {
+			name = "budget_panel"
+			position = { x = 0 y = 0 }
+			size = { width = 860 height = 600 }
+			instantTextboxType = {
+				name = "budget_title"
+				position = { x = 42 y = 170 }
+				font = "Aces20"
+				text = "AC_ECON_UI_POLICY_HEADER"
+				format = left
+				maxWidth = 730
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "budget_tax"
+				position = { x = 42 y = 213 }
+				font = "Aces16"
+				text = "AC_ECON_UI_TAX_LEVEL"
+				format = left
+				maxWidth = 730
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "budget_tax_cooldown"
+				position = { x = 42 y = 246 }
+				font = "Aces16"
+				text = "AC_ECON_UI_TAX_COOLDOWN"
+				format = left
+				maxWidth = 730
+				maxHeight = 28
+			}
+			buttonType = {
+				name = "tax_low_button"
+				position = { x = 42 y = 285 }
+				spriteType = "GFX_icon_button_60x60"
+				text = "AC_ECON_UI_TAX_LOW"
+				buttonFont = "Aces16"
+				clicksound = "click_ok"
+			}
+			buttonType = {
+				name = "tax_standard_button"
+				position = { x = 157 y = 285 }
+				spriteType = "GFX_icon_button_60x60"
+				text = "AC_ECON_UI_TAX_STANDARD"
+				buttonFont = "Aces16"
+				clicksound = "click_ok"
+			}
+			buttonType = {
+				name = "tax_high_button"
+				position = { x = 275 y = 285 }
+				spriteType = "GFX_icon_button_60x60"
+				text = "AC_ECON_UI_TAX_HIGH"
+				buttonFont = "Aces16"
+				clicksound = "click_ok"
+			}
+			instantTextboxType = {
+				name = "budget_services"
+				position = { x = 42 y = 374 }
+				font = "Aces16"
+				text = "AC_ECON_UI_SERVICES_LEVEL"
+				format = left
+				maxWidth = 730
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "budget_services_cooldown"
+				position = { x = 42 y = 410 }
+				font = "Aces16"
+				text = "AC_ECON_UI_SERVICES_COOLDOWN"
+				format = left
+				maxWidth = 730
+				maxHeight = 28
+			}
+			buttonType = {
+				name = "services_basic_button"
+				position = { x = 42 y = 452 }
+				spriteType = "GFX_icon_button_60x60"
+				text = "AC_ECON_UI_SERVICES_BASIC"
+				buttonFont = "Aces16"
+				clicksound = "click_ok"
+			}
+			buttonType = {
+				name = "services_rebuild_button"
+				position = { x = 185 y = 452 }
+				spriteType = "GFX_icon_button_60x60"
+				text = "AC_ECON_UI_SERVICES_REBUILD"
+				buttonFont = "Aces16"
+				clicksound = "click_ok"
+			}
+			instantTextboxType = {
+				name = "budget_note"
+				position = { x = 42 y = 531 }
+				font = "Aces16"
+				text = "AC_ECON_UI_POLICY_NOTE"
+				format = left
+				maxWidth = 760
+				maxHeight = 28
+			}
+		}
+		containerWindowType = {
+			name = "contracts_panel"
+			position = { x = 0 y = 0 }
+			size = { width = 860 height = 600 }
+			instantTextboxType = {
+				name = "contracts_title"
+				position = { x = 42 y = 170 }
+				font = "Aces20"
+				text = "AC_ECON_UI_CONTRACTS_HEADER"
+				format = left
+				maxWidth = 730
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "contracts_credit"
+				position = { x = 42 y = 215 }
+				font = "Aces16"
+				text = "AC_ECON_UI_DEBT_LIMIT"
+				format = left
+				maxWidth = 770
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "contracts_debt"
+				position = { x = 42 y = 253 }
+				font = "Aces16"
+				text = "AC_ECON_UI_CREDIT"
+				format = left
+				maxWidth = 770
+				maxHeight = 28
+			}
+			buttonType = {
+				name = "borrow_button"
+				position = { x = 42 y = 305 }
+				spriteType = "GFX_icon_button_60x60"
+				text = "AC_ECON_UI_BORROW"
+				buttonFont = "Aces16"
+				clicksound = "click_ok"
+			}
+			buttonType = {
+				name = "repay_button"
+				position = { x = 169 y = 305 }
+				spriteType = "GFX_icon_button_60x60"
+				text = "AC_ECON_UI_REPAY"
+				buttonFont = "Aces16"
+				clicksound = "click_ok"
+			}
+			instantTextboxType = {
+				name = "contracts_procurement"
+				position = { x = 42 y = 388 }
+				font = "Aces16"
+				text = "AC_ECON_UI_CONTRACT_ESCROW"
+				format = left
+				maxWidth = 770
+				maxHeight = 28
+			}
+			instantTextboxType = {
+				name = "contracts_pulses"
+				position = { x = 42 y = 425 }
+				font = "Aces16"
+				text = "AC_ECON_UI_CONTRACT_PULSES"
+				format = left
+				maxWidth = 770
+				maxHeight = 28
+			}
+			buttonType = {
+				name = "order_button"
+				position = { x = 42 y = 469 }
+				spriteType = "GFX_icon_button_60x60"
+				text = "AC_ECON_UI_ORDER"
+				buttonFont = "Aces16"
+				clicksound = "click_ok"
+			}
+			buttonType = {
+				name = "cancel_order_button"
+				position = { x = 177 y = 469 }
+				spriteType = "GFX_icon_button_60x60"
+				text = "AC_ECON_UI_CANCEL"
+				buttonFont = "Aces16"
+				clicksound = "click_ok"
+			}
+			instantTextboxType = {
+				name = "contracts_note"
+				position = { x = 42 y = 550 }
+				font = "Aces16"
+				text = "AC_ECON_UI_CONTRACT_NOTE"
+				format = left
+				maxWidth = 780
+				maxHeight = 28
+			}
+		}
 		instantTextboxType = {
-			name = "mils_cost"
-			position = { x = 120 y = 65 }
+			name = "footer"
+			position = { x = 42 y = 564 }
 			font = "Aces16"
-			text = "MILS_COST_LOC"
-			maxWidth = 400
-			maxHeight = 20
+			text = "AC_ECON_UI_FOOTER"
 			format = left
-		}
-		
-		iconType = {
-			name = "mils_cost_icon"
-			position = { x = 75 y = 85 }
-			quadTextureSprite = "GFX_endgame_industry_button"
-			centerposition = yes			
-		}
-		
-		instantTextboxType = {
-			name = "civs_cost"
-			position = { x = 120 y = 140 }
-			font = "Aces16"
-			text = "CIVS_COST_LOC"
-			maxWidth = 400
-			maxHeight = 20
-			format = left
-		}
-		
-		iconType = {
-			name = "civs_cost_icon"
-			position = { x = 75 y = 160 }
-			quadTextureSprite = "GFX_endgame_civ_industry_button"
-			centerposition = yes			
-		}
-		
-		instantTextboxType = {
-			name = "docks_cost"
-			position = { x = 120 y = 215 }
-			font = "Aces16"
-			text = "DOCKS_COST_LOC"
-			maxWidth = 400
-			maxHeight = 20
-			format = left
-		}
-		
-		iconType = {
-			name = "docks_cost_icon"
-			position = { x = 75 y = 235 }
-			quadTextureSprite = "GFX_endgame_naval_industry_button"
-			centerposition = yes			
+			maxWidth = 750
+			maxHeight = 28
 		}
 	}
 }

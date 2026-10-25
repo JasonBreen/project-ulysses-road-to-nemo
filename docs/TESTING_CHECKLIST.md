@@ -56,3 +56,11 @@ Static checks are automated by `tools/Test-UlyssesStatic.ps1` (CI: `.github/work
 
 - Version/build metadata, mod descriptor hash, save names, logs, date checkpoints, branch/choice path, and a concise result for every checklist item.
 - Never describe static inspection as runtime compatibility, and never treat a definition count as proof of reachability.
+
+## The Peace We Inherit acceptance
+
+The expansion's [native branch checklist](PEACE_WE_INHERIT.md#acceptance-checklist)
+adds all nine Belkan outcome/policy combinations, neutral/monarchy preservation,
+independent/subject/absent Ustio, pending diplomatic replies across save/load,
+partner invalidation, absolute calendar timing, and low/high Ulysses preparedness.
+These are **unrun native requirements**, separate from the passing offline suite.

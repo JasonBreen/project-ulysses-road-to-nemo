@@ -47,6 +47,20 @@ This is a source-traceable coverage backlog for the private continuation. It is 
 | Economy integration | Existing repository economy prototype | All campaign economy effects are guarded by `ac_econ_ready` | Offline economy tests pass; native balance unverified |
 | Ustio scaffold reconnection | Inherited Ustio focus/event files and existing Ratio outcome flags | Restored the initial child focuses, repaired one malformed coordinate, and reloaded the existing branch tree after live postwar outcomes; conventional victory is excluded because the inherited outcome annexes Ustio before handoff | Static-validated; no new borders/cores; native reachability unverified |
 
+## The Peace We Inherit implementation
+
+The approved expansion adds all four authored slices: 30 Belkan focuses; eight
+each for Osea and Ustio; six each for Sapin and Gebet; targeted FATO/Recta/South
+Belka briefs; six reciprocal reconstruction negotiations; and a preparedness,
+relief and late-1999 record layer. See [the expansion ledger](PEACE_WE_INHERIT.md)
+for source entries, affected namespaces, balance values, compatibility contracts
+and the native acceptance checklist. It extends the existing postwar handoff
+without replacing inherited governments or Ustio branches. The matrix above is
+the earlier coverage baseline; these additions do not establish native reachability.
+The authorized isolated [24 October native session](NATIVE_PEACE_WE_INHERIT_20261024.md)
+adds engine observations and an explicit coverage CSV; seeded aftermath contexts
+do not establish the natural war-to-settlement handoff.
+
 ## Coverage contract for new work
 
 Every new lore/event slice should record:

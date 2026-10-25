@@ -1,0 +1,70 @@
+# Provisional gameplay; see docs/FACTIONS.md and FACTIONS_PROVENANCE.md.
+
+ac_fac_enabled = {
+ has_game_rule = { rule = ac_factions option = enabled }
+ date > 1994.12.31
+ any_owned_state = { always = yes }
+}
+ac_fac_ready = {
+ ac_fac_enabled = yes has_country_flag = ac_fac_initialized
+ check_variable = { var = ac_fac_identity value = THIS.id compare = equals }
+}
+ac_fac_can_act = { ac_fac_ready = yes has_capitulated = no }
+ac_fac_can_found = { ac_fac_can_act = yes is_subject = no is_in_faction = no has_war = no }
+ac_fac_managed = {
+ ac_fac_can_act = yes is_subject = no is_faction_leader = yes
+ has_country_flag = ac_fac_chartered
+}
+ac_fac_offer_valid = {
+ ac_fac_can_found = yes has_country_flag = ac_fac_invite_pending
+ check_variable = { var = ac_fac_offer_host value = FROM.id compare = equals }
+ check_variable = { var = ac_fac_offer_generation value = FROM.ac_fac_generation compare = equals }
+ FROM = { exists = yes ac_fac_managed = yes NOT = { has_war_with = ROOT } }
+}
+ac_sub_chair_valid = {
+ ac_fac_can_act = yes has_country_flag = ac_sub_chair
+ is_subject = no is_in_faction = yes
+ check_variable = { var = ac_sub_host value = THIS.id compare = equals }
+ check_variable = { ac_sub_role = 1 }
+}
+ac_sub_member_valid = {
+ ac_fac_ready = yes has_country_flag = ac_sub_member
+ check_variable = { var = ac_sub_identity value = THIS.id compare = equals }
+ check_variable = { ac_sub_host > 0 }
+ var:ac_sub_host = {
+  exists = yes ac_sub_chair_valid = yes
+  check_variable = { var = ac_sub_generation value = PREV.ac_sub_generation compare = equals }
+ }
+}
+ac_sub_full_valid = {
+ ac_sub_member_valid = yes check_variable = { ac_sub_role = 1 }
+ is_subject = no is_in_faction = yes
+ var:ac_sub_host = { is_in_faction_with = PREV }
+}
+ac_sub_associate_valid = {
+ ac_sub_member_valid = yes check_variable = { ac_sub_role = 2 } is_subject = no
+ OR = { is_in_faction = no var:ac_sub_host = { is_in_faction_with = PREV } }
+}
+ac_sub_can_found = {
+ ac_fac_can_act = yes is_subject = no is_in_faction = yes
+ NOT = { has_country_flag = ac_sub_member }
+ any_faction_member = { NOT = { tag = ROOT } ac_fac_ready = yes is_subject = no }
+}
+ac_sub_offer_valid = {
+ ac_fac_can_act = yes is_subject = no NOT = { has_country_flag = ac_sub_member }
+ has_country_flag = ac_sub_invite_pending
+ check_variable = { var = ac_sub_offer_host value = FROM.id compare = equals }
+ check_variable = { var = ac_sub_offer_generation value = FROM.ac_sub_generation compare = equals }
+ FROM = { exists = yes ac_sub_chair_valid = yes NOT = { has_war_with = ROOT } }
+}
+ac_sub_offer_full_valid = { ac_sub_offer_valid = yes FROM = { is_in_faction_with = ROOT } }
+ac_sub_offer_associate_valid = {
+ ac_sub_offer_valid = yes OR = { is_in_faction = no FROM = { is_in_faction_with = ROOT } }
+}
+ac_sub_can_invest = {
+ ac_fac_can_act = yes ac_sub_full_valid = yes
+ OR = {
+  NOT = { ac_econ_ready = yes }
+  AND = { ac_econ_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 2 } }
+ }
+}

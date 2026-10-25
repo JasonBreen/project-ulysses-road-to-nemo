@@ -1,0 +1,248 @@
+# Provisional gameplay; see docs/FACTIONS.md and FACTIONS_PROVENANCE.md.
+
+ac_fac_diplomacy = {
+ ac_fac_found_bloc_decision = {
+  cost = 100 days_re_enable = 180
+  visible = { is_in_faction = no }
+  available = { ac_fac_can_found = yes }
+  complete_effect = { ac_fac_found_bloc = yes }
+  ai_will_do = { base = 0 }
+ }
+ ac_fac_invite_decision = {
+  cost = 25
+  target_root_trigger = { ac_fac_managed = yes }
+  target_array = global.ac_fac_countries targets_dynamic = yes
+  target_trigger = { FROM = { ac_fac_can_found = yes NOT = { tag = ROOT } NOT = { has_country_flag = ac_fac_invite_pending } } }
+  complete_effect = {
+   FROM = {
+    set_variable = { ac_fac_offer_host = ROOT.id }
+    set_variable = { ac_fac_offer_generation = ROOT.ac_fac_generation }
+    set_country_flag = { flag = ac_fac_invite_pending days = 31 }
+    country_event = { id = ac_factions.1 days = 1 }
+   }
+  }
+  ai_will_do = { base = 0 }
+ }
+ ac_fac_leave_decision = {
+  cost = 25
+  visible = { is_in_faction = yes is_faction_leader = no }
+  available = { ac_fac_can_act = yes is_subject = no has_war = no }
+  complete_effect = { leave_faction = yes ac_sub_refresh = yes }
+  ai_will_do = { base = 0 }
+ }
+ ac_fac_dissolve_bloc_decision = {
+  cost = 25 visible = { ac_fac_managed = yes }
+  available = { has_war = no NOT = { any_faction_member = { has_war = yes } } }
+  complete_effect = { dismantle_faction = yes clr_country_flag = ac_fac_chartered ac_sub_refresh = yes }
+  ai_will_do = { base = 0 }
+ }
+ ac_fac_coordination_decision = {
+  cost = 35 days_re_enable = 90
+  visible = { has_dlc = "No Compromise, No Surrender" is_in_faction = yes }
+  available = { ac_fac_can_act = yes }
+  complete_effect = {
+   add_faction_initiative = 10
+   add_faction_influence_score = 5
+   faction_leader = { if = { limit = { check_variable = { ac_fac_sessions < 3 } } add_to_variable = { ac_fac_sessions = 1 } } }
+  }
+  ai_will_do = { base = 0 }
+ }
+ ac_fac_joint_research_decision = {
+  cost = 75 visible = { has_dlc = "No Compromise, No Surrender" is_faction_leader = yes }
+  available = {
+   ac_fac_can_act = yes has_faction_research_unlocked = no
+   any_faction_member = { ac_sub_chair_valid = yes check_variable = { ac_sub_research = 1 } }
+  }
+  complete_effect = { set_faction_research_unlocked = yes }
+  ai_will_do = { base = 0 }
+ }
+ ac_fac_joint_command_decision = {
+  cost = 75 visible = { has_dlc = "No Compromise, No Surrender" is_faction_leader = yes }
+  available = {
+   ac_fac_can_act = yes has_faction_military_unlocked = no
+   any_faction_member = { ac_sub_chair_valid = yes check_variable = { ac_sub_mobility = 1 } }
+  }
+  complete_effect = { set_faction_military_unlocked = yes }
+  ai_will_do = { base = 0 }
+ }
+ ac_fac_spymaster_decision = {
+  cost = 50 days_re_enable = 180
+  visible = { has_dlc = "La Resistance" is_faction_leader = yes }
+  target_root_trigger = { ac_fac_can_act = yes is_faction_leader = yes has_dlc = "La Resistance" }
+  target_array = global.ac_fac_countries targets_dynamic = yes
+  target_trigger = { FROM = { ac_fac_can_act = yes is_in_faction_with = ROOT has_intelligence_agency = yes } }
+  complete_effect = { FROM = { set_faction_spymaster = yes } }
+  ai_will_do = { base = 0 }
+ }
+}
+ac_fac_councils = {
+ ac_fac_support_civic_decision = {
+  cost = 40
+  available = { ac_fac_can_act = yes NOT = { has_country_flag = ac_fac_influence_cooldown } check_variable = { ac_fac_civic < 100 } }
+  complete_effect = { ac_fac_support_civic = yes }
+  ai_will_do = { base = 0 }
+ }
+ ac_fac_support_security_decision = {
+  cost = 40
+  available = { ac_fac_can_act = yes NOT = { has_country_flag = ac_fac_influence_cooldown } check_variable = { ac_fac_security < 100 } }
+  complete_effect = { ac_fac_support_security = yes }
+  ai_will_do = { base = 0 }
+ }
+ ac_fac_support_industry_decision = {
+  cost = 40
+  available = { ac_fac_can_act = yes NOT = { has_country_flag = ac_fac_influence_cooldown } check_variable = { ac_fac_industry < 100 } }
+  complete_effect = { ac_fac_support_industry = yes }
+  ai_will_do = {
+   base = 1
+   modifier = { factor = 0 NOT = { ac_sub_full_valid = yes } }
+   modifier = { factor = 0 check_variable = { ac_fac_industry >= 30 } }
+  }
+ }
+ ac_corp_support_engineering_decision = {
+  cost = 40
+  available = { ac_fac_can_act = yes NOT = { has_country_flag = ac_corp_influence_cooldown } check_variable = { ac_corp_engineering < 100 } }
+  complete_effect = { ac_corp_support_engineering = yes }
+  ai_will_do = { base = 0 }
+ }
+ ac_corp_support_operations_decision = {
+  cost = 40
+  available = { ac_fac_can_act = yes NOT = { has_country_flag = ac_corp_influence_cooldown } check_variable = { ac_corp_operations < 100 } }
+  complete_effect = { ac_corp_support_operations = yes }
+  ai_will_do = { base = 0 }
+ }
+ ac_corp_support_board_decision = {
+  cost = 40
+  available = { ac_fac_can_act = yes NOT = { has_country_flag = ac_corp_influence_cooldown } check_variable = { ac_corp_board < 100 } }
+  complete_effect = { ac_corp_support_board = yes }
+  ai_will_do = { base = 0 }
+ }
+
+ ac_corp_mio_workshop_decision = {
+  cost = 50 days_re_enable = 180 visible = { has_dlc = "Arms Against Tyranny" }
+  available = {
+   ac_fac_can_act = yes any_military_industrial_organization = { always = yes }
+   check_variable = { ac_corp_engineering >= 40 }
+  }
+  complete_effect = { every_military_industrial_organization = { add_mio_funds = 25 } }
+  ai_will_do = { base = 0 }
+ }
+}
+ac_sub_council = {
+ ac_sub_found_decision = {
+  cost = 75 days_re_enable = 180
+  visible = { NOT = { has_country_flag = ac_sub_member } is_in_faction = yes }
+  available = { ac_sub_can_found = yes }
+  complete_effect = { ac_sub_found = yes }
+  ai_will_do = { base = 0 }
+ }
+
+ ac_sub_invite_full_decision = {
+  cost = 25 target_root_trigger = { ac_sub_chair_valid = yes } target_array = global.ac_fac_countries targets_dynamic = yes
+  target_trigger = {
+   FROM = {
+    ac_fac_can_act = yes is_subject = no NOT = { tag = ROOT }
+    NOT = { has_country_flag = ac_sub_member } NOT = { has_country_flag = ac_sub_invite_pending }
+    NOT = { has_war_with = ROOT } is_in_faction_with = ROOT
+   }
+  }
+  complete_effect = {
+   FROM = {
+    set_variable = { ac_sub_offer_host = ROOT.id }
+    set_variable = { ac_sub_offer_generation = ROOT.ac_sub_generation }
+    set_country_flag = { flag = ac_sub_invite_pending days = 31 }
+    country_event = { id = ac_factions.2 days = 1 }
+   }
+  }
+  ai_will_do = { base = 0 }
+ }
+
+ ac_sub_invite_associate_decision = {
+  cost = 25 target_root_trigger = { ac_sub_chair_valid = yes } target_array = global.ac_fac_countries targets_dynamic = yes
+  target_trigger = {
+   FROM = {
+    ac_fac_can_act = yes is_subject = no NOT = { tag = ROOT }
+    NOT = { has_country_flag = ac_sub_member } NOT = { has_country_flag = ac_sub_invite_pending }
+    NOT = { has_war_with = ROOT } OR = { is_in_faction = no is_in_faction_with = ROOT }
+   }
+  }
+  complete_effect = {
+   FROM = {
+    set_variable = { ac_sub_offer_host = ROOT.id }
+    set_variable = { ac_sub_offer_generation = ROOT.ac_sub_generation }
+    set_country_flag = { flag = ac_sub_invite_pending days = 31 }
+    country_event = { id = ac_factions.3 days = 1 }
+   }
+  }
+  ai_will_do = { base = 0 }
+ }
+
+ ac_sub_leave_decision = {
+  cost = 0 visible = { has_country_flag = ac_sub_member NOT = { has_country_flag = ac_sub_chair } }
+  complete_effect = { ac_sub_clear_member = yes } ai_will_do = { base = 0 }
+ }
+ ac_sub_dissolve_decision = {
+  cost = 0 visible = { ac_sub_chair_valid = yes }
+  complete_effect = { ac_sub_dissolve = yes } ai_will_do = { base = 0 }
+ }
+ ac_sub_transfer_decision = {
+  cost = 25 target_root_trigger = { ac_sub_chair_valid = yes } target_array = global.ac_fac_countries targets_dynamic = yes
+  target_trigger = {
+   FROM = {
+    ac_sub_full_valid = yes has_capitulated = no NOT = { tag = ROOT }
+    check_variable = { var = ac_sub_host value = ROOT.id compare = equals }
+   }
+  }
+  complete_effect = { ac_sub_transfer = yes } ai_will_do = { base = 0 }
+ }
+
+ ac_sub_invest_mobility_decision = {
+  cost = 35 visible = { ac_sub_full_valid = yes }
+  available = { ac_sub_can_invest = yes check_variable = { ac_sub_invest_mobility = 0 } check_variable = { ac_fac_security >= 30 } }
+  complete_effect = { ac_sub_invest_mobility_effect = yes } ai_will_do = { base = 1 }
+ }
+ ac_sub_enact_mobility_decision = {
+  cost = 50 visible = { ac_sub_chair_valid = yes }
+  available = { check_variable = { ac_sub_mobility = 0 }
+   check_variable = { ac_sub_invest_mobility = 1 }
+   any_country = {
+    NOT = { tag = ROOT } ac_sub_full_valid = yes
+    check_variable = { var = ac_sub_host value = ROOT.id compare = equals }
+    check_variable = { ac_sub_invest_mobility = 1 }
+   } }
+  complete_effect = { ac_sub_enact_mobility_effect = yes } ai_will_do = { base = 1 }
+ }
+
+ ac_sub_invest_procurement_decision = {
+  cost = 35 visible = { ac_sub_full_valid = yes }
+  available = { ac_sub_can_invest = yes check_variable = { ac_sub_invest_procurement = 0 } check_variable = { ac_fac_industry >= 30 } }
+  complete_effect = { ac_sub_invest_procurement_effect = yes } ai_will_do = { base = 1 }
+ }
+ ac_sub_enact_procurement_decision = {
+  cost = 50 visible = { ac_sub_chair_valid = yes }
+  available = { check_variable = { ac_sub_procurement = 0 }
+   check_variable = { ac_sub_invest_procurement = 1 }
+   any_country = {
+    NOT = { tag = ROOT } ac_sub_full_valid = yes
+    check_variable = { var = ac_sub_host value = ROOT.id compare = equals }
+    check_variable = { ac_sub_invest_procurement = 1 }
+   } }
+  complete_effect = { ac_sub_enact_procurement_effect = yes } ai_will_do = { base = 1 }
+ }
+
+ ac_sub_invest_research_decision = {
+  cost = 35 visible = { ac_sub_full_valid = yes }
+  available = { ac_sub_can_invest = yes check_variable = { ac_sub_invest_research = 0 } check_variable = { ac_corp_engineering >= 30 } }
+  complete_effect = { ac_sub_invest_research_effect = yes } ai_will_do = { base = 1 }
+ }
+ ac_sub_enact_research_decision = {
+  cost = 50 visible = { ac_sub_chair_valid = yes }
+  available = { check_variable = { ac_sub_research = 0 }
+   check_variable = { ac_sub_invest_research = 1 }
+   any_country = {
+    NOT = { tag = ROOT } ac_sub_full_valid = yes
+    check_variable = { var = ac_sub_host value = ROOT.id compare = equals }
+    check_variable = { ac_sub_invest_research = 1 }
+   } }
+  complete_effect = { ac_sub_enact_research_effect = yes } ai_will_do = { base = 1 }
+ }
+}

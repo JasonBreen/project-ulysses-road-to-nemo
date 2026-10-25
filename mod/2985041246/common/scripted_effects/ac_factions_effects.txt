@@ -1,0 +1,468 @@
+# Provisional gameplay; see docs/FACTIONS.md and FACTIONS_PROVENANCE.md.
+
+ac_fac_initialize = {
+ if = {
+  limit = { ac_fac_enabled = yes NOT = { is_in_array = { global.ac_fac_countries = THIS } } }
+  add_to_array = { global.ac_fac_countries = THIS }
+ }
+ if = {
+  limit = { ac_fac_enabled = yes NOT = { ac_fac_ready = yes } }
+  set_country_flag = ac_fac_initialized
+  set_variable = { ac_fac_identity = THIS.id }
+  set_variable = { ac_fac_civic = 40 }
+  set_variable = { ac_fac_security = 35 }
+  set_variable = { ac_fac_industry = 25 }
+  set_variable = { ac_corp_engineering = 40 }
+  set_variable = { ac_corp_operations = 35 }
+  set_variable = { ac_corp_board = 25 }
+  ac_sub_clear_member = yes
+  clr_country_flag = ac_sub_chair
+  clr_country_flag = ac_fac_chartered
+ }
+}
+ac_fac_refresh = {
+ set_variable = { ac_fac_stability = ac_fac_civic }
+ multiply_variable = { ac_fac_stability = 0.0005 }
+ set_variable = { ac_fac_organization = ac_fac_security }
+ multiply_variable = { ac_fac_organization = 0.0003 }
+ set_variable = { ac_fac_construction = ac_fac_industry }
+ multiply_variable = { ac_fac_construction = 0.0003 }
+ set_variable = { ac_corp_research = ac_corp_engineering }
+ multiply_variable = { ac_corp_research = 0.0002 }
+ set_variable = { ac_corp_efficiency = ac_corp_operations }
+ multiply_variable = { ac_corp_efficiency = 0.0005 }
+ set_variable = { ac_corp_output = ac_corp_board }
+ multiply_variable = { ac_corp_output = 0.0002 }
+ set_variable = { ac_fac_capture = 0 }
+ if = {
+  limit = { OR = {
+   check_variable = { ac_fac_civic > 70 } check_variable = { ac_fac_security > 70 }
+   check_variable = { ac_fac_industry > 70 } check_variable = { ac_corp_engineering > 70 }
+   check_variable = { ac_corp_operations > 70 } check_variable = { ac_corp_board > 70 }
+  } }
+  set_variable = { ac_fac_capture = -0.05 }
+ }
+ if = {
+  limit = { NOT = { has_dynamic_modifier = { modifier = ac_fac_council_modifier } } }
+  add_dynamic_modifier = { modifier = ac_fac_council_modifier }
+ }
+ if = {
+  limit = {
+   has_dlc = "By Blood Alone"
+   NOT = { original_tag = BLK } NOT = { original_tag = SAP }
+   NOT = { has_power_balance = { id = BLK_power_balance } }
+   NOT = { has_power_balance = { id = SAP_power_balance } }
+   NOT = { has_power_balance = { id = ac_fac_power_balance } }
+  }
+  set_power_balance = { id = ac_fac_power_balance set_value = 0 }
+ }
+}
+ac_fac_found_bloc = {
+ if = {
+  limit = { ac_fac_can_found = yes }
+  add_to_variable = { ac_fac_generation = 1 }
+  set_country_flag = ac_fac_chartered
+  set_variable = { ac_fac_sessions = 0 }
+  if = {
+   limit = { has_dlc = "No Compromise, No Surrender" }
+   create_faction_from_template = ac_fac_mutual_defence
+  }
+  else = { create_faction = ac_fac_bloc_name }
+ }
+}
+ac_fac_accept = {
+ if = { limit = { ac_fac_offer_valid = yes } FROM = { add_to_faction = ROOT } }
+ clr_country_flag = ac_fac_invite_pending
+}
+ac_sub_found = {
+ if = {
+  limit = { ac_sub_can_found = yes }
+  add_to_variable = { ac_sub_epoch = 1 }
+  set_variable = { ac_sub_generation = ac_sub_epoch }
+  set_country_flag = ac_sub_chair
+  set_country_flag = ac_sub_member
+  set_variable = { ac_sub_identity = THIS.id }
+  set_variable = { ac_sub_host = THIS.id }
+  set_variable = { ac_sub_role = 1 }
+  set_variable = { ac_sub_mobility = 0 }
+  set_variable = { ac_sub_procurement = 0 }
+  set_variable = { ac_sub_research = 0 }
+  ac_sub_refresh = yes
+ }
+}
+ac_sub_clear_member = {
+ clr_country_flag = ac_sub_member
+ clear_variable = ac_sub_host
+ clear_variable = ac_sub_identity
+ clear_variable = ac_sub_role
+ clear_variable = ac_sub_invest_mobility
+ clear_variable = ac_sub_invest_procurement
+ clear_variable = ac_sub_invest_research
+ if = {
+  limit = { has_dynamic_modifier = { modifier = ac_sub_program_modifier } }
+  remove_dynamic_modifier = { modifier = ac_sub_program_modifier }
+ }
+}
+ac_sub_accept_full = {
+ if = {
+  limit = { ac_sub_offer_full_valid = yes }
+  set_variable = { ac_sub_host = FROM.id }
+  set_variable = { ac_sub_generation = FROM.ac_sub_generation }
+  set_variable = { ac_sub_identity = THIS.id }
+  set_variable = { ac_sub_role = 1 }
+  set_country_flag = ac_sub_member
+  ac_sub_refresh = yes
+ }
+ clr_country_flag = ac_sub_invite_pending
+}
+ac_sub_accept_associate = {
+ if = {
+  limit = { ac_sub_offer_associate_valid = yes }
+  set_variable = { ac_sub_host = FROM.id }
+  set_variable = { ac_sub_generation = FROM.ac_sub_generation }
+  set_variable = { ac_sub_identity = THIS.id }
+  set_variable = { ac_sub_role = 2 }
+  set_country_flag = ac_sub_member
+  ac_sub_refresh = yes
+ }
+ clr_country_flag = ac_sub_invite_pending
+}
+ac_sub_pay_investment = {
+ if = { limit = { ac_econ_ready = yes } subtract_from_variable = { ac_econ_treasury = 2 } }
+}
+ac_sub_count_support = {
+ set_variable = { ac_sub_support_mobility = 0 }
+ set_variable = { ac_sub_support_procurement = 0 }
+ set_variable = { ac_sub_support_research = 0 }
+ every_country = {
+  limit = {
+   ac_sub_full_valid = yes
+   check_variable = { var = ac_sub_host value = PREV.id compare = equals }
+  }
+  if = { limit = { check_variable = { ac_sub_invest_mobility = 1 } } PREV = { add_to_variable = { ac_sub_support_mobility = 1 } } }
+  if = { limit = { check_variable = { ac_sub_invest_procurement = 1 } } PREV = { add_to_variable = { ac_sub_support_procurement = 1 } } }
+  if = { limit = { check_variable = { ac_sub_invest_research = 1 } } PREV = { add_to_variable = { ac_sub_support_research = 1 } } }
+ }
+}
+ac_sub_refresh = {
+ if = {
+  limit = { OR = { ac_sub_full_valid = yes ac_sub_associate_valid = yes } }
+  var:ac_sub_host = {
+   PREV = {
+    set_variable = { ac_sub_supply = PREV.ac_sub_mobility }
+    set_variable = { ac_sub_efficiency = PREV.ac_sub_procurement }
+    set_variable = { ac_sub_science = PREV.ac_sub_research }
+   }
+  }
+  multiply_variable = { ac_sub_supply = -0.03 }
+  multiply_variable = { ac_sub_efficiency = 0.05 }
+  multiply_variable = { ac_sub_science = 0.02 }
+  if = {
+   limit = { ac_sub_associate_valid = yes }
+   multiply_variable = { ac_sub_supply = 0.5 }
+   multiply_variable = { ac_sub_efficiency = 0.5 }
+   multiply_variable = { ac_sub_science = 0.5 }
+  }
+  if = {
+   limit = { NOT = { has_dynamic_modifier = { modifier = ac_sub_program_modifier } } }
+   add_dynamic_modifier = { modifier = ac_sub_program_modifier }
+  }
+ }
+ else = { ac_sub_clear_member = yes }
+}
+ac_sub_dissolve = {
+ # Entry points establish the chair as ROOT.
+ clr_country_flag = ac_sub_chair
+ add_to_variable = { ac_sub_epoch = 1 }
+ set_variable = { ac_sub_generation = ac_sub_epoch }
+ every_country = {
+  limit = { check_variable = { var = ac_sub_host value = ROOT.id compare = equals } }
+  ac_sub_clear_member = yes
+ }
+ set_variable = { ac_sub_mobility = 0 }
+ set_variable = { ac_sub_procurement = 0 }
+ set_variable = { ac_sub_research = 0 }
+}
+ac_sub_transfer = {
+ # ROOT is old chair; FROM is the selected valid full member.
+ if = {
+  limit = {
+   ac_sub_chair_valid = yes
+   FROM = {
+    ac_sub_full_valid = yes NOT = { tag = ROOT } has_capitulated = no
+    check_variable = { var = ac_sub_host value = ROOT.id compare = equals }
+   }
+  }
+  set_variable = { ac_sub_transfer_epoch = ac_sub_generation }
+  FROM = {
+   add_to_variable = { ac_sub_epoch = 1 }
+   set_variable = { ac_sub_generation = ac_sub_epoch }
+   set_country_flag = ac_sub_chair
+   set_variable = { ac_sub_mobility = ROOT.ac_sub_mobility }
+   set_variable = { ac_sub_procurement = ROOT.ac_sub_procurement }
+   set_variable = { ac_sub_research = ROOT.ac_sub_research }
+  }
+  every_country = {
+   limit = {
+    has_country_flag = ac_sub_member is_subject = no
+    check_variable = { var = ac_sub_identity value = THIS.id compare = equals }
+    check_variable = { var = ac_sub_host value = ROOT.id compare = equals }
+    OR = { tag = FROM check_variable = { var = ac_sub_generation value = ROOT.ac_sub_transfer_epoch compare = equals } }
+    OR = {
+     AND = { check_variable = { ac_sub_role = 1 } is_in_faction_with = ROOT }
+     AND = { check_variable = { ac_sub_role = 2 } OR = { is_in_faction = no is_in_faction_with = ROOT } }
+    }
+   }
+   set_variable = { ac_sub_host = FROM.id }
+   set_variable = { ac_sub_generation = FROM.ac_sub_generation }
+  }
+  clr_country_flag = ac_sub_chair
+  set_variable = { ac_sub_mobility = 0 }
+  set_variable = { ac_sub_procurement = 0 }
+  set_variable = { ac_sub_research = 0 }
+  FROM = { ac_sub_count_support = yes }
+ }
+}
+ac_fac_cleanup = {
+ if = { limit = { has_dynamic_modifier = { modifier = ac_fac_council_modifier } } remove_dynamic_modifier = { modifier = ac_fac_council_modifier } }
+ if = { limit = { has_power_balance = { id = ac_fac_power_balance } } remove_power_balance = { id = ac_fac_power_balance } }
+ ac_sub_clear_member = yes
+ clr_country_flag = ac_sub_chair
+}
+ac_fac_tick = {
+ if = {
+  limit = { ac_fac_enabled = yes }
+  ac_fac_initialize = yes
+  ac_fac_refresh = yes
+  if = { limit = { is_in_faction = no } clr_country_flag = ac_fac_chartered }
+  if = {
+   limit = { has_country_flag = ac_sub_chair NOT = { ac_sub_chair_valid = yes } }
+   if = {
+    limit = { check_variable = { var = ac_sub_host value = THIS.id compare = equals } }
+    ac_sub_dissolve = yes
+   }
+   else = { clr_country_flag = ac_sub_chair }
+  }
+  if = { limit = { has_country_flag = ac_sub_member } ac_sub_refresh = yes }
+  if = { limit = { ac_sub_chair_valid = yes } ac_sub_count_support = yes }
+ }
+ else = { ac_fac_cleanup = yes }
+}
+
+ac_fac_support_civic = {
+ if = { limit = { ac_fac_can_act = yes }
+  if = {
+   limit = { check_variable = { ac_fac_security >= 5 } }
+   subtract_from_variable = { ac_fac_security = 5 }
+   add_to_variable = { ac_fac_civic = 5 }
+  }
+  else = {
+   add_to_variable = { ac_fac_civic = ac_fac_security }
+   set_variable = { ac_fac_security = 0 }
+  }
+  if = {
+   limit = { check_variable = { ac_fac_industry >= 5 } }
+   subtract_from_variable = { ac_fac_industry = 5 }
+   add_to_variable = { ac_fac_civic = 5 }
+  }
+  else = {
+   add_to_variable = { ac_fac_civic = ac_fac_industry }
+   set_variable = { ac_fac_industry = 0 }
+  }
+  if = {
+   limit = { has_dlc = "By Blood Alone" has_power_balance = { id = ac_fac_power_balance } }
+   add_power_balance_value = { id = ac_fac_power_balance value = -0.1 }
+  }
+  set_country_flag = { flag = ac_fac_influence_cooldown days = 30 }
+  ac_fac_refresh = yes
+ }
+}
+
+ac_fac_support_security = {
+ if = { limit = { ac_fac_can_act = yes }
+  if = {
+   limit = { check_variable = { ac_fac_civic >= 5 } }
+   subtract_from_variable = { ac_fac_civic = 5 }
+   add_to_variable = { ac_fac_security = 5 }
+  }
+  else = {
+   add_to_variable = { ac_fac_security = ac_fac_civic }
+   set_variable = { ac_fac_civic = 0 }
+  }
+  if = {
+   limit = { check_variable = { ac_fac_industry >= 5 } }
+   subtract_from_variable = { ac_fac_industry = 5 }
+   add_to_variable = { ac_fac_security = 5 }
+  }
+  else = {
+   add_to_variable = { ac_fac_security = ac_fac_industry }
+   set_variable = { ac_fac_industry = 0 }
+  }
+  if = {
+   limit = { has_dlc = "By Blood Alone" has_power_balance = { id = ac_fac_power_balance } }
+   add_power_balance_value = { id = ac_fac_power_balance value = 0.1 }
+  }
+  set_country_flag = { flag = ac_fac_influence_cooldown days = 30 }
+  ac_fac_refresh = yes
+ }
+}
+
+ac_fac_support_industry = {
+ if = { limit = { ac_fac_can_act = yes }
+  if = {
+   limit = { check_variable = { ac_fac_civic >= 5 } }
+   subtract_from_variable = { ac_fac_civic = 5 }
+   add_to_variable = { ac_fac_industry = 5 }
+  }
+  else = {
+   add_to_variable = { ac_fac_industry = ac_fac_civic }
+   set_variable = { ac_fac_civic = 0 }
+  }
+  if = {
+   limit = { check_variable = { ac_fac_security >= 5 } }
+   subtract_from_variable = { ac_fac_security = 5 }
+   add_to_variable = { ac_fac_industry = 5 }
+  }
+  else = {
+   add_to_variable = { ac_fac_industry = ac_fac_security }
+   set_variable = { ac_fac_security = 0 }
+  }
+  set_country_flag = { flag = ac_fac_influence_cooldown days = 30 }
+  ac_fac_refresh = yes
+ }
+}
+
+ac_corp_support_engineering = {
+ if = { limit = { ac_fac_can_act = yes }
+  if = {
+   limit = { check_variable = { ac_corp_operations >= 5 } }
+   subtract_from_variable = { ac_corp_operations = 5 }
+   add_to_variable = { ac_corp_engineering = 5 }
+  }
+  else = {
+   add_to_variable = { ac_corp_engineering = ac_corp_operations }
+   set_variable = { ac_corp_operations = 0 }
+  }
+  if = {
+   limit = { check_variable = { ac_corp_board >= 5 } }
+   subtract_from_variable = { ac_corp_board = 5 }
+   add_to_variable = { ac_corp_engineering = 5 }
+  }
+  else = {
+   add_to_variable = { ac_corp_engineering = ac_corp_board }
+   set_variable = { ac_corp_board = 0 }
+  }
+  set_country_flag = { flag = ac_corp_influence_cooldown days = 30 }
+  ac_fac_refresh = yes
+ }
+}
+
+ac_corp_support_operations = {
+ if = { limit = { ac_fac_can_act = yes }
+  if = {
+   limit = { check_variable = { ac_corp_engineering >= 5 } }
+   subtract_from_variable = { ac_corp_engineering = 5 }
+   add_to_variable = { ac_corp_operations = 5 }
+  }
+  else = {
+   add_to_variable = { ac_corp_operations = ac_corp_engineering }
+   set_variable = { ac_corp_engineering = 0 }
+  }
+  if = {
+   limit = { check_variable = { ac_corp_board >= 5 } }
+   subtract_from_variable = { ac_corp_board = 5 }
+   add_to_variable = { ac_corp_operations = 5 }
+  }
+  else = {
+   add_to_variable = { ac_corp_operations = ac_corp_board }
+   set_variable = { ac_corp_board = 0 }
+  }
+  set_country_flag = { flag = ac_corp_influence_cooldown days = 30 }
+  ac_fac_refresh = yes
+ }
+}
+
+ac_corp_support_board = {
+ if = { limit = { ac_fac_can_act = yes }
+  if = {
+   limit = { check_variable = { ac_corp_engineering >= 5 } }
+   subtract_from_variable = { ac_corp_engineering = 5 }
+   add_to_variable = { ac_corp_board = 5 }
+  }
+  else = {
+   add_to_variable = { ac_corp_board = ac_corp_engineering }
+   set_variable = { ac_corp_engineering = 0 }
+  }
+  if = {
+   limit = { check_variable = { ac_corp_operations >= 5 } }
+   subtract_from_variable = { ac_corp_operations = 5 }
+   add_to_variable = { ac_corp_board = 5 }
+  }
+  else = {
+   add_to_variable = { ac_corp_board = ac_corp_operations }
+   set_variable = { ac_corp_operations = 0 }
+  }
+  set_country_flag = { flag = ac_corp_influence_cooldown days = 30 }
+  ac_fac_refresh = yes
+ }
+}
+
+ac_sub_invest_mobility_effect = {
+ if = {
+  limit = { ac_sub_can_invest = yes check_variable = { ac_sub_invest_mobility = 0 } check_variable = { ac_fac_security >= 30 } }
+  ac_sub_pay_investment = yes
+  set_variable = { ac_sub_invest_mobility = 1 }
+  var:ac_sub_host = { ac_sub_count_support = yes }
+ }
+}
+ac_sub_enact_mobility_effect = {
+ ac_sub_count_support = yes
+ if = {
+  limit = { ac_sub_chair_valid = yes check_variable = { ac_sub_support_mobility >= 2 } check_variable = { ac_sub_mobility = 0 } check_variable = { ac_sub_invest_mobility = 1 } }
+  set_variable = { ac_sub_mobility = 1 }
+  every_country = {
+   limit = { check_variable = { var = ac_sub_host value = ROOT.id compare = equals } }
+   ac_sub_refresh = yes
+  }
+ }
+}
+
+ac_sub_invest_procurement_effect = {
+ if = {
+  limit = { ac_sub_can_invest = yes check_variable = { ac_sub_invest_procurement = 0 } check_variable = { ac_fac_industry >= 30 } }
+  ac_sub_pay_investment = yes
+  set_variable = { ac_sub_invest_procurement = 1 }
+  var:ac_sub_host = { ac_sub_count_support = yes }
+ }
+}
+ac_sub_enact_procurement_effect = {
+ ac_sub_count_support = yes
+ if = {
+  limit = { ac_sub_chair_valid = yes check_variable = { ac_sub_support_procurement >= 2 } check_variable = { ac_sub_procurement = 0 } check_variable = { ac_sub_invest_procurement = 1 } }
+  set_variable = { ac_sub_procurement = 1 }
+  every_country = {
+   limit = { check_variable = { var = ac_sub_host value = ROOT.id compare = equals } }
+   ac_sub_refresh = yes
+  }
+ }
+}
+
+ac_sub_invest_research_effect = {
+ if = {
+  limit = { ac_sub_can_invest = yes check_variable = { ac_sub_invest_research = 0 } check_variable = { ac_corp_engineering >= 30 } }
+  ac_sub_pay_investment = yes
+  set_variable = { ac_sub_invest_research = 1 }
+  var:ac_sub_host = { ac_sub_count_support = yes }
+ }
+}
+ac_sub_enact_research_effect = {
+ ac_sub_count_support = yes
+ if = {
+  limit = { ac_sub_chair_valid = yes check_variable = { ac_sub_support_research >= 2 } check_variable = { ac_sub_research = 0 } check_variable = { ac_sub_invest_research = 1 } }
+  set_variable = { ac_sub_research = 1 }
+  every_country = {
+   limit = { check_variable = { var = ac_sub_host value = ROOT.id compare = equals } }
+   ac_sub_refresh = yes
+  }
+ }
+}

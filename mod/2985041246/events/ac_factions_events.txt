@@ -1,0 +1,35 @@
+# Provisional gameplay; see docs/FACTIONS.md and FACTIONS_PROVENANCE.md.
+add_namespace = ac_factions
+
+country_event = {
+ id = ac_factions.1 title = ac_factions.1.t desc = ac_factions.1.d
+ is_triggered_only = yes timeout_days = 20
+ # Default option declines. An unattended invitation never grants membership.
+ option = { name = ac_factions.decline clr_country_flag = ac_fac_invite_pending ai_chance = { base = 30 } }
+ option = {
+  name = ac_factions.accept trigger = { ac_fac_offer_valid = yes } ac_fac_accept = yes
+  ai_chance = { base = 70 modifier = { factor = 0.1 has_opinion = { target = FROM value < 0 } } }
+ }
+}
+
+country_event = {
+ id = ac_factions.2 title = ac_factions.2.t desc = ac_factions.2.d
+ is_triggered_only = yes timeout_days = 20
+ # Default option declines. An unattended invitation never grants membership.
+ option = { name = ac_factions.decline clr_country_flag = ac_sub_invite_pending ai_chance = { base = 30 } }
+ option = {
+  name = ac_factions.accept trigger = { ac_sub_offer_full_valid = yes } ac_sub_accept_full = yes
+  ai_chance = { base = 70 modifier = { factor = 0.1 has_opinion = { target = FROM value < 0 } } }
+ }
+}
+
+country_event = {
+ id = ac_factions.3 title = ac_factions.3.t desc = ac_factions.3.d
+ is_triggered_only = yes timeout_days = 20
+ # Default option declines. An unattended invitation never grants membership.
+ option = { name = ac_factions.decline clr_country_flag = ac_sub_invite_pending ai_chance = { base = 30 } }
+ option = {
+  name = ac_factions.accept trigger = { ac_sub_offer_associate_valid = yes } ac_sub_accept_associate = yes
+  ai_chance = { base = 70 modifier = { factor = 0.1 has_opinion = { target = FROM value < 0 } } }
+ }
+}

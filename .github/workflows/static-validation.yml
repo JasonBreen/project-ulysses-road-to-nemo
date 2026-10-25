@@ -14,6 +14,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Check briefing artwork and original layout
+        run: python tools/frontend_briefing/validate.py
+      - name: Check map font and display branding
+        run: python tools/frontend_typography/validate.py
       - name: Run static regression checks
         shell: pwsh
         run: .\tools\Test-UlyssesStatic.ps1 -ModRoot .\mod\2985041246

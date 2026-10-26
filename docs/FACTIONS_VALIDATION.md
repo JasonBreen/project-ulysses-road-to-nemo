@@ -8,7 +8,7 @@ Branch: codex/faction-systems-20261025. Isolated E: worktree: ulysses-faction-sy
 - Offline interpreter executes actual effects/triggers/decisions/consent events and rejects unknown commands.
 - State-copy/852-month fixture checks modeled persistence only, not HOI4 save serialization or a native campaign to 2065.
 - Native parser/UI/AI/play/save/reload: **UNRUN**, constrained by the active MD playtest. No game launched/stopped/restarted, and no installed mod/game/playset/save/setting changed.
-- No MD edits, remote push, PR, external comment, remote merge, publication or generated art. Authorized reconciliation used a local rebase and read-only object retrieval.
+- At the 25 October reconciliation checkpoint: no MD edits, remote push, PR, external comment, remote merge, publication or generated art. Authorized reconciliation used a local rebase and read-only object retrieval. Later publication authorization is recorded below; native restrictions remain.
 
 ## Commands and results
 
@@ -29,7 +29,7 @@ Verified repository identity: **JasonBreen/project-ulysses-road-to-nemo**, URL *
 - gh repo view JasonBreen/project-ulysses-continuation --json nameWithOwner,url,visibility,isPrivate returns nameWithOwner=JasonBreen/project-ulysses-road-to-nemo, visibility=PUBLIC, isPrivate=false, and the Road to Nemo URL.
 - gh api repos/JasonBreen/project-ulysses-continuation returns full_name=JasonBreen/project-ulysses-road-to-nemo, html_url=https://github.com/JasonBreen/project-ulysses-road-to-nemo, private=false, visibility=public and default_branch=main.
 
-This contradicts the private-repository expectation. No visibility change, push, PR/comment, remote merge or publication was attempted. Read-only metadata/object retrieval does not change remote state. Keep the candidate local; any later visibility or publication decision belongs to the owner. Machine-readable evidence is saved in E:/Codex/ulysses-factions-evidence-20261025/repository-identity.json.
+At the 25 October checkpoint this contradicted the initial private-repository expectation, and no visibility change, push, PR/comment, remote merge or publication had been attempted. On 26 October the user confirmed that public visibility is intentional and explicitly authorized pushing the faction branch and opening a draft PR. This authorization does not permit changing visibility, security settings, merging or force pushing. Machine-readable identity evidence remains in E:/Codex/ulysses-factions-evidence-20261025/repository-identity.json.
 
 Native acceptance is pending because the user confirmed an active MD playtest. This is an explicit execution restriction, not a failed or uncertain native test. There is no installation to restore.
 
@@ -46,6 +46,14 @@ All applicable modest sequential checks passed on f48428a plus the rebased facti
 - Technology audit: zero invalid dates/start years/errors; one inherited warning.
 - Original faction source/tool blobs are unchanged by reconciliation; docs now describe the exact base and limits.
 
-The local CI workflow now registers Test-UlyssesFactions.py alongside the existing frontend/static checks. The hosted command omits the unavailable installed-game path: it runs the offline matrix and explicitly skips only the installed-interface test. Remote CI remains unrun because no push was authorized/performed.
+The local CI workflow now registers Test-UlyssesFactions.py alongside the existing frontend/static checks. The hosted command omits the unavailable installed-game path: it runs the offline matrix and explicitly skips only the installed-interface test. At that reconciliation checkpoint remote CI was unrun. Subsequent publication/check results belong to the draft PR and exact-head handoff, rather than a claim of native acceptance.
 
 The earlier full map-raster check is retained: neither upstream nor this patch changed map rasters/geography, and the inherited frontend validator also verifies the pinned geography hashes. No native test was scheduled.
+
+## Authorized draft publication — 26 October 2026
+
+The user explicitly approved pushing these faction changes and opening a draft PR at 04:36:38 UTC. The public target is JasonBreen/project-ulysses-road-to-nemo; public visibility is intentional. Before publication, the local branch was clean at ac12afbe8fa29517ca8c02d9ba0d03658d93102d and remote main remained f48428aa829f6b5fe97fd64d9f2abefc108ed84d. A remote faction branch/equivalent PR did not exist; the only open PR was the separate visual/economy #23.
+
+The implementation checkpoint ac12afbe8fa29517ca8c02d9ba0d03658d93102d is preserved on codex/faction-systems-preserved-ac12afb. Publication uses normal commits/pushes and a draft PR. The active MD playtest hold remains: no native launch, UI input, installed mod/game, saves, settings or playset changes. The final source SHA, modest preflight checks and hosted CI results are recorded in the PR/handoff. No merge or visibility/security change is authorized.
+
+Pre-publication verification passed sequentially in **15.9 seconds** at below-normal priority: 35 faction tests with installed-reference verification, the hosted entrypoint (34 passes / one installed-reference skip), frontend/typography and campaign/Ustio/native static checks, 24 aftermath tests, 27 economy tests and PR-text validation. All logs and temporary files remain on E:. The code is unchanged from the preserved ac12afb implementation; the follow-up changes only this publication record.

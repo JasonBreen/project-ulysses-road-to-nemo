@@ -2,7 +2,8 @@
 # Each decision sets the same ac_sp_*_complete flag and grants the same reward
 # as its project by calling the shared effect in
 # common/scripted_effects/ac_special_projects.txt. Costs and durations are
-# provisional gameplay.
+# provisional gameplay. A programme whose target is destroyed or seized is
+# cancelled, and the shared effect re-checks the same gates on completion.
 ac_superweapons = {
 	ac_superweapons_excalibur = {
 		icon = GFX_decision_ac_sp_excalibur
@@ -17,6 +18,11 @@ ac_superweapons = {
 		available = {
 			NOT = { has_global_flag = excalibur_destroyed }
 			NOT = { has_global_flag = ac_sp_excalibur_complete }
+		}
+		cancel_trigger = {
+			OR = {
+				has_global_flag = excalibur_destroyed
+			}
 		}
 		fire_only_once = yes
 		cost = 100
@@ -52,6 +58,11 @@ ac_superweapons = {
 			date < 1996.1.1
 			NOT = { has_global_flag = ac_sp_v2_complete }
 		}
+		cancel_trigger = {
+			OR = {
+				date > 1995.12.31
+			}
+		}
 		fire_only_once = yes
 		cost = 75
 		days_remove = 240
@@ -84,6 +95,12 @@ ac_superweapons = {
 			NOT = { has_global_flag = ac_ucw_stonehenge_seized }
 			NOT = { has_global_flag = ac_ucw_stonehenge_destroyed }
 			NOT = { has_global_flag = ac_sp_stonehenge_complete }
+		}
+		cancel_trigger = {
+			OR = {
+				has_global_flag = ac_ucw_stonehenge_seized
+				has_global_flag = ac_ucw_stonehenge_destroyed
+			}
 		}
 		fire_only_once = yes
 		cost = 125
@@ -148,6 +165,11 @@ ac_superweapons = {
 			NOT = { has_global_flag = ac_ucw_megalith_destroyed }
 			NOT = { has_global_flag = ac_sp_megalith_complete }
 		}
+		cancel_trigger = {
+			OR = {
+				has_global_flag = ac_ucw_megalith_destroyed
+			}
+		}
 		fire_only_once = yes
 		cost = 125
 		days_remove = 360
@@ -179,6 +201,11 @@ ac_superweapons = {
 			has_global_flag = ac_sp_excalibur_complete
 			NOT = { has_global_flag = excalibur_destroyed }
 			NOT = { has_global_flag = ac_sp_rhongomyniad_complete }
+		}
+		cancel_trigger = {
+			OR = {
+				has_global_flag = excalibur_destroyed
+			}
 		}
 		fire_only_once = yes
 		cost = 150

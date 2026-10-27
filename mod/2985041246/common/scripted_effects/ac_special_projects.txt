@@ -7,10 +7,16 @@
 
 # Chronicle 1994 / 12.23; strengthens the focus-built Excalibur (mod provenance).
 ac_sp_excalibur_complete_effect = {
-	set_global_flag = ac_sp_excalibur_complete
+	# The target may be destroyed or seized while a programme runs.
 	if = {
-		limit = { NOT = { has_idea = ac_sp_excalibur_hardened } NOT = { has_idea = ac_sp_rhongomyniad_tower } }
-		add_ideas = ac_sp_excalibur_hardened
+		limit = {
+			NOT = { has_global_flag = excalibur_destroyed }
+		}
+		set_global_flag = ac_sp_excalibur_complete
+		if = {
+			limit = { NOT = { has_idea = ac_sp_excalibur_hardened } NOT = { has_idea = ac_sp_rhongomyniad_tower } }
+			add_ideas = ac_sp_excalibur_hardened
+		}
 	}
 }
 
@@ -18,27 +24,40 @@ ac_sp_excalibur_complete_effect = {
 # (belka_dlp_war.99/.100, belka_dropped_nukes) is not changed; later content may
 # read ac_sp_v2_complete.
 ac_sp_v2_complete_effect = {
-	set_global_flag = ac_sp_v2_complete
+	# The V2 launch facilities were attacked on 1995 / 12.31.
 	if = {
-		limit = { NOT = { has_idea = ac_sp_v2_deterrent } }
-		add_ideas = ac_sp_v2_deterrent
+		limit = {
+			date < 1996.1.1
+		}
+		set_global_flag = ac_sp_v2_complete
+		if = {
+			limit = { NOT = { has_idea = ac_sp_v2_deterrent } }
+			add_ideas = ac_sp_v2_deterrent
+		}
 	}
 }
 
 # Chronicle 1998 / 06.19. Feeds The Peace We Inherit only when its variables exist.
 ac_sp_stonehenge_complete_effect = {
-	set_global_flag = ac_sp_stonehenge_complete
+	# The target may be destroyed or seized while a programme runs.
 	if = {
-		limit = { NOT = { has_idea = ac_sp_stonehenge_battery } }
-		add_ideas = ac_sp_stonehenge_battery
-		if = {
-			limit = { has_variable = ac_pwi_preparedness NOT = { has_country_flag = ac_pwi_crisis_resolved } }
-			add_to_variable = { ac_pwi_preparedness = 15 }
-			ac_pwi_bound_pressures = yes
+		limit = {
+			NOT = { has_global_flag = ac_ucw_stonehenge_seized }
+			NOT = { has_global_flag = ac_ucw_stonehenge_destroyed }
 		}
-		else_if = {
-			limit = { has_variable = ac_pwi_relief_capacity }
-			add_to_variable = { ac_pwi_relief_capacity = 10 }
+		set_global_flag = ac_sp_stonehenge_complete
+		if = {
+			limit = { NOT = { has_idea = ac_sp_stonehenge_battery } }
+			add_ideas = ac_sp_stonehenge_battery
+			if = {
+				limit = { has_variable = ac_pwi_preparedness NOT = { has_country_flag = ac_pwi_crisis_resolved } }
+				add_to_variable = { ac_pwi_preparedness = 15 }
+				ac_pwi_bound_pressures = yes
+			}
+			else_if = {
+				limit = { has_variable = ac_pwi_relief_capacity }
+				add_to_variable = { ac_pwi_relief_capacity = 10 }
+			}
 		}
 	}
 }
@@ -69,23 +88,35 @@ ac_sp_arkbird_complete_effect = {
 # Super Weapons, Megalith; Chronicle 2005 / 09.26. Timing is provisional gameplay.
 # The ac_ucw_megalith_* flags belong to the Continental War arc and are only read.
 ac_sp_megalith_complete_effect = {
-	set_global_flag = ac_sp_megalith_complete
+	# The target may be destroyed or seized while a programme runs.
 	if = {
-		limit = { NOT = { has_idea = ac_sp_megalith_fortress } }
-		add_ideas = ac_sp_megalith_fortress
+		limit = {
+			NOT = { has_global_flag = ac_ucw_megalith_destroyed }
+		}
+		set_global_flag = ac_sp_megalith_complete
+		if = {
+			limit = { NOT = { has_idea = ac_sp_megalith_fortress } }
+			add_ideas = ac_sp_megalith_fortress
+		}
 	}
 }
 
 # Provisional gameplay: gives substance to BLK_project_rhongomyniad /
 # belka_dlp_won.9 (mod provenance). Not an official ACE COMBAT weapon.
 ac_sp_rhongomyniad_complete_effect = {
-	set_global_flag = ac_sp_rhongomyniad_complete
+	# The target may be destroyed or seized while a programme runs.
 	if = {
-		limit = { NOT = { has_idea = ac_sp_rhongomyniad_tower } }
-		if = {
-			limit = { has_idea = ac_sp_excalibur_hardened }
-			remove_ideas = ac_sp_excalibur_hardened
+		limit = {
+			NOT = { has_global_flag = excalibur_destroyed }
 		}
-		add_ideas = ac_sp_rhongomyniad_tower
+		set_global_flag = ac_sp_rhongomyniad_complete
+		if = {
+			limit = { NOT = { has_idea = ac_sp_rhongomyniad_tower } }
+			if = {
+				limit = { has_idea = ac_sp_excalibur_hardened }
+				remove_ideas = ac_sp_excalibur_hardened
+			}
+			add_ideas = ac_sp_rhongomyniad_tower
+		}
 	}
 }

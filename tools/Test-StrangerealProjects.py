@@ -24,6 +24,15 @@ REPLACE_PATHS = (
     "common/special_projects/project_tags",
     "common/scientist_traits",
 )
+# Gates re-checked when a programme finishes; the fallback decision must also
+# cancel on them, so a destroyed or seized target never pays out.
+COMPLETION_GATES = {
+    "ac_sp_excalibur": ("has_global_flag = excalibur_destroyed",),
+    "ac_sp_v2": ("date",),
+    "ac_sp_stonehenge": ("has_global_flag = ac_ucw_stonehenge_seized", "has_global_flag = ac_ucw_stonehenge_destroyed"),
+    "ac_sp_megalith": ("has_global_flag = ac_ucw_megalith_destroyed",),
+    "ac_sp_rhongomyniad": ("has_global_flag = excalibur_destroyed",),
+}
 PROJECTS = (
     "ac_sp_excalibur",
     "ac_sp_v2",
@@ -192,6 +201,11 @@ def check(mod: Path) -> list[str]:
                     f"{decision} is not gated to players without Gotterdammerung")
             require(f"has_global_flag = {project}_complete" in decisions[decision],
                     f"{decision} is not guarded by {project}_complete")
+            cancel = re.search(r"cancel_trigger\s*=\s*\{(.*?)\n\t\t\}", decisions[decision], re.S)
+            for gate in COMPLETION_GATES.get(project, ()):
+                require(bool(cancel) and gate in cancel.group(1), f"{decision} does not cancel on {gate}")
+                require(gate in effects.get(effect, "").split("set_global_flag")[0],
+                        f"{effect} does not re-check {gate} before completing")
             referenced_gfx.update(re.findall(r"\bGFX_\w+", decisions[decision]))
             for suffix in ("", "_desc"):
                 require(decision + suffix in keys, f"missing localisation {decision + suffix}")

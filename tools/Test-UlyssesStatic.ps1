@@ -136,7 +136,7 @@ if ($aftermathExitCode -ne 0) {
 }
 
 Write-Output 'Focus art and Economy Dashboard visual contract audit'
-& $pythonHost (Join-Path $PSScriptRoot 'audit_visual_dependencies.py')
+& $pythonHost (Join-Path $PSScriptRoot 'audit_visual_dependencies.py') --mod-root $ModRoot
 if ($LASTEXITCODE -ne 0) {
     Write-Error 'Focus/economy artwork contract audit failed.'
     exit 1

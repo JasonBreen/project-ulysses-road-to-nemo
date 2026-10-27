@@ -13,9 +13,11 @@ import re
 from collections import Counter
 from pathlib import Path
 
-MOD = Path(__file__).resolve().parents[1] / "mod" / "2985041246"
+DEFAULT_MOD = Path(__file__).resolve().parents[1] / "mod" / "2985041246"
 GFX_RE = re.compile(r'\btexturefile\s*=\s*(?:"([^"]+)"|([^\s}#]+))', re.I)
-SPRITE_RE = re.compile(r"(?i)\bspriteType\s*=\s*\{")
+# Tiled and animated sprite types carry textures too (e.g. GFX_tiled_research_bg).
+SPRITE_RE = re.compile(r"(?i)\b(?:spriteType|corneredTileSpriteType|frameAnimatedSpriteType"
+                       r"|textSpriteType)\s*=\s*\{")
 NAME_RE = re.compile(r'\bname\s*=\s*"?(GFX_[A-Za-z0-9_]+)', re.I)
 FOCUS_RE = re.compile(r"(?m)^\s*icon\s*=\s*(GFX_[A-Za-z0-9_]+)\s*(?:#.*)?$")
 GUI_SPRITE_RE = re.compile(r'\b(?:spriteType|quadTextureSprite)\s*=\s*"(GFX_[A-Za-z0-9_]+)"')
@@ -46,7 +48,10 @@ def main():
     parser.add_argument("--strict-all", action="store_true",
                         help="Fail if ANY authored .gfx texture is not shipped with Ulysses")
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--mod-root", type=Path, default=DEFAULT_MOD,
+                        help="Mod copy to audit (defaults to this checkout's mod)")
     args = parser.parse_args()
+    MOD = args.mod_root.resolve()
 
     images = {normal(str(p.relative_to(MOD))) for p in MOD.rglob("*") if p.is_file()}
     artwork = {}

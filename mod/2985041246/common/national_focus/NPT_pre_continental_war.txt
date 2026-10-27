@@ -1,15 +1,269 @@
-# shared_focus = {
-#     id = NPT_1991_elections
-#     icon = placeholder
-#     cost = 0
-#     ai_will_do = {
-#         factor = 90
-#     }
-#     x = 7
-#     y = 0
-# 	available = { always = no } # Elections by event on April 20, 1991
-#     completion_reward = {
-        
-#     }
-#     search_filters = { }
-# }
+# North Point focuses for npt_pre_continental_war_focus (NPT.txt).
+# The archive sketch scheduled "elections by event on April 20, 1991"; that
+# event was never written, so the result is a player choice (mod provenance).
+# None of the mandates changes the ruling party or the National Defense Council.
+
+shared_focus = {
+	id = NPT_1991_elections
+	icon = GFX_ac_briefing_ose_1992_elections
+	cost = 1
+	ai_will_do = { factor = 90 }
+	x = 7
+	y = 0
+	available = { date > 1991.4.19 }
+	completion_reward = {
+		add_political_power = 25
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_old_guard_mandate
+	icon = GFX_ac_briefing_ose_urgent_war_committee
+	cost = 3
+	ai_will_do = { factor = 60 }
+	prerequisite = { focus = NPT_1991_elections }
+	mutually_exclusive = { focus = NPT_drp_mandate focus = NPT_reformist_mandate }
+	x = 4
+	y = 1
+	completion_reward = {
+		add_popularity = { ideology = neutrality popularity = 0.05 }
+		add_stability = 0.05
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_drp_mandate
+	icon = GFX_ac_briefing_GEB_1992_elections
+	cost = 3
+	ai_will_do = { factor = 25 }
+	prerequisite = { focus = NPT_1991_elections }
+	mutually_exclusive = { focus = NPT_old_guard_mandate focus = NPT_reformist_mandate }
+	x = 7
+	y = 1
+	completion_reward = {
+		add_popularity = { ideology = democratic popularity = 0.10 }
+		add_stability = -0.02
+		add_political_power = 25
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_reformist_mandate
+	icon = GFX_ac_briefing_UST_army_debate
+	cost = 3
+	ai_will_do = { factor = 15 }
+	prerequisite = { focus = NPT_1991_elections }
+	mutually_exclusive = { focus = NPT_old_guard_mandate focus = NPT_drp_mandate }
+	x = 10
+	y = 1
+	completion_reward = {
+		add_popularity = { ideology = fascism popularity = 0.10 }
+		army_experience = 10
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_national_defense_review
+	icon = GFX_ac_briefing_UST_strike_first
+	cost = 5
+	ai_will_do = { factor = 80 }
+	prerequisite = { focus = NPT_old_guard_mandate focus = NPT_drp_mandate focus = NPT_reformist_mandate }
+	x = 7
+	y = 2
+	completion_reward = {
+		army_experience = 15
+		air_experience = 10
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_armed_neutrality
+	icon = GFX_ac_briefing_GEB_our_violent_brothers
+	cost = 5
+	ai_will_do = { factor = 30 }
+	prerequisite = { focus = NPT_national_defense_review }
+	mutually_exclusive = { focus = NPT_usean_outreach }
+	x = 4
+	y = 3
+	completion_reward = {
+		add_ideas = NPT_armed_neutrality_idea
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_usean_outreach
+	icon = GFX_ac_briefing_sap_our_place_in_the_world
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = NPT_national_defense_review }
+	mutually_exclusive = { focus = NPT_armed_neutrality }
+	x = 10
+	y = 3
+	completion_reward = {
+		add_political_power = 25
+		if = {
+			limit = { country_exists = FCU }
+			add_opinion_modifier = { target = FCU modifier = considers_friend }
+			FCU = { add_opinion_modifier = { target = ROOT modifier = considers_friend } }
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_island_air_defence
+	icon = GFX_ac_briefing_BLK_excalibur
+	cost = 5
+	ai_will_do = { factor = 60 }
+	prerequisite = { focus = NPT_armed_neutrality }
+	x = 3
+	y = 4
+	completion_reward = {
+		air_experience = 10
+		capital_scope = {
+			add_building_construction = { type = air_base level = 1 instant_build = yes }
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_self_reliant_industry
+	icon = GFX_ac_briefing_ose_industrial_buildup
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = NPT_armed_neutrality }
+	x = 5
+	y = 4
+	completion_reward = {
+		random_owned_controlled_state = {
+			add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+		}
+		if = {
+			limit = { ac_econ_ready = yes }
+			ac_econ_refresh_budget = yes
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_fcu_consultations
+	icon = GFX_ac_briefing_ose_urgent_war_committee
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = NPT_usean_outreach }
+	x = 9
+	y = 4
+	completion_reward = {
+		add_political_power = 50
+		add_stability = 0.03
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_uto_staff_talks
+	icon = GFX_ac_briefing_UST_army_debate
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = NPT_usean_outreach }
+	x = 11
+	y = 4
+	completion_reward = {
+		add_ideas = NPT_usean_liaison_idea
+		if = {
+			limit = { country_exists = FCU }
+			add_opinion_modifier = { target = FCU modifier = air_force_cooperation }
+			FCU = { add_opinion_modifier = { target = ROOT modifier = air_force_cooperation } }
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_guarded_neutrality
+	icon = GFX_ac_briefing_GEB_our_violent_brothers
+	cost = 5
+	ai_will_do = { factor = 60 }
+	prerequisite = { focus = NPT_island_air_defence }
+	prerequisite = { focus = NPT_self_reliant_industry }
+	x = 4
+	y = 5
+	completion_reward = {
+		add_stability = 0.05
+		army_experience = 15
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_open_the_airfields
+	icon = GFX_ac_briefing_BLK_excalibur
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = NPT_fcu_consultations focus = NPT_uto_staff_talks }
+	x = 10
+	y = 5
+	completion_reward = {
+		air_experience = 15
+		capital_scope = {
+			add_building_construction = { type = air_base level = 2 instant_build = yes }
+		}
+	}
+	search_filters = { }
+}
+
+# Official: ISAF establishes its headquarters in North Point (Chronicle, 2004 / 09.16).
+# Gated on PR A's ac_ucw_isaf_formed, which this tree reads and never sets.
+shared_focus = {
+	id = NPT_host_isaf
+	icon = GFX_ac_briefing_sap_our_place_in_the_world
+	cost = 5
+	ai_will_do = { factor = 100 }
+	prerequisite = { focus = NPT_open_the_airfields }
+	x = 10
+	y = 6
+	available = {
+		custom_trigger_tooltip = {
+			tooltip = NPT_isaf_formed_tt
+			has_global_flag = ac_ucw_isaf_formed
+		}
+	}
+	completion_reward = {
+		set_country_flag = ac_npt_hosts_isaf
+		add_ideas = NPT_isaf_rear_base_idea
+		if = {
+			limit = { country_exists = FCU }
+			FCU = { add_opinion_modifier = { target = ROOT modifier = considers_friend } }
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = NPT_isaf_logistics_hub
+	icon = GFX_ac_briefing_ose_industrial_buildup
+	cost = 5
+	ai_will_do = { factor = 90 }
+	prerequisite = { focus = NPT_host_isaf }
+	x = 10
+	y = 7
+	completion_reward = {
+		capital_scope = {
+			add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+			add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+		}
+		if = {
+			limit = { ac_econ_ready = yes }
+			ac_econ_refresh_budget = yes
+		}
+	}
+	search_filters = { }
+}

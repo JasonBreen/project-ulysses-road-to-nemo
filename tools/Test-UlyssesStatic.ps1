@@ -134,6 +134,7 @@ if ($aftermathExitCode -ne 0) {
     Write-Error "Aftermath contract checks failed with exit code $aftermathExitCode."
     exit $aftermathExitCode
 }
+& $pythonHost (Join-Path $PSScriptRoot 'Test-UseaActors.py') --mod-root $ModRoot; if ($LASTEXITCODE -ne 0) { Write-Error 'Usea actor contract checks failed.'; exit $LASTEXITCODE }
 
 Write-Output 'Focus art and Economy Dashboard visual contract audit'
 & $pythonHost (Join-Path $PSScriptRoot 'audit_visual_dependencies.py') --mod-root $ModRoot

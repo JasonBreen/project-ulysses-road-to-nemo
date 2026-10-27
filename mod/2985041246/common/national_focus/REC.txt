@@ -54,8 +54,21 @@ shared_focus = {
 	available = {
 		has_war = no
 		custom_trigger_tooltip = {
+			tooltip = REC_postwar_handoff_tt
+			has_global_flag = ac_postwar_contract_started
+		}
+		# Outcomes that never assign a settlement decision pass this check.
+		custom_trigger_tooltip = {
 			tooltip = REC_local_settlement_resolved_tt
 			NOT = { has_country_flag = ac_postwar_settlement_pending }
+		}
+		# REC is always an ac_pwi participant, so ac_pwi.76 always arrives once it is at peace.
+		custom_trigger_tooltip = {
+			tooltip = REC_local_briefing_answered_tt
+			OR = {
+				has_country_flag = ac_pwi_choice_76_0
+				has_country_flag = ac_pwi_choice_76_1
+			}
 		}
 	}
 	completion_reward = {

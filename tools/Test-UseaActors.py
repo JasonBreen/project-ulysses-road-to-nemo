@@ -222,8 +222,14 @@ class UseaActorContracts(unittest.TestCase):
         _, focuses = tree("REC")
         source = text("common/national_focus/REC.txt")
         self.assertIn("has_country_flag = ac_postwar_settlement_pending", source)
-        self.assertIn("ac_pwi_choice_76_0", source)
-        self.assertIn("ac_pwi_choice_76_1", source)
+        # A Recta released before the war must not finish recovery before the
+        # postwar handoff and the ac_pwi.76 briefing choice.
+        available = mapping(focuses["REC_local_recovery_programme"])["available"]
+        gates = [mapping(value) for key, _, value in available if key == "custom_trigger_tooltip"]
+        self.assertIn("ac_postwar_contract_started", [gate.get("has_global_flag") for gate in gates])
+        choices = [gate["OR"] for gate in gates if "OR" in gate]
+        self.assertEqual(1, len(choices))
+        self.assertEqual({"ac_pwi_choice_76_0", "ac_pwi_choice_76_1"}, {value for _, _, value in choices[0]})
         self.assertIn("ac_postwar_local_recovery", text("common/decisions/ac_continuation_decisions.txt"))
         self.assertIn("id = ac_pwi.76", text("events/ac_pwi.txt"))
 

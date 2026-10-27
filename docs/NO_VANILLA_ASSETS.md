@@ -1,6 +1,28 @@
 # 1.19 no-vanilla-assets policy
 
-The 1.19 port must not ship copied vanilla HOI4 content or assets. This policy is about files delivered by the mod, not the game engine's normal ability to supply vanilla functionality when the mod does not replace it.
+The 1.19 port must not ship copied vanilla HOI4 content or assets. The
+historical hash/provenance audit below inspects only files shipped by the mod
+and was insufficient to meet the stronger, user-facing visual requirement.
+
+## User-facing rule — no vanilla visual fallbacks
+
+As of 24 October 2026 the requirement is stronger than a no-copied-files
+audit: **no visible Hearts of Iron IV vanilla art, sprites or WWII imagery
+anywhere in Project Ulysses**, whether those pixels are shipped in the mod
+or resolved by GFX definitions from the installed engine.
+
+- Use Ulysses/Strangereal-authored graphics for focus icons, ideas, events,
+  technology, equipment, unit counters, topbar widgets, research interface,
+  animated controls, and role/niche art.
+- Mod texture ownership and correct engine frame counts/dimensions must both
+  be validated; hash comparison alone is not visual acceptance.
+- Run `python tools/audit_visual_dependencies.py --strict-all` as a release
+  gate and native-test every UI surface. The current draft cleanup branch
+  has **not** reached that standard; it must not be merged as complete.
+- The older provenance audit below remains necessary to prevent the separate
+  mistake of copying installed HOI4 files into the repository.
+
+
 
 The separate [country-selection briefing repair](FRONTEND_BRIEFING_REPAIR.md)
 replaces visible inherited/fallback chrome on the reported frontend screen with

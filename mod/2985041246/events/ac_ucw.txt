@@ -1,0 +1,615 @@
+# Authored gameplay; source: tools/build_continental_war.py.
+add_namespace = ac_ucw
+country_event = {
+	id = ac_ucw.1
+	title = ac_ucw.1.t
+	desc = ac_ucw.1.d
+	picture = GFX_report_event_bad_news_1
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.1.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+country_event = {
+	id = ac_ucw.10
+	title = ac_ucw.10.t
+	desc = ac_ucw.10.d
+	picture = GFX_report_event_protest_1
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.10.a
+		ai_chance = { factor = 90 }
+		add_to_variable = { ac_ucw_grievance = 5 }
+		add_to_variable = { ac_ucw_pressure = -10 }
+		set_global_flag = ac_ucw_border_closed
+		news_event = { id = ac_ucw.12 days = 1 }
+		if = {
+			limit = { country_exists = FCU }
+			FCU = {
+				country_event = { id = ac_ucw.11 days = 2 }
+			}
+		}
+	}
+	option = {
+		name = ac_ucw.10.b
+		ai_chance = { factor = 10 }
+		add_to_variable = { ac_ucw_grievance = -10 }
+		add_to_variable = { ac_ucw_pressure = 10 }
+		add_to_variable = { ac_ucw_recovery = -5 }
+		set_global_flag = ac_ucw_border_open
+	}
+}
+
+country_event = {
+	id = ac_ucw.11
+	title = ac_ucw.11.t
+	desc = ac_ucw.11.d
+	picture = GFX_report_event_protests_2
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.11.a
+		ai_chance = { factor = 60 }
+		add_to_variable = { ac_ucw_pressure = 10 }
+		add_to_variable = { ac_ucw_recovery = -3 }
+		add_political_power = -25
+		add_timed_idea = { idea = ac_ucw_refugee_relief days = 365 }
+	}
+	option = {
+		name = ac_ucw.11.b
+		ai_chance = { factor = 40 }
+		add_to_variable = { ac_ucw_pressure = 5 }
+		add_stability = -0.02
+	}
+}
+
+news_event = {
+	id = ac_ucw.12
+	title = ac_ucw.12.t
+	desc = ac_ucw.12.d
+	picture = GFX_report_event_bad_news_2
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.12.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+country_event = {
+	id = ac_ucw.13
+	title = ac_ucw.13.t
+	desc = ac_ucw.13.d
+	picture = GFX_report_event_treaty_1
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.13.a
+		ai_chance = { factor = 50 }
+		add_to_variable = { ac_ucw_grievance = -10 }
+		add_opinion_modifier = { target = FCU modifier = ac_ucw_mediation }
+		if = {
+			limit = { country_exists = FCU }
+			FCU = {
+				add_opinion_modifier = { target = ERU modifier = ac_ucw_mediation }
+				country_event = { id = ac_ucw.14 days = 1 }
+			}
+		}
+	}
+	option = {
+		name = ac_ucw.13.b
+		ai_chance = { factor = 50 }
+		add_to_variable = { ac_ucw_grievance = 5 }
+		if = {
+			limit = { country_exists = FCU }
+			FCU = {
+				country_event = { id = ac_ucw.15 days = 1 }
+			}
+		}
+	}
+}
+
+country_event = {
+	id = ac_ucw.14
+	title = ac_ucw.14.t
+	desc = ac_ucw.14.d
+	picture = GFX_report_event_treaty_2
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.14.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+country_event = {
+	id = ac_ucw.15
+	title = ac_ucw.15.t
+	desc = ac_ucw.15.d
+	picture = GFX_report_event_bad_news_1
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.15.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.25
+	title = ac_ucw.25.t
+	desc = ac_ucw.25.d
+	picture = GFX_report_event_treaty_2
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.25.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.20
+	title = ac_ucw.20.t
+	desc = ac_ucw.20.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.20.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.40
+	title = ac_ucw.40.t
+	desc = ac_ucw.40.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.40.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+country_event = {
+	id = ac_ucw.30
+	title = ac_ucw.30.t
+	desc = ac_ucw.30.d
+	picture = GFX_report_event_ose_war_committee
+	is_triggered_only = yes
+	trigger = { ac_ucw_war_running = yes }
+	option = {
+		name = ac_ucw.30.a
+		ai_chance = { factor = 100 }
+		ac_ucw_form_isaf = yes
+	}
+}
+
+news_event = {
+	id = ac_ucw.31
+	title = ac_ucw.31.t
+	desc = ac_ucw.31.d
+	picture = GFX_report_event_treaty_1
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.31.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+country_event = {
+	id = ac_ucw.32
+	title = ac_ucw.32.t
+	desc = ac_ucw.32.d
+	picture = GFX_report_event_treaty_2
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.32.a
+		ai_chance = { factor = 80 }
+		if = {
+			limit = { country_exists = FCU }
+			FCU = {
+				add_to_faction = NPT
+				country_event = { id = ac_ucw.33 days = 1 }
+			}
+		}
+	}
+	option = {
+		name = ac_ucw.32.b
+		ai_chance = { factor = 20 }
+		if = {
+			limit = { country_exists = FCU }
+			FCU = {
+				country_event = { id = ac_ucw.34 days = 1 }
+			}
+		}
+	}
+}
+
+country_event = {
+	id = ac_ucw.33
+	title = ac_ucw.33.t
+	desc = ac_ucw.33.d
+	picture = GFX_report_event_treaty_2
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.33.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+country_event = {
+	id = ac_ucw.34
+	title = ac_ucw.34.t
+	desc = ac_ucw.34.d
+	picture = GFX_report_event_bad_news_1
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.34.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.41
+	title = ac_ucw.41.t
+	desc = ac_ucw.41.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.41.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.42
+	title = ac_ucw.42.t
+	desc = ac_ucw.42.d
+	picture = GFX_report_event_ose_war_committee
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.42.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.43
+	title = ac_ucw.43.t
+	desc = ac_ucw.43.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.43.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.44
+	title = ac_ucw.44.t
+	desc = ac_ucw.44.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.44.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.70
+	title = ac_ucw.70.t
+	desc = ac_ucw.70.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.70.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.71
+	title = ac_ucw.71.t
+	desc = ac_ucw.71.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.71.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.72
+	title = ac_ucw.72.t
+	desc = ac_ucw.72.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.72.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.73
+	title = ac_ucw.73.t
+	desc = ac_ucw.73.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.73.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.74
+	title = ac_ucw.74.t
+	desc = ac_ucw.74.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.74.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.75
+	title = ac_ucw.75.t
+	desc = ac_ucw.75.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.75.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.76
+	title = ac_ucw.76.t
+	desc = ac_ucw.76.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.76.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.77
+	title = ac_ucw.77.t
+	desc = ac_ucw.77.d
+	picture = GFX_report_event_blk_army_attack
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.77.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+country_event = {
+	id = ac_ucw.45
+	title = ac_ucw.45.t
+	desc = ac_ucw.45.d
+	picture = GFX_report_event_treaty_1
+	is_triggered_only = yes
+	trigger = { ac_ucw_war_running = yes }
+	option = {
+		name = ac_ucw.45.a
+		trigger = { ac_ucw_war_running = yes }
+		ai_chance = { factor = 20 }
+		if = {
+			limit = { country_exists = ERU }
+			ERU = {
+				ac_ucw_armistice = yes
+			}
+		}
+	}
+	option = {
+		name = ac_ucw.45.b
+		ai_chance = { factor = 80 }
+		if = {
+			limit = { country_exists = ERU }
+			ERU = {
+				country_event = { id = ac_ucw.47 days = 1 }
+			}
+		}
+	}
+}
+
+country_event = {
+	id = ac_ucw.46
+	title = ac_ucw.46.t
+	desc = ac_ucw.46.d
+	picture = GFX_report_event_treaty_1
+	is_triggered_only = yes
+	trigger = { ac_ucw_war_running = yes }
+	option = {
+		name = ac_ucw.46.a
+		trigger = { ac_ucw_war_running = yes }
+		ai_chance = { factor = 15 }
+		ac_ucw_armistice = yes
+	}
+	option = {
+		name = ac_ucw.46.b
+		ai_chance = { factor = 85 }
+		if = {
+			limit = { country_exists = FCU }
+			FCU = {
+				country_event = { id = ac_ucw.47 days = 1 }
+			}
+		}
+	}
+}
+
+country_event = {
+	id = ac_ucw.47
+	title = ac_ucw.47.t
+	desc = ac_ucw.47.d
+	picture = GFX_report_event_bad_news_1
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.47.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.50
+	title = ac_ucw.50.t
+	desc = ac_ucw.50.d
+	picture = GFX_report_event_flag_osea_1
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.50.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.51
+	title = ac_ucw.51.t
+	desc = ac_ucw.51.d
+	picture = GFX_report_event_bad_news_2
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.51.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = ac_ucw.52
+	title = ac_ucw.52.t
+	desc = ac_ucw.52.d
+	picture = GFX_report_event_treaty_2
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.52.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+country_event = {
+	id = ac_ucw.60
+	title = ac_ucw.60.t
+	desc = ac_ucw.60.d
+	picture = GFX_report_event_excalibur_1
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.60.a
+		ai_chance = { factor = 100 }
+		set_global_flag = ac_ucw_megalith_active
+		add_timed_idea = { idea = ac_ucw_megalith_threat days = 14 }
+		country_event = { id = ac_ucw.61 days = 14 }
+	}
+}
+
+country_event = {
+	id = ac_ucw.61
+	title = ac_ucw.61.t
+	desc = ac_ucw.61.d
+	picture = GFX_report_event_excalibur_1
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.61.a
+		ai_chance = { factor = 100 }
+		ac_ucw_destroy_megalith = yes
+	}
+}
+
+news_event = {
+	id = ac_ucw.62
+	title = ac_ucw.62.t
+	desc = ac_ucw.62.d
+	picture = GFX_report_event_treaty_1
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.62.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+country_event = {
+	id = ac_ucw.90
+	title = ac_ucw.90.t
+	desc = ac_ucw.90.d
+	picture = GFX_report_event_treaty_2
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.90.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+country_event = {
+	id = ac_ucw.99
+	title = ac_ucw.99.t
+	desc = ac_ucw.99.d
+	picture = GFX_report_event_blank
+	is_triggered_only = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_ucw.99.a
+		ai_chance = { factor = 100 }
+	}
+}

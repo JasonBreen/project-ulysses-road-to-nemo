@@ -135,6 +135,14 @@ if ($aftermathExitCode -ne 0) {
     exit $aftermathExitCode
 }
 
+Write-Output 'Usean Continental War: offline transition and content checks'
+& $pythonHost (Join-Path $PSScriptRoot 'Test-ContinentalWar.py') --mod-root $ModRoot
+$continentalExitCode = $LASTEXITCODE
+if ($continentalExitCode -ne 0) {
+    Write-Error "Continental War contract checks failed with exit code $continentalExitCode."
+    exit $continentalExitCode
+}
+
 Write-Output 'Focus art and Economy Dashboard visual contract audit'
 & $pythonHost (Join-Path $PSScriptRoot 'audit_visual_dependencies.py') --mod-root $ModRoot
 if ($LASTEXITCODE -ne 0) {

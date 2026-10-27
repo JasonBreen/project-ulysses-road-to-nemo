@@ -1,0 +1,464 @@
+# Authored gameplay; source: tools/build_continental_war.py.
+ac_ucw_fallout = {
+	ac_ucw_eru_blame_the_fcu = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = ERU }
+		available = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } }
+		cost = 25
+		ai_will_do = { base = 1 }
+		fire_only_once = no
+		days_re_enable = 120
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } }
+				add_to_variable = { ac_ucw_grievance = 10 }
+				add_war_support = 0.02
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_eru_public_works = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = ERU }
+		available = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } check_variable = { ac_ucw_recovery < 90 } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } check_variable = { ac_ucw_recovery < 90 } }
+				add_to_variable = { ac_ucw_grievance = -5 }
+				add_to_variable = { ac_ucw_recovery = 8 }
+				if = { limit = { ac_econ_ready = yes } ac_econ_set_reconstruction = yes }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_eru_refugee_accord = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = ERU }
+		available = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } }
+		cost = 75
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } }
+				add_to_variable = { ac_ucw_grievance = -12 }
+				add_to_variable = { ac_ucw_pressure = -10 }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_eru_war_plan = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = ERU }
+		available = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } check_variable = { ac_ucw_grievance > 69 } has_country_flag = ac_ucw_eru_mobilized }
+		cost = 50
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } check_variable = { ac_ucw_grievance > 69 } has_country_flag = ac_ucw_eru_mobilized NOT = { has_country_flag = ac_ucw_eru_war_plan_taken } }
+				set_country_flag = ac_ucw_eru_war_plan_taken
+				set_country_flag = ac_ucw_war_plan_ready
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_eru_invade_san_salvacion = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = ERU }
+		available = { ac_ucw_active = yes ac_ucw_can_start_war = yes OR = { date > 2003.5.31 AND = { has_country_flag = ac_ucw_war_plan_ready date > 2001.12.31 } } }
+		cost = 25
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes ac_ucw_can_start_war = yes OR = { date > 2003.5.31 AND = { has_country_flag = ac_ucw_war_plan_ready date > 2001.12.31 } } NOT = { has_country_flag = ac_ucw_eru_invade_san_salvacion_taken } }
+				set_country_flag = ac_ucw_eru_invade_san_salvacion_taken
+				ac_ucw_start_war = yes
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_eru_continental_accord = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = ERU }
+		available = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } check_variable = { ac_ucw_grievance < 25 } NOT = { has_country_flag = ac_ucw_eru_mobilized } date > 2001.12.31 }
+		cost = 100
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } check_variable = { ac_ucw_grievance < 25 } NOT = { has_country_flag = ac_ucw_eru_mobilized } date > 2001.12.31 NOT = { has_country_flag = ac_ucw_eru_continental_accord_taken } }
+				set_country_flag = ac_ucw_eru_continental_accord_taken
+				ac_ucw_avert_war = yes
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_fcu_relief_corridors = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = FCU }
+		available = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } check_variable = { ac_ucw_pressure > 9 } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } check_variable = { ac_ucw_pressure > 9 } }
+				add_to_variable = { ac_ucw_pressure = -10 }
+				add_to_variable = { ac_ucw_recovery = 5 }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_fcu_mediate = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = FCU }
+		available = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } country_exists = ERU }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } country_exists = ERU }
+				ERU = { country_event = { id = ac_ucw.13 days = 1 } }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_fcu_garrison_stonehenge = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = FCU }
+		available = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } has_global_flag = ac_ucw_stonehenge_operational country_exists = SNS }
+		cost = 75
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } has_global_flag = ac_ucw_stonehenge_operational country_exists = SNS NOT = { has_country_flag = ac_ucw_fcu_garrison_stonehenge_taken } }
+				set_country_flag = ac_ucw_fcu_garrison_stonehenge_taken
+				SNS = { add_ideas = ac_ucw_stonehenge_garrison }
+				if = {
+					limit = { country_exists = ERU }
+					ERU = {
+						add_to_variable = { ac_ucw_grievance = 5 }
+					}
+				}
+
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_fcu_draft_charter = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = FCU }
+		available = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } country_exists = ERU ERU = { has_country_flag = ac_ucw_eru_mobilized } }
+		cost = 50
+		ai_will_do = { base = 1 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } country_exists = ERU ERU = { has_country_flag = ac_ucw_eru_mobilized } NOT = { has_country_flag = ac_ucw_fcu_draft_charter_taken } }
+				set_country_flag = ac_ucw_fcu_draft_charter_taken
+				set_country_flag = ac_ucw_isaf_prepared
+				ac_ucw_bound = yes
+			}
+		}
+	}
+}
+ac_ucw_war = {
+	ac_ucw_order_los_canas = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = FCU has_global_flag = ac_ucw_isaf_formed }
+		available = { ac_ucw_active = yes ac_ucw_stage_los_canas_ready = yes check_variable = { ac_ucw_stage_weeks > 0 } }
+		cost = 25
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes ac_ucw_stage_los_canas_ready = yes check_variable = { ac_ucw_stage_weeks > 0 } NOT = { has_country_flag = ac_ucw_order_los_canas_taken } }
+				set_country_flag = ac_ucw_order_los_canas_taken
+				ac_ucw_stage_los_canas = yes
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_order_north_point = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = FCU has_global_flag = ac_ucw_isaf_formed }
+		available = { ac_ucw_active = yes ac_ucw_stage_north_point_ready = yes check_variable = { ac_ucw_stage_weeks > 25 } }
+		cost = 25
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes ac_ucw_stage_north_point_ready = yes check_variable = { ac_ucw_stage_weeks > 25 } NOT = { has_country_flag = ac_ucw_order_north_point_taken } }
+				set_country_flag = ac_ucw_order_north_point_taken
+				ac_ucw_stage_north_point = yes
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_order_counteroffensive = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = FCU has_global_flag = ac_ucw_isaf_formed }
+		available = { ac_ucw_active = yes ac_ucw_stage_counteroffensive_ready = yes check_variable = { ac_ucw_stage_weeks > 8 } }
+		cost = 25
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes ac_ucw_stage_counteroffensive_ready = yes check_variable = { ac_ucw_stage_weeks > 8 } NOT = { has_country_flag = ac_ucw_order_counteroffensive_taken } }
+				set_country_flag = ac_ucw_order_counteroffensive_taken
+				ac_ucw_stage_counteroffensive = yes
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_order_stonehenge = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = FCU has_global_flag = ac_ucw_isaf_formed }
+		available = { ac_ucw_active = yes ac_ucw_stage_stonehenge_ready = yes check_variable = { ac_ucw_stage_weeks > 3 } }
+		cost = 25
+		ai_will_do = { base = 0 }
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes ac_ucw_stage_stonehenge_ready = yes check_variable = { ac_ucw_stage_weeks > 3 } NOT = { has_country_flag = ac_ucw_order_stonehenge_taken } }
+				set_country_flag = ac_ucw_order_stonehenge_taken
+				ac_ucw_stage_stonehenge = yes
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_eru_seek_armistice = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = ERU }
+		available = { ac_ucw_active = yes ac_ucw_war_running = yes has_global_flag = ac_ucw_stage_counteroffensive country_exists = FCU }
+		cost = 50
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes ac_ucw_war_running = yes has_global_flag = ac_ucw_stage_counteroffensive country_exists = FCU }
+				FCU = { country_event = { id = ac_ucw.45 days = 1 } }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_ucw_fcu_offer_armistice = {
+		allowed = { ac_ucw_participant = yes }
+		visible = { original_tag = FCU has_global_flag = ac_ucw_isaf_formed }
+		available = { ac_ucw_active = yes ac_ucw_war_running = yes has_global_flag = ac_ucw_stage_los_canas country_exists = ERU }
+		cost = 50
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_active = yes ac_ucw_war_running = yes has_global_flag = ac_ucw_stage_los_canas country_exists = ERU }
+				ERU = { country_event = { id = ac_ucw.46 days = 1 } }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+}
+ac_playtest = {
+	ac_playtest_ucw_open_calendar = {
+		allowed = { always = yes }
+		visible = { ac_ucw_playtest_shortcuts_on = yes }
+		available = { ac_ucw_playtest_shortcuts_on = yes NOT = { has_global_flag = ac_ucw_calendar_started } }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_playtest_shortcuts_on = yes NOT = { has_global_flag = ac_ucw_calendar_started } }
+				set_global_flag = ac_ucw_playtest_forced
+				set_global_flag = ac_sp_stonehenge_complete
+				ac_ucw_world_start = yes
+				if = { limit = { country_exists = ERU } ERU = { ac_ucw_country_start = yes } }
+				if = { limit = { country_exists = FCU } FCU = { ac_ucw_country_start = yes } }
+				if = { limit = { country_exists = SNS } SNS = { ac_ucw_country_start = yes } }
+				if = { limit = { country_exists = AMB } AMB = { ac_ucw_country_start = yes } }
+				if = { limit = { country_exists = UGE } UGE = { ac_ucw_country_start = yes } }
+				if = { limit = { country_exists = DEL } DEL = { ac_ucw_country_start = yes } }
+				if = { limit = { country_exists = NPT } NPT = { ac_ucw_country_start = yes } }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_playtest_ucw_raise_grievance = {
+		allowed = { always = yes }
+		visible = { ac_ucw_playtest_shortcuts_on = yes }
+		available = { ac_ucw_playtest_shortcuts_on = yes has_global_flag = ac_ucw_calendar_started NOT = { has_global_flag = ac_ucw_war_started } country_exists = ERU }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_playtest_shortcuts_on = yes has_global_flag = ac_ucw_calendar_started NOT = { has_global_flag = ac_ucw_war_started } country_exists = ERU }
+				ERU = { set_variable = { ac_ucw_grievance = 80 } set_country_flag = ac_ucw_eru_mobilized set_country_flag = ac_ucw_war_plan_ready }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_playtest_ucw_start_war = {
+		allowed = { always = yes }
+		visible = { ac_ucw_playtest_shortcuts_on = yes }
+		available = { ac_ucw_playtest_shortcuts_on = yes has_global_flag = ac_ucw_calendar_started NOT = { has_global_flag = ac_ucw_war_started } country_exists = ERU }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_playtest_shortcuts_on = yes has_global_flag = ac_ucw_calendar_started NOT = { has_global_flag = ac_ucw_war_started } country_exists = ERU }
+				ERU = { ac_ucw_start_war = yes }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_playtest_ucw_seize_stonehenge = {
+		allowed = { always = yes }
+		visible = { ac_ucw_playtest_shortcuts_on = yes }
+		available = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_stonehenge_seized } }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_stonehenge_seized } }
+				ac_ucw_seize_stonehenge = yes
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_playtest_ucw_form_isaf = {
+		allowed = { always = yes }
+		visible = { ac_ucw_playtest_shortcuts_on = yes }
+		available = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_isaf_formed } country_exists = FCU }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_isaf_formed } country_exists = FCU }
+				FCU = { ac_ucw_form_isaf = yes }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_playtest_ucw_next_stage = {
+		allowed = { always = yes }
+		visible = { ac_ucw_playtest_shortcuts_on = yes }
+		available = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes has_global_flag = ac_ucw_isaf_formed NOT = { has_global_flag = ac_ucw_stonehenge_destroyed } country_exists = FCU }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes has_global_flag = ac_ucw_isaf_formed NOT = { has_global_flag = ac_ucw_stonehenge_destroyed } country_exists = FCU }
+				FCU = {
+				    if = { limit = { NOT = { has_global_flag = ac_ucw_stage_los_canas } } ac_ucw_stage_los_canas = yes }
+				    else_if = { limit = { NOT = { has_global_flag = ac_ucw_stage_north_point } } ac_ucw_stage_north_point = yes }
+				    else_if = { limit = { NOT = { has_global_flag = ac_ucw_stage_counteroffensive } } ac_ucw_stage_counteroffensive = yes }
+				    else = { ac_ucw_seize_stonehenge = yes ac_ucw_stage_stonehenge = yes }
+				}
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_playtest_ucw_isaf_victory = {
+		allowed = { always = yes }
+		visible = { ac_ucw_playtest_shortcuts_on = yes }
+		available = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes }
+				ac_ucw_record_isaf_victory = yes
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_playtest_ucw_erusean_victory = {
+		allowed = { always = yes }
+		visible = { ac_ucw_playtest_shortcuts_on = yes }
+		available = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes }
+				ac_ucw_record_erusean_victory = yes
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_playtest_ucw_stalemate = {
+		allowed = { always = yes }
+		visible = { ac_ucw_playtest_shortcuts_on = yes }
+		available = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes country_exists = ERU }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes country_exists = ERU }
+				ERU = { ac_ucw_armistice = yes }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+
+	ac_playtest_ucw_report = {
+		allowed = { always = yes }
+		visible = { ac_ucw_playtest_shortcuts_on = yes }
+		available = { ac_ucw_playtest_shortcuts_on = yes always = yes }
+		cost = 0
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = { ac_ucw_playtest_shortcuts_on = yes always = yes }
+				if = { limit = { country_exists = ERU ERU = { has_variable = ac_ucw_grievance } } set_variable = { ac_ucw_report_grievance = ERU.ac_ucw_grievance } }
+				if = { limit = { country_exists = FCU FCU = { has_variable = ac_ucw_stage_weeks } } set_variable = { ac_ucw_report_weeks = FCU.ac_ucw_stage_weeks } }
+				country_event = { id = ac_ucw.99 days = 0 }
+				ac_ucw_bound = yes
+			}
+		}
+	}
+}

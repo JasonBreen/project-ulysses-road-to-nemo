@@ -1,0 +1,486 @@
+# Authored gameplay; source: tools/build_continental_war.py.
+focus_tree = {
+	id = ac_ucw_fcu_tree
+	country = { factor = 0 }
+	default = no
+	continuous_focus_position = { x = 1300 y = 1700 }
+	focus = {
+		id = FCU_ucw_after_ulysses
+		icon = GFX_focus_generic_globe_usea
+		x = 10
+		y = 0
+		cost = 5
+		ai_will_do = { factor = 20 }
+		available = { original_tag = FCU ac_ucw_active = yes  }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_after_ulysses_done } }
+				set_country_flag = FCU_ucw_after_ulysses_done
+				add_to_variable = { ac_ucw_recovery = 5 }
+				add_political_power = 50
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_relief_camps
+		icon = GFX_focus_generic_diplomacy_osea
+		x = 6
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_after_ulysses }
+		available = { original_tag = FCU ac_ucw_active = yes  }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_relief_camps_done } }
+				set_country_flag = FCU_ucw_relief_camps_done
+				add_to_variable = { ac_ucw_pressure = 5 }
+				add_to_variable = { ac_ucw_recovery = 5 }
+				add_stability = -0.02
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_stonehenge_custody
+		icon = GFX_focus_generic_army_defensive
+		x = 10
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_after_ulysses }
+		available = { original_tag = FCU ac_ucw_active = yes has_global_flag = ac_ucw_stonehenge_operational country_exists = SNS }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_stonehenge_custody_done } }
+				set_country_flag = FCU_ucw_stonehenge_custody_done
+				SNS = { add_ideas = ac_ucw_stonehenge_garrison }
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_continental_economy
+		icon = GFX_focus_generic_extract_steel
+		x = 14
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_after_ulysses }
+		available = { original_tag = FCU ac_ucw_active = yes  }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_continental_economy_done } }
+				set_country_flag = FCU_ucw_continental_economy_done
+				add_to_variable = { ac_ucw_recovery = 10 }
+				if = { limit = { ac_econ_ready = yes } ac_econ_set_reconstruction = yes }
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_mediation
+		icon = GFX_focus_generic_diplomacy_osea
+		x = 6
+		y = 2
+		cost = 5
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_relief_camps }
+		available = { original_tag = FCU ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } country_exists = ERU }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_mediation_done } }
+				set_country_flag = FCU_ucw_mediation_done
+				ERU = { country_event = { id = ac_ucw.13 days = 1 } }
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_uto_readiness
+		icon = GFX_focus_generic_infantry_equipment_research
+		x = 12
+		y = 2
+		cost = 5
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_stonehenge_custody focus = FCU_ucw_continental_economy }
+		available = { original_tag = FCU ac_ucw_active = yes  }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_uto_readiness_done } }
+				set_country_flag = FCU_ucw_uto_readiness_done
+				army_experience = 10
+				air_experience = 10
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_early_warning
+		icon = GFX_focus_generic_fighter_weapons_school
+		x = 12
+		y = 3
+		cost = 5
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_uto_readiness }
+		available = { original_tag = FCU ac_ucw_active = yes  }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_early_warning_done } }
+				set_country_flag = FCU_ucw_early_warning_done
+				air_experience = 15
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_draft_charter
+		icon = GFX_focus_generic_diplomacy_osea
+		x = 12
+		y = 4
+		cost = 5
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_early_warning }
+		available = { original_tag = FCU ac_ucw_active = yes  }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_draft_charter_done } }
+				set_country_flag = FCU_ucw_draft_charter_done
+				set_country_flag = ac_ucw_isaf_prepared
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_peace_dividend
+		icon = GFX_focus_generic_extract_steel
+		x = 16
+		y = 4
+		cost = 5
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_continental_economy }
+		available = { original_tag = FCU ac_ucw_active = yes has_global_flag = ac_ucw_war_averted }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_peace_dividend_done } }
+				set_country_flag = FCU_ucw_peace_dividend_done
+				add_to_variable = { ac_ucw_pressure = -10 }
+				add_to_variable = { ac_ucw_recovery = 10 }
+				add_ideas = ac_ucw_continental_peace
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_found_isaf
+		icon = GFX_focus_generic_army_palace_guard
+		x = 10
+		y = 5
+		cost = 3
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_mediation focus = FCU_ucw_draft_charter }
+		available = { original_tag = FCU ac_ucw_active = yes has_global_flag = ac_ucw_isaf_formed }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_found_isaf_done } }
+				set_country_flag = FCU_ucw_found_isaf_done
+				army_experience = 15
+				add_war_support = 0.05
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_hold_los_canas
+		icon = GFX_focus_generic_army_defensive
+		x = 8
+		y = 6
+		cost = 3
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_found_isaf }
+		available = { original_tag = FCU ac_ucw_active = yes has_global_flag = ac_ucw_stage_los_canas }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_hold_los_canas_done } }
+				set_country_flag = FCU_ucw_hold_los_canas_done
+				army_experience = 10
+				add_stability = 0.03
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_invite_north_point
+		icon = GFX_focus_generic_diplomacy_osea
+		x = 12
+		y = 6
+		cost = 3
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_found_isaf }
+		available = { original_tag = FCU ac_ucw_active = yes country_exists = NPT }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_invite_north_point_done } }
+				set_country_flag = FCU_ucw_invite_north_point_done
+				if = {
+					limit = { country_exists = NPT }
+					NPT = {
+						if = {
+							limit = { NOT = { is_in_faction_with = FCU } NOT = { has_war_with = FCU } has_capitulated = no }
+							country_event = { id = ac_ucw.32 days = 1 }
+						}
+					}
+				}
+
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_north_point_hq
+		icon = GFX_focus_generic_fighter_weapons_school
+		x = 10
+		y = 7
+		cost = 3
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_hold_los_canas focus = FCU_ucw_invite_north_point }
+		available = { original_tag = FCU ac_ucw_active = yes has_global_flag = ac_ucw_stage_north_point }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_north_point_hq_done } }
+				set_country_flag = FCU_ucw_north_point_hq_done
+				air_experience = 25
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_air_wings
+		icon = GFX_focus_generic_bomber_training_school
+		x = 8
+		y = 8
+		cost = 3
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_north_point_hq }
+		available = { original_tag = FCU ac_ucw_active = yes  }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_air_wings_done } }
+				set_country_flag = FCU_ucw_air_wings_done
+				air_experience = 20
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_amphibious_lift
+		icon = GFX_focus_generic_army_expeditionary
+		x = 12
+		y = 8
+		cost = 3
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_north_point_hq }
+		available = { original_tag = FCU ac_ucw_active = yes  }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_amphibious_lift_done } }
+				set_country_flag = FCU_ucw_amphibious_lift_done
+				navy_experience = 20
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_landing
+		icon = GFX_focus_generic_army_expeditionary
+		x = 10
+		y = 9
+		cost = 3
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_air_wings focus = FCU_ucw_amphibious_lift }
+		available = { original_tag = FCU ac_ucw_active = yes has_global_flag = ac_ucw_stage_counteroffensive }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_landing_done } }
+				set_country_flag = FCU_ucw_landing_done
+				army_experience = 20
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_strike_stonehenge
+		icon = GFX_focus_generic_cas_training_school
+		x = 8
+		y = 10
+		cost = 3
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_landing }
+		available = { original_tag = FCU ac_ucw_active = yes has_global_flag = ac_ucw_stage_counteroffensive }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_strike_stonehenge_done } }
+				set_country_flag = FCU_ucw_strike_stonehenge_done
+				air_experience = 20
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_tango_line
+		icon = GFX_focus_generic_army_defensive
+		x = 12
+		y = 10
+		cost = 3
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_landing }
+		available = { original_tag = FCU ac_ucw_active = yes  }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_tango_line_done } }
+				set_country_flag = FCU_ucw_tango_line_done
+				army_experience = 20
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_road_to_farbanti
+		icon = GFX_focus_generic_army_expeditionary
+		x = 10
+		y = 11
+		cost = 3
+		ai_will_do = { factor = 20 }
+		prerequisite = { focus = FCU_ucw_strike_stonehenge focus = FCU_ucw_tango_line }
+		available = { original_tag = FCU ac_ucw_active = yes has_global_flag = ac_ucw_war_started }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_road_to_farbanti_done } }
+				set_country_flag = FCU_ucw_road_to_farbanti_done
+				add_war_support = 0.05
+				army_experience = 15
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_oversee_erusea
+		icon = GFX_focus_generic_diplomacy_osea
+		x = 8
+		y = 12
+		cost = 3
+		ai_will_do = { factor = 20 }
+		available = { original_tag = FCU ac_ucw_active = yes OR = { has_global_flag = ac_ucw_outcome_isaf_victory } }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_oversee_erusea_done } }
+				set_country_flag = FCU_ucw_oversee_erusea_done
+				add_political_power = 75
+				add_stability = 0.05
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_ucw_continental_order
+		icon = GFX_focus_generic_globe_usea
+		x = 12
+		y = 12
+		cost = 3
+		ai_will_do = { factor = 20 }
+		available = { original_tag = FCU ac_ucw_active = yes OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate } }
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_continental_order_done } }
+				set_country_flag = FCU_ucw_continental_order_done
+				add_to_variable = { ac_ucw_pressure = -10 }
+				add_to_variable = { ac_ucw_recovery = 10 }
+				ac_ucw_bound = yes
+			}
+		}
+		search_filters = { }
+	}
+}

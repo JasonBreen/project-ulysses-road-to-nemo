@@ -10,6 +10,7 @@ This ledger is a work queue, not a claim that the entries below are settled. Off
 | 1991 bookmarks and existing Belkan branches | Mod provenance | Archive and current static inventory | Preserve/adapt with provenance; verify reachability and chronology at runtime later. |
 | Joker 1: Ustian birth, Belkan connections, Moon11/Shadow22, Watchtowerorganization, Cope, and Tasha's mother shooting him down | User-authored continuity | Sam's supplied planning outline | Approved creative layer, not official canon; compile exact dates/details from Sam before implementation. |
 | 2065-12-31 inclusive campaign cutoff | Project requirement / provisional engineering contract | `docs/DESIGN.md` | Engine permission, authored content, and runtime coverage must be reported separately. No invented future lore. |
+| Ulysses fallout and Usean Continental War, 1999–2005; Stonehenge, Megalith, Excalibur, V2 and Arkbird project framing | Official | [ACES Chronicle details and Super Weapons](USEAN_CONTINENTAL_WAR.md), accessed 27 Oct 2026 | Sources and actor contracts compiled; nothing implemented yet. The war's start day, Megalith's construction timing and every alternate outcome are provisional gameplay. Recta has no Chronicle entry and stays mod provenance. |
 | Technology/equipment names through 2065 | Mixed / pending | Current files are mostly inherited IDs with 1991–2005 dates; date syntax validator now covers 1900–2065 | Audit names, localization, provenance, and canon conflicts before adding later-era content. |
 
 ## The Peace We Inherit expansion

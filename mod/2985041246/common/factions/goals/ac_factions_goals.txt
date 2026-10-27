@@ -1,0 +1,26 @@
+# Provisional gameplay; see docs/FACTIONS.md and FACTIONS_PROVENANCE.md.
+
+ac_fac_manifest = {
+ name = ac_fac_manifest_name description = ac_fac_manifest_desc is_manifest = yes
+ ratio_progress = { total_amount = 4 completed_amount = num_faction_members }
+ visible = { has_dlc = "No Compromise, No Surrender" has_faction_template = ac_fac_mutual_defence }
+}
+ac_fac_coordination_goal = {
+ name = ac_fac_coordination_goal_name description = ac_fac_coordination_goal_desc category = short_term
+ visible = { has_dlc = "No Compromise, No Surrender" has_faction_template = ac_fac_mutual_defence }
+ available = { has_dlc = "No Compromise, No Surrender" }
+ completed = { check_variable = { ac_fac_sessions >= 3 } }
+ complete_effect = { add_faction_initiative = 30 } ai_will_do = { base = 0 }
+}
+ac_fac_program_goal = {
+ name = ac_fac_program_goal_name description = ac_fac_program_goal_desc category = medium_term
+ visible = { has_dlc = "No Compromise, No Surrender" has_faction_template = ac_fac_mutual_defence }
+ available = { has_dlc = "No Compromise, No Surrender" }
+ completed = {
+  any_faction_member = {
+   ac_sub_chair_valid = yes check_variable = { ac_sub_mobility = 1 }
+   check_variable = { ac_sub_procurement = 1 } check_variable = { ac_sub_research = 1 }
+  }
+ }
+ complete_effect = { add_faction_initiative = 50 } ai_will_do = { base = 0 }
+}

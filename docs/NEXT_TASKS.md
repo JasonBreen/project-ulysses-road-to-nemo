@@ -12,7 +12,7 @@ Current continuation slice: the former demo handoff now consumes conventional vi
 2. **Silence vanilla content**
    - Empty-override the Earth-country focus, event, decision, scripted-effect and MIO files that error against the Strangereal setup (~3,300 log lines).
    - Keep generic files that 1.19 systems rely on.
-3. **Strangereal special projects.** Replace vanilla WWII projects with Ace Combat superweapons: Excalibur, V2, Stonehenge, Megalith, Arkbird and others. These build on the new `special_project_facility_spawn` positions.
+3. **Strangereal special projects — done (static).** The vanilla WWII projects and scientist traits are replaced by `ac_sp_excalibur`, `ac_sp_v2`, `ac_sp_stonehenge`, `ac_sp_arkbird`, `ac_sp_megalith` and `ac_sp_rhongomyniad`, with `ac_superweapons` no-DLC fallback decisions. See the Track C section of [USEAN_CONTINENTAL_WAR.md](USEAN_CONTINENTAL_WAR.md). Native reachability is unverified.
 4. **AI templates and doctrines**
    - Rewrite `common/ai_templates/generic.txt` in 1.19 syntax.
    - Retarget subdoctrine unit bonuses to the mod's modern unit types.

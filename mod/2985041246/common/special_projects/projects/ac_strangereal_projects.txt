@@ -1,0 +1,485 @@
+# Project Ulysses Strangereal superweapon projects.
+# Each project_output calls the matching ac_sp_*_complete_effect in
+# common/scripted_effects/ac_special_projects.txt; the no-DLC fallback
+# decisions in common/decisions/ac_superweapons.txt call the same effects.
+# Reads ac_ucw_* (Track A) and ac_yuk_arkbird_partner (Track B) flags only;
+# every read is safe when those flags never appear.
+
+# Source: Chronicle 1994 / 12.23; Super Weapons, Excalibur. Strengthens the focus-built Excalibur (BLK_excalibur, belka_dlp_coup.6; mod provenance).
+ac_sp_excalibur = {
+	specialization = specialization_air
+	icon = GFX_ac_sp_excalibur
+	blueprint_image = GFX_ac_sp_blueprint_air_defence
+
+	project_tags = {
+		ac_sp_tag_directed_energy
+	}
+
+	allowed = {
+		original_tag = BLK
+	}
+
+	visible = {
+		FROM = { has_completed_focus = BLK_excalibur }
+	}
+
+	available = {
+		FROM = {
+			has_completed_focus = BLK_excalibur
+		}
+		NOT = { has_global_flag = excalibur_destroyed }
+		NOT = { has_global_flag = ac_sp_excalibur_complete }
+	}
+
+	complexity = sp_complexity.medium
+	prototype_time = sp_time.prototype.medium
+
+	ai_will_do = {
+		base = 10
+	}
+
+	project_output = {
+		country_effects = {
+			ac_sp_excalibur_complete_effect = yes
+		}
+	}
+
+	generic_prototype_rewards = {
+		ac_sp_reward_breakthrough
+		ac_sp_reward_test_setback
+		ac_sp_reward_oversight_review
+		ac_sp_reward_field_trials_air_defence
+	}
+
+	unique_prototype_rewards = {
+		ac_sp_excalibur_reward_mirror_relays = {
+			icon = GFX_ac_sp_excalibur_reward_mirror_relays
+			fire_only_once = yes
+			threshold = {
+				min = 0
+				max = 80
+			}
+			weight = {
+				base = 20
+			}
+			option = {
+				token = ac_sp_excalibur_reward_mirror_relays_accelerate
+				default = yes
+				iteration_output = {
+					country_effects = {
+						add_political_power = -50
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.medium }
+					}
+				}
+			}
+			option = {
+				token = ac_sp_excalibur_reward_mirror_relays_shielding
+				iteration_output = {
+					country_effects = {
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.low }
+						add_stability = 0.02
+					}
+				}
+			}
+		}
+	}
+}
+
+# Source: Chronicle 1995 / 05.17 and 12.31. Bounded to the Belkan War and AWWNB window; links to belka_dlp_war.99/.100 only through ac_sp_v2_complete.
+ac_sp_v2 = {
+	specialization = specialization_nuclear
+	icon = GFX_ac_sp_v2
+	blueprint_image = GFX_ac_sp_blueprint_orbital
+
+	project_tags = {
+		ac_sp_tag_strategic_missile
+	}
+
+	allowed = {
+		OR = {
+			original_tag = BLK
+			original_tag = AWW
+		}
+	}
+
+	visible = {
+		date < 1996.1.1
+	}
+
+	available = {
+		date < 1996.1.1
+		NOT = { has_global_flag = ac_sp_v2_complete }
+	}
+
+	complexity = sp_complexity.medium
+	prototype_time = sp_time.prototype.medium
+
+	ai_will_do = {
+		base = 5
+	}
+
+	project_output = {
+		country_effects = {
+			ac_sp_v2_complete_effect = yes
+		}
+	}
+
+	generic_prototype_rewards = {
+		ac_sp_reward_breakthrough
+		ac_sp_reward_test_setback
+		ac_sp_reward_oversight_review
+		ac_sp_reward_field_trials_orbital
+	}
+
+	unique_prototype_rewards = {
+		ac_sp_v2_reward_launch_sites = {
+			icon = GFX_ac_sp_v2_reward_launch_sites
+			fire_only_once = yes
+			threshold = {
+				min = 0
+				max = 80
+			}
+			weight = {
+				base = 20
+			}
+			option = {
+				token = ac_sp_v2_reward_launch_sites_dispersed
+				default = yes
+				iteration_output = {
+					country_effects = {
+						add_war_support = 0.02
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.medium }
+					}
+				}
+			}
+			option = {
+				token = ac_sp_v2_reward_launch_sites_hardened
+				iteration_output = {
+					country_effects = {
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.low }
+						add_stability = 0.02
+					}
+				}
+			}
+		}
+	}
+}
+
+# Source: Chronicle 1996 / 04.20 (start gate) and 1998 / 06.19 (completion target); Super Weapons, Stonehenge. Gate and duration are provisional gameplay.
+ac_sp_stonehenge = {
+	specialization = specialization_air
+	icon = GFX_ac_sp_stonehenge
+	blueprint_image = GFX_ac_sp_blueprint_air_defence
+
+	project_tags = {
+		ac_sp_tag_railgun
+	}
+
+	allowed = {
+		original_tag = FCU
+	}
+
+	visible = {
+		always = yes
+	}
+
+	available = {
+		date > 1996.4.19
+		NOT = { has_global_flag = ac_sp_stonehenge_complete }
+		NOT = { has_global_flag = ac_ucw_stonehenge_seized }
+		NOT = { has_global_flag = ac_ucw_stonehenge_destroyed }
+	}
+
+	complexity = sp_complexity.large
+	prototype_time = sp_time.prototype.long
+
+	ai_will_do = {
+		base = 20
+	}
+
+	project_output = {
+		country_effects = {
+			ac_sp_stonehenge_complete_effect = yes
+		}
+	}
+
+	generic_prototype_rewards = {
+		ac_sp_reward_breakthrough
+		ac_sp_reward_test_setback
+		ac_sp_reward_oversight_review
+		ac_sp_reward_field_trials_air_defence
+	}
+
+	unique_prototype_rewards = {
+		ac_sp_stonehenge_reward_international_crews = {
+			icon = GFX_ac_sp_stonehenge_reward_international_crews
+			fire_only_once = yes
+			threshold = {
+				min = 0
+				max = 80
+			}
+			weight = {
+				base = 20
+			}
+			option = {
+				token = ac_sp_stonehenge_reward_international_crews_pooled
+				default = yes
+				iteration_output = {
+					country_effects = {
+						add_political_power = 25
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.medium }
+					}
+				}
+			}
+			option = {
+				token = ac_sp_stonehenge_reward_international_crews_national
+				iteration_output = {
+					country_effects = {
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.low }
+						add_stability = 0.02
+					}
+				}
+			}
+		}
+	}
+}
+
+# Source: Chronicle 1999 / 07.08 (start gate) and 1999 / 10.08. Debris-clearing conversion only; weaponisation (2010) is out of scope.
+ac_sp_arkbird = {
+	specialization = specialization_nuclear
+	icon = GFX_ac_sp_arkbird
+	blueprint_image = GFX_ac_sp_blueprint_orbital
+
+	project_tags = {
+		ac_sp_tag_orbital
+		ac_sp_tag_debris_clearing
+	}
+
+	allowed = {
+		original_tag = OSE
+	}
+
+	visible = {
+		always = yes
+	}
+
+	available = {
+		date > 1999.7.7
+		NOT = { has_global_flag = ac_sp_arkbird_complete }
+	}
+
+	complexity = sp_complexity.medium
+	prototype_time = sp_time.prototype.medium
+
+	ai_will_do = {
+		base = 10
+	}
+
+	project_output = {
+		country_effects = {
+			ac_sp_arkbird_complete_effect = yes
+		}
+	}
+
+	generic_prototype_rewards = {
+		ac_sp_reward_breakthrough
+		ac_sp_reward_test_setback
+		ac_sp_reward_oversight_review
+		ac_sp_reward_field_trials_orbital
+	}
+
+	unique_prototype_rewards = {
+		ac_sp_arkbird_reward_yuktobanian_crews = {
+			icon = GFX_ac_sp_arkbird_reward_yuktobanian_crews
+			fire_only_once = yes
+			threshold = {
+				min = 0
+				max = 80
+			}
+			weight = {
+				base = 0
+				modifier = {
+					add = 40
+					country_exists = YUK
+					YUK = { has_country_flag = ac_yuk_arkbird_partner }
+				}
+			}
+			option = {
+				token = ac_sp_arkbird_reward_yuktobanian_crews_joint
+				default = yes
+				iteration_output = {
+					country_effects = {
+						add_political_power = 50
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.medium }
+					}
+				}
+			}
+		}
+	}
+}
+
+# Source: Super Weapons, Megalith; Chronicle 2005 / 09.26. No construction date is published, so availability and timing are provisional gameplay.
+ac_sp_megalith = {
+	specialization = specialization_nuclear
+	icon = GFX_ac_sp_megalith
+	blueprint_image = GFX_ac_sp_blueprint_orbital
+
+	project_tags = {
+		ac_sp_tag_strategic_missile
+		ac_sp_tag_orbital
+	}
+
+	allowed = {
+		original_tag = ERU
+	}
+
+	visible = {
+		always = yes
+	}
+
+	available = {
+		has_global_flag = ac_ucw_war_started
+		NOT = { has_global_flag = ac_ucw_megalith_destroyed }
+		NOT = { has_global_flag = ac_sp_megalith_complete }
+	}
+
+	complexity = sp_complexity.large
+	prototype_time = sp_time.prototype.medium
+
+	ai_will_do = {
+		base = 10
+	}
+
+	project_output = {
+		country_effects = {
+			ac_sp_megalith_complete_effect = yes
+		}
+	}
+
+	generic_prototype_rewards = {
+		ac_sp_reward_breakthrough
+		ac_sp_reward_test_setback
+		ac_sp_reward_oversight_review
+		ac_sp_reward_field_trials_orbital
+	}
+
+	unique_prototype_rewards = {
+		ac_sp_megalith_reward_silo_complex = {
+			icon = GFX_ac_sp_megalith_reward_silo_complex
+			fire_only_once = yes
+			threshold = {
+				min = 0
+				max = 80
+			}
+			weight = {
+				base = 20
+			}
+			option = {
+				token = ac_sp_megalith_reward_silo_complex_deep
+				default = yes
+				iteration_output = {
+					country_effects = {
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.low }
+						add_stability = 0.02
+					}
+				}
+			}
+			option = {
+				token = ac_sp_megalith_reward_silo_complex_fast
+				iteration_output = {
+					country_effects = {
+						add_stability = -0.02
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.medium }
+					}
+				}
+			}
+		}
+	}
+}
+
+# Source: Provisional gameplay for the Belkan-victory branch; gives substance to BLK_project_rhongomyniad / belka_dlp_won.9 (mod provenance). No official source.
+ac_sp_rhongomyniad = {
+	specialization = specialization_nuclear
+	icon = GFX_ac_sp_rhongomyniad
+	blueprint_image = GFX_ac_sp_blueprint_orbital
+
+	project_tags = {
+		ac_sp_tag_directed_energy
+		ac_sp_tag_orbital
+	}
+
+	special_project_parent = {
+		ac_sp_excalibur
+	}
+
+	allowed = {
+		original_tag = BLK
+	}
+
+	visible = {
+		FROM = { has_completed_focus = BLK_project_rhongomyniad }
+	}
+
+	available = {
+		FROM = {
+			has_completed_focus = BLK_project_rhongomyniad
+		}
+		has_global_flag = ac_sp_excalibur_complete
+		NOT = { has_global_flag = excalibur_destroyed }
+		NOT = { has_global_flag = ac_sp_rhongomyniad_complete }
+	}
+
+	complexity = sp_complexity.insane
+	prototype_time = sp_time.prototype.long
+
+	ai_will_do = {
+		base = 10
+	}
+
+	project_output = {
+		country_effects = {
+			ac_sp_rhongomyniad_complete_effect = yes
+		}
+	}
+
+	generic_prototype_rewards = {
+		ac_sp_reward_breakthrough
+		ac_sp_reward_test_setback
+		ac_sp_reward_oversight_review
+		ac_sp_reward_field_trials_orbital
+	}
+
+	unique_prototype_rewards = {
+		ac_sp_rhongomyniad_reward_tower_secrecy = {
+			icon = GFX_ac_sp_rhongomyniad_reward_tower_secrecy
+			fire_only_once = yes
+			threshold = {
+				min = 0
+				max = 80
+			}
+			weight = {
+				base = 20
+			}
+			option = {
+				token = ac_sp_rhongomyniad_reward_tower_secrecy_covert
+				default = yes
+				iteration_output = {
+					country_effects = {
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.low }
+						add_stability = 0.02
+					}
+				}
+			}
+			option = {
+				token = ac_sp_rhongomyniad_reward_tower_secrecy_open
+				iteration_output = {
+					country_effects = {
+						add_political_power = -50
+						add_war_support = 0.03
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.medium }
+					}
+				}
+			}
+		}
+	}
+}

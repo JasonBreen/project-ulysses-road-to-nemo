@@ -1,0 +1,169 @@
+# Project Ulysses generic prototype rewards (provisional gameplay).
+# ROOT is the project, FROM is the country inside weight blocks; inside
+# iteration_output.country_effects FROM is the project.
+
+ac_sp_reward_breakthrough = {
+	icon = GFX_ac_sp_reward_breakthrough
+	fire_only_once = yes
+	threshold = {
+		min = 0
+		max = 100
+	}
+	weight = {
+		base = 10
+	}
+	option = {
+		token = ac_sp_reward_breakthrough_option
+		iteration_output = {
+			country_effects = {
+				FROM = { add_project_progress_ratio = constant:sp_progress.gain.medium }
+			}
+		}
+	}
+}
+
+ac_sp_reward_test_setback = {
+	icon = GFX_ac_sp_reward_test_setback
+	fire_only_once = yes
+	threshold = {
+		min = 15
+		max = 100
+	}
+	weight = {
+		base = 10
+	}
+	option = {
+		token = ac_sp_reward_test_setback_option
+		iteration_output = {
+			country_effects = {
+				FROM = { add_project_progress_ratio = constant:sp_progress.loss.low }
+			}
+		}
+	}
+}
+
+ac_sp_reward_oversight_review = {
+	icon = GFX_ac_sp_reward_oversight_review
+	fire_only_once = yes
+	threshold = {
+		min = 0
+		max = 100
+	}
+	weight = {
+		base = 6
+	}
+	option = {
+		token = ac_sp_reward_oversight_review_accelerate
+		default = yes
+		iteration_output = {
+			country_effects = {
+				add_political_power = -25
+				FROM = { add_project_progress_ratio = constant:sp_progress.gain.low }
+			}
+		}
+	}
+	option = {
+		token = ac_sp_reward_oversight_review_audit
+		iteration_output = {
+			country_effects = {
+				add_political_power = 25
+			}
+		}
+	}
+}
+
+ac_sp_reward_field_trials_orbital = {
+	icon = GFX_ac_sp_reward_field_trials_orbital
+	fire_only_once = yes
+	threshold = {
+		min = 0
+		max = 100
+	}
+	weight = {
+		base = 8
+		modifier = {
+			factor = 0
+			var:scientist = {
+				has_scientist_level = {
+					level > 4
+					specialization = specialization_nuclear
+				}
+			}
+		}
+	}
+	option = {
+		token = ac_sp_reward_field_trials_orbital_option
+		iteration_output = {
+			scientist_effects = {
+				add_scientist_xp = {
+					experience = constant:sp_scientist_xp_gain.medium
+					specialization = specialization_nuclear
+				}
+			}
+		}
+	}
+}
+
+ac_sp_reward_field_trials_air_defence = {
+	icon = GFX_ac_sp_reward_field_trials_air_defence
+	fire_only_once = yes
+	threshold = {
+		min = 0
+		max = 100
+	}
+	weight = {
+		base = 8
+		modifier = {
+			factor = 0
+			var:scientist = {
+				has_scientist_level = {
+					level > 4
+					specialization = specialization_air
+				}
+			}
+		}
+	}
+	option = {
+		token = ac_sp_reward_field_trials_air_defence_option
+		iteration_output = {
+			scientist_effects = {
+				add_scientist_xp = {
+					experience = constant:sp_scientist_xp_gain.medium
+					specialization = specialization_air
+				}
+			}
+		}
+	}
+}
+
+ac_sp_reward_field_trials_naval = {
+	icon = GFX_ac_sp_reward_field_trials_naval
+	fire_only_once = yes
+	threshold = {
+		min = 0
+		max = 100
+	}
+	weight = {
+		base = 8
+		modifier = {
+			factor = 0
+			var:scientist = {
+				has_scientist_level = {
+					level > 4
+					specialization = specialization_naval
+				}
+			}
+		}
+	}
+	option = {
+		token = ac_sp_reward_field_trials_naval_option
+		iteration_output = {
+			scientist_effects = {
+				add_scientist_xp = {
+					experience = constant:sp_scientist_xp_gain.medium
+					specialization = specialization_naval
+				}
+			}
+		}
+	}
+}

@@ -439,6 +439,19 @@ class ContinentalWarTests(unittest.TestCase):
         self.assertEqual({"ac_ucw_isaf_command", "ac_ucw_isaf_counteroffensive"}, {i for i in world.countries["FCU"].ideas if i.startswith("ac_ucw_isaf")})
         self.assertLessEqual(world.countries["FCU"].variables["ac_ucw_stage_weeks"], 520)
 
+    def test_lost_stonehenge_removes_the_completed_project_battery(self):
+        world = at_war()
+        world.countries["FCU"].ideas["ac_sp_stonehenge_battery"] = None
+        world.controllers[310] = "ERU"
+        world.weeks(1)
+        self.assertIn("ac_ucw_stonehenge_seized", world.globals)
+        self.assertNotIn("ac_sp_stonehenge_battery", world.countries["FCU"].ideas, "seizure")
+        world.countries["FCU"].ideas["ac_sp_stonehenge_battery"] = None
+        world.controllers[310] = "SNS"
+        world.weeks(1)
+        self.assertIn("ac_ucw_stonehenge_destroyed", world.globals)
+        self.assertNotIn("ac_sp_stonehenge_battery", world.countries["FCU"].ideas, "destruction")
+
     def test_stage_counter_is_clamped(self):
         world = at_war()
         world.weeks(14)

@@ -216,12 +216,14 @@ add_ideas = ac_ucw_eru_war_footing
 FCU = { set_variable = { ac_ucw_stage_weeks = 0 } }
 news_event = { id = ac_ucw.20 days = 1 }"""))
     brief(20, "Erusea invades San Salvacion", "The official chronology records that Erusea invaded neutral San Salvacion in the summer of 2003 and seized Stonehenge. In this campaign San Salvacion belongs to Central Usea's treaty organization from 1991, so its partners are called to its defence. The exact start date is provisional gameplay.")
+    # The completed special project's battery spirit (#26) stops serving FCU once the site is lost.
     effect("ac_ucw_seize_stonehenge", gonce("ac_ucw_stonehenge_seized", """news_event = { id = ac_ucw.40 days = 1 }
+FCU = { remove_ideas = ac_sp_stonehenge_battery }
 if = {
     limit = { has_global_flag = ac_ucw_stonehenge_operational }
 """ + "\n".join("    " + line for line in (scoped("ERU", "add_ideas = ac_ucw_stonehenge_railguns") + scoped("FCU", "add_ideas = ac_ucw_under_stonehenge")).splitlines()) + "\n}"))
     # Ground recapture completes the Stonehenge stage as well, so later checks see one state.
-    effect("ac_ucw_destroy_stonehenge", gonce("ac_ucw_stonehenge_destroyed", "set_global_flag = ac_ucw_stage_stonehenge\nnews_event = { id = ac_ucw.44 days = 1 }\n" + scoped("ERU", "remove_ideas = ac_ucw_stonehenge_railguns") + scoped("FCU", "remove_ideas = ac_ucw_under_stonehenge\nset_variable = { ac_ucw_stage_weeks = 0 }"), "has_global_flag = ac_ucw_stonehenge_seized"))
+    effect("ac_ucw_destroy_stonehenge", gonce("ac_ucw_stonehenge_destroyed", "set_global_flag = ac_ucw_stage_stonehenge\nnews_event = { id = ac_ucw.44 days = 1 }\n" + scoped("ERU", "remove_ideas = ac_ucw_stonehenge_railguns") + scoped("FCU", "remove_ideas = ac_ucw_under_stonehenge\nremove_ideas = ac_sp_stonehenge_battery\nset_variable = { ac_ucw_stage_weeks = 0 }"), "has_global_flag = ac_ucw_stonehenge_seized"))
     brief(40, "Stonehenge turns on the sky", "The official chronology records that Erusea seized Stonehenge and turned its railguns, built to destroy Ulysses fragments, against aircraft. Allied air operations over the continent now face the battery's fire.")
     effect("ac_ucw_eru_war_tick", """# Provisional window: the Chronicle records only the summer of 2003.
 if = {

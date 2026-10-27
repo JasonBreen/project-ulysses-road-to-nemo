@@ -58,14 +58,14 @@ focus_tree = {
 		cost = 5
 		ai_will_do = { factor = 20 }
 		prerequisite = { focus = FCU_ucw_after_ulysses }
-		available = { original_tag = FCU ac_ucw_active = yes has_global_flag = ac_ucw_stonehenge_operational country_exists = SNS }
+		available = { original_tag = FCU ac_ucw_active = yes ac_ucw_stonehenge_intact = yes country_exists = SNS }
 		cancel_if_invalid = yes
 		continue_if_invalid = no
 		completion_reward = {
 			if = {
 				limit = { ac_ucw_active = yes NOT = { has_country_flag = FCU_ucw_stonehenge_custody_done } }
 				set_country_flag = FCU_ucw_stonehenge_custody_done
-				SNS = { add_ideas = ac_ucw_stonehenge_garrison }
+				if = { limit = { ac_ucw_stonehenge_intact = yes } SNS = { add_ideas = ac_ucw_stonehenge_garrison } }
 				ac_ucw_bound = yes
 			}
 		}

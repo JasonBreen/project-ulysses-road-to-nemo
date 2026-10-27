@@ -127,6 +127,8 @@ def build_core():
     trigger("ac_ucw_active", "has_country_flag = ac_ucw_started\nhas_capitulated = no")
     trigger("ac_ucw_controls_stonehenge", "%d = { is_controlled_by = ROOT }" % STONEHENGE_STATE)
     trigger("ac_ucw_stonehenge_held_by_erusea", "%d = { is_controlled_by = ERU }" % STONEHENGE_STATE)
+    # Prewar custody only makes sense while the battery is complete and still in treaty hands.
+    trigger("ac_ucw_stonehenge_intact", "has_global_flag = ac_ucw_stonehenge_operational\nNOT = { has_global_flag = ac_ucw_stonehenge_seized }\nNOT = { has_global_flag = ac_ucw_stonehenge_destroyed }")
     trigger("ac_ucw_war_over", "OR = { " + " ".join("has_global_flag = ac_ucw_outcome_" + o for o in OUTCOMES) + " }")
     trigger("ac_ucw_war_running", "has_global_flag = ac_ucw_war_started\nac_ucw_war_over = no")
     trigger("ac_ucw_can_start_war", """original_tag = ERU
@@ -202,7 +204,7 @@ def build_fallout():
     decision("ac_ucw_fallout", "ac_ucw_eru_continental_accord", "Sign a continental accord", "Requires grievance below 25, no mobilized reserves and a date after 1 January 2002. Erusea renounces force over the fallout. The Continental War is averted. Provisional gameplay: in the official chronology the war happens.", peace + " check_variable = { ac_ucw_grievance < 25 } NOT = { has_country_flag = ac_ucw_eru_mobilized } date > 2001.12.31", "ac_ucw_avert_war = yes", cost=100, visible=eru, ai=0)
     decision("ac_ucw_fallout", "ac_ucw_fcu_relief_corridors", "Open relief corridors", "Coordinate relief convoys: refugee pressure -10, recovery +5. Once every 180 days.", peace + " check_variable = { ac_ucw_pressure > 9 }", changes(0, -10, 5), visible=fcu, cooldown=180, single=False, ai=1)
     decision("ac_ucw_fallout", "ac_ucw_fcu_mediate", "Offer Erusea mediation", "Propose talks on refugees and reconstruction credit. Erusea may accept or refuse. Once every 365 days. Provisional gameplay.", peace + " country_exists = ERU", "ERU = { country_event = { id = ac_ucw.13 days = 1 } }", cost=50, visible=fcu, cooldown=365, single=False, ai=1)
-    decision("ac_ucw_fallout", "ac_ucw_fcu_garrison_stonehenge", "Garrison Stonehenge", "Requires a completed Stonehenge. San Salvacion receives a defensive garrison; Erusea's grievance rises by 5. Provisional gameplay.", peace + " has_global_flag = ac_ucw_stonehenge_operational country_exists = SNS", "SNS = { add_ideas = ac_ucw_stonehenge_garrison }\n" + scoped("ERU", changes(5)), cost=75, visible=fcu, ai=1)
+    decision("ac_ucw_fallout", "ac_ucw_fcu_garrison_stonehenge", "Garrison Stonehenge", "Requires a completed Stonehenge. San Salvacion receives a defensive garrison; Erusea's grievance rises by 5. Provisional gameplay.", peace + " ac_ucw_stonehenge_intact = yes country_exists = SNS", "SNS = { add_ideas = ac_ucw_stonehenge_garrison }\n" + scoped("ERU", changes(5)), cost=75, visible=fcu, ai=1)
     decision("ac_ucw_fallout", "ac_ucw_fcu_draft_charter", "Draft an allied charter", "Requires Erusea's reserves to be mobilized. If Erusea attacks, the allied command forms at once instead of waiting for the recorded date of 22 August 2003. Provisional gameplay.", peace + " country_exists = ERU ERU = { has_country_flag = ac_ucw_eru_mobilized }", "set_country_flag = ac_ucw_isaf_prepared", visible=fcu, ai=1)
     effect("ac_ucw_avert_war", gonce("ac_ucw_war_averted", "news_event = { id = ac_ucw.25 days = 1 }", "ac_ucw_can_start_war = yes"))
     brief(25, "A continental accord", "Erusea and its neighbours have signed an accord renouncing force over the Ulysses fallout. In the official chronology the Usean Continental War begins in 2003. In this campaign it has been averted: a provisional gameplay branch.", picture="GFX_report_event_treaty_2")
@@ -217,13 +219,11 @@ FCU = { set_variable = { ac_ucw_stage_weeks = 0 } }
 news_event = { id = ac_ucw.20 days = 1 }"""))
     brief(20, "Erusea invades San Salvacion", "The official chronology records that Erusea invaded neutral San Salvacion in the summer of 2003 and seized Stonehenge. In this campaign San Salvacion belongs to Central Usea's treaty organization from 1991, so its partners are called to its defence. The exact start date is provisional gameplay.")
     # The completed special project's battery spirit (#26) stops serving FCU once the site is lost.
-    effect("ac_ucw_seize_stonehenge", gonce("ac_ucw_stonehenge_seized", """news_event = { id = ac_ucw.40 days = 1 }
-FCU = { remove_ideas = ac_sp_stonehenge_battery }
-if = {
+    effect("ac_ucw_seize_stonehenge", gonce("ac_ucw_stonehenge_seized", "news_event = { id = ac_ucw.40 days = 1 }\n" + scoped("FCU", "remove_ideas = ac_sp_stonehenge_battery") + scoped("SNS", "remove_ideas = ac_ucw_stonehenge_garrison") + """if = {
     limit = { has_global_flag = ac_ucw_stonehenge_operational }
 """ + "\n".join("    " + line for line in (scoped("ERU", "add_ideas = ac_ucw_stonehenge_railguns") + scoped("FCU", "add_ideas = ac_ucw_under_stonehenge")).splitlines()) + "\n}"))
     # Ground recapture completes the Stonehenge stage as well, so later checks see one state.
-    effect("ac_ucw_destroy_stonehenge", gonce("ac_ucw_stonehenge_destroyed", "set_global_flag = ac_ucw_stage_stonehenge\nnews_event = { id = ac_ucw.44 days = 1 }\n" + scoped("ERU", "remove_ideas = ac_ucw_stonehenge_railguns") + scoped("FCU", "remove_ideas = ac_ucw_under_stonehenge\nremove_ideas = ac_sp_stonehenge_battery\nset_variable = { ac_ucw_stage_weeks = 0 }"), "has_global_flag = ac_ucw_stonehenge_seized"))
+    effect("ac_ucw_destroy_stonehenge", gonce("ac_ucw_stonehenge_destroyed", "set_global_flag = ac_ucw_stage_stonehenge\nnews_event = { id = ac_ucw.44 days = 1 }\n" + scoped("ERU", "remove_ideas = ac_ucw_stonehenge_railguns") + scoped("SNS", "remove_ideas = ac_ucw_stonehenge_garrison") + scoped("FCU", "remove_ideas = ac_ucw_under_stonehenge\nremove_ideas = ac_sp_stonehenge_battery\nset_variable = { ac_ucw_stage_weeks = 0 }"), "has_global_flag = ac_ucw_stonehenge_seized"))
     brief(40, "Stonehenge turns on the sky", "The official chronology records that Erusea seized Stonehenge and turned its railguns, built to destroy Ulysses fragments, against aircraft. Allied air operations over the continent now face the battery's fire.")
     effect("ac_ucw_eru_war_tick", """# Provisional window: the Chronicle records only the summer of 2003.
 if = {
@@ -439,7 +439,7 @@ def build_trees():
 
     f("FCU", "after_ulysses", "After Ulysses", "Count the cost of the fallout across the treaty organization.", 10, 0, I["globe"], reward=changes(0, 0, 5) + "\nadd_political_power = 50")
     f("FCU", "relief_camps", "Refugee Relief", "Receive displaced families. Refugee pressure +5, recovery +5, stability -2 percentage points.", 6, 1, I["diplo"], ["after_ulysses"], reward=changes(0, 5, 5) + "\nadd_stability = -0.02")
-    f("FCU", "stonehenge_custody", "Custody of Stonehenge", "Requires a completed Stonehenge. Place the battery under treaty guard. Provisional gameplay.", 10, 1, I["defend"], ["after_ulysses"], "has_global_flag = ac_ucw_stonehenge_operational country_exists = SNS", "SNS = { add_ideas = ac_ucw_stonehenge_garrison }")
+    f("FCU", "stonehenge_custody", "Custody of Stonehenge", "Requires a completed Stonehenge. Place the battery under treaty guard. Provisional gameplay.", 10, 1, I["defend"], ["after_ulysses"], "ac_ucw_stonehenge_intact = yes country_exists = SNS", "if = { limit = { ac_ucw_stonehenge_intact = yes } SNS = { add_ideas = ac_ucw_stonehenge_garrison } }")
     f("FCU", "continental_economy", "A Continental Economy", "Coordinate recovery credit across the treaty organization. Recovery +10.", 14, 1, I["steel"], ["after_ulysses"], reward=changes(0, 0, 10) + "\nif = { limit = { ac_econ_ready = yes } ac_econ_set_reconstruction = yes }")
     f("FCU", "mediation", "Mediate with Erusea", "Offer Erusea talks on the fallout. Provisional gameplay.", 6, 2, I["diplo"], ["relief_camps"], "NOT = { %s } country_exists = ERU" % war, "ERU = { country_event = { id = ac_ucw.13 days = 1 } }")
     f("FCU", "uto_readiness", "Treaty Readiness Review", "Review the treaty organization's forces.", 12, 2, I["industry"], ["stonehenge_custody", "continental_economy"], reward="army_experience = 10\nair_experience = 10")

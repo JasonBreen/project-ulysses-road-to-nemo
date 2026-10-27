@@ -73,7 +73,18 @@ ac_ucw_seize_stonehenge = {
 		limit = { always = yes NOT = { has_global_flag = ac_ucw_stonehenge_seized } }
 		set_global_flag = ac_ucw_stonehenge_seized
 		news_event = { id = ac_ucw.40 days = 1 }
-		FCU = { remove_ideas = ac_sp_stonehenge_battery }
+		if = {
+			limit = { country_exists = FCU }
+			FCU = {
+				remove_ideas = ac_sp_stonehenge_battery
+			}
+		}
+		if = {
+			limit = { country_exists = SNS }
+			SNS = {
+				remove_ideas = ac_ucw_stonehenge_garrison
+			}
+		}
 		if = {
 		    limit = { has_global_flag = ac_ucw_stonehenge_operational }
 		    if = {
@@ -102,6 +113,12 @@ ac_ucw_destroy_stonehenge = {
 			limit = { country_exists = ERU }
 			ERU = {
 				remove_ideas = ac_ucw_stonehenge_railguns
+			}
+		}
+		if = {
+			limit = { country_exists = SNS }
+			SNS = {
+				remove_ideas = ac_ucw_stonehenge_garrison
 			}
 		}
 		if = {

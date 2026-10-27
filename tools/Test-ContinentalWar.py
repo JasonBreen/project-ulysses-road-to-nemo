@@ -452,6 +452,25 @@ class ContinentalWarTests(unittest.TestCase):
         self.assertIn("ac_ucw_stonehenge_destroyed", world.globals)
         self.assertNotIn("ac_sp_stonehenge_battery", world.countries["FCU"].ideas, "destruction")
 
+    def test_stonehenge_custody_closes_once_the_battery_is_lost(self):
+        world = started()
+        world.complete("FCU_ucw_after_ulysses", "FCU")
+        self.assertTrue(world.focus_available("FCU_ucw_stonehenge_custody", "FCU"))
+        world.take("ac_ucw_fcu_garrison_stonehenge", "FCU")
+        self.assertIn("ac_ucw_stonehenge_garrison", world.countries["SNS"].ideas)
+        world = at_war()
+        world.complete("FCU_ucw_after_ulysses", "FCU")
+        world.countries["SNS"].ideas["ac_ucw_stonehenge_garrison"] = None
+        world.controllers[310] = "ERU"
+        world.weeks(1)
+        self.assertNotIn("ac_ucw_stonehenge_garrison", world.countries["SNS"].ideas, "seizure ends the garrison")
+        self.assertFalse(world.focus_available("FCU_ucw_stonehenge_custody", "FCU"), "seized")
+        world.controllers[310] = "SNS"
+        world.weeks(1)
+        self.assertIn("ac_ucw_stonehenge_destroyed", world.globals)
+        self.assertFalse(world.focus_available("FCU_ucw_stonehenge_custody", "FCU"), "destroyed")
+        self.assertNotIn("ac_ucw_stonehenge_garrison", world.countries["SNS"].ideas)
+
     def test_stage_counter_is_clamped(self):
         world = at_war()
         world.weeks(14)

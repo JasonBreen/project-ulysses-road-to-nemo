@@ -237,9 +237,14 @@ class World:
             self.drain()
 
     def drain(self):
-        """Answer queued country events with their AI-preferred option."""
-        while self.queue:
-            _, tag, ident = self.queue.pop(0)
+        """Answer due country events with their AI-preferred option; later ones wait."""
+        while True:
+            due = [item for item in self.queue if item[0] <= self.today]
+            if not due:
+                return
+            item = min(due, key=lambda entry: entry[0])
+            self.queue.remove(item)
+            _, tag, ident = item
             if self.countries[tag].exists:
                 self.choose(ident, tag=tag, option=self.preferred(ident))
 
@@ -332,7 +337,7 @@ class ContinentalWarTests(unittest.TestCase):
             world = started()
             world.today = day("2000.4.21")
             world.tick()
-            self.assertEqual([(world.today + 1, "ERU", "ac_ucw.10")], world.queue)
+            self.assertEqual([(world.today + 1, "ERU")], [(d, tag) for d, tag, ident in world.queue if ident == "ac_ucw.10"])
             world.queue.clear()
             world.choose("ac_ucw.10", option)
             self.assertIn(flag, world.globals)
@@ -462,6 +467,8 @@ class ContinentalWarTests(unittest.TestCase):
         world.controllers[310] = "FCU"
         world.weeks(1)
         self.assertIn("ac_ucw_stonehenge_destroyed", world.globals)
+        self.assertIn("ac_ucw_stage_stonehenge", world.globals, "Ground recapture completes the stage")
+        self.assertEqual(1, world.news_ids().count("ac_ucw.44"))
 
     def test_north_point_without_host_flag_is_reinvited(self):
         world = at_war()
@@ -487,7 +494,11 @@ class ContinentalWarTests(unittest.TestCase):
         world.weeks(1)
         self.assertEqual(["ac_ucw_outcome_isaf_victory"], world.outcome())
         self.assertNotIn("ac_ucw_2005_assessed", world.globals)
-        world.weeks(4)
+        world.weeks(2)
+        self.assertIn("ac_ucw_megalith_active", world.globals, "Megalith follows the surrender by a week")
+        self.assertNotIn("ac_ucw_megalith_destroyed", world.globals)
+        self.assertNotIn("ac_ucw_2005_assessed", world.globals, "No assessment while Megalith is held")
+        world.weeks(2)
         self.assertIn("ac_ucw_megalith_destroyed", world.globals)
         self.assertNotIn("ac_ucw_megalith_active", world.globals)
         self.assertIn("ac_ucw_eru_provisional_government", world.countries["ERU"].ideas)
@@ -517,6 +528,9 @@ class ContinentalWarTests(unittest.TestCase):
         world.choose("ac_ucw.46", 0, "ERU")
         self.assertEqual(["ac_ucw_outcome_stalemate"], world.outcome())
         self.assertFalse(any("ERU" in pair for pair in world.wars))
+        self.assertIn("ac_ucw_stage_los_canas", world.globals)
+        self.assertEqual([], [i for i in world.countries["FCU"].ideas if i.startswith(("ac_ucw_isaf", "ac_ucw_under"))])
+        self.assertNotIn("ac_ucw_eru_war_footing", world.countries["ERU"].ideas)
         world.weeks(2)
         self.assertIn("ac_ucw_2005_assessed", world.globals)
         self.assertEqual(1, len(world.outcome()))

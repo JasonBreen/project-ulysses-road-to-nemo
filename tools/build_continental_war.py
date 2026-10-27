@@ -220,7 +220,8 @@ news_event = { id = ac_ucw.20 days = 1 }"""))
 if = {
     limit = { has_global_flag = ac_ucw_stonehenge_operational }
 """ + "\n".join("    " + line for line in (scoped("ERU", "add_ideas = ac_ucw_stonehenge_railguns") + scoped("FCU", "add_ideas = ac_ucw_under_stonehenge")).splitlines()) + "\n}"))
-    effect("ac_ucw_destroy_stonehenge", gonce("ac_ucw_stonehenge_destroyed", "news_event = { id = ac_ucw.44 days = 1 }\n" + scoped("ERU", "remove_ideas = ac_ucw_stonehenge_railguns") + scoped("FCU", "remove_ideas = ac_ucw_under_stonehenge"), "has_global_flag = ac_ucw_stonehenge_seized"))
+    # Ground recapture completes the Stonehenge stage as well, so later checks see one state.
+    effect("ac_ucw_destroy_stonehenge", gonce("ac_ucw_stonehenge_destroyed", "set_global_flag = ac_ucw_stage_stonehenge\nnews_event = { id = ac_ucw.44 days = 1 }\n" + scoped("ERU", "remove_ideas = ac_ucw_stonehenge_railguns") + scoped("FCU", "remove_ideas = ac_ucw_under_stonehenge\nset_variable = { ac_ucw_stage_weeks = 0 }"), "has_global_flag = ac_ucw_stonehenge_seized"))
     brief(40, "Stonehenge turns on the sky", "The official chronology records that Erusea seized Stonehenge and turned its railguns, built to destroy Ulysses fragments, against aircraft. Allied air operations over the continent now face the battery's fire.")
     effect("ac_ucw_eru_war_tick", """# Provisional window: the Chronicle records only the summer of 2003.
 if = {
@@ -300,9 +301,13 @@ if = {
 
 
 def build_outcomes():
-    effect("ac_ucw_record_isaf_victory", gonce("ac_ucw_outcome_isaf_victory", "news_event = { id = ac_ucw.50 days = 1 }\n" + scoped("FCU", "country_event = { id = ac_ucw.60 days = 7 }"), "ac_ucw_war_running = yes"))
-    effect("ac_ucw_record_erusean_victory", gonce("ac_ucw_outcome_erusean_victory", "news_event = { id = ac_ucw.51 days = 1 }", "ac_ucw_war_running = yes"))
-    effect("ac_ucw_record_stalemate", gonce("ac_ucw_outcome_stalemate", "news_event = { id = ac_ucw.52 days = 1 }", "ac_ucw_war_running = yes"))
+    # Stage spirits only make sense while the war runs; every ending clears them.
+    effect("ac_ucw_end_war_spirits", scoped("FCU", "\n".join("remove_ideas = " + i for i in ("ac_ucw_isaf_command", "ac_ucw_isaf_fallback", "ac_ucw_isaf_north_point_hq", "ac_ucw_isaf_counteroffensive", "ac_ucw_under_stonehenge")))
+           + scoped("ERU", "\n".join("remove_ideas = " + i for i in ("ac_ucw_eru_war_footing", "ac_ucw_eru_overstretched", "ac_ucw_stonehenge_railguns")))
+           + scoped("NPT", "remove_ideas = ac_ucw_npt_isaf_rear_base"))
+    effect("ac_ucw_record_isaf_victory", gonce("ac_ucw_outcome_isaf_victory", "ac_ucw_end_war_spirits = yes\nnews_event = { id = ac_ucw.50 days = 1 }\n" + scoped("FCU", "country_event = { id = ac_ucw.60 days = 7 }"), "ac_ucw_war_running = yes"))
+    effect("ac_ucw_record_erusean_victory", gonce("ac_ucw_outcome_erusean_victory", "ac_ucw_end_war_spirits = yes\nnews_event = { id = ac_ucw.51 days = 1 }", "ac_ucw_war_running = yes"))
+    effect("ac_ucw_record_stalemate", gonce("ac_ucw_outcome_stalemate", "ac_ucw_end_war_spirits = yes\nnews_event = { id = ac_ucw.52 days = 1 }", "ac_ucw_war_running = yes"))
     effect("ac_ucw_outcome_tick", block("if", """limit = { ac_ucw_war_running = yes }
 if = { limit = { OR = { NOT = { country_exists = ERU } ERU = { has_capitulated = yes } } } ac_ucw_record_isaf_victory = yes }
 else_if = { limit = { OR = { NOT = { country_exists = FCU } FCU = { has_capitulated = yes } } } ac_ucw_record_erusean_victory = yes }

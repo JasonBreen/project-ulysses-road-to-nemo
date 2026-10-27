@@ -95,6 +95,7 @@ ac_ucw_destroy_stonehenge = {
 	if = {
 		limit = { has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_destroyed } }
 		set_global_flag = ac_ucw_stonehenge_destroyed
+		set_global_flag = ac_ucw_stage_stonehenge
 		news_event = { id = ac_ucw.44 days = 1 }
 		if = {
 			limit = { country_exists = ERU }
@@ -106,6 +107,7 @@ ac_ucw_destroy_stonehenge = {
 			limit = { country_exists = FCU }
 			FCU = {
 				remove_ideas = ac_ucw_under_stonehenge
+				set_variable = { ac_ucw_stage_weeks = 0 }
 			}
 		}
 	}
@@ -295,10 +297,38 @@ ac_ucw_armistice = {
 	}
 }
 
+ac_ucw_end_war_spirits = {
+	if = {
+		limit = { country_exists = FCU }
+		FCU = {
+			remove_ideas = ac_ucw_isaf_command
+			remove_ideas = ac_ucw_isaf_fallback
+			remove_ideas = ac_ucw_isaf_north_point_hq
+			remove_ideas = ac_ucw_isaf_counteroffensive
+			remove_ideas = ac_ucw_under_stonehenge
+		}
+	}
+	if = {
+		limit = { country_exists = ERU }
+		ERU = {
+			remove_ideas = ac_ucw_eru_war_footing
+			remove_ideas = ac_ucw_eru_overstretched
+			remove_ideas = ac_ucw_stonehenge_railguns
+		}
+	}
+	if = {
+		limit = { country_exists = NPT }
+		NPT = {
+			remove_ideas = ac_ucw_npt_isaf_rear_base
+		}
+	}
+}
+
 ac_ucw_record_isaf_victory = {
 	if = {
 		limit = { ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_outcome_isaf_victory } }
 		set_global_flag = ac_ucw_outcome_isaf_victory
+		ac_ucw_end_war_spirits = yes
 		news_event = { id = ac_ucw.50 days = 1 }
 		if = {
 			limit = { country_exists = FCU }
@@ -313,6 +343,7 @@ ac_ucw_record_erusean_victory = {
 	if = {
 		limit = { ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_outcome_erusean_victory } }
 		set_global_flag = ac_ucw_outcome_erusean_victory
+		ac_ucw_end_war_spirits = yes
 		news_event = { id = ac_ucw.51 days = 1 }
 	}
 }
@@ -321,6 +352,7 @@ ac_ucw_record_stalemate = {
 	if = {
 		limit = { ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_outcome_stalemate } }
 		set_global_flag = ac_ucw_outcome_stalemate
+		ac_ucw_end_war_spirits = yes
 		news_event = { id = ac_ucw.52 days = 1 }
 	}
 }

@@ -503,6 +503,7 @@ class ContinentalWarTests(unittest.TestCase):
     def test_isaf_victory_megalith_and_assessment(self):
         world = at_war()
         world.weeks(5)
+        world.countries["ERU"].ideas["ac_sp_megalith_fortress"] = None
         world.countries["ERU"].capitulated = True
         world.weeks(1)
         self.assertEqual(["ac_ucw_outcome_isaf_victory"], world.outcome())
@@ -515,6 +516,7 @@ class ContinentalWarTests(unittest.TestCase):
         self.assertIn("ac_ucw_megalith_destroyed", world.globals)
         self.assertNotIn("ac_ucw_megalith_active", world.globals)
         self.assertIn("ac_ucw_eru_provisional_government", world.countries["ERU"].ideas)
+        self.assertNotIn("ac_sp_megalith_fortress", world.countries["ERU"].ideas, "completed project spirit ends with Megalith")
         world.weeks(1)
         self.assertIn("ac_ucw_2005_assessed", world.globals)
         self.assertEqual(["ac_ucw_outcome_isaf_victory"], world.outcome())

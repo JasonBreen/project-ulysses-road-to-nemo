@@ -135,6 +135,7 @@ if ($aftermathExitCode -ne 0) {
     exit $aftermathExitCode
 }
 & $pythonHost (Join-Path $PSScriptRoot 'Test-UseaActors.py') --mod-root $ModRoot; if ($LASTEXITCODE -ne 0) { Write-Error 'Usea actor contract checks failed.'; exit $LASTEXITCODE }
+& $pythonHost (Join-Path $PSScriptRoot 'Test-StrangerealProjects.py') --mod-root $ModRoot; if ($LASTEXITCODE -ne 0) { Write-Error 'Strangereal special project checks failed.'; exit 1 }
 
 Write-Output 'Focus art and Economy Dashboard visual contract audit'
 & $pythonHost (Join-Path $PSScriptRoot 'audit_visual_dependencies.py') --mod-root $ModRoot

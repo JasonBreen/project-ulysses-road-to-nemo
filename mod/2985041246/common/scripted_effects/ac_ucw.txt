@@ -1,0 +1,438 @@
+# Authored gameplay; source: tools/build_continental_war.py.
+ac_ucw_bound = {
+	if = { limit = { has_variable = ac_ucw_grievance } clamp_variable = { var = ac_ucw_grievance min = 0 max = 100 } }
+	if = { limit = { has_variable = ac_ucw_pressure } clamp_variable = { var = ac_ucw_pressure min = 0 max = 100 } }
+	if = { limit = { has_variable = ac_ucw_recovery } clamp_variable = { var = ac_ucw_recovery min = 0 max = 100 } }
+}
+
+ac_ucw_world_start = {
+	if = {
+		limit = { OR = { date > 1999.11.30 has_global_flag = ac_ucw_playtest_forced } NOT = { has_global_flag = ac_ucw_calendar_started } }
+		set_global_flag = ac_ucw_calendar_started
+		# Chronicle 1998/06.19: Stonehenge is complete before the arc begins,
+		# unless the Strangereal special project already recorded it.
+		if = { limit = { OR = { has_global_flag = ac_sp_stonehenge_complete date > 1998.6.18 } } set_global_flag = ac_ucw_stonehenge_operational }
+		# A save first loaded after a milestone records it as past and never replays it.
+		if = { limit = { date > 2000.4.21 } set_global_flag = ac_ucw_refugee_closure_done }
+		if = { limit = { date > 2004.10.9 } set_global_flag = ac_ucw_brief_shezna_done }
+		if = { limit = { date > 2004.11.22 } set_global_flag = ac_ucw_brief_comberth_done }
+		if = { limit = { date > 2004.12.30 } set_global_flag = ac_ucw_brief_comona_done }
+		if = { limit = { date > 2005.2.27 } set_global_flag = ac_ucw_brief_istas_done }
+		if = { limit = { date > 2005.3.13 } set_global_flag = ac_ucw_brief_engineers_done }
+		if = { limit = { date > 2005.6.17 } set_global_flag = ac_ucw_brief_ice_creek_done }
+		if = { limit = { date > 2005.7.9 } set_global_flag = ac_ucw_brief_san_salvacion_done }
+		if = { limit = { date > 2005.8.14 } set_global_flag = ac_ucw_brief_whiskey_done }
+		if = { limit = { date > 2004.12.31 } set_global_flag = ac_ucw_late_calendar }
+	}
+}
+
+ac_ucw_country_start = {
+	if = {
+		limit = { ac_ucw_participant = yes has_global_flag = ac_ucw_calendar_started has_capitulated = no NOT = { has_country_flag = ac_ucw_started } }
+		set_country_flag = ac_ucw_started
+		set_variable = { ac_ucw_pressure = 40 }
+		set_variable = { ac_ucw_recovery = 45 }
+		if = { limit = { has_country_flag = ac_pwi_relief_strained } add_to_variable = { ac_ucw_pressure = 15 } add_to_variable = { ac_ucw_recovery = -10 } }
+		if = { limit = { has_country_flag = ac_pwi_relief_resilient } add_to_variable = { ac_ucw_pressure = -15 } add_to_variable = { ac_ucw_recovery = 10 } }
+		if = { limit = { original_tag = ERU } set_variable = { ac_ucw_grievance = 45 } load_focus_tree = { tree = ac_ucw_eru_tree keep_completed = yes } }
+		if = { limit = { original_tag = FCU } set_variable = { ac_ucw_stage_weeks = 0 } load_focus_tree = { tree = ac_ucw_fcu_tree keep_completed = yes } }
+		country_event = { id = ac_ucw.1 days = 1 }
+		ac_ucw_bound = yes
+	}
+}
+
+ac_ucw_fallout_tick = {
+	if = {
+	    limit = { original_tag = ERU date > 2000.4.20 NOT = { has_global_flag = ac_ucw_refugee_closure_done } }
+	    set_global_flag = ac_ucw_refugee_closure_done
+	    country_event = { id = ac_ucw.10 days = 1 }
+	}
+}
+
+ac_ucw_avert_war = {
+	if = {
+		limit = { ac_ucw_can_start_war = yes NOT = { has_global_flag = ac_ucw_war_averted } }
+		set_global_flag = ac_ucw_war_averted
+		news_event = { id = ac_ucw.25 days = 1 }
+	}
+}
+
+ac_ucw_start_war = {
+	if = {
+		limit = { ac_ucw_can_start_war = yes }
+		set_global_flag = ac_ucw_war_started
+		declare_war_on = { target = SNS type = annex_everything }
+		add_ideas = ac_ucw_eru_war_footing
+		FCU = { set_variable = { ac_ucw_stage_weeks = 0 } }
+		news_event = { id = ac_ucw.20 days = 1 }
+	}
+}
+
+ac_ucw_seize_stonehenge = {
+	if = {
+		limit = { always = yes NOT = { has_global_flag = ac_ucw_stonehenge_seized } }
+		set_global_flag = ac_ucw_stonehenge_seized
+		news_event = { id = ac_ucw.40 days = 1 }
+		if = {
+			limit = { country_exists = FCU }
+			FCU = {
+				remove_ideas = ac_sp_stonehenge_battery
+			}
+		}
+		if = {
+			limit = { country_exists = SNS }
+			SNS = {
+				remove_ideas = ac_ucw_stonehenge_garrison
+			}
+		}
+		if = {
+		    limit = { has_global_flag = ac_ucw_stonehenge_operational }
+		    if = {
+		    	limit = { country_exists = ERU }
+		    	ERU = {
+		    		add_ideas = ac_ucw_stonehenge_railguns
+		    	}
+		    }
+		    if = {
+		    	limit = { country_exists = FCU }
+		    	FCU = {
+		    		add_ideas = ac_ucw_under_stonehenge
+		    	}
+		    }
+		}
+	}
+}
+
+ac_ucw_destroy_stonehenge = {
+	if = {
+		limit = { has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_destroyed } }
+		set_global_flag = ac_ucw_stonehenge_destroyed
+		set_global_flag = ac_ucw_stage_stonehenge
+		news_event = { id = ac_ucw.44 days = 1 }
+		if = {
+			limit = { country_exists = ERU }
+			ERU = {
+				remove_ideas = ac_ucw_stonehenge_railguns
+			}
+		}
+		if = {
+			limit = { country_exists = SNS }
+			SNS = {
+				remove_ideas = ac_ucw_stonehenge_garrison
+			}
+		}
+		if = {
+			limit = { country_exists = FCU }
+			FCU = {
+				remove_ideas = ac_ucw_under_stonehenge
+				remove_ideas = ac_sp_stonehenge_battery
+				set_variable = { ac_ucw_stage_weeks = 0 }
+			}
+		}
+	}
+}
+
+ac_ucw_eru_war_tick = {
+	# Provisional window: the Chronicle records only the summer of 2003.
+	if = {
+	    limit = { is_ai = yes ac_ucw_can_start_war = yes date > 2003.6.20 NOT = { has_global_flag = ac_ucw_late_calendar } check_variable = { ac_ucw_grievance > 24 } }
+	    ac_ucw_start_war = yes
+	}
+	if = {
+	    limit = { ac_ucw_war_running = yes }
+	    if = { limit = { NOT = { has_global_flag = ac_ucw_stonehenge_seized } ac_ucw_stonehenge_held_by_erusea = yes } ac_ucw_seize_stonehenge = yes }
+	    # A playtest seizure leaves the map unchanged; only a real Erusean hold can later be lost.
+	    if = { limit = { has_global_flag = ac_ucw_stonehenge_simulated ac_ucw_stonehenge_held_by_erusea = yes } clr_global_flag = ac_ucw_stonehenge_simulated }
+	    if = { limit = { has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_simulated } ac_ucw_stonehenge_held_by_erusea = no } ac_ucw_destroy_stonehenge = yes }
+	    if = {
+	        limit = { is_ai = yes has_global_flag = ac_ucw_stage_stonehenge NOT = { has_country_flag = ac_ucw_armistice_sought } country_exists = FCU FCU = { check_variable = { ac_ucw_stage_weeks > 40 } } }
+	        set_country_flag = ac_ucw_armistice_sought
+	        FCU = { country_event = { id = ac_ucw.45 days = 1 } }
+	    }
+	}
+}
+
+ac_ucw_form_isaf = {
+	if = {
+		limit = { original_tag = FCU ac_ucw_war_running = yes has_capitulated = no NOT = { has_global_flag = ac_ucw_isaf_formed } }
+		set_global_flag = ac_ucw_isaf_formed
+		if = { limit = { is_faction_leader = yes } set_faction_name = ac_ucw_isaf_faction }
+		if = { limit = { country_exists = ERU NOT = { has_war_with = ERU } } declare_war_on = { target = ERU type = topple_government } }
+		add_ideas = ac_ucw_isaf_command
+		set_variable = { ac_ucw_stage_weeks = 0 }
+		news_event = { id = ac_ucw.31 days = 1 }
+		if = {
+			limit = { country_exists = NPT }
+			NPT = {
+				if = {
+					limit = { NOT = { is_in_faction_with = FCU } NOT = { has_war_with = FCU } has_capitulated = no }
+					country_event = { id = ac_ucw.32 days = 2 }
+				}
+			}
+		}
+	}
+}
+
+ac_ucw_fcu_war_tick = {
+	if = {
+	    limit = { ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_isaf_formed } NOT = { has_country_flag = ac_ucw_isaf_offered } OR = { date > 2003.8.21 has_country_flag = ac_ucw_isaf_prepared } }
+	    set_country_flag = ac_ucw_isaf_offered
+	    country_event = { id = ac_ucw.30 days = 1 }
+	}
+	if = {
+	    limit = { ac_ucw_war_running = yes has_global_flag = ac_ucw_isaf_formed }
+	    add_to_variable = { ac_ucw_stage_weeks = 1 }
+	    clamp_variable = { var = ac_ucw_stage_weeks min = 0 max = 520 }
+	}
+	if = {
+	    limit = { is_ai = yes ac_ucw_war_running = yes }
+	    if = { limit = { ac_ucw_stage_los_canas_ready = yes check_variable = { ac_ucw_stage_weeks > 2 } } ac_ucw_stage_los_canas = yes }
+	    if = { limit = { ac_ucw_stage_north_point_ready = yes check_variable = { ac_ucw_stage_weeks > 51 } } ac_ucw_stage_north_point = yes }
+	    if = { limit = { ac_ucw_stage_counteroffensive_ready = yes check_variable = { ac_ucw_stage_weeks > 17 } } ac_ucw_stage_counteroffensive = yes }
+	    if = { limit = { ac_ucw_stage_stonehenge_ready = yes check_variable = { ac_ucw_stage_weeks > 9 } } ac_ucw_stage_stonehenge = yes }
+	}
+}
+
+ac_ucw_stage_los_canas = {
+	if = {
+		limit = { ac_ucw_stage_los_canas_ready = yes NOT = { has_global_flag = ac_ucw_stage_los_canas } }
+		set_global_flag = ac_ucw_stage_los_canas
+		add_ideas = ac_ucw_isaf_fallback
+		if = {
+			limit = { country_exists = ERU }
+			ERU = {
+				add_timed_idea = { idea = ac_ucw_eru_offensive days = 180 }
+			}
+		}
+
+		set_variable = { ac_ucw_stage_weeks = 0 }
+		news_event = { id = ac_ucw.41 days = 1 }
+	}
+}
+
+ac_ucw_stage_north_point = {
+	if = {
+		limit = { ac_ucw_stage_north_point_ready = yes NOT = { has_global_flag = ac_ucw_stage_north_point } }
+		set_global_flag = ac_ucw_stage_north_point
+		remove_ideas = ac_ucw_isaf_fallback
+		add_ideas = ac_ucw_isaf_north_point_hq
+		if = {
+			limit = { country_exists = NPT }
+			NPT = {
+				if = {
+					limit = { OR = { has_country_flag = ac_npt_hosts_isaf is_in_faction_with = FCU } }
+					add_ideas = ac_ucw_npt_isaf_rear_base
+				}
+				else_if = {
+					limit = { NOT = { has_war_with = FCU } has_capitulated = no }
+					country_event = { id = ac_ucw.32 days = 2 }
+				}
+			}
+		}
+
+		set_variable = { ac_ucw_stage_weeks = 0 }
+		news_event = { id = ac_ucw.42 days = 1 }
+	}
+}
+
+ac_ucw_stage_counteroffensive = {
+	if = {
+		limit = { ac_ucw_stage_counteroffensive_ready = yes NOT = { has_global_flag = ac_ucw_stage_counteroffensive } }
+		set_global_flag = ac_ucw_stage_counteroffensive
+		remove_ideas = ac_ucw_isaf_north_point_hq
+		add_ideas = ac_ucw_isaf_counteroffensive
+		if = {
+			limit = { country_exists = ERU }
+			ERU = {
+				add_ideas = ac_ucw_eru_overstretched
+			}
+		}
+
+		set_variable = { ac_ucw_stage_weeks = 0 }
+		news_event = { id = ac_ucw.43 days = 1 }
+	}
+}
+
+ac_ucw_stage_stonehenge = {
+	if = {
+		limit = { ac_ucw_stage_stonehenge_ready = yes NOT = { has_global_flag = ac_ucw_stage_stonehenge } }
+		set_global_flag = ac_ucw_stage_stonehenge
+		ac_ucw_destroy_stonehenge = yes
+		set_variable = { ac_ucw_stage_weeks = 0 }
+	}
+}
+
+ac_ucw_chronicle_tick = {
+	if = {
+		limit = { ac_ucw_war_running = yes date > 2004.10.9 has_global_flag = ac_ucw_stage_north_point NOT = { has_global_flag = ac_ucw_brief_shezna_done } NOT = { has_global_flag = ac_ucw_brief_shezna } }
+		set_global_flag = ac_ucw_brief_shezna
+		news_event = { id = ac_ucw.70 days = 1 }
+	}
+	if = {
+		limit = { ac_ucw_war_running = yes date > 2004.11.22 has_global_flag = ac_ucw_stage_north_point NOT = { has_global_flag = ac_ucw_brief_comberth_done } NOT = { has_global_flag = ac_ucw_brief_comberth } }
+		set_global_flag = ac_ucw_brief_comberth
+		news_event = { id = ac_ucw.71 days = 1 }
+	}
+	if = {
+		limit = { ac_ucw_war_running = yes date > 2004.12.30 has_global_flag = ac_ucw_stage_north_point NOT = { has_global_flag = ac_ucw_brief_comona_done } NOT = { has_global_flag = ac_ucw_brief_comona } }
+		set_global_flag = ac_ucw_brief_comona
+		news_event = { id = ac_ucw.72 days = 1 }
+	}
+	if = {
+		limit = { ac_ucw_war_running = yes date > 2005.2.27 has_global_flag = ac_ucw_stage_counteroffensive NOT = { has_global_flag = ac_ucw_brief_istas_done } NOT = { has_global_flag = ac_ucw_brief_istas } }
+		set_global_flag = ac_ucw_brief_istas
+		news_event = { id = ac_ucw.73 days = 1 }
+	}
+	if = {
+		limit = { ac_ucw_war_running = yes date > 2005.3.13 has_global_flag = ac_ucw_stage_counteroffensive NOT = { has_global_flag = ac_ucw_brief_engineers_done } NOT = { has_global_flag = ac_ucw_brief_engineers } }
+		set_global_flag = ac_ucw_brief_engineers
+		news_event = { id = ac_ucw.74 days = 1 }
+	}
+	if = {
+		limit = { ac_ucw_war_running = yes date > 2005.6.17 has_global_flag = ac_ucw_stage_counteroffensive NOT = { has_global_flag = ac_ucw_brief_ice_creek_done } NOT = { has_global_flag = ac_ucw_brief_ice_creek } }
+		set_global_flag = ac_ucw_brief_ice_creek
+		news_event = { id = ac_ucw.75 days = 1 }
+	}
+	if = {
+		limit = { ac_ucw_war_running = yes date > 2005.7.9 has_global_flag = ac_ucw_stage_counteroffensive ac_ucw_stonehenge_held_by_erusea = no NOT = { has_global_flag = ac_ucw_brief_san_salvacion_done } NOT = { has_global_flag = ac_ucw_brief_san_salvacion } }
+		set_global_flag = ac_ucw_brief_san_salvacion
+		news_event = { id = ac_ucw.76 days = 1 }
+	}
+	if = {
+		limit = { ac_ucw_war_running = yes date > 2005.8.14 has_global_flag = ac_ucw_stage_counteroffensive NOT = { has_global_flag = ac_ucw_brief_whiskey_done } NOT = { has_global_flag = ac_ucw_brief_whiskey } }
+		set_global_flag = ac_ucw_brief_whiskey
+		news_event = { id = ac_ucw.77 days = 1 }
+	}
+}
+
+ac_ucw_armistice = {
+	if = {
+		limit = { original_tag = ERU ac_ucw_war_running = yes }
+		if = { limit = { country_exists = FCU has_war_with = FCU } white_peace = FCU }
+		if = { limit = { country_exists = SNS has_war_with = SNS } white_peace = SNS }
+		if = { limit = { country_exists = AMB has_war_with = AMB } white_peace = AMB }
+		if = { limit = { country_exists = UGE has_war_with = UGE } white_peace = UGE }
+		if = { limit = { country_exists = DEL has_war_with = DEL } white_peace = DEL }
+		if = { limit = { country_exists = NPT has_war_with = NPT } white_peace = NPT }
+		ac_ucw_record_stalemate = yes
+	}
+}
+
+ac_ucw_end_war_spirits = {
+	if = {
+		limit = { country_exists = FCU }
+		FCU = {
+			remove_ideas = ac_ucw_isaf_command
+			remove_ideas = ac_ucw_isaf_fallback
+			remove_ideas = ac_ucw_isaf_north_point_hq
+			remove_ideas = ac_ucw_isaf_counteroffensive
+			remove_ideas = ac_ucw_under_stonehenge
+		}
+	}
+	if = {
+		limit = { country_exists = ERU }
+		ERU = {
+			remove_ideas = ac_ucw_eru_war_footing
+			remove_ideas = ac_ucw_eru_overstretched
+			remove_ideas = ac_ucw_stonehenge_railguns
+		}
+	}
+	if = {
+		limit = { country_exists = NPT }
+		NPT = {
+			remove_ideas = ac_ucw_npt_isaf_rear_base
+		}
+	}
+}
+
+ac_ucw_record_isaf_victory = {
+	if = {
+		limit = { ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_outcome_isaf_victory } }
+		set_global_flag = ac_ucw_outcome_isaf_victory
+		ac_ucw_end_war_spirits = yes
+		news_event = { id = ac_ucw.50 days = 1 }
+		if = {
+			limit = { country_exists = FCU }
+			FCU = {
+				country_event = { id = ac_ucw.60 days = 7 }
+			}
+		}
+	}
+}
+
+ac_ucw_record_erusean_victory = {
+	if = {
+		limit = { ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_outcome_erusean_victory } }
+		set_global_flag = ac_ucw_outcome_erusean_victory
+		ac_ucw_end_war_spirits = yes
+		news_event = { id = ac_ucw.51 days = 1 }
+	}
+}
+
+ac_ucw_record_stalemate = {
+	if = {
+		limit = { ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_outcome_stalemate } }
+		set_global_flag = ac_ucw_outcome_stalemate
+		ac_ucw_end_war_spirits = yes
+		news_event = { id = ac_ucw.52 days = 1 }
+	}
+}
+
+ac_ucw_outcome_tick = {
+	if = {
+		limit = { ac_ucw_war_running = yes }
+		if = { limit = { OR = { NOT = { country_exists = ERU } ERU = { has_capitulated = yes } } } ac_ucw_record_isaf_victory = yes }
+		else_if = { limit = { OR = { NOT = { country_exists = FCU } FCU = { has_capitulated = yes } } } ac_ucw_record_erusean_victory = yes }
+		else_if = { limit = { has_global_flag = ac_ucw_isaf_formed ERU = { NOT = { has_war_with = FCU } } } ac_ucw_record_stalemate = yes }
+	}
+}
+
+ac_ucw_destroy_megalith = {
+	if = {
+		limit = { has_global_flag = ac_ucw_megalith_active NOT = { has_global_flag = ac_ucw_megalith_destroyed } }
+		set_global_flag = ac_ucw_megalith_destroyed
+		clr_global_flag = ac_ucw_megalith_active
+		news_event = { id = ac_ucw.62 days = 1 }
+		if = {
+			limit = { country_exists = ERU }
+			ERU = {
+				remove_ideas = ac_sp_megalith_fortress
+				add_ideas = ac_ucw_eru_provisional_government
+			}
+		}
+	}
+}
+
+ac_ucw_assessment_tick = {
+	if = {
+		limit = {
+		    has_country_flag = ac_ucw_started
+		    NOT = { has_country_flag = ac_ucw_assessment_sent }
+		    OR = {
+		        has_global_flag = ac_ucw_megalith_destroyed
+		        has_global_flag = ac_ucw_outcome_erusean_victory
+		        has_global_flag = ac_ucw_outcome_stalemate
+		        AND = { has_global_flag = ac_ucw_war_averted date > 2004.12.31 }
+		        date > 2005.12.30
+		    }
+		}
+		set_country_flag = ac_ucw_assessment_sent
+		set_global_flag = ac_ucw_2005_assessed
+		country_event = { id = ac_ucw.90 days = 1 }
+	}
+}
+
+ac_ucw_weekly = {
+	ac_ucw_world_start = yes
+	ac_ucw_country_start = yes
+	if = {
+	    limit = { has_country_flag = ac_ucw_started }
+	    ac_ucw_fallout_tick = yes
+	    if = { limit = { original_tag = ERU } ac_ucw_eru_war_tick = yes }
+	    if = { limit = { original_tag = FCU } ac_ucw_fcu_war_tick = yes }
+	    ac_ucw_outcome_tick = yes
+	    ac_ucw_chronicle_tick = yes
+	    ac_ucw_assessment_tick = yes
+	}
+	ac_ucw_bound = yes
+}

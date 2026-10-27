@@ -1,0 +1,77 @@
+# Authored gameplay; source: tools/build_continental_war.py.
+ac_ucw_participant = {
+	OR = { original_tag = ERU original_tag = FCU original_tag = SNS original_tag = AMB original_tag = UGE original_tag = DEL original_tag = NPT }
+}
+
+ac_ucw_active = {
+	has_country_flag = ac_ucw_started
+	has_capitulated = no
+}
+
+ac_ucw_controls_stonehenge = {
+	310 = { is_controlled_by = ROOT }
+}
+
+ac_ucw_stonehenge_held_by_erusea = {
+	310 = { is_controlled_by = ERU }
+}
+
+ac_ucw_stonehenge_intact = {
+	has_global_flag = ac_ucw_stonehenge_operational
+	NOT = { has_global_flag = ac_ucw_stonehenge_seized }
+	NOT = { has_global_flag = ac_ucw_stonehenge_destroyed }
+}
+
+ac_ucw_war_over = {
+	OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate }
+}
+
+ac_ucw_war_running = {
+	has_global_flag = ac_ucw_war_started
+	ac_ucw_war_over = no
+}
+
+ac_ucw_can_start_war = {
+	original_tag = ERU
+	has_global_flag = ac_ucw_calendar_started
+	NOT = { has_global_flag = ac_ucw_war_started }
+	NOT = { has_global_flag = ac_ucw_war_averted }
+	has_capitulated = no
+	country_exists = SNS
+	country_exists = FCU
+	NOT = { has_war_with = SNS }
+}
+
+ac_ucw_playtest_shortcuts_on = {
+	has_game_rule = { rule = ac_playtest_shortcuts option = enabled }
+}
+
+ac_ucw_stage_los_canas_ready = {
+	original_tag = FCU
+	ac_ucw_war_running = yes
+	has_global_flag = ac_ucw_isaf_formed
+	NOT = { has_global_flag = ac_ucw_stage_los_canas }
+}
+
+ac_ucw_stage_north_point_ready = {
+	original_tag = FCU
+	ac_ucw_war_running = yes
+	has_global_flag = ac_ucw_stage_los_canas
+	NOT = { has_global_flag = ac_ucw_stage_north_point }
+}
+
+ac_ucw_stage_counteroffensive_ready = {
+	original_tag = FCU
+	ac_ucw_war_running = yes
+	has_global_flag = ac_ucw_stage_north_point
+	NOT = { has_global_flag = ac_ucw_stage_counteroffensive }
+}
+
+ac_ucw_stage_stonehenge_ready = {
+	original_tag = FCU
+	ac_ucw_war_running = yes
+	has_global_flag = ac_ucw_stage_counteroffensive
+	NOT = { has_global_flag = ac_ucw_stage_stonehenge }
+	has_global_flag = ac_ucw_stonehenge_seized
+	NOT = { has_global_flag = ac_ucw_stonehenge_destroyed }
+}

@@ -415,15 +415,14 @@ focus_tree = {
 		cost = 5
 		ai_will_do = { factor = 20 }
 		prerequisite = { focus = ERU_ucw_arms_talks }
-		available = { original_tag = ERU ac_ucw_active = yes check_variable = { ac_ucw_grievance < 25 } date > 2001.12.31 NOT = { has_country_flag = ac_ucw_eru_mobilized } }
+		available = { original_tag = ERU ac_ucw_active = yes NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } check_variable = { ac_ucw_grievance < 25 } date > 2001.12.31 NOT = { has_country_flag = ac_ucw_eru_mobilized } }
 		cancel_if_invalid = yes
 		continue_if_invalid = no
 		completion_reward = {
 			if = {
 				limit = { ac_ucw_active = yes NOT = { has_country_flag = ERU_ucw_continental_accord_done } }
 				set_country_flag = ERU_ucw_continental_accord_done
-				ac_ucw_avert_war = yes
-				add_ideas = ac_ucw_continental_peace
+				if = { limit = { ac_ucw_can_start_war = yes } ac_ucw_avert_war = yes add_ideas = ac_ucw_continental_peace }
 				ac_ucw_bound = yes
 			}
 		}

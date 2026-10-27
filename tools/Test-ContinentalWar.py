@@ -588,6 +588,47 @@ class ContinentalWarTests(unittest.TestCase):
         self.assertEqual(["ac_ucw_outcome_stalemate"], world.outcome())
         self.assertFalse(world.available("ac_playtest_ucw_isaf_victory", "ERU"))
 
+    def test_shortcut_seizure_survives_weekly_ticks(self):
+        world = World("1991.1.1", rule=True)
+        for tag in ("ERU", "FCU"):
+            world.countries[tag].ai = False
+        for ident in ("ac_playtest_ucw_open_calendar", "ac_playtest_ucw_start_war", "ac_playtest_ucw_seize_stonehenge", "ac_playtest_ucw_form_isaf"):
+            world.take(ident, "ERU")
+        world.weeks(2)
+        self.assertNotIn("ac_ucw_stonehenge_destroyed", world.globals, "A simulated seizure is not a ground recapture")
+        for stage in ("los_canas", "north_point", "counteroffensive", "stonehenge"):
+            world.take("ac_playtest_ucw_next_stage", "ERU")
+            self.assertIn("ac_ucw_stage_" + stage, world.globals)
+        real = at_war()
+        real.controllers[310] = "ERU"
+        real.weeks(1)
+        real.controllers[310] = "SNS"
+        real.weeks(1)
+        self.assertIn("ac_ucw_stonehenge_destroyed", real.globals, "A real hold that is lost still destroys the battery")
+
+    def test_accord_focus_closes_once_the_war_starts(self):
+        world = started()
+        for step in ("after_ulysses", "refugee_quotas", "continental_dialogue", "refugee_accord", "reconstruction_bonds", "arms_talks"):
+            world.complete("ERU_ucw_" + step, "ERU")
+        world.today = day("2003.7.1")
+        world.run("ac_ucw_start_war", "ERU")
+        self.assertIn("ac_ucw_war_started", world.globals)
+        self.assertFalse(world.focus_available("ERU_ucw_continental_accord", "ERU"))
+        world.execute(mapping(world.focuses["ERU_ucw_continental_accord"])["completion_reward"], world.countries["ERU"])
+        self.assertNotIn("ac_ucw_continental_peace", world.countries["ERU"].ideas)
+
+    def test_renewed_north_point_invitation_grants_the_rear_base(self):
+        world = at_war()
+        world.weeks(14)
+        world.faction.pop("NPT", None)
+        world.countries["NPT"].ideas.clear()
+        world.countries["FCU"].ai = False
+        world.countries["FCU"].variables["ac_ucw_stage_weeks"] = 30
+        world.take("ac_ucw_order_north_point", "FCU")
+        self.assertNotIn("ac_ucw_npt_isaf_rear_base", world.countries["NPT"].ideas)
+        world.choose("ac_ucw.32", 0, "NPT")
+        self.assertEqual("FCU", world.faction.get("NPT"))
+        self.assertIn("ac_ucw_npt_isaf_rear_base", world.countries["NPT"].ideas)
     def test_eru_tree_routes(self):
         world = started()
         world.countries["ERU"].ai = False

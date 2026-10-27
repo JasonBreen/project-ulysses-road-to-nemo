@@ -353,6 +353,7 @@ ac_playtest = {
 		complete_effect = {
 			if = {
 				limit = { ac_ucw_playtest_shortcuts_on = yes ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_stonehenge_seized } }
+				if = { limit = { ac_ucw_stonehenge_held_by_erusea = no } set_global_flag = ac_ucw_stonehenge_simulated }
 				ac_ucw_seize_stonehenge = yes
 				ac_ucw_bound = yes
 			}
@@ -389,7 +390,11 @@ ac_playtest = {
 				    if = { limit = { NOT = { has_global_flag = ac_ucw_stage_los_canas } } ac_ucw_stage_los_canas = yes }
 				    else_if = { limit = { NOT = { has_global_flag = ac_ucw_stage_north_point } } ac_ucw_stage_north_point = yes }
 				    else_if = { limit = { NOT = { has_global_flag = ac_ucw_stage_counteroffensive } } ac_ucw_stage_counteroffensive = yes }
-				    else = { ac_ucw_seize_stonehenge = yes ac_ucw_stage_stonehenge = yes }
+				    else = {
+				        if = { limit = { NOT = { has_global_flag = ac_ucw_stonehenge_seized } ac_ucw_stonehenge_held_by_erusea = no } set_global_flag = ac_ucw_stonehenge_simulated }
+				        ac_ucw_seize_stonehenge = yes
+				        ac_ucw_stage_stonehenge = yes
+				    }
 				}
 				ac_ucw_bound = yes
 			}

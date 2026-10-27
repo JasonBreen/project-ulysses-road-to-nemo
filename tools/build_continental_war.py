@@ -231,7 +231,9 @@ if = {
 if = {
     limit = { ac_ucw_war_running = yes }
     if = { limit = { NOT = { has_global_flag = ac_ucw_stonehenge_seized } ac_ucw_stonehenge_held_by_erusea = yes } ac_ucw_seize_stonehenge = yes }
-    if = { limit = { has_global_flag = ac_ucw_stonehenge_seized ac_ucw_stonehenge_held_by_erusea = no } ac_ucw_destroy_stonehenge = yes }
+    # A playtest seizure leaves the map unchanged; only a real Erusean hold can later be lost.
+    if = { limit = { has_global_flag = ac_ucw_stonehenge_simulated ac_ucw_stonehenge_held_by_erusea = yes } clr_global_flag = ac_ucw_stonehenge_simulated }
+    if = { limit = { has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_simulated } ac_ucw_stonehenge_held_by_erusea = no } ac_ucw_destroy_stonehenge = yes }
     if = {
         limit = { is_ai = yes has_global_flag = ac_ucw_stage_stonehenge NOT = { has_country_flag = ac_ucw_armistice_sought } country_exists = FCU FCU = { check_variable = { ac_ucw_stage_weeks > 40 } } }
         set_country_flag = ac_ucw_armistice_sought
@@ -250,7 +252,7 @@ news_event = { id = ac_ucw.31 days = 1 }
         ("Found ISAF.", "ac_ucw_form_isaf = yes", "", 100)], trigger_text="ac_ucw_war_running = yes", picture="GFX_report_event_ose_war_committee")
     brief(31, "ISAF is founded", "Central Usea has founded the Independent State Allied Forces to drive Erusea out of San Salvacion. The official chronology dates its founding to 22 August 2003.", picture="GFX_report_event_treaty_1")
     event(32, "ISAF asks for North Point", "ISAF has invited North Point to join the allied command. In the official chronology ISAF's headquarters moves to North Point on 16 September 2004. Joining commits the island to the war; declining keeps its neutrality, which is a provisional alternative.", [
-        ("Join ISAF.", scoped("FCU", "add_to_faction = NPT\ncountry_event = { id = ac_ucw.33 days = 1 }"), "", 80),
+        ("Join ISAF.", "if = { limit = { has_global_flag = ac_ucw_stage_north_point ac_ucw_war_running = yes } add_ideas = ac_ucw_npt_isaf_rear_base }\n" + scoped("FCU", "add_to_faction = NPT\ncountry_event = { id = ac_ucw.33 days = 1 }"), "", 80),
         ("Keep our neutrality.", scoped("FCU", "country_event = { id = ac_ucw.34 days = 1 }"), "", 20)], picture="GFX_report_event_treaty_2")
     event(33, "North Point joins ISAF", "North Point has joined the allied command. Its harbours and airfields are open to ISAF.", [("Welcome them.", "", "", 100)])
     event(34, "North Point declines", "North Point has declined to join ISAF for now. Its government is willing to talk again if the war turns.", [("Note the answer.", "", "", 100)], picture="GFX_report_event_bad_news_1")
@@ -425,7 +427,7 @@ def build_trees():
     f("ERU", "refugee_accord", "Refugee Accord", "Agree a regional refugee accord with Central Usea. Grievance -10, refugee pressure -10. Provisional gameplay.", 13, 3, I["diplo"], ["continental_dialogue"], "NOT = { %s }" % war, changes(-10, -10) + "\n" + scoped("FCU", "add_opinion_modifier = { target = ERU modifier = ac_ucw_mediation }"))
     f("ERU", "reconstruction_bonds", "Reconstruction Bonds", "Finance recovery at home. Recovery +10.", 13, 4, I["steel"], ["refugee_accord"], reward=changes(0, 0, 10) + "\nif = { limit = { ac_econ_ready = yes } ac_econ_set_reconstruction = yes }")
     f("ERU", "arms_talks", "Usean Arms Talks", "Join talks on continental arms limits. Grievance -10. Provisional gameplay.", 13, 5, I["diplo"], ["reconstruction_bonds"], "NOT = { %s }" % war, changes(-10) + "\nadd_war_support = -0.03")
-    f("ERU", "continental_accord", "A Continental Accord", "Requires grievance below 25 and a date after 1 January 2002. Renounce force over the fallout. The Continental War is averted. Provisional gameplay.", 13, 6, I["globe"], ["arms_talks"], "check_variable = { ac_ucw_grievance < 25 } date > 2001.12.31 NOT = { has_country_flag = ac_ucw_eru_mobilized }", "ac_ucw_avert_war = yes\nadd_ideas = ac_ucw_continental_peace")
+    f("ERU", "continental_accord", "A Continental Accord", "Requires grievance below 25 and a date after 1 January 2002. Renounce force over the fallout. The Continental War is averted. Provisional gameplay.", 13, 6, I["globe"], ["arms_talks"], "NOT = { %s } NOT = { has_global_flag = ac_ucw_war_averted } check_variable = { ac_ucw_grievance < 25 } date > 2001.12.31 NOT = { has_country_flag = ac_ucw_eru_mobilized }" % war, "if = { limit = { ac_ucw_can_start_war = yes } ac_ucw_avert_war = yes add_ideas = ac_ucw_continental_peace }")
     f("ERU", "provisional_government", "The Provisional Government", "Requires ISAF victory. Govern under ISAF oversight (official chronology, 26 September 2005).", 5, 11, I["diplo"], available=outcome_available("isaf_victory"), reward="add_political_power = 50\nadd_stability = 0.05", cost=3)
     f("ERU", "rebuild_under_oversight", "Rebuild Under Oversight", "Rebuild the country with allied credit. Provisional gameplay.", 5, 12, I["steel"], ["provisional_government"], reward=changes(0, -10, 10), cost=3)
     f("ERU", "victors_order", "The Victor's Order", "Requires Erusean victory. Dictate the continental order. Provisional gameplay.", 9, 11, I["guard"], available=outcome_available("erusean_victory"), reward="add_ideas = ac_ucw_eru_victors_order", cost=3)
@@ -492,12 +494,12 @@ def build_playtest():
         ("ac_playtest_ucw_start_war", "Playtest: start the Continental War", "Erusea invades San Salvacion now, as through its own decision.",
          "has_global_flag = ac_ucw_calendar_started NOT = { has_global_flag = ac_ucw_war_started } country_exists = ERU", "ERU = { ac_ucw_start_war = yes }"),
         ("ac_playtest_ucw_seize_stonehenge", "Playtest: Erusea seizes Stonehenge", "Records the seizure and its railgun spirits without moving any troops.",
-         "ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_stonehenge_seized }", "ac_ucw_seize_stonehenge = yes"),
+         "ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_stonehenge_seized }", "if = { limit = { ac_ucw_stonehenge_held_by_erusea = no } set_global_flag = ac_ucw_stonehenge_simulated }\nac_ucw_seize_stonehenge = yes"),
         ("ac_playtest_ucw_form_isaf", "Playtest: form ISAF", "Central Usea founds ISAF now.",
          "ac_ucw_war_running = yes NOT = { has_global_flag = ac_ucw_isaf_formed } country_exists = FCU", "FCU = { ac_ucw_form_isaf = yes }"),
         ("ac_playtest_ucw_next_stage", "Playtest: advance the war one stage", "Runs the next ISAF stage, as through its decision. Seizes Stonehenge first if the last stage needs it.",
          "ac_ucw_war_running = yes has_global_flag = ac_ucw_isaf_formed NOT = { has_global_flag = ac_ucw_stonehenge_destroyed } country_exists = FCU",
-         "FCU = {\n    if = { limit = { NOT = { has_global_flag = ac_ucw_stage_los_canas } } ac_ucw_stage_los_canas = yes }\n    else_if = { limit = { NOT = { has_global_flag = ac_ucw_stage_north_point } } ac_ucw_stage_north_point = yes }\n    else_if = { limit = { NOT = { has_global_flag = ac_ucw_stage_counteroffensive } } ac_ucw_stage_counteroffensive = yes }\n    else = { ac_ucw_seize_stonehenge = yes ac_ucw_stage_stonehenge = yes }\n}"),
+         "FCU = {\n    if = { limit = { NOT = { has_global_flag = ac_ucw_stage_los_canas } } ac_ucw_stage_los_canas = yes }\n    else_if = { limit = { NOT = { has_global_flag = ac_ucw_stage_north_point } } ac_ucw_stage_north_point = yes }\n    else_if = { limit = { NOT = { has_global_flag = ac_ucw_stage_counteroffensive } } ac_ucw_stage_counteroffensive = yes }\n    else = {\n        if = { limit = { NOT = { has_global_flag = ac_ucw_stonehenge_seized } ac_ucw_stonehenge_held_by_erusea = no } set_global_flag = ac_ucw_stonehenge_simulated }\n        ac_ucw_seize_stonehenge = yes\n        ac_ucw_stage_stonehenge = yes\n    }\n}"),
         ("ac_playtest_ucw_isaf_victory", "Playtest: force ISAF victory", "Records ISAF victory and starts the Megalith chain. The war itself is not ended.", "ac_ucw_war_running = yes", "ac_ucw_record_isaf_victory = yes"),
         ("ac_playtest_ucw_erusean_victory", "Playtest: force Erusean victory", "Records Erusean victory. The war itself is not ended.", "ac_ucw_war_running = yes", "ac_ucw_record_erusean_victory = yes"),
         ("ac_playtest_ucw_stalemate", "Playtest: force an armistice", "Erusea makes white peace with every allied participant and the war ends in a stalemate.", "ac_ucw_war_running = yes country_exists = ERU", "ERU = { ac_ucw_armistice = yes }"),
@@ -580,6 +582,7 @@ def build_flag_localization():
         "ac_ucw_isaf_offered": "The ISAF founding has been proposed",
         "ac_ucw_stonehenge_seized": "Erusea has seized Stonehenge",
         "ac_ucw_stonehenge_destroyed": "Stonehenge has been destroyed",
+        "ac_ucw_stonehenge_simulated": "Stonehenge's seizure was recorded by a playtest shortcut",
         "ac_ucw_armistice_sought": "Erusea has asked for an armistice",
         "ac_ucw_megalith_active": "Erusean officers hold Megalith",
         "ac_ucw_megalith_destroyed": "Megalith has been destroyed",

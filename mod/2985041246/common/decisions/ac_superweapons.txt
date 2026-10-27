@@ -1,0 +1,200 @@
+# No-DLC fallback decisions for the Strangereal special projects.
+# Each decision sets the same ac_sp_*_complete flag and grants the same reward
+# as its project by calling the shared effect in
+# common/scripted_effects/ac_special_projects.txt. Costs and durations are
+# provisional gameplay.
+ac_superweapons = {
+	ac_superweapons_excalibur = {
+		icon = GFX_decision_ac_sp_excalibur
+		allowed = {
+			NOT = { has_dlc = "Gotterdammerung" }
+			original_tag = BLK
+		}
+		visible = {
+			has_completed_focus = BLK_excalibur
+			NOT = { has_global_flag = ac_sp_excalibur_complete }
+		}
+		available = {
+			NOT = { has_global_flag = excalibur_destroyed }
+			NOT = { has_global_flag = ac_sp_excalibur_complete }
+		}
+		fire_only_once = yes
+		cost = 100
+		days_remove = 300
+		ai_will_do = {
+			base = 5
+		}
+		complete_effect = {
+			custom_effect_tooltip = ac_superweapons_programme_started_tt
+		}
+		remove_effect = {
+			if = {
+				limit = { NOT = { has_global_flag = ac_sp_excalibur_complete } }
+				ac_sp_excalibur_complete_effect = yes
+			}
+		}
+	}
+
+	ac_superweapons_v2 = {
+		icon = GFX_decision_ac_sp_v2
+		allowed = {
+			NOT = { has_dlc = "Gotterdammerung" }
+			OR = {
+			original_tag = BLK
+			original_tag = AWW
+		}
+		}
+		visible = {
+			date < 1996.1.1
+			NOT = { has_global_flag = ac_sp_v2_complete }
+		}
+		available = {
+			date < 1996.1.1
+			NOT = { has_global_flag = ac_sp_v2_complete }
+		}
+		fire_only_once = yes
+		cost = 75
+		days_remove = 240
+		ai_will_do = {
+			base = 5
+		}
+		complete_effect = {
+			custom_effect_tooltip = ac_superweapons_programme_started_tt
+		}
+		remove_effect = {
+			if = {
+				limit = { NOT = { has_global_flag = ac_sp_v2_complete } }
+				ac_sp_v2_complete_effect = yes
+			}
+		}
+	}
+
+	ac_superweapons_stonehenge = {
+		icon = GFX_decision_ac_sp_stonehenge
+		allowed = {
+			NOT = { has_dlc = "Gotterdammerung" }
+			original_tag = FCU
+		}
+		visible = {
+			always = yes
+			NOT = { has_global_flag = ac_sp_stonehenge_complete }
+		}
+		available = {
+			date > 1996.4.19
+			NOT = { has_global_flag = ac_ucw_stonehenge_seized }
+			NOT = { has_global_flag = ac_ucw_stonehenge_destroyed }
+			NOT = { has_global_flag = ac_sp_stonehenge_complete }
+		}
+		fire_only_once = yes
+		cost = 125
+		days_remove = 720
+		ai_will_do = {
+			base = 5
+		}
+		complete_effect = {
+			custom_effect_tooltip = ac_superweapons_programme_started_tt
+		}
+		remove_effect = {
+			if = {
+				limit = { NOT = { has_global_flag = ac_sp_stonehenge_complete } }
+				ac_sp_stonehenge_complete_effect = yes
+			}
+		}
+	}
+
+	ac_superweapons_arkbird = {
+		icon = GFX_decision_ac_sp_arkbird
+		allowed = {
+			NOT = { has_dlc = "Gotterdammerung" }
+			original_tag = OSE
+		}
+		visible = {
+			always = yes
+			NOT = { has_global_flag = ac_sp_arkbird_complete }
+		}
+		available = {
+			date > 1999.7.7
+			NOT = { has_global_flag = ac_sp_arkbird_complete }
+		}
+		fire_only_once = yes
+		cost = 75
+		days_remove = 300
+		ai_will_do = {
+			base = 5
+		}
+		complete_effect = {
+			custom_effect_tooltip = ac_superweapons_programme_started_tt
+		}
+		remove_effect = {
+			if = {
+				limit = { NOT = { has_global_flag = ac_sp_arkbird_complete } }
+				ac_sp_arkbird_complete_effect = yes
+			}
+		}
+	}
+
+	ac_superweapons_megalith = {
+		icon = GFX_decision_ac_sp_megalith
+		allowed = {
+			NOT = { has_dlc = "Gotterdammerung" }
+			original_tag = ERU
+		}
+		visible = {
+			always = yes
+			NOT = { has_global_flag = ac_sp_megalith_complete }
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+			NOT = { has_global_flag = ac_ucw_megalith_destroyed }
+			NOT = { has_global_flag = ac_sp_megalith_complete }
+		}
+		fire_only_once = yes
+		cost = 125
+		days_remove = 360
+		ai_will_do = {
+			base = 5
+		}
+		complete_effect = {
+			custom_effect_tooltip = ac_superweapons_programme_started_tt
+		}
+		remove_effect = {
+			if = {
+				limit = { NOT = { has_global_flag = ac_sp_megalith_complete } }
+				ac_sp_megalith_complete_effect = yes
+			}
+		}
+	}
+
+	ac_superweapons_rhongomyniad = {
+		icon = GFX_decision_ac_sp_rhongomyniad
+		allowed = {
+			NOT = { has_dlc = "Gotterdammerung" }
+			original_tag = BLK
+		}
+		visible = {
+			has_completed_focus = BLK_project_rhongomyniad
+			NOT = { has_global_flag = ac_sp_rhongomyniad_complete }
+		}
+		available = {
+			has_global_flag = ac_sp_excalibur_complete
+			NOT = { has_global_flag = excalibur_destroyed }
+			NOT = { has_global_flag = ac_sp_rhongomyniad_complete }
+		}
+		fire_only_once = yes
+		cost = 150
+		days_remove = 540
+		ai_will_do = {
+			base = 5
+		}
+		complete_effect = {
+			custom_effect_tooltip = ac_superweapons_programme_started_tt
+		}
+		remove_effect = {
+			if = {
+				limit = { NOT = { has_global_flag = ac_sp_rhongomyniad_complete } }
+				ac_sp_rhongomyniad_complete_effect = yes
+			}
+		}
+	}
+
+}

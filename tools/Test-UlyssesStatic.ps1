@@ -134,6 +134,7 @@ if ($aftermathExitCode -ne 0) {
     Write-Error "Aftermath contract checks failed with exit code $aftermathExitCode."
     exit $aftermathExitCode
 }
+& $pythonHost (Join-Path $PSScriptRoot 'Test-UseaActors.py') --mod-root $ModRoot; if ($LASTEXITCODE -ne 0) { Write-Error 'Usea actor contract checks failed.'; exit $LASTEXITCODE }
 & $pythonHost (Join-Path $PSScriptRoot 'Test-StrangerealProjects.py') --mod-root $ModRoot; if ($LASTEXITCODE -ne 0) { Write-Error 'Strangereal special project checks failed.'; exit 1 }
 
 Write-Output 'Usean Continental War: offline transition and content checks'

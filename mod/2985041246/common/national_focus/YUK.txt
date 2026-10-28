@@ -1,0 +1,299 @@
+# Yuktobania: army reform off yuk_top_heavy_command_structure, through 2005.
+# yuktobania_fp.1, yuk_belkan_war_intervention and the command idea are mod
+# provenance; the Arkbird co-operation branch cites Chronicle 1999 / 10.08.
+# Effects are provisional gameplay. No leader changes and nothing after 2005.
+focus_tree = {
+	id = yuk_reform_focus
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = YUK
+		}
+	}
+	default = no
+	continuous_focus_position = { x = 50 y = 2000 }
+
+	shared_focus = YUK_review_the_command_structure
+	shared_focus = YUK_lessons_of_the_intervention
+	shared_focus = YUK_army_reform_commission
+	shared_focus = YUK_arkbird_debris_talks
+	shared_focus = YUK_expeditionary_staff_college
+	shared_focus = YUK_volunteer_veterans
+	shared_focus = YUK_delegate_field_initiative
+	shared_focus = YUK_combined_arms_exercises
+	shared_focus = YUK_arkbird_debris_programme
+	shared_focus = YUK_expeditionary_command
+	shared_focus = YUK_reformed_field_command
+	shared_focus = YUK_orbital_debris_tracking
+	shared_focus = YUK_army_reform_complete
+	shared_focus = YUK_civil_space_cooperation
+}
+
+shared_focus = {
+	id = YUK_review_the_command_structure
+	icon = GFX_ac_briefing_UST_army_debate
+	cost = 3
+	ai_will_do = { factor = 100 }
+	x = 7
+	y = 0
+	completion_reward = {
+		army_experience = 10
+		add_political_power = 25
+	}
+	search_filters = { }
+}
+
+# Post-intervention branch: Yuktobania chose option a of yuktobania_fp.1.
+shared_focus = {
+	id = YUK_lessons_of_the_intervention
+	icon = GFX_ac_briefing_UST_strike_first
+	cost = 5
+	ai_will_do = { factor = 90 }
+	prerequisite = { focus = YUK_review_the_command_structure }
+	mutually_exclusive = { focus = YUK_army_reform_commission }
+	x = 3
+	y = 1
+	available = {
+		custom_trigger_tooltip = {
+			tooltip = YUK_intervened_tt
+			OR = {
+				has_country_flag = YUK_fp_intervened
+				has_idea = yuk_belkan_war_intervention
+			}
+		}
+		custom_trigger_tooltip = {
+			tooltip = YUK_belkan_war_over_tt
+			NOT = { has_global_flag = belkan_war_is_happening }
+		}
+	}
+	completion_reward = {
+		army_experience = 15
+		air_experience = 10
+	}
+	search_filters = { }
+}
+
+# Non-intervention branch: the army reform promised by yuktobania_fp.1 option b.
+shared_focus = {
+	id = YUK_army_reform_commission
+	icon = GFX_ac_briefing_ose_urgent_war_committee
+	cost = 5
+	ai_will_do = { factor = 90 }
+	prerequisite = { focus = YUK_review_the_command_structure }
+	mutually_exclusive = { focus = YUK_lessons_of_the_intervention }
+	x = 7
+	y = 1
+	available = {
+		custom_trigger_tooltip = {
+			tooltip = YUK_stood_aside_tt
+			NOT = { has_country_flag = YUK_fp_intervened }
+			NOT = { has_idea = yuk_belkan_war_intervention }
+			OR = {
+				has_country_flag = YUK_fp_stood_aside
+				has_global_flag = ac_postwar_contract_started
+			}
+		}
+	}
+	completion_reward = {
+		army_experience = 15
+		add_political_power = 25
+	}
+	search_filters = { }
+}
+
+# Official: Osea and Yuktobania co-operate to convert the Arkbird into a
+# debris-clearing platform (Chronicle, 1999 / 10.08). Non-weapon use only.
+shared_focus = {
+	id = YUK_arkbird_debris_talks
+	icon = GFX_ac_briefing_sap_our_place_in_the_world
+	cost = 5
+	ai_will_do = { factor = 80 }
+	prerequisite = { focus = YUK_review_the_command_structure }
+	x = 11
+	y = 1
+	available = {
+		date > 1999.10.7
+		country_exists = OSE
+		NOT = { has_war_with = OSE }
+	}
+	completion_reward = {
+		add_political_power = 25
+		add_opinion_modifier = { target = OSE modifier = air_force_cooperation }
+		OSE = { add_opinion_modifier = { target = ROOT modifier = air_force_cooperation } }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = YUK_expeditionary_staff_college
+	icon = GFX_ac_briefing_UST_army_debate
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = YUK_lessons_of_the_intervention }
+	x = 2
+	y = 2
+	completion_reward = {
+		army_experience = 20
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = YUK_volunteer_veterans
+	icon = GFX_ac_briefing_GEB_faulmann_doctrine
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = YUK_lessons_of_the_intervention }
+	x = 4
+	y = 2
+	completion_reward = {
+		air_experience = 15
+		add_war_support = 0.03
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = YUK_delegate_field_initiative
+	icon = GFX_ac_briefing_UST_army_debate
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = YUK_army_reform_commission }
+	x = 6
+	y = 2
+	completion_reward = {
+		army_experience = 20
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = YUK_combined_arms_exercises
+	icon = GFX_ac_briefing_UST_strike_first
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = YUK_army_reform_commission }
+	x = 8
+	y = 2
+	completion_reward = {
+		army_experience = 10
+		air_experience = 10
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = YUK_arkbird_debris_programme
+	icon = GFX_ac_briefing_BLK_excalibur
+	cost = 5
+	ai_will_do = { factor = 80 }
+	prerequisite = { focus = YUK_arkbird_debris_talks }
+	x = 11
+	y = 2
+	available = {
+		country_exists = OSE
+		NOT = { has_war_with = OSE }
+	}
+	completion_reward = {
+		set_country_flag = ac_yuk_arkbird_partner
+		add_ideas = yuk_arkbird_partnership
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = YUK_expeditionary_command
+	icon = GFX_ac_briefing_BLK_nationalism_unleashed
+	cost = 5
+	ai_will_do = { factor = 80 }
+	prerequisite = { focus = YUK_expeditionary_staff_college }
+	prerequisite = { focus = YUK_volunteer_veterans }
+	x = 3
+	y = 3
+	completion_reward = {
+		if = {
+			limit = { has_idea = yuk_top_heavy_command_structure }
+			remove_ideas = yuk_top_heavy_command_structure
+		}
+		add_ideas = yuk_expeditionary_command
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = YUK_reformed_field_command
+	icon = GFX_ac_briefing_BLK_nationalism_unleashed
+	cost = 5
+	ai_will_do = { factor = 80 }
+	prerequisite = { focus = YUK_delegate_field_initiative }
+	prerequisite = { focus = YUK_combined_arms_exercises }
+	x = 7
+	y = 3
+	completion_reward = {
+		if = {
+			limit = { has_idea = yuk_top_heavy_command_structure }
+			remove_ideas = yuk_top_heavy_command_structure
+		}
+		add_ideas = yuk_reformed_field_command
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = YUK_orbital_debris_tracking
+	icon = GFX_ac_briefing_BLK_excalibur
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = YUK_arkbird_debris_programme }
+	x = 11
+	y = 3
+	completion_reward = {
+		air_experience = 15
+		capital_scope = {
+			add_building_construction = { type = radar_station level = 1 instant_build = yes }
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = YUK_army_reform_complete
+	icon = GFX_ac_briefing_ose_industrial_buildup
+	cost = 5
+	ai_will_do = { factor = 80 }
+	prerequisite = { focus = YUK_expeditionary_command focus = YUK_reformed_field_command }
+	x = 5
+	y = 4
+	completion_reward = {
+		army_experience = 15
+		add_stability = 0.03
+		random_owned_controlled_state = {
+			add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+		}
+		if = {
+			limit = { ac_econ_ready = yes }
+			ac_econ_refresh_budget = yes
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = YUK_civil_space_cooperation
+	icon = GFX_ac_briefing_sap_our_place_in_the_world
+	cost = 5
+	ai_will_do = { factor = 60 }
+	prerequisite = { focus = YUK_orbital_debris_tracking }
+	x = 11
+	y = 4
+	completion_reward = {
+		add_stability = 0.03
+		if = {
+			limit = { country_exists = OSE }
+			add_opinion_modifier = { target = OSE modifier = considers_friend }
+			OSE = { add_opinion_modifier = { target = ROOT modifier = considers_friend } }
+		}
+	}
+	search_filters = { }
+}

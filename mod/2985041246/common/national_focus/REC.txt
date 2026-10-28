@@ -1,0 +1,284 @@
+# Recta: postwar consolidation, 1995-2005, inside the states Recta already holds.
+# Mod provenance and provisional gameplay only; the Chronicle has no Recta entry.
+# No borders change here. See docs/USEAN_CONTINENTAL_WAR.md (Actor contracts).
+focus_tree = {
+	id = rec_postwar_consolidation_focus
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = REC
+		}
+	}
+	default = no
+	continuous_focus_position = { x = 50 y = 2000 }
+
+	shared_focus = REC_consolidate_the_republic
+	shared_focus = REC_local_recovery_programme
+	shared_focus = REC_state_administration
+	shared_focus = REC_close_ties_with_gebet
+	shared_focus = REC_independent_course
+	shared_focus = REC_hardline_communism
+	shared_focus = REC_reform_communism
+	shared_focus = REC_gebet_economic_compact
+	shared_focus = REC_rectan_border_guard
+	shared_focus = REC_party_security_organs
+	shared_focus = REC_economic_councils
+	shared_focus = REC_fato_partnership
+	shared_focus = REC_fato_distance
+}
+
+shared_focus = {
+	id = REC_consolidate_the_republic
+	icon = GFX_ac_briefing_ose_urgent_war_committee
+	cost = 3
+	ai_will_do = { factor = 100 }
+	x = 6
+	y = 0
+	completion_reward = {
+		add_political_power = 25
+		add_stability = 0.03
+	}
+	search_filters = { }
+}
+
+# Follows the existing ac_postwar_local_recovery decision and the ac_pwi.76 choice.
+shared_focus = {
+	id = REC_local_recovery_programme
+	icon = GFX_ac_briefing_ose_industrial_buildup
+	cost = 5
+	ai_will_do = { factor = 90 }
+	prerequisite = { focus = REC_consolidate_the_republic }
+	x = 4
+	y = 1
+	available = {
+		has_war = no
+		custom_trigger_tooltip = {
+			tooltip = REC_postwar_handoff_tt
+			has_global_flag = ac_postwar_contract_started
+		}
+		# Outcomes that never assign a settlement decision pass this check.
+		custom_trigger_tooltip = {
+			tooltip = REC_local_settlement_resolved_tt
+			NOT = { has_country_flag = ac_postwar_settlement_pending }
+		}
+		# REC is always an ac_pwi participant, so ac_pwi.76 always arrives once it is at peace.
+		custom_trigger_tooltip = {
+			tooltip = REC_local_briefing_answered_tt
+			OR = {
+				has_country_flag = ac_pwi_choice_76_0
+				has_country_flag = ac_pwi_choice_76_1
+			}
+		}
+	}
+	completion_reward = {
+		if = {
+			limit = { ac_pwi_active = yes }
+			add_to_variable = { ac_pwi_recovery = 5 }
+			if = {
+				limit = { has_country_flag = ac_pwi_choice_76_0 }
+				add_to_variable = { ac_pwi_recovery = 3 }
+			}
+			else_if = {
+				limit = { has_country_flag = ac_pwi_choice_76_1 }
+				add_to_variable = { ac_pwi_confidence = 3 }
+			}
+			ac_pwi_bound_pressures = yes
+		}
+		random_owned_controlled_state = {
+			add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+		}
+		if = {
+			limit = { ac_econ_ready = yes }
+			ac_econ_set_reconstruction = yes
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = REC_state_administration
+	icon = GFX_ac_briefing_UST_army_debate
+	cost = 5
+	ai_will_do = { factor = 80 }
+	prerequisite = { focus = REC_consolidate_the_republic }
+	x = 8
+	y = 1
+	completion_reward = {
+		add_political_power = 25
+		capital_scope = {
+			add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = REC_close_ties_with_gebet
+	icon = GFX_ac_briefing_GEB_our_violent_brothers
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = REC_local_recovery_programme }
+	mutually_exclusive = { focus = REC_independent_course }
+	x = 2
+	y = 2
+	available = { country_exists = GEB }
+	completion_reward = {
+		add_opinion_modifier = { target = GEB modifier = considers_friend }
+		GEB = { add_opinion_modifier = { target = ROOT modifier = considers_friend } }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = REC_independent_course
+	icon = GFX_ac_briefing_sap_our_place_in_the_world
+	cost = 5
+	ai_will_do = { factor = 30 }
+	prerequisite = { focus = REC_local_recovery_programme }
+	mutually_exclusive = { focus = REC_close_ties_with_gebet }
+	x = 5
+	y = 2
+	completion_reward = {
+		add_stability = 0.05
+		add_political_power = 25
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = REC_hardline_communism
+	icon = GFX_ac_briefing_UST_strike_first
+	cost = 5
+	ai_will_do = { factor = 50 }
+	prerequisite = { focus = REC_state_administration }
+	mutually_exclusive = { focus = REC_reform_communism }
+	x = 8
+	y = 2
+	completion_reward = {
+		add_popularity = { ideology = communism popularity = 0.05 }
+		add_ideas = REC_party_discipline_idea
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = REC_reform_communism
+	icon = GFX_ac_briefing_GEB_1992_elections
+	cost = 5
+	ai_will_do = { factor = 50 }
+	prerequisite = { focus = REC_state_administration }
+	mutually_exclusive = { focus = REC_hardline_communism }
+	x = 11
+	y = 2
+	completion_reward = {
+		add_popularity = { ideology = democratic popularity = 0.05 }
+		add_ideas = REC_council_reform_idea
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = REC_gebet_economic_compact
+	icon = GFX_ac_briefing_ose_industrial_buildup
+	cost = 5
+	ai_will_do = { factor = 70 }
+	prerequisite = { focus = REC_close_ties_with_gebet }
+	x = 2
+	y = 3
+	available = { country_exists = GEB }
+	completion_reward = {
+		add_political_power = 25
+		add_opinion_modifier = { target = GEB modifier = ac_pwi_reconstruction_accord }
+		GEB = { add_opinion_modifier = { target = ROOT modifier = ac_pwi_reconstruction_accord } }
+		if = {
+			limit = { ac_pwi_active = yes }
+			add_to_variable = { ac_pwi_confidence = 4 }
+			ac_pwi_bound_pressures = yes
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = REC_rectan_border_guard
+	icon = GFX_ac_briefing_GEB_faulmann_doctrine
+	cost = 5
+	ai_will_do = { factor = 60 }
+	prerequisite = { focus = REC_independent_course }
+	x = 5
+	y = 3
+	completion_reward = {
+		army_experience = 15
+		add_manpower = 2000
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = REC_party_security_organs
+	icon = GFX_ac_briefing_GEB_our_violent_brothers
+	cost = 5
+	ai_will_do = { factor = 60 }
+	prerequisite = { focus = REC_hardline_communism }
+	x = 8
+	y = 3
+	completion_reward = {
+		add_stability = 0.05
+		add_political_power = -25
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = REC_economic_councils
+	icon = GFX_ac_briefing_ose_industrial_buildup
+	cost = 5
+	ai_will_do = { factor = 60 }
+	prerequisite = { focus = REC_reform_communism }
+	x = 11
+	y = 3
+	completion_reward = {
+		random_owned_controlled_state = {
+			add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+		}
+		if = {
+			limit = { ac_econ_ready = yes }
+			ac_econ_refresh_budget = yes
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = REC_fato_partnership
+	icon = GFX_ac_briefing_sap_our_place_in_the_world
+	cost = 5
+	ai_will_do = { factor = 60 }
+	prerequisite = { focus = REC_gebet_economic_compact focus = REC_rectan_border_guard focus = REC_party_security_organs focus = REC_economic_councils }
+	mutually_exclusive = { focus = REC_fato_distance }
+	x = 5
+	y = 4
+	available = { country_exists = FAT }
+	completion_reward = {
+		add_opinion_modifier = { target = FAT modifier = considers_friend }
+		FAT = { add_opinion_modifier = { target = ROOT modifier = considers_friend } }
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = REC_fato_distance
+	icon = GFX_ac_briefing_ose_urgent_war_committee
+	cost = 5
+	ai_will_do = { factor = 40 }
+	prerequisite = { focus = REC_gebet_economic_compact focus = REC_rectan_border_guard focus = REC_party_security_organs focus = REC_economic_councils }
+	mutually_exclusive = { focus = REC_fato_partnership }
+	x = 8
+	y = 4
+	completion_reward = {
+		add_political_power = 50
+		add_stability = 0.03
+	}
+	search_filters = { }
+}

@@ -36,8 +36,70 @@ ac_ucw_country_start = {
 		if = { limit = { has_country_flag = ac_pwi_relief_resilient } add_to_variable = { ac_ucw_pressure = -15 } add_to_variable = { ac_ucw_recovery = 10 } }
 		if = { limit = { original_tag = ERU } set_variable = { ac_ucw_grievance = 45 } load_focus_tree = { tree = ac_ucw_eru_tree keep_completed = yes } }
 		if = { limit = { original_tag = FCU } set_variable = { ac_ucw_stage_weeks = 0 } load_focus_tree = { tree = ac_ucw_fcu_tree keep_completed = yes } }
+		ac_exp_apply_opening = yes
 		country_event = { id = ac_ucw.1 days = 1 }
 		ac_ucw_bound = yes
+	}
+}
+
+ac_exp_apply_opening = {
+	if = {
+		limit = { has_country_flag = ac_ucw_started OR = { original_tag = ERU original_tag = FCU } NOT = { has_country_flag = ac_exp_opening_applied } }
+		set_country_flag = ac_exp_opening_applied
+		if = {
+			limit = { original_tag = ERU }
+			if = {
+				limit = { has_country_flag = ERU_exp_prepared_civil }
+				add_to_variable = { ac_ucw_recovery = 3 }
+			}
+
+			if = {
+				limit = { has_country_flag = ERU_exp_prepared_logistics }
+				add_to_variable = { ac_ucw_recovery = 4 }
+			}
+
+			if = {
+				limit = { has_country_flag = ERU_exp_prepared_relief }
+				add_to_variable = { ac_ucw_pressure = -5 }
+			}
+
+			if = {
+				limit = { has_country_flag = ERU_exp_prepared_readiness }
+				add_to_variable = { ac_ucw_recovery = 2 }
+			}
+		}
+
+		if = {
+			limit = { original_tag = FCU }
+			if = {
+				limit = { has_country_flag = FCU_exp_prepared_civil }
+				add_to_variable = { ac_ucw_recovery = 3 }
+			}
+
+			if = {
+				limit = { has_country_flag = FCU_exp_prepared_logistics }
+				add_to_variable = { ac_ucw_recovery = 4 }
+			}
+
+			if = {
+				limit = { has_country_flag = FCU_exp_prepared_relief }
+				add_to_variable = { ac_ucw_pressure = -5 }
+			}
+
+			if = {
+				limit = { has_country_flag = FCU_exp_prepared_readiness }
+				add_to_variable = { ac_ucw_recovery = 2 }
+			}
+		}
+
+		ac_ucw_bound = yes
+	}
+}
+
+ac_ucw_offer_mediation = {
+	if = {
+		limit = { original_tag = FCU ac_ucw_active = yes has_capitulated = no is_subject = no country_exists = ERU NOT = { has_war_with = ERU } ERU = { has_capitulated = no is_subject = no } NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } ERU = { NOT = { has_country_flag = ac_ucw_mediation_pending } } }
+		ERU = { set_country_flag = { flag = ac_ucw_mediation_pending days = 30 } country_event = { id = ac_ucw.13 days = 1 } }
 	}
 }
 

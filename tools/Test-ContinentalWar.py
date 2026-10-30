@@ -42,6 +42,9 @@ class Country:
     exists: bool = True
     ai: bool = True
     capitulated: bool = False
+    subject: bool = False
+    bonuses: list = field(default_factory=list)
+    opinions: list = field(default_factory=list)
     flags: dict = field(default_factory=dict)
     variables: dict = field(default_factory=dict)
     ideas: dict = field(default_factory=dict)
@@ -79,7 +82,7 @@ class World:
         return frozenset((a, b)) in self.wars
 
     def flag(self, country, key):
-        return key in country.flags
+        return key in country.flags and (country.flags[key] is None or country.flags[key]>self.today)
 
     def number(self, value, country):
         try:
@@ -113,6 +116,10 @@ class World:
                 answer = value in country.ideas
             elif key == "has_capitulated":
                 answer = country.capitulated == (value == "yes")
+            elif key == 'is_subject':
+                answer = country.subject == (value == 'yes')
+            elif key == 'has_war':
+                answer = any(country.tag in war for war in self.wars) == (value == 'yes')
             elif key == "is_ai":
                 answer = country.ai == (value == "yes")
             elif key == "has_war_with":
@@ -131,7 +138,7 @@ class World:
                 (inner, _, target), = value
                 assert inner == "is_controlled_by", inner
                 answer = self.controllers[int(key)] == (country.tag if target == "ROOT" else target)
-            elif key in TAGS:
+            elif key in self.countries:
                 answer = self.countries[key].exists and self.trigger(value, self.countries[key])
             elif key in ("check_variable", "date"):
                 if key == "date":
@@ -171,14 +178,17 @@ class World:
             if key in self.effects:
                 if value == "yes":
                     self.execute(self.effects[key], country)
-            elif key in TAGS:
+            elif key in self.countries:
                 if self.countries[key].exists:
                     self.execute(value, self.countries[key])
             elif key == "set_country_flag":
-                assert not isinstance(value, list), "Timed flags are not used by this arc"
-                country.flags[value] = None
+                if isinstance(value,list):
+                    data=fields(value);country.flags[data['flag']]=self.today+int(data['days'])
+                else:country.flags[value] = None
             elif key == "set_global_flag":
                 self.globals.add(value)
+            elif key == "clr_country_flag":
+                country.flags.pop(value,None)
             elif key == "clr_global_flag":
                 self.globals.discard(value)
             elif key in ("set_variable", "add_to_variable"):
@@ -202,11 +212,19 @@ class World:
             elif key == "add_timed_idea":
                 country.ideas[fields(value)["idea"]] = None
             elif key == "add_opinion_modifier":
-                assert fields(value)["modifier"] == "ac_ucw_mediation"
-            elif key in ("add_political_power", "add_stability", "add_war_support", "army_experience", "air_experience", "navy_experience"):
+                assert fields(value)["modifier"] in ("ac_ucw_mediation", 'ac_exp_scientific_exchange')
+                country.opinions.append(fields(value))
+            elif key == 'add_tech_bonus':
+                data=fields(value)
+                assert data['category'] in ('industry','electronics')
+                assert int(data['uses']) == 1 and 0 < float(data['bonus']) <= 1
+                country.bonuses.append(data)
+            elif key in ("add_political_power", "add_stability", "add_war_support", "army_experience", "air_experience", "navy_experience", 'add_manpower'):
                 country.misc += float(value)
             elif key == "ac_econ_set_reconstruction":
                 assert self.fiscal, "Unguarded economy dependency"
+            elif key == "custom_effect_tooltip":
+                assert isinstance(value, str) and value, "Empty explanatory tooltip"
             elif key == "load_focus_tree":
                 country.tree = fields(value)["tree"]
             elif key == "declare_war_on":
@@ -246,11 +264,11 @@ class World:
             self.queue.remove(item)
             _, tag, ident = item
             if self.countries[tag].exists:
-                self.choose(ident, tag=tag, option=self.preferred(ident))
+                self.choose(ident, tag=tag, option=self.preferred(ident,tag))
 
-    def preferred(self, ident):
+    def preferred(self, ident, tag='ERU'):
         options = [v for k, _, v in self.events[ident][1] if k == "option"]
-        weights = [float(fields(mapping(o)["ai_chance"])["factor"]) for o in options]
+        weights = [float(fields(mapping(o)["ai_chance"])["factor"]) if self.trigger(mapping(o).get('trigger',[]),self.countries[tag]) else -1 for o in options]
         return weights.index(max(weights))
 
     def options(self, ident):
@@ -683,7 +701,7 @@ class ContinentalWarTests(unittest.TestCase):
 
     def test_source_contract_localisation_and_banned_effects(self):
         world = World()
-        self.assertEqual(45, len(world.focuses))
+        self.assertEqual(72, len(world.focuses))
         loc_path = MOD / "localisation/english/ac_ucw_l_english.yml"
         self.assertTrue(loc_path.read_bytes().startswith(b"\xef\xbb\xbf"))
         keys = re.findall(r'^\s*([A-Za-z0-9_.]+):0\s+"', loc_path.read_text(encoding="utf-8-sig"), re.M)
@@ -728,8 +746,8 @@ class ContinentalWarTests(unittest.TestCase):
                 if key in ("prerequisite", "mutually_exclusive"):
                     for _, _, other in value:
                         self.assertIn(other, world.focuses, ident)
-        sprites = {mapping(v)["name"].strip('"'): mapping(v) for k, _, v in load("interface/ac_goals.gfx")[0][2] if k == "spriteType"}
-        shine = (MOD / "interface/ac_goals_shine.gfx").read_text(encoding="utf-8-sig")
+        sprites = {mapping(v)["name"].strip('"'): mapping(v) for k, _, v in load("interface/ac_expansion_focus.gfx")[0][2] if k == "spriteType"}
+        shine = (MOD / "interface/ac_expansion_focus.gfx").read_text(encoding="utf-8-sig")
         for ident, nodes in world.focuses.items():
             icon = mapping(nodes)["icon"]
             self.assertIn(icon, sprites, ident)

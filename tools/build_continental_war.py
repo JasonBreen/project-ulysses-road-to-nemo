@@ -9,6 +9,7 @@ provisional gameplay.
 import argparse
 from pathlib import Path
 import re
+from usea_expansion.content import FOCUSES, partner
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD = ROOT / "mod/2985041246"
@@ -81,6 +82,7 @@ def brief(number, title, desc, picture="GFX_report_event_blk_army_attack"):
 
 def focus(tag, suffix, title, desc, x, y, icon, prerequisite=(), available="", reward="", excludes=(), cost=5, ai=20):
     ident = "%s_ucw_%s" % (tag, suffix)
+    icon = "GFX_ac_exp_" + ident
     loc(ident, title)
     loc(ident + "_desc", desc)
     body = "id = %s\nicon = %s\nx = %s\ny = %s\ncost = %s\nai_will_do = { factor = %s }\n" % (ident, icon, x, y, cost, ai)
@@ -89,7 +91,7 @@ def focus(tag, suffix, title, desc, x, y, icon, prerequisite=(), available="", r
     if excludes:
         body += "mutually_exclusive = { %s }\n" % " ".join("focus = %s_ucw_%s" % (tag, item) for item in excludes)
     body += "available = { original_tag = %s ac_ucw_active = yes %s }\ncancel_if_invalid = yes\ncontinue_if_invalid = no\n" % (tag, available)
-    body += block("completion_reward", once(ident + "_done", reward))
+    body += block("completion_reward", once(ident + "_done", reward, "ac_ucw_active = yes " + available))
     body += "search_filters = { }\n"
     TREES[tag].append(block("focus", body))
     return ident
@@ -163,7 +165,19 @@ if = { limit = { has_country_flag = ac_pwi_relief_strained } add_to_variable = {
 if = { limit = { has_country_flag = ac_pwi_relief_resilient } add_to_variable = { ac_ucw_pressure = -15 } add_to_variable = { ac_ucw_recovery = 10 } }
 if = { limit = { original_tag = ERU } set_variable = { ac_ucw_grievance = 45 } load_focus_tree = { tree = ac_ucw_eru_tree keep_completed = yes } }
 if = { limit = { original_tag = FCU } set_variable = { ac_ucw_stage_weeks = 0 } load_focus_tree = { tree = ac_ucw_fcu_tree keep_completed = yes } }
+ac_exp_apply_opening = yes
 country_event = { id = ac_ucw.1 days = 1 }""", "ac_ucw_participant = yes has_global_flag = ac_ucw_calendar_started has_capitulated = no"))
+    # This hook runs after the owning initializer, never before its baseline
+    # assignments. Old saves have no preparation flags and receive no payout.
+    carry = []
+    for tag in ("ERU", "FCU"):
+        parts = []
+        for kind, delta in (("civil", changes(recovery=3)), ("logistics", changes(recovery=4)),
+                            ("relief", changes(pressure=-5)), ("readiness", changes(recovery=2))):
+            parts.append(block("if", "limit = { has_country_flag = %s_exp_prepared_%s }\n%s" % (tag, kind, delta)))
+        carry.append(block("if", "limit = { original_tag = %s }\n%s" % (tag, "\n".join(parts))))
+    effect("ac_exp_apply_opening", once("ac_exp_opening_applied", "\n".join(carry),
+        "has_country_flag = ac_ucw_started OR = { original_tag = ERU original_tag = FCU }"))
     loc("ac_ucw_fallout", "After Ulysses: Usea")
     loc("ac_ucw_fallout_desc", "USEAN BRIEFING\nRefugee pressure: [?ac_ucw_pressure|.0]/100. Fallout recovery: [?ac_ucw_recovery|.0]/100.\nThe official chronology records Erusea closing its border to refugees on 21 April 2000 and the invasion of San Salvacion in the summer of 2003. The indices, choices and any averted or earlier war are provisional gameplay.")
     loc("ac_ucw_war", "The Usean Continental War")
@@ -176,6 +190,11 @@ country_event = { id = ac_ucw.1 days = 1 }""", "ac_ucw_participant = yes has_glo
 
 
 def build_fallout():
+    mediation_peace = 'NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted }'
+    mediation_reply = 'has_country_flag = ac_ucw_mediation_pending has_capitulated = no '+partner('FCU')+' '+mediation_peace
+    effect('ac_ucw_offer_mediation',block('if','limit = { original_tag = FCU ac_ucw_active = yes has_capitulated = no '+partner('ERU')+' '+mediation_peace+' ERU = { NOT = { has_country_flag = ac_ucw_mediation_pending } } }\nERU = { set_country_flag = { flag = ac_ucw_mediation_pending days = 30 } country_event = { id = ac_ucw.13 days = 1 } }'))
+    def reply(body):
+        return block('if','limit = { '+mediation_reply+' }\nclr_country_flag = ac_ucw_mediation_pending\n'+body)
     effect("ac_ucw_fallout_tick", """if = {
     limit = { original_tag = ERU date > 2000.4.20 NOT = { has_global_flag = ac_ucw_refugee_closure_done } }
     set_global_flag = ac_ucw_refugee_closure_done
@@ -189,8 +208,9 @@ def build_fallout():
         ("Ask the treaty partners to share the burden.", changes(0, 5) + "\nadd_stability = -0.02", "", 40)], picture="GFX_report_event_protests_2")
     brief(12, "Erusea closes its border", "The official chronology records that Erusea stopped taking in refugees on 21 April 2000. Columns of displaced families have turned away from the frontier, and the governments of Usea are left to argue over who will take them in.", picture="GFX_report_event_bad_news_2")
     event(13, "Central Usea offers mediation", "Central Usea proposes talks on refugees, reconstruction credit and the status of Stonehenge. Accepting lowers tension with our neighbours. Refusing tells the nation that its grievances will not be negotiated away. Provisional gameplay.", [
-        ("Accept the talks.", changes(-10) + "\nadd_opinion_modifier = { target = FCU modifier = ac_ucw_mediation }\n" + scoped("FCU", "add_opinion_modifier = { target = ERU modifier = ac_ucw_mediation }\ncountry_event = { id = ac_ucw.14 days = 1 }"), "", 50),
-        ("Refuse.", changes(5) + "\n" + scoped("FCU", "country_event = { id = ac_ucw.15 days = 1 }"), "", 50)], picture="GFX_report_event_treaty_1")
+        ("Accept the talks.", reply(changes(-10) + "\nadd_opinion_modifier = { target = FCU modifier = ac_ucw_mediation }\n" + scoped("FCU", "add_opinion_modifier = { target = ERU modifier = ac_ucw_mediation }\ncountry_event = { id = ac_ucw.14 days = 1 }")), mediation_reply, 50),
+        ("Refuse.", reply(changes(5) + "\n" + scoped("FCU", "country_event = { id = ac_ucw.15 days = 1 }")), mediation_reply, 50),
+        ("The mandate has expired; close the file.", "clr_country_flag = ac_ucw_mediation_pending", 'NOT = { '+mediation_reply+' }', 100)], trigger_text='original_tag = ERU', picture="GFX_report_event_treaty_1")
     event(14, "Erusea accepts the talks", "Erusea has agreed to talks. Grievance in Farbanti has eased for now; it has not disappeared.", [("Record the agreement.", "", "", 100)])
     event(15, "Erusea refuses the talks", "Erusea has refused mediation. Its government says that Usea's richer states should carry the cost of the fallout themselves.", [("Note the refusal.", "", "", 100)], picture="GFX_report_event_bad_news_1")
     peace = "NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted }"
@@ -203,7 +223,7 @@ def build_fallout():
     decision("ac_ucw_fallout", "ac_ucw_eru_invade_san_salvacion", "Invade San Salvacion", "Declare war on San Salvacion and seize Stonehenge. The official chronology dates the invasion to the summer of 2003. Earlier, it needs the San Salvacion plan and a date after 1 January 2002. San Salvacion's treaty partners will be called to its defence.", "ac_ucw_can_start_war = yes OR = { date > 2003.5.31 AND = { has_country_flag = ac_ucw_war_plan_ready date > 2001.12.31 } }", "ac_ucw_start_war = yes", cost=25, visible=eru, ai=0)
     decision("ac_ucw_fallout", "ac_ucw_eru_continental_accord", "Sign a continental accord", "Requires grievance below 25, no mobilized reserves and a date after 1 January 2002. Erusea renounces force over the fallout. The Continental War is averted. Provisional gameplay: in the official chronology the war happens.", peace + " check_variable = { ac_ucw_grievance < 25 } NOT = { has_country_flag = ac_ucw_eru_mobilized } date > 2001.12.31", "ac_ucw_avert_war = yes", cost=100, visible=eru, ai=0)
     decision("ac_ucw_fallout", "ac_ucw_fcu_relief_corridors", "Open relief corridors", "Coordinate relief convoys: refugee pressure -10, recovery +5. Once every 180 days.", peace + " check_variable = { ac_ucw_pressure > 9 }", changes(0, -10, 5), visible=fcu, cooldown=180, single=False, ai=1)
-    decision("ac_ucw_fallout", "ac_ucw_fcu_mediate", "Offer Erusea mediation", "Propose talks on refugees and reconstruction credit. Erusea may accept or refuse. Once every 365 days. Provisional gameplay.", peace + " country_exists = ERU", "ERU = { country_event = { id = ac_ucw.13 days = 1 } }", cost=50, visible=fcu, cooldown=365, single=False, ai=1)
+    decision("ac_ucw_fallout", "ac_ucw_fcu_mediate", "Offer Erusea mediation", "Propose talks on refugees and reconstruction credit. Both governments must remain independent, uncapitulated and at peace with each other. Erusea may accept or refuse; an interrupted mandate expires without a diplomatic reward. Once every 365 days. Provisional gameplay.", peace + " has_capitulated = no "+partner('ERU')+' ERU = { NOT = { has_country_flag = ac_ucw_mediation_pending } }', "ac_ucw_offer_mediation = yes", cost=50, visible=fcu, cooldown=365, single=False, ai=1)
     decision("ac_ucw_fallout", "ac_ucw_fcu_garrison_stonehenge", "Garrison Stonehenge", "Requires a completed Stonehenge. San Salvacion receives a defensive garrison; Erusea's grievance rises by 5. Provisional gameplay.", peace + " ac_ucw_stonehenge_intact = yes country_exists = SNS", "SNS = { add_ideas = ac_ucw_stonehenge_garrison }\n" + scoped("ERU", changes(5)), cost=75, visible=fcu, ai=1)
     decision("ac_ucw_fallout", "ac_ucw_fcu_draft_charter", "Draft an allied charter", "Requires Erusea's reserves to be mobilized. If Erusea attacks, the allied command forms at once instead of waiting for the recorded date of 22 August 2003. Provisional gameplay.", peace + " country_exists = ERU ERU = { has_country_flag = ac_ucw_eru_mobilized }", "set_country_flag = ac_ucw_isaf_prepared", visible=fcu, ai=1)
     effect("ac_ucw_avert_war", gonce("ac_ucw_war_averted", "news_event = { id = ac_ucw.25 days = 1 }", "ac_ucw_can_start_war = yes"))
@@ -441,7 +461,7 @@ def build_trees():
     f("FCU", "relief_camps", "Refugee Relief", "Receive displaced families. Refugee pressure +5, recovery +5, stability -2 percentage points.", 6, 1, I["diplo"], ["after_ulysses"], reward=changes(0, 5, 5) + "\nadd_stability = -0.02")
     f("FCU", "stonehenge_custody", "Custody of Stonehenge", "Requires a completed Stonehenge. Place the battery under treaty guard. Provisional gameplay.", 10, 1, I["defend"], ["after_ulysses"], "ac_ucw_stonehenge_intact = yes country_exists = SNS", "if = { limit = { ac_ucw_stonehenge_intact = yes } SNS = { add_ideas = ac_ucw_stonehenge_garrison } }")
     f("FCU", "continental_economy", "A Continental Economy", "Coordinate recovery credit across the treaty organization. Recovery +10.", 14, 1, I["steel"], ["after_ulysses"], reward=changes(0, 0, 10) + "\nif = { limit = { ac_econ_ready = yes } ac_econ_set_reconstruction = yes }")
-    f("FCU", "mediation", "Mediate with Erusea", "Offer Erusea talks on the fallout. Provisional gameplay.", 6, 2, I["diplo"], ["relief_camps"], "NOT = { %s } country_exists = ERU" % war, "ERU = { country_event = { id = ac_ucw.13 days = 1 } }")
+    f("FCU", "mediation", "Mediate with Erusea", "Relief cannot solve every dispute over the frontier. Authorize a limited mandate for talks on refugees and reconstruction. Erusea may refuse. If either government becomes a subject, capitulates or enters a war with the other, the offer closes without diplomatic rewards; the readiness branch remains available. Provisional gameplay.", 6, 2, I["diplo"], ["relief_camps"], "NOT = { %s } has_capitulated = no " % war + partner('ERU')+' ERU = { NOT = { has_country_flag = ac_ucw_mediation_pending } }', "ac_ucw_offer_mediation = yes")
     f("FCU", "uto_readiness", "Treaty Readiness Review", "Review the treaty organization's forces.", 12, 2, I["industry"], ["stonehenge_custody", "continental_economy"], reward="army_experience = 10\nair_experience = 10")
     f("FCU", "early_warning", "Early-Warning Network", "Build radar and reconnaissance coverage of the Erusean frontier.", 12, 3, I["fighter"], ["uto_readiness"], reward="air_experience = 15")
     f("FCU", "draft_charter", "Draft an Allied Charter", "If Erusea attacks, the allied command forms at once. Provisional gameplay.", 12, 4, I["diplo"], ["early_warning"], reward="set_country_flag = ac_ucw_isaf_prepared")
@@ -458,6 +478,11 @@ def build_trees():
     f("FCU", "road_to_farbanti", "The Road to Farbanti", "Drive on the Erusean capital.", 10, 11, I["expedition"], ["strike_stonehenge", "tango_line"], war, "add_war_support = 0.05\narmy_experience = 15", cost=3)
     f("FCU", "oversee_erusea", "Oversee the Provisional Government", "Requires ISAF victory. Support Erusea's provisional government (official chronology, 26 September 2005).", 8, 12, I["diplo"], available=outcome_available("isaf_victory"), reward="add_political_power = 75\nadd_stability = 0.05", cost=3)
     f("FCU", "continental_order", "A Continental Order", "Requires the end of the war. Rebuild the treaty organization for peace. Provisional gameplay.", 12, 12, I["globe"], available=outcome_available(*OUTCOMES), reward=changes(0, -10, 10), cost=3)
+    for row in FOCUSES:
+        if row.phase == "later":
+            f(row.tag, "exp_" + row.suffix, row.title, row.desc, row.x, row.y,
+              "GFX_ac_exp_" + row.id, row.prerequisite, row.available, row.reward,
+              row.excludes, row.cost)
     loc("ac_ucw_eru_tree", "Erusea after Ulysses")
     loc("ac_ucw_eru_tree_desc", "Erusea's path through the Ulysses fallout and the Usean Continental War, 2000–2005.")
     loc("ac_ucw_fcu_tree", "Central Usea and ISAF")
@@ -575,6 +600,7 @@ def build_flag_localization():
         "ac_ucw_late_calendar": "The Usean calendar began after 2004",
         "ac_ucw_border_closed": "Erusea has closed its border",
         "ac_ucw_border_open": "Erusea has kept its border open",
+        "ac_ucw_mediation_pending": "A Central Usean mediation mandate is still open",
         "ac_ucw_war_started": "The Usean Continental War has begun",
         "ac_ucw_war_averted": "The Usean Continental War has been averted",
         "ac_ucw_war_plan_ready": "Erusea has drawn up the San Salvacion plan",
@@ -601,6 +627,10 @@ def build_flag_localization():
     }
     for name, title, *_ in STAGES:
         labels["ac_ucw_stage_" + name] = "Completed war stage: " + title
+    labels['ac_exp_opening_applied'] = 'Opening preparations have been carried into the Usean emergency'
+    for tag in ('ERU', 'FCU'):
+        for kind in ('civil', 'logistics', 'relief', 'readiness'):
+            labels[tag+'_exp_prepared_'+kind] = tag+': '+kind+' preparations completed before the emergency'
     for flag, _, title, *_ in BRIEFS:
         labels[flag] = "Reported: " + title
         labels[flag + "_done"] = "Already past: " + title

@@ -8,12 +8,22 @@ jobs:
   map-validation:
     runs-on: windows-latest
     steps:
-      - name: Check out private project
+      - name: Check out project
         uses: actions/checkout@v4
       - name: Set up offline contract test runtime
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install artwork validation dependency
+        run: python -m pip install Pillow==11.3.0
+      - name: Check Usean expansion
+        run: python -B tools/Test-UseaExpansion.py
+      - name: Check interface repairs and starting governments
+        run: python -B tools/Test-InterfaceRepairs.py
+      - name: Check Continental War generated output
+        run: python -B tools/build_continental_war.py --check
+      - name: Check every authored asset dependency
+        run: python -B tools/audit_visual_dependencies.py --strict-all
       - name: Check briefing artwork and original layout
         run: python tools/frontend_briefing/validate.py
       - name: Check map font and display branding

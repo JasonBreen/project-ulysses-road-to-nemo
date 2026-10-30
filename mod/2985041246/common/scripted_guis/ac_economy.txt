@@ -3,11 +3,17 @@ scripted_gui = {
 		window_name = "project_ulysses_economy_screen_open_button"
 		context_type = player_context
 		parent_window_token = top_bar
-		visible = { always = yes }
+		visible = {
+			always = yes
+		}
 		effects = {
 			button_open_click = {
-				set_variable = { project_ulysses_economy_screen_open = 1 }
-				set_variable = { ac_econ_ui_tab = 0 }
+				set_variable = {
+					project_ulysses_economy_screen_open = 1
+				}
+				set_variable = {
+					ac_econ_ui_tab = 0
+				}
 				ac_econ_refresh_budget = yes
 			}
 		}
@@ -15,37 +21,362 @@ scripted_gui = {
 	project_ulysses_economy_screen = {
 		window_name = "project_ulysses_economy_screen"
 		context_type = player_context
-		visible = { has_variable = project_ulysses_economy_screen_open }
+		visible = {
+			has_variable = project_ulysses_economy_screen_open
+		}
 		triggers = {
-			overview_panel_visible = { check_variable = { ac_econ_ui_tab = 0 } }
-			budget_panel_visible = { check_variable = { ac_econ_ui_tab = 1 } }
-			contracts_panel_visible = { check_variable = { ac_econ_ui_tab = 2 } }
-			refresh_button_click_enabled = { ac_econ_ready = yes }
-			borrow_button_click_enabled = { ac_econ_can_borrow = yes }
-			repay_button_click_enabled = { ac_econ_can_repay = yes }
-			order_button_click_enabled = { ac_econ_can_order = yes }
-			cancel_order_button_click_enabled = { ac_econ_ready = yes check_variable = { ac_econ_procurement_weeks > 0 } }
-			tax_low_button_click_enabled = { ac_econ_ready = yes NOT = { has_country_flag = ac_econ_tax_cooldown } NOT = { check_variable = { ac_econ_tax_level = 0 } } }
-			tax_standard_button_click_enabled = { ac_econ_ready = yes NOT = { has_country_flag = ac_econ_tax_cooldown } NOT = { check_variable = { ac_econ_tax_level = 1 } } }
-			tax_high_button_click_enabled = { ac_econ_ready = yes NOT = { has_country_flag = ac_econ_tax_cooldown } NOT = { check_variable = { ac_econ_tax_level = 2 } } }
-			services_basic_button_click_enabled = { ac_econ_ready = yes NOT = { has_country_flag = ac_econ_spending_cooldown } NOT = { check_variable = { ac_econ_civilian_level = 0 } } }
-			services_rebuild_button_click_enabled = { ac_econ_ready = yes NOT = { has_country_flag = ac_econ_spending_cooldown } NOT = { check_variable = { ac_econ_civilian_level = 1 } } }
+			refresh_button_click_enabled = {
+				ac_econ_ready = yes
+			}
+			borrow_button_click_enabled = {
+				ac_econ_can_borrow = yes
+			}
+			repay_button_click_enabled = {
+				ac_econ_can_repay = yes
+			}
+			order_button_click_enabled = {
+				ac_econ_can_order = yes
+			}
+			cancel_order_button_click_enabled = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_procurement_weeks > 0
+				}
+			}
+			tax_low_button_click_enabled = {
+				ac_econ_ready = yes
+				NOT = {
+					has_country_flag = ac_econ_tax_cooldown
+				}
+				NOT = {
+					check_variable = {
+						ac_econ_tax_level = 0
+					}
+				}
+			}
+			tax_standard_button_click_enabled = {
+				ac_econ_ready = yes
+				NOT = {
+					has_country_flag = ac_econ_tax_cooldown
+				}
+				NOT = {
+					check_variable = {
+						ac_econ_tax_level = 1
+					}
+				}
+			}
+			tax_high_button_click_enabled = {
+				ac_econ_ready = yes
+				NOT = {
+					has_country_flag = ac_econ_tax_cooldown
+				}
+				NOT = {
+					check_variable = {
+						ac_econ_tax_level = 2
+					}
+				}
+			}
+			services_basic_button_click_enabled = {
+				ac_econ_ready = yes
+				NOT = {
+					has_country_flag = ac_econ_spending_cooldown
+				}
+				NOT = {
+					check_variable = {
+						ac_econ_civilian_level = 0
+					}
+				}
+			}
+			services_rebuild_button_click_enabled = {
+				ac_econ_ready = yes
+				NOT = {
+					has_country_flag = ac_econ_spending_cooldown
+				}
+				NOT = {
+					check_variable = {
+						ac_econ_civilian_level = 1
+					}
+				}
+			}
+			ov_title_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_treasury_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_debt_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_arrears_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_credit_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_capacity_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_current_balance_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_budget_header_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_revenue_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_civil_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_military_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_interest_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			ov_last_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			refresh_button_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			budget_title_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			budget_tax_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			budget_tax_cooldown_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			tax_low_button_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			tax_standard_button_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			tax_high_button_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			budget_services_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			budget_services_cooldown_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			services_basic_button_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			services_rebuild_button_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			budget_note_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			contracts_title_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 2
+				}
+			}
+			contracts_credit_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 2
+				}
+			}
+			contracts_debt_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 2
+				}
+			}
+			borrow_button_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 2
+				}
+			}
+			repay_button_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 2
+				}
+			}
+			contracts_procurement_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 2
+				}
+			}
+			contracts_pulses_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 2
+				}
+			}
+			order_button_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 2
+				}
+			}
+			cancel_order_button_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 2
+				}
+			}
+			contracts_note_visible = {
+				ac_econ_ready = yes
+				check_variable = {
+					ac_econ_ui_tab = 2
+				}
+			}
+			tab_overview_visible = {
+				ac_econ_ready = yes
+			}
+			tab_budget_visible = {
+				ac_econ_ready = yes
+			}
+			tab_contracts_visible = {
+				ac_econ_ready = yes
+			}
+			disabled_title_visible = {
+				NOT = {
+					ac_econ_ready = yes
+				}
+			}
+			disabled_message_visible = {
+				NOT = {
+					ac_econ_ready = yes
+				}
+			}
 		}
 		effects = {
-			close_button_click = { clear_variable = project_ulysses_economy_screen_open }
-			tab_overview_click = { set_variable = { ac_econ_ui_tab = 0 } }
-			tab_budget_click = { set_variable = { ac_econ_ui_tab = 1 } }
-			tab_contracts_click = { set_variable = { ac_econ_ui_tab = 2 } }
-			refresh_button_click = { ac_econ_refresh_budget = yes }
-			borrow_button_click = { ac_econ_borrow = yes }
-			repay_button_click = { ac_econ_repay = yes }
-			order_button_click = { ac_econ_order_infantry = yes }
-			cancel_order_button_click = { ac_econ_cancel_procurement = yes }
-			tax_low_button_click = { ac_econ_set_low_tax = yes }
-			tax_standard_button_click = { ac_econ_set_standard_tax = yes }
-			tax_high_button_click = { ac_econ_set_high_tax = yes }
-			services_basic_button_click = { ac_econ_set_basic_services = yes }
-			services_rebuild_button_click = { ac_econ_set_reconstruction = yes }
+			close_button_click = {
+				clear_variable = project_ulysses_economy_screen_open
+			}
+			tab_overview_click = {
+				set_variable = {
+					ac_econ_ui_tab = 0
+				}
+			}
+			tab_budget_click = {
+				set_variable = {
+					ac_econ_ui_tab = 1
+				}
+			}
+			tab_contracts_click = {
+				set_variable = {
+					ac_econ_ui_tab = 2
+				}
+			}
+			refresh_button_click = {
+				ac_econ_refresh_budget = yes
+			}
+			borrow_button_click = {
+				ac_econ_borrow = yes
+			}
+			repay_button_click = {
+				ac_econ_repay = yes
+			}
+			order_button_click = {
+				ac_econ_order_infantry = yes
+			}
+			cancel_order_button_click = {
+				ac_econ_cancel_procurement = yes
+			}
+			tax_low_button_click = {
+				ac_econ_set_low_tax = yes
+			}
+			tax_standard_button_click = {
+				ac_econ_set_standard_tax = yes
+			}
+			tax_high_button_click = {
+				ac_econ_set_high_tax = yes
+			}
+			services_basic_button_click = {
+				ac_econ_set_basic_services = yes
+			}
+			services_rebuild_button_click = {
+				ac_econ_set_reconstruction = yes
+			}
 		}
 	}
 }

@@ -14,10 +14,10 @@ from collections import Counter
 from pathlib import Path
 
 DEFAULT_MOD = Path(__file__).resolve().parents[1] / "mod" / "2985041246"
-GFX_RE = re.compile(r'\btexturefile\s*=\s*(?:"([^"]+)"|([^\s}#]+))', re.I)
+GFX_RE = re.compile(r'\btexturefile[12]?\s*=\s*(?:"([^"]+)"|([^\s}#]+))', re.I)
 # Tiled and animated sprite types carry textures too (e.g. GFX_tiled_research_bg).
 SPRITE_RE = re.compile(r"(?i)\b(?:spriteType|corneredTileSpriteType|frameAnimatedSpriteType"
-                       r"|textSpriteType)\s*=\s*\{")
+                       r"|textSpriteType|progressbarType)\s*=\s*\{")
 NAME_RE = re.compile(r'\bname\s*=\s*"?(GFX_[A-Za-z0-9_]+)', re.I)
 FOCUS_RE = re.compile(r"(?m)^\s*icon\s*=\s*(GFX_[A-Za-z0-9_]+)\s*(?:#.*)?$")
 GUI_SPRITE_RE = re.compile(r'\b(?:spriteType|quadTextureSprite)\s*=\s*"(GFX_[A-Za-z0-9_]+)"')
@@ -63,20 +63,20 @@ def main():
         source = path.read_text(encoding="utf-8-sig")
         active = "\n".join(line.split("#", 1)[0] for line in source.splitlines())
         for block in blocks(active):
-            texture = GFX_RE.search(block)
-            if not texture:
+            textures = list(GFX_RE.finditer(block))
+            if not textures:
                 continue
             name = NAME_RE.search(block)
             count += 1
             sprite = name.group(1) if name else "<unnamed-sprite>"
-            asset = normal(texture.group(1) or texture.group(2))
+            assets = [normal(t.group(1) or t.group(2)) for t in textures]
+            asset = assets[0]
             # Count even unnamed/non-GFX sprites: the engine can still display
             # their texture, and silently omitting them makes strict scans lie.
-            locally_owned = asset in images
+            locally_owned = all(a in images for a in assets)
             if name and (sprite not in artwork or locally_owned):
                 artwork[sprite] = (locally_owned, asset)
-            if not locally_owned:
-                missing_textures.append((path.relative_to(MOD).as_posix(), sprite, asset))
+            missing_textures.extend((path.relative_to(MOD).as_posix(), sprite, a) for a in assets if a not in images)
 
     # Completed graphical families may not regain engine-supplied artwork.
     clean_art_files = {

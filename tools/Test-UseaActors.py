@@ -68,7 +68,8 @@ def tree(tag):
 
 def localisation(tag):
     path = MOD / "localisation/english/country_{}_l_english.yml".format(tag)
-    return path, LOC_KEY.findall(path.read_text(encoding="utf-8-sig"))
+    expansion = MOD / 'localisation/english/ac_expansion_l_english.yml'
+    return path, LOC_KEY.findall(path.read_text(encoding="utf-8-sig") + expansion.read_text(encoding='utf-8-sig'))
 
 
 def mentions_foreign_flag(nodes):
@@ -154,7 +155,7 @@ class UseaActorContracts(unittest.TestCase):
                         self.assertIn("GFX_idea_" + picture, sprites, (value, picture))
 
     def test_focus_icons_resolve_to_briefing_sprites_with_shine(self):
-        gfx = text("interface/ac_frontend_briefing.gfx")
+        gfx = text("interface/ac_frontend_briefing.gfx") + text('interface/ac_expansion_focus.gfx')
         sprites = {}
         for name, texture in re.findall(r'name\s*=\s*"([^"]+)"\s*texturefile\s*=\s*"([^"]+)"', gfx):
             sprites[name] = texture
@@ -162,7 +163,7 @@ class UseaActorContracts(unittest.TestCase):
             _, focuses = tree(tag)
             for ident, nodes in focuses.items():
                 icon = mapping(nodes)["icon"]
-                self.assertTrue(icon.startswith("GFX_ac_briefing_"), (ident, icon))
+                self.assertTrue(icon.startswith(("GFX_ac_briefing_", 'GFX_ac_exp_')), (ident, icon))
                 self.assertIn(icon, sprites, ident)
                 self.assertIn(icon + "_shine", sprites, ident)
                 self.assertTrue((MOD / sprites[icon]).is_file(), (ident, sprites[icon]))
@@ -213,7 +214,8 @@ class UseaActorContracts(unittest.TestCase):
                         changed = True
             # Gated content may only be a leaf branch; the rest of the tree,
             # including every root, must stay reachable without the flags.
-            self.assertLessEqual(len(blocked), 3, (tag, sorted(blocked)))
+            permitted = {'NPT_host_isaf', 'NPT_isaf_logistics_hub', 'NPT_exp_allied_transport', 'NPT_exp_hosting_accounts'} if tag == 'NPT' else set()
+            self.assertTrue(blocked <= permitted, (tag, sorted(blocked - permitted)))
             for ident, nodes in focuses.items():
                 if not [k for k, _, _ in nodes if k == "prerequisite"]:
                     self.assertNotIn(ident, blocked, ident)

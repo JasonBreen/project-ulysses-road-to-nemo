@@ -14,6 +14,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install artwork validation dependency
+        run: python -m pip install Pillow==11.3.0
+      - name: Check Usean expansion and generated content
+        run: |
+          python -B tools/Test-UseaExpansion.py
+          python -B tools/Test-InterfaceRepairs.py
+          python -B tools/build_continental_war.py --check
+          python -B tools/audit_visual_dependencies.py --strict-all
       - name: Check briefing artwork and original layout
         run: python tools/frontend_briefing/validate.py
       - name: Check map font and display branding

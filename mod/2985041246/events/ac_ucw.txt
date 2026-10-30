@@ -87,30 +87,46 @@ country_event = {
 	desc = ac_ucw.13.d
 	picture = GFX_report_event_treaty_1
 	is_triggered_only = yes
-	trigger = { always = yes }
+	trigger = { original_tag = ERU }
 	option = {
 		name = ac_ucw.13.a
+		trigger = { has_country_flag = ac_ucw_mediation_pending has_capitulated = no is_subject = no country_exists = FCU NOT = { has_war_with = FCU } FCU = { has_capitulated = no is_subject = no } NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } }
 		ai_chance = { factor = 50 }
-		add_to_variable = { ac_ucw_grievance = -10 }
-		add_opinion_modifier = { target = FCU modifier = ac_ucw_mediation }
 		if = {
-			limit = { country_exists = FCU }
-			FCU = {
-				add_opinion_modifier = { target = ERU modifier = ac_ucw_mediation }
-				country_event = { id = ac_ucw.14 days = 1 }
+			limit = { has_country_flag = ac_ucw_mediation_pending has_capitulated = no is_subject = no country_exists = FCU NOT = { has_war_with = FCU } FCU = { has_capitulated = no is_subject = no } NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } }
+			clr_country_flag = ac_ucw_mediation_pending
+			add_to_variable = { ac_ucw_grievance = -10 }
+			add_opinion_modifier = { target = FCU modifier = ac_ucw_mediation }
+			if = {
+				limit = { country_exists = FCU }
+				FCU = {
+					add_opinion_modifier = { target = ERU modifier = ac_ucw_mediation }
+					country_event = { id = ac_ucw.14 days = 1 }
+				}
 			}
 		}
 	}
 	option = {
 		name = ac_ucw.13.b
+		trigger = { has_country_flag = ac_ucw_mediation_pending has_capitulated = no is_subject = no country_exists = FCU NOT = { has_war_with = FCU } FCU = { has_capitulated = no is_subject = no } NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } }
 		ai_chance = { factor = 50 }
-		add_to_variable = { ac_ucw_grievance = 5 }
 		if = {
-			limit = { country_exists = FCU }
-			FCU = {
-				country_event = { id = ac_ucw.15 days = 1 }
+			limit = { has_country_flag = ac_ucw_mediation_pending has_capitulated = no is_subject = no country_exists = FCU NOT = { has_war_with = FCU } FCU = { has_capitulated = no is_subject = no } NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } }
+			clr_country_flag = ac_ucw_mediation_pending
+			add_to_variable = { ac_ucw_grievance = 5 }
+			if = {
+				limit = { country_exists = FCU }
+				FCU = {
+					country_event = { id = ac_ucw.15 days = 1 }
+				}
 			}
 		}
+	}
+	option = {
+		name = ac_ucw.13.c
+		trigger = { NOT = { has_country_flag = ac_ucw_mediation_pending has_capitulated = no is_subject = no country_exists = FCU NOT = { has_war_with = FCU } FCU = { has_capitulated = no is_subject = no } NOT = { has_global_flag = ac_ucw_war_started } NOT = { has_global_flag = ac_ucw_war_averted } } }
+		ai_chance = { factor = 100 }
+		clr_country_flag = ac_ucw_mediation_pending
 	}
 }
 

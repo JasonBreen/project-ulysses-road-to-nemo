@@ -1,0 +1,436 @@
+focus_tree = {
+	id = ac_exp_fcu_opening
+	country = { factor = 0 modifier = { add = 20 original_tag = FCU NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 } }
+	default = no
+	continuous_focus_position = { x = 1100 y = 1000 }
+	focus = {
+		id = FCU_exp_opening
+		icon = GFX_ac_exp_FCU_exp_opening
+		x = 10
+		y = 0
+		cost = 5
+		ai_will_do = { factor = 40 }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_opening_done } }
+				set_country_flag = FCU_exp_opening_done
+				set_country_flag = FCU_exp_opening_ready
+				custom_effect_tooltip = ac_exp_opening_brief_tt
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_treaty_register
+		icon = GFX_ac_exp_FCU_exp_treaty_register
+		x = 2
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_opening }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_treaty_register_done } }
+				set_country_flag = FCU_exp_treaty_register_done
+				add_political_power = -10
+				add_stability = 0.01
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_burden_formula
+		icon = GFX_ac_exp_FCU_exp_burden_formula
+		x = 2
+		y = 2
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_treaty_register }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_burden_formula_done } }
+				set_country_flag = FCU_exp_burden_formula_done
+				set_country_flag = FCU_exp_choice_2_ready
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_liaison_offices
+		icon = GFX_ac_exp_FCU_exp_liaison_offices
+		x = 1
+		y = 3
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_burden_formula }
+		mutually_exclusive = { focus = FCU_exp_treaty_audit }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes has_idea = FCU_exp_civil NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes has_idea = FCU_exp_civil NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_liaison_offices_done } }
+				set_country_flag = FCU_exp_liaison_offices_done
+				set_country_flag = FCU_exp_prepared_civil
+				add_stability = 0.02
+				add_political_power = -20
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_treaty_audit
+		icon = GFX_ac_exp_FCU_exp_treaty_audit
+		x = 3
+		y = 3
+		cost = 10
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_burden_formula }
+		mutually_exclusive = { focus = FCU_exp_liaison_offices }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes has_idea = FCU_exp_directive NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes has_idea = FCU_exp_directive NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_treaty_audit_done } }
+				set_country_flag = FCU_exp_treaty_audit_done
+				set_country_flag = FCU_exp_prepared_logistics
+				add_tech_bonus = { name = FCU_exp_treaty_audit bonus = 0.5 uses = 1 category = industry }
+				add_political_power = -25
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_transport_map
+		icon = GFX_ac_exp_FCU_exp_transport_map
+		x = 7
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_opening }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_transport_map_done } }
+				set_country_flag = FCU_exp_transport_map_done
+				add_tech_bonus = { name = FCU_exp_transport_map bonus = 0.5 uses = 1 category = industry }
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_port_schedules
+		icon = GFX_ac_exp_FCU_exp_port_schedules
+		x = 7
+		y = 2
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_transport_map }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_port_schedules_done } }
+				set_country_flag = FCU_exp_port_schedules_done
+				navy_experience = 8
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_relief_stockpiles
+		icon = GFX_ac_exp_FCU_exp_relief_stockpiles
+		x = 7
+		y = 3
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_port_schedules }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_relief_stockpiles_done } }
+				set_country_flag = FCU_exp_relief_stockpiles_done
+				set_country_flag = FCU_exp_prepared_logistics
+				add_political_power = -25
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_interoperable_workshops
+		icon = GFX_ac_exp_FCU_exp_interoperable_workshops
+		x = 7
+		y = 4
+		cost = 10
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_relief_stockpiles }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_interoperable_workshops_done } }
+				set_country_flag = FCU_exp_interoperable_workshops_done
+				add_tech_bonus = { name = FCU_exp_interoperable_workshops bonus = 0.75 uses = 1 category = industry }
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_civil_protection
+		icon = GFX_ac_exp_FCU_exp_civil_protection
+		x = 12
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_opening }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_civil_protection_done } }
+				set_country_flag = FCU_exp_civil_protection_done
+				add_stability = 0.02
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_medical_register
+		icon = GFX_ac_exp_FCU_exp_medical_register
+		x = 12
+		y = 2
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_civil_protection }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_medical_register_done } }
+				set_country_flag = FCU_exp_medical_register_done
+				add_political_power = -15
+				set_country_flag = FCU_exp_choice_3_ready
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_shelter_exercises
+		icon = GFX_ac_exp_FCU_exp_shelter_exercises
+		x = 11
+		y = 3
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_medical_register }
+		mutually_exclusive = { focus = FCU_exp_public_information }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes has_idea = FCU_exp_relief_priority NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes has_idea = FCU_exp_relief_priority NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_shelter_exercises_done } }
+				set_country_flag = FCU_exp_shelter_exercises_done
+				set_country_flag = FCU_exp_prepared_relief
+				add_stability = 0.02
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_public_information
+		icon = GFX_ac_exp_FCU_exp_public_information
+		x = 13
+		y = 3
+		cost = 10
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_medical_register }
+		mutually_exclusive = { focus = FCU_exp_shelter_exercises }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes has_idea = FCU_exp_dual_use NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes has_idea = FCU_exp_dual_use NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_public_information_done } }
+				set_country_flag = FCU_exp_public_information_done
+				set_country_flag = FCU_exp_prepared_readiness
+				army_experience = 10
+				navy_experience = 5
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_joint_inventory
+		icon = GFX_ac_exp_FCU_exp_joint_inventory
+		x = 17
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_opening }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_joint_inventory_done } }
+				set_country_flag = FCU_exp_joint_inventory_done
+				army_experience = 8
+				air_experience = 5
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_staff_exchanges
+		icon = GFX_ac_exp_FCU_exp_staff_exchanges
+		x = 17
+		y = 2
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_joint_inventory }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_staff_exchanges_done } }
+				set_country_flag = FCU_exp_staff_exchanges_done
+				army_experience = 12
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_warning_drills
+		icon = GFX_ac_exp_FCU_exp_warning_drills
+		x = 17
+		y = 3
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_staff_exchanges }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_warning_drills_done } }
+				set_country_flag = FCU_exp_warning_drills_done
+				air_experience = 12
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_readiness_commitment
+		icon = GFX_ac_exp_FCU_exp_readiness_commitment
+		x = 17
+		y = 4
+		cost = 10
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_warning_drills }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_readiness_commitment_done } }
+				set_country_flag = FCU_exp_readiness_commitment_done
+				set_country_flag = FCU_exp_prepared_readiness
+				add_political_power = -25
+			}
+		}
+		search_filters = { }
+	}
+
+	focus = {
+		id = FCU_exp_opening_assessment
+		icon = GFX_ac_exp_FCU_exp_opening_assessment
+		x = 10
+		y = 5
+		cost = 5
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = FCU_exp_liaison_offices focus = FCU_exp_treaty_audit focus = FCU_exp_interoperable_workshops focus = FCU_exp_shelter_exercises focus = FCU_exp_public_information focus = FCU_exp_readiness_commitment }
+		available = {
+			original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		completion_reward = {
+			if = {
+				limit = { original_tag = FCU ac_exp_eligible = yes NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 NOT = { has_country_flag = FCU_exp_opening_assessment_done } }
+				set_country_flag = FCU_exp_opening_assessment_done
+				set_country_flag = FCU_exp_opening_reviewed
+				add_stability = 0.02
+			}
+		}
+		search_filters = { }
+	}
+}

@@ -1,7 +1,8 @@
 # Five-country expansion development ledger
 
-Implementation base: verified main `8f503d1`, 30 October 2026. Scope ends in
-2005. This ledger distinguishes official chronology, inherited mod contracts
+Implementation base: verified main `8f503d1`, 30 October 2026. The campaign arc
+ends in 2005; completing its recovery assessments may extend beyond year-end.
+This ledger distinguishes official chronology, inherited mod contracts
 and newly authored alternatives. Native acceptance is recorded separately in
 `evidence/usea-expansion/ACCEPTANCE.md`.
 
@@ -86,9 +87,14 @@ branches do not require a foreign response to reach a conclusion. Faction,
 war, territorial and special-project states remain with their owning effects.
 
 Weekly narrative dispatch uses country-specific on-actions. Opening briefs
-expire before the later calendar (Recta before 2000); all expansion events
-expire at the end of 2005. Later choices require flags from newly completed
-content. Sent and answered flags prevent repeat dispatch and duplicate options.
+expire before the later calendar (Recta before 2000); the earlier policy events
+retain their end-of-2005 deadline. The five concluding assessments instead
+require their completion flag without a calendar cutoff. Erusea's ISAF-defeat
+reconstruction chain takes 112 days after the settlement, so a 26 September
+2005 start reaches its assessment on 16 January 2006, before the next weekly
+dispatch and one-day event delay. This completes the existing recovery route;
+it adds no post-2005 war arc. Sent and answered flags prevent repeat dispatch
+and duplicate options. Capitulation eligibility still applies.
 Ordinary old saves receive eligible future additions rather than replaying an
 opening brief merely because the mod was updated.
 

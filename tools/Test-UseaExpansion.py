@@ -87,8 +87,65 @@ class Expansion(unittest.TestCase):
             w.choose(event,0,tag);snapshot=copy.deepcopy(c);w.choose(event,1,tag);self.assertEqual(snapshot,c)
             self.assertIn(tag+'_exp_civil',c.ideas);self.assertNotIn(tag+'_exp_directive',c.ideas)
             w=World('2005.12.31');c=w.countries[tag]
-            for ready in ('opening_ready','choice_2_ready','choice_3_ready','assessment_ready'):c.flags[tag+'_exp_'+ready]=None
+            for ready in ('opening_ready','choice_2_ready','choice_3_ready'):c.flags[tag+'_exp_'+ready]=None
             w.run('ac_exp_weekly',tag);self.assertFalse(w.queue)
+    def test_late_assessments_require_completion_and_remain_once_only(self):
+        for offset,tag in enumerate(('ERU','FCU','NPT','REC','YUK')):
+            with self.subTest(tag=tag):
+                w=World('2006.1.1');c=w.countries[tag]
+                # Updating a late save must not replay expired preparation choices.
+                for ready in ('opening_ready','choice_2_ready','choice_3_ready'):
+                    c.flags[tag+'_exp_'+ready]=None
+                w.run('ac_exp_weekly',tag);self.assertFalse(w.queue)
+                for index in (1,2,3):
+                    event=w.events['ac_expansion.'+str(offset*10+index)][1]
+                    self.assertFalse(w.trigger(get(event,'trigger'),c))
+                ident='ac_expansion.'+str(offset*10+4)
+                event=w.events[ident][1]
+                c.flags[tag+'_exp_assessment_ready']=None
+                c.capitulated=True
+                w.run('ac_exp_weekly',tag);self.assertFalse(w.queue)
+                self.assertFalse(w.trigger(get(event,'trigger'),c))
+                c.capitulated=False
+                w.run('ac_exp_weekly',tag);w.run('ac_exp_weekly',tag)
+                self.assertEqual([(w.today+1,tag,ident)],w.queue)
+                w.today+=1
+                self.assertTrue(w.trigger(get(event,'trigger'),c))
+                w.drain();self.assertIn(tag+'_exp_event_4_answered',c.flags)
+                answered=copy.deepcopy(c)
+                w.choose(ident,1,tag);w.run('ac_exp_weekly',tag)
+                self.assertEqual(answered,c);self.assertFalse(w.queue)
+                self.assertFalse(w.trigger(get(event,'trigger'),c))
+    def test_september_isaf_settlement_finishes_after_year_end_and_unlocks_services(self):
+        for fiscal in (False,True):
+            with self.subTest(fiscal=fiscal):
+                w=World('2005.9.26',fiscal=fiscal)
+                w.run('ac_ucw_world_start','ERU');w.run('ac_ucw_country_start','ERU')
+                w.globals.add('ac_ucw_outcome_isaf_victory')
+                w.queue.clear()  # Isolate the national assessment from calendar briefs.
+                for suffix in ('provisional_government','rebuild_under_oversight',
+                               'exp_reconstruction_oversight','exp_settlement_assessment'):
+                    ident='ERU_ucw_'+suffix
+                    self.assertTrue(w.focus_available(ident,'ERU'))
+                    w.today+=int(get(w.focuses[ident],'cost'))*7
+                    w.complete(ident,'ERU')
+                self.assertEqual(ucw.day('2006.1.16'),w.today)
+                w=copy.deepcopy(w)  # Reload after completing the capstone.
+                w.today+=7  # Allow a full weekly dispatch interval.
+                w.run('ac_exp_weekly','ERU')
+                self.assertEqual([(w.today+1,'ERU','ac_expansion.4')],w.queue)
+                w=copy.deepcopy(w)  # Reload while the event is queued.
+                w.run('ac_exp_weekly','ERU');self.assertEqual(1,len(w.queue))
+                w.today+=1;c=w.countries['ERU']
+                self.assertTrue(w.trigger(get(w.events['ac_expansion.4'][1],'trigger'),c))
+                w.drain();self.assertIn('ERU_exp_service',c.ideas)
+                category=get(load('common/decisions/categories/ac_expansion.txt'),'ERU_exp_programmes')
+                decision=get(get(load('common/decisions/ac_expansion.txt'),'ERU_exp_programmes'),'ERU_exp_maintain_services')
+                self.assertTrue(w.trigger(get(category,'visible'),c))
+                self.assertTrue(w.trigger(get(decision,'available'),c))
+                before=c.variables['ac_ucw_recovery']
+                w.execute(get(decision,'complete_effect'),c)
+                self.assertEqual(before+2,c.variables['ac_ucw_recovery'])
     def test_saved_policy_and_completed_focus_survive_handoff(self):
         w=World('1991.1.1');c=w.countries['ERU'];w.complete('ERU_exp_opening','ERU');c.ideas['ERU_exp_civil']=None
         w=copy.deepcopy(w);w.today=ucw.day('1999.12.1');w.run('ac_ucw_world_start','ERU');w.run('ac_ucw_country_start','ERU')

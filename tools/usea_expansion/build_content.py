@@ -76,12 +76,17 @@ COUNTRY_TEXT={
  'REC':('Recta','The District Ledgers','The first district ledgers have arrived at the republican offices. Some are complete; others contain lists of missing records and buildings whose purpose has changed repeatedly. Before reconstruction can become more than a promise, the administration needs a defensible account of what it governs. The existing territorial settlement remains the limit of this programme.'),
  'YUK':('Yuktobania','Capacity behind the Production Figures','The industrial inventory distinguishes what the ministries have planned from what their workshops can actually deliver. Rail dispatchers describe shortages that production reports barely mention. Civil administrators and the command staff agree that something must change, but disagree over who should have the authority to demand it.')}
 
+def event_deadline(index):
+    # A settlement's prerequisite chain can finish after 2005. Only the
+    # concluding assessment stays open; historical/preparation choices expire.
+    return '' if index==4 else ' date < 2005.12.31'
+
 def event(tag,index,title,desc,options):
     if tag=='FCU':options=FCU_OPTIONS[index]
     number=TAGS.index(tag)*10+index;key='ac_expansion.'+str(number)
     flag=tag+'_exp_event_'+str(index)
     loc(key+'.t',title);loc(key+'.d',desc+'\n\nThese choices are authored alternatives within the campaign.')
-    body='id = '+key+'\ntitle = '+key+'.t\ndesc = '+key+'.d\npicture = GFX_ac_exp_event_'+tag.lower()+('_domestic' if index<3 else '_crisis')+'\nis_triggered_only = yes\ntrigger = { original_tag = '+tag+' ac_exp_eligible = yes NOT = { has_country_flag = '+flag+'_answered } date < 2005.12.31 }\n'
+    body='id = '+key+'\ntitle = '+key+'.t\ndesc = '+key+'.d\npicture = GFX_ac_exp_event_'+tag.lower()+('_domestic' if index<3 else '_crisis')+'\nis_triggered_only = yes\ntrigger = { original_tag = '+tag+' ac_exp_eligible = yes NOT = { has_country_flag = '+flag+'_answered }'+event_deadline(index)+' }\n'
     for i,(label,reward) in enumerate(options):
         option=key+'.'+chr(97+i);loc(option,label)
         body+=block('option','name = '+option+'\nai_chance = { factor = '+str(60 if i==0 else 40)+' }\n'+once(flag+'_answered',reward))
@@ -103,7 +108,7 @@ def build_narrative():
         ready={1:'opening_ready',2:'choice_2_ready',3:'choice_3_ready',4:'assessment_ready'}
         for i,suffix in ready.items():
             flag=tag+'_exp_event_'+str(i)
-            condition='original_tag = '+tag+' has_country_flag = '+tag+'_exp_'+suffix+' date < 2005.12.31'
+            condition='original_tag = '+tag+' has_country_flag = '+tag+'_exp_'+suffix+event_deadline(i)
             if i==1:condition+=' date < '+('2000.1.1' if tag=='REC' else '1999.12.1')
             dispatch.append(once(flag+'_sent','country_event = { id = ac_expansion.'+str(TAGS.index(tag)*10+i)+' days = 1 }',condition+' ac_exp_eligible = yes'))
     EFFECTS.append(block('ac_exp_weekly','\n'.join(dispatch)))

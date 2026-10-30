@@ -24,6 +24,16 @@ references, and harmless retired event handlers. FCU's four policy combinations,
 opening/later handoff, partner interruption, expiry and duplicate replies are
 exercised offline. This does not establish engine execution of every script.
 
+PR #29's settlement-deadline repair adds offline coverage for the 112-day
+Erusean reconstruction chain after a 26 September 2005 ISAF settlement. The
+assessment and continuing service decision remain reachable in January 2006,
+with fiscal rules both enabled and disabled and reloads before/after dispatch.
+All five countries' concluding assessments retain completion, capitulation and
+once-only guards; expired preparation choices still do not replay in late saves.
+This repair has not been retested in the native engine.
+`candidate-payload.json` retains the earlier disposable payload's hashes; that
+payload was not synchronized during the PR review repair.
+
 The strict authored-asset gate reports 4,809 sprite definitions, 826 focus icon
 bindings, and zero unresolved texture references. The effective engine/mod
 dependency report has zero missing repaired-screen dependencies or conflicting

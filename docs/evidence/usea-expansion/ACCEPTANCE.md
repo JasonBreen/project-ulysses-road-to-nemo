@@ -3,8 +3,10 @@
 **Status: implementation candidate; native release acceptance remains open.**
 Base: `8f503d1de6b434031fcb110a6dd1dd7f26622a78`. Worktree:
 `G:\Project-Ulysses-Usea-Expansion`, branch `codex/usea-art-expansion`.
-The normal installed mod has not been synchronized by this task. Nothing was
-published, pushed, merged or released.
+The normal installed mod has not been synchronized by this task. This record
+describes the implementation and validation snapshot prepared for pull-request
+review. Merging, release publication and normal-install synchronization remain
+separate delivery actions.
 
 ## Static and offline coverage
 

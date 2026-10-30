@@ -61,8 +61,9 @@ widths are retained as `source_width`, with the correction in `format_repair`.
 The source PNGs are the reproducible inputs for the generated illustrations:
 rerunning an image model is not claimed to produce identical pixels. The DDS
 packaging and procedural line artwork are reproducible from committed inputs.
-There are no added image watermarks, invented leader portraits or new leader
-assignments.
+There are no added image watermarks or invented human leader portraits. The
+AC8 portrait collection does not assign those characters to governments;
+Sinclair and the office leaders are implemented separately as described below.
 
 ## Official promotional artwork
 

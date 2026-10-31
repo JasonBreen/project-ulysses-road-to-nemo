@@ -64,6 +64,10 @@ class World(anea.World):
             if key=='original_tag':results.append(country.original_tag==value)
             elif key=='any_owned_state':results.append(country.exists and country.owned and self.trigger(value,country))
             elif key=='has_government':results.append(country.government==value)
+            elif key=='focus_progress':
+                data=mapping(value)
+                progress=1 if data['focus'] in country.focuses else getattr(country,'active_progress',.5) if country.active_focus==data['focus'] else 0
+                results.append(progress>float(data['progress']))
             elif key=='ac_macro_ready':results.append((self.fiscal and country.exists and country.owned and country.variables['ac_macro_identity']==country.identity)==(value=='yes'))
             elif key=='check_variable' and value[0][0]=='var':
                 data=fields(value);a=self.number(data['var'],country);b=self.number(data['value'],country)
@@ -259,6 +263,26 @@ class Institutions(unittest.TestCase):
         self.assertEqual(before,(c.political_power,c.variables,c.ideas))
         for tag in ('BLK','UST','OSE','SAP','GEB','EMM','EVA','ERU','FCU','NPT','REC','YUK','AWW'):
             c=w.countries[tag];c.tree='generic_focus';w.run('ac_pol_enter_regional',tag);self.assertEqual('generic_focus',c.tree)
+
+    def test_previous_tree_idle_handles_selected_zero_progress_regional_and_continuous(self):
+        w=World().init();c=w.countries['SNS'];c.tree='ac_regional_foundation';c.active_progress=0
+        self.assertTrue(w.trigger(w.triggers['ac_pol_previous_tree_idle'],c))
+        for ident in w.focuses:
+            c.active_focus=ident
+            self.assertFalse(w.trigger(w.triggers['ac_pol_previous_tree_idle'],c),ident)
+            # Preserve the legacy helper's exact generic-only meaning.
+            self.assertTrue(w.trigger(w.triggers['ac_pol_legacy_idle'],c),ident)
+            c.focuses.add(ident)
+            self.assertTrue(w.trigger(w.triggers['ac_pol_previous_tree_idle'],c),ident)
+            c.focuses.remove(ident)
+        c.active_focus='continuous_air_production'
+        self.assertFalse(w.trigger(w.triggers['ac_pol_previous_tree_idle'],c))
+        c.tree='generic_focus';c.active_focus='equipment_effort'
+        self.assertFalse(w.trigger(w.triggers['ac_pol_previous_tree_idle'],c))
+        c.active_focus=None
+        self.assertTrue(w.trigger(w.triggers['ac_pol_previous_tree_idle'],c))
+        c.tree='ERU'
+        self.assertFalse(w.trigger(w.triggers['ac_pol_previous_tree_idle'],c))
 
     def test_twenty_one_choices_refusal_late_replies_and_distinct_conditions(self):
         w=World().init();events=[key for key in w.events if key.startswith('ac_pol.')];self.assertEqual(21,len(events))

@@ -57,6 +57,11 @@ def triggers(profiles):
     # block a handoff; active normal or continuous focuses must block it.
     idle='\n'.join('NOT = { AND = { NOT = { has_completed_focus = '+ident+' } OR = { has_shine_effect_on_focus = '+ident+' focus_progress = { focus = '+ident+' progress > 0 } } } }' for ident in dict.fromkeys(ids))
     rows.append(block('ac_pol_legacy_idle',idle))
+    regional='\n'.join('NOT = { AND = { NOT = { has_completed_focus = ac_reg_'+row.suffix+' } OR = { has_shine_effect_on_focus = ac_reg_'+row.suffix+' focus_progress = { focus = ac_reg_'+row.suffix+' progress > 0 } } } }' for row in FOCUSES)
+    # Additive public adoption seam: unknown/bespoke previous trees fail closed.
+    # The original generic-to-regional owner keeps its narrower helper above.
+    rows.append(block('ac_pol_previous_tree_idle',
+        'OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation }\nac_pol_legacy_idle = yes\n'+regional))
     put('common/scripted_triggers/ac_politics.txt','\n'.join(rows))
     return ids
 

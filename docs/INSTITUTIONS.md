@@ -252,6 +252,16 @@ same **Pillow 11.3.0** version as CI; 11.0.0 renders some filled leaf motifs
 differently. The gallery uses the shipped original bitmap font atlas to avoid
 platform FreeType differences.
 
+## Previous-tree adoption API
+
+`ac_pol_previous_tree_idle` is the shared eligibility seam for a national tree
+adopting from `generic_focus` or `ac_regional_foundation`. It checks all generic,
+regional and continuous IDs. A selected uncompleted focus blocks adoption even
+at zero progress; completed content does not block it. Other previous trees
+fail closed. Consumers must preserve completed focuses and own their country
+and calendar eligibility. The existing `ac_pol_legacy_idle` remains narrower
+and unchanged for the generic-to-regional handoff.
+
 ## Acceptance still required
 
 Offline coverage executes the shipped effects, triggers, decisions, events and

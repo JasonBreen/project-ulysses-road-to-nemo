@@ -23,7 +23,7 @@ provenance and provisional gameplay remain separately labeled.
 | --- | --- | --- | --- |
 | 0 | Current candidate | Privacy cleanup; Steam screenshot/interface repairs; this roadmap and verification evidence | Source-ready; native pending |
 | 1 | 1991–2005 | World foundations, country institutions, monthly macroeconomics, regional framework and anti-vanilla audit | Shared owners and selected foundations source-ready; world conversion incomplete; native pending |
-| 2 | 1991–2005 | Four Usean partners and six independent global squadron stories | 228-focus partner programmes source-ready; stories in separate review package; native pending |
+| 2 | 1991–2005 | Four Usean partners and six independent global squadron stories | Partner programmes and six stories/artwork source-ready; native pending |
 | 3 | 2006–2013 | Reconstruction, internal fracture, Circum-Pacific routes and supporting-country campaigns | Pending |
 | 4 | 2014–2016 | Anea's military crisis and consequences, preserving previous policies and aid outcomes | Pending |
 | 5 | 2017–2020 | Renewed Usea, Aurelia/Leasath and the remaining 2020 technology/campaign coverage | Pending |
@@ -65,6 +65,10 @@ PR #31 subsequently delivered six FCU focuses. They count against the FCU
 budget. The machine-readable ledger records delivered and remaining definitions
 for each successive review package; the historical approval baseline is retained
 rather than counting additions twice. The regional framework remains separate.
+The current first-wave candidate delivers 228 partner definitions plus the six
+existing FCU additions: 234 delivered and 794 remaining. Its six squadron
+campaigns deliver 120 core chapters, 24 recurring cast members and 18 conclusions,
+with all 78 original image masters retained. Later packages remain unimplemented.
 Belka and Ustio retain their already large campaigns and gain cohesion, decisions
 and narrative consequences without a new fixed focus quota; AWWNB's emergent
 entry remains intact. Never pad a budget with interchangeable factory or

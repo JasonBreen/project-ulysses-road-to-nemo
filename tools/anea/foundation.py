@@ -201,12 +201,11 @@ def outputs():
         out[f'common/ai_strategy/{tag}_anea.txt'] = ai_output(tag, row)
         out[f'common/ai_strategy_plans/{tag}_anea_research.txt'] = research_output(tag)
         all_hubs.extend(row['supply_hubs']); all_routes.extend(row['routes'])
-    for file, lines in [('map/supply_nodes.txt', [f'1 {p}' for p in all_hubs]), ('map/railways.txt', ['2 ' + str(len(r)) + ' ' + ' '.join(map(str, r)) for r in all_routes])]:
-        base = manifest['map_baselines'][file]
-        original = '\n'.join((MOD / file).read_text().splitlines()[:base['lines']]).rstrip() + '\n'
-        if hashlib.sha256(original.encode()).hexdigest() != base['sha256']:
-            raise ValueError('Inherited logistics prefix changed: ' + file)
-        out[file] = original + '\n'.join(lines) + '\n'
+    # Shared numeric map files have explicit append owners. Preserve only
+    # declared, validated foreign records while regenerating this family.
+    sys.path.insert(0, str(ROOT / 'tools'))
+    from shared_logistics import compose
+    out.update(compose(ROOT, MOD, owner='anea'))
     out['localisation/english/replace/ac_anea_regions_l_english.yml'] = '\ufeffl_english:\n' + '\n'.join(loc) + '\n'
     out['localisation/english/ac_anea_foundation_l_english.yml'] = '\ufeffl_english:\n' + '\n'.join(f' {tag}_anea_research_name:0 "{COUNTRY[tag]}: Sustainment and Recovery"\n {tag}_anea_research_desc:0 "Maintain industry, defensive aviation, infantry equipment and logistics. These priorities are provisional campaign calibration."' for tag in COUNTRY) + '\n'
     return out

@@ -1,4 +1,4 @@
-# World foundation registry and first Usean starts
+# World foundation registry and selected Usean starts
 
 This Package 1 source slice is based on main
 `3810d1a`, preserving the approval baseline `1f04456`. It implements a reproducible
@@ -8,6 +8,13 @@ repairs described in [the capital ledger](WORLD_CAPITAL_REPAIRS.md). It adds no 
 country tags, borders, cores, leader identities or event grants.
 Native testing is paused; source checks do not establish playable balance,
 AI behavior or final game acceptance.
+
+The subsequent [Erusean foundation](ERUSEA_FOUNDATION.md) preserves the four
+starts below and extends the same owner with an additive ERU roster and
+component-based logistics. It retains ERU's individual 28 CIV/23 MIL/11 dockyard
+placements and all 16 inherited ports. Its new forces, bounded resource
+additions and minimum island receiving facilities are documented gameplay
+calibration. The four-country budgets and placements below remain unchanged.
 
 ## What the registry establishes
 
@@ -19,8 +26,9 @@ event-driven forces and native parser/supply/AI behavior are outside that
 registry's direct-history boundary.
 
 After this slice, 69 histories include 62 currently landowning countries.
-**26 landowners still have no industry and 28 no infrastructure; 52 histories
-have no direct OOB reference. All62 landowning countries now have owned capitals.** These are
+**26 landowners still have no industry and 28 no infrastructure; 51 histories
+have no direct OOB reference after the ERU addition. All 62 landowning countries
+now have owned capitals.** These are
 documented inherited gaps, not claims that every affected country is absent or
 unplayable. Dormant/emergent countries are separate from active ones, and PLH /
 state 171 remains explicitly unresolved. The inspector records an inherited

@@ -1,4 +1,4 @@
-"""Reproduce four-country placements from owned raster adjacency, not canon maps."""
+"""Reproduce partner and additive ERU placements from owned raster adjacency."""
 import hashlib
 import json
 from pathlib import Path
@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "tools/usea_expansion"))
 sys.path.insert(0, str(ROOT / "tools/anea"))
 from script import parse, get
 from foundation_map import topology, components, shortest
+from erusea import derive_erusea
 
 BASE = "1f04456750b6e17a900cbfa407fddc3a4e96f3d5"
 
@@ -41,8 +42,15 @@ def derive():
             result["map_baselines"][relative] = {"lines": len(source.splitlines()), "sha256": hashlib.sha256(source.encode()).hexdigest()}
     for tag, profile in profiles["countries"].items():
         history_path = next((MOD / "history/countries").glob(tag + " - *.txt"))
-        history_source = (previous["countries"][tag]["country_history_source"] if previous
+        prior = previous["countries"].get(tag) if previous else None
+        history_source = (prior["country_history_source"] if prior
                           else history_path.read_text(encoding="utf-8-sig"))
+        if profile.get("preserve_inherited_economy"):
+            if tag != "ERU":
+                raise ValueError("Additive foundation requires a reviewed country placement owner: " + tag)
+            result["countries"][tag] = derive_erusea(states, history_path.relative_to(MOD).as_posix(),
+                history_source, prior, defs, graph, airport, profile)
+            continue
         capital = int(get(parse(history_source), "capital"))
         owned_states = sorted(i for i, s in states.items() if s["owner"] == tag)
         if capital not in owned_states:

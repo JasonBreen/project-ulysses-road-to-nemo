@@ -729,7 +729,7 @@ class Stories(unittest.TestCase):
         contracts = json.loads((ROOT / 'tools/squadrons/engine_contracts.json').read_text())
         idea_groups = mapping(load('common/ideas/ac_squadrons.txt'))['ideas']
         debrief = mapping(mapping(idea_groups)['country'])['ac_sq_professional_debrief']
-        self.assertEqual('no', mapping(debrief)['allowed_civil_war'])
+        self.assertEqual('no', mapping(mapping(debrief)['allowed_civil_war'])['always'])
         certified = contracts['country_idea_modifiers']
         self.assertTrue(contracts['sources'])
         seen = []

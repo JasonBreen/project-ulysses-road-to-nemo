@@ -312,7 +312,7 @@ def build():
                 'common/decisions/ac_squadrons.txt': decisions,
                 'events/ac_squadrons.txt': event_text,
                 'common/ideas/ac_squadrons.txt': block('ideas', block('country', block('ac_sq_professional_debrief',
-                    'picture = ac_sq_professional_debrief\nallowed_civil_war = no\n' + block('allowed', 'always = no') +
+                    'picture = ac_sq_professional_debrief\n' + block('allowed_civil_war', 'always = no') + block('allowed', 'always = no') +
                     block('modifier', 'experience_gain_air_factor = 0.02')))),
                 'common/game_rules/ac_squadrons.txt': block('ac_sq_stories',
                     'name = ac_sq_rule\ngroup = AC_SQUADRON_RULES\n' +

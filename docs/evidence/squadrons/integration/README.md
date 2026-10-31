@@ -28,12 +28,20 @@ regressions, roadmap counts, strict authored assets and the full static suite.
 The registry was refreshed for the story host declarations. CI retains each
 story gate as a separate failing step and preserves all prerequisite checks.
 
-The strict authored audit reports 6528 sprite definitions, 1204 checked focus
+The strict authored audit reports 6552 sprite definitions, 1204 checked focus
 icons and zero missing authored texture references or cleaned-family regressions.
 The full static/reference wrapper reports map errors 0, retained placeholder
 map warnings 2, reference warnings 2006 and technology warning 1. These counts
 do not claim completed worldwide support or a closed engine/DLC dependency graph.
 The changed-story-script scanner separately found zero errors and warnings.
+
+The subsequent effective-dependency integration exposed a missing generic
+decision icon shared by all 162 story controls. The current payload supplies
+24 owned action motifs at the independently recorded 26×29 row aperture. The
+artwork gate now checks every unprefixed row reference, including empty/default
+cases, rather than inspecting only explicit `GFX_` references in events and
+category headers. The image-master count remains 78; packaged output is now
+139 textures and 133 sprite bindings.
 
 **Native testing remains paused.** These are source, bounded offline interpreter
 and image-review results. Shortcut fixtures and copied state are not native

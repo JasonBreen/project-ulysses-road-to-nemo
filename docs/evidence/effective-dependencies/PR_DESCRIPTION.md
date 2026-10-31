@@ -25,7 +25,8 @@ not turn those failed scenarios into conversion acceptance.
 
 Validation:
 
-- 29 new synthetic provider/closure regressions and 16 existing decision tests.
+- 31 synthetic provider/closure regressions and 16 existing decision tests,
+  including program-as-texture/audio rejection and valid shader-alias context.
 - Focus canvas 9, overview/screenshot 7, briefing and typography checks pass.
 - `audit_visual_dependencies.py --strict-all` passes with zero authored-GFX
   missing references.

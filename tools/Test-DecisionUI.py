@@ -189,7 +189,7 @@ class EffectiveConsumers(unittest.TestCase):
     def test_shader_alias_uses_original_path_after_source_relative_probe(self):
         self.put(self.engine, "gfx/fx/buttonstate.shader", "engine shader service")
         resource = EffectiveFiles(self.mod, self.engine).resource(
-            "gfx/fx/buttonstate.lua", "interface/nationalfocusview.gfx")
+            "gfx/fx/buttonstate.lua", "interface/nationalfocusview.gfx", usage="program")
         self.assertEqual("engine_service", resource["status"])
         self.assertEqual("gfx/fx/buttonstate.shader", resource["path"])
         self.assertEqual("gfx/fx/buttonstate.lua", resource["legacy_alias"])

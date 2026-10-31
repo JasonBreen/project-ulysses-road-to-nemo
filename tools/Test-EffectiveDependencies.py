@@ -336,10 +336,35 @@ class EffectiveDependencies(unittest.TestCase):
         fake=self.record("gfx/icon.dds",b"engine-pixels","engine","authored")
         vfs=EffectiveFiles(self.mod,self.engine,self.profile(provenance=[fake]))
         self.assertEqual("unresolved",vfs.resource("gfx/icon.dds")["classification"])
-        self.assertEqual("technical",vfs.resource("gfx/fx/basic.lua")["classification"])
-        self.assertEqual("engine_service",vfs.resource("gfx/fx/basic.lua")["status"])
+        self.assertEqual("technical",vfs.resource("gfx/fx/basic.lua",usage="program")["classification"])
+        self.assertEqual("engine_service",vfs.resource("gfx/fx/basic.lua",usage="program")["status"])
+        self.assertEqual("unresolved",vfs.resource("gfx/fx/basic.lua")["classification"])
         approved=self.record("gfx/icon.dds",b"engine-pixels","engine","approved_sourced")
         self.assertEqual("approved_sourced",EffectiveFiles(self.mod,self.engine,self.profile(provenance=[approved])).resource("gfx/icon.dds")["classification"])
+
+    def test_program_exception_cannot_close_a_texture_or_audio_binding(self):
+        self.window()
+        self.put(self.engine,"gfx/fx/basic.shader","synthetic shader program")
+        self.put(self.mod,"interface/panel.gfx",'spriteTypes={spriteType={name="GFX_panel" texturefile="gfx/fx/basic.lua"}}')
+        audit=Audit(self.mod,self.engine,self.profile())
+        row=audit.resolve("sprite","GFX_panel")
+        self.assertEqual("unresolved",row["classification"])
+        self.assertEqual("unsupported_resource_kind",row["resources"][0]["status"])
+        self.assertFalse(audit.run(["countrydecisionview.gui"],True)["completed_presentation_gate"]["passed"])
+        self.put(self.mod,"sound/cue.asset",'sound={name="cue" file="gfx/fx/basic.shader"}')
+        self.assertEqual("unresolved",Audit(self.mod,self.engine,self.profile()).resolve("sound","cue")["classification"])
+
+    def test_program_field_keeps_primary_shader_alias_beside_an_authored_texture(self):
+        local=self.window()
+        self.put(self.engine,"gfx/fx/basic.shader","synthetic shader program")
+        self.put(self.mod,"interface/panel.gfx",'spriteTypes={spriteType={name="GFX_panel" texturefile="gfx/panel.dds" effectFile="gfx/fx/basic.lua"}}')
+        audit=Audit(self.mod,self.engine,self.profile(provenance=[local]))
+        row=audit.resolve("sprite","GFX_panel")
+        self.assertEqual("authored",row["classification"])
+        program=next(r for r in row["resources"] if r["binding_usage"]=="program")
+        self.assertEqual("engine_service",program["status"])
+        self.assertEqual("gfx/fx/basic.lua",program["legacy_alias"])
+        self.assertTrue(audit.run(["countrydecisionview.gui"],True)["completed_presentation_gate"]["passed"])
 
     def test_unreachable_decisions_have_a_recorded_static_reason(self):
         self.window()

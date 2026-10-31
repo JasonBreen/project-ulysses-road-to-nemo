@@ -249,8 +249,8 @@ class Providers:
             return
         self.candidates.setdefault(asset.relative, []).append(asset)
 
-    def classify(self, asset):
-        if asset.suffix.lower() in (".lua", ".fx", ".shader", ".fxh"):
+    def classify(self, asset, usage=None):
+        if usage == "program" and asset.suffix.lower() in (".lua", ".fx", ".shader", ".fxh"):
             return "technical", "Executable shader/program service; not a texture or audio family exemption"
         approval = self.approvals.get((asset.relative, asset.provider))
         try:

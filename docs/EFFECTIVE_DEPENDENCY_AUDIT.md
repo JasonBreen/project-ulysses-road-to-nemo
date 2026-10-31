@@ -115,7 +115,7 @@ are not silently removed based on presumed campaign conditions.
 |---|---|
 | `authored` | Exact mod file, matching SHA256 and provider, with a per-file provenance reason and evidence. Installed content cannot be relabeled authored. |
 | `approved_sourced` | Exact provider/file/hash with a reviewed sourcing assertion and evidence. The tool checks the binding; it cannot establish legal permission or the truth of an assertion. |
-| `technical` | Narrow shader/program service files (`.lua`, `.shader`, `.fx`, `.fxh`), with no pixel/audio family exemption. |
+| `technical` | Shader/program service files (`.lua`, `.shader`, `.fx`, `.fxh`) consumed through an explicit program binding, with no pixel/audio family exemption. |
 | `unreachable` | A statically disabled decision/category with a recorded reason. |
 | `unresolved` | Missing, ambiguous, conflicting, uninspected, or lacking matching provenance; this also propagates through dependencies. |
 
@@ -123,6 +123,14 @@ The retained selected-DLC profiles credit only the 690 exact original
 procedural decision textures already pinned by `decisions_assets.json`. They do
 not approve any installed artwork/audio or other inherited mod imagery. A local
 file's existence alone establishes neither originality nor approval.
+
+The independent follow-up review qualifies program exceptions by the consumer's
+binding. A shader or legacy `.lua` alias used as `texturefile`, mask, normal map,
+portrait or sound is unresolved, even when the program file exists. Valid
+`effectFile`/effect program bindings keep their original-root shader alias.
+Two additional negative/positive fixtures cover this false-green path; the
+dependency regression suite now contains 31 tests. Resource metadata records
+the inspected usage where the binding supplies it.
 
 ## Supported dependency edges and limits
 

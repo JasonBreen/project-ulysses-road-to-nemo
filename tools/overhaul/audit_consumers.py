@@ -24,6 +24,10 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 DEFAULT_MOD = ROOT / "mod/2985041246"
 MEDIA_SUFFIXES = {".dds", ".tga", ".png", ".jpg", ".jpeg", ".bmp", ".mesh", ".anim", ".wav", ".ogg", ".fnt", ".ttf", ".lua", ".shader", ".fx", ".fxh"}
+RESOURCE_SUFFIXES = {"image": {".dds", ".tga", ".png", ".jpg", ".jpeg", ".bmp"},
+                     "program": {".lua", ".shader", ".fx", ".fxh"},
+                     "audio": {".wav", ".ogg"}, "font": {".fnt", ".ttf"},
+                     "mesh": {".mesh"}, "animation": {".anim"}}
 sys.path.insert(0, str(ROOT / "tools/usea_expansion"))
 from script import get, parse, walk
 from providers import Providers
@@ -57,7 +61,7 @@ class EffectiveFiles:
                 and (suffix is None or path.suffix.lower() in suffix)
                 and (not authored_only or origin == "mod")]
 
-    def resource(self, value, source=None):
+    def resource(self, value, source=None, usage=None):
         requested = normal(value)
         probes = [requested]
         if source:
@@ -78,13 +82,18 @@ class EffectiveFiles:
                     ambiguous |= len({candidate.sha256() for _, candidate in found})>1
                 except (OSError, RuntimeError, zipfile.BadZipFile, NotImplementedError):
                     ambiguous = True
-            classification, evidence = self.providers.classify(asset)
+            classification, evidence = self.providers.classify(asset, usage)
+            wrong_type = usage in RESOURCE_SUFFIXES and asset.suffix.lower() not in RESOURCE_SUFFIXES[usage]
+            if wrong_type:
+                classification, evidence = "unresolved", "Resource type does not satisfy its " + usage + " binding"
             service = classification == "technical"
-            result = dict(path=relative, status="ambiguous_asset" if ambiguous else
+            result = dict(path=relative, status="ambiguous_asset" if ambiguous else "unsupported_resource_kind" if wrong_type else
                           "engine_service" if asset.origin == "engine" and service else
                           "mod_asset" if asset.origin == "mod" else "engine_asset",
                           provider=asset.provider, source=asset.source, bytes=asset.bytes, sha256=asset._hash, classification="unresolved" if ambiguous else classification,
                           classification_evidence=evidence)
+            if usage:
+                result["binding_usage"] = usage
             if ambiguous:
                 result["provider_candidates"] = self.providers.ambiguities.get(relative, [a.metadata() for _, a in found])
             if alias:
@@ -195,13 +204,16 @@ class Audit:
                 if key in ("texturefile", "texturefile1", "texturefile2", "diffuse", "normalmap", "specularmap",
                            "texture_diffuse", "texture_normal", "texture_specular", "animationmaskfile", "animationtexturefile",
                            "texture", "normal", "specular", "masking_texture"):
-                    resources.append(self.vfs.resource(value, definition["source"]))
+                    resources.append(self.vfs.resource(value, definition["source"], usage="image"))
                 elif key in ("file", "meshfile", "animationfile", "effectfile"):
                     if value and ("/" in value or "\\" in value or Path(value).suffix):
-                        resources.append(self.vfs.resource(value, definition["source"]))
+                        usage = {"meshfile": "mesh", "animationfile": "animation", "effectfile": "program"}.get(key)
+                        if key == "file":
+                            usage = {"sound": "audio", "song": "audio", "audio": "audio", "sprite": "image", "mesh": "mesh", "animation": "animation", "font": "font"}.get(family)
+                        resources.append(self.vfs.resource(value, definition["source"], usage=usage))
                 elif key == "path" and family == "font":
                     for extension in (".fnt", ".dds"):
-                        resources.append(self.vfs.resource(value + extension))
+                        resources.append(self.vfs.resource(value + extension, usage="font" if extension == ".fnt" else "image"))
                 elif family == "entity" and key in ("clone", "pdxmesh"):
                     dependency = self.resolve("entity" if key == "clone" else "mesh", value, visiting)
                     dependencies.append(dependency)
@@ -233,10 +245,10 @@ class Audit:
                 elif key not in ("name", "id", "text", "tooltip", "description") and Path(value).suffix.lower() in MEDIA_SUFFIXES:
                     # Unknown literal media bindings stay in the dependency
                     # graph instead of being hidden by a closed key allowlist.
-                    resources.append(self.vfs.resource(value, definition["source"]))
+                    resources.append(self.vfs.resource(value, definition["source"], usage="program" if key == "effect" else None))
         for kind, material in walk(node):
             if family == "mesh" and kind.lower() == "meshsettings":
-                textures = [dict(binding=key, resource=self.vfs.resource(value, definition["source"]))
+                textures = [dict(binding=key, resource=self.vfs.resource(value, definition["source"], usage="image"))
                             for key, value in fields(material) if key in ("texture_diffuse", "texture_normal", "texture_specular")]
                 materials.append(dict(name=scalar(get(material,"name","<unnamed mesh setting>")), textures=textures))
         # Attachment animations belong to the attached entity, not its parent.
@@ -250,7 +262,7 @@ class Audit:
             dependencies.append(dict(family="animation_binding", name=name, status="runtime_binding_uninspected",
                                      classification="unresolved", resources=[],
                                      reason="Entity state label has no resolved inherited mesh animation ID; embedded native bindings are uninspected"))
-        issues = {r["status"] for r in resources if r["status"] in ("missing_asset", "engine_asset", "ambiguous_asset")}
+        issues = {r["status"] for r in resources if r["status"] in ("missing_asset", "engine_asset", "ambiguous_asset", "unsupported_resource_kind")}
         issues.update(d["status"] for d in dependencies if d["status"] not in ("mod_resolved", "engine_service"))
         if conflicts:
             status = "conflicting_definitions"
@@ -317,7 +329,8 @@ class Audit:
                     elif key in ("font", "buttonfont"):
                         rows.append(self.row("font", value, source, owner, "screen"))
                     elif key not in ("name", "id", "text", "tooltip", "description") and Path(value).suffix.lower() in MEDIA_SUFFIXES:
-                        resource = self.vfs.resource(value, source)
+                        usage = "program" if key in ("effectfile", "effect") else "image" if "texture" in key or key in ("normal", "specular", "diffuse", "mask") else None
+                        resource = self.vfs.resource(value, source, usage=usage)
                         rows.append(dict(family="file", name=value, consumer=source, owner=owner, consumer_family="screen_literal",
                                          status="mod_resolved" if resource["status"] == "mod_asset" else resource["status"],
                                          classification="unresolved" if resource.get("binary_material_dependencies") else resource["classification"], resources=[resource]))
@@ -444,7 +457,7 @@ class Audit:
                             if value.startswith("GFX_"):
                                 self.icon(value, rel, kind, family)
                             else:
-                                resource = self.vfs.resource(value, rel)
+                                resource = self.vfs.resource(value, rel, usage="image")
                                 self.rows.append(dict(consumer_family=family, consumer=rel, owner=kind, family="file", name=value,
                                                       status=resource["status"], classification=resource["classification"], resources=[resource]))
                         elif family in ("mio", "agency") and key in ("icon", "picture", "portrait"):

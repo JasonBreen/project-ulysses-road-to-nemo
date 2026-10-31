@@ -157,10 +157,14 @@ def inspect():
             if reason and reason.startswith('deliberately absent:'):
                 dispositions['has_direct_naval_roster'] = reason
         issues = [key for key, value in checks.items() if not value and key not in dispositions]
+        personnel_gate = role.get('inherited_personnel_debt')
+        if personnel_gate: issues.append('inherited_personnel_reinforcement_debt')
         if tag == "PLH" or 171 in owned:
             status = "unresolved_placeholder_do_not_infer"
         elif not owned:
             status = "dormant_or_emergent_entry_requires_review"
+        elif personnel_gate and issues == ['inherited_personnel_reinforcement_debt']:
+            status = 'authored_foundation_with_inherited_policy_debt_native_pending'
         elif issues:
             status = "inherited_foundation_gaps"
         elif tag in covered or tag in ("EMM", "EVA"):
@@ -195,6 +199,7 @@ def inspect():
             "technology_inventory_all_history_branches": sorted({tech for key, _, value in nodes(history) if key == 'set_technology' and isinstance(value, list) for tech, _, _ in value}),
             "missing_roster_files": missing, "roster_offline_parser_errors": parse_errors, "initial_production_assignments": dict(sorted(production.items())),
             "source_checks": checks, "source_gaps": issues, "role_not_required": dispositions,
+            "inherited_personnel_gate": personnel_gate,
             "scope_note": "Direct history/OOB source inspection only. Event-driven forces and native AI, supply reach, engine parsing and balance are separate acceptance."})
     summary = {"country_histories": len(rows), "currently_landowning": sum(bool(r["owned_states"]) for r in rows),
         "support_status_counts": dict(sorted(Counter(r["support_status"] for r in rows).items())),

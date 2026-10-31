@@ -55,11 +55,29 @@ class Engine:
                 if ident.startswith(root + '_') and get(body, 'archetype'):
                     base = get(body, 'archetype') + ident[len(root):]
                     if base in definitions:
-                        return self.resolve(base, definitions, files, chain + (ident,))
+                        self.record(files[root])
+                        return {**self.resolve(base, definitions, files, chain + (ident,)), 'archetype': root}
         body = definitions[ident]; self.record(files[ident])
         parent = get(body, 'parent', get(body, 'archetype'))
         values = self.resolve(parent, definitions, files, chain + (ident,)) if parent else {}
-        values.update({key: value for key, _, value in body})
+        for key, _, value in body:
+            if value == 'inherit':
+                if key not in values: raise ValueError('Unresolved inherited primary field: ' + ident + ':' + key)
+                continue
+            if key == 'module_slots':
+                inherited = {k: v for k, _, v in values.get(key, [])}; resolved = {}
+                for slot, _, definition in value:
+                    if definition == 'inherit':
+                        if slot not in inherited: raise ValueError('Unresolved inherited slot: ' + ident + ':' + slot)
+                        definition = inherited[slot]
+                    elif isinstance(definition, str):
+                        if definition not in resolved and definition not in inherited:
+                            raise ValueError('Unresolved aliased slot: ' + ident + ':' + slot)
+                        definition = resolved.get(definition, inherited.get(definition))
+                    resolved[slot] = definition
+                values[key] = [[k, '=', v] for k, v in resolved.items()]
+            else:
+                values[key] = value
         return values
 
     def stats(self, ident, modules=()):
@@ -76,7 +94,31 @@ class Engine:
                     multipliers[key] += float(value)
             for key, _, value in part.get('add_resources', []):
                 resources[key] = resources.get(key, 0) + float(value)
+            for key, _, value in part.get('build_cost_resources', []):
+                resources[key] = resources.get(key, 0) + float(value)
         return {**{k: v * (1 + multipliers[k]) for k, v in values.items()}, 'resources': resources}
+
+    def design_slots(self, ident, modules):
+        body = self.resolve(ident, self.equipment, self.eq_files)
+        slots = {k: v for k, _, v in body.get('module_slots', [])}; overrides = {}
+        contracts = {}
+        for slot, module in modules.items():
+            if slot not in slots: raise ValueError(f'Undefined module slot: {ident}:{slot}')
+            definition = self.resolve(module, self.modules, self.module_files)
+            category = definition.get('category')
+            allowed = {k for k, _, _ in get(slots[slot], 'allowed_module_categories', [])} | overrides.get(slot, set())
+            # Some naval slots enumerate exact module IDs as well as categories.
+            explicit = {k for k, _, _ in get(slots[slot], 'allowed_modules', [])}
+            if category not in allowed and module not in explicit:
+                raise ValueError(f'Incompatible module category: {ident}:{slot}:{module}:{category}')
+            for target, _, categories in definition.get('allowed_module_categories', []):
+                overrides.setdefault(target, set()).update(k for k, _, _ in categories)
+            contracts[slot] = dict(module=module, category=category, allowed_categories=sorted(allowed))
+        defaults = dict((k, v) for k, _, v in body.get('default_modules', []))
+        missing = [slot for slot, values in slots.items() if get(values, 'required') == 'yes' and slot not in modules
+                   and defaults.get(slot) in (None, 'empty')]
+        if missing: raise ValueError('Missing required design slots: ' + str(missing))
+        return contracts
 
     def unlock(self, ident, mapping):
         options = mapping.get(ident, [])

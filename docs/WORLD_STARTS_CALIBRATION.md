@@ -66,7 +66,7 @@ These countries keep every inherited civilian factory and yard at its original s
 |BLD — Bulgurdarest|11/5/3|11/6/3|8|60/12|3/1|
 |CSO — Central Sotoa|4/4/0|4/5/0|3|24/0|0/0|
 |DAK — Dakrain|4/4/2|4/5/2|4|24/0|1/0|
-|DOR — Dorondo|10/10/0|10/10/0|8|72/12|0/0|
+|DOR — Dorondo|10/10/0|10/13/0|8|72/12|0/0|
 |FRU — Ferustia|5/4/0|5/5/0|6|36/0|0/0|
 |GIB — Gibraltar|2/0/0|2/3/0|2|0/0|0/0|
 |LUR — Luremia|5/1/0|5/3/0|3|0/0|0/0|
@@ -75,3 +75,37 @@ These countries keep every inherited civilian factory and yard at its original s
 |VOS — Voslage|5/3/2|5/5/2|6|36/0|1/0|
 
 All additions are provisional gameplay. Actual deployment, required equipment and module unlocks, simultaneous line allocations, stocks, full opening fuel, scoped AI, retained identity and owned-component routes are tested. The four BBA/MTG projections establish source coverage only. No armored units are introduced by this fifteen-country slice. The retained-army compatibility and legacy-owner integration remain separate work, including explicit NSB/LaR boundaries. Native acceptance remains pending.
+
+## Seven retained-army starts
+
+The original land files remain untouched as provenance and saved reference targets. New country histories select one composed land roster, containing every inherited formation and cumulative units block, instead of loading the original and an additional army. Formation name/order metadata, deployment provinces, experience and equipment factors are preserved. Supply routes reach the retained deployment locations. Original politics, leaders, ideas, relationships and fiscal eligibility markers stay under their existing owners.
+
+| Country | Retained CIV/MIL/yards | Target CIV/MIL/yards | Preserved formations | Starting service aircraft | Combat ships |
+|---|---:|---:|---:|---:|---:|
+|GEB|10/5/0|10/6/0|10|1 retained bomber|0|
+|UST|8/4/0|8/7/0|9|50 fighters,15 support|0|
+|NRL|18/3/11|18/10/11|15|72 fighters,12 support|8|
+|PBL|24/16/6|24/24/6|29|96 fighters,24 support|7|
+|RAT|11/6/4|11/10/4|12|48 fighters,12 support|4|
+|SYC|3/1/4|3/8/4|7|24 fighters,12 support|3|
+|WIE|8/5/3|8/11/3|14|48 fighters,12 support|3|
+
+GEB's single training bomber remains a single aircraft; its existing air-force-development content remains relevant. PBL's original sixteen assigned military lines retain their allocations; eight added lines cover previously unsupported support/carrier/SPG/rocket and aviation roles. No formations are removed. Two undefined PBL `medium_sp_artillery` support entries (Heavy Infantry and Mechanized Brigade) become valid `medium_sp_artillery_brigade` regiments in free slot2,0. Undefined `xxx` and foreign `GER_Arm_01` naming groups become numbered template-matching groups while preserving formation order metadata. These are bounded validity repairs to inherited mod content, not new official military history.
+
+## Armor compatibility and extra DLC boundaries
+
+The core matrix is four BBA/MTG combinations. YUK/NRL/PBL/RAT/SYC/WIE also have four additional NSB-enabled source cases, bringing this owner's fifty profiles to224cases. The mod's inherited `common/technologies/NSB_armor.txt` is entirely commented; designer chassis/module presence in the installed catalog alone does not establish an unlock. Three narrow history-only, unresearchable/no-folder `ac_ws_nsb_*_support` technologies therefore unlock only the actual chassis, required modules and subunit for a fielded service role. No general armor technology tree or visible research screen is restored. NSB-off retains the existing technical legacy types; NSB-on creates matching owned variants before stocks and land production load.
+
+`armor.py` maps provisional service recipes to installed1.19.4.1 `common/units/equipment/tank_chassis.txt`, `x_tank_chassis.txt`, `common/units/equipment/modules/00_tank_modules.txt` and the relevant subset of `common/technologies/NSB_armor.txt`. The metadata records exact effective source hashes, required slot/category contracts, costs, resources (including module build-cost resources), fuel coefficients, equipment archetypes and unlock order. Parent-slot `inherit`, whole-slot-map inheritance and same-hull slot aliases are resolved; wrong slot categories fail. Counts and broad roles are comparable; raw designer/legacy statistics are reported separately rather than asserted equal. Native designer behavior is not established by these source cases.
+
+PBL's retained IMV role uses the existing mod `imv1` compatibility technology and base technical armored-car equipment. Its La Resistance enabled/disabled source boundary must be recorded in the final integrated matrix; hard-coded DLC availability is not inferred merely from an authored technology definition. Legacy-owner BLK/OSE/SAP/FAT repairs and all four countries' logistics/resource worksheets remain separate pending integration. All61active countries having industry does not yet mean all 61starts have completed every DLC/native acceptance gate.
+
+## Reviewed capacity and personnel constraints
+
+The implementation now allocates NEW industry/resources only on owned-core states. YUK's two inherited KLG-core states keep their identities and receive no new industrial/resource allocations. DOR retains its 3 non-core MIL in 487, excludes them from usable startup capacity, and adds 3 core MIL:13 physical / 10 conservative usable core MIL. Known non-core-controller slot/factory/resource modifiers are source-recorded; the worksheets do not assume compliance rounding. Rail output retains all inherited edges and levels and emits only new edges, preserving higher-level infrastructure without relying on duplicate-row precedence.
+
+`policies.py` captures literal actual opening laws, ideas and relevant technology effects. FRU's 75% exports and 50% resource penalty remain; Al 4 / steel 6 industrial imports require 2 CIV under the read-only primary resource terms, matching the conservative allowance after rounded consumer goods. No free trade deal, new faction or actual delivered supply is assumed. UST's resource/consumer-goods/manpower penalties remain; its small remaining steel shortfall gets bounded core allocation because its conservative trade-CIV allowance is zero. Fuel income and replacement production now use these actual policies; full-activity import pressure and conservative reserve scenarios are reported separately.
+
+`personnel.py` reads actual selected OOBs, primary subunit/equipment personnel, retained core populations and opening laws/ideas. New starts must fit a 10% deployed-personnel replacement reserve. CSO uses3 four-battalion formations (13,380 total deployed including aircraft; 1,338 reserve against 15,000 pool), MST five-battalion formations and SLA four-battalion formations. No population or conscription-law grant is used. UST retains its 9 authored formations and 65 aircraft but fails this source budget because of its inherited combined negative conscription factors. That liability is explicitly exposed in the 69-country registry and [release checklist](WORLD_STARTS_ACCEPTANCE.md); it is not reduced to a native-pending note or a universal green claim. Existing conditional reform-route source bindings are checked, while natural access/pacing remains pending.
+
+The offline policy parser lists three unrelated installed country files using unsupported preprocessing syntax. None supplies an active/default idea in these fifty histories; any unresolved required policy fails closed. Relevant effective mod inputs are hash-checked offline, changed history policies require explicit recapture, and primary-reference runs recompute the actual policy/technical data.

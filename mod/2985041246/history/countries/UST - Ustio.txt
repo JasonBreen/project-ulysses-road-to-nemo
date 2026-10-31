@@ -1,3 +1,121 @@
+# Active-world foundation: provisional gameplay; tools/world_starts profiles, placements and primary worksheets.
+# BEGIN ACTIVE WORLD UNLOCKS
+if = {
+	limit = {
+		NOT = { has_dlc = "By Blood Alone" }
+		NOT = { has_dlc = "Man the Guns" }
+	}
+	set_technology = {
+		CAS1 = 1
+		aa_lmg = 1
+		basic_machine_tools = 1
+		basic_small_airframe = 1
+		basic_train = 1
+		construction1 = 1
+		early_bombs = 1
+		electronic_mechanical_engineering = 1
+		engines_1 = 1
+		fighter1 = 1
+		fuel_refining = 1
+		fuel_silos = 1
+		gw_artillery = 1
+		infantry_weapons = 1
+		infantry_weapons1 = 1
+		iw_small_airframe = 1
+		motorised_infantry = 1
+		tech_engineers = 1
+		tech_mountaineers = 1
+		tech_recon = 1
+		tech_support = 1
+	}
+}
+if = {
+	limit = {
+		has_dlc = "By Blood Alone"
+		NOT = { has_dlc = "Man the Guns" }
+	}
+	set_technology = {
+		aa_lmg = 1
+		basic_machine_tools = 1
+		basic_small_airframe = 1
+		basic_train = 1
+		construction1 = 1
+		early_bombs = 1
+		electronic_mechanical_engineering = 1
+		engines_1 = 1
+		engines_2 = 1
+		fuel_refining = 1
+		fuel_silos = 1
+		gw_artillery = 1
+		infantry_weapons = 1
+		infantry_weapons1 = 1
+		iw_small_airframe = 1
+		motorised_infantry = 1
+		tech_engineers = 1
+		tech_mountaineers = 1
+		tech_recon = 1
+		tech_support = 1
+	}
+}
+if = {
+	limit = {
+		NOT = { has_dlc = "By Blood Alone" }
+		has_dlc = "Man the Guns"
+	}
+	set_technology = {
+		CAS1 = 1
+		aa_lmg = 1
+		basic_machine_tools = 1
+		basic_small_airframe = 1
+		basic_train = 1
+		construction1 = 1
+		early_bombs = 1
+		electronic_mechanical_engineering = 1
+		engines_1 = 1
+		fighter1 = 1
+		fuel_refining = 1
+		fuel_silos = 1
+		gw_artillery = 1
+		infantry_weapons = 1
+		infantry_weapons1 = 1
+		iw_small_airframe = 1
+		motorised_infantry = 1
+		tech_engineers = 1
+		tech_mountaineers = 1
+		tech_recon = 1
+		tech_support = 1
+	}
+}
+if = {
+	limit = {
+		has_dlc = "By Blood Alone"
+		has_dlc = "Man the Guns"
+	}
+	set_technology = {
+		aa_lmg = 1
+		basic_machine_tools = 1
+		basic_small_airframe = 1
+		basic_train = 1
+		construction1 = 1
+		early_bombs = 1
+		electronic_mechanical_engineering = 1
+		engines_1 = 1
+		engines_2 = 1
+		fuel_refining = 1
+		fuel_silos = 1
+		gw_artillery = 1
+		infantry_weapons = 1
+		infantry_weapons1 = 1
+		iw_small_airframe = 1
+		motorised_infantry = 1
+		tech_engineers = 1
+		tech_mountaineers = 1
+		tech_recon = 1
+		tech_support = 1
+	}
+}
+# END ACTIVE WORLD UNLOCKS
+
 capital = 335
 
 set_research_slots = 3
@@ -129,8 +247,6 @@ if = {
 
 #OOB
 
-set_oob = "UST_land"
-
 if = {
 	limit = { has_dlc = "By Blood Alone" }
 	create_equipment_variant = {
@@ -153,9 +269,9 @@ if = {
 
 if = {
 	limit = { has_dlc = "By Blood Alone" }
-		set_air_oob = "UST_air_dlc"
+
 	else = {
-		set_air_oob = "UST_air"
+
 	}
 }
 
@@ -172,3 +288,82 @@ add_equipment_to_stockpile = {
 # New histories only; old saves are never reseeded.
 set_country_flag = ac_macro_history_eligible
 # END ECONOMY V2 NEW CAMPAIGN
+
+# BEGIN WORLD FOUNDATION
+# Active-world foundation: provisional gameplay; tools/world_starts profiles, placements and primary worksheets.
+set_country_flag = UST_ws_foundation
+set_convoys = 200
+starting_train_buffer = 1
+set_fuel_ratio = 1.0
+if = {
+	limit = { has_dlc = "By Blood Alone" }
+	create_equipment_variant = {
+		name = "UST Service Fighter"
+		type = small_plane_airframe_1
+		modules = {
+			fixed_main_weapon_slot = light_mg_4x
+			engine_type_slot = engine_2_1x
+		}
+	}
+	create_equipment_variant = {
+		name = "UST Service Support"
+		type = small_plane_cas_airframe_1
+		modules = {
+			fixed_main_weapon_slot = bomb_locks
+			engine_type_slot = engine_2_1x
+		}
+	}
+	add_equipment_to_stockpile = {
+		type = small_plane_airframe_1
+		amount = 13
+		producer = UST
+		variant_name = "UST Service Fighter"
+	}
+	add_equipment_to_stockpile = {
+		type = small_plane_cas_airframe_1
+		amount = 4
+		producer = UST
+		variant_name = "UST Service Support"
+	}
+	set_air_oob = "UST_ws_air_bba"
+	else = {
+		add_equipment_to_stockpile = {
+			type = fighter_equipment_1
+			amount = 13
+			producer = UST
+		}
+		add_equipment_to_stockpile = {
+			type = CAS_equipment_1
+			amount = 4
+			producer = UST
+		}
+		set_air_oob = "UST_ws_air"
+	}
+}
+set_oob = "UST_ws_land"
+add_equipment_to_stockpile = {
+	type = infantry_equipment_1
+	amount = 4000
+	producer = UST
+}
+add_equipment_to_stockpile = {
+	type = support_equipment_1
+	amount = 1200
+	producer = UST
+}
+add_equipment_to_stockpile = {
+	type = artillery_equipment_1
+	amount = 1200
+	producer = UST
+}
+add_equipment_to_stockpile = {
+	type = motorized_equipment_1
+	amount = 3200
+	producer = UST
+}
+add_equipment_to_stockpile = {
+	type = train_equipment_1
+	amount = 100
+	producer = UST
+}
+# END WORLD FOUNDATION

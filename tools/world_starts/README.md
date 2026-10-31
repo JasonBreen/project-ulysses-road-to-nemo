@@ -2,7 +2,7 @@
 
 This owner is being delivered in local slices. The current implemented slice is
 FCU/YUK/NPT, the 25 previously industry-empty active starts, and fifteen
-inherited-industry starts without a standing roster. The baseline inventory covers all 61 active histories, four BBA/MTG
+inherited-industry starts without a standing roster, and seven retained-army starts. The baseline inventory covers all 61 active histories, four BBA/MTG
 routes and FATO's extra human-Belka context. The original 25-country proposal remains frozen; delivered profiles record reviewed
 upward adjustments needed to replace actual combat and transport roles.
 PLH/state 171 and seven landless emergent histories receive no blanket start grant.
@@ -82,3 +82,7 @@ to promise unlimited all-force combat.
 
 Native testing remains paused. Static checks do not establish game parsing,
 fuel/convoy/supply throughput, AI growth, natural pacing or save/reload acceptance.
+
+Retained-army mode composes original cumulative units blocks without loading a second army. NSB armor roles have explicit additional source cases and narrow history-only unlocks; see the calibration ledger for the unresolved native/extra-DLC boundaries.
+
+`personnel.py --check` verifies the selected OOB report and exposes the preserved UST reinforcement debt. Universal sustainable-start acceptance remains false; see docs/WORLD_STARTS_ACCEPTANCE.md. `policies.py` captures actual starting laws/ideas and relevant technology effects; conservative core capacity and explicit import deficits replace raw-count/default-law assumptions.

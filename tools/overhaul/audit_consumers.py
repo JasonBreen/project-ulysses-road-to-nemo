@@ -290,19 +290,28 @@ class Audit:
                                                         consumer_family="decision_category" if category else "decision",
                                                         icon=scalar(get(node, "icon", "<engine default>"))))
                     continue
-                value = scalar(get(node, "icon", ""))
-                if isinstance(value, str) and value:
-                    prefixes = ("GFX_decision_category_", "GFX_decision_") if category else ("GFX_decision_",)
-                    rows.append(self.icon(value, rel, name, "decision_category" if category else "decision", prefixes))
-                elif not value:
-                    rows.append(self.icon("GFX_decision_category_generic" if category else "GFX_decision_unknown", rel, name, "decision_default"))
-                else:
-                    # Conditional icon blocks have runtime branches. Inspect all
-                    # scalar GFX candidates instead of assuming the first branch.
-                    for _, child in walk([["icon", "=", value]]):
-                        for key, candidate in fields(child):
-                            if key in ("icon", "value") and candidate.startswith("GFX_"):
-                                rows.append(self.icon(candidate, rel, name, "conditional_decision_icon"))
+                icons = [value for key, _, value in node if key.lower() == 'icon']
+                prefixes = ("GFX_decision_category_", "GFX_decision_") if category else ("GFX_decision_",)
+                fallback = "GFX_decision_category_generic" if category else "GFX_decision_unknown"
+                conditional = False; found = False; unconditional = False
+                for value in icons:
+                    value = scalar(value)
+                    if isinstance(value, str) and value:
+                        rows.append(self.icon(value, rel, name, "decision_category" if category else "decision", prefixes))
+                        found = True; unconditional = True
+                    elif isinstance(value, list):
+                        conditional = True
+                        # Repeated icon blocks use unprefixed `key` values.
+                        # Their trigger does not exempt a branch from coverage.
+                        for key, candidate in fields(value):
+                            if key in ("key", "icon", "value"):
+                                rows.append(self.icon(candidate, rel, name, "conditional_decision_icon", prefixes))
+                                found = True
+                # Logical trigger exhaustiveness is not established offline.
+                # Include the runtime default for conditional-only declarations,
+                # or an empty/malformed declaration with no usable candidate.
+                if not found or conditional and not unconditional:
+                    rows.append(self.icon(fallback, rel, name, "conditional_decision_default" if conditional else "decision_default"))
                 picture = scalar(get(node, "picture", ""))
                 if isinstance(picture, str) and picture:
                     rows.append(self.icon(picture, rel, name, "decision_picture", ("GFX_",)))

@@ -2,6 +2,7 @@
 from collections import Counter
 import hashlib
 import json
+import importlib.util
 from pathlib import Path
 import sys
 import tempfile
@@ -61,8 +62,9 @@ class DecisionUI(unittest.TestCase):
             title_end = int(get(get(title, "position"), "x")) + int(get(title, "maxWidth"))
             cost_x = int(get(get(cost, "position"), "x"))
             cost_end = cost_x + int(get(cost, "maxWidth"))
-            self.assertLess(title_end, cost_x)
-            self.assertEqual("56", get(get(node, "size"), "height"))
+            self.assertLess(int(get(get(title, "position"), "y")) + int(get(title, "maxHeight")),
+                            int(get(get(cost, "position"), "y")))
+            self.assertEqual("104", get(get(node, "size"), "height"))
             progress = controls["btn_progress_good"]
             self.assertLess(int(get(get(title, "position"), "y")) + int(get(title, "maxHeight")),
                             int(get(get(progress, "position"), "y")))
@@ -70,10 +72,64 @@ class DecisionUI(unittest.TestCase):
                 timer = controls["timer_text"]
                 self.assertLess(cost_end, int(get(get(timer, "position"), "x")))
             if "track_decision_checkbox" in controls:
-                self.assertLess(cost_end, int(get(get(controls["track_decision_checkbox"], "position"), "x")))
+                self.assertLess(title_end, int(get(get(controls["track_decision_checkbox"], "position"), "x")))
         for _, node in walk(self.tree):
             for field in ("font", "buttonFont"):
                 if get(node, field): self.assertIn(scalar(get(node, field)), ("ACBriefing16", "ACBriefing20"))
+
+    def test_actual_localized_titles_and_dynamic_country_state_names_fit(self):
+        spec = importlib.util.spec_from_file_location('decision_focus_metrics', ROOT / 'tools/Test-FocusScreenRepairs.py')
+        metrics = importlib.util.module_from_spec(spec); spec.loader.exec_module(metrics)
+        line_height, advances = metrics.font_metrics()
+        loc = {}
+        import re
+        for path in sorted((MOD / 'localisation/english').rglob('*.yml')):
+            loc.update(re.findall(r'^\s*([^\s:#]+):\d*\s+"((?:\\.|[^"\\])*)"', path.read_text(encoding='utf-8-sig'), re.M))
+        ideology = get(parse((MOD / 'common/ideologies/00_ideologies.txt').read_text(encoding='utf-8-sig')), 'ideologies')
+        groups = [key for key, _, _ in ideology]
+        country_keys = {tag + suffix for path in (MOD / 'history/countries').glob('*.txt') for tag in [path.name[:3]]
+                        for suffix in ['', '_DEF'] + ['_' + group + ending for group in groups for ending in ('', '_DEF')]}
+        state_keys = {scalar(get(get(parse(path.read_text(encoding='utf-8-sig')), 'state'), 'name'))
+                      for path in (MOD / 'history/states').glob('*.txt')}
+        names = [loc[key] for key in country_keys | state_keys if key in loc
+                 and '[' not in loc[key] and '$' not in loc[key] and '\\n' not in loc[key]]
+        self.assertGreater(len(names), 500)
+        title = named([['item', '=', named(self.tree, 'timed_decision_item')]], 'name_text')
+        width, height = int(get(title, 'maxWidth')), int(get(title, 'maxHeight'))
+        checked = set()
+        for path in (MOD / 'common/decisions').glob('*.txt'):
+            for _, _, group in parse(path.read_text(encoding='utf-8-sig')):
+                if not isinstance(group, list): continue
+                for ident, _, node in group:
+                    if not isinstance(node, list) or ident not in loc: continue
+                    # The shipped digits have unequal advances. Measure the
+                    # original 1991 case and every year through the retained
+                    # campaign ceiling rather than assuming 2020 is widest.
+                    texts = [loc[ident].replace('[GetYear]',str(year)) for year in range(1991,2066)] if '[GetYear]' in loc[ident] else [loc[ident]]
+                    variants = []
+                    for text in texts:
+                        text = text.replace('[FROM.GetMobilizationDivisionCount]', '9999')
+                        variants.extend([re.sub(r'\[FROM\.(?:owner\.)?Get(?:NameDef|Name|NonIdeologyName)\]', name, text) for name in names] if '[FROM.' in text else [text])
+                    for value in variants:
+                        self.assertNotIn('[', value, ident)
+                        lines = metrics.wrapped_lines(value, width, advances)
+                        self.assertLessEqual(len(lines)*line_height, height, (ident, value, lines))
+                        self.assertTrue(all(sum(advances.get(ord(c), 8) for c in line) <= width for line in lines), ident)
+                    checked.add(ident)
+        self.assertIn('OSE_award_research_grants_house_vote', checked)
+        self.assertIn('OSE_award_research_grants_senate_vote', checked)
+        self.assertGreaterEqual(len(checked), 250)
+
+    def test_filled_and_empty_timer_textures_remain_visually_distinct(self):
+        tree = parse((MOD / 'interface/countrydecisionview.gfx').read_text())
+        count = 0
+        for kind, node in walk(tree):
+            if kind.lower() != 'progressbartype': continue
+            filled, empty = [MOD / scalar(get(node, key)) for key in ('textureFile1', 'textureFile2')]
+            with Image.open(filled) as a, Image.open(empty) as b:
+                self.assertNotEqual(a.convert('RGBA').tobytes(), b.convert('RGBA').tobytes())
+            count += 1
+        self.assertEqual(2, count)
 
     def test_generated_files_are_reproducible(self):
         outputs, manifest = build(self.contract)
@@ -144,6 +200,28 @@ class EffectiveConsumers(unittest.TestCase):
         self.put(self.mod, "common/decisions/choices.txt", "category={choice={icon=unbound}}")
         screen = Audit(self.mod, self.engine).screen("countrydecisionview.gui", True)
         self.assertTrue(any("GFX_decision_unbound:missing_definition" in f for f in screen["failures"]))
+
+    def test_every_repeated_conditional_icon_key_enters_the_gate(self):
+        self.sprite(self.mod, 'GFX_panel')
+        self.sprite(self.mod, 'GFX_decision_first')
+        self.put(self.mod, 'interface/countrydecisionview.gui', 'guiTypes={containerWindowType={name="countrydecisionview" iconType={name="bg" spriteType="GFX_panel"}}}')
+        self.put(self.mod, 'common/decisions/choices.txt', 'category={choice={icon={key=first trigger={check_variable={var=control value=0 compare=equals}}} icon={key=missing trigger={always=no}} icon={key=GFX_explicit trigger={always=yes}}}}')
+        audit = Audit(self.mod, self.engine)
+        icons = audit.decision_consumers()
+        self.assertEqual({'GFX_decision_first', 'GFX_decision_missing', 'GFX_explicit', 'GFX_decision_unknown'}, {row['name'] for row in icons})
+        failures = audit.screen('countrydecisionview.gui', True)['failures']
+        self.assertTrue(any('GFX_decision_missing:missing_definition' in row for row in failures))
+        self.assertTrue(any('GFX_explicit:missing_definition' in row for row in failures))
+
+    def test_conditional_and_empty_icons_do_not_hide_runtime_defaults(self):
+        self.sprite(self.mod,'GFX_decision_first')
+        self.sprite(self.engine,'GFX_decision_unknown',path='gfx/engine_default.dds',filename='interface/default.gfx')
+        self.put(self.mod,'common/decisions/choices.txt', 'category={conditional={icon={key=first trigger={always=no}}} empty={icon=""} no_icon={}}')
+        audit=Audit(self.mod,self.engine);rows=audit.decision_consumers()
+        defaults=[row for row in rows if row['name']=='GFX_decision_unknown']
+        self.assertEqual({'conditional','empty','no_icon'},{row['owner'] for row in defaults})
+        self.assertTrue(all(row['status']=='engine_fallback' for row in defaults))
+        self.assertFalse(any(row['name'].endswith('_no') for row in rows))
 
     def test_cross_file_conflicts_fail_even_when_both_textures_are_local(self):
         self.sprite(self.mod, "GFX_same")

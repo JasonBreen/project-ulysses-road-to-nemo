@@ -205,7 +205,9 @@ def artwork(spec, texture):
         elif "flag" in name:
             d.rectangle((0, 0, fw-1, h-1), outline=color)
         elif "progress" in name:
-            fill = RED if "bad" in name else CYAN if "good" in name else MUTED
+            # textureFile1 is the completed portion; textureFile2 is the
+            # remainder. An opaque identical pair conceals every timer change.
+            fill = (RED if "bad" in name else CYAN) if texture['field'].lower().endswith('1') else MUTED
             d.rectangle((0, 0, fw-1, h-1), fill=fill)
         elif any(s in name for s in ("header_bg", "item_bg", "end_bg", "tiled", "scroll_track", "scrollbar_vertical_bg")):
             d.rectangle((0, 0, fw-1, h-1), fill=PANEL if "item" in name else NAVY)
@@ -250,7 +252,7 @@ def build(contract):
         if name == "decisionview_title":
             setv(node, "position", xy(24, 13)); setv(node, "maxHeight", "24")
         if name == "decision_grid_container":
-            setv(node, "vertical_scroll_step", "56")
+            setv(node, "vertical_scroll_step", "104")
         if name == "category_header":
             for _, child in walk([[kind, "=", node]]):
                 if scalar(get(child, "name")) == "name_text":
@@ -263,25 +265,25 @@ def build(contract):
                 if scalar(get(child, "name")) == "name_text":
                     setv(child, "maxWidth", "285")
         if name in ("decision_item", "timed_decision_item", "targeted_decision_item"):
-            setv(node, "size", [["width", "=", "100%"], ["height", "=", "56"]])
+            setv(node, "size", [["width", "=", "100%"], ["height", "=", "104"]])
             for _, child in walk([[kind, "=", node]]):
                 child_name = scalar(get(child, "name"))
                 if child_name == "name_text":
-                    setv(child, "position", xy(62, 6)); setv(child, "maxWidth", "220")
-                    setv(child, "maxHeight", "34")
+                    setv(child, "position", xy(62, 4)); setv(child, "maxWidth", "356")
+                    setv(child, "maxHeight", "54")
                 elif child_name == "cost_and_timer_text":
-                    setv(child, "position", xy(290, 12)); setv(child, "maxHeight", "28")
-                    setv(child, "maxWidth", "72" if name != "decision_item" else "128")
+                    setv(child, "position", xy(62, 62)); setv(child, "maxHeight", "22")
+                    setv(child, "maxWidth", "180")
                 elif child_name == "timer_text":
-                    setv(child, "position", xy(368, 12)); setv(child, "maxWidth", "50"); setv(child, "maxHeight", "28")
+                    setv(child, "position", xy(260, 62)); setv(child, "maxWidth", "130"); setv(child, "maxHeight", "22")
                 elif child_name == "track_decision_checkbox":
-                    setv(child, "position", xy(429, 14))
+                    setv(child, "position", xy(429, 18))
                 elif child_name == "btn_select":
-                    setv(child, "position", xy(464, 13))
+                    setv(child, "position", xy(464, 17))
                 elif child_name == "timer_icon":
-                    setv(child, "position", xy(480, 27))
+                    setv(child, "position", xy(480, 40))
                 elif child_name in ("btn_progress_good", "btn_progress_bad"):
-                    setv(child, "position", xy(9, 44))
+                    setv(child, "position", xy(9, 90))
         if name == "on_map_decision_locator_item":
             setv(node, "size", [["width", "=", "100%"], ["height", "=", "56"]])
     outputs = {"interface/countrydecisionview.gui":
@@ -291,7 +293,7 @@ def build(contract):
     for spec in specifications:
         if spec["name"] == "GFX_decision_item_bg":
             for texture in spec["textures"]:
-                texture["height"] = 56
+                texture["height"] = 104
     # Authored archive scripts contain these unresolved icon tokens. Keep the
     # gameplay scripts stable and give each runtime convention a real binding.
     for name in ("GFX_decision_mission_icon", "GFX_decision_xxx", "GFX_decision_XXX",

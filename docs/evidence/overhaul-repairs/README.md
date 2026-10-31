@@ -29,9 +29,9 @@ oversized inline prefixes were removed without shortening narrative prose.
 
 ## Verification boundary
 
-The retained `validation/static-results.json` records **27 passing check groups**
+The retained `validation/static-results.json` records **30 passing check groups**
 with their commands and logs. The focused suites include seven overview/fiscal/
-label regressions, twelve decision/dependency tests and nine focus-screen tests.
+label regressions, sixteen decision/dependency tests and nine focus-screen tests.
 The focus geometry check resolves 25 trees and 950 focus instances, with zero
 caption intersections after seven inherited placement repairs. All 883 currently
 localized focus IDs fit the measured three-line caption contract.
@@ -45,6 +45,22 @@ the broader consumer backlog and uninspected DLC archives remain explicit in
 
 The candidate payload is recorded by hash in `validation/candidate-payload.json`.
 It is a source candidate, not a copy installed or tested in HOI4.
+
+## PR32 review corrections
+
+The review payload distinguishes filled and remaining decision-progress artwork,
+inventories every repeated conditional icon key and the unproven runtime default,
+runs the four repair checks as independent CI steps, and expands decision rows
+to 104 pixels with 356×54 title bounds. Costs/timers sit beneath the title and
+progress beneath both. The regression measures all known decision names,
+literal country/state-name variations and year substitutions from 1991 through
+2065 with the actual shipped font advances. These corrections preserve the
+engine-bound controls and scrolling protocol.
+
+The refreshed effective decision gate resolves twelve conditional icon branches
+and three conservative conditional defaults to mod assets. The broader artwork,
+model, portrait and audio backlog remains separately reported, including all
+uninspected DLC archive limits. No in-game after screenshot is claimed.
 
 See also [the focus repair ledger](../../FOCUS_SCREEN_REPAIRS_20261031.md) and
 [the offline focus geometry/seam projection](../package0-focus/focus-geometry-and-seams.png).

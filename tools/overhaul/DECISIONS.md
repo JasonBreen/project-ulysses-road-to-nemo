@@ -22,7 +22,7 @@ python -B tools/Test-DecisionUI.py
 python -B tools/audit_visual_dependencies.py --strict-all
 ```
 
-Ordinary generation and all twelve focused tests need no installed game. The
+Ordinary generation and all sixteen focused tests need no installed game. The
 explicit developer-only `--capture-contract <engine>` command refreshes format
 metadata; it is not part of a normal reproducible build. Capture normalizes old
 `.lua` effect aliases to existing `.shader` services without copying their code.
@@ -30,8 +30,8 @@ metadata; it is not part of a normal reproducible build. Capture normalizes old
 All required decision, targeted/timed decision, report, category, collapse,
 tracking, popup-preference, custom-icon and map-locator control names remain.
 Escape and the engine's viewport-sized scrolling protocol remain. Decision rows
-reserve separate bounds for two-line titles, cost, timer, tracking and action;
-progress bars sit below the text. The missing inherited category separator is
+use 104-pixel rows with separate bounds for three-line titles (356×54), cost,
+timer, tracking and action; progress bars sit below the text. The missing inherited category separator is
 explicitly supplied. Fractional inherited strip widths are rounded up to complete
 integer frames in the authored sheets.
 
@@ -40,6 +40,31 @@ the engine's runtime icon family so engine-selected defaults cannot fall back
 to WWII artwork. It also binds inherited unresolved XXX/placeholder/mission
 tokens. These are original semantic briefing glyphs and compatibility defaults,
 not a claim that every old decision now has a unique finished illustration.
+
+## PR review corrections
+
+The PR32 review identified four concrete defects, corrected together with the
+generated output and regressions:
+
+- Filled and remaining progress textures were identical. Filled portions now
+  use cyan/red and the remaining portion uses the muted structural color; both
+  packaged pairs are checked for distinct decoded pixels.
+- Conditional icon inventory skipped repeated unprefixed `key` declarations.
+  Every top-level icon block/key now enters the appropriate prefix resolver.
+  Nested trigger values are excluded. Conditional-only or empty declarations
+  also inventory the runtime default when fallback coverage is not established.
+- A PowerShell workflow block could hide an earlier native-command failure.
+  Roadmap, overview repairs, decision UI and focus-screen checks now have
+  separate CI steps, each with its own exit status.
+- Existing research-grant vote titles clipped at the previous dimensions.
+  The title/cost/timer/progress layout now fits actual authored titles and
+  literal country/state-name variations. Font-advance checks cover the original
+  1991 text and every year through the retained 2065 ceiling, including the
+  distinguishing House/Senate vote suffixes.
+
+The installed-reference decision gate includes all twelve conditional icon
+consumers and three conditional defaults, all resolving to mod-local assets.
+This remains a loose-file dependency result, not native visual acceptance.
 
 ## Installed-reference dependency inventory
 

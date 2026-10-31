@@ -13,6 +13,7 @@ collide with an id that the diff does not contain.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -23,9 +24,17 @@ from pathlib import Path
 
 MARKER = "<!-- ulysses-pr-scan -->"
 MOD_PREFIX = "mod/2985041246/"
-ID_RE = re.compile(r"(?m)^\s*id\s*=\s*([A-Za-z0-9_.]+)\s*$")
 LOC_RE = re.compile(r"(?m)^\s*([A-Za-z0-9_.]+):\d*\s+\"")
 EVENT_LOC_RE = re.compile(r"(?m)^\s*(?:title|desc|name)\s*=\s*([A-Za-z0-9_.]+)\s*$")
+IDENT = re.compile(r"[A-Za-z_][A-Za-z0-9_.]*")
+FOCUS_BLOCKS = {"focus", "shared_focus"}
+EVENT_BLOCKS = {
+    "country_event",
+    "news_event",
+    "state_event",
+    "unit_leader_event",
+    "operative_leader_event",
+}
 
 
 @dataclass(frozen=True)
@@ -50,7 +59,11 @@ def brace_balance(text: str) -> int | None:
 
 
 def shadowed_else(text: str) -> list[int]:
-    """Flag else_if that follows else in the same block. MD reports this."""
+    """Flag else_if that follows else in the same block. MD reports this.
+
+    The marker stays when the else body closes and depth returns to it. It
+    drops when the containing scope closes, or when a new if starts there.
+    """
     hits: list[int] = []
     depth = 0
     else_depth: set[int] = set()
@@ -60,11 +73,94 @@ def shadowed_else(text: str) -> list[int]:
             else_depth.add(depth)
         elif re.match(r"else_if\s*=", code) and depth in else_depth:
             hits.append(line_number)
+        elif re.match(r"if\s*=", code):
+            else_depth.discard(depth)
         next_depth = depth + code.count("{") - code.count("}")
         if next_depth < depth:
-            else_depth = {item for item in else_depth if item < next_depth}
+            else_depth = {item for item in else_depth if item <= next_depth}
         depth = next_depth
     return hits
+
+
+def definition_ids(text: str, kind: str) -> list[tuple[int, str]]:
+    """Return ids of focus or event definitions, not nested id parameters.
+
+    An event definition is a top-level event block. A nested
+    `country_event = { id = ... }` effect is not one. Focus ids are direct
+    fields of `focus` and `shared_focus` blocks, so a power-balance or
+    province id inside a reward is not a focus id.
+    """
+    names = FOCUS_BLOCKS if kind == "focus" else EVENT_BLOCKS
+    cleaned = strip_comments(text)
+    depth = 0
+    active: set[int] = set()
+    found: list[tuple[int, str]] = []
+    index = 0
+    line = 1
+    length = len(cleaned)
+    while index < length:
+        char = cleaned[index]
+        if char == "\n":
+            line += 1
+            index += 1
+            continue
+        if char.isspace():
+            index += 1
+            continue
+        if char == '"':
+            index += 1
+            while index < length and cleaned[index] != '"':
+                if cleaned[index] == "\n":
+                    line += 1
+                index += 1
+            index = min(index + 1, length)
+            continue
+        if char == "{":
+            depth += 1
+            index += 1
+            continue
+        if char == "}":
+            depth -= 1
+            active = {item for item in active if item <= depth}
+            index += 1
+            continue
+        match = IDENT.match(cleaned, index)
+        if not match:
+            index += 1
+            continue
+        word = match.group(0)
+        word_line = line
+        cursor = match.end()
+        while cursor < length and cleaned[cursor].isspace():
+            if cleaned[cursor] == "\n":
+                line += 1
+            cursor += 1
+        if cursor >= length or cleaned[cursor] != "=":
+            index = match.end()
+            continue
+        cursor += 1
+        while cursor < length and cleaned[cursor].isspace():
+            if cleaned[cursor] == "\n":
+                line += 1
+            cursor += 1
+        if cursor < length and cleaned[cursor] == "{" and word in names:
+            depth += 1
+            if kind == "focus" or depth == 1:
+                active.add(depth)
+            index = cursor + 1
+            continue
+        if word == "id" and depth in active:
+            value = IDENT.match(cleaned, cursor)
+            if value:
+                found.append((word_line, value.group(0)))
+                index = value.end()
+                continue
+        if cursor < length and cleaned[cursor] != "{":
+            value = IDENT.match(cleaned, cursor)
+            index = value.end() if value else cursor
+            continue
+        index = cursor
+    return found
 
 
 def loc_index(mod: Path) -> set[str]:
@@ -87,11 +183,8 @@ def duplicate_ids(mod: Path, changed: set[str]) -> list[Finding]:
             continue
         for path in sorted(root.rglob("*.txt")):
             relative = path.relative_to(mod.parents[1]).as_posix()
-            for line_number, line in enumerate(path.read_text(encoding="utf-8-sig", errors="replace").splitlines(), 1):
-                match = ID_RE.match(re.sub(r"#.*", "", line))
-                if not match:
-                    continue
-                ident = match.group(1)
+            text = path.read_text(encoding="utf-8-sig", errors="replace")
+            for line_number, ident in definition_ids(text, kind):
                 key = (kind, ident)
                 if key in seen:
                     previous, previous_line = seen[key]
@@ -128,11 +221,9 @@ def scan_changed(mod: Path, repo: Path, changed: list[str]) -> list[Finding]:
                 if match and match.group(1) not in keys:
                     findings.append(Finding("error", relative, line_number, f"Missing localization key {match.group(1)}"))
         if "/national_focus/" in relative:
-            for line_number, raw in enumerate(text.splitlines(), 1):
-                match = ID_RE.match(re.sub(r"#.*", "", raw))
-                if not match or "." in match.group(1):
+            for line_number, ident in definition_ids(text, "focus"):
+                if "." in ident:
                     continue
-                ident = match.group(1)
                 for key in (ident, ident + "_desc"):
                     if key not in keys:
                         findings.append(Finding("error", relative, line_number, f"Missing localization key {key}"))
@@ -222,6 +313,10 @@ class ScanTests(unittest.TestCase):
         self.assertIsNotNone(brace_balance("a = {\n"))
         self.assertEqual([], shadowed_else("if = { limit = { always = yes }\nx = 1\n}\nelse_if = { limit = { always = no }\nx = 2\n}\nelse = { x = 3 }\n"))
         self.assertEqual([3], shadowed_else("if = { limit = { always = yes } x = 1 }\nelse = { x = 2 }\nelse_if = { limit = { always = no } x = 3 }\n"))
+        multiline = "if = {\n\tlimit = { always = yes }\n\tx = 1\n}\nelse = {\n\tx = 2\n}\nelse_if = {\n\tlimit = { always = no }\n\tx = 3\n}\n"
+        self.assertEqual([8], shadowed_else(multiline))
+        restarted = "if = {\n\tx = 1\n}\nelse = {\n\tx = 2\n}\nif = {\n\tx = 3\n}\nelse_if = {\n\tx = 4\n}\n"
+        self.assertEqual([], shadowed_else(restarted))
 
     def test_missing_key_and_bom(self) -> None:
         with tempfile.TemporaryDirectory() as folder:
@@ -242,6 +337,61 @@ class ScanTests(unittest.TestCase):
             self.assertTrue(any("UTF-8 BOM" in message for message in messages))
             self.assertTrue(any("sample.1.d" in message for message in messages))
             self.assertTrue(any("sample.1.a" in message for message in messages))
+
+    def test_definition_ids_ignore_nested_parameters(self) -> None:
+        event = "country_event = {\n\tid = sample.1\n\toption = {\n\t\tcountry_event = { id = sample.2 days = 7 }\n\t}\n}\nshared_focus = { id = INLINE_FOCUS x = 1 }\n"
+        self.assertEqual(["sample.1"], [ident for _, ident in definition_ids(event, "event")])
+        self.assertEqual(["INLINE_FOCUS"], [ident for _, ident in definition_ids(event, "focus")])
+        sap = Path(__file__).resolve().parents[1] / "mod" / "2985041246" / "common" / "national_focus" / "SAP_pre_belkan_war.txt"
+        idents = [ident for _, ident in definition_ids(sap.read_text(encoding="utf-8-sig"), "focus")]
+        self.assertIn("sap_1991_parliamentary_elections", idents)
+        self.assertNotIn("SAP_power_balance", idents)
+        geb = sap.with_name("GEB_pre_belkan_war.txt")
+        geb_ids = [ident for _, ident in definition_ids(geb.read_text(encoding="utf-8-sig"), "focus")]
+        self.assertIn("GEB_the_meike_line", geb_ids)
+        self.assertFalse(any(ident.isdigit() for ident in geb_ids))
+
+    def test_nested_focus_id_does_not_require_localization(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            repo = Path(folder)
+            mod = repo / "mod" / "2985041246"
+            focus_dir = mod / "common" / "national_focus"
+            focus_dir.mkdir(parents=True)
+            loc = mod / "localisation" / "english"
+            loc.mkdir(parents=True)
+            (focus_dir / "sample.txt").write_text(
+                "shared_focus = {\n\tid = REAL_FOCUS\n\tcompletion_reward = {\n\t\tadd_power_balance_value = { id = SAP_power_balance value = -0.05 }\n\t\tprovince = { id = 1835 }\n\t}\n}\n",
+                encoding="utf-8",
+            )
+            (loc / "sample_l_english.yml").write_bytes("\ufeffl_english:\n REAL_FOCUS:0 \"Title\"\n REAL_FOCUS_desc:0 \"Desc\"\n".encode("utf-8"))
+            relative = "mod/2985041246/common/national_focus/sample.txt"
+            messages = [item.message for item in scan_changed(mod, repo, [relative])]
+            self.assertFalse(any("SAP_power_balance" in message or "1835" in message for message in messages))
+
+    def test_duplicate_definition_is_still_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            repo = Path(folder)
+            mod = repo / "mod" / "2985041246"
+            focus_dir = mod / "common" / "national_focus"
+            focus_dir.mkdir(parents=True)
+            (focus_dir / "a.txt").write_text(
+                "shared_focus = {\n\tid = SAME\n\tcompletion_reward = {\n\t\tadd_power_balance_value = { id = SAP_power_balance }\n\t}\n}\n",
+                encoding="utf-8",
+            )
+            (focus_dir / "b.txt").write_text("shared_focus = {\n\tid = SAME\n}\n", encoding="utf-8")
+            changed = "mod/2985041246/common/national_focus/b.txt"
+            findings = duplicate_ids(mod, {changed})
+            self.assertTrue(any(item.message.startswith("Duplicate focus id SAME;") for item in findings))
+            self.assertFalse(any("SAP_power_balance" in item.message for item in findings))
+
+    def test_comment_pages(self) -> None:
+        from publish_pr_scan import load_comments
+
+        slurped = json.dumps([[{"body": "<!-- ulysses-pr-scan --> one"}], [{"body": "two"}]])
+        self.assertEqual(["<!-- ulysses-pr-scan --> one", "two"], [item["body"] for item in load_comments(slurped)])
+        separate = '[{"body": "a"}]\n[{"body": "b"}]'
+        self.assertEqual(["a", "b"], [item["body"] for item in load_comments(separate)])
+        self.assertEqual([], load_comments(""))
 
 
 def main() -> int:

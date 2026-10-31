@@ -69,9 +69,15 @@ class UseanRebellion(unittest.TestCase):
         for path in ISOLATED:
             self.assertNotIn("ac_ur_", read(path), path)
         opening = read("common/national_focus/FCU_opening.txt")
+        tree = read("common/national_focus/ac_usean_rebellion.txt")
         for focus in FOCUSES:
             self.assertIn(f"shared_focus = {focus}", opening)
-            self.assertEqual(1, len(re.findall(rf"(?m)^\s*id\s*=\s*{focus}\s*$", read("common/national_focus/ac_usean_rebellion.txt"))))
+            self.assertEqual(1, len(re.findall(rf"(?m)^\s*id\s*=\s*{focus}\s*$", tree)))
+        assessment = re.search(r"id = FCU_ur_assessment\b(.*)", tree, re.S)
+        self.assertIsNotNone(assessment)
+        blocks = re.findall(r"prerequisite\s*=\s*\{([^{}]*)\}", assessment.group(1))
+        self.assertEqual(1, len(blocks))
+        self.assertEqual(["FCU_ur_stand_down", "FCU_ur_keep_mobilized"], re.findall(r"focus = (\w+)", blocks[0]))
 
     def test_events_and_localization(self) -> None:
         events = read("events/ac_usean_rebellion.txt")
@@ -106,9 +112,13 @@ class UseanRebellion(unittest.TestCase):
 
 
 def main() -> None:
+    global MOD
     parser = argparse.ArgumentParser()
     parser.add_argument("--mod-root", default="")
-    unittest.main(argv=["Test-UseanRebellion"])
+    args, remaining = parser.parse_known_args()
+    if args.mod_root:
+        MOD = Path(args.mod_root)
+    unittest.main(argv=["Test-UseanRebellion", *remaining])
 
 
 if __name__ == "__main__":

@@ -56,14 +56,53 @@ def build():
                     setv(child,'position',xy(222,102));setv(child,'maxWidth','350');setv(child,'maxHeight','100')
                 elif name in ('start','stop'):setv(child,'position',xy(450,55))
         if get(node,'name') in ('"national_focus_item"','"continuous_national_focus_item"'):
+            continuous=get(node,'name')=='"continuous_national_focus_item"'
+            setv(node,'size',size(180 if continuous else 165,164 if continuous else 144))
             for _,child in walk(node):
                 if get(child,'name')=='"name"':
-                    setv(child,'font','"ACBriefing16"');setv(child,'maxHeight','40')
-                    setv(child,'position',xy(15,44))
-                if get(node,'name')=='"continuous_national_focus_item"' and get(child,'name')=='"symbol"':
-                    setv(child,'position',xy(40,-40))
-                elif get(node,'name')=='"national_focus_item"' and get(child,'name')=='"symbol"':
-                    setv(child,'position',xy(5,-56))
+                    # The shipped font has an 18px line height: three lines need 54px.
+                    setv(child,'font','"ACBriefing16"');setv(child,'maxHeight','54')
+                    setv(child,'position',xy(15,100 if continuous else 44))
+                if continuous and get(child,'name')=='"symbol"':
+                    setv(child,'position',xy(40,0))
+                elif not continuous and get(child,'name')=='"symbol"':
+                    #144/2-80-96/2=-56: the96px icon ends at40,
+                    #where the64px caption frame begins. Grid padding below
+                    #keeps the first icon clear of the screen header.
+                    setv(child,'position',xy(5,-80))
+                elif continuous and get(child,'name')=='"bg"':
+                    setv(child,'position',xy(5,96))
+                elif continuous and get(child,'name')=='"pol_power_icon"':
+                    setv(child,'position',xy(142,3))
+                elif continuous and get(child,'name')=='"focus_cost"':
+                    setv(child,'position',xy(140,26));setv(child,'maxWidth','32')
+                elif not continuous and get(child,'name')=='"historical"':
+                    setv(child,'position',xy(-12,-40))
+                elif not continuous and get(child,'name')=='"viewing_flag"':
+                    setv(child,'position',xy(130,-40))
+                elif not continuous and get(child,'name')=='"viewing_flag_border"':
+                    setv(child,'position',xy(125,-45))
+        if get(node,'name')=='"focus_spacing"':setv(node,'position',xy(96,160))
+        if get(node,'name')=='"grid_window"':
+            for child_kind,_,child in node:
+                if child_kind.lower()=='gridboxtype' and isinstance(child,list) and get(child,'name')=='"grid"':
+                    setv(child,'position',xy(50,66))
+        if get(node,'name') in ('"exclusive_offset"','"exclusive_offset_left"'):
+            #28px item offset +(-28)px route offset +16px marker centre
+            #places exclusions at16px, clear of the44–98px caption band.
+            setv(get(node,'position'),'y','-28')
+        if get(node,'name')=='"continuous_focus_window"':
+            setv(node,'size',size(770,456))
+            for _,child in walk(node):
+                name=get(child,'name','').strip('"')
+                if name=='continuous_focus_title':setv(child,'maxHeight','24')
+                elif name=='continuous_focus_desc':
+                    setv(child,'position',xy(23,48));setv(child,'maxHeight','36')
+                elif name=='continuous_focus_progress':setv(child,'maxHeight','24')
+                elif name=='entries':
+                    setv(child,'position',xy(13,88));setv(child,'size',size(744,352))
+                elif name=='list':
+                    setv(child,'position',xy(16,8));setv(child,'slotsize',size(180,172))
     return '# ACES briefing interface; 1.19.4 engine control contract, original presentation.\n'+render(tree)+'\n'
 
 

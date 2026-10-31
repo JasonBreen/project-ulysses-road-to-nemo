@@ -4,9 +4,10 @@ This candidate composes repair/privacy PR #32, World Foundation PR #33, the
 shared economy/institutions PR #34 and partner-programme PR #35 with the six
 original squadron campaigns and complete artwork. The story component is
 `ee8104e8027908b81aed54343ccf8fdd090650a1`; its integrated runtime payload was
-tested at `83edac9`. The later prerequisite merge adds review documentation,
-offline economy reconstructions and CI checks without changing delivered mod
-bytes. The retained [results.json](results.json) identifies the tested payload
+originally tested at `83edac9`. The current follow-up includes the shared
+integer-ratio operand correction and the documented air-experience modifier
+binding for the debrief spirit. The retained [results.json](results.json)
+identifies the updated source checkpoint and the tested payload
 with its sorted-path/raw-byte SHA-256.
 
 Reproduce from the repository root with Python 3.12, Pillow 11.3.0, numpy 2.2.6

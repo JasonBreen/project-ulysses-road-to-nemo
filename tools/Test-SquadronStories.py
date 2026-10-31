@@ -726,8 +726,21 @@ class Stories(unittest.TestCase):
                         self.assertTrue(body[0][0].startswith('ac_sq_'))
         effects = (MOD / 'common/scripted_effects/ac_squadrons.txt').read_text()
         self.assertNotRegex(effects, r'(?:set|clr)_global_flag|declare_war_on|transfer_state|add_to_faction|add_equipment|add_building|load_oob|recruit_character')
-        ideas = (MOD / 'common/ideas/ac_squadrons.txt').read_text()
-        self.assertIn('air_experience_gain_factor = 0.02', ideas)
+        contracts = json.loads((ROOT / 'tools/squadrons/engine_contracts.json').read_text())
+        idea_groups = mapping(load('common/ideas/ac_squadrons.txt'))['ideas']
+        debrief = mapping(mapping(idea_groups)['country'])['ac_sq_professional_debrief']
+        self.assertEqual('no', mapping(mapping(debrief)['allowed_civil_war'])['always'])
+        certified = contracts['country_idea_modifiers']
+        self.assertTrue(contracts['sources'])
+        seen = []
+        for _, country_ideas in walk(load('common/ideas/ac_squadrons.txt')):
+            for key, _, value in country_ideas:
+                if key == 'modifier':
+                    for modifier, _, amount in value:
+                        seen.append(modifier)
+                        self.assertIn(modifier, certified, 'Uncertified engine modifier in story reward')
+                        self.assertEqual('0.02', amount)
+        self.assertEqual(1, len(seen))
         self.assertNotIn('air_experience =', effects)
 
 

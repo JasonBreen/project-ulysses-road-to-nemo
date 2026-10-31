@@ -137,6 +137,13 @@ Decimal offline conservation is not proof of HOI4 arithmetic. An approved native
 probe must cover the largest 2020 economy, smallest country's payment, long-run
 prices, negative growth and rounding/remainder behavior before release acceptance.
 
+Sub-thousandth allowance/policy coefficients use integer ratios, avoiding a tiny
+literal that could be lost before it multiplies a scaled base. Operand-only
+three-decimal stress regressions exercise the actual source and preserve the
+nonzero fee and receipt reversal. They do not establish native intermediate
+precision; an annual amount lost after division still cannot be recovered by a
+later residual carry.
+
 ## Physical economy, occupation and releases
 
 Persistent real productive value belongs to a state. Pure forecasts aggregate

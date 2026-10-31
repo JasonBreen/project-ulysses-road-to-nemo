@@ -66,9 +66,9 @@ Final source checks use Python 3.12, Pillow 11.3.0 and numpy 2.2.6:
 |---|---|
 | Macro source suite | 27 passed, including exact warning/correction/recovery boundaries and duplicate-callback protection. |
 | Settled-ledger source suite | 14 passed, including monetary carry, history and five-page geometry. |
-| Observable force-upkeep suite | 8 passed, including installed primary contract hashes. |
+| Observable force-upkeep suite | 9 passed, including installed primary contract hashes and coarse-literal stress. |
 | Institutions source suite | 20 passed, including real cloned-tag weekly dispatch. |
-| Shared real-owner suite | 4 passed. |
+| Shared real-owner suite | 5 passed, including policy-fee operand stress. |
 | Retained experimental economy suite | 27 passed. |
 | Factions with installed reference | 35 passed, no skips. |
 | Full `Test-UlyssesStatic.ps1` with installed 1.19.4.1 read-only reference | Passed. Map errors 0; one placeholder-owned state and 204 placeholder strategic regions retained. Reference warnings 2006 and technology warnings 1 remain; no warning-free claim. |
@@ -150,8 +150,8 @@ stability, execution order and performance still requiring engine acceptance.
 
 ## Final follow-up source checks
 
-The final ledger/upkeep/state-receipt candidate passed 27 macro, 14 ledger,
-8 force-upkeep, 20 institution, 4 real-owner integration, 27 retained economy,
+The final ledger/upkeep/state-receipt and operand candidate passed 27 macro, 14 ledger,
+9 force-upkeep, 20 institution, 5 real-owner integration, 27 retained economy,
 35 faction and 8 interface tests. Force/faction provenance checks used the
 installed engine only as a read-only script reference. Macro and Anea generated
 outputs plus the authored asset audit `--strict-all` passed. A fresh full
@@ -159,9 +159,11 @@ outputs plus the authored asset audit `--strict-all` passed. A fresh full
 after the state-receipt changes: map errors 0, retained placeholder warnings 2,
 reference warnings 2006 and technology warnings 1. The retained `results.json`
 records each executed command and its source-only coverage.
-The retained run tests source commit `8a96ff014412d4ca713ddad99168aa16b48d5485`.
-The subsequent review commit adds evidence and the explicitly labeled offline
-screen reconstruction; it does not change the delivered economy or institutions.
+The current retained run tests source commit `dd17c754f6bf4103ece706fe5881ad1027c341a1`,
+including the operand correction described below. The earlier `8a96ff0` checkpoint
+and its results remain in Git history. The subsequent review commit refreshes
+evidence and the explicitly labeled offline screen reconstruction; it does not
+change delivered runtime scripts.
 
 The selected-screen consumer dependency audit also passes for
 `ac_macro_economy.gui` against the installed loose-file reference. This establishes
@@ -170,6 +172,18 @@ anti-vanilla gate. DLC archives and the global unresolved dependency backlog
 remain separate acceptance work.
 
 ## Native limits
+
+A subsequent operand review replaces the 0.0005 infantry allowance coefficient
+and the civic/district policy coefficients with equivalent integer ratios. Early
+scaling of a base cannot recover a coefficient already lost during literal
+resolution. Two actual-source stress regressions restrict numeric literals to
+three decimal places while preserving the interpreter's variable arithmetic;
+the infantry allowance and both policy fees remain nonzero, and exact receipt
+reversal still holds. This is an operand-only robustness check, **not** a model
+or observation of HOI4's actual parsing, intermediate rounding or range.
+Force-upkeep now has nine cases and real shared-owner integration five.
+Amounts lost after a native division and very small annual commitments remain
+part of the existing native arithmetic acceptance probes.
 
 The interpreters use Decimal/ordinal-date models. They do not prove HOI4 fixed
 point precision, dynamic-variable observations, native save inheritance,

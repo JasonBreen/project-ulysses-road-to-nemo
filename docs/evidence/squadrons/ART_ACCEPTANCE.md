@@ -23,8 +23,9 @@ python -B tools/audit_visual_dependencies.py --strict-all
 | Narrative scenes | 48 | 48 event cards | 200×160 |
 | Independent loading compositions | 6 | Six full screens and six picker images | 1920×1080 and 192×144 |
 | Story categories | Procedural sources using established flags | 6 | 100×100 |
+| Dispatch, archive and cast actions | Original procedural action motifs using established flags | 24 | 26×29 |
 | Professional debrief spirit | Original procedural source | 1 | 75×75 |
-| **Total** | **78 image masters** | **115 DDS textures / 109 sprite definitions** | One frame each |
+| **Total** | **78 image masters** | **139 DDS textures / 133 sprite definitions** | One frame each |
 
 The asset manifest records frame sizes, alpha extrema, source hash, provenance,
 sprite binding and all 120 chapter-to-scene assignments. All full illustrations
@@ -56,8 +57,16 @@ or annotation is added.
 
 ## Checks and limits
 
-The full package rebuilt successfully after the framing correction. All eight
-artwork checks passed: all 78 provenance records, all 115 texture hashes and
+The full package rebuilt successfully after the framing correction and the
+decision-consumer repair. The stronger engine-dependency audit caught one
+unresolved generic icon binding used by all 162 story rows. Twenty-four small
+read/archive, pause, resume and cast motifs now provide explicit owned bindings.
+The artwork test resolves every unprefixed decision icon through the engine's
+`GFX_decision_` convention and compares its dimensions with the independently
+recorded row aperture. Review [decision-icons-contact-sheet.png](decision-icons-contact-sheet.png)
+at actual size and two-times magnification.
+
+All eight artwork checks passed: all 78 provenance records, all 139 texture hashes and
 frame/alpha bounds, all story consumers, chapter mapping, independent loading
 bindings, exclusion from national leader bindings, sprite uniqueness and
 byte-reproducible packaging/galleries. The separate runtime runner passed all

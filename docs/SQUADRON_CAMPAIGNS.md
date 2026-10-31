@@ -112,9 +112,12 @@ screens are separately composed sources, not enlarged event crops. Individual
 records preserve corrective image edits and the source masters stay in the
 repository rather than depending on a generator cache.
 
-Packaging produces 115 DDS textures:24 portraits at 156×210,24 cast event cards and
+Packaging produces 139 DDS textures:24 portraits at 156×210,24 cast event cards and
 48 scene cards at 200×160, six 1920×1080 loading screens and their 192×144 picker
-thumbnails, six 100×100 category icons and one 75×75 spirit icon. All use deliberate
+thumbnails, six 100×100 category icons,24 decision-row action icons at 26×29 and
+one 75×75 spirit icon. The action icons have standard `GFX_decision_` bindings;
+every unprefixed row consumer is checked, including archive and cast actions.
+All use deliberate
 single frames. Images use opaque navy containment to retain entire heads and
 scenes; the category/spirit silhouettes retain transparent outer corners.
 The assets manifest records dimensions, frames, alpha requirements, bindings,

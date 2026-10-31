@@ -126,6 +126,32 @@ def insignia(tag):
     return image, flag_path
 
 
+def decision_icon(tag, action):
+    """Match the shipped26×29 decision-row aperture, with clear action motifs."""
+    image = Image.new('RGBA', (52, 58))
+    draw = ImageDraw.Draw(image)
+    draw.rounded_rectangle((4, 3, 47, 54), radius=8, fill=NAVY, outline=CYAN, width=2)
+    if action == 'read':
+        draw.rectangle((13, 8, 39, 42), outline=WHITE, width=2)
+        for y, end in ((17, 33), (24, 31), (31, 35)):
+            draw.line((19, y, end, y), fill=CYAN, width=2)
+    elif action == 'pause':
+        draw.rectangle((14, 11, 22, 40), fill=WHITE)
+        draw.rectangle((30, 11, 38, 40), fill=WHITE)
+    elif action == 'resume':
+        draw.polygon(((16, 10), (16, 41), (39, 25)), fill=WHITE)
+    elif action == 'cast':
+        draw.ellipse((20, 8, 32, 20), outline=WHITE, width=2)
+        draw.arc((10, 21, 42, 53), 180, 360, fill=WHITE, width=3)
+        draw.line((10, 36, 42, 36), fill=CYAN, width=2)
+    else:
+        raise ValueError('Unknown story action motif: ' + action)
+    flag = MOD / 'gfx/flags' / (tag + '.tga')
+    with Image.open(flag) as source:
+        image.alpha_composite(ImageOps.fit(source.convert('RGBA'), (24, 8), method=Image.Resampling.LANCZOS), (14, 44))
+    return image.resize((26, 29), Image.Resampling.LANCZOS), flag
+
+
 def package(ready):
     for row in ready:
         ident, tag = row['id'], row['tag'].lower()
@@ -150,6 +176,14 @@ def package(ready):
                 'GFX_ac_sq_category_' + row['tag'].lower(), 'original story-category frame using established national flag',
                 national_flag=flag.relative_to(MOD).as_posix(), national_flag_sha256=digest(flag.read_bytes()),
                 editable_geometry='tools/squadrons/build_art.py:insignia')
+        for action in ('read', 'pause', 'resume', 'cast'):
+            image, flag = decision_icon(row['tag'], action)
+            texture(f'gfx/AC_squadrons/decisions/{row["tag"].lower()}_{action}.dds', image,
+                    'GFX_decision_ac_sq_' + row['tag'].lower() + '_' + action,
+                    'original squadron decision-row action motif using established national flag',
+                    tag=row['tag'], action=action, national_flag=flag.relative_to(MOD).as_posix(),
+                    national_flag_sha256=digest(flag.read_bytes()),
+                    editable_geometry='tools/squadrons/build_art.py:decision_icon')
     image = Image.new('RGBA', (75, 75))
     draw = ImageDraw.Draw(image)
     draw.polygon(((8, 6), (67, 6), (69, 60), (37, 72), (6, 60)), fill=NAVY, outline=CYAN, width=2)
@@ -177,6 +211,18 @@ def galleries(ready, missing):
     font = ImageFont.truetype(str(FONT), 16)
     small = ImageFont.truetype(str(FONT), 13)
     cast = {p['id']: p for r in campaigns(False) for p in r['cast']}
+    actions = [row for row in ASSETS if '/decisions/' in row['file']]
+    if actions:
+        sheet = Image.new('RGBA', (960, 480), NAVY)
+        draw = ImageDraw.Draw(sheet)
+        for index, row in enumerate(actions):
+            x, y = index % 6 * 160, index // 6 * 120
+            with Image.open(io.BytesIO(OUTPUTS[MOD / row['file']])) as icon:
+                sheet.alpha_composite(icon.resize((52, 58), Image.Resampling.NEAREST), (x + 15, y + 8))
+                sheet.alpha_composite(icon.convert('RGBA'), (x + 105, y + 24))
+            draw.text((x + 8, y + 79), row['tag'] + ' | ' + row['action'], font=small, fill=WHITE)
+            draw.text((x + 8, y + 98), '2x preview / actual26x29', font=small, fill=CYAN)
+        put(EVIDENCE / 'decision-icons-contact-sheet.png', encoded(sheet, 'PNG'))
     for family, columns, cell in (('portraits', 6, (192, 270)), ('scenes', 4, (300, 211)), ('loading', 2, (576, 366))):
         rows = [r for r in ready if r['family'] == family]
         if not rows:

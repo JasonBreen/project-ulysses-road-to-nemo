@@ -276,28 +276,28 @@ def build():
         final_ready = 'check_variable = { ac_sq_chapter = 20 } NOT = { has_country_flag = ac_sq_ending_pending }'
         ready.append(block('AND', final_ready))
         triggers += block(prefix + '_next_ready', 'ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } NOT = { has_country_flag = ac_sq_cooldown }\n' + block('OR', ''.join(ready)))
-        rows += block(prefix + '_read', 'icon = generic_political_actions\ncost = 0\n' +
+        rows += block(prefix + '_read', 'icon = ' + prefix + '_read\ncost = 0\n' +
                       block('visible', 'ac_sq_active = yes has_country_flag = ac_sq_paused') +
                       block('available', prefix + '_next_ready = yes') +
                       block('complete_effect', prefix + '_repair_pending = yes\n' + prefix + '_dispatch = yes\n' + prefix + '_finish = yes\n'))
         loc(prefix + '_read', 'Read the next eligible dispatch')
         loc(prefix + '_read_desc', 'File expired scenes without applying their choices, then open the next scene eligible at the current date. A pending dispatch or the thirty-day reading interval must finish first.')
-        rows += block(prefix + '_pause', 'icon = generic_political_actions\n' + block('visible', 'ac_sq_active = yes NOT = { has_country_flag = ac_sq_paused }') +
+        rows += block(prefix + '_pause', 'icon = ' + prefix + '_pause\n' + block('visible', 'ac_sq_active = yes NOT = { has_country_flag = ac_sq_paused }') +
                       'cost = 0\n' + block('complete_effect', 'set_country_flag = ac_sq_paused\n'))
         loc(prefix + '_pause', 'Pause automatic dispatches'); loc(prefix + '_pause_desc', LOC['ac_sq_pause_desc'])
-        rows += block(prefix + '_resume', 'icon = generic_political_actions\n' + block('visible', 'ac_sq_active = yes has_country_flag = ac_sq_paused') +
+        rows += block(prefix + '_resume', 'icon = ' + prefix + '_resume\n' + block('visible', 'ac_sq_active = yes has_country_flag = ac_sq_paused') +
                       'cost = 0\n' + block('complete_effect', 'clr_country_flag = ac_sq_paused\n'))
         loc(prefix + '_resume', 'Resume automatic dispatches'); loc(prefix + '_resume_desc', LOC['ac_sq_resume_desc'])
         for chapter in row['chapters']:
             key = prefix + '_archive_' + str(chapter['id'])
             loc(key, str(chapter['id']).zfill(2) + ' | ' + chapter['title']); loc(key + '_desc', 'Read the scene without replaying its choice or rewards.')
-            rows += block(key, 'icon = generic_political_actions\ncost = 0\n' +
+            rows += block(key, 'icon = ' + prefix + '_read\ncost = 0\n' +
                           block('visible', 'has_country_flag = ' + flag(row, 'chapter_' + str(chapter['id']))) +
                           block('complete_effect', 'country_event = { id = ac_sq.' + str(row['base'] + 10000 + chapter['id']) + ' days = 0 }\n'))
         for index, person in enumerate(row['cast']):
             key = prefix + '_cast_' + person['id']
             loc(key, person['name']); loc(key + '_desc', person['role'] + '\n\n' + person['bio'])
-            rows += block(key, 'icon = generic_political_actions\ncost = 0\n' + block('visible', 'has_country_flag = ac_sq_initialized') +
+            rows += block(key, 'icon = ' + prefix + '_cast\ncost = 0\n' + block('visible', 'has_country_flag = ac_sq_initialized') +
                           block('complete_effect', 'country_event = { id = ac_sq.' + str(row['base'] + 50 + index) + ' days = 0 }\n'))
         decisions += block(prefix, rows)
         event_text += events(row)

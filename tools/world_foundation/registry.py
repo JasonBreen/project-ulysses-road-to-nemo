@@ -4,7 +4,7 @@
 explicit report path; the default command prints only its aggregate summary.
 """
 import argparse
-from collections import Counter
+from collections import Counter, defaultdict
 import hashlib
 import json
 from pathlib import Path
@@ -31,6 +31,23 @@ def input_path_order(path, root=MOD):
 
 def inspect():
     inputs = set()
+    support_inputs = {}
+
+    def support_profile(relative, collection=None):
+        path = ROOT / relative
+        if not path.exists():
+            return {}
+        raw = path.read_bytes().replace(b'\r\n', b'\n')
+        support_inputs[relative] = hashlib.sha256(raw).hexdigest()
+        data = json.loads(raw)
+        return data if collection == 'object' else {row['tag']: row for row in (data[collection] if collection else data)}
+
+    fiscal_profiles = support_profile('tools/economy_v2/profiles.json', 'profiles')
+    political_profiles = support_profile('tools/institutions/profiles.json')
+    capital_profiles = support_profile('tools/world_capitals/placements.json', 'object').get('countries', {})
+    for name, profiles in [('fiscal', fiscal_profiles), ('political', political_profiles)]:
+        if profiles and len(profiles) != 69:
+            raise ValueError('The integrated ' + name + ' registry must cover all69 histories')
 
     def read(path):
         inputs.add(path)
@@ -62,6 +79,14 @@ def inspect():
             characters[ident] = [ideology_group.get(get(role, "ideology", "").strip('"'))
                                 for k, _, role in body if k == "country_leader"
                                 and get(role, "expire", '"2066.1.1"').strip('"') > "1991.1.1"]
+    participant_declarations = defaultdict(list)
+    for path in sorted((MOD / 'common/scripted_triggers').glob('*.txt')):
+        for key, _, body in read(path):
+            if not isinstance(body, list) or not key.endswith(('_participant', '_host')):
+                continue
+            tags = {value for field, _, value in nodes(body) if field in ('tag', 'original_tag') and isinstance(value, str)}
+            for tag in tags:
+                participant_declarations[tag].append(dict(trigger=key, source=path.relative_to(MOD).as_posix()))
     rows = []
     covered = set(json.loads((HERE / "profiles.json").read_text())["countries"])
     for path in sorted((MOD / "history/countries").glob("*.txt")):
@@ -123,8 +148,23 @@ def inspect():
             status = "authored_foundation_native_acceptance_pending"
         else:
             status = "inherited_source_checks_pass_native_acceptance_pending"
+        political = political_profiles.get(tag)
+        fiscal = fiscal_profiles.get(tag)
+        office = bool(active) and all(ident.endswith('_ac_government_office') for ident in active)
         rows.append({"tag": tag, "name": path.stem.split(" - ", 1)[-1], "history": path.relative_to(MOD).as_posix(),
             "support_status": status, "native_acceptance": "not established by this source registry",
+            "start_classification": 'placeholder' if tag == 'PLH' or 171 in owned else 'active' if owned else 'emergent',
+            "classification_note": 'Landless inherited histories require their legitimate release/setup contract; no retroactive start grant is implied.',
+            "capital_source_layer": 'approved provisional capital district' if tag in capital_profiles or tag == 'EVA' else 'inherited mod mapping; no new official city assertion',
+            "leader_representation": dict(kind='government office' if office else 'named inherited individual' if active else 'legacy or unresolved',
+                characters=active, term_source='approved provisional 1991 term' if 'FCU_robert_sinclair' in active else 'inherited or office representation; official term not newly certified'),
+            "political_institution": ({key: political[key] for key in ('institution', 'capacity', 'source_layer', 'reference', 'status')} if political else {'status': 'owner profile not integrated'}),
+            "fiscal_profile": ({key: fiscal[key] for key in ('gdp_billion', 'debt_ratio', 'collection', 'growth', 'inflation', 'source_layer', 'calibration')} if fiscal else {'status': 'owner profile not integrated'}),
+            "tree_assignment": dict(country_aligned_definitions=focus_counts[tag],
+                regional_fallback=bool(political and political['regional_tree']),
+                note='Definition inventory plus integrated fallback profile; actual selection/imports are tested by their owning tree suite.'),
+            "regional_contracts": sorted(participant_declarations[tag], key=lambda row: (row['source'], row['trigger'])),
+            "diplomatic_eligibility": 'Runtime partner eligibility belongs to the listed regional/public owners; existence, war, subject and capitulation conditions are not replaced by this source registry.',
             "owned_states": sorted(owned), "province_count": len(owned_provinces),
             "inherited_manpower_total_not_canon_population": sum(int(get(s["body"], "manpower", "0")) for s in owned.values()),
             "capital_state": capital, "capital_current_owner": states.get(capital, {}).get("owner"),
@@ -133,6 +173,7 @@ def inspect():
             "intersecting_rail_path_count": sum(any(p in owned_provinces for p in route) for route in rails),
             "tag_prefixed_focus_definitions": focus_counts[tag],
             "recruited_active_party_leaders": active, "history_roster_references": roster_refs,
+            "technology_inventory_all_history_branches": sorted({tech for key, _, value in nodes(history) if key == 'set_technology' and isinstance(value, list) for tech, _, _ in value}),
             "missing_roster_files": missing, "roster_offline_parser_errors": parse_errors, "initial_production_assignments": dict(sorted(production.items())),
             "source_checks": checks, "source_gaps": issues,
             "scope_note": "Direct history/OOB source inspection only. Event-driven forces and native AI, supply reach, engine parsing and balance are separate acceptance."})
@@ -145,7 +186,9 @@ def inspect():
     digest = hashlib.sha256()
     for path in sorted(inputs, key=input_path_order):
         digest.update(path.relative_to(MOD).as_posix().encode() + b"\0" + path.read_bytes())
-    return {"schema": 1, "start": "1991.1.1", "evidence": "source inspection, not native acceptance",
+    return {"schema": 2, "start": "1991.1.1", "evidence": "source inspection, not native acceptance",
+        "support_profile_inputs_sha256": dict(sorted(support_inputs.items())),
+        "support_profile_hash_normalization": "UTF-8 source bytes with CRLF normalized to LF; not a native payload or texture hash",
         "input_digest_sha256": digest.hexdigest(), "input_file_count": len(inputs), "summary": summary, "countries": rows}
 
 

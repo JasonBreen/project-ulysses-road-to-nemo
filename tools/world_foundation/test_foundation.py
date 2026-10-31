@@ -70,6 +70,33 @@ class WorldFoundationTests(unittest.TestCase):
         self.assertEqual(order[0], order[1])
         self.assertEqual(sorted(names, key=lambda name: (name.casefold(), name)), order[0])
 
+    def test_registry_classifies_placeholder_emergent_and_leader_representation(self):
+        rows = inspect()['countries']
+        classes = {kind: sum(row['start_classification'] == kind for row in rows)
+                   for kind in ('active', 'emergent', 'placeholder')}
+        self.assertEqual({'active': 61, 'emergent': 7, 'placeholder': 1}, classes)
+        self.assertEqual('placeholder', next(row for row in rows if row['tag'] == 'PLH')['start_classification'])
+        fcu = next(row for row in rows if row['tag'] == 'FCU')
+        self.assertIn('provisional', fcu['leader_representation']['term_source'])
+        self.assertEqual(14, sum(row['tag'] not in ('EVA',) and row['capital_source_layer'] == 'approved provisional capital district' for row in rows))
+        for row in rows:
+            if row['leader_representation']['kind'] == 'government office':
+                self.assertTrue(all(name.endswith('_ac_government_office') for name in row['recruited_active_party_leaders']))
+
+    def test_integrated_fiscal_and_institution_profiles_cover_every_history(self):
+        if not (ROOT / 'tools/economy_v2/profiles.json').exists() or not (ROOT / 'tools/institutions/profiles.json').exists():
+            self.skipTest('Shared owners are not integrated into this foundation-only candidate')
+        report = inspect()
+        self.assertEqual(2, report['schema'])
+        self.assertIn('CRLF normalized', report['support_profile_hash_normalization'])
+        for row in report['countries']:
+            self.assertGreater(row['fiscal_profile']['gdp_billion'], 0, row['tag'])
+            self.assertIn('not canon', row['fiscal_profile']['source_layer'])
+            self.assertTrue(row['political_institution']['institution'])
+            self.assertIn('provisional', row['political_institution']['source_layer'])
+            self.assertIsInstance(row['regional_contracts'], list)
+            self.assertIn('native', row['scope_note'])
+
     def test_registry_contains_all_69_without_claiming_universal_playability(self):
         expected = inspect()
         self.assertEqual(expected, json.loads((HERE / "country_registry.json").read_text()))

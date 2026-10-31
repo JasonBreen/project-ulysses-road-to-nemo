@@ -26,4 +26,4 @@ The current planning note is intentionally incomplete and unverified. It records
 
 ## 2065 rule
 
-The campaign may be engineered to run through 2065-12-31, but a date alone does not establish a canon event. Do not invent future history to fill the horizon. Content through 2065 must be classified as official-source-backed, Sam's user-authored continuity, inherited mod provenance, or provisional gameplay abstraction. The repository must state which of these has actually been authored and runtime-tested.
+The campaign may be engineered to run through 2065-12-31, but a date alone does not establish a canon event. Do not invent future history to fill the horizon. Content through 2065 must be classified as official-source-backed, User's user-authored continuity, inherited mod provenance, or provisional gameplay abstraction. The repository must state which of these has actually been authored and runtime-tested.

@@ -91,7 +91,7 @@ else = { set_variable = { ac_anea_recovery = 15 } }''')) + 'ac_anea_bound = yes'
         body = 'set_variable = { ac_anea_recovery = ' + str(base) + ' }\n'
         # Threshold steps implement floor exactly using known engine primitives.
         for threshold in range(divisor, 101, divisor):
-            body += guarded('check_variable = { ac_anea_preparedness > ' + str(threshold - 1) + ' }', 'add_to_variable = { ac_anea_recovery = 1 }')
+            body += guarded('check_variable = { ac_anea_preparedness >= ' + str(threshold) + ' }', 'add_to_variable = { ac_anea_recovery = 1 }')
         body += 'clamp_variable = { var = ac_anea_recovery min = 0 max = ' + str(cap) + ' }'
         conversion += guarded('original_tag = ' + tag, body)
     effects['ac_anea_resolve_crisis'] = guarded('ac_anea_active = yes date > 1999.7.7 NOT = { has_country_flag = ac_anea_crisis }', 'set_country_flag = ac_anea_crisis\n' + conversion + 'ac_anea_bound = yes')

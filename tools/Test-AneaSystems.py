@@ -113,7 +113,7 @@ class AneaSystems(unittest.TestCase):
         self.assertEqual(73, w.countries['EMM'].variables['ac_pwi_recovery']);self.assertEqual(19, w.countries['EVA'].variables['ac_ucw_pressure'])
 
     def test_crisis_floor_and_caps_for_every_preparedness_value(self):
-        for prep in range(101):
+        for prep in [n / 4 for n in range(401)] + [4.99, 4.999, 5.01, 99.99]:
             w = World().init();w.today = ucw.day('1999.7.8')
             for tag, base, div, cap in [('EMM', 70, 5, 90), ('EVA', 15, 4, 40)]:
                 c = w.countries[tag];c.variables['ac_anea_preparedness'] = prep

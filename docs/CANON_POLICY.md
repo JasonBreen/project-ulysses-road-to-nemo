@@ -22,7 +22,7 @@ Every lore-sensitive addition or correction should record:
 
 ## Joker 1 handling
 
-The current planning note is intentionally incomplete and unverified. It records only Sam's supplied outline: Ustian-born Joker 1; Belkan connections; history with Moon11/Shadow22; Watchtowerorganization; connection with Cope; and Tasha's mother as the pilot who shot him down. No dates, locations, motivations, sequence of events, or additional character details may be inferred from that outline. Create a source-backed compilation issue before implementing it.
+The current planning note is intentionally incomplete and unverified. It records only User's supplied outline: Ustian-born Joker 1; Belkan connections; history with Moon11/Shadow22; Watchtowerorganization; connection with Cope; and Tasha's mother as the pilot who shot him down. No dates, locations, motivations, sequence of events, or additional character details may be inferred from that outline. Create a source-backed compilation issue before implementing it.
 
 ## 2065 rule
 

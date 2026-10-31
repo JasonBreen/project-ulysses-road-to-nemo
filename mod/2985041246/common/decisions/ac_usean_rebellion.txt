@@ -1,0 +1,79 @@
+ac_ur_command = {
+	ac_ur_record_southern_district = {
+		icon = FCU_exp_maintain_services
+		allowed = { original_tag = FCU }
+		visible = {
+			has_country_flag = ac_ur_skully_recorded
+			NOT = { has_country_flag = ac_ur_southern_district_recorded }
+		}
+		available = {
+			has_country_flag = ac_ur_skully_recorded
+			NOT = { has_country_flag = ac_ur_southern_district_recorded }
+		}
+		fire_only_once = yes
+		cost = 25
+		ai_will_do = { base = 100 }
+		complete_effect = {
+			set_country_flag = ac_ur_southern_district_recorded
+			army_experience = 5
+		}
+	}
+
+	ac_ur_commit_scarface = {
+		icon = FCU_exp_maintain_services
+		allowed = { original_tag = FCU }
+		visible = {
+			has_country_flag = ac_ur_coup_started
+			NOT = { has_country_flag = ac_ur_scarface_committed }
+		}
+		available = {
+			has_country_flag = ac_ur_coup_started
+			NOT = { has_country_flag = ac_ur_scarface_committed }
+		}
+		fire_only_once = yes
+		cost = 40
+		ai_will_do = { base = 100 }
+		complete_effect = {
+			set_country_flag = ac_ur_scarface_committed
+			add_timed_idea = { idea = ac_ur_scarface_sortie days = 90 }
+			air_experience = 10
+		}
+	}
+
+	ac_ur_restore_administration = {
+		icon = FCU_exp_maintain_services
+		allowed = { original_tag = FCU }
+		visible = {
+			NOT = { has_country_flag = ac_ur_administration_restored }
+			OR = {
+				has_country_flag = ac_ur_coup_defeated
+				AND = {
+					has_country_flag = ac_ur_coup_prolonged
+					NOT = { has_idea = ac_ur_coup_strain }
+				}
+			}
+		}
+		available = {
+			NOT = { has_country_flag = ac_ur_administration_restored }
+			OR = {
+				has_country_flag = ac_ur_coup_defeated
+				AND = {
+					has_country_flag = ac_ur_coup_prolonged
+					NOT = { has_idea = ac_ur_coup_strain }
+				}
+			}
+		}
+		fire_only_once = yes
+		cost = 25
+		ai_will_do = { base = 80 }
+		complete_effect = {
+			set_country_flag = ac_ur_administration_restored
+			if = {
+				limit = { NOT = { has_country_flag = ac_ur_coup_defeated } }
+				set_country_flag = ac_ur_coup_defeated
+			}
+			remove_ideas = ac_ur_coup_strain
+			add_stability = 0.03
+		}
+	}
+}

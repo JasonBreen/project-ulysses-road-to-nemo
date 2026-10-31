@@ -1,0 +1,50 @@
+name: PR scan
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: pr-scan-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    name: Scan changed script
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Scan the diff
+        id: scan
+        continue-on-error: true
+        run: python -B tools/pr_scan.py --base "origin/${{ github.base_ref }}" --comment-out "$RUNNER_TEMP/pr-scan.md" --annotations-out "$RUNNER_TEMP/pr-scan-annotations.txt"
+
+      - name: Publish file annotations
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/pr-scan-annotations.txt" ]; then
+            cat "$RUNNER_TEMP/pr-scan-annotations.txt"
+          fi
+
+      - name: Publish or update the scan comment
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python -B tools/publish_pr_scan.py --pr "${{ github.event.pull_request.number }}" --body "$RUNNER_TEMP/pr-scan.md"
+
+      - name: Fail when the scan reported errors
+        if: steps.scan.outcome == 'failure'
+        run: exit 1

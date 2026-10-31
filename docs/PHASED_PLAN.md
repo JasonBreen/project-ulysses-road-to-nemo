@@ -1,5 +1,10 @@
 # Phased development plan
 
+For the current approved release sequence and budgets, see
+[Strangereal overhaul: 1991–2020](STRANGEREAL_OVERHAUL.md). The earlier phases
+below are retained as development history, not completion claims for the
+pending overhaul.
+
 Guiding priority: make a coherent, playable private continuation before pursuing public-release polish. Preserve the static baseline and keep each phase independently reviewable.
 
 ## Phase 0 — Reproducible baseline and compatibility diagnosis
@@ -44,7 +49,7 @@ Exit criteria: every supported demo branch has a declared postwar destination an
 1. Expand Recta/Yuktobania and other Usean content only after their branch contracts are written.
 2. Reconcile the 1991–2005 technology span, inherited armor/naval dates, properly localized technology/equipment names, and any later-war equipment gates against the 2065-12-31 inclusive campaign contract.
 3. Replace placeholder art, names, leaders, advisors, and ship names in priority order of player visibility.
-4. Compile Sam's established Joker 1 continuity as a separately attributed user-authored source before implementing it; do not invent future lore to fill the 2065 horizon.
+4. Compile the established Joker 1 continuity as a separately attributed user-authored source before implementing it; do not invent future lore to fill the 2065 horizon.
 5. Integrate the child task's Markdown economy model and portable VS Code/Antigravity-compatible workspace only after reviewing its separate branch/worktree and static assumptions.
 6. Add long-run AI, supply, diplomacy, peace conference, and save stability coverage.
 

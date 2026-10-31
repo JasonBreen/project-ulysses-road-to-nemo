@@ -1,0 +1,36 @@
+# Authored gameplay; source: tools/usean_partners/content.py and build.py.
+ac_up_participant = {
+	OR = { AND = { tag = SNS original_tag = SNS } AND = { tag = AMB original_tag = AMB } AND = { tag = UGE original_tag = UGE } AND = { tag = DEL original_tag = DEL } }
+}
+
+ac_up_active = {
+	ac_up_participant = yes has_country_flag = ac_up_initialized has_capitulated = no
+}
+
+ac_up_settlement_ready = {
+	ac_up_active = yes OR = { ac_ucw_war_over = yes has_global_flag = ac_ucw_war_averted AND = { date > 2005.12.30 has_war = no NOT = { has_global_flag = ac_ucw_war_started } } }
+}
+
+ac_up_can_fund = {
+	ac_up_active = yes political_power >= 25 ac_pol_active = yes OR = { AND = { has_country_flag = ac_up_efficient_authorisations check_variable = { ac_pol_capacity > 0 } } check_variable = { ac_pol_capacity > 1 } } OR = { ac_econ_ready = no ac_econ_can_pay_programme = yes }
+}
+
+ac_up_sns_partner_valid = {
+	tag = SNS original_tag = SNS has_capitulated = no is_subject = no country_exists = FCU NOT = { has_war_with = FCU } FCU = { tag = FCU original_tag = FCU has_capitulated = no is_subject = no }
+}
+
+ac_up_amb_partner_valid = {
+	tag = AMB original_tag = AMB has_capitulated = no is_subject = no country_exists = FCU NOT = { has_war_with = FCU } FCU = { tag = FCU original_tag = FCU has_capitulated = no is_subject = no }
+}
+
+ac_up_uge_partner_valid = {
+	tag = UGE original_tag = UGE has_capitulated = no is_subject = no country_exists = FCU NOT = { has_war_with = FCU } FCU = { tag = FCU original_tag = FCU has_capitulated = no is_subject = no }
+}
+
+ac_up_del_partner_valid = {
+	tag = DEL original_tag = DEL has_capitulated = no is_subject = no country_exists = FCU NOT = { has_war_with = FCU } FCU = { tag = FCU original_tag = FCU has_capitulated = no is_subject = no }
+}
+
+ac_up_scope_idle = {
+	NOT = { has_country_flag = ac_up_scope_active }
+}

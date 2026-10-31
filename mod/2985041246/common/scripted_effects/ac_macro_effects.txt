@@ -1,0 +1,1832 @@
+# Original macroeconomic gameplay; amounts in billions of abstract units.
+ac_macro_initialize = {
+	if = {
+		limit = { ac_macro_mode = yes any_owned_state = { always = yes } NOT = { ac_macro_ready = yes } OR = { AND = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 } has_global_flag = ac_macro_world_started } }
+		if = { limit = { has_variable = ac_macro_identity NOT = { check_variable = { var = ac_macro_identity value = THIS.id compare = equals } } }
+		 clr_country_flag = ac_macro_history_eligible
+		 clr_country_flag = ac_macro_warning
+		 clr_country_flag = ac_macro_crisis
+		 clr_country_flag = ac_macro_transaction_succeeded
+		 clr_country_flag = ac_macro_policy_cooldown
+		 clr_country_flag = ac_macro_monthly_authorized
+		}
+		set_country_flag = ac_macro_initialized
+		clr_country_flag = ac_macro_ledger_authorized
+		set_variable = { ac_macro_schema = 2 }
+		set_variable = { ac_macro_identity = THIS.id }
+		set_variable = { ac_macro_ui_page = 0 }
+		set_variable = { ac_macro_price_index = 100 }
+		set_variable = { ac_macro_income_tax = 0.20 }
+		set_variable = { ac_macro_business_tax = 0.20 }
+		set_variable = { ac_macro_consumption_tax = 0.05 }
+		set_variable = { ac_macro_base_growth = 3 }
+		set_variable = { ac_macro_inflation = 2 }
+		set_variable = { ac_macro_collection = 0.85 }
+		set_variable = { ac_macro_policy_rate = 4 }
+		set_variable = { ac_macro_readiness = 70 }
+		set_variable = { ac_macro_funding = 1 }
+		set_variable = { ac_macro_growth = 3 }
+		set_variable = { ac_macro_growth_lag = 0 }
+		set_variable = { ac_macro_cash = 0 }
+		set_variable = { ac_macro_debt = 0 }
+		set_variable = { ac_macro_arrears = 0 }
+		set_variable = { ac_macro_commitments_annual = 0 }
+		set_variable = { ac_macro_replacement_escrow = 0 }
+		set_variable = { ac_macro_replacement_target = 0 }
+		set_variable = { ac_macro_settlements = 0 }
+		set_variable = { ac_macro_last_revenue = 0 }
+		set_variable = { ac_macro_last_bill = 0 }
+		set_variable = { ac_macro_last_paid = 0 }
+		set_variable = { ac_macro_last_borrowed = 0 }
+		set_variable = { ac_macro_last_arrears_added = 0 }
+		set_variable = { ac_macro_last_arrears_paid = 0 }
+		set_variable = { ac_macro_stress_months = 0 }
+		set_variable = { ac_macro_warning_months = 0 }
+		set_variable = { ac_macro_warning_months_left = 0 }
+		set_variable = { ac_macro_recovery_months = 0 }
+		set_variable = { ac_macro_readiness_modifier = -0.03 }
+		set_variable = { ac_macro_service_modifier = 0 }
+		set_variable = { ac_macro_research_modifier = 0 }
+		set_variable = { ac_macro_construction_modifier = 0 }
+		# No settlement has occurred. Startup/reload timing must not skip the first
+		# scheduled accounting boundary for a released country or a new identity.
+		set_variable = { ac_macro_last_settlement = 0 }
+		set_variable = { ac_macro_last_factories = num_of_controlled_factories }
+		set_variable = { ac_macro_history_count = 0 }
+		set_variable = { ac_macro_history_last_recorded = 0 }
+		set_variable = { ac_macro_last_real_gdp = 0 }
+		set_variable = { ac_macro_last_nominal_gdp = 0 }
+		set_variable = { ac_macro_last_tax_base = 0 }
+		set_variable = { ac_macro_last_prices = 0 }
+		set_variable = { ac_macro_last_funding = 0 }
+		set_variable = { ac_macro_last_balance = 0 }
+		set_variable = { ac_macro_history_0_real = 0 }
+		set_variable = { ac_macro_history_0_nominal = 0 }
+		set_variable = { ac_macro_history_0_tax_base = 0 }
+		set_variable = { ac_macro_history_0_prices = 0 }
+		set_variable = { ac_macro_history_0_revenue = 0 }
+		set_variable = { ac_macro_history_0_bill = 0 }
+		set_variable = { ac_macro_history_0_paid = 0 }
+		set_variable = { ac_macro_history_0_borrowed = 0 }
+		set_variable = { ac_macro_history_0_arrears_added = 0 }
+		set_variable = { ac_macro_history_0_arrears_paid = 0 }
+		set_variable = { ac_macro_history_0_cash = 0 }
+		set_variable = { ac_macro_history_0_debt = 0 }
+		set_variable = { ac_macro_history_0_arrears = 0 }
+		set_variable = { ac_macro_history_0_funding = 0 }
+		set_variable = { ac_macro_history_0_sequence = 0 }
+		set_variable = { ac_macro_history_0_net = 0 }
+		set_variable = { ac_macro_history_0_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_0_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_0_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_0_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_0_escrow = 0 }
+		set_variable = { ac_macro_graph_0_output = 1 }
+		set_variable = { ac_macro_graph_0_net_positive = 1 }
+		set_variable = { ac_macro_graph_0_net_negative = 1 }
+		set_variable = { ac_macro_history_1_real = 0 }
+		set_variable = { ac_macro_history_1_nominal = 0 }
+		set_variable = { ac_macro_history_1_tax_base = 0 }
+		set_variable = { ac_macro_history_1_prices = 0 }
+		set_variable = { ac_macro_history_1_revenue = 0 }
+		set_variable = { ac_macro_history_1_bill = 0 }
+		set_variable = { ac_macro_history_1_paid = 0 }
+		set_variable = { ac_macro_history_1_borrowed = 0 }
+		set_variable = { ac_macro_history_1_arrears_added = 0 }
+		set_variable = { ac_macro_history_1_arrears_paid = 0 }
+		set_variable = { ac_macro_history_1_cash = 0 }
+		set_variable = { ac_macro_history_1_debt = 0 }
+		set_variable = { ac_macro_history_1_arrears = 0 }
+		set_variable = { ac_macro_history_1_funding = 0 }
+		set_variable = { ac_macro_history_1_sequence = 0 }
+		set_variable = { ac_macro_history_1_net = 0 }
+		set_variable = { ac_macro_history_1_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_1_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_1_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_1_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_1_escrow = 0 }
+		set_variable = { ac_macro_graph_1_output = 1 }
+		set_variable = { ac_macro_graph_1_net_positive = 1 }
+		set_variable = { ac_macro_graph_1_net_negative = 1 }
+		set_variable = { ac_macro_history_2_real = 0 }
+		set_variable = { ac_macro_history_2_nominal = 0 }
+		set_variable = { ac_macro_history_2_tax_base = 0 }
+		set_variable = { ac_macro_history_2_prices = 0 }
+		set_variable = { ac_macro_history_2_revenue = 0 }
+		set_variable = { ac_macro_history_2_bill = 0 }
+		set_variable = { ac_macro_history_2_paid = 0 }
+		set_variable = { ac_macro_history_2_borrowed = 0 }
+		set_variable = { ac_macro_history_2_arrears_added = 0 }
+		set_variable = { ac_macro_history_2_arrears_paid = 0 }
+		set_variable = { ac_macro_history_2_cash = 0 }
+		set_variable = { ac_macro_history_2_debt = 0 }
+		set_variable = { ac_macro_history_2_arrears = 0 }
+		set_variable = { ac_macro_history_2_funding = 0 }
+		set_variable = { ac_macro_history_2_sequence = 0 }
+		set_variable = { ac_macro_history_2_net = 0 }
+		set_variable = { ac_macro_history_2_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_2_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_2_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_2_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_2_escrow = 0 }
+		set_variable = { ac_macro_graph_2_output = 1 }
+		set_variable = { ac_macro_graph_2_net_positive = 1 }
+		set_variable = { ac_macro_graph_2_net_negative = 1 }
+		set_variable = { ac_macro_history_3_real = 0 }
+		set_variable = { ac_macro_history_3_nominal = 0 }
+		set_variable = { ac_macro_history_3_tax_base = 0 }
+		set_variable = { ac_macro_history_3_prices = 0 }
+		set_variable = { ac_macro_history_3_revenue = 0 }
+		set_variable = { ac_macro_history_3_bill = 0 }
+		set_variable = { ac_macro_history_3_paid = 0 }
+		set_variable = { ac_macro_history_3_borrowed = 0 }
+		set_variable = { ac_macro_history_3_arrears_added = 0 }
+		set_variable = { ac_macro_history_3_arrears_paid = 0 }
+		set_variable = { ac_macro_history_3_cash = 0 }
+		set_variable = { ac_macro_history_3_debt = 0 }
+		set_variable = { ac_macro_history_3_arrears = 0 }
+		set_variable = { ac_macro_history_3_funding = 0 }
+		set_variable = { ac_macro_history_3_sequence = 0 }
+		set_variable = { ac_macro_history_3_net = 0 }
+		set_variable = { ac_macro_history_3_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_3_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_3_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_3_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_3_escrow = 0 }
+		set_variable = { ac_macro_graph_3_output = 1 }
+		set_variable = { ac_macro_graph_3_net_positive = 1 }
+		set_variable = { ac_macro_graph_3_net_negative = 1 }
+		set_variable = { ac_macro_history_4_real = 0 }
+		set_variable = { ac_macro_history_4_nominal = 0 }
+		set_variable = { ac_macro_history_4_tax_base = 0 }
+		set_variable = { ac_macro_history_4_prices = 0 }
+		set_variable = { ac_macro_history_4_revenue = 0 }
+		set_variable = { ac_macro_history_4_bill = 0 }
+		set_variable = { ac_macro_history_4_paid = 0 }
+		set_variable = { ac_macro_history_4_borrowed = 0 }
+		set_variable = { ac_macro_history_4_arrears_added = 0 }
+		set_variable = { ac_macro_history_4_arrears_paid = 0 }
+		set_variable = { ac_macro_history_4_cash = 0 }
+		set_variable = { ac_macro_history_4_debt = 0 }
+		set_variable = { ac_macro_history_4_arrears = 0 }
+		set_variable = { ac_macro_history_4_funding = 0 }
+		set_variable = { ac_macro_history_4_sequence = 0 }
+		set_variable = { ac_macro_history_4_net = 0 }
+		set_variable = { ac_macro_history_4_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_4_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_4_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_4_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_4_escrow = 0 }
+		set_variable = { ac_macro_graph_4_output = 1 }
+		set_variable = { ac_macro_graph_4_net_positive = 1 }
+		set_variable = { ac_macro_graph_4_net_negative = 1 }
+		set_variable = { ac_macro_history_5_real = 0 }
+		set_variable = { ac_macro_history_5_nominal = 0 }
+		set_variable = { ac_macro_history_5_tax_base = 0 }
+		set_variable = { ac_macro_history_5_prices = 0 }
+		set_variable = { ac_macro_history_5_revenue = 0 }
+		set_variable = { ac_macro_history_5_bill = 0 }
+		set_variable = { ac_macro_history_5_paid = 0 }
+		set_variable = { ac_macro_history_5_borrowed = 0 }
+		set_variable = { ac_macro_history_5_arrears_added = 0 }
+		set_variable = { ac_macro_history_5_arrears_paid = 0 }
+		set_variable = { ac_macro_history_5_cash = 0 }
+		set_variable = { ac_macro_history_5_debt = 0 }
+		set_variable = { ac_macro_history_5_arrears = 0 }
+		set_variable = { ac_macro_history_5_funding = 0 }
+		set_variable = { ac_macro_history_5_sequence = 0 }
+		set_variable = { ac_macro_history_5_net = 0 }
+		set_variable = { ac_macro_history_5_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_5_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_5_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_5_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_5_escrow = 0 }
+		set_variable = { ac_macro_graph_5_output = 1 }
+		set_variable = { ac_macro_graph_5_net_positive = 1 }
+		set_variable = { ac_macro_graph_5_net_negative = 1 }
+		set_variable = { ac_macro_history_6_real = 0 }
+		set_variable = { ac_macro_history_6_nominal = 0 }
+		set_variable = { ac_macro_history_6_tax_base = 0 }
+		set_variable = { ac_macro_history_6_prices = 0 }
+		set_variable = { ac_macro_history_6_revenue = 0 }
+		set_variable = { ac_macro_history_6_bill = 0 }
+		set_variable = { ac_macro_history_6_paid = 0 }
+		set_variable = { ac_macro_history_6_borrowed = 0 }
+		set_variable = { ac_macro_history_6_arrears_added = 0 }
+		set_variable = { ac_macro_history_6_arrears_paid = 0 }
+		set_variable = { ac_macro_history_6_cash = 0 }
+		set_variable = { ac_macro_history_6_debt = 0 }
+		set_variable = { ac_macro_history_6_arrears = 0 }
+		set_variable = { ac_macro_history_6_funding = 0 }
+		set_variable = { ac_macro_history_6_sequence = 0 }
+		set_variable = { ac_macro_history_6_net = 0 }
+		set_variable = { ac_macro_history_6_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_6_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_6_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_6_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_6_escrow = 0 }
+		set_variable = { ac_macro_graph_6_output = 1 }
+		set_variable = { ac_macro_graph_6_net_positive = 1 }
+		set_variable = { ac_macro_graph_6_net_negative = 1 }
+		set_variable = { ac_macro_history_7_real = 0 }
+		set_variable = { ac_macro_history_7_nominal = 0 }
+		set_variable = { ac_macro_history_7_tax_base = 0 }
+		set_variable = { ac_macro_history_7_prices = 0 }
+		set_variable = { ac_macro_history_7_revenue = 0 }
+		set_variable = { ac_macro_history_7_bill = 0 }
+		set_variable = { ac_macro_history_7_paid = 0 }
+		set_variable = { ac_macro_history_7_borrowed = 0 }
+		set_variable = { ac_macro_history_7_arrears_added = 0 }
+		set_variable = { ac_macro_history_7_arrears_paid = 0 }
+		set_variable = { ac_macro_history_7_cash = 0 }
+		set_variable = { ac_macro_history_7_debt = 0 }
+		set_variable = { ac_macro_history_7_arrears = 0 }
+		set_variable = { ac_macro_history_7_funding = 0 }
+		set_variable = { ac_macro_history_7_sequence = 0 }
+		set_variable = { ac_macro_history_7_net = 0 }
+		set_variable = { ac_macro_history_7_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_7_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_7_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_7_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_7_escrow = 0 }
+		set_variable = { ac_macro_graph_7_output = 1 }
+		set_variable = { ac_macro_graph_7_net_positive = 1 }
+		set_variable = { ac_macro_graph_7_net_negative = 1 }
+		set_variable = { ac_macro_history_8_real = 0 }
+		set_variable = { ac_macro_history_8_nominal = 0 }
+		set_variable = { ac_macro_history_8_tax_base = 0 }
+		set_variable = { ac_macro_history_8_prices = 0 }
+		set_variable = { ac_macro_history_8_revenue = 0 }
+		set_variable = { ac_macro_history_8_bill = 0 }
+		set_variable = { ac_macro_history_8_paid = 0 }
+		set_variable = { ac_macro_history_8_borrowed = 0 }
+		set_variable = { ac_macro_history_8_arrears_added = 0 }
+		set_variable = { ac_macro_history_8_arrears_paid = 0 }
+		set_variable = { ac_macro_history_8_cash = 0 }
+		set_variable = { ac_macro_history_8_debt = 0 }
+		set_variable = { ac_macro_history_8_arrears = 0 }
+		set_variable = { ac_macro_history_8_funding = 0 }
+		set_variable = { ac_macro_history_8_sequence = 0 }
+		set_variable = { ac_macro_history_8_net = 0 }
+		set_variable = { ac_macro_history_8_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_8_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_8_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_8_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_8_escrow = 0 }
+		set_variable = { ac_macro_graph_8_output = 1 }
+		set_variable = { ac_macro_graph_8_net_positive = 1 }
+		set_variable = { ac_macro_graph_8_net_negative = 1 }
+		set_variable = { ac_macro_history_9_real = 0 }
+		set_variable = { ac_macro_history_9_nominal = 0 }
+		set_variable = { ac_macro_history_9_tax_base = 0 }
+		set_variable = { ac_macro_history_9_prices = 0 }
+		set_variable = { ac_macro_history_9_revenue = 0 }
+		set_variable = { ac_macro_history_9_bill = 0 }
+		set_variable = { ac_macro_history_9_paid = 0 }
+		set_variable = { ac_macro_history_9_borrowed = 0 }
+		set_variable = { ac_macro_history_9_arrears_added = 0 }
+		set_variable = { ac_macro_history_9_arrears_paid = 0 }
+		set_variable = { ac_macro_history_9_cash = 0 }
+		set_variable = { ac_macro_history_9_debt = 0 }
+		set_variable = { ac_macro_history_9_arrears = 0 }
+		set_variable = { ac_macro_history_9_funding = 0 }
+		set_variable = { ac_macro_history_9_sequence = 0 }
+		set_variable = { ac_macro_history_9_net = 0 }
+		set_variable = { ac_macro_history_9_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_9_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_9_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_9_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_9_escrow = 0 }
+		set_variable = { ac_macro_graph_9_output = 1 }
+		set_variable = { ac_macro_graph_9_net_positive = 1 }
+		set_variable = { ac_macro_graph_9_net_negative = 1 }
+		set_variable = { ac_macro_history_10_real = 0 }
+		set_variable = { ac_macro_history_10_nominal = 0 }
+		set_variable = { ac_macro_history_10_tax_base = 0 }
+		set_variable = { ac_macro_history_10_prices = 0 }
+		set_variable = { ac_macro_history_10_revenue = 0 }
+		set_variable = { ac_macro_history_10_bill = 0 }
+		set_variable = { ac_macro_history_10_paid = 0 }
+		set_variable = { ac_macro_history_10_borrowed = 0 }
+		set_variable = { ac_macro_history_10_arrears_added = 0 }
+		set_variable = { ac_macro_history_10_arrears_paid = 0 }
+		set_variable = { ac_macro_history_10_cash = 0 }
+		set_variable = { ac_macro_history_10_debt = 0 }
+		set_variable = { ac_macro_history_10_arrears = 0 }
+		set_variable = { ac_macro_history_10_funding = 0 }
+		set_variable = { ac_macro_history_10_sequence = 0 }
+		set_variable = { ac_macro_history_10_net = 0 }
+		set_variable = { ac_macro_history_10_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_10_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_10_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_10_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_10_escrow = 0 }
+		set_variable = { ac_macro_graph_10_output = 1 }
+		set_variable = { ac_macro_graph_10_net_positive = 1 }
+		set_variable = { ac_macro_graph_10_net_negative = 1 }
+		set_variable = { ac_macro_history_11_real = 0 }
+		set_variable = { ac_macro_history_11_nominal = 0 }
+		set_variable = { ac_macro_history_11_tax_base = 0 }
+		set_variable = { ac_macro_history_11_prices = 0 }
+		set_variable = { ac_macro_history_11_revenue = 0 }
+		set_variable = { ac_macro_history_11_bill = 0 }
+		set_variable = { ac_macro_history_11_paid = 0 }
+		set_variable = { ac_macro_history_11_borrowed = 0 }
+		set_variable = { ac_macro_history_11_arrears_added = 0 }
+		set_variable = { ac_macro_history_11_arrears_paid = 0 }
+		set_variable = { ac_macro_history_11_cash = 0 }
+		set_variable = { ac_macro_history_11_debt = 0 }
+		set_variable = { ac_macro_history_11_arrears = 0 }
+		set_variable = { ac_macro_history_11_funding = 0 }
+		set_variable = { ac_macro_history_11_sequence = 0 }
+		set_variable = { ac_macro_history_11_net = 0 }
+		set_variable = { ac_macro_history_11_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_history_11_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_history_11_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_history_11_bill_carry_milli = 0 }
+		set_variable = { ac_macro_history_11_escrow = 0 }
+		set_variable = { ac_macro_graph_11_output = 1 }
+		set_variable = { ac_macro_graph_11_net_positive = 1 }
+		set_variable = { ac_macro_graph_11_net_negative = 1 }
+		set_variable = { ac_macro_revenue_carry_milli = 0 }
+		set_variable = { ac_macro_bill_carry_milli = 0 }
+		set_variable = { ac_macro_last_revenue_accrued_milli = 0 }
+		set_variable = { ac_macro_last_bill_accrued_milli = 0 }
+		set_variable = { ac_macro_budget_administration = 1 }
+		set_variable = { ac_macro_budget_services = 1 }
+		set_variable = { ac_macro_budget_education = 1 }
+		set_variable = { ac_macro_budget_development = 1 }
+		set_variable = { ac_macro_budget_defense = 1 }
+		ac_macro_profile = yes
+		if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 }
+		 ac_macro_seed_states = yes
+		 set_global_flag = ac_macro_world_started
+		 ac_macro_quote = yes
+		 set_variable = { ac_macro_cash = ac_macro_nominal_gdp }
+		 multiply_variable = { ac_macro_cash = 0.02 }
+		 set_variable = { ac_macro_debt = ac_macro_nominal_gdp }
+		 multiply_variable = { ac_macro_debt = ac_macro_seed_debt_ratio }
+		}
+		ac_macro_quote = yes
+	}
+}
+ac_macro_quote = {
+	if = {
+		limit = { ac_macro_ready = yes }
+		set_variable = { ac_macro_real_gdp = 0 }
+		set_variable = { ac_macro_potential_gdp = 0 }
+		set_variable = { ac_macro_tax_base = 0 }
+		set_variable = { ac_macro_civilian_factories = num_of_civilian_factories }
+		set_variable = { ac_macro_factory_capacity = num_of_controlled_factories }
+		set_variable = { ac_macro_military_factories = num_of_military_factories }
+		set_variable = { ac_macro_dockyards = num_of_naval_factories }
+		set_variable = { ac_macro_army_k = deployed_army_manpower_k }
+		set_variable = { ac_macro_navy_k = deployed_navy_manpower_k }
+		set_variable = { ac_macro_air_k = deployed_airforce_manpower_k }
+		set_variable = { ac_macro_planes = num_deployed_planes }
+		set_variable = { ac_macro_ships = num_ships }
+		set_variable = { ac_macro_infantry_produced = total_equipment_produced_infantry }
+		every_controlled_state = {
+		 if = { limit = { has_variable = ac_macro_real_output }
+		  add_to_variable = { PREV.ac_macro_potential_gdp = ac_macro_real_output }
+		  set_temp_variable = { ac_macro_state_output = ac_macro_real_output }
+		  set_temp_variable = { ac_macro_state_factor = 1 }
+		  subtract_from_temp_variable = { ac_macro_state_factor = ac_macro_disruption }
+		  multiply_temp_variable = { ac_macro_state_output = ac_macro_state_factor }
+		  add_to_variable = { PREV.ac_macro_real_gdp = ac_macro_state_output }
+		  if = { limit = { NOT = { is_owned_by = PREV } } multiply_temp_variable = { ac_macro_state_output = 0.35 } }
+		  add_to_variable = { PREV.ac_macro_tax_base = ac_macro_state_output }
+		 }
+		}
+		set_variable = { ac_macro_nominal_gdp = ac_macro_real_gdp }
+		set_temp_variable = { ac_macro_price_multiplier = ac_macro_price_index }
+		divide_temp_variable = { ac_macro_price_multiplier = 100 }
+		multiply_variable = { ac_macro_nominal_gdp = ac_macro_price_multiplier }
+		multiply_variable = { ac_macro_tax_base = ac_macro_price_multiplier }
+		set_variable = { ac_macro_output_gap = 0 }
+		if = { limit = { check_variable = { ac_macro_potential_gdp > 0 } }
+		 set_variable = { ac_macro_output_gap = ac_macro_real_gdp }
+		 divide_variable = { ac_macro_output_gap = ac_macro_potential_gdp }
+		 multiply_variable = { ac_macro_output_gap = -1 }
+		 add_to_variable = { ac_macro_output_gap = 1 }
+		}
+		set_variable = { ac_macro_effective_collection = ac_macro_budget_administration }
+		multiply_variable = { ac_macro_effective_collection = 0.1 }
+		add_to_variable = { ac_macro_effective_collection = 0.9 }
+		multiply_variable = { ac_macro_effective_collection = ac_macro_collection }
+		multiply_variable = { ac_macro_effective_collection = ac_macro_funding }
+		clamp_variable = { var = ac_macro_effective_collection min = 0.1 max = 0.98 }
+		set_variable = { ac_macro_revenue_milli = 0 }
+		set_variable = { ac_macro_revenue_income_milli = ac_macro_tax_base }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_revenue_income_milli < 1000 } }
+			multiply_variable = { ac_macro_revenue_income_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_revenue_income_milli = 0.55 }
+		multiply_variable = { ac_macro_revenue_income_milli = ac_macro_income_tax }
+		multiply_variable = { ac_macro_revenue_income_milli = ac_macro_effective_collection }
+		divide_variable = { ac_macro_revenue_income_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_revenue_income_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_revenue_milli = ac_macro_revenue_income_milli }
+		set_variable = { ac_macro_revenue_income = ac_macro_revenue_income_milli }
+		divide_variable = { ac_macro_revenue_income = 1000 }
+		set_variable = { ac_macro_revenue_business_milli = ac_macro_tax_base }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_revenue_business_milli < 1000 } }
+			multiply_variable = { ac_macro_revenue_business_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_revenue_business_milli = 0.25 }
+		multiply_variable = { ac_macro_revenue_business_milli = ac_macro_business_tax }
+		multiply_variable = { ac_macro_revenue_business_milli = ac_macro_effective_collection }
+		divide_variable = { ac_macro_revenue_business_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_revenue_business_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_revenue_milli = ac_macro_revenue_business_milli }
+		set_variable = { ac_macro_revenue_business = ac_macro_revenue_business_milli }
+		divide_variable = { ac_macro_revenue_business = 1000 }
+		set_variable = { ac_macro_revenue_consumption_milli = ac_macro_tax_base }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_revenue_consumption_milli < 1000 } }
+			multiply_variable = { ac_macro_revenue_consumption_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_revenue_consumption_milli = 0.65 }
+		multiply_variable = { ac_macro_revenue_consumption_milli = ac_macro_consumption_tax }
+		multiply_variable = { ac_macro_revenue_consumption_milli = ac_macro_effective_collection }
+		divide_variable = { ac_macro_revenue_consumption_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_revenue_consumption_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_revenue_milli = ac_macro_revenue_consumption_milli }
+		set_variable = { ac_macro_revenue_consumption = ac_macro_revenue_consumption_milli }
+		divide_variable = { ac_macro_revenue_consumption = 1000 }
+		set_variable = { ac_macro_revenue = ac_macro_revenue_milli }
+		divide_variable = { ac_macro_revenue = 1000 }
+		set_variable = { ac_macro_operating_milli = 0 }
+		set_temp_variable = { ac_macro_category_factor = ac_macro_budget_administration }
+		multiply_temp_variable = { ac_macro_category_factor = 0.25 }
+		add_to_temp_variable = { ac_macro_category_factor = 0.75 }
+		set_variable = { ac_macro_spending_administration_milli = ac_macro_nominal_gdp }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_spending_administration_milli < 1000 } }
+			multiply_variable = { ac_macro_spending_administration_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_spending_administration_milli = 0.015 }
+		multiply_variable = { ac_macro_spending_administration_milli = ac_macro_category_factor }
+		divide_variable = { ac_macro_spending_administration_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_spending_administration_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_operating_milli = ac_macro_spending_administration_milli }
+		set_temp_variable = { ac_macro_category_factor = ac_macro_budget_services }
+		multiply_temp_variable = { ac_macro_category_factor = 0.25 }
+		add_to_temp_variable = { ac_macro_category_factor = 0.75 }
+		set_variable = { ac_macro_spending_services_milli = ac_macro_nominal_gdp }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_spending_services_milli < 1000 } }
+			multiply_variable = { ac_macro_spending_services_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_spending_services_milli = 0.05 }
+		multiply_variable = { ac_macro_spending_services_milli = ac_macro_category_factor }
+		divide_variable = { ac_macro_spending_services_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_spending_services_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_operating_milli = ac_macro_spending_services_milli }
+		set_temp_variable = { ac_macro_category_factor = ac_macro_budget_education }
+		multiply_temp_variable = { ac_macro_category_factor = 0.25 }
+		add_to_temp_variable = { ac_macro_category_factor = 0.75 }
+		set_variable = { ac_macro_spending_education_milli = ac_macro_nominal_gdp }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_spending_education_milli < 1000 } }
+			multiply_variable = { ac_macro_spending_education_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_spending_education_milli = 0.03 }
+		multiply_variable = { ac_macro_spending_education_milli = ac_macro_category_factor }
+		divide_variable = { ac_macro_spending_education_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_spending_education_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_operating_milli = ac_macro_spending_education_milli }
+		set_temp_variable = { ac_macro_category_factor = ac_macro_budget_development }
+		multiply_temp_variable = { ac_macro_category_factor = 0.25 }
+		add_to_temp_variable = { ac_macro_category_factor = 0.75 }
+		set_variable = { ac_macro_spending_development_milli = ac_macro_nominal_gdp }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_spending_development_milli < 1000 } }
+			multiply_variable = { ac_macro_spending_development_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_spending_development_milli = 0.02 }
+		multiply_variable = { ac_macro_spending_development_milli = ac_macro_category_factor }
+		divide_variable = { ac_macro_spending_development_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_spending_development_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_operating_milli = ac_macro_spending_development_milli }
+		set_temp_variable = { ac_macro_category_factor = ac_macro_budget_defense }
+		multiply_temp_variable = { ac_macro_category_factor = 0.25 }
+		add_to_temp_variable = { ac_macro_category_factor = 0.75 }
+		set_variable = { ac_macro_spending_defense_milli = ac_macro_nominal_gdp }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_spending_defense_milli < 1000 } }
+			multiply_variable = { ac_macro_spending_defense_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_spending_defense_milli = 0.03 }
+		multiply_variable = { ac_macro_spending_defense_milli = ac_macro_category_factor }
+		divide_variable = { ac_macro_spending_defense_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_spending_defense_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_operating_milli = ac_macro_spending_defense_milli }
+		set_temp_variable = { ac_macro_personnel = deployed_army_manpower_k }
+		add_to_temp_variable = { ac_macro_personnel = deployed_navy_manpower_k }
+		add_to_temp_variable = { ac_macro_personnel = deployed_airforce_manpower_k }
+		set_temp_variable = { ac_macro_war_factor = 1 }
+		if = { limit = { has_war = yes } set_temp_variable = { ac_macro_war_factor = 1.5 } }
+		set_variable = { ac_macro_upkeep_milli = 0 }
+		# Equipment counts describe army holdings, never stockpile totals.
+		set_variable = { ac_macro_land_armor_k = 0 }
+		set_temp_variable = { ac_macro_armor_parent = num_equipment_in_armies_k@light_tank_chassis }
+		set_temp_variable = { ac_macro_armor_derived = 0 }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@light_tank_aa_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@light_tank_artillery_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@light_tank_destroyer_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@light_tank_amphibious_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@light_tank_flame_chassis }
+		if = {
+			limit = { check_variable = { ac_macro_armor_derived > ac_macro_armor_parent } }
+			set_temp_variable = { ac_macro_armor_parent = ac_macro_armor_derived }
+		}
+		add_to_variable = { ac_macro_land_armor_k = ac_macro_armor_parent }
+		set_temp_variable = { ac_macro_armor_parent = num_equipment_in_armies_k@medium_tank_chassis }
+		set_temp_variable = { ac_macro_armor_derived = 0 }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@medium_tank_aa_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@medium_tank_artillery_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@medium_tank_destroyer_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@medium_tank_amphibious_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@medium_tank_flame_chassis }
+		if = {
+			limit = { check_variable = { ac_macro_armor_derived > ac_macro_armor_parent } }
+			set_temp_variable = { ac_macro_armor_parent = ac_macro_armor_derived }
+		}
+		add_to_variable = { ac_macro_land_armor_k = ac_macro_armor_parent }
+		set_temp_variable = { ac_macro_armor_parent = num_equipment_in_armies_k@heavy_tank_chassis }
+		set_temp_variable = { ac_macro_armor_derived = 0 }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@heavy_tank_aa_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@heavy_tank_artillery_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@heavy_tank_destroyer_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@heavy_tank_amphibious_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@heavy_tank_flame_chassis }
+		if = {
+			limit = { check_variable = { ac_macro_armor_derived > ac_macro_armor_parent } }
+			set_temp_variable = { ac_macro_armor_parent = ac_macro_armor_derived }
+		}
+		add_to_variable = { ac_macro_land_armor_k = ac_macro_armor_parent }
+		set_temp_variable = { ac_macro_armor_parent = num_equipment_in_armies_k@modern_tank_chassis }
+		set_temp_variable = { ac_macro_armor_derived = 0 }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@modern_tank_aa_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@modern_tank_artillery_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@modern_tank_destroyer_chassis }
+		if = {
+			limit = { check_variable = { ac_macro_armor_derived > ac_macro_armor_parent } }
+			set_temp_variable = { ac_macro_armor_parent = ac_macro_armor_derived }
+		}
+		add_to_variable = { ac_macro_land_armor_k = ac_macro_armor_parent }
+		set_temp_variable = { ac_macro_armor_parent = num_equipment_in_armies_k@super_heavy_tank_chassis }
+		set_temp_variable = { ac_macro_armor_derived = 0 }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@super_heavy_tank_aa_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@super_heavy_tank_artillery_chassis }
+		add_to_temp_variable = { ac_macro_armor_derived = num_equipment_in_armies_k@super_heavy_tank_destroyer_chassis }
+		if = {
+			limit = { check_variable = { ac_macro_armor_derived > ac_macro_armor_parent } }
+			set_temp_variable = { ac_macro_armor_parent = ac_macro_armor_derived }
+		}
+		add_to_variable = { ac_macro_land_armor_k = ac_macro_armor_parent }
+		set_temp_variable = { ac_macro_armor_parent = num_equipment_in_armies_k@amphibious_tank_chassis }
+		set_temp_variable = { ac_macro_armor_derived = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_armor_derived > ac_macro_armor_parent } }
+			set_temp_variable = { ac_macro_armor_parent = ac_macro_armor_derived }
+		}
+		add_to_variable = { ac_macro_land_armor_k = ac_macro_armor_parent }
+		set_temp_variable = { ac_macro_armor_parent = num_equipment_in_armies_k@land_cruiser_chassis }
+		set_temp_variable = { ac_macro_armor_derived = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_armor_derived > ac_macro_armor_parent } }
+			set_temp_variable = { ac_macro_armor_parent = ac_macro_armor_derived }
+		}
+		add_to_variable = { ac_macro_land_armor_k = ac_macro_armor_parent }
+		set_temp_variable = { ac_macro_armor_parent = num_equipment_in_armies_k@armored_support_vehicle }
+		set_temp_variable = { ac_macro_armor_derived = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_armor_derived > ac_macro_armor_parent } }
+			set_temp_variable = { ac_macro_armor_parent = ac_macro_armor_derived }
+		}
+		add_to_variable = { ac_macro_land_armor_k = ac_macro_armor_parent }
+		set_temp_variable = { ac_macro_armor_parent = num_equipment_in_armies_k@armored_car_equipment }
+		set_temp_variable = { ac_macro_armor_derived = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_armor_derived > ac_macro_armor_parent } }
+			set_temp_variable = { ac_macro_armor_parent = ac_macro_armor_derived }
+		}
+		add_to_variable = { ac_macro_land_armor_k = ac_macro_armor_parent }
+		clamp_variable = { var = ac_macro_land_armor_k min = 0 }
+		set_variable = { ac_macro_land_infantry_k = 0 }
+		add_to_variable = { ac_macro_land_infantry_k = num_equipment_in_armies_k@infantry_equipment }
+		clamp_variable = { var = ac_macro_land_infantry_k min = 0 }
+		set_variable = { ac_macro_land_motorized_k = 0 }
+		add_to_variable = { ac_macro_land_motorized_k = num_equipment_in_armies_k@motorized_equipment }
+		clamp_variable = { var = ac_macro_land_motorized_k min = 0 }
+		set_variable = { ac_macro_land_mechanized_k = 0 }
+		add_to_variable = { ac_macro_land_mechanized_k = num_equipment_in_armies_k@mechanized_equipment }
+		add_to_variable = { ac_macro_land_mechanized_k = num_equipment_in_armies_k@amphibious_mechanized_equipment }
+		clamp_variable = { var = ac_macro_land_mechanized_k min = 0 }
+		set_variable = { ac_macro_land_support_k = 0 }
+		add_to_variable = { ac_macro_land_support_k = num_equipment_in_armies_k@support_equipment }
+		clamp_variable = { var = ac_macro_land_support_k min = 0 }
+		set_variable = { ac_macro_land_artillery_k = 0 }
+		add_to_variable = { ac_macro_land_artillery_k = num_equipment_in_armies_k@artillery_equipment }
+		add_to_variable = { ac_macro_land_artillery_k = num_equipment_in_armies_k@anti_air_equipment }
+		add_to_variable = { ac_macro_land_artillery_k = num_equipment_in_armies_k@anti_tank_equipment }
+		clamp_variable = { var = ac_macro_land_artillery_k min = 0 }
+		# Secondary aircraft types overlap. Observe them, but never sum them as tails.
+		set_variable = { ac_macro_air_premium_annual = 0 }
+		set_variable = { ac_macro_air_fighters = 0 }
+		if = {
+			limit = { check_variable = { num_deployed_planes_with_type@fighter > ac_macro_air_fighters } }
+			set_variable = { ac_macro_air_fighters = num_deployed_planes_with_type@fighter }
+		}
+		if = {
+			limit = { check_variable = { num_deployed_planes_with_type@interceptor > ac_macro_air_fighters } }
+			set_variable = { ac_macro_air_fighters = num_deployed_planes_with_type@interceptor }
+		}
+		if = {
+			limit = { check_variable = { num_deployed_planes_with_type@heavy_fighter > ac_macro_air_fighters } }
+			set_variable = { ac_macro_air_fighters = num_deployed_planes_with_type@heavy_fighter }
+		}
+		clamp_variable = { var = ac_macro_air_fighters min = 0 max = ac_macro_planes }
+		set_temp_variable = { ac_macro_role_premium = ac_macro_air_fighters }
+		multiply_temp_variable = { ac_macro_role_premium = 0.002 }
+		if = {
+			limit = { check_variable = { ac_macro_role_premium > ac_macro_air_premium_annual } }
+			set_variable = { ac_macro_air_premium_annual = ac_macro_role_premium }
+		}
+		set_variable = { ac_macro_air_cas = 0 }
+		if = {
+			limit = { check_variable = { num_deployed_planes_with_type@cas > ac_macro_air_cas } }
+			set_variable = { ac_macro_air_cas = num_deployed_planes_with_type@cas }
+		}
+		clamp_variable = { var = ac_macro_air_cas min = 0 max = ac_macro_planes }
+		set_temp_variable = { ac_macro_role_premium = ac_macro_air_cas }
+		multiply_temp_variable = { ac_macro_role_premium = 0.001 }
+		if = {
+			limit = { check_variable = { ac_macro_role_premium > ac_macro_air_premium_annual } }
+			set_variable = { ac_macro_air_premium_annual = ac_macro_role_premium }
+		}
+		set_variable = { ac_macro_air_naval = 0 }
+		if = {
+			limit = { check_variable = { num_deployed_planes_with_type@naval_bomber > ac_macro_air_naval } }
+			set_variable = { ac_macro_air_naval = num_deployed_planes_with_type@naval_bomber }
+		}
+		if = {
+			limit = { check_variable = { num_deployed_planes_with_type@maritime_patrol_plane > ac_macro_air_naval } }
+			set_variable = { ac_macro_air_naval = num_deployed_planes_with_type@maritime_patrol_plane }
+		}
+		clamp_variable = { var = ac_macro_air_naval min = 0 max = ac_macro_planes }
+		set_temp_variable = { ac_macro_role_premium = ac_macro_air_naval }
+		multiply_temp_variable = { ac_macro_role_premium = 0.003 }
+		if = {
+			limit = { check_variable = { ac_macro_role_premium > ac_macro_air_premium_annual } }
+			set_variable = { ac_macro_air_premium_annual = ac_macro_role_premium }
+		}
+		set_variable = { ac_macro_air_tactical = 0 }
+		if = {
+			limit = { check_variable = { num_deployed_planes_with_type@tactical_bomber > ac_macro_air_tactical } }
+			set_variable = { ac_macro_air_tactical = num_deployed_planes_with_type@tactical_bomber }
+		}
+		clamp_variable = { var = ac_macro_air_tactical min = 0 max = ac_macro_planes }
+		set_temp_variable = { ac_macro_role_premium = ac_macro_air_tactical }
+		multiply_temp_variable = { ac_macro_role_premium = 0.006 }
+		if = {
+			limit = { check_variable = { ac_macro_role_premium > ac_macro_air_premium_annual } }
+			set_variable = { ac_macro_air_premium_annual = ac_macro_role_premium }
+		}
+		set_variable = { ac_macro_air_strategic = 0 }
+		if = {
+			limit = { check_variable = { num_deployed_planes_with_type@strategic_bomber > ac_macro_air_strategic } }
+			set_variable = { ac_macro_air_strategic = num_deployed_planes_with_type@strategic_bomber }
+		}
+		clamp_variable = { var = ac_macro_air_strategic min = 0 max = ac_macro_planes }
+		set_temp_variable = { ac_macro_role_premium = ac_macro_air_strategic }
+		multiply_temp_variable = { ac_macro_role_premium = 0.01 }
+		if = {
+			limit = { check_variable = { ac_macro_role_premium > ac_macro_air_premium_annual } }
+			set_variable = { ac_macro_air_premium_annual = ac_macro_role_premium }
+		}
+		set_variable = { ac_macro_air_transport = 0 }
+		if = {
+			limit = { check_variable = { num_deployed_planes_with_type@air_transport > ac_macro_air_transport } }
+			set_variable = { ac_macro_air_transport = num_deployed_planes_with_type@air_transport }
+		}
+		clamp_variable = { var = ac_macro_air_transport min = 0 max = ac_macro_planes }
+		set_temp_variable = { ac_macro_role_premium = ac_macro_air_transport }
+		multiply_temp_variable = { ac_macro_role_premium = 0.004 }
+		if = {
+			limit = { check_variable = { ac_macro_role_premium > ac_macro_air_premium_annual } }
+			set_variable = { ac_macro_air_premium_annual = ac_macro_role_premium }
+		}
+		set_variable = { ac_macro_force_part_milli = ac_macro_personnel }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 0.06 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_force_part_milli = num_deployed_planes }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 0.008 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_force_part_milli = num_ships }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 0.08 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_force_part_milli = num_ships_with_type@carrier }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 0.8 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_force_part_milli = num_ships_with_type@submarine }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 0.02 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_force_part_milli = ac_macro_land_armor_k }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 0.2 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_force_part_milli = ac_macro_air_premium_annual }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 1 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_force_part_milli = ac_macro_land_infantry_k }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 0.0005 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_force_part_milli = ac_macro_land_motorized_k }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 0.04 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_force_part_milli = ac_macro_land_mechanized_k }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 0.08 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_force_part_milli = ac_macro_land_support_k }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 0.003 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_force_part_milli = ac_macro_land_artillery_k }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_force_part_milli < 1000 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_force_part_milli = 0.01 }
+		multiply_variable = { ac_macro_force_part_milli = ac_macro_war_factor }
+		divide_variable = { ac_macro_force_part_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_force_part_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }
+		set_variable = { ac_macro_upkeep = ac_macro_upkeep_milli }
+		divide_variable = { ac_macro_upkeep = 1000 }
+		if = { limit = { check_variable = { ac_macro_upkeep_milli > ac_macro_spending_defense_milli } }
+		 subtract_from_variable = { ac_macro_operating_milli = ac_macro_spending_defense_milli }
+		 set_variable = { ac_macro_spending_defense_milli = ac_macro_upkeep_milli }
+		 add_to_variable = { ac_macro_operating_milli = ac_macro_spending_defense_milli }
+		}
+		set_variable = { ac_macro_spending_administration = ac_macro_spending_administration_milli }
+		divide_variable = { ac_macro_spending_administration = 1000 }
+		set_variable = { ac_macro_spending_services = ac_macro_spending_services_milli }
+		divide_variable = { ac_macro_spending_services = 1000 }
+		set_variable = { ac_macro_spending_education = ac_macro_spending_education_milli }
+		divide_variable = { ac_macro_spending_education = 1000 }
+		set_variable = { ac_macro_spending_development = ac_macro_spending_development_milli }
+		divide_variable = { ac_macro_spending_development = 1000 }
+		set_variable = { ac_macro_spending_defense = ac_macro_spending_defense_milli }
+		divide_variable = { ac_macro_spending_defense = 1000 }
+		set_variable = { ac_macro_operating = ac_macro_operating_milli }
+		divide_variable = { ac_macro_operating = 1000 }
+		set_variable = { ac_macro_debt_ratio = 0 }
+		if = { limit = { check_variable = { ac_macro_nominal_gdp > 0 } }
+		 set_variable = { ac_macro_debt_ratio = ac_macro_debt }
+		 divide_variable = { ac_macro_debt_ratio = ac_macro_nominal_gdp }
+		}
+		set_variable = { ac_macro_interest_rate = ac_macro_policy_rate }
+		if = { limit = { check_variable = { ac_macro_debt_ratio > 0.6 } } add_to_variable = { ac_macro_interest_rate = 2 } }
+		if = { limit = { check_variable = { ac_macro_debt_ratio > 1 } } add_to_variable = { ac_macro_interest_rate = 3 } }
+		if = { limit = { check_variable = { ac_macro_arrears > 0 } } add_to_variable = { ac_macro_interest_rate = 3 } }
+		set_variable = { ac_macro_interest_milli = ac_macro_debt }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_interest_milli < 1000 } }
+			multiply_variable = { ac_macro_interest_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_interest_milli = ac_macro_interest_rate }
+		divide_variable = { ac_macro_interest_milli = 1200 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_interest_milli = 1000 }
+		}
+		set_variable = { ac_macro_interest = ac_macro_interest_milli }
+		divide_variable = { ac_macro_interest = 1000 }
+		set_variable = { ac_macro_commitment_month_milli = ac_macro_commitments_annual }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_commitment_month_milli < 1000 } }
+			multiply_variable = { ac_macro_commitment_month_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		divide_variable = { ac_macro_commitment_month_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_commitment_month_milli = 1000 }
+		}
+		set_variable = { ac_macro_bill_milli = ac_macro_operating_milli }
+		add_to_variable = { ac_macro_bill_milli = ac_macro_interest_milli }
+		add_to_variable = { ac_macro_bill_milli = ac_macro_commitment_month_milli }
+		set_variable = { ac_macro_bill = ac_macro_bill_milli }
+		divide_variable = { ac_macro_bill = 1000 }
+		set_variable = { ac_macro_balance = ac_macro_revenue }
+		subtract_from_variable = { ac_macro_balance = ac_macro_bill }
+		set_variable = { ac_macro_credit_limit = ac_macro_nominal_gdp }
+		set_variable = { ac_macro_credit_room = ac_macro_credit_limit }
+		subtract_from_variable = { ac_macro_credit_room = ac_macro_debt }
+		clamp_variable = { var = ac_macro_credit_room min = 0 }
+		set_variable = { ac_macro_loan_size = ac_macro_nominal_gdp }
+		multiply_variable = { ac_macro_loan_size = 0.005 }
+		clamp_variable = { var = ac_macro_loan_size min = 0.001 }
+		set_variable = { ac_macro_defense_funding = 1 }
+		if = { limit = { check_variable = { ac_macro_upkeep_milli > 0 } }
+		 set_variable = { ac_macro_defense_funding = ac_macro_spending_defense_milli }
+		 divide_variable = { ac_macro_defense_funding = ac_macro_upkeep_milli }
+		 clamp_variable = { var = ac_macro_defense_funding min = 0 max = 1 }
+		}
+		multiply_variable = { ac_macro_defense_funding = ac_macro_funding }
+		# Compatibility quote aliases are display-only in full mode, never write owners.
+		set_variable = { ac_econ_treasury = ac_macro_cash }
+		set_variable = { ac_econ_debt = ac_macro_debt }
+		set_variable = { ac_econ_arrears = ac_macro_arrears }
+		set_variable = { ac_econ_revenue = ac_macro_revenue }
+		set_variable = { ac_econ_spending = ac_macro_operating }
+		set_variable = { ac_econ_balance = ac_macro_balance }
+		if = { limit = { NOT = { has_dynamic_modifier = { modifier = ac_macro_economy_modifier } } } add_dynamic_modifier = { modifier = ac_macro_economy_modifier } }
+	}
+}
+ac_macro_settle_month = {
+	if = {
+		limit = { ac_macro_ready = yes date > 1991.1.31 has_country_flag = ac_macro_monthly_authorized check_variable = { ac_macro_last_settlement < date } }
+		clr_country_flag = ac_macro_monthly_authorized
+		set_variable = { ac_macro_last_settlement = date }
+		ac_macro_quote = yes
+		# Private settlement allocation. UI/quote paths never execute this.
+		set_variable = { ac_macro_settled_real_gdp = 0 }
+		set_variable = { ac_macro_settled_tax_base = 0 }
+		every_controlled_state = {
+		 if = { limit = { has_variable = ac_macro_real_output }
+		  if = { limit = { OR = { NOT = { has_variable = ac_macro_claim_date } check_variable = { ac_macro_claim_date < date } } }
+		   set_variable = { ac_macro_claim_date = date }
+		   set_variable = { ac_macro_claim_receiver = PREV.id }
+		   set_variable = { ac_macro_claim_output = ac_macro_real_output }
+		   set_temp_variable = { ac_macro_claim_factor = 1 }
+		   subtract_from_temp_variable = { ac_macro_claim_factor = ac_macro_disruption }
+		   multiply_variable = { ac_macro_claim_output = ac_macro_claim_factor }
+		   set_variable = { ac_macro_claim_tax_base = ac_macro_claim_output }
+		   if = { limit = { NOT = { is_owned_by = PREV } } multiply_variable = { ac_macro_claim_tax_base = 0.35 } }
+		  }
+		  if = { limit = { check_variable = { ac_macro_claim_date = date } check_variable = { var = ac_macro_claim_receiver value = PREV.id compare = equals } }
+		   add_to_variable = { PREV.ac_macro_settled_real_gdp = ac_macro_claim_output }
+		   add_to_variable = { PREV.ac_macro_settled_tax_base = ac_macro_claim_tax_base }
+		  }
+		 }
+		}
+		# Temporarily quote this period's allocated bases; the final public quote below
+		# restores current physical-controller forecasts after the payment is complete.
+		set_variable = { ac_macro_real_gdp = ac_macro_settled_real_gdp }
+		set_variable = { ac_macro_nominal_gdp = ac_macro_settled_real_gdp }
+		multiply_variable = { ac_macro_nominal_gdp = ac_macro_price_multiplier }
+		set_variable = { ac_macro_tax_base = ac_macro_settled_tax_base }
+		multiply_variable = { ac_macro_tax_base = ac_macro_price_multiplier }
+		set_variable = { ac_macro_revenue_milli = 0 }
+		set_variable = { ac_macro_revenue_income_milli = ac_macro_tax_base }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_revenue_income_milli < 1000 } }
+			multiply_variable = { ac_macro_revenue_income_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_revenue_income_milli = 0.55 }
+		multiply_variable = { ac_macro_revenue_income_milli = ac_macro_income_tax }
+		multiply_variable = { ac_macro_revenue_income_milli = ac_macro_effective_collection }
+		divide_variable = { ac_macro_revenue_income_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_revenue_income_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_revenue_milli = ac_macro_revenue_income_milli }
+		set_variable = { ac_macro_revenue_income = ac_macro_revenue_income_milli }
+		divide_variable = { ac_macro_revenue_income = 1000 }
+		set_variable = { ac_macro_revenue_business_milli = ac_macro_tax_base }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_revenue_business_milli < 1000 } }
+			multiply_variable = { ac_macro_revenue_business_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_revenue_business_milli = 0.25 }
+		multiply_variable = { ac_macro_revenue_business_milli = ac_macro_business_tax }
+		multiply_variable = { ac_macro_revenue_business_milli = ac_macro_effective_collection }
+		divide_variable = { ac_macro_revenue_business_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_revenue_business_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_revenue_milli = ac_macro_revenue_business_milli }
+		set_variable = { ac_macro_revenue_business = ac_macro_revenue_business_milli }
+		divide_variable = { ac_macro_revenue_business = 1000 }
+		set_variable = { ac_macro_revenue_consumption_milli = ac_macro_tax_base }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_revenue_consumption_milli < 1000 } }
+			multiply_variable = { ac_macro_revenue_consumption_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_revenue_consumption_milli = 0.65 }
+		multiply_variable = { ac_macro_revenue_consumption_milli = ac_macro_consumption_tax }
+		multiply_variable = { ac_macro_revenue_consumption_milli = ac_macro_effective_collection }
+		divide_variable = { ac_macro_revenue_consumption_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_revenue_consumption_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_revenue_milli = ac_macro_revenue_consumption_milli }
+		set_variable = { ac_macro_revenue_consumption = ac_macro_revenue_consumption_milli }
+		divide_variable = { ac_macro_revenue_consumption = 1000 }
+		set_variable = { ac_macro_revenue = ac_macro_revenue_milli }
+		divide_variable = { ac_macro_revenue = 1000 }
+		set_variable = { ac_macro_operating_milli = 0 }
+		set_temp_variable = { ac_macro_category_factor = ac_macro_budget_administration }
+		multiply_temp_variable = { ac_macro_category_factor = 0.25 }
+		add_to_temp_variable = { ac_macro_category_factor = 0.75 }
+		set_variable = { ac_macro_spending_administration_milli = ac_macro_nominal_gdp }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_spending_administration_milli < 1000 } }
+			multiply_variable = { ac_macro_spending_administration_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_spending_administration_milli = 0.015 }
+		multiply_variable = { ac_macro_spending_administration_milli = ac_macro_category_factor }
+		divide_variable = { ac_macro_spending_administration_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_spending_administration_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_operating_milli = ac_macro_spending_administration_milli }
+		set_temp_variable = { ac_macro_category_factor = ac_macro_budget_services }
+		multiply_temp_variable = { ac_macro_category_factor = 0.25 }
+		add_to_temp_variable = { ac_macro_category_factor = 0.75 }
+		set_variable = { ac_macro_spending_services_milli = ac_macro_nominal_gdp }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_spending_services_milli < 1000 } }
+			multiply_variable = { ac_macro_spending_services_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_spending_services_milli = 0.05 }
+		multiply_variable = { ac_macro_spending_services_milli = ac_macro_category_factor }
+		divide_variable = { ac_macro_spending_services_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_spending_services_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_operating_milli = ac_macro_spending_services_milli }
+		set_temp_variable = { ac_macro_category_factor = ac_macro_budget_education }
+		multiply_temp_variable = { ac_macro_category_factor = 0.25 }
+		add_to_temp_variable = { ac_macro_category_factor = 0.75 }
+		set_variable = { ac_macro_spending_education_milli = ac_macro_nominal_gdp }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_spending_education_milli < 1000 } }
+			multiply_variable = { ac_macro_spending_education_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_spending_education_milli = 0.03 }
+		multiply_variable = { ac_macro_spending_education_milli = ac_macro_category_factor }
+		divide_variable = { ac_macro_spending_education_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_spending_education_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_operating_milli = ac_macro_spending_education_milli }
+		set_temp_variable = { ac_macro_category_factor = ac_macro_budget_development }
+		multiply_temp_variable = { ac_macro_category_factor = 0.25 }
+		add_to_temp_variable = { ac_macro_category_factor = 0.75 }
+		set_variable = { ac_macro_spending_development_milli = ac_macro_nominal_gdp }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_spending_development_milli < 1000 } }
+			multiply_variable = { ac_macro_spending_development_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_spending_development_milli = 0.02 }
+		multiply_variable = { ac_macro_spending_development_milli = ac_macro_category_factor }
+		divide_variable = { ac_macro_spending_development_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_spending_development_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_operating_milli = ac_macro_spending_development_milli }
+		set_temp_variable = { ac_macro_category_factor = ac_macro_budget_defense }
+		multiply_temp_variable = { ac_macro_category_factor = 0.25 }
+		add_to_temp_variable = { ac_macro_category_factor = 0.75 }
+		set_variable = { ac_macro_spending_defense_milli = ac_macro_nominal_gdp }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_spending_defense_milli < 1000 } }
+			multiply_variable = { ac_macro_spending_defense_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_spending_defense_milli = 0.03 }
+		multiply_variable = { ac_macro_spending_defense_milli = ac_macro_category_factor }
+		divide_variable = { ac_macro_spending_defense_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_spending_defense_milli = 1000 }
+		}
+		add_to_variable = { ac_macro_operating_milli = ac_macro_spending_defense_milli }
+		set_variable = { ac_macro_upkeep = ac_macro_upkeep_milli }
+		divide_variable = { ac_macro_upkeep = 1000 }
+		if = { limit = { check_variable = { ac_macro_upkeep_milli > ac_macro_spending_defense_milli } }
+		 subtract_from_variable = { ac_macro_operating_milli = ac_macro_spending_defense_milli }
+		 set_variable = { ac_macro_spending_defense_milli = ac_macro_upkeep_milli }
+		 add_to_variable = { ac_macro_operating_milli = ac_macro_spending_defense_milli }
+		}
+		set_variable = { ac_macro_spending_administration = ac_macro_spending_administration_milli }
+		divide_variable = { ac_macro_spending_administration = 1000 }
+		set_variable = { ac_macro_spending_services = ac_macro_spending_services_milli }
+		divide_variable = { ac_macro_spending_services = 1000 }
+		set_variable = { ac_macro_spending_education = ac_macro_spending_education_milli }
+		divide_variable = { ac_macro_spending_education = 1000 }
+		set_variable = { ac_macro_spending_development = ac_macro_spending_development_milli }
+		divide_variable = { ac_macro_spending_development = 1000 }
+		set_variable = { ac_macro_spending_defense = ac_macro_spending_defense_milli }
+		divide_variable = { ac_macro_spending_defense = 1000 }
+		set_variable = { ac_macro_operating = ac_macro_operating_milli }
+		divide_variable = { ac_macro_operating = 1000 }
+		set_variable = { ac_macro_debt_ratio = 0 }
+		if = { limit = { check_variable = { ac_macro_nominal_gdp > 0 } }
+		 set_variable = { ac_macro_debt_ratio = ac_macro_debt }
+		 divide_variable = { ac_macro_debt_ratio = ac_macro_nominal_gdp }
+		}
+		set_variable = { ac_macro_interest_rate = ac_macro_policy_rate }
+		if = { limit = { check_variable = { ac_macro_debt_ratio > 0.6 } } add_to_variable = { ac_macro_interest_rate = 2 } }
+		if = { limit = { check_variable = { ac_macro_debt_ratio > 1 } } add_to_variable = { ac_macro_interest_rate = 3 } }
+		if = { limit = { check_variable = { ac_macro_arrears > 0 } } add_to_variable = { ac_macro_interest_rate = 3 } }
+		set_variable = { ac_macro_interest_milli = ac_macro_debt }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_interest_milli < 1000 } }
+			multiply_variable = { ac_macro_interest_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		multiply_variable = { ac_macro_interest_milli = ac_macro_interest_rate }
+		divide_variable = { ac_macro_interest_milli = 1200 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_interest_milli = 1000 }
+		}
+		set_variable = { ac_macro_interest = ac_macro_interest_milli }
+		divide_variable = { ac_macro_interest = 1000 }
+		set_variable = { ac_macro_commitment_month_milli = ac_macro_commitments_annual }
+		set_temp_variable = { ac_macro_scaled_early = 0 }
+		if = {
+			limit = { check_variable = { ac_macro_commitment_month_milli < 1000 } }
+			multiply_variable = { ac_macro_commitment_month_milli = 1000 }
+			set_temp_variable = { ac_macro_scaled_early = 1 }
+		}
+		divide_variable = { ac_macro_commitment_month_milli = 12 }
+		if = {
+			limit = { check_variable = { ac_macro_scaled_early = 0 } }
+			multiply_variable = { ac_macro_commitment_month_milli = 1000 }
+		}
+		set_variable = { ac_macro_bill_milli = ac_macro_operating_milli }
+		add_to_variable = { ac_macro_bill_milli = ac_macro_interest_milli }
+		add_to_variable = { ac_macro_bill_milli = ac_macro_commitment_month_milli }
+		set_variable = { ac_macro_bill = ac_macro_bill_milli }
+		divide_variable = { ac_macro_bill = 1000 }
+		set_variable = { ac_macro_balance = ac_macro_revenue }
+		subtract_from_variable = { ac_macro_balance = ac_macro_bill }
+		# Preserve the annual bases used to bill this settlement, not the next forecast.
+		set_variable = { ac_macro_last_real_gdp = ac_macro_real_gdp }
+		set_variable = { ac_macro_last_nominal_gdp = ac_macro_nominal_gdp }
+		set_variable = { ac_macro_last_tax_base = ac_macro_tax_base }
+		set_variable = { ac_macro_last_prices = ac_macro_price_index }
+		# Accrual includes sub-quantum flows; cash and billed arrears use whole0.001b quanta.
+		set_variable = { ac_macro_last_revenue_accrued_milli = ac_macro_revenue_milli }
+		set_temp_variable = { ac_macro_to_settle = ac_macro_revenue_milli }
+		add_to_temp_variable = { ac_macro_to_settle = ac_macro_revenue_carry_milli }
+		set_temp_variable = { ac_macro_whole_quanta = ac_macro_to_settle }
+		round_temp_variable = ac_macro_whole_quanta
+		if = {
+			limit = { check_variable = { ac_macro_whole_quanta > ac_macro_to_settle } }
+			subtract_from_temp_variable = { ac_macro_whole_quanta = 1 }
+		}
+		set_variable = { ac_macro_revenue_carry_milli = ac_macro_to_settle }
+		subtract_from_variable = { ac_macro_revenue_carry_milli = ac_macro_whole_quanta }
+		set_variable = { ac_macro_last_revenue = ac_macro_whole_quanta }
+		divide_variable = { ac_macro_last_revenue = 1000 }
+		set_variable = { ac_macro_last_bill_accrued_milli = ac_macro_bill_milli }
+		set_temp_variable = { ac_macro_to_settle = ac_macro_bill_milli }
+		add_to_temp_variable = { ac_macro_to_settle = ac_macro_bill_carry_milli }
+		set_temp_variable = { ac_macro_whole_quanta = ac_macro_to_settle }
+		round_temp_variable = ac_macro_whole_quanta
+		if = {
+			limit = { check_variable = { ac_macro_whole_quanta > ac_macro_to_settle } }
+			subtract_from_temp_variable = { ac_macro_whole_quanta = 1 }
+		}
+		set_variable = { ac_macro_bill_carry_milli = ac_macro_to_settle }
+		subtract_from_variable = { ac_macro_bill_carry_milli = ac_macro_whole_quanta }
+		set_variable = { ac_macro_last_bill = ac_macro_whole_quanta }
+		divide_variable = { ac_macro_last_bill = 1000 }
+		set_variable = { ac_macro_last_borrowed = 0 }
+		set_variable = { ac_macro_last_arrears_added = 0 }
+		set_variable = { ac_macro_last_arrears_paid = 0 }
+		set_variable = { ac_macro_previous_arrears = ac_macro_arrears }
+		add_to_variable = { ac_macro_cash = ac_macro_last_revenue }
+		if = { limit = { check_variable = { ac_macro_cash < ac_macro_last_bill } }
+		 set_temp_variable = { ac_macro_financing = ac_macro_last_bill }
+		 subtract_from_temp_variable = { ac_macro_financing = ac_macro_cash }
+		 if = { limit = { check_variable = { ac_macro_financing > ac_macro_credit_room } } set_temp_variable = { ac_macro_financing = ac_macro_credit_room } }
+		 add_to_variable = { ac_macro_cash = ac_macro_financing }
+		 add_to_variable = { ac_macro_debt = ac_macro_financing }
+		 set_variable = { ac_macro_last_borrowed = ac_macro_financing }
+		}
+		set_variable = { ac_macro_last_paid = ac_macro_last_bill }
+		if = { limit = { check_variable = { ac_macro_last_paid > ac_macro_cash } } set_variable = { ac_macro_last_paid = ac_macro_cash } }
+		subtract_from_variable = { ac_macro_cash = ac_macro_last_paid }
+		set_variable = { ac_macro_last_arrears_added = ac_macro_last_bill }
+		subtract_from_variable = { ac_macro_last_arrears_added = ac_macro_last_paid }
+		add_to_variable = { ac_macro_arrears = ac_macro_last_arrears_added }
+		set_variable = { ac_macro_funding = 1 }
+		if = { limit = { check_variable = { ac_macro_last_bill > 0 } }
+		 set_variable = { ac_macro_funding = ac_macro_last_paid }
+		 divide_variable = { ac_macro_funding = ac_macro_last_bill }
+		}
+		if = { limit = { check_variable = { ac_macro_cash > 0 } check_variable = { ac_macro_arrears > 0 } }
+		 set_temp_variable = { ac_macro_payment = ac_macro_cash }
+		 if = { limit = { check_variable = { ac_macro_payment > ac_macro_arrears } } set_temp_variable = { ac_macro_payment = ac_macro_arrears } }
+		 subtract_from_variable = { ac_macro_cash = ac_macro_payment }
+		 subtract_from_variable = { ac_macro_arrears = ac_macro_payment }
+		 set_variable = { ac_macro_last_arrears_paid = ac_macro_payment }
+		}
+		add_to_variable = { ac_macro_settlements = 1 }
+		ac_macro_real_cycle = yes
+		ac_macro_crisis_cycle = yes
+		ac_macro_replacement_cycle = yes
+		ac_macro_ai_policy = yes
+		# Private receipt: this month may create one historical record.
+		set_country_flag = ac_macro_ledger_authorized
+		ac_macro_record_ledger = yes
+		clr_country_flag = ac_macro_ledger_authorized
+		ac_macro_quote = yes
+	}
+}
+ac_macro_real_cycle = {
+	if = {
+		limit = { ac_macro_ready = yes }
+		set_variable = { ac_macro_growth = ac_macro_base_growth }
+		set_temp_variable = { ac_macro_capacity_change = ac_macro_factory_capacity }
+		subtract_from_temp_variable = { ac_macro_capacity_change = ac_macro_last_factories }
+		set_variable = { ac_macro_capacity_growth = ac_macro_capacity_change }
+		clamp_variable = { var = ac_macro_capacity_growth min = -5 max = 5 }
+		multiply_variable = { ac_macro_capacity_growth = 0.2 }
+		add_to_variable = { ac_macro_growth = ac_macro_capacity_growth }
+		set_variable = { ac_macro_last_factories = ac_macro_factory_capacity }
+		set_temp_variable = { ac_macro_development_effect = ac_macro_budget_development }
+		multiply_temp_variable = { ac_macro_development_effect = 0.3 }
+		add_to_temp_variable = { ac_macro_development_effect = ac_macro_budget_education }
+		multiply_temp_variable = { ac_macro_development_effect = 0.3 }
+		multiply_temp_variable = { ac_macro_development_effect = ac_macro_funding }
+		# Smooth investment benefits; they do not appear immediately on a policy click.
+		multiply_variable = { ac_macro_growth_lag = 0.8 }
+		multiply_temp_variable = { ac_macro_development_effect = 0.2 }
+		add_to_variable = { ac_macro_growth_lag = ac_macro_development_effect }
+		add_to_variable = { ac_macro_growth = ac_macro_growth_lag }
+		if = { limit = { check_variable = { ac_macro_income_tax > 0.25 } } add_to_variable = { ac_macro_growth = -1 } }
+		if = { limit = { check_variable = { ac_macro_funding < 0.9 } } add_to_variable = { ac_macro_growth = -2 } }
+		if = { limit = { has_war = yes } add_to_variable = { ac_macro_growth = -3 } }
+		if = { limit = { has_country_flag = ac_macro_crisis } add_to_variable = { ac_macro_growth = -2 } }
+		if = { limit = { check_variable = { ac_macro_policy_rate > 4 } } add_to_variable = { ac_macro_growth = -0.25 } }
+		clamp_variable = { var = ac_macro_growth min = -20 max = 10 }
+		set_temp_variable = { ac_macro_growth_factor = ac_macro_growth }
+		divide_temp_variable = { ac_macro_growth_factor = 1200 }
+		add_to_temp_variable = { ac_macro_growth_factor = 1 }
+		every_controlled_state = {
+		 if = { limit = { has_variable = ac_macro_real_output OR = { NOT = { has_variable = ac_macro_state_last_cycle } check_variable = { ac_macro_state_last_cycle < date } } }
+		  # Productive growth/repair belongs to the state and this accounting boundary.
+		  # A controller change between country callbacks must not apply it twice.
+		  set_variable = { ac_macro_state_last_cycle = date }
+		  set_temp_variable = { ac_macro_state_growth_factor = PREV.ac_macro_growth }
+		  divide_temp_variable = { ac_macro_state_growth_factor = 1200 }
+		  add_to_temp_variable = { ac_macro_state_growth_factor = 1 }
+		  multiply_variable = { ac_macro_real_output = ac_macro_state_growth_factor }
+		  set_temp_variable = { ac_macro_state_repair = PREV.ac_macro_budget_development }
+		  add_to_temp_variable = { ac_macro_state_repair = 1 }
+		  multiply_temp_variable = { ac_macro_state_repair = 0.005 }
+		  multiply_temp_variable = { ac_macro_state_repair = PREV.ac_macro_funding }
+		  subtract_from_variable = { ac_macro_disruption = ac_macro_state_repair }
+		  clamp_variable = { var = ac_macro_disruption min = 0 max = 0.75 }
+		 }
+		}
+		set_temp_variable = { ac_macro_inflation_gap = 2 }
+		subtract_from_temp_variable = { ac_macro_inflation_gap = ac_macro_inflation }
+		multiply_temp_variable = { ac_macro_inflation_gap = 0.1 }
+		add_to_variable = { ac_macro_inflation = ac_macro_inflation_gap }
+		if = { limit = { has_war = yes } add_to_variable = { ac_macro_inflation = 0.15 } }
+		set_temp_variable = { ac_macro_supply_pressure = ac_macro_output_gap }
+		multiply_temp_variable = { ac_macro_supply_pressure = 0.3 }
+		add_to_variable = { ac_macro_inflation = ac_macro_supply_pressure }
+		if = { limit = { check_variable = { ac_macro_policy_rate > 4 } } add_to_variable = { ac_macro_inflation = -0.1 } }
+		if = { limit = { check_variable = { ac_macro_policy_rate < 4 } } add_to_variable = { ac_macro_inflation = 0.1 } }
+		clamp_variable = { var = ac_macro_inflation min = -5 max = 25 }
+		set_temp_variable = { ac_macro_price_factor = ac_macro_inflation }
+		divide_temp_variable = { ac_macro_price_factor = 1200 }
+		add_to_temp_variable = { ac_macro_price_factor = 1 }
+		multiply_variable = { ac_macro_price_index = ac_macro_price_factor }
+		set_temp_variable = { ac_macro_readiness_delta = ac_macro_budget_defense }
+		add_to_temp_variable = { ac_macro_readiness_delta = 6 }
+		multiply_temp_variable = { ac_macro_readiness_delta = ac_macro_funding }
+		add_to_temp_variable = { ac_macro_readiness_delta = -6 }
+		add_to_variable = { ac_macro_readiness = ac_macro_readiness_delta }
+		clamp_variable = { var = ac_macro_readiness min = 0 max = 100 }
+		set_variable = { ac_macro_readiness_modifier = ac_macro_readiness }
+		divide_variable = { ac_macro_readiness_modifier = 1000 }
+		add_to_variable = { ac_macro_readiness_modifier = -0.1 }
+		set_variable = { ac_macro_service_modifier = ac_macro_budget_services }
+		multiply_variable = { ac_macro_service_modifier = 0.01 }
+		multiply_variable = { ac_macro_service_modifier = ac_macro_funding }
+		add_to_variable = { ac_macro_service_modifier = -0.01 }
+		set_variable = { ac_macro_construction_modifier = ac_macro_budget_development }
+		multiply_variable = { ac_macro_construction_modifier = 0.025 }
+		multiply_variable = { ac_macro_construction_modifier = ac_macro_funding }
+		add_to_variable = { ac_macro_construction_modifier = -0.025 }
+		set_variable = { ac_macro_research_modifier = ac_macro_budget_education }
+		multiply_variable = { ac_macro_research_modifier = 0.015 }
+		multiply_variable = { ac_macro_research_modifier = ac_macro_funding }
+		add_to_variable = { ac_macro_research_modifier = -0.015 }
+	}
+}
+ac_macro_crisis_cycle = {
+	if = {
+		limit = { ac_macro_ready = yes }
+		# The warning begins after two failed settlements. Its three correction
+		# months begin with the next scheduled settlement, not the warning's own month.
+		if = { limit = { has_country_flag = ac_macro_warning }
+		 add_to_variable = { ac_macro_warning_months = 1 }
+		 set_variable = { ac_macro_warning_months_left = 3 }
+		 subtract_from_variable = { ac_macro_warning_months_left = ac_macro_warning_months }
+		 clamp_variable = { var = ac_macro_warning_months_left min = 0 max = 3 }
+		}
+		if = { limit = { check_variable = { ac_macro_funding < 0.9 } }
+		 add_to_variable = { ac_macro_stress_months = 1 }
+		 set_variable = { ac_macro_recovery_months = 0 }
+		 if = { limit = { check_variable = { ac_macro_stress_months > 1 } NOT = { has_country_flag = ac_macro_warning } }
+		  set_country_flag = ac_macro_warning
+		  set_variable = { ac_macro_warning_months = 0 }
+		  set_variable = { ac_macro_warning_months_left = 3 }
+		  country_event = { id = ac_macro.1 days = 1 }
+		 }
+		 if = { limit = { has_country_flag = ac_macro_warning check_variable = { ac_macro_warning_months > 2 } NOT = { has_country_flag = ac_macro_crisis } }
+		  set_country_flag = ac_macro_crisis
+		  country_event = { id = ac_macro.2 days = 1 }
+		 }
+		}
+		else = {
+		 set_variable = { ac_macro_stress_months = 0 }
+		 if = { limit = { OR = { check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_arrears < ac_macro_previous_arrears } } }
+		  add_to_variable = { ac_macro_recovery_months = 1 }
+		 }
+		 else = { set_variable = { ac_macro_recovery_months = 0 } }
+		 if = { limit = { check_variable = { ac_macro_recovery_months > 2 } }
+		  clr_country_flag = ac_macro_warning
+		  set_variable = { ac_macro_warning_months = 0 }
+		  set_variable = { ac_macro_warning_months_left = 0 }
+		  if = { limit = { has_country_flag = ac_macro_crisis } clr_country_flag = ac_macro_crisis country_event = { id = ac_macro.3 days = 1 } }
+		 }
+		}
+	}
+}
+ac_macro_borrow = {
+	ac_macro_quote = yes
+	if = {
+		limit = { ac_macro_can_borrow = yes }
+		add_to_variable = { ac_macro_cash = ac_macro_loan_size }
+		add_to_variable = { ac_macro_debt = ac_macro_loan_size }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_repay = {
+	if = {
+		limit = { ac_macro_can_repay = yes }
+		set_temp_variable = { ac_macro_payment = ac_macro_loan_size }
+		if = { limit = { check_variable = { ac_macro_payment > ac_macro_cash } } set_temp_variable = { ac_macro_payment = ac_macro_cash } }
+		if = { limit = { check_variable = { ac_macro_payment > ac_macro_debt } } set_temp_variable = { ac_macro_payment = ac_macro_debt } }
+		subtract_from_variable = { ac_macro_cash = ac_macro_payment }
+		subtract_from_variable = { ac_macro_debt = ac_macro_payment }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_try_spend = {
+	clr_country_flag = ac_macro_transaction_succeeded
+	if = {
+		limit = { ac_macro_ready = yes }
+		if = { limit = { check_variable = { ac_macro_transaction_amount >= 0.001 } check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= ac_macro_transaction_amount } }
+		 subtract_from_variable = { ac_macro_cash = ac_macro_transaction_amount }
+		 set_country_flag = ac_macro_transaction_succeeded
+		}
+		ac_macro_quote = yes
+	}
+}
+ac_macro_receive = {
+	if = {
+		limit = { ac_macro_ready = yes }
+		if = { limit = { check_variable = { ac_macro_transaction_amount > 0 } }
+		 add_to_variable = { ac_macro_cash = ac_macro_transaction_amount }
+		}
+		ac_macro_quote = yes
+	}
+}
+ac_macro_change_commitment = {
+	if = {
+		limit = { ac_macro_ready = yes }
+		add_to_variable = { ac_macro_commitments_annual = ac_macro_commitment_delta }
+		clamp_variable = { var = ac_macro_commitments_annual min = 0 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_apply_disruption = {
+	if = {
+		limit = { ac_macro_ready = yes }
+		set_variable = { ac_macro_pending_disruption = ac_macro_disruption_delta }
+		clamp_variable = { var = ac_macro_pending_disruption min = 0 max = 0.75 }
+		every_controlled_state = {
+		 if = { limit = { has_variable = ac_macro_real_output }
+		  add_to_variable = { ac_macro_disruption = PREV.ac_macro_pending_disruption }
+		  clamp_variable = { var = ac_macro_disruption min = 0 max = 0.75 }
+		 }
+		}
+		ac_macro_quote = yes
+	}
+}
+ac_macro_fund_replacements = {
+	if = {
+		limit = { ac_macro_can_fund_replacements = yes }
+		subtract_from_variable = { ac_macro_cash = 0.005 }
+		set_variable = { ac_macro_replacement_escrow = 0.005 }
+		set_variable = { ac_macro_replacement_target = total_equipment_produced_infantry }
+		add_to_variable = { ac_macro_replacement_target = 100 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_cancel_replacements = {
+	if = {
+		limit = { ac_macro_ready = yes }
+		if = { limit = { check_variable = { ac_macro_replacement_escrow > 0 } }
+		 add_to_variable = { ac_macro_cash = ac_macro_replacement_escrow }
+		 set_variable = { ac_macro_replacement_escrow = 0 }
+		}
+		ac_macro_quote = yes
+	}
+}
+ac_macro_replacement_cycle = {
+	if = {
+		limit = { ac_macro_can_produce = yes check_variable = { ac_macro_replacement_escrow > 0 } check_variable = { ac_macro_replacement_target <= total_equipment_produced_infantry } }
+		set_variable = { ac_macro_replacement_escrow = 0 }
+		add_to_variable = { ac_macro_readiness = 2 }
+		clamp_variable = { var = ac_macro_readiness min = 0 max = 100 }
+		# The native queue already produced the equipment. Never grant another stockpile.
+	}
+}
+ac_macro_tax_low = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		set_variable = { ac_macro_income_tax = 0.16 }
+		set_variable = { ac_macro_business_tax = 0.16 }
+		set_variable = { ac_macro_consumption_tax = 0.04 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_tax_standard = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		set_variable = { ac_macro_income_tax = 0.2 }
+		set_variable = { ac_macro_business_tax = 0.2 }
+		set_variable = { ac_macro_consumption_tax = 0.05 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_tax_high = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		set_variable = { ac_macro_income_tax = 0.26 }
+		set_variable = { ac_macro_business_tax = 0.24 }
+		set_variable = { ac_macro_consumption_tax = 0.08 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_income_tax_up = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_income_tax = 0.02 }
+		clamp_variable = { var = ac_macro_income_tax min = 0 max = 0.4 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_income_tax_down = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_income_tax = -0.02 }
+		clamp_variable = { var = ac_macro_income_tax min = 0 max = 0.4 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_business_tax_up = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_business_tax = 0.02 }
+		clamp_variable = { var = ac_macro_business_tax min = 0 max = 0.35 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_business_tax_down = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_business_tax = -0.02 }
+		clamp_variable = { var = ac_macro_business_tax min = 0 max = 0.35 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_consumption_tax_up = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_consumption_tax = 0.02 }
+		clamp_variable = { var = ac_macro_consumption_tax min = 0 max = 0.15 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_consumption_tax_down = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_consumption_tax = -0.02 }
+		clamp_variable = { var = ac_macro_consumption_tax min = 0 max = 0.15 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_preset_balanced = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		set_variable = { ac_macro_budget_administration = 1 }
+		set_variable = { ac_macro_budget_services = 1 }
+		set_variable = { ac_macro_budget_education = 1 }
+		set_variable = { ac_macro_budget_development = 1 }
+		set_variable = { ac_macro_budget_defense = 1 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_preset_development = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		set_variable = { ac_macro_budget_administration = 1 }
+		set_variable = { ac_macro_budget_services = 1 }
+		set_variable = { ac_macro_budget_education = 2 }
+		set_variable = { ac_macro_budget_development = 2 }
+		set_variable = { ac_macro_budget_defense = 0 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_preset_relief = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		set_variable = { ac_macro_budget_administration = 1 }
+		set_variable = { ac_macro_budget_services = 2 }
+		set_variable = { ac_macro_budget_education = 1 }
+		set_variable = { ac_macro_budget_development = 1 }
+		set_variable = { ac_macro_budget_defense = 0 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_preset_mobilization = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		set_variable = { ac_macro_budget_administration = 1 }
+		set_variable = { ac_macro_budget_services = 0 }
+		set_variable = { ac_macro_budget_education = 0 }
+		set_variable = { ac_macro_budget_development = 1 }
+		set_variable = { ac_macro_budget_defense = 2 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_preset_stabilization = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		set_variable = { ac_macro_budget_administration = 1 }
+		set_variable = { ac_macro_budget_services = 0 }
+		set_variable = { ac_macro_budget_education = 0 }
+		set_variable = { ac_macro_budget_development = 0 }
+		set_variable = { ac_macro_budget_defense = 0 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_administration_up = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_budget_administration = 1 }
+		clamp_variable = { var = ac_macro_budget_administration min = 0 max = 2 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_administration_down = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_budget_administration = -1 }
+		clamp_variable = { var = ac_macro_budget_administration min = 0 max = 2 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_services_up = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_budget_services = 1 }
+		clamp_variable = { var = ac_macro_budget_services min = 0 max = 2 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_services_down = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_budget_services = -1 }
+		clamp_variable = { var = ac_macro_budget_services min = 0 max = 2 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_education_up = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_budget_education = 1 }
+		clamp_variable = { var = ac_macro_budget_education min = 0 max = 2 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_education_down = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_budget_education = -1 }
+		clamp_variable = { var = ac_macro_budget_education min = 0 max = 2 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_development_up = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_budget_development = 1 }
+		clamp_variable = { var = ac_macro_budget_development min = 0 max = 2 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_development_down = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_budget_development = -1 }
+		clamp_variable = { var = ac_macro_budget_development min = 0 max = 2 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_defense_up = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_budget_defense = 1 }
+		clamp_variable = { var = ac_macro_budget_defense min = 0 max = 2 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_defense_down = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_budget_defense = -1 }
+		clamp_variable = { var = ac_macro_budget_defense min = 0 max = 2 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_policy_rate_up = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_policy_rate = 2 }
+		clamp_variable = { var = ac_macro_policy_rate min = 2 max = 8 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_policy_rate_down = {
+	if = {
+		limit = { ac_macro_can_change_policy = yes }
+		add_to_variable = { ac_macro_policy_rate = -2 }
+		clamp_variable = { var = ac_macro_policy_rate min = 2 max = 8 }
+		set_country_flag = { flag = ac_macro_policy_cooldown days = 30 }
+		ac_macro_quote = yes
+	}
+}
+ac_macro_ai_policy = {
+	if = {
+		limit = { ac_macro_ready = yes is_ai = yes }
+		if = { limit = { check_variable = { ac_macro_funding < 0.95 } }
+		 if = { limit = { check_variable = { ac_macro_income_tax < 0.26 } } ac_macro_tax_high = yes }
+		 else = { ac_macro_preset_stabilization = yes }
+		}
+		else_if = { limit = { has_war = yes } ac_macro_preset_mobilization = yes }
+		else_if = { limit = { check_variable = { ac_macro_arrears > 0 } } ac_macro_preset_balanced = yes }
+		else = {
+		 set_temp_variable = { ac_macro_reserve = ac_macro_bill }
+		 multiply_temp_variable = { ac_macro_reserve = 3 }
+		 if = { limit = { check_variable = { ac_macro_cash > ac_macro_reserve } } ac_macro_repay = yes }
+		}
+	}
+}

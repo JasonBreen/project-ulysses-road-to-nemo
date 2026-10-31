@@ -5,6 +5,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import shutil
 import sys
@@ -234,11 +235,16 @@ class WorldFoundationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             for tag in ("SNS", "DEL"):
                 row = MANIFEST["countries"][tag]; path = Path(temp) / row["country_history"]; path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text(begin + (MOD / row["country_history"]).read_text())
+                current = re.sub(r'# BEGIN ECONOMY V2 NEW CAMPAIGN\n.*?# END ECONOMY V2 NEW CAMPAIGN\n?', '',
+                                 (MOD / row["country_history"]).read_text(), flags=re.S)
+                path.write_text(begin + current)
                 with patch.object(build, "MOD", Path(temp)):
                     output = country_output(tag, row, PROFILES[tag])
                     self.assertEqual(output.count("# BEGIN ECONOMY V2 NEW CAMPAIGN"), 1)
                     self.assertIn("set_country_flag = ac_macro_history_eligible", output)
+                    path.write_text(begin + begin + current)
+                    with self.assertRaisesRegex(ValueError, 'Invalid economic eligibility'):
+                        country_output(tag, row, PROFILES[tag])
                     path.write_text(begin.replace("set_country_flag", "add_political_power = 100\nset_country_flag") + row["country_history_source"])
                     with self.assertRaisesRegex(ValueError, "Unexpected economic"):
                         country_output(tag, row, PROFILES[tag])

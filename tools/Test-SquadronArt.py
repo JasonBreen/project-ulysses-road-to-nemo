@@ -65,9 +65,11 @@ class SquadronArt(unittest.TestCase):
         self.assertEqual(78, len(set(actual.values())))
 
     def test_all_textures_have_deliberate_dimensions_frames_and_alpha(self):
-        self.assertEqual(115, len(self.assets))
-        self.assertEqual(109, len(self.sprites))
-        self.assertEqual(115, len({r['file'] for r in self.assets}))
+        self.assertEqual(139, len(self.assets))
+        self.assertEqual(133, len(self.sprites))
+        self.assertEqual(139, len({r['file'] for r in self.assets}))
+        aperture = next(r for r in json.loads((ROOT / 'tools/overhaul/decisions_assets.json').read_text())['assets']
+                        if r['sprite'] == 'GFX_decision_unknown')
         for row in self.assets:
             path = MOD / row['file']
             self.assertEqual(row['sha256'], hashlib.sha256(path.read_bytes()).hexdigest())
@@ -78,12 +80,14 @@ class SquadronArt(unittest.TestCase):
                 self.assertEqual('RGBA', image.mode)
                 extrema = image.getchannel('A').getextrema()
                 self.assertEqual((row['alpha_min'], row['alpha_max']), extrema)
-                if '/categories/' in row['file'] or '/ideas/' in row['file']:
+                if any(family in row['file'] for family in ('/categories/', '/ideas/', '/decisions/')):
                     self.assertEqual((0, 255), extrema)
                     for x, y in ((0, 0), (image.width - 1, 0), (0, image.height - 1), (image.width - 1, image.height - 1)):
                         self.assertEqual(0, image.getpixel((x, y))[3])
                 else:
                     self.assertEqual((255, 255), extrema)
+            if '/decisions/' in row['file']:
+                self.assertEqual((aperture['width'], aperture['height']), (row['width'], row['height']))
             if row.get('source'):
                 self.assertEqual(row['source_sha256'], hashlib.sha256((ROOT / row['source']).read_bytes()).hexdigest())
                 self.assertTrue((ROOT / row['provenance']).exists())
@@ -96,6 +100,19 @@ class SquadronArt(unittest.TestCase):
                     if prop in ('picture', 'icon') and isinstance(value, str) and value.startswith('GFX_ac_sq_'):
                         used.add(value)
         self.assertGreaterEqual(len(used), 78)
+        decision_icons = set()
+        decision_count = 0
+        for _, _, decisions in parse((MOD / 'common/decisions/ac_squadrons.txt').read_text()):
+            for ident, _, body in decisions:
+                properties = fields(body)
+                self.assertIn('icon', properties, ident + ' must not silently use a runtime default')
+                value = properties['icon']
+                self.assertIsInstance(value, str)
+                decision_icons.add(value if value.startswith('GFX_') else 'GFX_decision_' + value)
+                decision_count += 1
+        self.assertEqual(sum(3 + len(row['chapters']) + len(row['cast']) for row in campaigns()), decision_count)
+        self.assertEqual(24, len(decision_icons))
+        used.update(decision_icons)
         self.assertFalse(used - self.sprites.keys())
         for name in used:
             texture = self.sprites[name]['texturefile'].strip('"')
@@ -147,7 +164,7 @@ class SquadronArt(unittest.TestCase):
 
     def test_no_other_sprite_family_conflicts_with_story_names(self):
         owners = {}
-        pattern = re.compile(r'\bname\s*=\s*"(GFX_ac_sq_[A-Za-z0-9_]+|GFX_idea_ac_sq_[A-Za-z0-9_]+)"')
+        pattern = re.compile(r'\bname\s*=\s*"(GFX_ac_sq_[A-Za-z0-9_]+|GFX_idea_ac_sq_[A-Za-z0-9_]+|GFX_decision_ac_sq_[A-Za-z0-9_]+)"')
         for path in (MOD / 'interface').glob('*.gfx'):
             for name in pattern.findall(path.read_text(encoding='utf-8-sig')):
                 self.assertNotIn(name, owners, (name, path, owners.get(name)))

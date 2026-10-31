@@ -5,12 +5,13 @@ interpreter. All commitment, quote, calendar and financial arithmetic runs from
 the generated mod source. Decimal execution is not native numeric acceptance.
 """
 import copy
-from decimal import Decimal as D
+from decimal import Decimal as D, ROUND_DOWN
 import importlib.util
 import json
 from pathlib import Path
 import sys
 import unittest
+import re
 
 ROOT = Path(__file__).resolve().parents[1]; MOD = ROOT / 'mod/2985041246'
 sys.path[:0] = [str(ROOT / 'tools'), str(ROOT / 'tools/economy_v2')]
@@ -59,12 +60,13 @@ class World(FiscalWorld):
                     self.execute([row for row in value if row[0] != 'limit'], context, temp, root, previous); branch = True
                 continue
             branch = None
-            if key in ('set_variable', 'add_to_variable', 'subtract_from_variable', 'multiply_variable', 'set_temp_variable', 'multiply_temp_variable') and value[0][0].startswith('ac_pol_'):
+            if key in ('set_variable', 'add_to_variable', 'subtract_from_variable', 'multiply_variable', 'divide_variable', 'set_temp_variable', 'multiply_temp_variable') and value[0][0].startswith('ac_pol_'):
                 name, _, operand = value[0]; amount = self.number(operand, context, temp, root, previous)
                 target = temp if 'temp_variable' in key else context.variables; before = target.get(name, D(0))
                 if key.startswith('set_'): target[name] = amount
                 elif key.startswith('add_'): target[name] = before + amount
                 elif key.startswith('subtract_'): target[name] = before - amount
+                elif key.startswith('divide_'): target[name] = before / amount
                 else: target[name] = before * amount
             elif key == 'add_political_power': context.pp += D(value)
             elif key in ('add_ideas', 'remove_ideas'):
@@ -82,6 +84,24 @@ class World(FiscalWorld):
 
 
 class SharedOwners(unittest.TestCase):
+    def test_policy_fees_survive_coarse_literal_operand_projection(self):
+        # A conservative operand-only stress model; not HOI4 numeric acceptance.
+        class CoarseLiteralWorld(World):
+            def number(self, value, context, temp, root, previous):
+                if re.fullmatch(r'-?\d+(?:\.\d+)?', value):
+                    return D(value).quantize(D('.001'), rounding=ROUND_DOWN)
+                return super().number(value, context, temp, root, previous)
+        for policy, numerator, denominator in [('civic',1,2000), ('district',3,10000)]:
+            world = CoarseLiteralWorld().initialize_both()
+            country = world.countries['SNS']
+            output = country.variables['ac_macro_nominal_gdp']
+            world.run('ac_pol_adopt_' + policy, 'SNS')
+            applied = country.variables['ac_pol_fiscal_applied']
+            self.assertGreater(applied, 0)
+            self.assertEqual(output * numerator / denominator, applied)
+            world.run('ac_pol_suspend_policy', 'SNS')
+            self.assertEqual(0, country.variables['ac_macro_commitments_annual'])
+
     def test_real_commitment_quote_and_monthly_bill_without_quote_settlement(self):
         w = World().initialize_both(); c = w.countries['SNS']; control = copy.deepcopy(w)
         cash = c.variables['ac_macro_cash']; bill = c.variables['ac_macro_bill']

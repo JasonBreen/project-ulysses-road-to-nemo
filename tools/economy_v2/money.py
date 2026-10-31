@@ -9,6 +9,7 @@ range and precision still require engine probes; lost upstream precision cannot
 be reconstructed by this accounting owner.
 """
 import forces
+from fractions import Fraction
 
 
 def block(name, body):
@@ -19,7 +20,20 @@ def monthly_milli(target, source, factors=(), divisor=12):
     body = f'set_variable = {{ {target} = {source} }}\nset_temp_variable = {{ ac_macro_scaled_early = 0 }}\n'
     body += block('if', f'limit = {{ check_variable = {{ {target} < 1000 }} }}\n'
                   f'multiply_variable = {{ {target} = 1000 }}\nset_temp_variable = {{ ac_macro_scaled_early = 1 }}')
-    body += ''.join(f'multiply_variable = {{ {target} = {factor} }}\n' for factor in factors)
+    for factor in factors:
+        # Resolve tiny coefficients through integer ratios. A literal such as
+        #0.0005 can disappear before multiplication in a coarse numeric parser;
+        # scaling the observed base first cannot recover that lost operand.
+        try:
+            ratio = Fraction(str(factor))
+        except ValueError:
+            ratio = None  # A runtime variable, not a numeric coefficient.
+        if ratio is not None and 0 < abs(ratio) < Fraction(1, 1000):
+            if ratio.numerator != 1:
+                body += f'multiply_variable = {{ {target} = {ratio.numerator} }}\n'
+            body += f'divide_variable = {{ {target} = {ratio.denominator} }}\n'
+        else:
+            body += f'multiply_variable = {{ {target} = {factor} }}\n'
     body += f'divide_variable = {{ {target} = {divisor} }}\n'
     body += block('if', f'limit = {{ check_variable = {{ ac_macro_scaled_early = 0 }} }}\nmultiply_variable = {{ {target} = 1000 }}')
     return body

@@ -57,13 +57,27 @@ def state_output(row, ident, cfg):
         if p not in owned:
             continue
         province = get(buildings, str(p), []); setv(province, "supply_node", "1"); setv(buildings, str(p), province)
-        hist[:] = [n for n in hist if n[0] != "victory_points" or int(n[2][0][0]) != p]
-        hist.append(["victory_points", "=", [[str(p), None, None], ["20" if p == row["capital_province"] else "5", None, None]]])
+        if row.get("preserve_inherited_economy"):
+            # The inherited capital100 and port30 remain the supply/VP
+            # hierarchy. Only previously unnamed new hubs receive a small VP.
+            if p in row["new_victory_points"]:
+                hist[:] = [n for n in hist if n[0] != "victory_points" or int(n[2][0][0]) != p]
+                hist.append(["victory_points", "=", [[str(p), None, None], ["5", None, None]]])
+        else:
+            hist[:] = [n for n in hist if n[0] != "victory_points" or int(n[2][0][0]) != p]
+            hist.append(["victory_points", "=", [[str(p), None, None], ["20" if p == row["capital_province"] else "5", None, None]]])
     resources = get(state, "resources", [])
     for key, value in cfg["resources"].items():
         setv(resources, key, str(value))
-    slots = cfg["civilian"] + cfg["military"] + cfg["dockyard"]
-    if slots > 6:
+    slots = cfg["civilian"] + cfg["military"] + cfg["dockyard"] + (cfg["fuel_silo"] if row.get("preserve_inherited_economy") else 0)
+    if row.get("preserve_inherited_economy"):
+        capacities = {"town": 4, "city": 6, "large_city": 8, "metropolis": 10}
+        original = row["baseline"][ident]["economy"]["state_category"]
+        category = original
+        if slots > capacities[original]:
+            category = next(k for k, v in capacities.items() if v >= slots)
+        setv(state, "state_category", category)
+    elif slots > 6:
         setv(state, "state_category", "large_city")
     elif slots > 4:
         setv(state, "state_category", "city")
@@ -102,15 +116,17 @@ def country_output(tag, row, profile):
     bba += variant(tag + " Service Fighter", "small_plane_airframe_1", {"fixed_main_weapon_slot": "light_mg_4x", "engine_type_slot": "engine_2_1x"})
     if profile["cas"]:
         bba += variant(tag + " Service Support", "small_plane_cas_airframe_1", {"fixed_main_weapon_slot": "bomb_locks", "engine_type_slot": "engine_2_1x"})
-    for kind, version, count in [("small_plane_airframe_1", "Service Fighter", 12 if profile["fighters"] > 24 else 8),
-                                 ("small_plane_cas_airframe_1", "Service Support", 6 if profile["cas"] else 0)]:
+    reserve_fighters = profile.get("reserve_fighters", 12 if profile["fighters"] > 24 else 8)
+    reserve_cas = profile.get("reserve_cas", 6 if profile["cas"] else 0)
+    for kind, version, count in [("small_plane_airframe_1", "Service Fighter", reserve_fighters),
+                                 ("small_plane_cas_airframe_1", "Service Support", reserve_cas)]:
         if count:
             bba += block("add_equipment_to_stockpile", f'type = {kind}\namount = {count}\nproducer = {tag}\nvariant_name = "{tag} {version}"')
     bba += f'set_air_oob = "{tag}_wf_air_bba"\n'
     legacy = block("set_technology", "early_fighter = 1\nfighter1 = 1\nCAS1 = 1")
-    legacy += block("add_equipment_to_stockpile", f'type = fighter_equipment_1\namount = {12 if profile["fighters"] > 24 else 8}\nproducer = {tag}')
+    legacy += block("add_equipment_to_stockpile", f'type = fighter_equipment_1\namount = {reserve_fighters}\nproducer = {tag}')
     if profile["cas"]:
-        legacy += block("add_equipment_to_stockpile", f"type = CAS_equipment_1\namount = 6\nproducer = {tag}")
+        legacy += block("add_equipment_to_stockpile", f"type = CAS_equipment_1\namount = {reserve_cas}\nproducer = {tag}")
     legacy += f'set_air_oob = "{tag}_wf_air"\n'
     text += block("if", 'limit = { has_dlc = "By Blood Alone" }\n' + bba + block("else", legacy))
     mtg = block("set_technology", "early_ship_hull_light = 1\nbasic_ship_hull_light = 1\nearly_ship_hull_submarine = 1\nbasic_ship_hull_submarine = 1\nbasic_battery = 1\nbasic_torpedo = 1\nbasic_depth_charges = 1\nmtg_transport = 1")
@@ -138,12 +154,30 @@ def land_output(tag, row, profile):
     template = block("division_template", f'name = "{tag} Territorial Infantry"\ndivision_names_group = {tag}_WF_INF\n' + block("regiments", regiments) + block("support", support))
     divisions = ""
     for n in range(profile["divisions"]):
-        divisions += block("division", f'name = "{tag} Territorial Division {n + 1}"\nlocation = {row["supply_hubs"][n % len(row["supply_hubs"])]}\ndivision_template = "{tag} Territorial Infantry"\nstart_experience_factor = 0.2\nstart_equipment_factor = 1.0')
-    lines = "".join(production(e, amount, tag) for e, amount in profile["production"].items() if e != "fighter")
+        location = row["land_deployments"][n] if "land_deployments" in row else row["supply_hubs"][n % len(row["supply_hubs"])]
+        divisions += block("division", f'name = "{tag} Territorial Division {n + 1}"\nlocation = {location}\ndivision_template = "{tag} Territorial Infantry"\nstart_experience_factor = 0.2\nstart_equipment_factor = 1.0')
+    lines = "".join(production(e, amount, tag) for e, amount in profile["production"].items() if e not in ("fighter", "cas"))
     return NOTE + template + block("units", divisions) + block("instant_effect", lines)
 
 
 def air_output(tag, row, profile, dlc):
+    if "air_deployments" in row:
+        wings = ""
+        for deployment in row["air_deployments"]:
+            planes = ""
+            for role, modern, legacy, version in [("fighters", "small_plane_airframe_1", "fighter_equipment_1", "Service Fighter"),
+                                                   ("cas", "small_plane_cas_airframe_1", "CAS_equipment_1", "Service Support")]:
+                amount = deployment[role]
+                if amount:
+                    details = f"owner = {tag}\ncreator = {tag}\namount = {amount}"
+                    if dlc:
+                        details += f'\nversion_name = "{tag} {version}"'
+                    planes += block(modern if dlc else legacy, details)
+            wings += block(str(deployment["state"]), planes)
+        lines = production("small_plane_airframe_1" if dlc else "fighter_equipment_1", profile["production"]["fighter"], tag, tag + " Service Fighter" if dlc else None)
+        if profile["production"].get("cas"):
+            lines += production("small_plane_cas_airframe_1" if dlc else "CAS_equipment_1", profile["production"]["cas"], tag, tag + " Service Support" if dlc else None)
+        return NOTE + block("air_wings", wings) + block("instant_effect", lines)
     aircraft = [("small_plane_airframe_1" if dlc else "fighter_equipment_1", profile["fighters"], "Service Fighter")]
     if profile["cas"]:
         aircraft.append(("small_plane_cas_airframe_1" if dlc else "CAS_equipment_1", profile["cas"], "Service Support"))
@@ -158,14 +192,27 @@ def air_output(tag, row, profile, dlc):
 
 
 def navy_output(tag, row, profile, dlc):
-    ships = ""
+    ships = ""; groups = {}
     for kind, amount, modern, legacy, version in [("destroyer", profile["destroyers"], "ship_hull_light_2", "destroyer_2", "Coastal Escort"), ("submarine", profile["submarines"], "ship_hull_submarine_2", "submarine_2", "Coastal Submarine")]:
+        groups[kind] = ""
         for n in range(amount):
             details = f"amount = 1\nowner = {tag}" + (f'\nversion_name = "{tag} {version}"' if dlc else "")
-            ships += block("ship", f'name = "{tag} {version} {n + 1}"\ndefinition = {kind}\n' + block("equipment", block(modern if dlc else legacy, details)))
-    p = row["ports"][0]["province"]
+            ship = block("ship", f'name = "{tag} {version} {n + 1}"\ndefinition = {kind}\n' + block("equipment", block(modern if dlc else legacy, details)))
+            ships += ship; groups[kind] += ship
+    p = row.get("naval_base", row["ports"][0]["province"])
     fleet = block("fleet", f'name = "{tag} Coastal Service"\nnaval_base = {p}\n' + block("task_force", f'name = "{tag} Coastal Patrol"\nlocation = {p}\n' + ships))
-    return NOTE + block("units", fleet) + block("instant_effect", production("convoy_1", profile["dockyard"], tag))
+    if "naval_production" in profile:
+        tasks = "".join(block("task_force", f'name = "{tag} Coastal {role}"\nlocation = {p}\n' + body)
+                        for role, body in groups.items() if body)
+        fleet = block("fleet", f'name = "{tag} Coastal Service"\nnaval_base = {p}\n' + tasks)
+    lines = production("convoy_1", profile["dockyard"], tag)
+    if "naval_production" in profile:
+        lines = ""
+        for role, modern, legacy, version in [("convoy", "convoy_1", "convoy_1", None),
+                                              ("destroyer", "ship_hull_light_2", "destroyer_2", "Coastal Escort"),
+                                              ("submarine", "ship_hull_submarine_2", "submarine_2", "Coastal Submarine")]:
+            lines += production(modern if dlc else legacy, profile["naval_production"][role], tag, tag + " " + version if dlc and version else None)
+    return NOTE + block("units", fleet) + block("instant_effect", lines)
 
 
 def ai_output(tag):
@@ -180,6 +227,13 @@ def ai_output(tag):
     war = f"allowed = {{ tag = {tag} original_tag = {tag} }}\nenable = {{ has_war = yes }}\nabort_when_not_enabled = yes\n"
     war += block("ai_strategy", "type = ai_wanted_divisions_factor\nvalue = -25")
     war += block("ai_strategy", "type = equipment_production_factor\nid = infantry\nvalue = 20")
+    if tag == "ERU":
+        # Territorial infantry keeps the initial twelve formations affordable;
+        # replacement production supports existing wings and coastal escorts.
+        for typ, ident, value in [("unit_ratio", "cas", 5), ("unit_ratio", "screen_ship", 15),
+                                  ("equipment_production_factor", "motorized", 10),
+                                  ("build_building", "air_base", 5), ("build_building", "infrastructure", 10)]:
+            base += block("ai_strategy", f"type = {typ}\nid = {ident}\nvalue = {value}")
     return NOTE + block(tag + "_wf_sustainment", base) + block(tag + "_wf_civilian", peace) + block(tag + "_wf_defense", war)
 
 
@@ -190,8 +244,11 @@ def outputs():
         profile = profiles[tag]
         for ident, cfg in row["placements"].items():
             output[row["baseline"][ident]["path"]] = state_output(row, ident, cfg)
-            region_loc.append(f' STATE_{ident}:0 "{cfg["name"]}"')
+            if not cfg.get("preserve_names"):
+                region_loc.append(f' STATE_{ident}:0 "{cfg["name"]}"')
         for p in row["supply_hubs"]:
+            if row.get("preserve_inherited_economy") and p not in row["new_victory_points"]:
+                continue
             label = profile["name"] + (" Capital Centre" if p == row["capital_province"] else f" Logistics Centre {p}")
             region_loc.append(f' VICTORY_POINTS_{p}:0 "{label}"')
         output[row["country_history"]] = country_output(tag, row, profile)
@@ -227,7 +284,9 @@ def main():
             path.parent.mkdir(parents=True, exist_ok=True); path.write_text(expected, encoding="utf-8", newline="\n")
     if failures:
         raise SystemExit("World foundation generated output differs: " + ", ".join(failures))
-    print("World foundation: 13 states, 4 histories, 20 DLC-aware OOBs; " + ("consistent" if args.check else "generated"))
+    manifest = json.loads((HERE / "foundation.json").read_text())
+    countries = manifest["countries"]
+    print(f"World foundation: {sum(len(r['states']) for r in countries.values())} states, {len(countries)} histories, {len(countries) * 5} DLC-aware OOBs; " + ("consistent" if args.check else "generated"))
 
 
 if __name__ == "__main__":

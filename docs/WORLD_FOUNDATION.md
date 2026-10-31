@@ -15,6 +15,12 @@ component-based logistics. It retains ERU's individual 28 CIV/23 MIL/11 dockyard
 placements and all 16 inherited ports. Its new forces, bounded resource
 additions and minimum island receiving facilities are documented gameplay
 calibration. The four-country budgets and placements below remain unchanged.
+This review slice is stacked on prerequisite [PR32](https://github.com/JasonBreen/project-ulysses-road-to-nemo/pull/32),
+the repair/privacy package. Its source is merged into the World branch without
+merging main. The [combined acceptance record](evidence/world-foundation/repair-stack/README.md)
+records the refreshed overview/registry, independent CI steps and shared regional
+label ownership. World foundation labels take precedence by agreement between
+the two authored files, rather than by relying on localization load order.
 
 ## What the registry establishes
 

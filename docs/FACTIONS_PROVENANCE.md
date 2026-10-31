@@ -1,6 +1,6 @@
 # Faction source and adaptation record
 
-Private scope reference: Sam's conversation supplied with the 25 October 2026 delegation requests joinable diplomatic/military blocs, internal country and corporate factions, applicable DLC integration and “sub pacts,” corrected from “subpack.” The delegation requires OEM inspection, 1995–2065 scope, strict Project Aces lore and noninterference with installed games.
+Private scope reference: the user conversation supplied with the 25 October 2026 delegation requests joinable diplomatic/military blocs, internal country and corporate factions, applicable DLC integration and “sub pacts,” corrected from “subpack.” The delegation requires OEM inspection, 1995–2065 scope, strict Project Aces lore and noninterference with installed games.
 
 ## OEM reference actually examined
 

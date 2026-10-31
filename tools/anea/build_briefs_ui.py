@@ -1,8 +1,9 @@
-"""Bound the engine-owned country history text without changing other controls.
+"""Bound engine-owned country prose and render a separate static overview.
 
 The original control is a captured compatibility contract. Ordinary generation
 and --check require no installed game. The historical frontend fingerprint is
-verified after restoring only this exact, validated intentional transformation.
+verified after restoring the exact text transformation and removing only the
+three validated, bounded overview controls.
 """
 import argparse
 import copy
@@ -62,8 +63,68 @@ def repaired_node(contract):
     node = row[2]
     setv(node, 'position', xy(35, 485))
     setv(node, 'maxHeight', '145')
+    setv(node, 'font', '"Aces16"')
     setv(node, 'scrollbarType', '"ac_exp_standardtext_slider"')
     return row
+
+
+OVERVIEW = '''
+		# Static campaign geography is independent of the scrolling country prose.
+		iconType = {
+			name = "ac_overhaul_world_overview"
+			spriteType = "GFX_ac_overhaul_world_overview"
+			position = { x = 14 y = -304 }
+			alwaystransparent = yes
+		}
+		instantTextBoxType = {
+			name = "ac_overhaul_overview_title"
+			position = { x = 30 y = -294 }
+			font = "Aces16"
+			text = "AC_OVERHAUL_OVERVIEW_TITLE"
+			maxWidth = 1165
+			maxHeight = 25
+			format = left
+			alwaystransparent = yes
+		}
+		instantTextBoxType = {
+			name = "ac_overhaul_overview_note"
+			position = { x = 30 y = 256 }
+			font = "Aces14"
+			text = "AC_OVERHAUL_OVERVIEW_NOTE"
+			maxWidth = 1165
+			maxHeight = 24
+			format = left
+			alwaystransparent = yes
+		}
+'''
+
+
+def remove_overview(text, required=False):
+    """Remove only fully matched authored controls; never mask unrelated edits."""
+    for kind, _, expected in parse(OVERVIEW):
+        name = get(expected, 'name')
+        pattern = re.compile(r'\b' + kind + r'\s*=\s*\{\s*name\s*=\s*' + re.escape(name))
+        matches = list(pattern.finditer(text))
+        if len(matches) > 1 or (required and len(matches) != 1):
+            raise ValueError('Missing or duplicate overview control: ' + name)
+        if not matches:
+            continue
+        start = matches[0].start()
+        depth = 0
+        for token in re.finditer(r'"(?:\\.|[^"\\])*"|#[^\n]*|[{}]', text[start:]):
+            if token[0] == '{':
+                depth += 1
+            elif token[0] == '}':
+                depth -= 1
+                if depth == 0:
+                    end = start + token.end()
+                    if parse(text[start:end]) != [[kind, '=', expected]]:
+                        raise ValueError('Overview differs from bounded control contract: ' + name)
+                    text = text[:start] + text[end:]
+                    break
+        else:
+            raise ValueError('Unclosed overview control: ' + name)
+    return text
 
 
 def validate_bounds(text, contract):
@@ -95,7 +156,8 @@ def normalize_for_fingerprint(text):
     """Restore only the known repair after validating its complete effective node."""
     contract = json.loads(CONTRACT.read_text())
     start, end = validate_bounds(text, contract)
-    return text[:start] + contract['original_raw'] + text[end:]
+    text = text[:start] + contract['original_raw'] + text[end:]
+    return remove_overview(text, required=True)
 
 
 def build(text):
@@ -104,11 +166,25 @@ def build(text):
     start, end = control_span(text)
     current = parse(text[start:end])[0]
     expected = repaired_node(contract)
-    if current not in (contract['original_node'], expected):
+    previous = copy.deepcopy(expected)
+    setv(previous[2], 'font', '"Aces12"')
+    if current not in (contract['original_node'], previous, expected):
         raise ValueError('Refusing to overwrite an unrecognised history-control change')
     # Keep the surrounding file byte-for-byte; only this control is rendered.
     replacement = render([expected], depth=2).lstrip('\t')
     result = text[:start] + replacement + text[end:]
+    # Retire the unbound statistics layer rather than displaying empty values.
+    result = re.sub(r'\s*# Cosmetic layer over the fixed bookmark map;[^\n]*\n\s*# retain[^\n]*\n', '\n', result)
+    result = re.sub(r'\s*iconType\s*=\s*\{\s*name\s*=\s*"ac_briefing_map_statistics".*?alwaystransparent\s*=\s*yes\s*\}', '', result, flags=re.S)
+    result = remove_overview(result)
+    # Draw before country/flag controls so the overview cannot paint over them.
+    anchor = '\n\t\tcontainerWindowType = {\n\t\t\tname ="countries"'
+    if result.count(anchor) != 1:
+        raise ValueError('Expected unique country-grid insertion point')
+    # Strip only whitespace left by a previous identical generated block.
+    result = re.sub(r'\n\s*# Static campaign geography is independent of the scrolling country prose\.\s*\n(?=\s*\n)', '\n', result)
+    before, after = result.split(anchor)
+    result = before.rstrip() + '\n' + OVERVIEW + anchor + after
     validate_bounds(result, contract)
     return result
 

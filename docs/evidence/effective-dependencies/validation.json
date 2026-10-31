@@ -51,5 +51,28 @@
   ],
   "native_coverage": "NONE; native testing remains paused. No installation synchronization, launcher/profile/settings/save mutation, or game input.",
   "conversion_acceptance": "NOT COMPLETE. Expected failed installed presentation gates are retained separately in results.json; passing tests or strict authored-GFX resolution do not supersede that backlog.",
-  "media_boundary": "Only tooling, CI, documentation and metadata-only JSON evidence changed. No installed texture, model, animation, audio, font or shader bytes were added."
+  "media_boundary": "Only tooling, CI, documentation and metadata-only JSON evidence changed. No installed texture, model, animation, audio, font or shader bytes were added.",
+  "independent_followup": {
+    "source_head": "0a48422dd6ff68ac3eaabea052580d067f3095a7",
+    "coverage": "Source and synthetic binding regressions; no native execution",
+    "commands": [
+      {
+        "command": "python -B tools/Test-EffectiveDependencies.py",
+        "exit_code": 0,
+        "result": "31 pass; includes shader/program-as-image/audio rejection and legitimate effectFile alias"
+      },
+      {
+        "command": "python -B tools/Test-DecisionUI.py",
+        "exit_code": 0,
+        "result": "16 pass with program usage explicit in shader alias fixture"
+      },
+      {
+        "command": "python -B tools/overhaul/capture_dependency_evidence.py <engine>",
+        "exit_code": 0,
+        "result": "Base-only decision ownership PASS; selected and all-installed presentation FAIL as expected; exact executed source hashes retained in results.json"
+      }
+    ],
+    "runtime_payload_changed": false,
+    "earlier_full_static_scope": "The original component full-static/reference result above precedes the program-binding follow-up; final CI reruns the current source suite."
+  }
 }

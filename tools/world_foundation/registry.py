@@ -89,6 +89,10 @@ def inspect():
                 participant_declarations[tag].append(dict(trigger=key, source=path.relative_to(MOD).as_posix()))
     rows = []
     covered = set(json.loads((HERE / "profiles.json").read_text())["countries"])
+    active_profiles_path = ROOT / 'tools/world_starts/profiles.json'
+    if active_profiles_path.exists():
+        active_profiles = support_profile('tools/world_starts/profiles.json', 'object').get('countries', {})
+        covered.update(active_profiles)
     for path in sorted((MOD / "history/countries").glob("*.txt")):
         tag = path.name[:3]; history = read(path)
         owned = {i: s for i, s in states.items() if s["owner"] == tag}

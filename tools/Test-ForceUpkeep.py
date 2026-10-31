@@ -6,12 +6,13 @@ affordability or balance acceptance.
 """
 import argparse
 import copy
-from decimal import Decimal as D
+from decimal import Decimal as D, ROUND_DOWN
 import hashlib
 import json
 from pathlib import Path
 import sys
 import unittest
+import re
 
 ROOT = Path(__file__).resolve().parents[1]; MOD = ROOT / 'mod/2985041246'
 sys.path[:0] = [str(ROOT / 'tools/economy_v2'), str(ROOT / 'tools/usea_expansion')]
@@ -71,6 +72,21 @@ class Forces(unittest.TestCase):
             self.assertEqual(0, country.variables['ac_macro_history_count'])
             country.war = True; world.run('ac_macro_quote', 'SNS')
             self.near(D(expected) * D('1.5'), country.variables['ac_macro_upkeep'] * 12)
+
+    def test_small_upkeep_rate_survives_coarse_literal_operand_projection(self):
+        # Stress only literal operand resolution, not native variable arithmetic.
+        # Actual engine precision/range/rounding remains a separate native gate.
+        class CoarseLiteralWorld(World):
+            def number(self, value, context, temp, root, previous):
+                if re.fullmatch(r'-?\d+(?:\.\d+)?', value):
+                    return D(value).quantize(D('.001'), rounding=ROUND_DOWN)
+                return super().number(value, context, temp, root, previous)
+        world = CoarseLiteralWorld(); world.action('on_startup')
+        country = world.countries['SNS']
+        country.observables['num_equipment_in_armies_k@infantry_equipment'] = 1
+        world.run('ac_macro_quote', 'SNS')
+        self.near('.0005', country.variables['ac_macro_upkeep'] * 12)
+        self.assertEqual(0, country.variables['ac_macro_settlements'])
 
     def test_armor_parent_and_derived_queries_do_not_double_charge_the_family(self):
         world, country, annual = self.quote_annual({

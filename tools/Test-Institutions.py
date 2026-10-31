@@ -91,8 +91,10 @@ class World(anea.World):
                     self.execute([node for node in value if node[0]!='limit'],country);branch=True
                 continue
             branch=None
-            if key in ('multiply_variable','multiply_temp_variable'):
-                name,_,operand=value[0];country.variables[name]*=self.number(operand,country)
+            if key in ('multiply_variable','multiply_temp_variable','divide_variable'):
+                name,_,operand=value[0]
+                if key=='divide_variable':country.variables[name]/=self.number(operand,country)
+                else:country.variables[name]*=self.number(operand,country)
             elif key=='set_temp_variable':
                 name,_,operand=value[0];country.variables[name]=self.number(operand,country)
             elif key=='clamp_variable':

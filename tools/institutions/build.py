@@ -88,9 +88,14 @@ def build_effects(profiles):
     # Foreign fiscal state is accessed only through the optional owner's API.
     # Reconcile an old exact snapshot before establishing a new policy amount.
     sync='set_temp_variable = { ac_macro_commitment_delta = ac_pol_fiscal_applied }\nmultiply_temp_variable = { ac_macro_commitment_delta = -1 }\nac_macro_change_commitment = yes\nset_variable = { ac_pol_fiscal_applied = 0 }\n'
-    for policy,rate in [('civic','0.0005'),('military','0.001'),('district','0.0003')]:
+    # Integer ratios avoid relying on sub-thousandth literal coefficients.
+    # This does not prove native variable precision or preserve an amount that
+    # the engine loses after division; the native small-payment gate remains.
+    for policy,numerator,denominator in [('civic',1,2000),('military',1,1000),('district',3,10000)]:
         sync+=guarded('has_country_flag = ac_pol_policy_'+policy,
-            'set_variable = { ac_pol_fiscal_applied = ac_macro_nominal_gdp }\nmultiply_variable = { ac_pol_fiscal_applied = '+rate+' }')
+            'set_variable = { ac_pol_fiscal_applied = ac_macro_nominal_gdp }\n'+
+            (f'multiply_variable = {{ ac_pol_fiscal_applied = {numerator} }}\n' if numerator != 1 else '')+
+            f'divide_variable = {{ ac_pol_fiscal_applied = {denominator} }}')
     sync+='set_temp_variable = { ac_macro_commitment_delta = ac_pol_fiscal_applied }\nac_macro_change_commitment = yes\nclr_country_flag = ac_pol_fiscal_dirty'
     reset_receipt='set_variable = { ac_pol_fiscal_applied = 0 }\nset_variable = { ac_pol_fiscal_identity = THIS.id }\nset_country_flag = ac_pol_fiscal_dirty'
     effect('ac_pol_sync_fiscal',guarded('ac_macro_ready = yes',

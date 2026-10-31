@@ -171,6 +171,18 @@ remain separate acceptance work.
 
 ## Native limits
 
+A subsequent operand review replaces the 0.0005 infantry allowance coefficient
+and the civic/district policy coefficients with equivalent integer ratios. Early
+scaling of a base cannot recover a coefficient already lost during literal
+resolution. Two actual-source stress regressions restrict numeric literals to
+three decimal places while preserving the interpreter's variable arithmetic;
+the infantry allowance and both policy fees remain nonzero, and exact receipt
+reversal still holds. This is an operand-only robustness check, **not** a model
+or observation of HOI4's actual parsing, intermediate rounding or range.
+Force-upkeep now has nine cases and real shared-owner integration five.
+Amounts lost after a native division and very small annual commitments remain
+part of the existing native arithmetic acceptance probes.
+
 The interpreters use Decimal/ordinal-date models. They do not prove HOI4 fixed
 point precision, dynamic-variable observations, native save inheritance,
 serialization, GUI behavior, natural AI pace or economic balance. Native engine

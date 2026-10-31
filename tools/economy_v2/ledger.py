@@ -13,6 +13,7 @@ the native engine preserves every upstream fractional calculation.
 FIELDS = {
     'real': 'ac_macro_last_real_gdp',
     'nominal': 'ac_macro_last_nominal_gdp',
+    'tax_base': 'ac_macro_last_tax_base',
     'prices': 'ac_macro_last_prices',
     'revenue': 'ac_macro_last_revenue',
     'bill': 'ac_macro_last_bill',
@@ -40,7 +41,7 @@ def block(name, body):
 
 def initialize():
     body = 'set_variable = { ac_macro_history_count = 0 }\nset_variable = { ac_macro_history_last_recorded = 0 }\n'
-    for name in ('real_gdp', 'nominal_gdp', 'prices', 'funding', 'balance'):
+    for name in ('real_gdp', 'nominal_gdp', 'tax_base', 'prices', 'funding', 'balance'):
         body += 'set_variable = { ac_macro_last_' + name + ' = 0 }\n'
     for i in range(12):
         for field in FIELDS:
@@ -54,6 +55,7 @@ def snapshot():
     return '''# Preserve the annual bases used to bill this settlement, not the next forecast.
 set_variable = { ac_macro_last_real_gdp = ac_macro_real_gdp }
 set_variable = { ac_macro_last_nominal_gdp = ac_macro_nominal_gdp }
+set_variable = { ac_macro_last_tax_base = ac_macro_tax_base }
 set_variable = { ac_macro_last_prices = ac_macro_price_index }
 '''
 

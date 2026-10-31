@@ -134,18 +134,62 @@ prices, negative growth and rounding/remainder behavior before release acceptanc
 
 ## Physical economy, occupation and releases
 
-Persistent real productive value belongs to a state. Its controller aggregates
-realized output; a foreign controller collects only 35% of the occupied state's
-normal tax base. The previous owner receives no tax from territory it does not
-control. State output is counted once. Ownership/control changes do not transfer
+Persistent real productive value belongs to a state. Pure forecasts aggregate
+the current controller's realized output, with 35% of the normal tax base for
+foreign-held states. An authorized monthly settlement freezes each state's
+output and taxable base to its first settling controller's numeric country ID
+and boundary date. A later same-boundary controller cannot settle those same
+bases again; the next boundary uses the then-current controller. This explicit
+whole-period allocation does not reverse an earlier paid bill or prorate a
+transfer. Forecast refresh never creates or changes those receipts. Growth and
+disruption repair also carry a state-owned boundary date and run once, including
+when control changes between country callbacks. Ownership/control changes do not transfer
 cash, erase debt, grant stockpiles or clone factories. Disruption is bounded
 0–75% and recovers only through delivered development funding.
 
-Real deployed personnel, aircraft and hull counts determine force operating
-burdens. Carrier/submarine premiums supplement a base hull cost, avoiding
-overlapping capital/screen/carrier classifications. War multiplies operating
-costs. These costs fund personnel/maintenance/support; native supply, fuel,
-attrition and equipment replacement retain their own physical behavior.
+Deployed personnel, army equipment, aircraft and hull observations determine
+operating allowances. Captured primary contracts are recorded in
+`tools/economy_v2/force_observables.json`: installed dynamic-variable
+documentation, official quantity-query examples, current equipment archetypes
+and designer modules. Their paths use `engine://` with file hashes; active DLC
+and native observation results remain unverified. No engine source or art is
+copied into the delivered mod.
+
+| Observed group | Provisional annual allowance |
+| --- | --- |
+| Deployed personnel | 0.06 billion per thousand personnel. |
+| Infantry / support equipment in armies | 0.0005 / 0.003 billion per thousand pieces. |
+| Motorized / mechanized equipment in armies | 0.04 / 0.08 billion per thousand vehicles. |
+| Armored equipment families | 0.20 billion per thousand estimated pieces. |
+| Towed artillery, anti-air and anti-tank archetypes | 0.01 billion per thousand pieces. |
+| All deployed aircraft |One base of 0.008 billion per aircraft. |
+| Aircraft role-premium pool |The maximum observed allowance among fighters 0.002, CAS 0.001, naval 0.003, tactical bombers 0.006, strategic bombers 0.010 and transports 0.004 billion per aircraft; overlapping roles are never summed as separate tails. |
+| Hulls |Existing 0.08-billion base plus 0.8 carrier and 0.02 submarine premiums. |
+
+Armor uses `max(parent quantity, sum of distinct derived archetypes)` within
+each captured family. Legacy equipment-name aliases are not also charged.
+This is intentionally conservative: if parent and derived observations are
+disjoint in the native engine, a mixed family is underestimated. Concrete
+motorized, mechanized, infantry, support and towed-artillery archetypes are
+queried once each, using army holdings rather than stockpiles.
+
+Designer aircraft modules can add secondary equipment types, so role counts
+are capped by total deployed aircraft and the premium uses a single maximum
+pool. A mixed fleet may be underestimated; the model does not invent an
+unobservable per-tail partition or charge the same aircraft once as a fighter
+and again as CAS. Unclassified aircraft retain the base. Carrier/submarine
+premiums supplement the hull base without adding overlapping capital/screen
+classes. War multiplies these operating allowances by 1.5. Personnel costs and
+equipment maintenance are distinct; native supply, fuel, attrition and physical
+replacement retain their own behavior. Flight hours, equipment age, reserve
+inventories and the native alias/intersection semantics remain limitations.
+
+The country-ID receipt uses the primary installed example
+`engine://common/decisions/CZE.txt`, `CZE_skoda_select_country`: its country-target
+`FROM` scope stores `THIS.id`. The same numeric-ID scope primitive is used for
+the existing fiscal account identity. Native save/release ID stability, callback
+ordering and performance remain unverified; source/deepcopy checks establish
+the authored contract rather than engine acceptance.
 
 Replacement funding reserves 0.005 billion and observes 100 additional infantry
 equipment produced by the native queue. Until that production exists it cannot
@@ -218,6 +262,7 @@ python -B tools/economy_v2/build.py --check
 python -B tools/usea_expansion/build_dashboard.py --check
 python -B tools/Test-EconomyV2.py
 python -B tools/Test-EconomyLedger.py
+python -B tools/Test-ForceUpkeep.py
 python -B tools/Test-SharedSystems.py
 python -B tools/Test-Institutions.py
 python -B -m unittest discover -s tools -p test_economy.py

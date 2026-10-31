@@ -14,7 +14,7 @@ ROOT = HERE.parents[1]
 MOD = ROOT / 'mod/2985041246'
 sys.path.insert(0, str(ROOT/'tools/usea_expansion'))
 from script import parse, render, get, setv, walk
-import ledger, money
+import ledger, money, claims
 
 MARKER = '# BEGIN ECONOMY V2 NEW CAMPAIGN\n# New histories only; old saves are never reseeded.\nset_country_flag = ac_macro_history_eligible\n# END ECONOMY V2 NEW CAMPAIGN\n'
 CATEGORIES = ('administration', 'services', 'education', 'development', 'defense')
@@ -301,7 +301,8 @@ ac_macro_replacement_cycle = yes
 ac_macro_ai_policy = yes
 ac_macro_quote = yes
 '''
-    settle = settle.replace('ac_macro_quote = yes\n', 'ac_macro_quote = yes\n' + ledger.snapshot(), 1)
+    settle = settle.replace('ac_macro_quote = yes\n',
+                            'ac_macro_quote = yes\n' + claims.allocate() + money.quote(SHARES, refresh_forces=False) + ledger.snapshot(), 1)
     settle = settle.replace('ac_macro_ai_policy = yes\nac_macro_quote = yes',
                             'ac_macro_ai_policy = yes\n' + ledger.record() + 'ac_macro_quote = yes', 1)
     effect('ac_macro_settle_month',block('if',settle))
@@ -333,7 +334,10 @@ set_temp_variable = { ac_macro_growth_factor = ac_macro_growth }
 divide_temp_variable = { ac_macro_growth_factor = 1200 }
 add_to_temp_variable = { ac_macro_growth_factor = 1 }
 every_controlled_state = {
- if = { limit = { has_variable = ac_macro_real_output }
+ if = { limit = { has_variable = ac_macro_real_output OR = { NOT = { has_variable = ac_macro_state_last_cycle } check_variable = { ac_macro_state_last_cycle < date } } }
+  # Productive growth/repair belongs to the state and this accounting boundary.
+  # A controller change between country callbacks must not apply it twice.
+  set_variable = { ac_macro_state_last_cycle = date }
   set_temp_variable = { ac_macro_state_growth_factor = PREV.ac_macro_growth }
   divide_temp_variable = { ac_macro_state_growth_factor = 1200 }
   add_to_temp_variable = { ac_macro_state_growth_factor = 1 }

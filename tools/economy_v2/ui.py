@@ -86,7 +86,7 @@ def build_ui():
             ('aircrew','Air personnel: [?ac_macro_air_k|.1] thousand'),('planes','Deployed aircraft: [?ac_macro_planes|.0]'),
             ('ships','Commissioned hulls: [?ac_macro_ships|.0]'),('upkeep','Monthly force obligation: [?ac_macro_upkeep|.3]'),
             ('readiness','Sustained readiness: [?ac_macro_readiness|.0] / 100'),('envelope','Defense envelope: [?ac_macro_spending_defense|.3]')]
-    for i,(name,text) in enumerate(forces):box('forces_'+name,text,28+(i%2)*410,307+(i//2)*29,h=28,page=2)
+    for i,(name,text) in enumerate(forces):box('forces_'+name,text,28+(i%2)*410,307+(i//2)*29,h=28,page=2,tooltip='AC_MACRO_FORCE_DETAIL' if name=='upkeep' else None)
     box('industry_note','Funding reserves 0.005 billion until native queues produce 100 more infantry equipment. Completion supports readiness and grants no duplicate goods. Fuel, supply, losses and replacement equipment remain physical requirements.',28,440,790,66,page=2)
     button('macro_order','Fund replacements',28,522,'ac_macro_fund_replacements = yes',2,'ac_macro_can_fund_replacements = yes')
     button('macro_cancel','Cancel funding',212,522,'ac_macro_cancel_replacements = yes',2,'ac_macro_ready = yes check_variable = { ac_macro_replacement_escrow > 0 }')
@@ -140,7 +140,8 @@ def build_ui():
         gfx.append(f'spriteType = {{ name = "GFX_ac_macro_{name}" texturefile = "{path}" noOfFrames = {n} }}')
         assets.append(dict(file=path,width=w*n,height=h,frames=n,sha256=hashlib.sha256(data).hexdigest(),source='original procedural geometry; tools/economy_v2/ui.py'))
     out['interface/ac_macro_economy.gfx']='spriteTypes = {\n'+'\n'.join(gfx)+'\n}\n'
-    loc.update(AC_MACRO_EXPLAIN_INCOME_TAX='Household income is estimated at 55% of nominal taxable output. Its selected rate and collection efficiency apply to that base; monthly receipts are annual receipts divided by12. Forecast: [?ac_macro_revenue_income|.3] billion/month.',
+    loc.update(AC_MACRO_FORCE_DETAIL='Army equipment, thousands: armor [?ac_macro_land_armor_k|.2], motorized [?ac_macro_land_motorized_k|.2], mechanized [?ac_macro_land_mechanized_k|.2], support [?ac_macro_land_support_k|.2], infantry [?ac_macro_land_infantry_k|.2], artillery [?ac_macro_land_artillery_k|.2]. Deployed aircraft roles: fighters [?ac_macro_air_fighters|.0], CAS [?ac_macro_air_cas|.0], tactical [?ac_macro_air_tactical|.0], strategic [?ac_macro_air_strategic|.0], transport [?ac_macro_air_transport|.0]. Equipment allowances cover maintenance. Multi-role aircraft share one operating allowance. Fuel, supply and replacement remain physical requirements.',
+               AC_MACRO_EXPLAIN_INCOME_TAX='Household income is estimated at 55% of nominal taxable output. Its selected rate and collection efficiency apply to that base; monthly receipts are annual receipts divided by 12. Forecast: [?ac_macro_revenue_income|.3] billion/month.',
                AC_MACRO_EXPLAIN_BUSINESS_TAX='Business surplus is estimated at 25% of nominal taxable output. Its selected rate and collection efficiency apply to that base. Forecast: [?ac_macro_revenue_business|.3] billion/month.',
                AC_MACRO_EXPLAIN_CONSUMPTION_TAX='Consumption is estimated at 65% of nominal taxable output, a different incidence from household income and business surplus. Forecast: [?ac_macro_revenue_consumption|.3] billion/month.',
                AC_MACRO_EXPLAIN_ADMINISTRATION='The standard annual envelope is1.5% of nominal output. Delivered administration supports collection efficiency; levels0/1/2 fund75%/100%/125% of that envelope.',

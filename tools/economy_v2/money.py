@@ -8,6 +8,7 @@ ordinary 2020 scenario avoids gratuitously large intermediates. Native rounding,
 range and precision still require engine probes; lost upstream precision cannot
 be reconstructed by this accounting owner.
 """
+import forces
 
 
 def block(name, body):
@@ -33,7 +34,7 @@ def initialize():
         'revenue_carry_milli', 'bill_carry_milli', 'last_revenue_accrued_milli', 'last_bill_accrued_milli'))
 
 
-def quote(shares):
+def quote(shares, refresh_forces=True):
     body = 'set_variable = { ac_macro_revenue_milli = 0 }\n'
     for tax, share in [('income', .55), ('business', .25), ('consumption', .65)]:
         target = 'ac_macro_revenue_' + tax + '_milli'
@@ -50,17 +51,19 @@ add_to_temp_variable = {{ ac_macro_category_factor = 0.75 }}
 '''
         body += monthly_milli(target, 'ac_macro_nominal_gdp', (share, 'ac_macro_category_factor'))
         body += f'add_to_variable = {{ ac_macro_operating_milli = {target} }}\n'
-    body += '''set_temp_variable = { ac_macro_personnel = deployed_army_manpower_k }
+    force_body = '''set_temp_variable = { ac_macro_personnel = deployed_army_manpower_k }
 add_to_temp_variable = { ac_macro_personnel = deployed_navy_manpower_k }
 add_to_temp_variable = { ac_macro_personnel = deployed_airforce_manpower_k }
 set_temp_variable = { ac_macro_war_factor = 1 }
 if = { limit = { has_war = yes } set_temp_variable = { ac_macro_war_factor = 1.5 } }
 set_variable = { ac_macro_upkeep_milli = 0 }
 '''
-    for source, factor in [('ac_macro_personnel', .06), ('num_deployed_planes', .01), ('num_ships', .08),
-                           ('num_ships_with_type@carrier', .8), ('num_ships_with_type@submarine', .02)]:
-        body += monthly_milli('ac_macro_force_part_milli', source, (factor, 'ac_macro_war_factor'))
-        body += 'add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }\n'
+    force_body += forces.snapshot()
+    for source, factor in forces.cost_inputs():
+        force_body += monthly_milli('ac_macro_force_part_milli', source, (factor, 'ac_macro_war_factor'))
+        force_body += 'add_to_variable = { ac_macro_upkeep_milli = ac_macro_force_part_milli }\n'
+    if refresh_forces:
+        body += force_body
     body += display('ac_macro_upkeep', 'ac_macro_upkeep_milli')
     body += '''if = { limit = { check_variable = { ac_macro_upkeep_milli > ac_macro_spending_defense_milli } }
  subtract_from_variable = { ac_macro_operating_milli = ac_macro_spending_defense_milli }

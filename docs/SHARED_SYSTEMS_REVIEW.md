@@ -98,7 +98,7 @@ The five pages now present Overview, Budget, Industry and readiness, Debt and
 contracts, and a twelve-record settled Ledger in an 860×700 window. Ledger
 snapshots retain the period's billed bases and actual paid/unpaid flows; the
 opening forecast never becomes a historical observation. Only authorized
-settlement writes or shifts records. All33 graph frames are distinct, including
+settlement writes or shifts records. All 33 graph frames are distinct, including
 the first nonzero level. Font tests read shipped bitmap advances and actual ink
 bounds, including the 19-pixel table rows.
 
@@ -109,13 +109,49 @@ uncollected revenue and unbilled obligation carries. A sub-quantum public spend
 is rejected after clearing any stale success result. This approved gameplay
 accounting rule cannot recover arithmetic already lost by native precision.
 
-`tools/Test-EconomyLedger.py` adds 12 actual-source/geometry cases: authorized
+`tools/Test-EconomyLedger.py` adds 14 actual-source/geometry cases: authorized
 history recording, twelve-entry order, no fabricated opening, pure UI/quotes,
 offline reload copies, clone and release identity, underfunding and arrears
 payment, tiny recurring commitments, the largest-profile synthetic 2020 path,
 conditional pages, actual glyph ink, and signed graph-frame pixels. The shared
 owner test now includes the carried institutional fraction in its comparison,
 instead of requiring a sub-quantum bill to be paid prematurely.
+
+## Verified-observable upkeep and period allocation
+
+The operating allowance now reads six land-equipment groups, nine current armor
+families and six aircraft role groups through primary documented observations.
+`force_observables.json` retains the installed contract file paths and hashes.
+Legacy alias names are not charged alongside their current archetypes. Armor
+uses a conservative family maximum and aircraft use one total base plus one
+maximum role-premium pool, because designer modules can add overlapping role
+types. Mixed families/fleets can be underestimated; no per-tail telemetry or
+native observation result is asserted. Eight source cases cover all captured
+signals, no alias double charge, role differences, the defense floor, physical
+stock preservation and installed-contract provenance.
+
+State growth/repair is boundary-bound. More importantly, each authorized period
+freezes a state's real output and taxable base to its first settling controller
+and date. Later same-boundary ownership or occupation changes cannot settle the
+same bases again. Current-controller forecasts remain pure and up to date. The
+regression compares summed actual settled GDP, taxable base and accrued receipts
+across both transfer cases; next-month allocation and productive growth resume
+normally. This is a whole-period gameplay rule, with native country-ID/save
+stability, execution order and performance still requiring engine acceptance.
+
+## Final follow-up source checks
+
+The final ledger/upkeep/state-receipt candidate passed 27 macro, 14 ledger,
+8 force-upkeep, 20 institution, 4 real-owner integration, 27 retained economy,
+35 faction and 8 interface tests. Force/faction provenance checks used the
+installed engine only as a read-only script reference. Macro and Anea generated
+outputs plus the authored asset audit `--strict-all` passed. A fresh full
+`Test-UlyssesStatic.ps1` with the installed read-only reference also passed
+after the state-receipt changes: map errors 0, retained placeholder warnings 2,
+reference warnings 2007 and technology warnings 1. The retained `results.json`
+records each executed command and its source-only coverage.
+The initial integration table above describes the earlier checkpoint; the
+follow-up counts in this paragraph supersede its component-suite counts.
 
 ## Native limits
 

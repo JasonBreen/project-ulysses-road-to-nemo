@@ -156,6 +156,53 @@ class Ledger(unittest.TestCase):
         self.assertEqual(1, released.variables['ac_macro_history_0_sequence'])
         self.assertEqual(0, released.variables['ac_macro_history_1_sequence'])
 
+    def test_transfer_between_monthly_callbacks_does_not_grow_or_repair_a_state_twice(self):
+        world, _ = self.world()
+        state = next(s for s in world.states.values() if s.owner == 'SNS')
+        state.variables['ac_macro_disruption'] = D('.2')
+        world.month('SNS')
+        first_output = state.variables['ac_macro_real_output']
+        first_disruption = state.variables['ac_macro_disruption']
+        state.owner = state.controller = 'DEL'
+        world.month('DEL')
+        self.assertEqual(first_output, state.variables['ac_macro_real_output'])
+        self.assertEqual(first_disruption, state.variables['ac_macro_disruption'])
+        world.month('DEL', 1991, 3)
+        self.assertGreater(state.variables['ac_macro_real_output'], first_output)
+        self.assertLess(state.variables['ac_macro_disruption'], first_disruption)
+
+    def test_monthly_state_claim_prevents_double_settled_output_and_tax_after_transfer(self):
+        for change_owner in (False, True):
+            world, original = self.world(); receiver = world.countries['DEL']
+            state = next(s for s in world.states.values() if s.owner == 'SNS')
+            before_real = original.variables['ac_macro_real_gdp'] + receiver.variables['ac_macro_real_gdp']
+            before_tax = original.variables['ac_macro_tax_base'] + receiver.variables['ac_macro_tax_base']
+            before_revenue = original.variables['ac_macro_revenue'] + receiver.variables['ac_macro_revenue']
+            states_before_quotes = copy.deepcopy(world.states)
+            for _ in range(2): world.run('ac_macro_quote', 'SNS'); world.run('ac_macro_quote', 'DEL')
+            self.assertEqual(states_before_quotes, world.states)
+            world.month('SNS')
+            claimed = state.variables['ac_macro_claim_output']; receiver_id = state.variables['ac_macro_claim_receiver']
+            state.controller = 'DEL'
+            if change_owner: state.owner = 'DEL'
+            world.run('ac_macro_quote', 'DEL')
+            forecast = receiver.variables['ac_macro_real_gdp']
+            self.assertGreater(forecast, D(110))
+            world.month('DEL')
+            self.assertEqual(original.identity, receiver_id)
+            self.assertEqual(receiver_id, state.variables['ac_macro_claim_receiver'])
+            self.assertNear(before_real, original.variables['ac_macro_last_real_gdp'] + receiver.variables['ac_macro_last_real_gdp'])
+            self.assertNear(before_tax, original.variables['ac_macro_last_tax_base'] + receiver.variables['ac_macro_last_tax_base'])
+            self.assertNear(before_revenue, (original.variables['ac_macro_last_revenue_accrued_milli'] + receiver.variables['ac_macro_last_revenue_accrued_milli']) / 1000)
+            self.assertLess(receiver.variables['ac_macro_last_real_gdp'], forecast)
+            # Same-boundary receipts are immutable even though public forecasts
+            # now aggregate the new physical controller's territory.
+            self.assertEqual(claimed, state.variables['ac_macro_claim_output'])
+            self.assertGreater(receiver.variables['ac_macro_real_gdp'], receiver.variables['ac_macro_last_real_gdp'])
+            world.month('DEL', 1991, 3)
+            self.assertEqual(receiver.identity, state.variables['ac_macro_claim_receiver'])
+            self.assertGreater(receiver.variables['ac_macro_last_real_gdp'], D(110))
+
     def test_underfunding_then_arrears_payment_are_distinct_recorded_flows(self):
         world, country = self.world()
         country.variables.update(ac_macro_cash=D(0), ac_macro_debt=D(140), ac_macro_commitments_annual=D(3000))

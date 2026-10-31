@@ -9,6 +9,7 @@ from datetime import date
 from decimal import Decimal as D, ROUND_HALF_UP
 from pathlib import Path
 import json, sys
+from forces import observable_names
 
 ROOT=Path(__file__).resolve().parents[2];MOD=ROOT/'mod/2985041246'
 sys.path.insert(0,str(ROOT/'tools'))
@@ -76,6 +77,7 @@ class World:
         known={'num_of_controlled_factories','num_of_civilian_factories','num_of_military_factories','num_of_naval_factories',
                'deployed_army_manpower_k','deployed_navy_manpower_k','deployed_airforce_manpower_k','num_deployed_planes',
                'num_ships','num_ships_with_type@carrier','num_ships_with_type@submarine','total_equipment_produced_infantry'}
+        known.update(observable_names())
         if value in known:return D(str(context.observables.get(value,1 if value=='num_of_military_factories' else 0)))
         raise ValueError('Unknown numeric observable '+value)
 

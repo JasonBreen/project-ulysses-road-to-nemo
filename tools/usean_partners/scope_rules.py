@@ -31,7 +31,7 @@ def build_scope_rules(effects, triggers, decisions):
         loc(ident, scope.title)
         loc(ident + "_desc", scope.purpose + "\n\n" + resource_text + " One operational scope may run at a time. Its benefits and opportunity costs last 90 days. All listed focus capabilities are required; they are distinct parts of this service rather than interchangeable capacity points.")
         loc(ident + "_spirit", scope.title); loc(ident + "_spirit_desc", scope.purpose + " " + resource_text)
-        ideas.append(block(ident + "_spirit", "picture = ac_up_idea_" + ident + "_spirit\nallowed = { always = no }\nremoval_cost = -1\n" + block("modifier", scope.modifier)))
+        ideas.append(block(ident + "_spirit", "picture = ac_up_idea_" + ident + "_spirit\nallowed = { always = no }\nallowed_civil_war = { always = no }\nremoval_cost = -1\n" + block("modifier", scope.modifier)))
         body = "ac_up_pay_programme = yes\n" + resource_effect + "\nset_country_flag = ac_up_scope_active\nset_country_flag = " + ident + "_active\nset_country_flag = { flag = ac_up_scope_window days = 90 }\nadd_ideas = " + ident + "_spirit\nac_up_bound = yes"
         effects[ident + "_start"] = guard(conditions, body)
         cleanup = "clr_country_flag = ac_up_scope_active\nclr_country_flag = " + ident + "_active\nremove_ideas = " + ident + "_spirit\n"

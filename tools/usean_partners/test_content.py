@@ -632,6 +632,17 @@ class PartnerTests(unittest.TestCase):
             self.assertNotIn(token, text)
         self.assertIn("ac_ucw_bound = yes", text)
         self.assertNotRegex(text, r"(?:set_variable|add_to_variable)\s*=\s*\{\s*ac_pol_capacity\s*=")
+        # Paid service benefits are not an unpaid civil-war inheritance. All
+        # static national policies, leases and operational scopes publish the
+        # engine's existing no-copy guard; dynamic programmes also retain their
+        # current/original-tag enable condition. Native inheritance is untested.
+        ideas = [idea for relative in ('common/ideas/ac_usean_partners.txt',
+                                      'common/ideas/ac_usean_partner_scopes.txt')
+                 for _, _, outer in load(relative) for _, _, country in outer
+                 for _, _, idea in country]
+        self.assertEqual(71, len(ideas))
+        for idea in ideas:
+            self.assertEqual([('always', '=', 'no')], get(idea, 'allowed_civil_war'))
 
 
 if __name__ == "__main__":

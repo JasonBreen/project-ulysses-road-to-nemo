@@ -177,3 +177,12 @@ and [filterable review gallery](evidence/usean-partners/artwork-gallery.html)
 are packaged alongside the assets. Source rendering has been inspected.
 Native node states, zoom/search, detail windows and readability at all required
 display configurations remain pending an authorized isolated native test.
+
+## Integrated owner review
+
+The [combined review](USEAN_PARTNER_INTEGRATION.md) records execution against the
+actual fiscal and institution owners, source tree priorities, Erusean/world
+generator composition and the paid-spirit civil-war inheritance guard. Retained
+pre-integration evidence describes its original component checkpoint; the new
+integration results report the combined candidate separately. Native acceptance
+and remote exact-head CI remain distinct.

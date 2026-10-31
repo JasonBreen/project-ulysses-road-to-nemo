@@ -19,6 +19,7 @@ python -B tools/usean_partners/build.py
 python -B tools/usean_partners/build_art.py
 python -B tools/usean_partners/build.py --check --require-dependencies
 python -B tools/usean_partners/test_content.py --require-dependencies
+python -B tools/usean_partners/test_integration.py
 ```
 
 The dependency gate requires the real Package 1 `ac_pol_*` capacity owner and
@@ -36,3 +37,8 @@ sheet and gallery are review artifacts, not native screenshots.
 See `docs/USEAN_PARTNER_CAMPAIGNS.md` for the source ledger, mechanics, save
 contracts and evidence boundaries. Native testing is paused; no launcher,
 installation, user save or settings modification is part of this workflow.
+
+The integrated real-owner gate loads the actual macro, legacy and institutional
+implementations. See `docs/USEAN_PARTNER_INTEGRATION.md` for its adapter boundary,
+selection-weight assertions and integration fixes; `run_checks.py --engine
+<read-only-reference> --core` retains the combined source/offline results.

@@ -312,7 +312,7 @@ def build_programmes(effects):
             unlock_title = next(r.title for r in FOCUSES if r.id == tag + "_up_" + unlock)
             loc(ident + "_desc", "Requires completed national work: " + unlock_title + ". Fund a bounded 180-day service. Its benefits carry the displayed continuing burden. Completion records useful work once; interruption forfeits the cost. A renewed service requires a new allocation.")
             loc(idea, title); loc(idea + "_desc", "A funded, temporary national service with a continuing opportunity cost. The underlying physical forces and supplies remain separate.")
-            ideas.append(block(idea, f"picture = ac_up_idea_{idea}\nallowed = {{ always = no }}\nremoval_cost = -1\n" + block("modifier", modifier)))
+            ideas.append(block(idea, f"picture = ac_up_idea_{idea}\nallowed = {{ always = no }}\nallowed_civil_war = {{ always = no }}\nremoval_cost = -1\n" + block("modifier", modifier)))
             condition = "ac_up_can_fund = yes " + earned(tag, unlock) + " NOT = { has_country_flag = " + active + " } NOT = { has_country_flag = ac_up_allocation_lock }"
             if tag == "AMB" and kind == "transport":
                 condition += " check_variable = { ac_up_amber_slots > 0 }"

@@ -50,7 +50,7 @@ class World(shared.World):
             if key in ('if', 'else_if', 'else'):
                 if key == 'if': branch = False
                 elif branch is None: raise ValueError('Orphaned national branch')
-                condition = key == 'else' or self.trigger(fields(value)['limit'], context, temp, root, previous)
+                condition = key == 'else' or self.trigger(next(v for k, _, v in value if k == 'limit'), context, temp, root, previous)
                 if not branch and condition:
                     self.execute([row for row in value if row[0] != 'limit'], context, temp, root, previous)
                     branch = True
@@ -91,6 +91,39 @@ class RealNationalContracts(unittest.TestCase):
             country.flags['ac_econ_initialized'] = None
             country.variables.update(ac_econ_treasury=D(10), ac_econ_arrears=D(0), ac_econ_debt=D(3))
         return world, country
+
+    def test_actual_tree_selection_weights_prefer_current_national_host_to_regional(self):
+        world = self.baselines['full']
+        def tree(relative):
+            return next(body for kind, _, body in parse((MOD/relative).read_text(encoding='utf-8-sig'))
+                        if kind == 'focus_tree')
+        def weight(node, country):
+            rules = next(body for key, _, body in node if key == 'country')
+            total = D(next(value for key, _, value in rules if key == 'factor'))
+            for key, _, modifier in rules:
+                if key != 'modifier':
+                    continue
+                conditions = [row for row in modifier if row[0] not in ('add', 'factor')]
+                if world.trigger(conditions, country):
+                    for field, _, value in modifier:
+                        if field == 'add': total += D(value)
+                        elif field == 'factor': total *= D(value)
+            return total
+        regional = tree('common/national_focus/ac_regional_foundation.txt')
+        national = {tag: tree('common/national_focus/'+tag+'.txt') for tag in ('SNS','AMB','UGE','DEL')}
+        for tag, own_tree in national.items():
+            country = copy.deepcopy(world.countries[tag])
+            self.assertEqual(5, weight(regional, country), tag)
+            self.assertEqual(40, weight(own_tree, country), tag)
+            self.assertGreater(weight(own_tree, country), weight(regional, country), tag)
+            self.assertEqual([tag], [owner for owner, candidate in national.items() if weight(candidate, country)>0])
+            # The actual current-tag and original-tag guards both matter. A
+            # civil-war clone sharing the original identity gets no national
+            # priority; neither does another identity occupying the current tag.
+            country.tag = 'D01'
+            self.assertEqual(0, weight(own_tree, country), (tag, 'changed current tag'))
+            country.tag = tag; country.original_tag = 'ZZZ'
+            self.assertEqual(0, weight(own_tree, country), (tag, 'changed original tag'))
 
     def test_all_29_scopes_pay_real_owners_once_in_each_fiscal_mode(self):
         self.assertEqual(29, len(SCOPES))

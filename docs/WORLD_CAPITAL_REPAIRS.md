@@ -43,7 +43,10 @@ fourteen capital locations; the approved fallback is their explicit source layer
 Connectivity uses actual shared pixel edges with impassable connections removed.
 Landmass size uses pixel area rather than province count; state centroids use
 only the state's land on the selected component. Lowest state ID resolves an
-equal-distance tie.
+equal-distance tie. Selection uses exact rational arithmetic over integer raster
+coordinate moments; diagnostic centroids/distances are recorded to six decimals.
+This avoids platform-dependent last-bit floating differences without changing
+the raster or treating a near tie as an exact one.
 
 Reproduce with Python3.12, Pillow11.3.0 and numpy2.2.6:
 

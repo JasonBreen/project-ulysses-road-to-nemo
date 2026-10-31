@@ -6,6 +6,7 @@ it grants nothing to existing saves and does not change state or map geometry.
 """
 import argparse
 import hashlib
+from fractions import Fraction
 import json
 from pathlib import Path
 import re
@@ -32,7 +33,12 @@ def centroid(provinces, centres, area):
     weight = sum(int(area[p]) for p in provinces)
     if not weight:
         raise ValueError('A selected land component has no raster area')
-    return tuple(sum(centres[p][axis] * int(area[p]) for p in provinces) / weight for axis in (0, 1))
+    # Raster moments are integer pixel-coordinate sums. Recover those integers
+    # before centroid arithmetic: squaring binary floats differed in the last
+    # digit between Windows and Linux. Exact fractions also make real ties use
+    # the documented state-ID rule instead of a platform rounding accident.
+    return tuple(Fraction(sum(round(centres[p][axis] * int(area[p])) for p in provinces), weight)
+                 for axis in (0, 1))
 
 
 def select(states, graph, centres, area):
@@ -48,12 +54,13 @@ def select(states, graph, centres, area):
     distance = lambda a, b: sum((a[axis] - b[axis]) ** 2 for axis in (0, 1))
     selected = min(candidates, key=lambda i: (distance(candidates[i], centre), i))
     province = min(set(states[selected]['land']) & mainland,
-                   key=lambda p: (distance(centres[p], candidates[selected]), p))
+                   key=lambda p: (distance(centroid({p}, centres, area), candidates[selected]), p))
     return dict(capital=selected, representative_province=province,
                 mainland_provinces=sorted(mainland), mainland_pixel_area=sum(int(area[p]) for p in mainland),
-                mainland_centroid=list(centre), selected_state_centroid=list(candidates[selected]),
+                mainland_centroid=[float(round(v, 6)) for v in centre],
+                selected_state_centroid=[float(round(v, 6)) for v in candidates[selected]],
                 detached_components=[sorted(group) for group in groups[1:]],
-                candidate_squared_distances={str(i): distance(c, centre) for i, c in sorted(candidates.items())})
+                candidate_squared_distances={str(i): float(round(distance(c, centre), 6)) for i, c in sorted(candidates.items())})
 
 
 def derive():

@@ -52,7 +52,7 @@ class WorldCapitals(unittest.TestCase):
             self.assertIn(row['representative_province'], row['mainland_provinces'])
             self.assertNotIn(171, row['owned_states'])
             distances = {int(i): n for i, n in row['candidate_squared_distances'].items()}
-            self.assertEqual(row['capital'], min(distances, key=lambda i: (distances[i], i)))
+            self.assertAlmostEqual(min(distances.values()), distances[row['capital']], places=6)
 
     def test_largest_landmass_uses_area_not_province_count(self):
         states = {10: {'land': [1]}, 20: {'land': [2, 3]}}
@@ -68,6 +68,14 @@ class WorldCapitals(unittest.TestCase):
         self.assertEqual(40, result['capital'])
         result = select({30: {'land': [1]}, 20: {'land': [2]}}, graph, positions, {1: 1, 2: 1})
         self.assertEqual(20, result['capital'])
+
+    def test_integer_raster_moments_restore_exact_fractional_ties(self):
+        graph = defaultdict(set, {1: {2}, 2: {1}})
+        states = {10: {'land': [1]}, 20: {'land': [2]}}
+        first = select(states, graph, {1: (1/3, 0), 2: (2/3, 0)}, {1: 3, 2: 3})
+        second = select(states, graph, {1: (1/3 + 1e-14, 0), 2: (2/3 - 1e-14, 0)}, {1: 3, 2: 3})
+        self.assertEqual(first, second)
+        self.assertEqual(10, first['capital'])
 
     def test_repair_preserves_foreign_setup_and_comments(self):
         source = '# country\ncapital = 1 # inherited district\nrecruit_character = office\n# BEGIN WORLD FOUNDATION\nset_oob = "fleet"\n# END WORLD FOUNDATION\n# BEGIN ECONOMY V2 NEW CAMPAIGN\nset_country_flag = ac_macro_history_eligible\n# END ECONOMY V2 NEW CAMPAIGN\n'

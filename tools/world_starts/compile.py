@@ -12,7 +12,7 @@ ROOT = HERE.parents[1]; MOD = ROOT / 'mod/2985041246'
 sys.path[:0] = [str(ROOT / 'tools/usea_expansion'), str(ROOT / 'tools')]
 from script import parse, get, setv, render
 from shared_logistics import compose
-from capabilities import AIR, NAVY, LAND, COMMON_TECH, equipment_for, design_for
+from capabilities import AIR, NAVY, LAND, COMMON_TECH, equipment_for, design_for, supports
 from technical import Engine
 
 NOTE = '# Active-world foundation: provisional gameplay; tools/world_starts profiles, placements and primary worksheets.\n'
@@ -117,13 +117,16 @@ def country_output(tag, row, profile, engine=None):
     modern = ''.join(variant(tag, AIR[role]) for role, count in profile['air'].items() if count)
     for role, count in profile['air_reserves'].items():
         modern += block('add_equipment_to_stockpile', f'type = {AIR[role]["modern"]}\namount = {count}\nproducer = {tag}\nvariant_name = "{tag} {AIR[role]["label"]}"')
-    modern += f'set_air_oob = "{tag}_ws_air_bba"\n'
+    if profile['air'] or any(r in AIR for r in profile['production']):
+        modern += f'set_air_oob = "{tag}_ws_air_bba"\n'
     legacy = ''.join(block('add_equipment_to_stockpile', f'type = {AIR[role]["legacy"]}\namount = {count}\nproducer = {tag}') for role, count in profile['air_reserves'].items())
-    legacy += f'set_air_oob = "{tag}_ws_air"\n'
-    body += block('if', 'limit = { has_dlc = "By Blood Alone" }\n' + modern + block('else', legacy))
+    if profile['air'] or any(r in AIR for r in profile['production']):
+        legacy += f'set_air_oob = "{tag}_ws_air"\n'
+        body += block('if', 'limit = { has_dlc = "By Blood Alone" }\n' + modern + block('else', legacy))
     modern = ''.join(variant(tag, NAVY[role]) for role, count in profile['navy'].items() if count)
-    modern += f'set_naval_oob = "{tag}_ws_navy_mtg"\n'
-    body += block('if', 'limit = { has_dlc = "Man the Guns" }\n' + modern + block('else', f'set_naval_oob = "{tag}_ws_navy"'))
+    if profile['navy'] or profile['naval_production']:
+        modern += f'set_naval_oob = "{tag}_ws_navy_mtg"\n'
+        body += block('if', 'limit = { has_dlc = "Man the Guns" }\n' + modern + block('else', f'set_naval_oob = "{tag}_ws_navy"'))
     body += f'set_oob = "{tag}_ws_land"\n'
     body += ''.join(block('add_equipment_to_stockpile', f'type = {kind}\namount = {count}\nproducer = {tag}') for kind, count in profile['stocks'].items())
     return prefix + source.rstrip() + '\n\n' + MARKER + '\n' + NOTE + body + END + '\n'
@@ -136,11 +139,11 @@ def land_output(tag, row, profile):
             continue
         units = (['modern_armor'] * 3 + ['motorized'] * 3) if role == 'armor' else [LAND[role]] * profile['infantry_battalions']
         regiments = '\n'.join(f'{kind} = {{ x = {n // 3} y = {n % 3} }}' for n, kind in enumerate(units))
-        support = 'engineer = { x = 0 y = 0 }\nartillery = { x = 0 y = 1 }'
+        support = '\n'.join(f'{kind} = {{ x = 0 y = {n} }}' for n, kind in enumerate(supports(profile)))
         if role != 'infantry':
             support += '\nlogistics_company = { x = 0 y = 2 }'
         name = tag + ' ' + role.title() + ' Formation'
-        templates += block('division_template', f'name = "{name}"\ndivision_names_group = {tag}_WS_{role.upper()}\n' + block('regiments', regiments) + block('support', support))
+        templates += block('division_template', f'name = "{name}"\ndivision_names_group = {tag}_WS_{role.upper()}\n' + block('regiments', regiments) + (block('support', support) if support else ''))
         for n in range(amount):
             location = row['land_deployments'][index]; index += 1
             divisions += block('division', f'name = "{tag} {role.title()} Formation {n + 1}"\nlocation = {location}\ndivision_template = "{name}"\nstart_experience_factor = 0.2\nstart_equipment_factor = 1.0')
@@ -166,7 +169,7 @@ def air_output(tag, row, profile, bba):
 
 
 def navy_output(tag, row, profile, mtg):
-    tasks = ''; base = row['naval_base']
+    tasks = ''; base = row.get('naval_base')
     for role, count in profile['navy'].items():
         ships = ''
         for n in range(count):
@@ -175,9 +178,9 @@ def navy_output(tag, row, profile, mtg):
                 details += '\nversion_name = "' + tag + ' ' + NAVY[role]['label'] + '"'
             ships += block('ship', f'name = "{tag} {NAVY[role]["label"]} {n + 1}"\ndefinition = {role}\n' + block('equipment', block(equipment_for(role, False, mtg), details)))
         tasks += block('task_force', f'name = "{tag} {role.title()} Service"\nlocation = {base}\n' + ships)
-    fleet = block('fleet', f'name = "{tag} Maritime Service"\nnaval_base = {base}\n' + tasks)
+    fleet = block('fleet', f'name = "{tag} Maritime Service"\nnaval_base = {base}\n' + tasks) if tasks else ''
     lines = ''.join(production(tag, role, count, mtg=mtg) for role, count in profile['naval_production'].items())
-    return NOTE + block('units', fleet) + block('instant_effect', lines)
+    return NOTE + (block('units', fleet) if fleet else '') + block('instant_effect', lines)
 
 
 def ai_output(tag, profile):
@@ -189,9 +192,12 @@ def ai_output(tag, profile):
     for role, count in profile['formations'].items():
         if count:
             base += block('ai_strategy', f'type = role_ratio\nid = {tag}_ws_{role}\nvalue = {round(100 * count / total)}')
-    for kind, ident, value in [('unit_ratio', 'fighter', 15), ('unit_ratio', 'convoy', 15), ('unit_ratio', 'screen_ship', 10),
-                               ('equipment_production_factor', 'support', 15), ('equipment_production_factor', 'infantry', 20),
-                               ('build_building', 'infrastructure', 10), ('build_building', 'industrial_complex', 20)]:
+    priorities = [('equipment_production_factor', 'infantry', 20), ('build_building', 'infrastructure', 10), ('build_building', 'industrial_complex', 20)]
+    if 'fighter' in profile['air']: priorities.append(('unit_ratio', 'fighter', 15))
+    if 'convoy' in profile['naval_production']: priorities.append(('unit_ratio', 'convoy', 15))
+    if 'destroyer' in profile['navy']: priorities.append(('unit_ratio', 'screen_ship', 10))
+    if supports(profile): priorities.append(('equipment_production_factor', 'support', 15))
+    for kind, ident, value in priorities:
         base += block('ai_strategy', f'type = {kind}\nid = {ident}\nvalue = {value}')
     peace = allowed + f'enable = {{ has_country_flag = {tag}_ws_foundation has_war = no }}\nabort_when_not_enabled = yes\n'
     peace += block('ai_strategy', f'type = ai_wanted_divisions_factor\nvalue = {-30 if tag == "YUK" else -60}')
@@ -211,24 +217,29 @@ def outputs(reference=None):
             labels.append(f' VICTORY_POINTS_{p}:0 "{profile["name"]} ' + ('Capital Centre' if int(p) == row['capital_province'] else 'Logistics Centre ' + p) + '"')
         out[row['country_history']] = country_output(tag, row, profile, engine)
         out[f'history/units/{tag}_ws_land.txt'] = land_output(tag, row, profile)
-        for bba in (False, True):
-            out[f'history/units/{tag}_ws_air' + ('_bba' if bba else '') + '.txt'] = air_output(tag, row, profile, bba)
-        for mtg in (False, True):
-            out[f'history/units/{tag}_ws_navy' + ('_mtg' if mtg else '') + '.txt'] = navy_output(tag, row, profile, mtg)
+        if profile['air'] or any(r in AIR for r in profile['production']):
+            for bba in (False, True):
+                out[f'history/units/{tag}_ws_air' + ('_bba' if bba else '') + '.txt'] = air_output(tag, row, profile, bba)
+        if profile['navy'] or profile['naval_production']:
+            for mtg in (False, True):
+                out[f'history/units/{tag}_ws_navy' + ('_mtg' if mtg else '') + '.txt'] = navy_output(tag, row, profile, mtg)
         names = ''; templates = ''
         for role, count in profile['formations'].items():
             if not count:
                 continue
             names += block(tag + '_WS_' + role.upper(), f'name = "{role.title()} Formation"\nfor_countries = {{ {tag} }}\ncan_use = {{ always = yes }}\ndivision_types = {{ "{LAND[role]}" }}\nfallback_name = "%d {role.title()} Formation"')
             regiments = 'modern_armor = 3\nmotorized = 3' if role == 'armor' else f'{LAND[role]} = {profile["infantry_battalions"]}'
-            support = 'engineer = 1\nartillery = 1' + ('\nlogistics_company = 1' if role != 'infantry' else '')
-            target = block(tag + '_ws_' + role + '_target', 'upgrade_prio = { factor = 1 }\n' + block('target_template', block('regiments', regiments) + block('support', support)))
+            support = '\n'.join(kind + ' = 1' for kind in supports(profile)) + ('\nlogistics_company = 1' if role != 'infantry' else '')
+            target = block(tag + '_ws_' + role + '_target', 'upgrade_prio = { factor = 1 }\n' + block('target_template', block('regiments', regiments) + (block('support', support) if support else '')))
             templates += block(tag + '_ws_' + role, f'available_for = {{ {tag} }}\nrole = {tag}_ws_{role}\nupgrade_prio = {{ factor = 5 }}\n' + target)
         out[f'common/units/names_divisions/{tag}_world_start.txt'] = NOTE + names
         out[f'common/ai_templates/{tag}_world_start.txt'] = NOTE + templates
         out[f'common/ai_strategy/{tag}_world_start.txt'] = ai_output(tag, profile)
         research = f'name = {tag}_ws_research_name\ndesc = {tag}_ws_research_desc\nallowed = {{ tag = {tag} original_tag = {tag} }}\nenable = {{ has_country_flag = {tag}_ws_foundation }}\nabort_when_not_enabled = yes\n'
-        research += block('research', 'industry = 15\ninfantry_tech = 15\nsupport_tech = 12\nlight_fighter = 12\nelectronics = 5\ndd_tech = 5') + 'weight = { factor = 1 }\n'
+        fields = 'industry = 15\ninfantry_tech = 15\nsupport_tech = 12\nelectronics = 5'
+        if profile['air']: fields += '\nlight_fighter = 12'
+        if profile['navy']: fields += '\ndd_tech = 5'
+        research += block('research', fields) + 'weight = { factor = 1 }\n'
         out[f'common/ai_strategy_plans/{tag}_world_start.txt'] = NOTE + block(tag + '_ws_research', research)
         research_loc.extend([f' {tag}_ws_research_name:0 "{profile["name"]}: Physical Sustainment"', f' {tag}_ws_research_desc:0 "Maintain transport, equipment replacement and affordable service capacity. These starting priorities are provisional gameplay calibration."'])
     out.update(compose(ROOT, MOD, owner='world_starts'))

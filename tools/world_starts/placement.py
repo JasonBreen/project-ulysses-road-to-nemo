@@ -17,7 +17,7 @@ ROOT = HERE.parents[1]; MOD = ROOT / 'mod/2985041246'
 sys.path[:0] = [str(ROOT / 'tools/usea_expansion'), str(ROOT / 'tools/anea'), str(ROOT / 'tools')]
 from script import parse, get
 from foundation_map import topology, components, shortest
-from capabilities import equipment_for, design_for
+from capabilities import equipment_for, design_for, supports
 from technical import Engine
 
 FIELDS = {'civilian': 'industrial_complex', 'military': 'arms_factory', 'dockyard': 'dockyard',
@@ -82,7 +82,9 @@ def capture_technical(profile, engine):
                 'equipment_technology': engine.equipment_tech(ident),
                 'module_technologies': {m: engine.module_tech(m) for m in design['modules'].values()} if design else {},
                 'stats': engine.stats(ident, design['modules'].values() if design else ())}
-    units = set(LAND[role] for role, count in profile['formations'].items() if count) | {'engineer', 'artillery'}
+    units = set(LAND[role] for role, count in profile['formations'].items() if count) | set(supports(profile))
+    if profile['formations'].get('armor'):
+        units.add('motorized')
     if any(role != 'infantry' and count for role, count in profile['formations'].items()):
         units.add('logistics_company')
     unit_data = {ident: {k: v for k, v in engine.unit(ident).items() if k in ('need', 'fuel_consumption', 'manpower', 'supply_consumption', 'active')}
@@ -227,9 +229,10 @@ def derive(reference):
         if row['ports']:
             base = max(row['ports'], key=lambda p: (int(p['province'] in main), cfg[str(p['state'])]['naval_bases'][str(p['province'])], -p['province']))
             row['naval_base'] = base['province']
-            if sum(profile['navy'].values()):
+            inherited_port = str(base['province']) in baseline[str(base['state'])]['ports']
+            if sum(profile['navy'].values()) and not inherited_port:
                 cfg[str(base['state'])]['naval_bases'][str(base['province'])] = max(cfg[str(base['state'])]['naval_bases'][str(base['province'])], 5 if len(owned) > 500 else 3)
-        air_states = list(dict.fromkeys([capital] + separated(eligible, airports, graph, main, capital, profile['airfield_count'])))[:profile['airfield_count']]
+        air_states = separated(eligible, airports, graph, main, capital, profile['airfield_count'])[:profile['airfield_count']] if profile['airfield_count'] else []
         row['air_states'] = air_states; row['airports'] = {str(i): airports[i] for i in air_states}
         row['air_deployments'] = []
         for n, i in enumerate(air_states):

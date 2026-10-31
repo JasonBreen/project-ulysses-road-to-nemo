@@ -1,9 +1,9 @@
 # Active-country physical foundations
 
 This owner is being delivered in local slices. The current implemented slice is
-FCU/YUK/NPT. The baseline inventory covers all 61 active histories, four BBA/MTG
-routes and FATO's extra human-Belka context. The 25 industry-empty rows remain an
-explicit calibration draft until their own source output and tests are delivered.
+FCU/YUK/NPT plus the 25 previously industry-empty active starts. The baseline inventory covers all 61 active histories, four BBA/MTG
+routes and FATO's extra human-Belka context. The original 25-country proposal remains frozen; delivered profiles record reviewed
+upward adjustments needed to replace actual combat and transport roles.
 PLH/state 171 and seven landless emergent histories receive no blanket start grant.
 
 All new budgets, force compositions, resource additions, numbered formations and
@@ -24,7 +24,7 @@ components separately. `foundation.json` records all protected quantities,
 placements, additions, exact routes and technical-source metadata.
 
 `compile.py` owns only the profiles listed here. It gives each selected route one
-land, air and naval OOB, after the necessary unlocks and variants. It supplies real
+land OOB and only the air/naval OOBs its role actually uses, after the necessary unlocks and variants. It supplies real
 production lines and replacement/transport stocks, full opening fuel and scoped
 AI roles/research. All setup is country-history-only; there is no startup,
 weekly, event or save-load OOB callback. Fiscal eligibility and government-owner

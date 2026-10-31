@@ -46,3 +46,13 @@ def design_for(role, bba, mtg):
     if role in NAVY and mtg:
         return NAVY[role]
     return None
+
+
+def supports(profile):
+    """Only equip support companies that the standing replacement plan owns."""
+    result = []
+    if profile['production'].get('support_equipment_1'):
+        result.append('engineer')
+    if profile['production'].get('artillery_equipment_1'):
+        result.append('artillery')
+    return result

@@ -54,6 +54,49 @@ class ActiveWorldTests(unittest.TestCase):
         for tag in PROFILES:
             self.assertEqual(next(r for r in BASELINE['countries'] if r['tag'] == tag)['classification'], 'active')
 
+    def test_empty_country_roles_have_real_logistics_lines_and_honest_absences(self):
+        registry = json.loads((ROOT / 'tools/world_foundation/country_registry.json').read_text())
+        registered = {r['tag']: r for r in registry['countries']}
+        for tag in BASELINE['active_industry_empty']:
+            p = PROFILES[tag]
+            self.assertEqual(sum(p['production'].values()), p['target_industry']['military'])
+            self.assertEqual(sum(p['naval_production'].values()), p['target_industry']['dockyard'])
+            for role in ('infantry_equipment_1', 'motorized_equipment_1', 'train_equipment_1'):
+                self.assertGreater(p['production'][role], 0)
+                self.assertGreater(p['stocks'][role], 0)
+            for role in p['air']: self.assertGreater(p['production'][role], 0)
+            for role in p['navy']: self.assertGreater(p['naval_production'][role], 0)
+            self.assertFalse(registered[tag]['source_gaps'], tag)
+            if not p['air']:
+                self.assertFalse(registered[tag]['source_checks']['has_direct_air_roster'])
+                self.assertIn('has_direct_air_roster', registered[tag]['role_not_required'])
+                self.assertFalse((MOD / f'history/units/{tag}_ws_air.txt').exists())
+                self.assertFalse((MOD / f'history/units/{tag}_ws_air_bba.txt').exists())
+                for key, _, body in read(f'history/units/{tag}_ws_land.txt'):
+                    if key == 'division_template': self.assertFalse(get(body, 'support', []))
+            if not p['navy']:
+                if p['naval_production']:
+                    self.assertFalse(any(key == 'ship' for key, _ in walk(read(f'history/units/{tag}_ws_navy.txt'))))
+                else:
+                    self.assertFalse((MOD / f'history/units/{tag}_ws_navy.txt').exists())
+
+    def test_raw_registry_gaps_are_not_hidden_without_a_reviewed_role(self):
+        sys.path.insert(0, str(ROOT / 'tools/world_foundation'))
+        from registry import inspect as inspect_registry
+        original = json.loads
+        with patch.object(json, 'loads', wraps=original) as decoder:
+            # Only alter the profile input; the real registry parser still reads
+            # the actual microstate history, rather than a synthetic green row.
+            def without_dispositions(raw, *a, **kw):
+                data = original(raw, *a, **kw)
+                if isinstance(data, dict) and isinstance(data.get('countries'), dict) and data['countries'].get('CRS', {}).get('capability_dispositions'):
+                    data['countries']['CRS']['capability_dispositions'] = {}
+                return data
+            decoder.side_effect = without_dispositions
+            rows = {r['tag']: r for r in inspect_registry()['countries']}
+        self.assertIn('has_direct_air_roster', rows['CRS']['source_gaps'])
+        self.assertEqual(rows['CRS']['support_status'], 'inherited_foundation_gaps')
+
     def test_real_generators_and_captured_primary_contracts_reproduce_without_game(self):
         self.assertEqual(derive(None), MANIFEST)
         for relative, text in compiler.outputs().items():
@@ -125,7 +168,8 @@ class ActiveWorldTests(unittest.TestCase):
             for bba, mtg, dlcs in cases():
                 effects = list(selected(read(row['country_history']), dlcs, tag))
                 refs = [v.strip('"') for k, _, v in effects if k in ('set_oob', 'load_oob', 'set_air_oob', 'set_naval_oob')]
-                self.assertEqual(len(refs), 3); self.assertEqual(len(set(refs)), 3)
+                expected = 1 + int(bool(p['air'])) + int(bool(p['navy'] or p['naval_production']))
+                self.assertEqual(len(refs), expected); self.assertEqual(len(set(refs)), expected)
                 divisions = planes = ships = 0; assigned = Counter(); actual_types = Counter()
                 for name in refs:
                     roster = read('history/units/' + name + '.txt')
@@ -203,7 +247,7 @@ class ActiveWorldTests(unittest.TestCase):
             tree = read(f'history/units/{tag}_ws_land.txt')
             for key, _, template in tree:
                 if key != 'division_template': continue
-                for subunit, _, _ in get(template, 'regiments') + get(template, 'support'):
+                for subunit, _, _ in get(template, 'regiments') + get(template, 'support', []):
                     for need, _, amount in row['unit_contracts'][subunit]['need']:
                         self.assertIn(need, produced, (tag, subunit, need))
                         self.assertTrue(any(gear[k] == need and n > 0 for k, n in p['stocks'].items()))

@@ -1,0 +1,151 @@
+{
+  "coverage": "Source/offline and image inspection only; no native game execution.",
+  "source_base_commit": "2b7a9350359729cbe7f096a38f6eef5930da1926",
+  "payload_sha256": "cad93f8c229cec0ab02611a51aafa6da74208fd6b2a45520e377c384cf051ec3",
+  "payload_hash_rule": "Sorted repository-relative POSIX path, NUL, raw file bytes for each delivered mod file.",
+  "checks": [
+    {
+      "check": "narrative",
+      "command": [
+        "python",
+        "-B",
+        "tools/squadrons/build.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.27,
+      "log": "narrative.txt"
+    },
+    {
+      "check": "runtime",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-SquadronStories.py"
+      ],
+      "exit_code": 0,
+      "seconds": 10.11,
+      "log": "runtime.txt"
+    },
+    {
+      "check": "artwork",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-SquadronArt.py"
+      ],
+      "exit_code": 0,
+      "seconds": 35.05,
+      "log": "artwork.txt"
+    },
+    {
+      "check": "partner-owner-contracts",
+      "command": [
+        "python",
+        "-B",
+        "tools/usean_partners/test_integration.py"
+      ],
+      "exit_code": 0,
+      "seconds": 14.81,
+      "log": "partner-owner-contracts.txt"
+    },
+    {
+      "check": "world-foundation",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_foundation/test_foundation.py"
+      ],
+      "exit_code": 0,
+      "seconds": 7.41,
+      "log": "world-foundation.txt"
+    },
+    {
+      "check": "country-registry",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_foundation/registry.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.56,
+      "log": "country-registry.txt"
+    },
+    {
+      "check": "focus-canvas",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-FocusScreenRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.83,
+      "log": "focus-canvas.txt"
+    },
+    {
+      "check": "decisions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-DecisionUI.py"
+      ],
+      "exit_code": 0,
+      "seconds": 6.09,
+      "log": "decisions.txt"
+    },
+    {
+      "check": "overhaul",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-OverhaulRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.88,
+      "log": "overhaul.txt"
+    },
+    {
+      "check": "roadmap",
+      "command": [
+        "python",
+        "-B",
+        "tools/overhaul/check_release_plan.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.19,
+      "log": "roadmap.txt"
+    },
+    {
+      "check": "assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 1.16,
+      "log": "assets.txt"
+    },
+    {
+      "check": "core",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 48.97,
+      "log": "core.txt"
+    }
+  ],
+  "native_status": "Paused; untested."
+}

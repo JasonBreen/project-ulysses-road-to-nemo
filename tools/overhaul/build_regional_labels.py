@@ -53,6 +53,18 @@ def outputs():
                          province=province, state=state, owner=owner,
                          source_layer='provisional gameplay',
                          reason='Readable provisional locality; no named canonical city or new victory point is inferred.'))
+    # World foundations own their reviewed state/hub labels. When that
+    # optional package is present, use those exact values for shared keys so
+    # the two replacement files cannot disagree under any engine load order.
+    world_labels = MOD / 'localisation/english/replace/ac_world_foundation_regions_l_english.yml'
+    if world_labels.exists():
+        owned = dict(re.findall(r'^\s*(\w+):\d+\s+"([^\n]*)"',
+                               world_labels.read_text(encoding='utf-8-sig'), re.M))
+        for row in rows:
+            if row['key'] in owned:
+                row.update(value=owned[row['key']], name_owner='world_foundation',
+                           owner_source=world_labels.relative_to(MOD).as_posix(),
+                           reason='Reuse the reviewed World foundation label; no load-order-dependent naming conflict.')
     text = 'l_english:\n # Provisional geography labels; see tools/overhaul/regional_labels.json.\n'
     text += ''.join(' ' + row['key'] + ':0 "' + row['value'] + '"\n' for row in rows)
     return {MOD / 'localisation/english/replace/ac_overhaul_regions_l_english.yml': text.encode('utf-8-sig'),

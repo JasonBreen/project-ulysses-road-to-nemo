@@ -32,6 +32,9 @@ def build():
     gui=copy.deepcopy(data['gui']);sg=copy.deepcopy(data['scripted_gui'])
     window=next(n for _,n in walk(gui) if get(n,'name')=='"project_ulysses_economy_screen"')
     logic=get(get(sg,'scripted_gui'),'project_ulysses_economy_screen')
+    # Full mode uses the new five-page directorate; saved legacy mode retains
+    # this exact three-page control/transaction contract.
+    setv(logic,'visible',parse('has_variable = project_ulysses_economy_screen_open ac_macro_mode = no'))
     triggers=get(logic,'triggers');triggers[:]=[r for r in triggers if not r[0].endswith('_panel_visible')]
     setv(window,'size',size(860,640))
     setv(get(window,'background'),'quadTextureSprite','"GFX_ac_ui_economy_background"')

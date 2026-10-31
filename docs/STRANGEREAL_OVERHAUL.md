@@ -2,8 +2,10 @@
 
 This is the user-approved implementation roadmap, recorded against the approval baseline
 `1f04456750b6e17a900cbfa407fddc3a4e96f3d5` and integrated with main `3810d1a`. It is a delivery contract, **not a
-claim that its content or systems are implemented**. Package 0 is source-ready for review, with native acceptance pending;
-Packages 1–5 and their new gameplay, art and native acceptance are pending.
+claim that the entire overhaul is implemented**. The repair package, shared
+economy/institutions and selected country foundations now have source review
+evidence. Completing every country foundation, the later campaigns and the
+effective anti-vanilla conversion remains staged work. Native acceptance is paused.
 The machine-readable counterpart is
 [release_plan.json](../tools/overhaul/release_plan.json). Check its budgets with
 `python -B tools/overhaul/check_release_plan.py`.
@@ -20,8 +22,8 @@ provenance and provisional gameplay remain separately labeled.
 | Package | Horizon | Deliverable | Status |
 | --- | --- | --- | --- |
 | 0 | Current candidate | Privacy cleanup; Steam screenshot/interface repairs; this roadmap and verification evidence | Source-ready; native pending |
-| 1 | 1991–2005 | World foundations, country institutions, monthly macroeconomics, regional framework and anti-vanilla audit | Pending |
-| 2 | 1991–2005 | Four Usean partners and six independent global squadron stories | Pending |
+| 1 | 1991–2005 | World foundations, country institutions, monthly macroeconomics, regional framework and anti-vanilla audit | Shared owners and selected foundations source-ready; world conversion incomplete; native pending |
+| 2 | 1991–2005 | Four Usean partners and six independent global squadron stories | Partner programmes and six stories/artwork source-ready; native pending |
 | 3 | 2006–2013 | Reconstruction, internal fracture, Circum-Pacific routes and supporting-country campaigns | Pending |
 | 4 | 2014–2016 | Anea's military crisis and consequences, preserving previous policies and aid outcomes | Pending |
 | 5 | 2017–2020 | Renewed Usea, Aurelia/Leasath and the remaining 2020 technology/campaign coverage | Pending |
@@ -60,8 +62,13 @@ Counts include existing shared imports and mutually exclusive alternatives;
 they do not establish engine reachability or a single-run completion count.
 The **36-focus regional framework is separate** from the 1,028 country additions.
 PR #31 subsequently delivered six FCU focuses. They count against the FCU
-budget: six delivered, 1,022 national additions remaining across this program.
-The historical approval baseline is retained rather than counting those six twice.
+budget. The machine-readable ledger records delivered and remaining definitions
+for each successive review package; the historical approval baseline is retained
+rather than counting additions twice. The regional framework remains separate.
+The current first-wave candidate delivers 228 partner definitions plus the six
+existing FCU additions: 234 delivered and 794 remaining. Its six squadron
+campaigns deliver 120 core chapters, 24 recurring cast members and 18 conclusions,
+with all 78 original image masters retained. Later packages remain unimplemented.
 Belka and Ustio retain their already large campaigns and gain cohesion, decisions
 and narrative consequences without a new fixed focus quota; AWWNB's emergent
 entry remains intact. Never pad a budget with interchangeable factory or

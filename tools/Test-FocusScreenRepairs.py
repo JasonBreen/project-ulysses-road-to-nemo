@@ -192,7 +192,10 @@ class FocusScreen(unittest.TestCase):
                 if abs(ax-bx)*pitch_x<width and abs(ay-by)*pitch_y<height:
                     actual.add((tree,a,b,positions[a],positions[b]))
         self.assertFalse(actual,'Resolved focus caption overlaps: '+repr(actual))
-        self.assertEqual(25,len(trees))
+        # Twenty-five is the repaired baseline, not a ceiling on new campaigns.
+        # Every resolved tree above still participates in the geometry checks;
+        # each expansion owner separately asserts its exact definition budget.
+        self.assertGreaterEqual(len(trees),25)
         self.assertGreaterEqual(sum(len(nodes) for nodes in trees.values()),940)
         for tree in ('ac_exp_fcu_opening','ac_ucw_fcu_tree'):
             self.assertIn(tree,trees)

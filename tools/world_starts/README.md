@@ -1,7 +1,8 @@
 # Active-country physical foundations
 
 This owner is being delivered in local slices. The current implemented slice is
-FCU/YUK/NPT plus the 25 previously industry-empty active starts. The baseline inventory covers all 61 active histories, four BBA/MTG
+FCU/YUK/NPT, the 25 previously industry-empty active starts, and fifteen
+inherited-industry starts without a standing roster. The baseline inventory covers all 61 active histories, four BBA/MTG
 routes and FATO's extra human-Belka context. The original 25-country proposal remains frozen; delivered profiles record reviewed
 upward adjustments needed to replace actual combat and transport roles.
 PLH/state 171 and seven landless emergent histories receive no blanket start grant.

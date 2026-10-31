@@ -106,7 +106,9 @@ class ActiveWorldTests(unittest.TestCase):
             self.assertEqual(row['profile_sha256'], hashlib.sha256(json.dumps(PROFILES[tag], sort_keys=True).encode()).hexdigest())
 
     def test_individual_inherited_buildings_resources_identity_and_vps_do_not_fall(self):
-        capacity = {'town': 4, 'large_town': 5, 'city': 6, 'large_city': 8, 'metropolis': 10, 'megalopolis': 12}
+        capacity = {'wasteland': 0, 'enclave': 0, 'tiny_island': 0, 'small_island': 1, 'pastoral': 1,
+                    'rural': 2, 'large_island': 2, 'town': 4, 'large_town': 5, 'city': 6,
+                    'large_city': 8, 'metropolis': 10, 'megalopolis': 12}
         for tag, row in MANIFEST['countries'].items():
             totals = Counter()
             for ident, old in row['baseline'].items():
@@ -191,7 +193,8 @@ class ActiveWorldTests(unittest.TestCase):
                 self.assertEqual(dict(assigned), {**p['production'], **p['naval_production']})
                 self.assertEqual(dict(actual_types), p['navy'])
                 results.append((divisions, planes, ships))
-                self.assertEqual(get(effects, 'set_convoys'), str(p['convoys']))
+                self.assertEqual([v for k, _, v in effects if k == 'set_convoys'][-1], str(p['convoys']))
+                self.assertGreaterEqual(p['convoys'], max([int(v) for k, _, v in parse(row['country_history_source']) if k == 'set_convoys'] + [0]))
                 self.assertEqual(get(effects, 'set_fuel_ratio'), '1.0')
             self.assertEqual(len(set(results)), 1)
             self.assertEqual(results[0], (sum(p['formations'].values()), sum(p['air'].values()), sum(p['navy'].values())))

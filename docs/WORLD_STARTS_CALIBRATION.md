@@ -51,3 +51,27 @@ Industry is added only to reviewed owned industrial/port terminals; island recei
 The frozen `empty_calibration_draft.json` records the intake proposal. The delivered profile records each upward MIL/yard adjustment in `calibration_review`: an aircraft start has rifle, engineer-support, truck, train and each aircraft-role line; a standing combat navy has a convoy line plus each hull class. The three civil-defense roles instead have three military lines (rifle/truck/train), four-battalion infantry, no unsupported support companies and no combat aviation or navy. Malynea alone has a merchant convoy yard. Convoy-only OOBs contain production without an empty fleet; aircraft-free countries have no air OOB at all.
 
 The registry retains raw false capability observations and separately records the explicit reviewed role dispositions. Removing a disposition makes the source gap visible again. It does not claim every country has aircraft or ships. All resource additions are bounded gameplay allocations for actual line inputs after conservative default exports; full-tempo fuel arithmetic remains a sensitivity rather than a promise of unlimited operations. The 25-country component receives no free imported army, fictitious procurement contract or automated old-save grant.
+
+## Fifteen inherited-industry starts without a standing roster
+
+These countries keep every inherited civilian factory and yard at its original state. Missing military lines are additive; their sizes follow actual replacement roles rather than an equal allocation. DOR/MST retain zero yards and receive no invented combat navy. AQU/BAL/GIB/LUR have infantry and transport lines without unsupported combat aviation or engineer companies. Their source role dispositions remain explicit in the registry.
+
+| Country | Inherited CIV/MIL/yards | Target CIV/MIL/yards | Formations | Fighters/CAS | Escorts/submarines |
+|---|---:|---:|---:|---:|---:|
+|ALR — Albard|14/6/9|14/8/9|8|72/12|6/2|
+|AQU — Aquitoria|3/2/0|3/3/0|2|0/0|0/0|
+|ARK — Arklith|15/3/20|15/8/20|8|96/24|8/4|
+|AUR — Aurelia|25/5/9|25/10/9|14|120/24|8/3|
+|BAL — Baltica|2/2/0|2/3/0|2|0/0|0/0|
+|BLD — Bulgurdarest|11/5/3|11/6/3|8|60/12|3/1|
+|CSO — Central Sotoa|4/4/0|4/5/0|3|24/0|0/0|
+|DAK — Dakrain|4/4/2|4/5/2|4|24/0|1/0|
+|DOR — Dorondo|10/10/0|10/10/0|8|72/12|0/0|
+|FRU — Ferustia|5/4/0|5/5/0|6|36/0|0/0|
+|GIB — Gibraltar|2/0/0|2/3/0|2|0/0|0/0|
+|LUR — Luremia|5/1/0|5/3/0|3|0/0|0/0|
+|MST — Monstrua|10/10/0|10/10/0|8|72/12|0/0|
+|SLA — Slavia|2/5/0|2/5/0|2|12/0|0/0|
+|VOS — Voslage|5/3/2|5/5/2|6|36/0|1/0|
+
+All additions are provisional gameplay. Actual deployment, required equipment and module unlocks, simultaneous line allocations, stocks, full opening fuel, scoped AI, retained identity and owned-component routes are tested. The four BBA/MTG projections establish source coverage only. No armored units are introduced by this fifteen-country slice. The retained-army compatibility and legacy-owner integration remain separate work, including explicit NSB/LaR boundaries. Native acceptance remains pending.

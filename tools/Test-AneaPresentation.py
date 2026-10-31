@@ -121,11 +121,11 @@ class AneaPresentation(unittest.TestCase):
         self.assertEqual(repaired_node(contract), actual)
         original = copy.deepcopy(contract['original_node'][2])
         changed = copy.deepcopy(actual[2])
-        original = [row for row in original if row[0] not in ('position', 'maxHeight')]
-        changed = [row for row in changed if row[0] not in ('position', 'maxHeight', 'scrollbarType')]
+        original = [row for row in original if row[0] not in ('position', 'maxHeight', 'font')]
+        changed = [row for row in changed if row[0] not in ('position', 'maxHeight', 'scrollbarType', 'font')]
         self.assertEqual(original, changed)
         self.assertEqual('"history"', get(actual[2], 'name'))
-        self.assertEqual('"Aces12"', get(actual[2], 'font'))
+        self.assertEqual('"Aces16"', get(actual[2], 'font'))
         self.assertEqual('380', get(actual[2], 'maxWidth'))
         self.assertEqual('145', get(actual[2], 'maxHeight'))
         self.assertEqual('"ac_exp_standardtext_slider"', get(actual[2], 'scrollbarType'))

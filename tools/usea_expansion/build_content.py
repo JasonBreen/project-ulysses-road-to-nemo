@@ -45,7 +45,8 @@ def build_trees():
         ident='ac_exp_'+tag.lower()+'_opening'
         loc(ident,('Erusea' if tag=='ERU' else 'Central Usea')+': the Opening Decade')
         loc(ident+'_desc','Administration, preparedness and continental relations, 1991–1999.')
-        body='id = '+ident+'\ncountry = { factor = 0 modifier = { add = 20 original_tag = '+tag+' NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 } }\ndefault = no\ncontinuous_focus_position = { x = 1100 y = 1000 }\n'
+        panel_x=(max(row.x for row in rows)+4)*96
+        body='id = '+ident+'\ncountry = { factor = 0 modifier = { add = 20 original_tag = '+tag+' NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 } }\ndefault = no\ncontinuous_focus_position = { x = '+str(panel_x)+' y = 16 }\n'
         put('common/national_focus/'+tag+'_opening.txt',block('focus_tree',body+'\n'.join(focus(r) for r in rows)))
     for tag in ('NPT','REC','YUK'):
         rows=[r for r in FOCUSES if r.tag==tag and r.phase=='support']

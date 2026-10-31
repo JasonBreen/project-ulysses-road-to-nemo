@@ -24,6 +24,11 @@ def nodes(tree):
             yield from nodes(value)
 
 
+def input_path_order(path, root=MOD):
+    relative = path.relative_to(root).as_posix()
+    return relative.casefold(), relative
+
+
 def inspect():
     inputs = set()
 
@@ -138,7 +143,7 @@ def inspect():
         "landowning_with_foreign_capital": sum(bool(r["owned_states"]) and not r["source_checks"]["owns_capital"] for r in rows),
         "without_direct_history_roster": sum(not r["history_roster_references"] for r in rows)}
     digest = hashlib.sha256()
-    for path in sorted(inputs):
+    for path in sorted(inputs, key=input_path_order):
         digest.update(path.relative_to(MOD).as_posix().encode() + b"\0" + path.read_bytes())
     return {"schema": 1, "start": "1991.1.1", "evidence": "source inspection, not native acceptance",
         "input_digest_sha256": digest.hexdigest(), "input_file_count": len(inputs), "summary": summary, "countries": rows}

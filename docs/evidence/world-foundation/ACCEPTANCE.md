@@ -57,3 +57,10 @@ histories are preserved. Raster-derived placements use the approved provisional
 fallback, not invented canonical city mappings. See [the capital ledger](../../WORLD_CAPITAL_REPAIRS.md).
 The registry is regenerated after these changes; its industry, infrastructure,
 roster and native-acceptance gaps remain explicit.
+
+Automated review additionally found that the input digest used the host's Path
+sort order. It now sorts explicit POSIX-style relative strings by case-folded
+name and then exact spelling. The eleventh foundation regression compares
+PureWindowsPath and PurePosixPath ordering of mixed-case inputs. The capital
+workflow now runs the registry/foundation and eight capital checks on Windows
+and Linux; final-commit CI results remain separate from these local observations.

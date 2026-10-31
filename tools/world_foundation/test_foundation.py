@@ -5,7 +5,7 @@ import hashlib
 import importlib.util
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 import shutil
 import sys
 import tempfile
@@ -16,7 +16,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from placements import ROOT, MOD, derive, topology
 from build import outputs, country_output
-from registry import inspect
+from registry import inspect, input_path_order
 from script import parse, get, walk
 from shared_logistics import compose, manifest_rows
 
@@ -57,6 +57,18 @@ class WorldFoundationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.definitions, cls.graph, cls.centroids, cls.pixels, cls.size = topology()
+
+    def test_registry_digest_order_is_platform_independent(self):
+        names = ['history/units/BLK_land.txt', 'history/units/ac_shared.txt',
+                 'common/characters/ac_governments.txt', 'common/characters/DEL.txt']
+        order = []
+        for kind, base in [(PurePosixPath, '/repo/mod'), (PureWindowsPath, 'G:/repo/mod')]:
+            root = kind(base)
+            paths = [root / name for name in reversed(names)]
+            ordered = sorted(paths, key=lambda path: input_path_order(path, root))
+            order.append([path.relative_to(root).as_posix() for path in ordered])
+        self.assertEqual(order[0], order[1])
+        self.assertEqual(sorted(names, key=lambda name: (name.casefold(), name)), order[0])
 
     def test_registry_contains_all_69_without_claiming_universal_playability(self):
         expected = inspect()

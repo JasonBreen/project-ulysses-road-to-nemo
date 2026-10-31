@@ -7,7 +7,13 @@ review branch from verified main `3810d1a`. The original partner component is
 is `13c8e48`. The repaired-interface restack is integrated through shared-system
 head `8a96ff0` (World `2afd9fa`). Final integrated validation and the refreshed dependency head are
 recorded under `docs/evidence/usean-partners/integration/results.json`.
-Publication and exact-head remote CI remain separate owner actions.
+PR #35 publishes this package, stacked on shared-system PR #34. The subsequent
+shared-system update `4582104` replaces tiny literal rate operands with equivalent
+integer ratios and adds two operand-only stress cases. The actual-owner suite
+was rerun across all 29 scopes and three fiscal modes after that merge; no
+national reward, policy or artwork rate changed. Current retained results
+identify the updated source head. Exact-head remote CI remains distinct from
+native acceptance.
 
 ## Contracts inspected and corrected
 
@@ -122,7 +128,7 @@ unchanged. Neither the registry nor these source tests certify native balance.
 The retained final run passed all 24 primary commands, including the complete
 static wrapper with a read-only installed reference, plus eight additional
 compatibility commands. Component counts are national 30, actual-owner 4,
-World/Erusean 20, macro 27, shared-owner 4, ledger 14, institutions 20, force-upkeep 8,
+World/Erusean 20, macro 27, shared-owner 5, ledger 14, institutions 20, force-upkeep 9,
 focus-screen 9, decision-screen 16 and overhaul 7. Additional suites passed legacy 27,
 factions 35 (no skips), Usean expansion 17 and Anea integration 5; campaign,
 briefing, typography and Continental War generation checks also passed.

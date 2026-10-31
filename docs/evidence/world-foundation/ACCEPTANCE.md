@@ -39,5 +39,12 @@ no native outcome is inferred from that report.
 
 Archive/baseline, province geometry, state ownership/cores/manpower, state 171
 and strategic-region geography are preserved. No normal installation, user
-profile or save was synchronized or changed. No PR, publication or remote merge
-is authorized by this acceptance record.
+profile or save was synchronized or changed. PR review follows the approved
+delivery workflow; release publication, remote merging and installation delivery
+remain separate actions.
+
+Root review additionally tightened the national AI/research scopes to require
+the current tag as well as its original tag. All ten foundation tests and the
+read-only equipment/module check passed again after regeneration. This keeps a
+dynamic civil-war clone from losing generic AI priorities in favor of a national
+template unavailable to that clone. Native AI acceptance is still open.

@@ -182,6 +182,8 @@ class WorldFoundationTests(unittest.TestCase):
             strategies = read(f"common/ai_strategy/{tag}_world_foundation.txt")
             for _, _, policy in strategies:
                 self.assertEqual(get(get(policy, "allowed"), "original_tag"), tag)
+                self.assertEqual(get(get(policy, "allowed"), "tag"), tag,
+                                 "A dynamic civil-war clone must not cancel its generic AI role without this national template")
             text = (MOD / f"common/ai_strategy/{tag}_world_foundation.txt").read_text()
             self.assertNotIn("declare_war_on", text)
             self.assertNotIn("type = conquer", text)

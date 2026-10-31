@@ -169,15 +169,15 @@ def navy_output(tag, row, profile, dlc):
 
 
 def ai_output(tag):
-    base = f"allowed = {{ original_tag = {tag} }}\nenable = {{ has_capitulated = no }}\nabort_when_not_enabled = yes\n"
+    base = f"allowed = {{ tag = {tag} original_tag = {tag} }}\nenable = {{ has_capitulated = no }}\nabort_when_not_enabled = yes\n"
     # Roles add to engine defaults; cancel the generic infantry/armor/mountain
     # ratios while selecting one country-specific affordable territorial role.
     for typ, ident, amount in [("role_ratio", "infantry", -80), ("role_ratio", "armor", -2), ("role_ratio", "mountaineers", -4), ("role_ratio", "ac_wf_territorial", 100), ("unit_ratio", "fighter", 15), ("unit_ratio", "convoy", 15), ("unit_ratio", "capital_ship", -10), ("equipment_production_factor", "infantry", 20), ("equipment_production_factor", "support", 15)]:
         base += block("ai_strategy", f"type = {typ}\nid = {ident}\nvalue = {amount}")
-    peace = f"allowed = {{ original_tag = {tag} }}\nenable = {{ has_war = no }}\nabort_when_not_enabled = yes\n"
+    peace = f"allowed = {{ tag = {tag} original_tag = {tag} }}\nenable = {{ has_war = no }}\nabort_when_not_enabled = yes\n"
     peace += block("ai_strategy", "type = ai_wanted_divisions_factor\nvalue = -60")
     peace += block("ai_strategy", "type = build_building\nid = industrial_complex\nvalue = 30")
-    war = f"allowed = {{ original_tag = {tag} }}\nenable = {{ has_war = yes }}\nabort_when_not_enabled = yes\n"
+    war = f"allowed = {{ tag = {tag} original_tag = {tag} }}\nenable = {{ has_war = yes }}\nabort_when_not_enabled = yes\n"
     war += block("ai_strategy", "type = ai_wanted_divisions_factor\nvalue = -25")
     war += block("ai_strategy", "type = equipment_production_factor\nid = infantry\nvalue = 20")
     return NOTE + block(tag + "_wf_sustainment", base) + block(tag + "_wf_civilian", peace) + block(tag + "_wf_defense", war)
@@ -204,7 +204,7 @@ def outputs():
         support = "engineer = 1" + ("\nartillery = 1" if profile["reserve_artillery"] else "")
         target = block(tag + "_wf_territorial_target", "upgrade_prio = { factor = 1 }\n" + block("target_template", block("support", support) + block("regiments", "infantry = 6")))
         output[f"common/ai_templates/{tag}_world_foundation.txt"] = NOTE + block(tag + "_wf_territorial", f"available_for = {{ {tag} }}\nrole = ac_wf_territorial\nupgrade_prio = {{ factor = 5 }}\n" + target)
-        research = f"name = {tag}_wf_research_name\ndesc = {tag}_wf_research_desc\nallowed = {{ original_tag = {tag} }}\nenable = {{ always = yes }}\nabort_when_not_enabled = yes\n"
+        research = f"name = {tag}_wf_research_name\ndesc = {tag}_wf_research_desc\nallowed = {{ tag = {tag} original_tag = {tag} }}\nenable = {{ always = yes }}\nabort_when_not_enabled = yes\n"
         research += block("research", "industry = 15\ninfantry_tech = 15\nsupport_tech = 12\nlight_fighter = 10\nelectronics = 5\ndd_tech = 2") + "weight = { factor = 1 }\n"
         output[f"common/ai_strategy_plans/{tag}_world_foundation.txt"] = NOTE + block(tag + "_wf_research", research)
         loc.append(f' {tag}_wf_research_name:0 "{profile["name"]}: Defensive Sustainment"')

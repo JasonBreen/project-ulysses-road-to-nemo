@@ -1,7 +1,7 @@
 # World foundation registry and first Usean starts
 
 This Package 1 source slice is based on main
-`1f04456750b6e17a900cbfa407fddc3a4e96f3d5`. It implements a reproducible
+`3810d1a`, preserving the approval baseline `1f04456`. It implements a reproducible
 69-country source registry and the initial military/industrial/logistics
 foundations for **SNS, AMB, UGE and DEL**. It adds no focuses, war outcomes,
 country tags, borders, cores, leader identities or event grants.
@@ -62,6 +62,10 @@ AI role avoids making its target compete with a second generic infantry target;
 the matching generic role weights are canceled for these countries. The initial
 templates do not require tanks, mechanized fleets or unaffordable large armies.
 Actual AI growth and supply use remain native acceptance items.
+
+National role overrides require both the current tag and original tag. A dynamic
+civil-war clone therefore retains its own generic AI behavior rather than having
+it canceled in favor of a template available only to the original country.
 
 ## Placements and composability
 

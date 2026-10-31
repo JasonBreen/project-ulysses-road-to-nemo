@@ -32,6 +32,14 @@ def check(plan):
                        ("target_definitions", "country_target_definitions")]:
         require(sum(row[field] for row in countries) == counts[key], f"Country {key} sum mismatch")
     require(counts["country_additions"] == 1028, "Approved country addition budget is 1,028")
+    delivered = sum(row.get("delivered_since_approval", 0) for row in countries)
+    remaining = sum(row.get("remaining_definitions", row["new_definitions"]) for row in countries)
+    require(delivered == counts.get("delivered_since_approval", 0), "Delivered focus accounting mismatch")
+    require(remaining == counts.get("remaining_country_additions", 1028), "Remaining focus accounting mismatch")
+    require(delivered + remaining == 1028, "Delivered and remaining focuses must reconcile to approval budget")
+    for row in countries:
+        require(row.get("remaining_definitions", row["new_definitions"]) + row.get("delivered_since_approval", 0)
+                == row["new_definitions"], f"{row['tag']}: delivered/remaining mismatch")
     require(counts["regional_shared_definitions"] == plan["regional_framework"]["shared_focus_definitions"] == 36,
             "Regional framework budget must remain 36")
     require(not counts["regional_counted_in_country_additions"], "Regional framework double-counted")

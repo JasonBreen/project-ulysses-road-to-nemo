@@ -26,7 +26,7 @@ deliberate 64px authored height; every joint/country variant uses that same heig
 - Continuous-focus symbols use positive offsets, separate 64px caption frames and
   172px grid rows. The 770×456 panel contains a 352px clipped scrolling entries area.
   Its title, description, progress and rows have separate bounded regions.
-- ERU/FCU opening trees put the panel at **(2016,16)**, clear of their rightmost
+- ERU and FCU opening trees put the panels at **(2016,16)** and **(2592,16)** respectively, clear of their rightmost
   focus. It fits the primary 3440×1440 view. Existing outer pan/scroll controls
   remain available at smaller views; native scrolling is still unverified.
 - An inherited duplicated `GEB_north_gebadia_factories` localization key had
@@ -39,7 +39,7 @@ deliberate 64px authored height; every joint/country variant uses that same heig
   to 4, carrying its relative legacy node with it. Sapin's six-focus recovery
   branch moves from column 60 to 70, beyond the inherited army branches. These
   are coordinate changes only; IDs, prerequisites, rewards and availability are
-  preserved. All **25 trees / 944 resolved instances** now have zero intersecting
+  preserved. All **25 trees / 950 resolved instances** now have zero intersecting
   caption rectangles, with no availability-based exceptions.
 
 [Offline geometry/seam projection](evidence/package0-focus/focus-geometry-and-seams.png)
@@ -62,7 +62,7 @@ The scoped artwork command preserves non-focus artwork and the complete asset
 manifest. Add `--check` to its invocation to compare focus textures/metadata
 without writing; the UI and content generators also support `--check`.
 
-The focused suite measures **877 currently authored localized focus IDs**,
+The focused suite measures **883 currently authored localized focus IDs**,
 including both scripted Belkan title variants, using the shipped font advances.
 All measured labels fit three lines at 147px. Missing/unresolved art or
 localization consumers remain part of the broader Package 0 dependency inventory;

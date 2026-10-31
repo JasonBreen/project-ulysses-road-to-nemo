@@ -1,7 +1,7 @@
 # Overhaul Package 0 evidence
 
 This directory records the privacy and screenshot-repair package based on main
-`1f04456750b6e17a900cbfa407fddc3a4e96f3d5`. It does not establish native acceptance.
+`3810d1a`, retaining the approval baseline `1f04456`. It does not establish native acceptance.
 
 ## Before evidence
 
@@ -29,11 +29,11 @@ oversized inline prefixes were removed without shortening narrative prose.
 
 ## Verification boundary
 
-The retained `validation/static-results.json` records **26 passing check groups**
+The retained `validation/static-results.json` records **27 passing check groups**
 with their commands and logs. The focused suites include seven overview/fiscal/
 label regressions, eleven decision/dependency tests and nine focus-screen tests.
-The focus geometry check resolves 25 trees and 944 focus instances, with zero
-caption intersections after seven inherited placement repairs. All 877 currently
+The focus geometry check resolves 25 trees and 950 focus instances, with zero
+caption intersections after seven inherited placement repairs. All 883 currently
 localized focus IDs fit the measured three-line caption contract.
 
 The strict authored-asset gate reports zero missing assets. The separate

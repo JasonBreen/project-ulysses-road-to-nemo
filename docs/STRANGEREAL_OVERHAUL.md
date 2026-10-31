@@ -1,7 +1,7 @@
 # Strangereal overhaul: 1991–2020
 
-This is the user-approved implementation roadmap, recorded against main
-`1f04456750b6e17a900cbfa407fddc3a4e96f3d5`. It is a delivery contract, **not a
+This is the user-approved implementation roadmap, recorded against the approval baseline
+`1f04456750b6e17a900cbfa407fddc3a4e96f3d5` and integrated with main `3810d1a`. It is a delivery contract, **not a
 claim that its content or systems are implemented**. Package 0 is source-ready for review, with native acceptance pending;
 Packages 1–5 and their new gameplay, art and native acceptance are pending.
 The machine-readable counterpart is
@@ -33,7 +33,7 @@ the supplied creative outline. Preserve `source/archive-original` and
 `source/baseline`. Its UI work must be assessed against the reported screenshots,
 not inferred from a successful source audit.
 
-| Country | Existing definitions | Planned total | Additions |
+| Country | Definitions at approval | Planned total | Budgeted additions |
 | --- | ---: | ---: | ---: |
 | San Salvacion | 0 | 72 | 72 |
 | Amber | 0 | 60 | 60 |
@@ -59,6 +59,9 @@ not inferred from a successful source audit.
 Counts include existing shared imports and mutually exclusive alternatives;
 they do not establish engine reachability or a single-run completion count.
 The **36-focus regional framework is separate** from the 1,028 country additions.
+PR #31 subsequently delivered six FCU focuses. They count against the FCU
+budget: six delivered, 1,022 national additions remaining across this program.
+The historical approval baseline is retained rather than counting those six twice.
 Belka and Ustio retain their already large campaigns and gain cohesion, decisions
 and narrative consequences without a new fixed focus quota; AWWNB's emergent
 entry remains intact. Never pad a budget with interchangeable factory or

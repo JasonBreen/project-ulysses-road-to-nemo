@@ -3,7 +3,8 @@
 This Package 1 source slice is based on main
 `3810d1a`, preserving the approval baseline `1f04456`. It implements a reproducible
 69-country source registry and the initial military/industrial/logistics
-foundations for **SNS, AMB, UGE and DEL**. It adds no focuses, war outcomes,
+foundations for **SNS, AMB, UGE and DEL**, plus all fourteen reviewed foreign-capital
+repairs described in [the capital ledger](WORLD_CAPITAL_REPAIRS.md). It adds no focuses, war outcomes,
 country tags, borders, cores, leader identities or event grants.
 Native testing is paused; source checks do not establish playable balance,
 AI behavior or final game acceptance.
@@ -18,8 +19,8 @@ event-driven forces and native parser/supply/AI behavior are outside that
 registry's direct-history boundary.
 
 After this slice, 69 histories include 62 currently landowning countries.
-**26 landowners still have no industry, 28 no infrastructure and 14 a capital
-owned by another tag; 52 histories have no direct OOB reference.** These are
+**26 landowners still have no industry and 28 no infrastructure; 52 histories
+have no direct OOB reference. All62 landowning countries now have owned capitals.** These are
 documented inherited gaps, not claims that every affected country is absent or
 unplayable. Dormant/emergent countries are separate from active ones, and PLH /
 state 171 remains explicitly unresolved. The inspector records an inherited

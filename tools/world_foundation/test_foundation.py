@@ -64,7 +64,7 @@ class WorldFoundationTests(unittest.TestCase):
         self.assertEqual(len(expected["countries"]), 69)
         self.assertEqual(len({r["tag"] for r in expected["countries"]}), 69)
         self.assertGreater(expected["summary"]["landowning_without_industry"], 0)
-        self.assertGreater(expected["summary"]["landowning_with_foreign_capital"], 0)
+        self.assertEqual(expected["summary"]["landowning_with_foreign_capital"], 0)
         for tag in PROFILES:
             row = next(r for r in expected["countries"] if r["tag"] == tag)
             self.assertTrue(all(row["source_checks"].values()), row)

@@ -25,7 +25,8 @@ HOI4 1.19.4.1 game; it was never launched or altered.
 
 The full static wrapper passed after the main merge: map errors 0, with two
 existing placeholder warnings; reference warnings 2,007 and technology warnings
-1 remain inherited audit items. Strict assets checked 5,081 sprites and 940
+1 remain open audit items. The entire warning inventory is not certified inherited.
+Strict assets checked 5,081 sprites and 940
 focus bindings with zero missing authored textures. The PR scan found zero
 errors and warnings in 57 changed script files. These limits remain explicit;
 the source checks do not prove every engine-selected visual is non-vanilla.
@@ -48,3 +49,11 @@ the current tag as well as its original tag. All ten foundation tests and the
 read-only equipment/module check passed again after regeneration. This keeps a
 dynamic civil-war clone from losing generic AI priorities in favor of a national
 template unavailable to that clone. Native AI acceptance is still open.
+
+The subsequent owned-capital review adds eight geographic/source regressions
+and fourteen one-field history repairs. All62 currently landowning countries now
+have owned capital states; the 48 other owned-capital assignments and seven dormant
+histories are preserved. Raster-derived placements use the approved provisional
+fallback, not invented canonical city mappings. See [the capital ledger](../../WORLD_CAPITAL_REPAIRS.md).
+The registry is regenerated after these changes; its industry, infrastructure,
+roster and native-acceptance gaps remain explicit.

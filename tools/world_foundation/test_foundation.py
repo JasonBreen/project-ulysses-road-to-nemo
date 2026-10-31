@@ -430,7 +430,8 @@ class WorldFoundationTests(unittest.TestCase):
             self.assertEqual(a[relative], w[relative])
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp); mod = root / "mod/2985041246"
-            for relative in ["tools/logistics_owners.json", "tools/anea/foundation.json", "tools/world_foundation/foundation.json"]:
+            owner_manifest = json.loads((ROOT / 'tools/logistics_owners.json').read_text())
+            for relative in ['tools/logistics_owners.json'] + [r['manifest'] for r in owner_manifest['owners']]:
                 target = root / relative; target.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(ROOT / relative, target)
             for path in (MOD / "history/states").glob("*.txt"):
                 target = mod / "history/states" / path.name; target.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(path, target)

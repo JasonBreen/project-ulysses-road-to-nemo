@@ -1,8 +1,8 @@
 # Package 1 shared-system integration review
 
-This Package1 candidate adds the full economy and institutional framework on
-the separately reviewable World Foundation prerequisite, PR33. That prerequisite
-includes the repair/privacy package, PR32; both descend from verified main3810d1a.
+This Package 1 candidate adds the full economy and institutional framework on
+the separately reviewable World Foundation prerequisite, PR #33. That prerequisite
+includes the repair/privacy package, PR #32; both descend from verified main `3810d1a`.
 The economy/institutions components retain their individual commits and their
 generated output. This PR adds no partner campaign or squadron story payload.
 The evidence is source/offline only; native acceptance remains paused.
@@ -60,16 +60,18 @@ standalone component testing; that fixture is under `tools/`, never under the
 delivered mod. In this integrated candidate it loads the real narrow owner.
 The combined suite above additionally executes the complete real quote path.
 
-Local checks with Python3.12, Pillow11.3.0 and numpy2.2.6:
+Final source checks use Python 3.12, Pillow 11.3.0 and numpy 2.2.6:
 
 | Check | Result |
 |---|---|
 | Macro source suite | 27 passed, including exact warning/correction/recovery boundaries and duplicate-callback protection. |
-| Institutions source suite | 19 passed, including real cloned-tag weekly dispatch. |
-| Shared real-owner suite | 4 passed. |
+| Settled-ledger source suite | 14 passed, including monetary carry, history and five-page geometry. |
+| Observable force-upkeep suite | 9 passed, including installed primary contract hashes and coarse-literal stress. |
+| Institutions source suite | 20 passed, including real cloned-tag weekly dispatch. |
+| Shared real-owner suite | 5 passed, including policy-fee operand stress. |
 | Retained experimental economy suite | 27 passed. |
 | Factions with installed reference | 35 passed, no skips. |
-| Full `Test-UlyssesStatic.ps1` with installed1.19.4.1 read-only reference | Passed. Map errors0; one placeholder-owned state and204 placeholder strategic regions retained. Reference warnings2007 and technology warnings1 remain; no warning-free claim. |
+| Full `Test-UlyssesStatic.ps1` with installed 1.19.4.1 read-only reference | Passed. Map errors 0; one placeholder-owned state and 204 placeholder strategic regions retained. Reference warnings 2006 and technology warnings 1 remain; no warning-free claim. |
 | Authored asset audit `--strict-all` | Passed; zero unresolved texture references and cleaned-family regressions. |
 | Anea foundation and starting-government generators `--check` | Passed with the new history eligibility markers. |
 | Marker regression after PR33 seam correction | Passed. |
@@ -87,11 +89,11 @@ Both authoring orders passed generation plus `--check`:
 1. Anea → world foundation → starting governments → economy.
 2. Economy → starting governments → world foundation → Anea.
 
-All69 country histories and both logistics files had identical byte hashes
+All 69 country histories and both logistics files had identical byte hashes
 after the two orders. The final review candidate also integrates the newer
-World/repair prerequisite2afd9fa. Both DEL sections are retained, the owners are
+World/repair prerequisite `2afd9fa`. Both DEL sections are retained, the owners are
 regenerated in their canonical order, and the registry is refreshed against the
-combined payload. The registry now joins all69 actual fiscal and institutional
+combined payload. The registry now joins all 69 actual fiscal and institutional
 profiles, leader representation, capital source layer, active/emergent/placeholder
 classification and explicit public regional participant declarations. Its source
 profile hashes normalize line endings for Windows/Linux reproducibility. The
@@ -148,19 +150,40 @@ stability, execution order and performance still requiring engine acceptance.
 
 ## Final follow-up source checks
 
-The final ledger/upkeep/state-receipt candidate passed 27 macro, 14 ledger,
-8 force-upkeep, 20 institution, 4 real-owner integration, 27 retained economy,
+The final ledger/upkeep/state-receipt and operand candidate passed 27 macro, 14 ledger,
+9 force-upkeep, 20 institution, 5 real-owner integration, 27 retained economy,
 35 faction and 8 interface tests. Force/faction provenance checks used the
 installed engine only as a read-only script reference. Macro and Anea generated
 outputs plus the authored asset audit `--strict-all` passed. A fresh full
 `Test-UlyssesStatic.ps1` with the installed read-only reference also passed
 after the state-receipt changes: map errors 0, retained placeholder warnings 2,
-reference warnings 2007 and technology warnings 1. The retained `results.json`
+reference warnings 2006 and technology warnings 1. The retained `results.json`
 records each executed command and its source-only coverage.
-The initial integration table above describes the earlier checkpoint; the
-follow-up counts in this paragraph supersede its component-suite counts.
+The current retained run tests source commit `dd17c754f6bf4103ece706fe5881ad1027c341a1`,
+including the operand correction described below. The earlier `8a96ff0` checkpoint
+and its results remain in Git history. The subsequent review commit refreshes
+evidence and the explicitly labeled offline screen reconstruction; it does not
+change delivered runtime scripts.
+
+The selected-screen consumer dependency audit also passes for
+`ac_macro_economy.gui` against the installed loose-file reference. This establishes
+the inspected screen's resolved source dependencies, not the completed world
+anti-vanilla gate. DLC archives and the global unresolved dependency backlog
+remain separate acceptance work.
 
 ## Native limits
+
+A subsequent operand review replaces the 0.0005 infantry allowance coefficient
+and the civic/district policy coefficients with equivalent integer ratios. Early
+scaling of a base cannot recover a coefficient already lost during literal
+resolution. Two actual-source stress regressions restrict numeric literals to
+three decimal places while preserving the interpreter's variable arithmetic;
+the infantry allowance and both policy fees remain nonzero, and exact receipt
+reversal still holds. This is an operand-only robustness check, **not** a model
+or observation of HOI4's actual parsing, intermediate rounding or range.
+Force-upkeep now has nine cases and real shared-owner integration five.
+Amounts lost after a native division and very small annual commitments remain
+part of the existing native arithmetic acceptance probes.
 
 The interpreters use Decimal/ordinal-date models. They do not prove HOI4 fixed
 point precision, dynamic-variable observations, native save inheritance,

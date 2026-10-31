@@ -8,9 +8,14 @@ the physical simulation. GDP never creates offsite factories or duplicate goods.
 
 **Status: implemented source and offline checks; native acceptance pending.**
 No game, profile, user save, normal installation or display setting was changed.
-The existing native-testing pause remains in force. No rendered GUI, native
+The existing native-testing pause remains in force. No native GUI, native
 arithmetic, real-save serialization, native AI pace or balance acceptance is
 claimed for this package.
+
+The [offline five-page review](evidence/economy-v2/ui-review-README.md) reconstructs
+the delivered GUI, sprites, font atlas and localization using an actual-script
+twelve-settlement fixture. It includes source fingerprints and bounds findings;
+it does not replace the native acceptance work.
 
 ## Units, sources and starting data
 
@@ -131,6 +136,13 @@ engine range, rounding and minimum meaningful payment are **open native gates**.
 Decimal offline conservation is not proof of HOI4 arithmetic. An approved native
 probe must cover the largest 2020 economy, smallest country's payment, long-run
 prices, negative growth and rounding/remainder behavior before release acceptance.
+
+Sub-thousandth allowance/policy coefficients use integer ratios, avoiding a tiny
+literal that could be lost before it multiplies a scaled base. Operand-only
+three-decimal stress regressions exercise the actual source and preserve the
+nonzero fee and receipt reversal. They do not establish native intermediate
+precision; an annual amount lost after division still cannot be recovered by a
+later residual carry.
 
 ## Physical economy, occupation and releases
 

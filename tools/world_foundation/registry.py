@@ -89,6 +89,11 @@ def inspect():
                 participant_declarations[tag].append(dict(trigger=key, source=path.relative_to(MOD).as_posix()))
     rows = []
     covered = set(json.loads((HERE / "profiles.json").read_text())["countries"])
+    active_profiles = {}
+    active_profiles_path = ROOT / 'tools/world_starts/profiles.json'
+    if active_profiles_path.exists():
+        active_profiles = support_profile('tools/world_starts/profiles.json', 'object').get('countries', {})
+        covered.update(active_profiles)
     for path in sorted((MOD / "history/countries").glob("*.txt")):
         tag = path.name[:3]; history = read(path)
         owned = {i: s for i, s in states.items() if s["owner"] == tag}
@@ -137,11 +142,29 @@ def inspect():
             "referenced_rosters_resolve": bool(roster_refs) and not missing and not parse_errors, "has_initial_production": bool(production)}
         if buildings["naval_base"] > 0:
             checks["has_direct_naval_roster"] = "naval" in roster_kinds
-        issues = [key for key, value in checks.items() if not value]
+        # Preserve the raw observations. A reviewed civil-defense role may
+        # deliberately have no standing aircraft or combat fleet; never turn
+        # an empty OOB into a claimed capability just to make this inventory green.
+        role = active_profiles.get(tag, {})
+        dispositions = {}
+        if role and not role.get('air') and not any(k in role.get('production', {}) for k in ('fighter', 'cas', 'tactical')):
+            reason = role.get('capability_dispositions', {}).get('combat_air')
+            if reason and reason.startswith('deliberately absent:'):
+                for key in ('has_direct_air_roster', 'has_airbase'):
+                    if not checks[key]: dispositions[key] = reason
+        if role and not role.get('navy') and 'has_direct_naval_roster' in checks and not checks['has_direct_naval_roster']:
+            reason = role.get('capability_dispositions', {}).get('combat_navy')
+            if reason and reason.startswith('deliberately absent:'):
+                dispositions['has_direct_naval_roster'] = reason
+        issues = [key for key, value in checks.items() if not value and key not in dispositions]
+        personnel_gate = role.get('inherited_personnel_debt')
+        if personnel_gate: issues.append('inherited_personnel_reinforcement_debt')
         if tag == "PLH" or 171 in owned:
             status = "unresolved_placeholder_do_not_infer"
         elif not owned:
             status = "dormant_or_emergent_entry_requires_review"
+        elif personnel_gate and issues == ['inherited_personnel_reinforcement_debt']:
+            status = 'authored_foundation_with_inherited_policy_debt_native_pending'
         elif issues:
             status = "inherited_foundation_gaps"
         elif tag in covered or tag in ("EMM", "EVA"):
@@ -175,7 +198,8 @@ def inspect():
             "recruited_active_party_leaders": active, "history_roster_references": roster_refs,
             "technology_inventory_all_history_branches": sorted({tech for key, _, value in nodes(history) if key == 'set_technology' and isinstance(value, list) for tech, _, _ in value}),
             "missing_roster_files": missing, "roster_offline_parser_errors": parse_errors, "initial_production_assignments": dict(sorted(production.items())),
-            "source_checks": checks, "source_gaps": issues,
+            "source_checks": checks, "source_gaps": issues, "role_not_required": dispositions,
+            "inherited_personnel_gate": personnel_gate,
             "scope_note": "Direct history/OOB source inspection only. Event-driven forces and native AI, supply reach, engine parsing and balance are separate acceptance."})
     summary = {"country_histories": len(rows), "currently_landowning": sum(bool(r["owned_states"]) for r in rows),
         "support_status_counts": dict(sorted(Counter(r["support_status"] for r in rows).items())),

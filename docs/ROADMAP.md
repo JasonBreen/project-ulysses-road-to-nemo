@@ -1,5 +1,10 @@
 # Implementation roadmap
 
+The current user-approved program is [Strangereal overhaul: 1991–2020](STRANGEREAL_OVERHAUL.md),
+with machine-readable budgets and honest package status. The implementation
+records below remain historical evidence; they do not supersede that roadmap
+or establish native acceptance for its pending packages.
+
 ## Anea — The Burden of Recovery
 
 The Emmerian/Estovakian 1991–2005 foundation is authored on the merged PR#29
@@ -82,7 +87,7 @@ task.
 
 1. Extend the reference audit to scripted effect/trigger calls and country-tag consumers; keep inherited vanilla namespaces explicitly allowlisted.
 2. Decide the target HOI4 branch from the installed build evidence before changing `supported_version` or branch-specific syntax.
-3. Resolve state 171 only after Sam supplies intended geography/ownership; do not invent a replacement.
+3. Resolve state 171 only after the user supplies intended geography/ownership; do not invent a replacement.
 4. Classify the 203 `XXX` strategic regions and rename only where lore-backed intent is established.
 5. Trace the 1991 Belkan War event/focus graph beyond the new handoff contract and replace remaining demo-terminal transitions with explicit continuation contracts.
 6. Resolve state 171 and the 203 XXX strategic regions only after source-backed geography decisions.

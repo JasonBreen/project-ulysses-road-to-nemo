@@ -1,0 +1,150 @@
+# Authored Anea gameplay; source: tools/anea/build_system.py.
+ac_anea_participant = {
+	OR = { original_tag = EMM original_tag = EVA }
+}
+
+ac_anea_eligible = {
+	ac_anea_participant = yes has_capitulated = no
+}
+
+ac_anea_active = {
+	ac_anea_eligible = yes has_country_flag = ac_anea_initialized
+}
+
+ac_anea_pair_valid = {
+	country_exists = EMM country_exists = EVA
+	EMM = { original_tag = EMM has_capitulated = no is_subject = no NOT = { has_war_with = EVA } }
+	EVA = { original_tag = EVA has_capitulated = no is_subject = no }
+}
+
+ac_anea_offer_answerable = {
+	has_global_flag = ac_anea_offer_pending ac_anea_pair_valid = yes
+	EMM = { has_country_flag = ac_anea_offer_window }
+}
+
+ac_anea_can_accept = {
+	original_tag = EVA ac_anea_offer_answerable = yes
+	NOT = { has_country_flag = EVA_an_self_reliance }
+}
+
+ac_anea_can_offer = {
+	original_tag = EMM ac_anea_active = yes ac_anea_pair_valid = yes
+	date > 2000.1.9 date < 2000.3.11
+	NOT = { has_global_flag = ac_anea_offer_attempted }
+	NOT = { has_country_flag = ac_anea_aid_past }
+}
+
+ac_anea_can_serve = {
+	original_tag = EMM ac_anea_active = yes ac_anea_pair_valid = yes
+	EVA = { has_country_flag = ac_anea_initialized }
+	NOT = { EVA = { has_country_flag = EVA_an_self_reliance } }
+	OR = { NOT = { has_country_flag = EMM_an_conditional_aid } EVA = { has_country_flag = EVA_an_audited_distribution } }
+	has_global_flag = ac_anea_accord date > 2000.1.9 date < 2005.12.31
+	NOT = { has_global_flag = ac_anea_service_active }
+	NOT = { has_global_flag = ac_anea_aid_frozen }
+	NOT = { has_country_flag = ac_anea_service_cooldown }
+	political_power >= 25
+	OR = { NOT = { has_global_flag = ac_anea_sanctions_active } EVA = { has_country_flag = EVA_an_audited_distribution } }
+	EVA = { OR = { NOT = { has_country_flag = EVA_an_audited_distribution } political_power >= 15 } }
+}
+
+ac_anea_alternative_eligible = {
+	ac_anea_pair_valid = yes has_global_flag = ac_anea_accord
+	EMM = { check_variable = { ac_anea_monitored_cycles >= 2 } }
+	EVA = { has_country_flag = EVA_an_audited_distribution check_variable = { ac_anea_recovery >= 40 } }
+}
+
+ac_anea_bureau_eligible = {
+	original_tag = EMM ac_anea_active = yes date > 2004.1.31 date < 2005.12.31
+	ac_anea_pair_valid = yes has_global_flag = ac_anea_accord
+	NOT = { has_global_flag = ac_anea_sanctions_active }
+	NOT = { has_global_flag = ac_anea_bureau }
+}
+
+ac_anea_nec_valid = {
+	country_exists = NEC ac_anea_pair_valid = yes
+	EMM = { NOT = { has_war_with = NEC } }
+	EVA = { NOT = { has_war_with = NEC } }
+	NEC = { original_tag = NEC has_capitulated = no is_subject = no }
+}
+
+ac_anea_can_prepare = {
+	ac_anea_active = yes date < 1999.7.8 political_power >= 25 NOT = { has_country_flag = ac_anea_prepare_cooldown } NOT = { has_country_flag = ac_anea_domestic_allocation }
+}
+
+ac_anea_can_repair = {
+	ac_anea_active = yes has_country_flag = ac_anea_crisis political_power >= 35 NOT = { has_country_flag = ac_anea_repair_cooldown } NOT = { has_country_flag = ac_anea_domestic_allocation }
+}
+
+ac_anea_can_train = {
+	ac_anea_active = yes political_power >= 25 NOT = { has_country_flag = ac_anea_train_cooldown } NOT = { has_country_flag = ac_anea_domestic_allocation }
+}
+
+ac_anea_generic_idle = {
+	NOT = { AND = { NOT = { has_completed_focus = army_effort } OR = { has_shine_effect_on_focus = army_effort focus_progress = { focus = army_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = equipment_effort } OR = { has_shine_effect_on_focus = equipment_effort focus_progress = { focus = equipment_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = motorization_effort } OR = { has_shine_effect_on_focus = motorization_effort focus_progress = { focus = motorization_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = doctrine_effort } OR = { has_shine_effect_on_focus = doctrine_effort focus_progress = { focus = doctrine_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = equipment_effort_2 } OR = { has_shine_effect_on_focus = equipment_effort_2 focus_progress = { focus = equipment_effort_2 progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = mechanization_effort } OR = { has_shine_effect_on_focus = mechanization_effort focus_progress = { focus = mechanization_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = doctrine_effort_2 } OR = { has_shine_effect_on_focus = doctrine_effort_2 focus_progress = { focus = doctrine_effort_2 progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = equipment_effort_3 } OR = { has_shine_effect_on_focus = equipment_effort_3 focus_progress = { focus = equipment_effort_3 progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = armor_effort } OR = { has_shine_effect_on_focus = armor_effort focus_progress = { focus = armor_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = special_forces } OR = { has_shine_effect_on_focus = special_forces focus_progress = { focus = special_forces progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = aviation_effort } OR = { has_shine_effect_on_focus = aviation_effort focus_progress = { focus = aviation_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = fighter_focus } OR = { has_shine_effect_on_focus = fighter_focus focus_progress = { focus = fighter_focus progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = bomber_focus } OR = { has_shine_effect_on_focus = bomber_focus focus_progress = { focus = bomber_focus progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = aviation_effort_2 } OR = { has_shine_effect_on_focus = aviation_effort_2 focus_progress = { focus = aviation_effort_2 progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = CAS_effort } OR = { has_shine_effect_on_focus = CAS_effort focus_progress = { focus = CAS_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = rocket_effort } OR = { has_shine_effect_on_focus = rocket_effort focus_progress = { focus = rocket_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = NAV_effort } OR = { has_shine_effect_on_focus = NAV_effort focus_progress = { focus = NAV_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = naval_effort } OR = { has_shine_effect_on_focus = naval_effort focus_progress = { focus = naval_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = flexible_navy } OR = { has_shine_effect_on_focus = flexible_navy focus_progress = { focus = flexible_navy progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = large_navy } OR = { has_shine_effect_on_focus = large_navy focus_progress = { focus = large_navy progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = submarine_effort } OR = { has_shine_effect_on_focus = submarine_effort focus_progress = { focus = submarine_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = cruiser_effort } OR = { has_shine_effect_on_focus = cruiser_effort focus_progress = { focus = cruiser_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = destroyer_effort } OR = { has_shine_effect_on_focus = destroyer_effort focus_progress = { focus = destroyer_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = capital_ships_effort } OR = { has_shine_effect_on_focus = capital_ships_effort focus_progress = { focus = capital_ships_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = industrial_effort } OR = { has_shine_effect_on_focus = industrial_effort focus_progress = { focus = industrial_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = construction_effort } OR = { has_shine_effect_on_focus = construction_effort focus_progress = { focus = construction_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = production_effort } OR = { has_shine_effect_on_focus = production_effort focus_progress = { focus = production_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = construction_effort_2 } OR = { has_shine_effect_on_focus = construction_effort_2 focus_progress = { focus = construction_effort_2 progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = production_effort_2 } OR = { has_shine_effect_on_focus = production_effort_2 focus_progress = { focus = production_effort_2 progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = infrastructure_effort } OR = { has_shine_effect_on_focus = infrastructure_effort focus_progress = { focus = infrastructure_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = infrastructure_effort_2 } OR = { has_shine_effect_on_focus = infrastructure_effort_2 focus_progress = { focus = infrastructure_effort_2 progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = nuclear_effort } OR = { has_shine_effect_on_focus = nuclear_effort focus_progress = { focus = nuclear_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = extra_tech_slot } OR = { has_shine_effect_on_focus = extra_tech_slot focus_progress = { focus = extra_tech_slot progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = extra_tech_slot_2 } OR = { has_shine_effect_on_focus = extra_tech_slot_2 focus_progress = { focus = extra_tech_slot_2 progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = secret_weapons } OR = { has_shine_effect_on_focus = secret_weapons focus_progress = { focus = secret_weapons progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = political_effort } OR = { has_shine_effect_on_focus = political_effort focus_progress = { focus = political_effort progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = collectivist_ethos } OR = { has_shine_effect_on_focus = collectivist_ethos focus_progress = { focus = collectivist_ethos progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = nationalism_focus } OR = { has_shine_effect_on_focus = nationalism_focus focus_progress = { focus = nationalism_focus progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = internationalism_focus } OR = { has_shine_effect_on_focus = internationalism_focus focus_progress = { focus = internationalism_focus progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = liberty_ethos } OR = { has_shine_effect_on_focus = liberty_ethos focus_progress = { focus = liberty_ethos progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = militarism } OR = { has_shine_effect_on_focus = militarism focus_progress = { focus = militarism progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = political_correctness } OR = { has_shine_effect_on_focus = political_correctness focus_progress = { focus = political_correctness progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = neutrality_focus } OR = { has_shine_effect_on_focus = neutrality_focus focus_progress = { focus = neutrality_focus progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = interventionism_focus } OR = { has_shine_effect_on_focus = interventionism_focus focus_progress = { focus = interventionism_focus progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = military_youth } OR = { has_shine_effect_on_focus = military_youth focus_progress = { focus = military_youth progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = deterrence } OR = { has_shine_effect_on_focus = deterrence focus_progress = { focus = deterrence progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = volunteer_corps } OR = { has_shine_effect_on_focus = volunteer_corps focus_progress = { focus = volunteer_corps progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = paramilitarism } OR = { has_shine_effect_on_focus = paramilitarism focus_progress = { focus = paramilitarism progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = indoctrination_focus } OR = { has_shine_effect_on_focus = indoctrination_focus focus_progress = { focus = indoctrination_focus progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = foreign_expeditions } OR = { has_shine_effect_on_focus = foreign_expeditions focus_progress = { focus = foreign_expeditions progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = why_we_fight } OR = { has_shine_effect_on_focus = why_we_fight focus_progress = { focus = why_we_fight progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = political_commissars } OR = { has_shine_effect_on_focus = political_commissars focus_progress = { focus = political_commissars progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = ideological_fanaticism } OR = { has_shine_effect_on_focus = ideological_fanaticism focus_progress = { focus = ideological_fanaticism progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = technology_sharing } OR = { has_shine_effect_on_focus = technology_sharing focus_progress = { focus = technology_sharing progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = DEN_undermine_overlord_continuous_focus } OR = { has_shine_effect_on_focus = DEN_undermine_overlord_continuous_focus focus_progress = { focus = DEN_undermine_overlord_continuous_focus progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = ETH_strengthen_the_black_lions } OR = { has_shine_effect_on_focus = ETH_strengthen_the_black_lions focus_progress = { focus = ETH_strengthen_the_black_lions progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = ETH_supporting_the_arbegnoch } OR = { has_shine_effect_on_focus = ETH_supporting_the_arbegnoch focus_progress = { focus = ETH_supporting_the_arbegnoch progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = continuous_naval_production } OR = { has_shine_effect_on_focus = continuous_naval_production focus_progress = { focus = continuous_naval_production progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = continuous_air_production } OR = { has_shine_effect_on_focus = continuous_air_production focus_progress = { focus = continuous_air_production progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = continuous_non_factory_construct } OR = { has_shine_effect_on_focus = continuous_non_factory_construct focus_progress = { focus = continuous_non_factory_construct progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = continuous_reduce_training_time } OR = { has_shine_effect_on_focus = continuous_reduce_training_time focus_progress = { focus = continuous_reduce_training_time progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = continuous_suppression } OR = { has_shine_effect_on_focus = continuous_suppression focus_progress = { focus = continuous_suppression progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = continuous_repair } OR = { has_shine_effect_on_focus = continuous_repair focus_progress = { focus = continuous_repair progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = continuous_tech_share } OR = { has_shine_effect_on_focus = continuous_tech_share focus_progress = { focus = continuous_tech_share progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = continuous_boost_freedom } OR = { has_shine_effect_on_focus = continuous_boost_freedom focus_progress = { focus = continuous_boost_freedom progress > 0 } } } }
+	NOT = { AND = { NOT = { has_completed_focus = continuous_restrict_freedom } OR = { has_shine_effect_on_focus = continuous_restrict_freedom focus_progress = { focus = continuous_restrict_freedom progress > 0 } } } }
+}

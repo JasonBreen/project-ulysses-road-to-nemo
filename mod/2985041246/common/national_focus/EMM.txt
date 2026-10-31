@@ -1,0 +1,1475 @@
+# Authored Anea campaign; source: tools/anea/content.py and build_campaign.py.
+focus_tree = {
+	id = ac_anea_emm_tree
+	country = { factor = 0 modifier = { add = 25 original_tag = EMM } }
+	default = no
+	continuous_focus_position = { x = 50 y = 2100 }
+	focus = {
+		id = EMM_an_national_account
+		icon = GFX_ac_anea_focus_EMM_an_national_account
+		x = 12
+		y = 0
+		cost = 5
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_national_account_done } }
+				set_country_flag = EMM_an_national_account_done
+				set_country_flag = EMM_an_opening_ready
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_budget_review
+		icon = GFX_ac_anea_focus_EMM_an_budget_review
+		x = 2
+		y = 2
+		cost = 5
+		prerequisite = { focus = EMM_an_national_account }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_budget_review_done } }
+				set_country_flag = EMM_an_budget_review_done
+				set_country_flag = EMM_an_allocation_ready
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_civil_priority
+		icon = GFX_ac_anea_focus_EMM_an_civil_priority
+		x = 1
+		y = 3
+		cost = 5
+		prerequisite = { focus = EMM_an_budget_review }
+		mutually_exclusive = { focus = EMM_an_defence_priority }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 70
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_civil_priority_done } }
+				set_country_flag = EMM_an_civil_priority_done
+				clr_country_flag = EMM_an_defence_priority
+				remove_ideas = EMM_an_defence_priority_spirit
+				set_country_flag = EMM_an_civil_priority
+				add_ideas = EMM_an_civil_priority_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_defence_priority
+		icon = GFX_ac_anea_focus_EMM_an_defence_priority
+		x = 3
+		y = 3
+		cost = 5
+		prerequisite = { focus = EMM_an_budget_review }
+		mutually_exclusive = { focus = EMM_an_civil_priority }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 25
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_defence_priority_done } }
+				set_country_flag = EMM_an_defence_priority_done
+				clr_country_flag = EMM_an_civil_priority
+				remove_ideas = EMM_an_civil_priority_spirit
+				set_country_flag = EMM_an_defence_priority
+				add_ideas = EMM_an_defence_priority_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_annual_compact
+		icon = GFX_ac_anea_focus_EMM_an_annual_compact
+		x = 2
+		y = 4
+		cost = 10
+		prerequisite = { focus = EMM_an_civil_priority focus = EMM_an_defence_priority }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_annual_compact_done } }
+				set_country_flag = EMM_an_annual_compact_done
+				add_stability = 0.02
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_workshop_register
+		icon = GFX_ac_anea_focus_EMM_an_workshop_register
+		x = 8
+		y = 2
+		cost = 5
+		prerequisite = { focus = EMM_an_national_account }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_workshop_register_done } }
+				set_country_flag = EMM_an_workshop_register_done
+				add_tech_bonus = { name = EMM_an_workshop_register bonus = 0.5 uses = 1 category = industry }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_freight_timetables
+		icon = GFX_ac_anea_focus_EMM_an_freight_timetables
+		x = 8
+		y = 3
+		cost = 5
+		prerequisite = { focus = EMM_an_workshop_register }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_freight_timetables_done } }
+				set_country_flag = EMM_an_freight_timetables_done
+				add_political_power = -15
+				add_ideas = EMM_an_freight_network_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_supplier_standards
+		icon = GFX_ac_anea_focus_EMM_an_supplier_standards
+		x = 8
+		y = 4
+		cost = 5
+		prerequisite = { focus = EMM_an_freight_timetables }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_supplier_standards_done } }
+				set_country_flag = EMM_an_supplier_standards_done
+				add_tech_bonus = { name = EMM_an_supplier_standards bonus = 0.5 uses = 1 category = industry }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_regional_contracts
+		icon = GFX_ac_anea_focus_EMM_an_regional_contracts
+		x = 8
+		y = 5
+		cost = 10
+		prerequisite = { focus = EMM_an_supplier_standards }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_regional_contracts_done } }
+				set_country_flag = EMM_an_regional_contracts_done
+				add_political_power = -20
+				add_ideas = EMM_an_maintenance_service_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_force_returns
+		icon = GFX_ac_anea_focus_EMM_an_force_returns
+		x = 16
+		y = 2
+		cost = 5
+		prerequisite = { focus = EMM_an_national_account }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_force_returns_done } }
+				set_country_flag = EMM_an_force_returns_done
+				army_experience = 8
+				air_experience = 5
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_airfield_crews
+		icon = GFX_ac_anea_focus_EMM_an_airfield_crews
+		x = 16
+		y = 3
+		cost = 5
+		prerequisite = { focus = EMM_an_force_returns }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_airfield_crews_done } }
+				set_country_flag = EMM_an_airfield_crews_done
+				air_experience = 12
+				add_ideas = EMM_an_air_service_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_coastal_patrols
+		icon = GFX_ac_anea_focus_EMM_an_coastal_patrols
+		x = 16
+		y = 4
+		cost = 5
+		prerequisite = { focus = EMM_an_airfield_crews }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_coastal_patrols_done } }
+				set_country_flag = EMM_an_coastal_patrols_done
+				navy_experience = 12
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_reserve_transport
+		icon = GFX_ac_anea_focus_EMM_an_reserve_transport
+		x = 16
+		y = 5
+		cost = 5
+		prerequisite = { focus = EMM_an_coastal_patrols }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_reserve_transport_done } }
+				set_country_flag = EMM_an_reserve_transport_done
+				army_experience = 12
+				add_ideas = EMM_an_reserve_logistics_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_regional_desks
+		icon = GFX_ac_anea_focus_EMM_an_regional_desks
+		x = 24
+		y = 2
+		cost = 5
+		prerequisite = { focus = EMM_an_national_account }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_regional_desks_done } }
+				set_country_flag = EMM_an_regional_desks_done
+				add_political_power = -15
+				add_stability = 0.01
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_civil_contacts
+		icon = GFX_ac_anea_focus_EMM_an_civil_contacts
+		x = 24
+		y = 3
+		cost = 5
+		prerequisite = { focus = EMM_an_regional_desks }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_civil_contacts_done } }
+				set_country_flag = EMM_an_civil_contacts_done
+				add_tech_bonus = { name = EMM_an_civil_contacts bonus = 0.5 uses = 1 category = electronics }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_consular_rota
+		icon = GFX_ac_anea_focus_EMM_an_consular_rota
+		x = 24
+		y = 4
+		cost = 5
+		prerequisite = { focus = EMM_an_civil_contacts }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_consular_rota_done } }
+				set_country_flag = EMM_an_consular_rota_done
+				add_stability = 0.02
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_neighbour_protocols
+		icon = GFX_ac_anea_focus_EMM_an_neighbour_protocols
+		x = 24
+		y = 5
+		cost = 5
+		prerequisite = { focus = EMM_an_consular_rota }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_neighbour_protocols_done } }
+				set_country_flag = EMM_an_neighbour_protocols_done
+				set_country_flag = EMM_an_neighbour_protocols
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_national_programme
+		icon = GFX_ac_anea_focus_EMM_an_national_programme
+		x = 12
+		y = 7
+		cost = 10
+		prerequisite = { focus = EMM_an_annual_compact }
+		available = {
+			original_tag = EMM ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes  NOT = { has_country_flag = EMM_an_national_programme_done } }
+				set_country_flag = EMM_an_national_programme_done
+				add_stability = 0.02
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_scientific_desk
+		icon = GFX_ac_anea_focus_EMM_an_scientific_desk
+		x = 12
+		y = 10
+		cost = 5
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_scientific_desk_done } }
+				set_country_flag = EMM_an_scientific_desk_done
+				set_country_flag = EMM_an_warning_office
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_municipal_surveys
+		icon = GFX_ac_anea_focus_EMM_an_municipal_surveys
+		x = 2
+		y = 12
+		cost = 5
+		prerequisite = { focus = EMM_an_scientific_desk }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_municipal_surveys_done } }
+				set_country_flag = EMM_an_municipal_surveys_done
+				add_to_variable = { ac_anea_preparedness = 6 }
+				ac_anea_bound = yes
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_local_wardens
+		icon = GFX_ac_anea_focus_EMM_an_local_wardens
+		x = 2
+		y = 13
+		cost = 5
+		prerequisite = { focus = EMM_an_municipal_surveys }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_local_wardens_done } }
+				set_country_flag = EMM_an_local_wardens_done
+				add_to_variable = { ac_anea_preparedness = 6 }
+				ac_anea_bound = yes
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_shelter_refit
+		icon = GFX_ac_anea_focus_EMM_an_shelter_refit
+		x = 2
+		y = 14
+		cost = 10
+		prerequisite = { focus = EMM_an_local_wardens }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date > 1998.9.19 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date > 1998.9.19 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_shelter_refit_done } }
+				set_country_flag = EMM_an_shelter_refit_done
+				add_to_variable = { ac_anea_preparedness = 12 }
+				ac_anea_bound = yes
+				add_political_power = -25
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_evacuation_register
+		icon = GFX_ac_anea_focus_EMM_an_evacuation_register
+		x = 2
+		y = 15
+		cost = 5
+		prerequisite = { focus = EMM_an_shelter_refit }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_evacuation_register_done } }
+				set_country_flag = EMM_an_evacuation_register_done
+				add_to_variable = { ac_anea_preparedness = 6 }
+				ac_anea_bound = yes
+				add_stability = 0.01
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_emergency_freight
+		icon = GFX_ac_anea_focus_EMM_an_emergency_freight
+		x = 8
+		y = 12
+		cost = 5
+		prerequisite = { focus = EMM_an_scientific_desk }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_emergency_freight_done } }
+				set_country_flag = EMM_an_emergency_freight_done
+				add_to_variable = { ac_anea_preparedness = 6 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_medical_stores
+		icon = GFX_ac_anea_focus_EMM_an_medical_stores
+		x = 8
+		y = 13
+		cost = 5
+		prerequisite = { focus = EMM_an_emergency_freight }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_medical_stores_done } }
+				set_country_flag = EMM_an_medical_stores_done
+				add_to_variable = { ac_anea_preparedness = 7 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_water_teams
+		icon = GFX_ac_anea_focus_EMM_an_water_teams
+		x = 8
+		y = 14
+		cost = 5
+		prerequisite = { focus = EMM_an_medical_stores }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_water_teams_done } }
+				set_country_flag = EMM_an_water_teams_done
+				add_to_variable = { ac_anea_preparedness = 7 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_protected_reserve
+		icon = GFX_ac_anea_focus_EMM_an_protected_reserve
+		x = 8
+		y = 15
+		cost = 10
+		prerequisite = { focus = EMM_an_water_teams }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_protected_reserve_done } }
+				set_country_flag = EMM_an_protected_reserve_done
+				add_to_variable = { ac_anea_preparedness = 8 }
+				ac_anea_bound = yes
+				add_ideas = EMM_an_protected_reserve_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_dispersal_plan
+		icon = GFX_ac_anea_focus_EMM_an_dispersal_plan
+		x = 16
+		y = 12
+		cost = 5
+		prerequisite = { focus = EMM_an_scientific_desk }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 NOT = { has_country_flag = EMM_an_dispersal_plan_done } }
+				set_country_flag = EMM_an_dispersal_plan_done
+				air_experience = 12
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_reserve_instructors
+		icon = GFX_ac_anea_focus_EMM_an_reserve_instructors
+		x = 16
+		y = 13
+		cost = 5
+		prerequisite = { focus = EMM_an_dispersal_plan }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 NOT = { has_country_flag = EMM_an_reserve_instructors_done } }
+				set_country_flag = EMM_an_reserve_instructors_done
+				army_experience = 12
+				add_ideas = EMM_an_instructor_cadre_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_port_contingency
+		icon = GFX_ac_anea_focus_EMM_an_port_contingency
+		x = 16
+		y = 14
+		cost = 5
+		prerequisite = { focus = EMM_an_reserve_instructors }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 NOT = { has_country_flag = EMM_an_port_contingency_done } }
+				set_country_flag = EMM_an_port_contingency_done
+				navy_experience = 12
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_readiness_ceiling
+		icon = GFX_ac_anea_focus_EMM_an_readiness_ceiling
+		x = 16
+		y = 15
+		cost = 10
+		prerequisite = { focus = EMM_an_port_contingency }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 NOT = { has_country_flag = EMM_an_readiness_ceiling_done } }
+				set_country_flag = EMM_an_readiness_ceiling_done
+				add_ideas = EMM_an_readiness_ceiling_spirit
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_warning_protocol
+		icon = GFX_ac_anea_focus_EMM_an_warning_protocol
+		x = 24
+		y = 12
+		cost = 5
+		prerequisite = { focus = EMM_an_scientific_desk }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_warning_protocol_done } }
+				set_country_flag = EMM_an_warning_protocol_done
+				add_to_variable = { ac_anea_preparedness = 5 }
+				ac_anea_bound = yes
+				add_stability = 0.01
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_relief_contacts
+		icon = GFX_ac_anea_focus_EMM_an_relief_contacts
+		x = 24
+		y = 13
+		cost = 5
+		prerequisite = { focus = EMM_an_warning_protocol }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_relief_contacts_done } }
+				set_country_flag = EMM_an_relief_contacts_done
+				add_to_variable = { ac_anea_preparedness = 5 }
+				ac_anea_bound = yes
+				set_country_flag = EMM_an_relief_contacts
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_technical_briefings
+		icon = GFX_ac_anea_focus_EMM_an_technical_briefings
+		x = 24
+		y = 14
+		cost = 5
+		prerequisite = { focus = EMM_an_relief_contacts }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_technical_briefings_done } }
+				set_country_flag = EMM_an_technical_briefings_done
+				add_to_variable = { ac_anea_preparedness = 5 }
+				ac_anea_bound = yes
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_mutual_receiving
+		icon = GFX_ac_anea_focus_EMM_an_mutual_receiving
+		x = 24
+		y = 15
+		cost = 5
+		prerequisite = { focus = EMM_an_technical_briefings }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_mutual_receiving_done } }
+				set_country_flag = EMM_an_mutual_receiving_done
+				add_to_variable = { ac_anea_preparedness = 5 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_preparedness_review
+		icon = GFX_ac_anea_focus_EMM_an_preparedness_review
+		x = 12
+		y = 17
+		cost = 5
+		prerequisite = { focus = EMM_an_scientific_desk }
+		available = {
+			original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EMM_an_preparedness_review_done } }
+				set_country_flag = EMM_an_preparedness_review_done
+				add_to_variable = { ac_anea_preparedness = 5 }
+				ac_anea_bound = yes
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_civil_account
+		icon = GFX_ac_anea_focus_EMM_an_civil_account
+		x = 12
+		y = 20
+		cost = 5
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EMM_an_civil_account_done } }
+				set_country_flag = EMM_an_civil_account_done
+				set_country_flag = EMM_an_recovery_started
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_utility_repair
+		icon = GFX_ac_anea_focus_EMM_an_utility_repair
+		x = 2
+		y = 22
+		cost = 5
+		prerequisite = { focus = EMM_an_civil_account }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EMM_an_utility_repair_done } }
+				set_country_flag = EMM_an_utility_repair_done
+				add_to_variable = { ac_anea_recovery = 4 }
+				ac_anea_bound = yes
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_housing_records
+		icon = GFX_ac_anea_focus_EMM_an_housing_records
+		x = 2
+		y = 23
+		cost = 5
+		prerequisite = { focus = EMM_an_utility_repair }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EMM_an_housing_records_done } }
+				set_country_flag = EMM_an_housing_records_done
+				add_to_variable = { ac_anea_recovery = 4 }
+				ac_anea_bound = yes
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_domestic_reserve
+		icon = GFX_ac_anea_focus_EMM_an_domestic_reserve
+		x = 2
+		y = 24
+		cost = 5
+		prerequisite = { focus = EMM_an_housing_records }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EMM_an_domestic_reserve_done } }
+				set_country_flag = EMM_an_domestic_reserve_done
+				add_to_variable = { ac_anea_recovery = 3 }
+				ac_anea_bound = yes
+				add_ideas = EMM_an_domestic_reserve_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_standing_services
+		icon = GFX_ac_anea_focus_EMM_an_standing_services
+		x = 2
+		y = 25
+		cost = 10
+		prerequisite = { focus = EMM_an_domestic_reserve }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EMM_an_standing_services_done } }
+				set_country_flag = EMM_an_standing_services_done
+				add_to_variable = { ac_anea_recovery = 3 }
+				ac_anea_bound = yes
+				add_ideas = EMM_an_standing_service_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_aid_review
+		icon = GFX_ac_anea_focus_EMM_an_aid_review
+		x = 8
+		y = 22
+		cost = 5
+		prerequisite = { focus = EMM_an_civil_account }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9 NOT = { has_country_flag = EMM_an_aid_review_done } }
+				set_country_flag = EMM_an_aid_review_done
+				set_country_flag = EMM_an_aid_policy_ready
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_broad_assistance
+		icon = GFX_ac_anea_focus_EMM_an_broad_assistance
+		x = 7
+		y = 23
+		cost = 5
+		prerequisite = { focus = EMM_an_aid_review }
+		mutually_exclusive = { focus = EMM_an_conditional_assistance }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 70
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9 NOT = { has_country_flag = EMM_an_broad_assistance_done } }
+				set_country_flag = EMM_an_broad_assistance_done
+				clr_country_flag = EMM_an_conditional_aid
+				remove_ideas = EMM_an_conditional_aid_spirit
+				set_country_flag = EMM_an_broad_aid
+				add_ideas = EMM_an_broad_aid_spirit
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_conditional_assistance
+		icon = GFX_ac_anea_focus_EMM_an_conditional_assistance
+		x = 9
+		y = 23
+		cost = 5
+		prerequisite = { focus = EMM_an_aid_review }
+		mutually_exclusive = { focus = EMM_an_broad_assistance }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9 NOT = { has_country_flag = EMM_an_conditional_assistance_done } }
+				set_country_flag = EMM_an_conditional_assistance_done
+				clr_country_flag = EMM_an_broad_aid
+				remove_ideas = EMM_an_broad_aid_spirit
+				set_country_flag = EMM_an_conditional_aid
+				add_ideas = EMM_an_conditional_aid_spirit
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_receiving_liaison
+		icon = GFX_ac_anea_focus_EMM_an_receiving_liaison
+		x = 8
+		y = 25
+		cost = 5
+		prerequisite = { focus = EMM_an_broad_assistance focus = EMM_an_conditional_assistance }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9 NOT = { has_country_flag = EMM_an_receiving_liaison_done } }
+				set_country_flag = EMM_an_receiving_liaison_done
+				add_to_variable = { ac_anea_recovery = 2 }
+				ac_anea_bound = yes
+				add_tech_bonus = { name = EMM_an_receiving_liaison bonus = 0.5 uses = 1 category = industry }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_defence_replacement
+		icon = GFX_ac_anea_focus_EMM_an_defence_replacement
+		x = 16
+		y = 22
+		cost = 5
+		prerequisite = { focus = EMM_an_civil_account }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EMM_an_defence_replacement_done } }
+				set_country_flag = EMM_an_defence_replacement_done
+				army_experience = 10
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_air_training_rota
+		icon = GFX_ac_anea_focus_EMM_an_air_training_rota
+		x = 16
+		y = 23
+		cost = 5
+		prerequisite = { focus = EMM_an_defence_replacement }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EMM_an_air_training_rota_done } }
+				set_country_flag = EMM_an_air_training_rota_done
+				air_experience = 15
+				add_ideas = EMM_an_recovery_training_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_fleet_refit
+		icon = GFX_ac_anea_focus_EMM_an_fleet_refit
+		x = 16
+		y = 24
+		cost = 5
+		prerequisite = { focus = EMM_an_air_training_rota }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EMM_an_fleet_refit_done } }
+				set_country_flag = EMM_an_fleet_refit_done
+				navy_experience = 15
+				add_tech_bonus = { name = EMM_an_fleet_refit bonus = 0.5 uses = 1 category = naval_equipment }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_balanced_readiness
+		icon = GFX_ac_anea_focus_EMM_an_balanced_readiness
+		x = 16
+		y = 25
+		cost = 10
+		prerequisite = { focus = EMM_an_fleet_refit }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EMM_an_balanced_readiness_done } }
+				set_country_flag = EMM_an_balanced_readiness_done
+				add_ideas = EMM_an_balanced_readiness_spirit
+				add_political_power = -25
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_sanctions_desk
+		icon = GFX_ac_anea_focus_EMM_an_sanctions_desk
+		x = 24
+		y = 22
+		cost = 5
+		prerequisite = { focus = EMM_an_civil_account }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2001.1.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2001.1.1 NOT = { has_country_flag = EMM_an_sanctions_desk_done } }
+				set_country_flag = EMM_an_sanctions_desk_done
+				set_country_flag = EMM_an_sanctions_desk
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_independent_relief
+		icon = GFX_ac_anea_focus_EMM_an_independent_relief
+		x = 24
+		y = 23
+		cost = 5
+		prerequisite = { focus = EMM_an_sanctions_desk }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EMM_an_independent_relief_done } }
+				set_country_flag = EMM_an_independent_relief_done
+				add_to_variable = { ac_anea_recovery = 3 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_consultative_agency
+		icon = GFX_ac_anea_focus_EMM_an_consultative_agency
+		x = 24
+		y = 24
+		cost = 5
+		prerequisite = { focus = EMM_an_independent_relief }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2004.1.31
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2004.1.31 NOT = { has_country_flag = EMM_an_consultative_agency_done } }
+				set_country_flag = EMM_an_consultative_agency_done
+				set_country_flag = EMM_an_agency_ready
+				add_political_power = -20
+				set_country_flag = EMM_an_bureau_ready
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_cooperation_record
+		icon = GFX_ac_anea_focus_EMM_an_cooperation_record
+		x = 24
+		y = 25
+		cost = 5
+		prerequisite = { focus = EMM_an_consultative_agency }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EMM_an_cooperation_record_done } }
+				set_country_flag = EMM_an_cooperation_record_done
+				add_to_variable = { ac_anea_recovery = 3 }
+				ac_anea_bound = yes
+				add_stability = 0.01
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EMM_an_recovery_assessment
+		icon = GFX_ac_anea_focus_EMM_an_recovery_assessment
+		x = 12
+		y = 28
+		cost = 10
+		prerequisite = { focus = EMM_an_standing_services }
+		prerequisite = { focus = EMM_an_balanced_readiness }
+		prerequisite = { focus = EMM_an_cooperation_record }
+		prerequisite = { focus = EMM_an_receiving_liaison }
+		available = {
+			original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2004.12.31
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2004.12.31 NOT = { has_country_flag = EMM_an_recovery_assessment_done } }
+				set_country_flag = EMM_an_recovery_assessment_done
+				set_country_flag = EMM_an_assessment_ready
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+}

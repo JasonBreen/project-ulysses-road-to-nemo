@@ -14,7 +14,7 @@ def effective(engine,suffix):
     files={p.relative_to(engine/'interface').as_posix():p for p in (engine/'interface').rglob('*'+suffix)}
     files.update({p.relative_to(MOD/'interface').as_posix():p for p in (MOD/'interface').rglob('*'+suffix)})
     return [files[k] for k in sorted(files)]
-def audit(engine):
+def audit(engine,include_frontend_history=False):
     sprites={};templates={};conflicts={}
     for p in effective(engine,'.gfx'):
         for _,name,raw in top_items(p.read_text(encoding='utf-8-sig',errors='replace'),'spriteTypes'):
@@ -27,8 +27,16 @@ def audit(engine):
             if kind.lower() in ('scrollbartype','extendedscrollbartype'):
                 templates[get(node,'name','').strip('"')]=(p,node)
     report={};failures=[]
-    for filename in ('nationalfocusview.gui','countrytechtreeview.gui','ac_economy_gui.gui','eventwindow.gui'):
+    filenames=['nationalfocusview.gui','countrytechtreeview.gui','ac_economy_gui.gui','eventwindow.gui']
+    if include_frontend_history:filenames.append('frontendgamesetupview.gui')
+    for filename in filenames:
         tree=parse((MOD/'interface'/filename).read_text())
+        if filename=='frontendgamesetupview.gui':
+            # Certify the newly bounded history control and its effective
+            # scrollbar dependencies. This is not a claim about the whole UI.
+            nodes=[n for _,n in walk(tree) if get(n,'name','').strip('"')=='history']
+            if len(nodes)!=1:failures.append('Missing or duplicate country history control')
+            tree=[['instantTextBoxType','=',n] for n in nodes]
         if filename=='eventwindow.gui':
             # Operative/leader event windows are preserved compatibility layouts,
             # outside the country/news visual repair being certified here.
@@ -65,10 +73,11 @@ def audit(engine):
             if not owned:failures.append('Engine imagery or missing texture: '+name)
             rows.append(dict(sprite=name,ownership='mod' if owned else 'engine or missing',definition=str(p),textures=assets,shaders=re.findall(r'effectFile\s*=\s*"([^"]+)"',raw,re.I)))
         report[filename]=dict(sprites=rows,scrollbars=bars)
+        if filename=='frontendgamesetupview.gui':report[filename]['coverage']='country history control and scrollbar only'
     report.update(conflicting_effective_sprite_definitions=conflicts,failures=sorted(set(failures)))
     return report
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('engine',type=Path);p.add_argument('--output',type=Path);a=p.parse_args();report=audit(a.engine)
+    p=argparse.ArgumentParser();p.add_argument('engine',type=Path);p.add_argument('--output',type=Path);p.add_argument('--include-frontend-history',action='store_true');a=p.parse_args();report=audit(a.engine,a.include_frontend_history)
     if a.output:a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(dict(failures=report['failures'],conflicts=report['conflicting_effective_sprite_definitions']),indent=2))
     if report['failures'] or report['conflicting_effective_sprite_definitions']:raise SystemExit(1)

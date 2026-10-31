@@ -29,6 +29,12 @@ or unsourced local impact zones were inferred.
 
 ## Citation rule
 
+The Anea foundation's [source and implementation ledger](ANEA_EXPANSION_LEDGER.md)
+records the1998 Anean risk/shelter entries,2000 aid,2002 sanctions,2004 agency
+and incomplete Chandelier separately from provisional gameplay. No1991 named
+officeholder, canonical provincial geography, civil-war outcome or later
+invasion is inferred. Territory and inherited manpower remain mod provenance.
+
 Do not promote a row from pending to official based only on a wiki, fan archive, old mod file, or an unreferenced comment. If no primary source is available, retain the row as user-authored, mod provenance, or provisional gameplay and say so in the implementation note.
 
 ## Faction and council systems

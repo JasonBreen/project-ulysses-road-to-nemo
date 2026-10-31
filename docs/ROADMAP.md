@@ -1,5 +1,17 @@
 # Implementation roadmap
 
+## Anea — The Burden of Recovery
+
+The Emmerian/Estovakian 1991–2005 foundation is authored on the merged PR#29
+base, with108 focuses, national starting setups, bounded civil preparedness and
+recovery, renewable aid services, actual-outcome sanctions and consultative
+cooperation. [Contracts and provenance](ANEA_EXPANSION_LEDGER.md),
+[offline/native acceptance](evidence/anea/ACCEPTANCE.md), and the
+[original artwork gallery](evidence/anea/artwork-gallery.html) accompany it.
+Native acceptance remains open and desktop interaction is stopped. The older
+entries below retain their historical branch context and are not fresh counts
+of the combined current repository.
+
 ## The Peace We Inherit — authored expansion
 
 All four approved slices are present in source: Belka's outcome and policy

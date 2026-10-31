@@ -1,0 +1,1476 @@
+# Authored Anea campaign; source: tools/anea/content.py and build_campaign.py.
+focus_tree = {
+	id = ac_anea_eva_tree
+	country = { factor = 0 modifier = { add = 25 original_tag = EVA } }
+	default = no
+	continuous_focus_position = { x = 50 y = 2100 }
+	focus = {
+		id = EVA_an_national_account
+		icon = GFX_ac_anea_focus_EVA_an_national_account
+		x = 12
+		y = 0
+		cost = 5
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_national_account_done } }
+				set_country_flag = EVA_an_national_account_done
+				set_country_flag = EVA_an_opening_ready
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_allocation_review
+		icon = GFX_ac_anea_focus_EVA_an_allocation_review
+		x = 2
+		y = 2
+		cost = 5
+		prerequisite = { focus = EVA_an_national_account }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_allocation_review_done } }
+				set_country_flag = EVA_an_allocation_review_done
+				set_country_flag = EVA_an_allocation_ready
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_audited_distribution
+		icon = GFX_ac_anea_focus_EVA_an_audited_distribution
+		x = 1
+		y = 3
+		cost = 5
+		prerequisite = { focus = EVA_an_allocation_review }
+		mutually_exclusive = { focus = EVA_an_command_distribution }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 15
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_audited_distribution_done } }
+				set_country_flag = EVA_an_audited_distribution_done
+				clr_country_flag = EVA_an_command_distribution
+				remove_ideas = EVA_an_command_distribution_spirit
+				set_country_flag = EVA_an_audited_distribution
+				add_ideas = EVA_an_audited_distribution_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_command_distribution
+		icon = GFX_ac_anea_focus_EVA_an_command_distribution
+		x = 3
+		y = 3
+		cost = 5
+		prerequisite = { focus = EVA_an_allocation_review }
+		mutually_exclusive = { focus = EVA_an_audited_distribution }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 80
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_command_distribution_done } }
+				set_country_flag = EVA_an_command_distribution_done
+				clr_country_flag = EVA_an_audited_distribution
+				remove_ideas = EVA_an_audited_distribution_spirit
+				set_country_flag = EVA_an_command_distribution
+				add_ideas = EVA_an_command_distribution_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_district_liaisons
+		icon = GFX_ac_anea_focus_EVA_an_district_liaisons
+		x = 2
+		y = 4
+		cost = 10
+		prerequisite = { focus = EVA_an_audited_distribution focus = EVA_an_command_distribution }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_district_liaisons_done } }
+				set_country_flag = EVA_an_district_liaisons_done
+				add_stability = 0.02
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_industrial_returns
+		icon = GFX_ac_anea_focus_EVA_an_industrial_returns
+		x = 8
+		y = 2
+		cost = 5
+		prerequisite = { focus = EVA_an_national_account }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_industrial_returns_done } }
+				set_country_flag = EVA_an_industrial_returns_done
+				add_tech_bonus = { name = EVA_an_industrial_returns bonus = 0.5 uses = 1 category = industry }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_rail_dispatch
+		icon = GFX_ac_anea_focus_EVA_an_rail_dispatch
+		x = 8
+		y = 3
+		cost = 5
+		prerequisite = { focus = EVA_an_industrial_returns }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_rail_dispatch_done } }
+				set_country_flag = EVA_an_rail_dispatch_done
+				add_ideas = EVA_an_dispatch_service_spirit
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_repair_cooperatives
+		icon = GFX_ac_anea_focus_EVA_an_repair_cooperatives
+		x = 8
+		y = 4
+		cost = 5
+		prerequisite = { focus = EVA_an_rail_dispatch }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_repair_cooperatives_done } }
+				set_country_flag = EVA_an_repair_cooperatives_done
+				add_tech_bonus = { name = EVA_an_repair_cooperatives bonus = 0.5 uses = 1 category = industry }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_industrial_reserve
+		icon = GFX_ac_anea_focus_EVA_an_industrial_reserve
+		x = 8
+		y = 5
+		cost = 10
+		prerequisite = { focus = EVA_an_repair_cooperatives }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_industrial_reserve_done } }
+				set_country_flag = EVA_an_industrial_reserve_done
+				add_ideas = EVA_an_industrial_reserve_spirit
+				add_political_power = -25
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_command_returns
+		icon = GFX_ac_anea_focus_EVA_an_command_returns
+		x = 16
+		y = 2
+		cost = 5
+		prerequisite = { focus = EVA_an_national_account }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_command_returns_done } }
+				set_country_flag = EVA_an_command_returns_done
+				army_experience = 10
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_air_maintenance
+		icon = GFX_ac_anea_focus_EVA_an_air_maintenance
+		x = 16
+		y = 3
+		cost = 5
+		prerequisite = { focus = EVA_an_command_returns }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_air_maintenance_done } }
+				set_country_flag = EVA_an_air_maintenance_done
+				air_experience = 12
+				add_ideas = EVA_an_air_maintenance_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_coastal_support
+		icon = GFX_ac_anea_focus_EVA_an_coastal_support
+		x = 16
+		y = 4
+		cost = 5
+		prerequisite = { focus = EVA_an_air_maintenance }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_coastal_support_done } }
+				set_country_flag = EVA_an_coastal_support_done
+				navy_experience = 12
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_mobile_workshops
+		icon = GFX_ac_anea_focus_EVA_an_mobile_workshops
+		x = 16
+		y = 5
+		cost = 5
+		prerequisite = { focus = EVA_an_coastal_support }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_mobile_workshops_done } }
+				set_country_flag = EVA_an_mobile_workshops_done
+				army_experience = 10
+				add_ideas = EVA_an_mobile_workshops_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_foreign_records
+		icon = GFX_ac_anea_focus_EVA_an_foreign_records
+		x = 24
+		y = 2
+		cost = 5
+		prerequisite = { focus = EVA_an_national_account }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_foreign_records_done } }
+				set_country_flag = EVA_an_foreign_records_done
+				add_political_power = -15
+				add_stability = 0.01
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_technical_exchanges
+		icon = GFX_ac_anea_focus_EVA_an_technical_exchanges
+		x = 24
+		y = 3
+		cost = 5
+		prerequisite = { focus = EVA_an_foreign_records }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_technical_exchanges_done } }
+				set_country_flag = EVA_an_technical_exchanges_done
+				add_tech_bonus = { name = EVA_an_technical_exchanges bonus = 0.5 uses = 1 category = electronics }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_border_documents
+		icon = GFX_ac_anea_focus_EVA_an_border_documents
+		x = 24
+		y = 4
+		cost = 5
+		prerequisite = { focus = EVA_an_technical_exchanges }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_border_documents_done } }
+				set_country_flag = EVA_an_border_documents_done
+				add_political_power = -15
+				add_stability = 0.02
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_neighbour_channels
+		icon = GFX_ac_anea_focus_EVA_an_neighbour_channels
+		x = 24
+		y = 5
+		cost = 5
+		prerequisite = { focus = EVA_an_border_documents }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_neighbour_channels_done } }
+				set_country_flag = EVA_an_neighbour_channels_done
+				set_country_flag = EVA_an_neighbour_channels
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_national_programme
+		icon = GFX_ac_anea_focus_EVA_an_national_programme
+		x = 12
+		y = 7
+		cost = 10
+		prerequisite = { focus = EVA_an_district_liaisons }
+		available = {
+			original_tag = EVA ac_anea_active = yes
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes  NOT = { has_country_flag = EVA_an_national_programme_done } }
+				set_country_flag = EVA_an_national_programme_done
+				add_stability = 0.02
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_risk_office
+		icon = GFX_ac_anea_focus_EVA_an_risk_office
+		x = 12
+		y = 10
+		cost = 5
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_risk_office_done } }
+				set_country_flag = EVA_an_risk_office_done
+				set_country_flag = EVA_an_warning_office
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_district_capacity
+		icon = GFX_ac_anea_focus_EVA_an_district_capacity
+		x = 2
+		y = 12
+		cost = 5
+		prerequisite = { focus = EVA_an_risk_office }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_district_capacity_done } }
+				set_country_flag = EVA_an_district_capacity_done
+				add_to_variable = { ac_anea_preparedness = 6 }
+				ac_anea_bound = yes
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_civil_engineers
+		icon = GFX_ac_anea_focus_EVA_an_civil_engineers
+		x = 2
+		y = 13
+		cost = 5
+		prerequisite = { focus = EVA_an_district_capacity }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_civil_engineers_done } }
+				set_country_flag = EVA_an_civil_engineers_done
+				add_to_variable = { ac_anea_preparedness = 7 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_evacuation_routes
+		icon = GFX_ac_anea_focus_EVA_an_evacuation_routes
+		x = 2
+		y = 14
+		cost = 5
+		prerequisite = { focus = EVA_an_civil_engineers }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_evacuation_routes_done } }
+				set_country_flag = EVA_an_evacuation_routes_done
+				add_to_variable = { ac_anea_preparedness = 7 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_district_shelters
+		icon = GFX_ac_anea_focus_EVA_an_district_shelters
+		x = 2
+		y = 15
+		cost = 10
+		prerequisite = { focus = EVA_an_evacuation_routes }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date > 1998.7.28 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date > 1998.7.28 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_district_shelters_done } }
+				set_country_flag = EVA_an_district_shelters_done
+				add_to_variable = { ac_anea_preparedness = 10 }
+				ac_anea_bound = yes
+				add_political_power = -25
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_distribution_depots
+		icon = GFX_ac_anea_focus_EVA_an_distribution_depots
+		x = 8
+		y = 12
+		cost = 5
+		prerequisite = { focus = EVA_an_risk_office }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_distribution_depots_done } }
+				set_country_flag = EVA_an_distribution_depots_done
+				add_to_variable = { ac_anea_preparedness = 5 }
+				ac_anea_bound = yes
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_spare_connections
+		icon = GFX_ac_anea_focus_EVA_an_spare_connections
+		x = 8
+		y = 13
+		cost = 5
+		prerequisite = { focus = EVA_an_distribution_depots }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_spare_connections_done } }
+				set_country_flag = EVA_an_spare_connections_done
+				add_to_variable = { ac_anea_preparedness = 6 }
+				ac_anea_bound = yes
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_medical_rotations
+		icon = GFX_ac_anea_focus_EVA_an_medical_rotations
+		x = 8
+		y = 14
+		cost = 5
+		prerequisite = { focus = EVA_an_spare_connections }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_medical_rotations_done } }
+				set_country_flag = EVA_an_medical_rotations_done
+				add_to_variable = { ac_anea_preparedness = 7 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_civil_freight
+		icon = GFX_ac_anea_focus_EVA_an_civil_freight
+		x = 8
+		y = 15
+		cost = 5
+		prerequisite = { focus = EVA_an_medical_rotations }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date > 1998.7.28 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date > 1998.7.28 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_civil_freight_done } }
+				set_country_flag = EVA_an_civil_freight_done
+				add_to_variable = { ac_anea_preparedness = 8 }
+				ac_anea_bound = yes
+				add_ideas = EVA_an_civil_freight_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_air_defence_drills
+		icon = GFX_ac_anea_focus_EVA_an_air_defence_drills
+		x = 16
+		y = 12
+		cost = 5
+		prerequisite = { focus = EVA_an_risk_office }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 NOT = { has_country_flag = EVA_an_air_defence_drills_done } }
+				set_country_flag = EVA_an_air_defence_drills_done
+				air_experience = 15
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_military_transport
+		icon = GFX_ac_anea_focus_EVA_an_military_transport
+		x = 16
+		y = 13
+		cost = 5
+		prerequisite = { focus = EVA_an_air_defence_drills }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 NOT = { has_country_flag = EVA_an_military_transport_done } }
+				set_country_flag = EVA_an_military_transport_done
+				army_experience = 12
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_command_reserves
+		icon = GFX_ac_anea_focus_EVA_an_command_reserves
+		x = 16
+		y = 14
+		cost = 5
+		prerequisite = { focus = EVA_an_military_transport }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 NOT = { has_country_flag = EVA_an_command_reserves_done } }
+				set_country_flag = EVA_an_command_reserves_done
+				add_ideas = EVA_an_command_reserve_spirit
+				army_experience = 8
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_readiness_limits
+		icon = GFX_ac_anea_focus_EVA_an_readiness_limits
+		x = 16
+		y = 15
+		cost = 10
+		prerequisite = { focus = EVA_an_command_reserves }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 NOT = { has_country_flag = EVA_an_readiness_limits_done } }
+				set_country_flag = EVA_an_readiness_limits_done
+				add_ideas = EVA_an_readiness_limits_spirit
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_chandelier_account
+		icon = GFX_ac_anea_focus_EVA_an_chandelier_account
+		x = 24
+		y = 12
+		cost = 5
+		prerequisite = { focus = EVA_an_risk_office }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_chandelier_account_done } }
+				set_country_flag = EVA_an_chandelier_account_done
+				set_country_flag = EVA_an_chandelier_reviewed
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_chandelier_research
+		icon = GFX_ac_anea_focus_EVA_an_chandelier_research
+		x = 23
+		y = 13
+		cost = 10
+		prerequisite = { focus = EVA_an_chandelier_account }
+		mutually_exclusive = { focus = EVA_an_redirect_engineers }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_chandelier_research_done } }
+				set_country_flag = EVA_an_chandelier_research_done
+				set_country_flag = EVA_an_chandelier_research
+				add_tech_bonus = { name = EVA_an_chandelier_research bonus = 0.75 uses = 1 category = electronics }
+				add_political_power = -30
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_redirect_engineers
+		icon = GFX_ac_anea_focus_EVA_an_redirect_engineers
+		x = 25
+		y = 13
+		cost = 10
+		prerequisite = { focus = EVA_an_chandelier_account }
+		mutually_exclusive = { focus = EVA_an_chandelier_research }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_redirect_engineers_done } }
+				set_country_flag = EVA_an_redirect_engineers_done
+				add_to_variable = { ac_anea_preparedness = 10 }
+				ac_anea_bound = yes
+				set_country_flag = EVA_an_redirected_engineers
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_technical_archive
+		icon = GFX_ac_anea_focus_EVA_an_technical_archive
+		x = 24
+		y = 15
+		cost = 5
+		prerequisite = { focus = EVA_an_chandelier_research focus = EVA_an_redirect_engineers }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_technical_archive_done } }
+				set_country_flag = EVA_an_technical_archive_done
+				set_country_flag = EVA_an_chandelier_archive
+				add_stability = 0.01
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_preparedness_review
+		icon = GFX_ac_anea_focus_EVA_an_preparedness_review
+		x = 12
+		y = 17
+		cost = 5
+		prerequisite = { focus = EVA_an_risk_office }
+		available = {
+			original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis }
+		}
+		bypass = {
+			has_country_flag = ac_anea_late_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 35
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes date > 1994.12.9 date < 1999.7.8 NOT = { has_country_flag = ac_anea_crisis } NOT = { has_country_flag = EVA_an_preparedness_review_done } }
+				set_country_flag = EVA_an_preparedness_review_done
+				add_to_variable = { ac_anea_preparedness = 5 }
+				ac_anea_bound = yes
+				add_political_power = -15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_crisis_returns
+		icon = GFX_ac_anea_focus_EVA_an_crisis_returns
+		x = 12
+		y = 20
+		cost = 5
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EVA_an_crisis_returns_done } }
+				set_country_flag = EVA_an_crisis_returns_done
+				set_country_flag = EVA_an_recovery_started
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_water_recovery
+		icon = GFX_ac_anea_focus_EVA_an_water_recovery
+		x = 2
+		y = 22
+		cost = 5
+		prerequisite = { focus = EVA_an_crisis_returns }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EVA_an_water_recovery_done } }
+				set_country_flag = EVA_an_water_recovery_done
+				add_to_variable = { ac_anea_recovery = 5 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_district_repairs
+		icon = GFX_ac_anea_focus_EVA_an_district_repairs
+		x = 2
+		y = 23
+		cost = 5
+		prerequisite = { focus = EVA_an_water_recovery }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EVA_an_district_repairs_done } }
+				set_country_flag = EVA_an_district_repairs_done
+				add_to_variable = { ac_anea_recovery = 5 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_civil_claims
+		icon = GFX_ac_anea_focus_EVA_an_civil_claims
+		x = 2
+		y = 24
+		cost = 5
+		prerequisite = { focus = EVA_an_district_repairs }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EVA_an_civil_claims_done } }
+				set_country_flag = EVA_an_civil_claims_done
+				add_to_variable = { ac_anea_recovery = 5 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_local_recovery
+		icon = GFX_ac_anea_focus_EVA_an_local_recovery
+		x = 2
+		y = 25
+		cost = 10
+		prerequisite = { focus = EVA_an_civil_claims }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EVA_an_local_recovery_done } }
+				set_country_flag = EVA_an_local_recovery_done
+				add_to_variable = { ac_anea_recovery = 5 }
+				ac_anea_bound = yes
+				add_ideas = EVA_an_local_recovery_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_aid_position
+		icon = GFX_ac_anea_focus_EVA_an_aid_position
+		x = 8
+		y = 22
+		cost = 5
+		prerequisite = { focus = EVA_an_crisis_returns }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9 NOT = { has_country_flag = EVA_an_aid_position_done } }
+				set_country_flag = EVA_an_aid_position_done
+				set_country_flag = EVA_an_aid_policy_ready
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_monitored_access
+		icon = GFX_ac_anea_focus_EVA_an_monitored_access
+		x = 7
+		y = 23
+		cost = 5
+		prerequisite = { focus = EVA_an_aid_position }
+		mutually_exclusive = { focus = EVA_an_domestic_self_reliance }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 70
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9 NOT = { has_country_flag = EVA_an_monitored_access_done } }
+				set_country_flag = EVA_an_monitored_access_done
+				clr_country_flag = EVA_an_self_reliance
+				remove_ideas = EVA_an_self_reliance_spirit
+				set_country_flag = EVA_an_aid_open
+				add_ideas = EVA_an_aid_open_spirit
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_domestic_self_reliance
+		icon = GFX_ac_anea_focus_EVA_an_domestic_self_reliance
+		x = 9
+		y = 23
+		cost = 5
+		prerequisite = { focus = EVA_an_aid_position }
+		mutually_exclusive = { focus = EVA_an_monitored_access }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 25
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9 NOT = { has_country_flag = EVA_an_domestic_self_reliance_done } }
+				set_country_flag = EVA_an_domestic_self_reliance_done
+				clr_country_flag = EVA_an_aid_open
+				remove_ideas = EVA_an_aid_open_spirit
+				set_country_flag = EVA_an_self_reliance
+				add_ideas = EVA_an_self_reliance_spirit
+				add_to_variable = { ac_anea_recovery = 3 }
+				ac_anea_bound = yes
+				add_political_power = -25
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_delivery_account
+		icon = GFX_ac_anea_focus_EVA_an_delivery_account
+		x = 8
+		y = 25
+		cost = 5
+		prerequisite = { focus = EVA_an_monitored_access focus = EVA_an_domestic_self_reliance }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2000.1.9 NOT = { has_country_flag = EVA_an_delivery_account_done } }
+				set_country_flag = EVA_an_delivery_account_done
+				add_to_variable = { ac_anea_recovery = 4 }
+				ac_anea_bound = yes
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_serviceable_force
+		icon = GFX_ac_anea_focus_EVA_an_serviceable_force
+		x = 16
+		y = 22
+		cost = 5
+		prerequisite = { focus = EVA_an_crisis_returns }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EVA_an_serviceable_force_done } }
+				set_country_flag = EVA_an_serviceable_force_done
+				army_experience = 12
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_aircrew_pipeline
+		icon = GFX_ac_anea_focus_EVA_an_aircrew_pipeline
+		x = 16
+		y = 23
+		cost = 5
+		prerequisite = { focus = EVA_an_serviceable_force }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EVA_an_aircrew_pipeline_done } }
+				set_country_flag = EVA_an_aircrew_pipeline_done
+				air_experience = 15
+				add_ideas = EVA_an_aircrew_pipeline_spirit
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_coastal_repairs
+		icon = GFX_ac_anea_focus_EVA_an_coastal_repairs
+		x = 16
+		y = 24
+		cost = 5
+		prerequisite = { focus = EVA_an_aircrew_pipeline }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EVA_an_coastal_repairs_done } }
+				set_country_flag = EVA_an_coastal_repairs_done
+				navy_experience = 15
+				add_tech_bonus = { name = EVA_an_coastal_repairs bonus = 0.5 uses = 1 category = naval_equipment }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_command_settlement
+		icon = GFX_ac_anea_focus_EVA_an_command_settlement
+		x = 16
+		y = 25
+		cost = 10
+		prerequisite = { focus = EVA_an_coastal_repairs }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EVA_an_command_settlement_done } }
+				set_country_flag = EVA_an_command_settlement_done
+				add_ideas = EVA_an_command_settlement_spirit
+				add_political_power = -25
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_review_response
+		icon = GFX_ac_anea_focus_EVA_an_review_response
+		x = 24
+		y = 22
+		cost = 5
+		prerequisite = { focus = EVA_an_crisis_returns }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2001.1.1
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2001.1.1 NOT = { has_country_flag = EVA_an_review_response_done } }
+				set_country_flag = EVA_an_review_response_done
+				set_country_flag = EVA_an_review_response
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_civilian_salvage
+		icon = GFX_ac_anea_focus_EVA_an_civilian_salvage
+		x = 24
+		y = 23
+		cost = 5
+		prerequisite = { focus = EVA_an_review_response }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EVA_an_civilian_salvage_done } }
+				set_country_flag = EVA_an_civilian_salvage_done
+				add_tech_bonus = { name = EVA_an_civilian_salvage bonus = 0.75 uses = 1 category = electronics }
+				add_to_variable = { ac_anea_recovery = 3 }
+				ac_anea_bound = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_anea_delegation
+		icon = GFX_ac_anea_focus_EVA_an_anea_delegation
+		x = 24
+		y = 24
+		cost = 5
+		prerequisite = { focus = EVA_an_civilian_salvage }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2004.1.31
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2004.1.31 NOT = { has_country_flag = EVA_an_anea_delegation_done } }
+				set_country_flag = EVA_an_anea_delegation_done
+				set_country_flag = EVA_an_agency_ready
+				add_political_power = -20
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_recovery_record
+		icon = GFX_ac_anea_focus_EVA_an_recovery_record
+		x = 24
+		y = 25
+		cost = 5
+		prerequisite = { focus = EVA_an_anea_delegation }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis NOT = { has_country_flag = EVA_an_recovery_record_done } }
+				set_country_flag = EVA_an_recovery_record_done
+				add_to_variable = { ac_anea_recovery = 3 }
+				ac_anea_bound = yes
+				add_stability = 0.01
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = EVA_an_recovery_assessment
+		icon = GFX_ac_anea_focus_EVA_an_recovery_assessment
+		x = 12
+		y = 28
+		cost = 10
+		prerequisite = { focus = EVA_an_local_recovery }
+		prerequisite = { focus = EVA_an_command_settlement }
+		prerequisite = { focus = EVA_an_recovery_record }
+		prerequisite = { focus = EVA_an_delivery_account }
+		available = {
+			original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2004.12.31
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		ai_will_do = {
+			factor = 40
+		}
+		completion_reward = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes has_country_flag = ac_anea_crisis date > 2004.12.31 NOT = { has_country_flag = EVA_an_recovery_assessment_done } }
+				set_country_flag = EVA_an_recovery_assessment_done
+				set_country_flag = EVA_an_assessment_ready
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+}

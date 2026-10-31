@@ -34,6 +34,15 @@ Far beyond the continent, another crisis approaches. The asteroid Ulysses will b
 
 **Current reality:** the 1991 opening has passed an initial live runtime test on HOI4 1.19.3. The complete Belkan War, its alternate outcomes, the postwar years and later conflicts are **not yet finished or fully validated**.
 
+**Anea expansion candidate:** Emmeria and Estovakia now have authored 1991–2005
+campaigns with 54 focuses each, complete starting-country setups, renewable aid
+and reconstruction choices, and original artwork. See the
+[implementation and source ledger](docs/ANEA_EXPANSION_LEDGER.md),
+[artwork gallery](docs/evidence/anea/artwork-gallery.html), and
+[acceptance record](docs/evidence/anea/ACCEPTANCE.md). This candidate has static
+and offline evidence; its native HOI4, AI, pacing and save/load acceptance remain
+open. The historical runtime statements elsewhere describe their earlier builds.
+
 ### Historical coordinates
 
 These are reference points from the [official ACES Chronicle](https://acecombat.jp/en/chronicle/details/), **not** a claim that every event is currently implemented or that an alternate-history playthrough must reproduce them.

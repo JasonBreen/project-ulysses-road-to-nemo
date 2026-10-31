@@ -1,0 +1,172 @@
+{
+  "coverage": "source and offline validation only",
+  "base_commit": "d72e529d4e69c59bf229bce8340f39dc6f0d362a",
+  "source_state": "working-tree candidate; validation logs are not native evidence",
+  "checks": [
+    {
+      "check": "macro",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-EconomyV2.py"
+      ],
+      "exit_code": 0,
+      "seconds": 75.73,
+      "log": "macro.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "ledger",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-EconomyLedger.py"
+      ],
+      "exit_code": 0,
+      "seconds": 5.42,
+      "log": "ledger.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "forces",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-ForceUpkeep.py",
+        "--engine",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 2.66,
+      "log": "forces.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "shared-owners",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-SharedSystems.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.38,
+      "log": "shared-owners.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "institutions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-Institutions.py"
+      ],
+      "exit_code": 0,
+      "seconds": 6.31,
+      "log": "institutions.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "legacy",
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_economy.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.64,
+      "log": "legacy.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "factions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-UlyssesFactions.py",
+        "--reference-game-root",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 1.39,
+      "log": "factions.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "interfaces",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-InterfaceRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.92,
+      "log": "interfaces.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "generated-macro",
+      "command": [
+        "python",
+        "-B",
+        "tools/economy_v2/build.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.31,
+      "log": "generated-macro.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "generated-anea",
+      "command": [
+        "python",
+        "-B",
+        "tools/anea/foundation.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.33,
+      "log": "generated-anea.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.81,
+      "log": "assets.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "core",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 247.01,
+      "log": "core.txt",
+      "coverage": "source/offline; not native acceptance"
+    }
+  ],
+  "native_status": "paused; untested"
+}

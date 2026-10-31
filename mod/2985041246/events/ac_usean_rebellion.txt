@@ -1,0 +1,70 @@
+add_namespace = ac_ur
+
+# Official: Chronicle, 1995 / 12.31. Same calendar day as Avalon Dam.
+# This event does not call or alter the Belkan war chain.
+country_event = {
+	id = ac_ur.1
+	title = ac_ur.1.t
+	desc = ac_ur.1.d
+	picture = GFX_ac_exp_event_fcu_domestic
+	is_triggered_only = yes
+
+	option = {
+		name = ac_ur.1.a
+		ai_chance = { factor = 100 }
+	}
+}
+
+# Official: Chronicle, 1997 / 05.30. The outbreak is recorded here.
+# The player's choice is ac_ur.3.
+country_event = {
+	id = ac_ur.2
+	title = ac_ur.2.t
+	desc = ac_ur.2.d
+	picture = GFX_ac_exp_event_fcu_crisis
+	is_triggered_only = yes
+
+	option = {
+		name = ac_ur.2.a
+		ai_chance = { factor = 100 }
+		country_event = { id = ac_ur.3 days = 7 }
+	}
+}
+
+country_event = {
+	id = ac_ur.3
+	title = ac_ur.3.t
+	desc = ac_ur.3.d
+	picture = GFX_ac_exp_event_fcu_crisis
+	is_triggered_only = yes
+
+	option = {
+		name = ac_ur.3.a
+		ai_chance = { factor = 80 }
+		set_country_flag = ac_ur_coup_defeated
+		remove_ideas = ac_ur_coup_strain
+		add_timed_idea = { idea = ac_ur_unified_command days = 180 }
+	}
+
+	option = {
+		name = ac_ur.3.b
+		ai_chance = { factor = 20 }
+		set_country_flag = ac_ur_coup_prolonged
+		remove_ideas = ac_ur_coup_strain
+		add_timed_idea = { idea = ac_ur_coup_strain days = 365 }
+	}
+}
+
+# Observer brief for the FCU faction and Erusea. No call to arms.
+country_event = {
+	id = ac_ur.4
+	title = ac_ur.4.t
+	desc = ac_ur.4.d
+	picture = GFX_ac_exp_event_fcu_crisis
+	is_triggered_only = yes
+
+	option = {
+		name = ac_ur.4.a
+		ai_chance = { factor = 100 }
+	}
+}

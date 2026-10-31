@@ -1,0 +1,157 @@
+# 1997 Usean rebellion branch for the FCU opening tree.
+# Chronicle facts only: 1995/12.31 Skully Islands, 1997/05.30 coup defeated
+# by Unified Command. The prolonged branch is provisional gameplay.
+# Icons reuse existing FCU opening art. No new borders or leaders.
+
+shared_focus = {
+	id = FCU_ur_acknowledge
+	icon = GFX_ac_exp_FCU_exp_public_information
+	x = 22
+	y = 1
+	cost = 5
+	ai_will_do = { factor = 40 }
+	available = {
+		original_tag = FCU
+		has_country_flag = ac_ur_coup_started
+		date > 1997.5.1
+		date < 1999.12.1
+		NOT = { has_global_flag = ac_ucw_calendar_started }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		add_political_power = 25
+		add_war_support = 0.03
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = FCU_ur_unified_command
+	icon = GFX_ac_exp_FCU_exp_joint_inventory
+	x = 22
+	y = 2
+	cost = 5
+	ai_will_do = { factor = 40 }
+	prerequisite = { focus = FCU_ur_acknowledge }
+	available = {
+		original_tag = FCU
+		has_country_flag = ac_ur_coup_started
+		date > 1997.5.1
+		date < 1999.12.1
+		NOT = { has_global_flag = ac_ucw_calendar_started }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		add_political_power = -15
+		army_experience = 10
+		if = {
+			limit = { NOT = { has_idea = ac_ur_unified_command } }
+			add_timed_idea = { idea = ac_ur_unified_command days = 120 }
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = FCU_ur_scarface_sortie
+	icon = GFX_ac_exp_FCU_exp_warning_drills
+	x = 22
+	y = 3
+	cost = 5
+	ai_will_do = { factor = 40 }
+	prerequisite = { focus = FCU_ur_unified_command }
+	available = {
+		original_tag = FCU
+		has_country_flag = ac_ur_coup_started
+		date > 1997.5.1
+		date < 1999.12.1
+		NOT = { has_global_flag = ac_ucw_calendar_started }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		if = {
+			limit = { NOT = { has_country_flag = ac_ur_scarface_committed } }
+			set_country_flag = ac_ur_scarface_committed
+			add_timed_idea = { idea = ac_ur_scarface_sortie days = 90 }
+			air_experience = 10
+		}
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = FCU_ur_stand_down
+	icon = GFX_ac_exp_FCU_exp_civil_protection
+	x = 21
+	y = 4
+	cost = 10
+	ai_will_do = { factor = 80 }
+	prerequisite = { focus = FCU_ur_scarface_sortie }
+	mutually_exclusive = { focus = FCU_ur_keep_mobilized }
+	available = {
+		original_tag = FCU
+		has_country_flag = ac_ur_coup_defeated
+		date > 1997.5.1
+		date < 1999.12.1
+		NOT = { has_global_flag = ac_ucw_calendar_started }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		add_stability = 0.03
+		add_political_power = -10
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = FCU_ur_keep_mobilized
+	icon = GFX_ac_exp_FCU_exp_readiness_commitment
+	x = 23
+	y = 4
+	cost = 10
+	ai_will_do = { factor = 20 }
+	prerequisite = { focus = FCU_ur_scarface_sortie }
+	mutually_exclusive = { focus = FCU_ur_stand_down }
+	available = {
+		original_tag = FCU
+		has_country_flag = ac_ur_coup_prolonged
+		date > 1997.5.1
+		date < 1999.12.1
+		NOT = { has_global_flag = ac_ucw_calendar_started }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		army_experience = 15
+		add_war_support = 0.05
+	}
+	search_filters = { }
+}
+
+shared_focus = {
+	id = FCU_ur_assessment
+	icon = GFX_ac_exp_FCU_exp_opening_assessment
+	x = 22
+	y = 5
+	cost = 5
+	ai_will_do = { factor = 40 }
+	prerequisite = { focus = FCU_ur_stand_down focus = FCU_ur_keep_mobilized }
+	available = {
+		original_tag = FCU
+		has_country_flag = ac_ur_coup_started
+		date > 1997.5.1
+		date < 1999.12.1
+		NOT = { has_global_flag = ac_ucw_calendar_started }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	completion_reward = {
+		add_stability = 0.02
+		set_country_flag = ac_ur_fcu_assessed
+	}
+	search_filters = { }
+}

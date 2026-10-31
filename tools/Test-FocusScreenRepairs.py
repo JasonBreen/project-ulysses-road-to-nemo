@@ -271,6 +271,10 @@ class FocusScreen(unittest.TestCase):
             tree=get(read('common/national_focus/'+tag+'_opening.txt'),'focus_tree')
             position=get(tree,'continuous_focus_position');px=int(get(position,'x'));py=int(get(position,'y'))
             focuses=[node for kind,_,node in tree if kind=='focus']
+            imports=[value for kind,_,value in tree if kind=='shared_focus' and isinstance(value,str)]
+            for path in (MOD/'common/national_focus').glob('*.txt'):
+                focuses.extend(node for kind,_,node in parse(path.read_text(encoding='utf-8-sig'))
+                               if kind=='shared_focus' and get(node,'id') in imports)
             right=max(int(get(node,'x'))*pitch_x+169 for node in focuses)
             self.assertGreater(px,right+32)
             self.assertLessEqual(50+px+panel_w,3440)

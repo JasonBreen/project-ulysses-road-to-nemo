@@ -1,0 +1,210 @@
+# Authored Anea gameplay; source: tools/anea/build_system.py.
+ac_anea_recovery = {
+	ac_anea_prepare_decision = {
+		icon = ac_anea_recovery
+		allowed = { ac_anea_participant = yes }
+		visible = {
+			ac_anea_active = yes
+		}
+		available = {
+			ac_anea_can_prepare = yes
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 7
+		ai_will_do = {
+			base = 1
+		}
+		complete_effect = {
+			ac_anea_prepare = yes
+		}
+	}
+	
+	ac_anea_repair_decision = {
+		icon = ac_anea_recovery
+		allowed = { ac_anea_participant = yes }
+		visible = {
+			ac_anea_active = yes
+		}
+		available = {
+			ac_anea_can_repair = yes
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 7
+		ai_will_do = {
+			base = 1
+		}
+		complete_effect = {
+			ac_anea_repair = yes
+		}
+	}
+	
+	ac_anea_train_decision = {
+		icon = ac_anea_recovery
+		allowed = { ac_anea_participant = yes }
+		visible = {
+			ac_anea_active = yes
+		}
+		available = {
+			ac_anea_can_train = yes
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 7
+		ai_will_do = {
+			base = 1
+		}
+		complete_effect = {
+			ac_anea_train = yes
+		}
+	}
+	
+	EMM_an_enter_campaign = {
+		icon = ac_anea_relief
+		allowed = { original_tag = EMM }
+		visible = {
+			ac_anea_active = yes NOT = { has_focus_tree = ac_anea_emm_tree }
+		}
+		available = {
+			ac_anea_active = yes ac_anea_generic_idle = yes
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 7
+		ai_will_do = {
+			base = 0
+		}
+		complete_effect = {
+			if = {
+				limit = { original_tag = EMM ac_anea_active = yes ac_anea_generic_idle = yes NOT = { has_focus_tree = ac_anea_emm_tree } }
+				load_focus_tree = { tree = ac_anea_emm_tree keep_completed = yes }
+			}
+		}
+	}
+	
+	EVA_an_enter_campaign = {
+		icon = ac_anea_relief
+		allowed = { original_tag = EVA }
+		visible = {
+			ac_anea_active = yes NOT = { has_focus_tree = ac_anea_eva_tree }
+		}
+		available = {
+			ac_anea_active = yes ac_anea_generic_idle = yes
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 7
+		ai_will_do = {
+			base = 0
+		}
+		complete_effect = {
+			if = {
+				limit = { original_tag = EVA ac_anea_active = yes ac_anea_generic_idle = yes NOT = { has_focus_tree = ac_anea_eva_tree } }
+				load_focus_tree = { tree = ac_anea_eva_tree keep_completed = yes }
+			}
+		}
+	}
+}
+
+ac_anea_relief = {
+	ac_anea_offer_decision = {
+		icon = ac_anea_relief
+		allowed = { original_tag = EMM }
+		visible = {
+			ac_anea_active = yes date > 2000.1.9 date < 2000.3.11 NOT = { has_global_flag = ac_anea_offer_attempted }
+		}
+		available = {
+			ac_anea_active = yes ac_anea_can_offer = yes
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 7
+		ai_will_do = {
+			base = 1
+		}
+		complete_effect = {
+			ac_anea_offer_aid = yes
+		}
+	}
+	
+	ac_anea_serve_decision = {
+		icon = ac_anea_relief
+		allowed = { original_tag = EMM }
+		visible = {
+			ac_anea_active = yes has_global_flag = ac_anea_accord
+		}
+		available = {
+			ac_anea_active = yes ac_anea_can_serve = yes
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 7
+		ai_will_do = {
+			base = 1
+		}
+		complete_effect = {
+			ac_anea_authorize_service = yes
+		}
+	}
+	
+	ac_anea_resume_decision = {
+		icon = ac_anea_relief
+		allowed = { original_tag = EMM }
+		visible = {
+			ac_anea_active = yes has_global_flag = ac_anea_accord has_global_flag = ac_anea_aid_frozen
+		}
+		available = {
+			ac_anea_active = yes has_global_flag = ac_anea_aid_frozen ac_anea_pair_valid = yes EVA = { has_country_flag = EVA_an_audited_distribution } political_power >= 25
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 7
+		ai_will_do = {
+			base = 1
+		}
+		complete_effect = {
+			ac_anea_resume_aid = yes
+		}
+	}
+	
+	ac_anea_review_decision = {
+		icon = ac_anea_relief
+		allowed = { original_tag = EMM }
+		visible = {
+			ac_anea_active = yes has_global_flag = ac_anea_sanctions_active
+		}
+		available = {
+			ac_anea_active = yes has_global_flag = ac_anea_sanctions_active ac_anea_alternative_eligible = yes
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 7
+		ai_will_do = {
+			base = 1
+		}
+		complete_effect = {
+			ac_anea_reconsider_sanctions = yes
+		}
+	}
+	
+	ac_anea_bureau_decision = {
+		icon = ac_anea_relief
+		allowed = { original_tag = EMM }
+		visible = {
+			ac_anea_active = yes date > 2004.1.31 NOT = { has_global_flag = ac_anea_bureau }
+		}
+		available = {
+			ac_anea_active = yes ac_anea_bureau_eligible = yes
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 7
+		ai_will_do = {
+			base = 1
+		}
+		complete_effect = {
+			ac_anea_found_bureau = yes
+		}
+	}
+}

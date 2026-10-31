@@ -1,0 +1,491 @@
+# Authored Anea gameplay; source: tools/anea/build_system.py.
+ac_anea_bound = {
+	clamp_variable = { var = ac_anea_preparedness min = 0 max = 100 }
+	clamp_variable = { var = ac_anea_recovery min = 0 max = 100 }
+}
+
+ac_anea_init = {
+	if = {
+		limit = { ac_anea_participant = yes NOT = { has_country_flag = ac_anea_initialized } }
+		set_country_flag = ac_anea_initialized
+		if = { limit = { NOT = { has_variable = ac_anea_preparedness } } set_variable = { ac_anea_preparedness = 0 } }
+		if = { limit = { NOT = { has_variable = ac_anea_recovery } } set_variable = { ac_anea_recovery = 0 } }
+		if = { limit = { original_tag = EMM NOT = { has_variable = ac_anea_monitored_cycles } } set_variable = { ac_anea_monitored_cycles = 0 } set_variable = { ac_anea_service_stage = 0 } }
+		if = {
+			limit = { date > 1991.1.7 }
+			set_country_flag = ac_anea_late_init
+			if = {
+				limit = { date > 1996.4.19 }
+				set_country_flag = ac_anea_warning_past
+			}
+			if = {
+				limit = { date > 1998.7.28 }
+				set_country_flag = ac_anea_risk_revised_past
+			}
+			if = {
+				limit = { date > 2000.3.10 }
+				set_country_flag = ac_anea_aid_past
+			}
+			if = {
+				limit = { date > 2002.3.19 }
+				set_country_flag = ac_anea_sanctions_past
+			}
+			if = {
+				limit = { date > 2004.1.31 }
+				set_country_flag = ac_anea_bureau_past
+			}
+			if = {
+				limit = { date > 1999.7.7 }
+				set_country_flag = ac_anea_late_crisis
+				set_country_flag = ac_anea_crisis
+				if = { limit = { original_tag = EMM } set_variable = { ac_anea_recovery = 70 } }
+				else = { set_variable = { ac_anea_recovery = 15 } }
+			}
+		}
+		ac_anea_bound = yes
+	}
+}
+
+ac_anea_resolve_crisis = {
+	if = {
+		limit = { ac_anea_active = yes date > 1999.7.7 NOT = { has_country_flag = ac_anea_crisis } }
+		set_country_flag = ac_anea_crisis
+		if = {
+			limit = { original_tag = EMM }
+			set_variable = { ac_anea_recovery = 70 }
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 4 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 9 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 14 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 19 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 24 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 29 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 34 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 39 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 44 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 49 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 54 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 59 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 64 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 69 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 74 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 79 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 84 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 89 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 94 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 99 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			clamp_variable = { var = ac_anea_recovery min = 0 max = 90 }
+		}
+		if = {
+			limit = { original_tag = EVA }
+			set_variable = { ac_anea_recovery = 15 }
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 3 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 7 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 11 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 15 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 19 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 23 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 27 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 31 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 35 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 39 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 43 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 47 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 51 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 55 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 59 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 63 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 67 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 71 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 75 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 79 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 83 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 87 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 91 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 95 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			if = {
+				limit = { check_variable = { ac_anea_preparedness > 99 } }
+				add_to_variable = { ac_anea_recovery = 1 }
+			}
+			clamp_variable = { var = ac_anea_recovery min = 0 max = 40 }
+		}
+		ac_anea_bound = yes
+	}
+}
+
+ac_anea_offer_aid = {
+	if = {
+		limit = { ac_anea_can_offer = yes }
+		set_global_flag = ac_anea_offer_attempted
+		set_global_flag = ac_anea_offer_pending
+		set_country_flag = { flag = ac_anea_offer_window days = 60 }
+		EVA = { country_event = { id = ac_anea.1 days = 1 } }
+	}
+}
+
+ac_anea_accept_aid = {
+	if = {
+		limit = { ac_anea_can_accept = yes }
+		clr_global_flag = ac_anea_offer_pending
+		set_global_flag = ac_anea_accord
+		set_global_flag = ac_anea_offer_accepted
+		EMM = { clr_country_flag = ac_anea_offer_window }
+		custom_effect_tooltip = ac_anea_accord_tt
+	}
+}
+
+ac_anea_refuse_aid = {
+	if = {
+		limit = { original_tag = EVA ac_anea_offer_answerable = yes }
+		clr_global_flag = ac_anea_offer_pending
+		set_global_flag = ac_anea_offer_refused
+		EMM = { clr_country_flag = ac_anea_offer_window }
+	}
+}
+
+ac_anea_close_offer = {
+	if = {
+		limit = { has_global_flag = ac_anea_offer_pending }
+		clr_global_flag = ac_anea_offer_pending
+		if = { limit = { ac_anea_pair_valid = no } set_global_flag = ac_anea_offer_invalid }
+		else = { set_global_flag = ac_anea_offer_expired }
+		if = { limit = { country_exists = EMM } EMM = { clr_country_flag = ac_anea_offer_window } }
+	}
+}
+
+ac_anea_authorize_service = {
+	if = {
+		limit = { ac_anea_can_serve = yes }
+		add_political_power = -25
+		set_global_flag = ac_anea_service_active
+		clr_global_flag = ac_anea_service_monitored
+		set_variable = { ac_anea_service_stage = 0 }
+		set_country_flag = { flag = ac_anea_delivery_due days = 60 }
+		add_ideas = ac_anea_relief_burden
+		if = {
+		 limit = { EVA = { has_country_flag = EVA_an_audited_distribution } }
+		 set_global_flag = ac_anea_service_monitored
+		 EVA = { add_political_power = -15 add_ideas = ac_anea_monitored_service }
+		}
+		custom_effect_tooltip = ac_anea_service_tt
+	}
+}
+
+ac_anea_end_service = {
+	clr_global_flag = ac_anea_service_active
+	clr_global_flag = ac_anea_service_monitored
+	if = { limit = { country_exists = EMM } EMM = { remove_ideas = ac_anea_relief_burden clr_country_flag = ac_anea_delivery_due set_country_flag = { flag = ac_anea_service_cooldown days = 180 } } }
+	if = { limit = { country_exists = EVA } EVA = { remove_ideas = ac_anea_monitored_service } }
+}
+
+ac_anea_interrupt = {
+	if = {
+		limit = { has_global_flag = ac_anea_accord ac_anea_pair_valid = no }
+		clr_global_flag = ac_anea_accord
+		set_global_flag = ac_anea_accord_interrupted
+		ac_anea_end_service = yes
+		clr_global_flag = ac_anea_bureau
+		if = { limit = { country_exists = EMM } EMM = { remove_ideas = ac_anea_bureau } }
+		if = { limit = { country_exists = EVA } EVA = { remove_ideas = ac_anea_bureau } }
+		if = { limit = { country_exists = NEC } NEC = { remove_ideas = ac_anea_bureau } }
+	}
+}
+
+ac_anea_withdraw_aid = {
+	if = {
+		limit = { has_global_flag = ac_anea_accord EVA = { has_country_flag = EVA_an_self_reliance } }
+		clr_global_flag = ac_anea_accord
+		set_global_flag = ac_anea_accord_withdrawn
+		ac_anea_end_service = yes
+	}
+}
+
+ac_anea_deliver = {
+	if = {
+		limit = { original_tag = EMM has_global_flag = ac_anea_service_active ac_anea_pair_valid = yes NOT = { has_country_flag = ac_anea_delivery_due } }
+		if = { limit = { EVA = { NOT = { has_country_flag = EVA_an_audited_distribution } } } clr_global_flag = ac_anea_service_monitored }
+		if = { limit = { has_global_flag = ac_anea_service_monitored } EVA = { add_to_variable = { ac_anea_recovery = 4 } ac_anea_bound = yes } }
+		else = { EVA = { add_to_variable = { ac_anea_recovery = 2 } ac_anea_bound = yes } }
+		add_to_variable = { ac_anea_service_stage = 1 }
+		if = {
+		 limit = { check_variable = { ac_anea_service_stage > 2 } }
+		 if = { limit = { has_global_flag = ac_anea_service_monitored } add_to_variable = { ac_anea_monitored_cycles = 1 } }
+		 else = { set_global_flag = ac_anea_aid_frozen set_global_flag = ac_anea_distribution_failed }
+		 ac_anea_end_service = yes
+		}
+		else = { set_country_flag = { flag = ac_anea_delivery_due days = 60 } }
+	}
+}
+
+ac_anea_daily = {
+	if = { limit = { has_global_flag = ac_anea_offer_pending OR = { ac_anea_pair_valid = no EMM = { NOT = { has_country_flag = ac_anea_offer_window } } } } ac_anea_close_offer = yes }
+	ac_anea_interrupt = yes
+	ac_anea_withdraw_aid = yes
+	if = { limit = { has_global_flag = ac_anea_bureau OR = { NOT = { has_global_flag = ac_anea_accord } ac_anea_pair_valid = no } } clr_global_flag = ac_anea_bureau }
+	if = { limit = { NOT = { has_global_flag = ac_anea_service_active } }
+	 if = { limit = { original_tag = EMM } remove_ideas = ac_anea_relief_burden }
+	 if = { limit = { original_tag = EVA } remove_ideas = ac_anea_monitored_service }
+	}
+	if = { limit = { NOT = { has_global_flag = ac_anea_bureau } } remove_ideas = ac_anea_bureau }
+	if = { limit = { has_global_flag = ac_anea_service_active EVA = { NOT = { has_country_flag = EVA_an_audited_distribution } } } clr_global_flag = ac_anea_service_monitored }
+	if = { limit = { has_global_flag = ac_anea_service_active EMM = { has_country_flag = EMM_an_conditional_aid } EVA = { NOT = { has_country_flag = EVA_an_audited_distribution } } } set_global_flag = ac_anea_aid_frozen ac_anea_end_service = yes }
+	ac_anea_deliver = yes
+	if = { limit = { has_global_flag = ac_anea_nec_pending OR = { NOT = { has_global_flag = ac_anea_bureau } ac_anea_nec_valid = no EMM = { NOT = { has_country_flag = ac_anea_nec_window } } } } clr_global_flag = ac_anea_nec_pending set_global_flag = ac_anea_nec_closed }
+	if = { limit = { has_global_flag = ac_anea_nec_participates OR = { NOT = { has_global_flag = ac_anea_bureau } ac_anea_nec_valid = no } } clr_global_flag = ac_anea_nec_participates if = { limit = { country_exists = NEC } NEC = { remove_ideas = ac_anea_bureau } } }
+}
+
+ac_anea_review_sanctions = {
+	if = {
+		limit = { original_tag = EMM ac_anea_active = yes date > 2002.3.19 NOT = { has_global_flag = ac_anea_sanctions_reviewed } NOT = { has_country_flag = ac_anea_sanctions_past } }
+		set_global_flag = ac_anea_sanctions_reviewed
+		if = { limit = { ac_anea_alternative_eligible = yes }
+		 set_global_flag = ac_anea_sanctions_avoided
+		 news_event = { id = ac_anea.11 days = 1 }
+		}
+		else_if = { limit = { ac_anea_pair_valid = yes }
+		 set_global_flag = ac_anea_sanctions_active
+		 EVA = { add_ideas = ac_anea_sanctions }
+		 news_event = { id = ac_anea.10 days = 1 }
+		}
+		else = { set_global_flag = ac_anea_sanctions_unavailable }
+	}
+}
+
+ac_anea_reconsider_sanctions = {
+	if = {
+		limit = { original_tag = EMM ac_anea_active = yes has_global_flag = ac_anea_sanctions_active ac_anea_alternative_eligible = yes }
+		clr_global_flag = ac_anea_sanctions_active
+		set_global_flag = ac_anea_sanctions_lifted
+		EVA = { remove_ideas = ac_anea_sanctions }
+		news_event = { id = ac_anea.12 days = 1 }
+	}
+}
+
+ac_anea_resume_aid = {
+	if = {
+		limit = { original_tag = EMM ac_anea_active = yes ac_anea_pair_valid = yes has_global_flag = ac_anea_accord has_global_flag = ac_anea_aid_frozen EVA = { has_country_flag = EVA_an_audited_distribution } political_power >= 25 }
+		add_political_power = -25
+		clr_global_flag = ac_anea_aid_frozen
+		set_global_flag = ac_anea_aid_reformed
+	}
+}
+
+ac_anea_found_bureau = {
+	if = {
+		limit = { ac_anea_bureau_eligible = yes }
+		set_global_flag = ac_anea_bureau
+		add_ideas = ac_anea_bureau
+		EVA = { add_ideas = ac_anea_bureau }
+		if = { limit = { ac_anea_nec_valid = yes NOT = { has_global_flag = ac_anea_nec_attempted } }
+		 set_global_flag = ac_anea_nec_attempted set_global_flag = ac_anea_nec_pending
+		 set_country_flag = { flag = ac_anea_nec_window days = 60 }
+		 NEC = { country_event = { id = ac_anea.20 days = 1 } }
+		}
+	}
+}
+
+ac_anea_accept_nec = {
+	if = {
+		limit = { original_tag = NEC ac_anea_nec_valid = yes has_global_flag = ac_anea_bureau has_global_flag = ac_anea_nec_pending EMM = { has_country_flag = ac_anea_nec_window } }
+		clr_global_flag = ac_anea_nec_pending
+		set_global_flag = ac_anea_nec_participates
+		add_ideas = ac_anea_bureau
+	}
+}
+
+ac_anea_refuse_nec = {
+	if = {
+		limit = { original_tag = NEC has_global_flag = ac_anea_nec_pending }
+		clr_global_flag = ac_anea_nec_pending
+		set_global_flag = ac_anea_nec_closed
+	}
+}
+
+ac_anea_calendar = {
+	if = { limit = { ac_anea_active = yes }
+	 if = { limit = { date > 1996.4.19 } set_country_flag = ac_anea_warning }
+	 if = { limit = { date > 1998.7.28 } set_country_flag = ac_anea_risk_revised }
+	 ac_anea_resolve_crisis = yes
+	 if = { limit = { original_tag = EMM }
+	  ac_anea_review_sanctions = yes
+	  if = { limit = { is_ai = yes ac_anea_can_offer = yes } ac_anea_offer_aid = yes }
+	  if = { limit = { is_ai = yes ac_anea_can_serve = yes } ac_anea_authorize_service = yes }
+	  if = { limit = { is_ai = yes ac_anea_bureau_eligible = yes } ac_anea_found_bureau = yes }
+	 }
+	}
+}
+
+ac_anea_weekly = {
+	ac_anea_init = yes
+	ac_anea_calendar = yes
+	ac_anea_campaign_weekly = yes
+	ac_anea_bound = yes
+}
+
+ac_anea_prepare = {
+	if = {
+		limit = { ac_anea_can_prepare = yes }
+		add_political_power = -25
+		add_to_variable = { ac_anea_preparedness = 3 }
+		set_country_flag = { flag = ac_anea_domestic_allocation days = 180 }
+		set_country_flag = { flag = ac_anea_prepare_cooldown days = 180 }
+		add_timed_idea = { idea = ac_anea_domestic_works days = 180 }
+		ac_anea_bound = yes
+	}
+}
+
+ac_anea_repair = {
+	if = {
+		limit = { ac_anea_can_repair = yes }
+		add_political_power = -35
+		add_to_variable = { ac_anea_recovery = 4 }
+		set_country_flag = { flag = ac_anea_domestic_allocation days = 180 }
+		set_country_flag = { flag = ac_anea_repair_cooldown days = 180 }
+		add_timed_idea = { idea = ac_anea_domestic_works days = 180 }
+		ac_anea_bound = yes
+	}
+}
+
+ac_anea_train = {
+	if = {
+		limit = { ac_anea_can_train = yes }
+		add_political_power = -25
+		army_experience = 6
+		air_experience = 3
+		set_country_flag = { flag = ac_anea_domestic_allocation days = 180 }
+		set_country_flag = { flag = ac_anea_train_cooldown days = 180 }
+		add_timed_idea = { idea = ac_anea_domestic_works days = 180 }
+		ac_anea_bound = yes
+	}
+}

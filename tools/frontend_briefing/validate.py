@@ -1,8 +1,10 @@
 """Validate briefing texture formats, sprite references and layout preservation.
 
 Run from any directory; no installed game, Pillow, or native engine required.
-The geometry fingerprint is the pre-repair 1c36a33 GUI with only visual property
-values normalized. All control names, positions, sizes and 1.19 stubs are covered.
+The geometry fingerprint is the pre-repair 1c36a33 GUI with visual properties
+normalized. The separately validated Anea country-history scrolling repair is
+restored to its captured original before fingerprinting. Other control names,
+positions, sizes and 1.19 stubs retain their historical fingerprint coverage.
 """
 from pathlib import Path
 import hashlib
@@ -28,7 +30,18 @@ def validate():
     def check(ok, message):
         if not ok: errors.append(message)
     gui = (MOD / 'interface/frontendgamesetupview.gui').read_text(encoding='utf-8-sig')
-    check(layout(gui) == (HERE/'layout.sha256').read_text().strip(), 'Original frontend layout or control contract changed')
+    # Deliberate exception: exactly one country history text control. Verify its
+    # complete repaired node and bounds, then restore its recorded original for
+    # the historical fingerprint. Do not refresh the fingerprint or hide other
+    # geometry/control changes behind a broad normalization rule.
+    sys.path.insert(0, str(ROOT/'tools/anea'))
+    try:
+        from build_briefs_ui import normalize_for_fingerprint
+        historical_gui = normalize_for_fingerprint(gui)
+    except (ValueError, OSError, KeyError) as error:
+        check(False, 'Country history scrolling contract: '+str(error))
+    else:
+        check(layout(historical_gui) == (HERE/'layout.sha256').read_text().strip(), 'Original frontend layout or control contract changed outside the country history repair')
     check(not re.search(r'(?:font|buttonFont)\s*=\s*"Aces\d+_black"',gui), 'Dark briefing panel uses black text')
     check(re.search(r'name = "ac_briefing_map_statistics"\s+spriteType = "GFX_ac_briefing_map_statistics_overlay"\s+position = \{ x = 975 y = -300 \}\s+alwaystransparent = yes',gui), 'Statistics overlay moved or intercepts input')
     gfx = (MOD/'interface/ac_frontend_briefing.gfx').read_text()
@@ -75,7 +88,7 @@ def validate():
         check(re.search(pattern,text), 'Bookmark lost its artwork binding: '+record['id'])
     for error in errors:print('FAIL:',error)
     if errors:return 1
-    print(f'Briefing UI: {len(specs)} BGRA textures, {len(sprites)} sprites, 30 bookmark bindings; original geometry and controls preserved.')
+    print(f'Briefing UI: {len(specs)} BGRA textures, {len(sprites)} sprites, 30 bookmark bindings; bounded scrolling country history; all other original geometry and controls preserved.')
     return 0
 
 

@@ -60,7 +60,19 @@ def main():
             d.text((78,105),tag,font=font,anchor='mm',fill=(218,237,242,255))
         import io
         stream=io.BytesIO();canvas.save(stream,format='DDS');outputs[path]=stream.getvalue()
-        assets.append(dict(file=path,width=156,height=210,frames=1,source=source.relative_to(MOD).as_posix() if source.exists() else None,source_sha256=hashlib.sha256(source.read_bytes()).hexdigest() if source.exists() else None,sha256=hashlib.sha256(outputs[path]).hexdigest(),role='existing national flag in original office frame' if source.exists() else 'original office identification card; established flag absent'))
+        presentation=row.get('presentation_source')
+        if presentation:
+            # Explicit authored presentations preserve the established identity
+            # and sprite. Build Anea art before this packaging step.
+            selected=(MOD/presentation).resolve()
+            if not selected.is_relative_to(MOD.resolve()):raise SystemExit('Office presentation escapes mod root: '+presentation)
+            with Image.open(selected) as image:
+                if image.size!=(156,210) or image.format!='DDS':raise SystemExit('Invalid office presentation: '+presentation)
+            outputs[path]=selected.read_bytes()
+        asset=dict(file=path,width=156,height=210,frames=1,source=source.relative_to(MOD).as_posix() if source.exists() else None,source_sha256=hashlib.sha256(source.read_bytes()).hexdigest() if source.exists() else None,sha256=hashlib.sha256(outputs[path]).hexdigest(),role='existing national flag in original office frame' if source.exists() else 'original office identification card; established flag absent')
+        if presentation:
+            asset.update(presentation_source=presentation,presentation_source_sha256=hashlib.sha256(outputs[path]).hexdigest())
+        assets.append(asset)
         gfx.append(f'spriteType = {{ name = "{sprite}" texturefile = "{path}" }}')
         chars.append(f'''{ident} = {{
  name = {ident}
@@ -79,7 +91,10 @@ def main():
             if file.endswith(('.txt','.yml','.gfx')):actual=actual.replace(b'\r\n',b'\n');data=data.replace(b'\r\n',b'\n')
             if actual!=data:raise SystemExit('Starting leader output differs: '+file)
         else:target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
-    if not a.check:(HERE/'leader_assets.json').write_text(json.dumps(assets,indent=2)+'\n')
+    asset_manifest=json.dumps(assets,indent=2)+'\n'
+    if a.check:
+        if (HERE/'leader_assets.json').read_text().replace('\r\n','\n')!=asset_manifest:raise SystemExit('Starting leader asset manifest differs')
+    else:(HERE/'leader_assets.json').write_text(asset_manifest)
     print('Starting government audit:',len(rows),'histories;',len(chars),'missing roles implemented (Sinclair plus office representations).')
 
 if __name__=='__main__':main()

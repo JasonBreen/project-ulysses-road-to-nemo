@@ -1,0 +1,890 @@
+# Original institutional gameplay; owner: tools/institutions/build.py.
+focus_tree = {
+	id = ac_regional_foundation
+	country = { factor = 0 modifier = { add = 5 ac_pol_uses_regional_tree = yes } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 2400 y = 16 }
+	initial_show_position = { focus = ac_reg_register }
+	focus = {
+		id = ac_reg_register
+		icon = GFX_ac_pol_focus_register
+		x = 2
+		y = 0
+		cost = 5
+		ai_will_do = { factor = 1 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_register }
+				}
+				set_country_flag = ac_pol_focus_register
+				set_country_flag = ac_pol_audits_unlocked
+				add_to_variable = { ac_pol_capacity = 5 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_audit
+		icon = GFX_ac_pol_focus_audit
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_register
+		}
+		mutually_exclusive = {
+			focus = ac_reg_executive
+		}
+		available = {
+			ac_pol_can_adopt = yes
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_audit }
+				}
+				set_country_flag = ac_pol_focus_audit
+				ac_pol_adopt_civic = yes
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_executive
+		icon = GFX_ac_pol_focus_executive
+		x = 4
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_register
+		}
+		mutually_exclusive = {
+			focus = ac_reg_audit
+		}
+		available = {
+			ac_pol_can_adopt = yes
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_executive }
+				}
+				set_country_flag = ac_pol_focus_executive
+				ac_pol_adopt_military = yes
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_districts
+		icon = GFX_ac_pol_focus_districts
+		x = 2
+		y = 2
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_audit
+			focus = ac_reg_executive
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_districts }
+				}
+				set_country_flag = ac_pol_focus_districts
+				set_country_flag = ac_pol_districts_unlocked
+				add_to_variable = { ac_pol_capacity = 5 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_records
+		icon = GFX_ac_pol_focus_records
+		x = 2
+		y = 3
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_districts
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_records }
+				}
+				set_country_flag = ac_pol_focus_records
+				set_country_flag = ac_pol_records_unlocked
+				add_to_variable = { ac_pol_capacity = 5 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_service_review
+		icon = GFX_ac_pol_focus_service_review
+		x = 2
+		y = 4
+		cost = 10
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_records
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_service_review }
+				}
+				set_country_flag = ac_pol_focus_service_review
+				add_to_variable = { ac_pol_capacity = 8 }
+				set_country_flag = ac_pol_services_reviewed
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_survey
+		icon = GFX_ac_pol_focus_survey
+		x = 10
+		y = 0
+		cost = 5
+		ai_will_do = { factor = 1 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_survey }
+				}
+				set_country_flag = ac_pol_focus_survey
+				set_country_flag = ac_pol_maintenance_unlocked
+				add_to_variable = { ac_pol_capacity = 5 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_civilian_contracts
+		icon = GFX_ac_pol_focus_civilian_contracts
+		x = 8
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_survey
+		}
+		mutually_exclusive = {
+			focus = ac_reg_protected_orders
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_civilian_contracts }
+				}
+				set_country_flag = ac_pol_focus_civilian_contracts
+				add_ideas = ac_pol_civilian_contracts
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_protected_orders
+		icon = GFX_ac_pol_focus_protected_orders
+		x = 12
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_survey
+		}
+		mutually_exclusive = {
+			focus = ac_reg_civilian_contracts
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_protected_orders }
+				}
+				set_country_flag = ac_pol_focus_protected_orders
+				add_ideas = ac_pol_protected_orders
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_spares
+		icon = GFX_ac_pol_focus_spares
+		x = 10
+		y = 2
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_civilian_contracts
+			focus = ac_reg_protected_orders
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_spares }
+				}
+				set_country_flag = ac_pol_focus_spares
+				set_country_flag = ac_pol_spares_unlocked
+				add_to_variable = { ac_pol_capacity = 5 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_freight
+		icon = GFX_ac_pol_focus_freight
+		x = 10
+		y = 3
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_spares
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_freight }
+				}
+				set_country_flag = ac_pol_focus_freight
+				add_ideas = ac_pol_freight_priorities
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_productive_review
+		icon = GFX_ac_pol_focus_productive_review
+		x = 10
+		y = 4
+		cost = 10
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_freight
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_productive_review }
+				}
+				set_country_flag = ac_pol_focus_productive_review
+				add_to_variable = { ac_pol_capacity = 8 }
+				set_country_flag = ac_pol_production_reviewed
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_emergency_register
+		icon = GFX_ac_pol_focus_emergency_register
+		x = 18
+		y = 0
+		cost = 5
+		ai_will_do = { factor = 1 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_emergency_register }
+				}
+				set_country_flag = ac_pol_focus_emergency_register
+				set_country_flag = ac_pol_relief_unlocked
+				add_to_variable = { ac_pol_capacity = 5 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_civil_protection
+		icon = GFX_ac_pol_focus_civil_protection
+		x = 16
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_emergency_register
+		}
+		mutually_exclusive = {
+			focus = ac_reg_uniformed_reserve
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_civil_protection }
+				}
+				set_country_flag = ac_pol_focus_civil_protection
+				add_ideas = ac_pol_civil_protection
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_uniformed_reserve
+		icon = GFX_ac_pol_focus_uniformed_reserve
+		x = 20
+		y = 1
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_emergency_register
+		}
+		mutually_exclusive = {
+			focus = ac_reg_civil_protection
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_uniformed_reserve }
+				}
+				set_country_flag = ac_pol_focus_uniformed_reserve
+				add_ideas = ac_pol_uniformed_reserve
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_stock_records
+		icon = GFX_ac_pol_focus_stock_records
+		x = 18
+		y = 2
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_civil_protection
+			focus = ac_reg_uniformed_reserve
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_stock_records }
+				}
+				set_country_flag = ac_pol_focus_stock_records
+				set_country_flag = ac_pol_stores_unlocked
+				add_to_variable = { ac_pol_capacity = 5 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_rehearsals
+		icon = GFX_ac_pol_focus_rehearsals
+		x = 18
+		y = 3
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_stock_records
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_rehearsals }
+				}
+				set_country_flag = ac_pol_focus_rehearsals
+				set_country_flag = ac_pol_exercises_unlocked
+				add_to_variable = { ac_pol_capacity = 5 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_resilience_review
+		icon = GFX_ac_pol_focus_resilience_review
+		x = 18
+		y = 4
+		cost = 10
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_rehearsals
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_resilience_review }
+				}
+				set_country_flag = ac_pol_focus_resilience_review
+				add_to_variable = { ac_pol_capacity = 8 }
+				set_country_flag = ac_pol_resilience_reviewed
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_defense_register
+		icon = GFX_ac_pol_focus_defense_register
+		x = 2
+		y = 6
+		cost = 5
+		ai_will_do = { factor = 1 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_defense_register }
+				}
+				set_country_flag = ac_pol_focus_defense_register
+				set_country_flag = ac_pol_training_unlocked
+				army_experience = 5
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_staff_schools
+		icon = GFX_ac_pol_focus_staff_schools
+		x = 0
+		y = 7
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_defense_register
+		}
+		mutually_exclusive = {
+			focus = ac_reg_field_priority
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_staff_schools }
+				}
+				set_country_flag = ac_pol_focus_staff_schools
+				add_ideas = ac_pol_staff_schools
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_field_priority
+		icon = GFX_ac_pol_focus_field_priority
+		x = 4
+		y = 7
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_defense_register
+		}
+		mutually_exclusive = {
+			focus = ac_reg_staff_schools
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_field_priority }
+				}
+				set_country_flag = ac_pol_focus_field_priority
+				add_ideas = ac_pol_field_priority
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_replacement_office
+		icon = GFX_ac_pol_focus_replacement_office
+		x = 2
+		y = 8
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_staff_schools
+			focus = ac_reg_field_priority
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_replacement_office }
+				}
+				set_country_flag = ac_pol_focus_replacement_office
+				set_country_flag = ac_pol_replacement_unlocked
+				army_experience = 5
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_readiness_reports
+		icon = GFX_ac_pol_focus_readiness_reports
+		x = 2
+		y = 9
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_replacement_office
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_readiness_reports }
+				}
+				set_country_flag = ac_pol_focus_readiness_reports
+				add_to_variable = { ac_pol_capacity = 6 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_defense_review
+		icon = GFX_ac_pol_focus_defense_review
+		x = 2
+		y = 10
+		cost = 10
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_readiness_reports
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_defense_review }
+				}
+				set_country_flag = ac_pol_focus_defense_review
+				add_to_variable = { ac_pol_capacity = 8 }
+				set_country_flag = ac_pol_defense_reviewed
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_external_register
+		icon = GFX_ac_pol_focus_external_register
+		x = 10
+		y = 6
+		cost = 5
+		ai_will_do = { factor = 1 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_external_register }
+				}
+				set_country_flag = ac_pol_focus_external_register
+				set_country_flag = ac_pol_external_unlocked
+				add_to_variable = { ac_pol_capacity = 5 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_guarded_contacts
+		icon = GFX_ac_pol_focus_guarded_contacts
+		x = 8
+		y = 7
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_external_register
+		}
+		mutually_exclusive = {
+			focus = ac_reg_technical_contacts
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_guarded_contacts }
+				}
+				set_country_flag = ac_pol_focus_guarded_contacts
+				add_ideas = ac_pol_guarded_contacts
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_technical_contacts
+		icon = GFX_ac_pol_focus_technical_contacts
+		x = 12
+		y = 7
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_external_register
+		}
+		mutually_exclusive = {
+			focus = ac_reg_guarded_contacts
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_technical_contacts }
+				}
+				set_country_flag = ac_pol_focus_technical_contacts
+				add_ideas = ac_pol_technical_contacts
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_domestic_contingency
+		icon = GFX_ac_pol_focus_domestic_contingency
+		x = 10
+		y = 8
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_guarded_contacts
+			focus = ac_reg_technical_contacts
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_domestic_contingency }
+				}
+				set_country_flag = ac_pol_focus_domestic_contingency
+				set_country_flag = ac_pol_audits_unlocked
+				add_to_variable = { ac_pol_capacity = 5 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_bounded_commitments
+		icon = GFX_ac_pol_focus_bounded_commitments
+		x = 10
+		y = 9
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_domestic_contingency
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_bounded_commitments }
+				}
+				set_country_flag = ac_pol_focus_bounded_commitments
+				add_to_variable = { ac_pol_capacity = 6 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_external_review
+		icon = GFX_ac_pol_focus_external_review
+		x = 10
+		y = 10
+		cost = 10
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_bounded_commitments
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_external_review }
+				}
+				set_country_flag = ac_pol_focus_external_review
+				add_to_variable = { ac_pol_capacity = 8 }
+				set_country_flag = ac_pol_external_reviewed
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_institution_review
+		icon = GFX_ac_pol_focus_institution_review
+		x = 18
+		y = 6
+		cost = 5
+		ai_will_do = { factor = 1 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_institution_review }
+				}
+				set_country_flag = ac_pol_focus_institution_review
+				set_country_flag = ac_pol_audits_unlocked
+				add_to_variable = { ac_pol_capacity = 5 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_delegation
+		icon = GFX_ac_pol_focus_delegation
+		x = 16
+		y = 7
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_institution_review
+		}
+		mutually_exclusive = {
+			focus = ac_reg_central_register
+		}
+		available = {
+			ac_pol_can_adopt = yes
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_delegation }
+				}
+				set_country_flag = ac_pol_focus_delegation
+				ac_pol_adopt_district = yes
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_central_register
+		icon = GFX_ac_pol_focus_central_register
+		x = 20
+		y = 7
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_institution_review
+		}
+		mutually_exclusive = {
+			focus = ac_reg_delegation
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_central_register }
+				}
+				set_country_flag = ac_pol_focus_central_register
+				set_country_flag = ac_pol_records_unlocked
+				add_ideas = ac_pol_central_register
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_inspectors
+		icon = GFX_ac_pol_focus_inspectors
+		x = 18
+		y = 8
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_delegation
+			focus = ac_reg_central_register
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_inspectors }
+				}
+				set_country_flag = ac_pol_focus_inspectors
+				add_to_variable = { ac_pol_capacity = 6 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_succession_rules
+		icon = GFX_ac_pol_focus_succession_rules
+		x = 18
+		y = 9
+		cost = 5
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_inspectors
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_succession_rules }
+				}
+				set_country_flag = ac_pol_focus_succession_rules
+				set_country_flag = ac_pol_records_unlocked
+				add_to_variable = { ac_pol_capacity = 6 }
+				ac_pol_bounds = yes
+			}
+		}
+	}
+	
+	focus = {
+		id = ac_reg_institutional_settlement
+		icon = GFX_ac_pol_focus_institutional_settlement
+		x = 18
+		y = 10
+		cost = 10
+		ai_will_do = { factor = 1 }
+		prerequisite = {
+			focus = ac_reg_succession_rules
+		}
+		completion_reward = {
+			ac_pol_initialize = yes
+			if = {
+				limit = {
+					ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_institutional_settlement }
+				}
+				set_country_flag = ac_pol_focus_institutional_settlement
+				add_to_variable = { ac_pol_capacity = 8 }
+				set_country_flag = ac_pol_regional_assessed
+				ac_pol_bounds = yes
+			}
+		}
+	}
+}

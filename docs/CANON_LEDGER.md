@@ -12,6 +12,7 @@ This ledger is a work queue, not a claim that the entries below are settled. Off
 | 2065-12-31 inclusive campaign cutoff | Project requirement / provisional engineering contract | `docs/DESIGN.md` | Engine permission, authored content, and runtime coverage must be reported separately. No invented future lore. |
 | Ulysses fallout and Usean Continental War, 1999–2005; Stonehenge, Megalith, Excalibur, V2 and Arkbird project framing | Official | [ACES Chronicle details and Super Weapons](USEAN_CONTINENTAL_WAR.md), accessed 27 Oct 2026 | Sources and actor contracts compiled; nothing implemented yet. The war's start day, Megalith's construction timing and every alternate outcome are provisional gameplay. Recta has no Chronicle entry and stays mod provenance. |
 | Technology/equipment names through 2065 | Mixed / pending | Current files are mostly inherited IDs with 1991–2005 dates; date syntax validator now covers 1900–2065 | Audit names, localization, provenance, and canon conflicts before adding later-era content. |
+| Skully Islands rebel base, 31 December 1995, and the Usean coup, 30 May 1997 | Official for the Chronicle sentences; provisional gameplay for the prolonged emergency and the modifier values | [ACES Chronicle](https://acecombat.jp/en/chronicle/details/), 1995 / 12.31 and 1997 / 05.30. IDs `ac_ur.1`–`.4`, `FCU_ur_*`, `ac_ur_coup_strain` | Implemented in script and static checks. Robert Tyler and Scarface are named only as the Chronicle names them. No rebel country list, no border change, no native test. |
 
 ## The Peace We Inherit expansion
 

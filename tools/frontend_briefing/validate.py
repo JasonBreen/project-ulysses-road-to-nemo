@@ -43,7 +43,8 @@ def validate():
     else:
         check(layout(historical_gui) == (HERE/'layout.sha256').read_text().strip(), 'Original frontend layout or control contract changed outside the country history repair')
     check(not re.search(r'(?:font|buttonFont)\s*=\s*"Aces\d+_black"',gui), 'Dark briefing panel uses black text')
-    check(re.search(r'name = "ac_briefing_map_statistics"\s+spriteType = "GFX_ac_briefing_map_statistics_overlay"\s+position = \{ x = 975 y = -300 \}\s+alwaystransparent = yes',gui), 'Statistics overlay moved or intercepts input')
+    check('name = "ac_briefing_map_statistics"' not in gui, 'Unbound legacy statistics layer is still visible')
+    check('name = "ac_overhaul_world_overview"' in gui, 'Independent campaign overview is missing')
     gfx = (MOD/'interface/ac_frontend_briefing.gfx').read_text()
     sprites = {}
     for raw in re.findall(r'spriteType\s*=\s*\{([^{}]+)\}', gfx):

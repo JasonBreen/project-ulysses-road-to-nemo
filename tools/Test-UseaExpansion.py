@@ -253,7 +253,11 @@ class Expansion(unittest.TestCase):
         gui=load('interface/nationalfocusview.gui')
         item=next(n for _,n in walk(gui) if get(n,'name')=='"national_focus_item"')
         title=next(n for _,n in walk(item) if get(n,'name')=='"name"')
-        self.assertLessEqual(int(get(get(title,'position'),'y'))+int(get(title,'maxHeight')),90)
+        background=next(n for _,n in walk(item) if get(n,'name')=='"bg"')
+        with Image.open(MOD/'gfx/interface/ac_expansion/ui/GFX_focus_can_start.dds') as frame:
+            self.assertLessEqual(int(get(get(title,'position'),'y'))+int(get(title,'maxHeight')),
+                                 int(get(get(background,'position'),'y'))+frame.height)
+        self.assertEqual(54,int(get(title,'maxHeight')), 'Three 18px text lines must fit')
         self.assertEqual('"ACBriefing16"',get(title,'font'))
         self.assertTrue((MOD/'interface/nationalfocusview.gfx').exists(), 'Engine filename override is required for runtime state sprites')
         with Image.open(MOD/'gfx/interface/ac_expansion/ui/GFX_focus_link_left_right.dds') as im:

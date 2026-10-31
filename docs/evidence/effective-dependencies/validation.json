@@ -74,5 +74,65 @@
     ],
     "runtime_payload_changed": false,
     "earlier_full_static_scope": "The original component full-static/reference result above precedes the program-binding follow-up; final CI reruns the current source suite."
+  },
+  "composed_stack_followup": {
+    "source_head": "3351995b6da7fac573f470bc57bfe57a367a2cd9",
+    "story_head": "c7329f25a06066cf58226f741d21408b4450ce28",
+    "main_verified": "3810d1abeb9749a265b7b48e8d9eccddf08b1be2",
+    "coverage": "Source, metadata and offline execution only; native remains paused. Earlier component results above retain their original scope.",
+    "commands": [
+      {
+        "command": "python -B tools/Test-EffectiveDependencies.py",
+        "exit_code": 0,
+        "result": "31 pass"
+      },
+      {
+        "command": "python -B tools/Test-DecisionUI.py",
+        "exit_code": 0,
+        "result": "16 pass"
+      },
+      {
+        "command": "python -B tools/Test-OverhaulRepairs.py",
+        "exit_code": 0,
+        "result": "7 pass"
+      },
+      {
+        "command": "python -B tools/Test-FocusScreenRepairs.py",
+        "exit_code": 0,
+        "result": "9 pass"
+      },
+      {
+        "command": "python -B tools/frontend_briefing/validate.py",
+        "exit_code": 0,
+        "result": "Briefing asset and bookmark bindings pass"
+      },
+      {
+        "command": "python -B tools/frontend_typography/validate.py",
+        "exit_code": 0,
+        "result": "465-glyph typography passes"
+      },
+      {
+        "command": "python -B tools/audit_visual_dependencies.py --strict-all",
+        "exit_code": 0,
+        "result": "6552 sprites,1204 focus icons,zero authored-GFX missing asset references"
+      },
+      {
+        "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File tools/Test-UlyssesStatic.ps1 -ModRoot mod/2985041246 -ReferenceGameRoot <engine>",
+        "exit_code": 0,
+        "result": "Full static/reference pass; inherited map2/reference2006/technology1 warnings retained"
+      },
+      {
+        "command": "python -B tools/overhaul/capture_dependency_evidence.py <engine>",
+        "exit_code": 0,
+        "result": "Decision ownership PASS; selected and all-installed complete-presentation FAIL; exact source hashes and full-failure-list digests retained"
+      },
+      {
+        "command": "python -B tools/overhaul/audit_consumers.py <engine> --gate-decisions --gate-screen ac_macro_economy.gui --summary-only --output docs/evidence/effective-dependencies/macro-screen.json",
+        "exit_code": 0,
+        "result": "Both requested screens zero ownership failures; global conversion not requested or certified"
+      }
+    ],
+    "runtime_payload_changed_by_audit": false,
+    "conversion_acceptance": false
   }
 }

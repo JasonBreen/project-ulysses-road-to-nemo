@@ -1,5 +1,10 @@
 # Audit explicit DLC providers and hidden presentation dependencies
 
+This tooling and evidence follow-up is stacked on the completed story bindings
+in PR #36. Its reports inspect the composed repair, foundation, economy,
+Usean-partner and story payload; the runtime changes belong to their earlier
+PRs. The audit itself adds no game payload or installed media.
+
 The earlier effective-consumer audit could see loose engine/mod files but could
 not resolve DLC archive members or directory-backed packs. This adds a
 read-only provider layer with explicit descriptor selections, safe ZIP access,
@@ -32,6 +37,10 @@ Validation:
   missing references.
 - Full static/reference suite passes with inherited map 2/reference 2006/tech 1
   warnings retained.
+- The composed payload has 6,552 authored sprites and 1,204 checked focus icons.
+  Both the decision screen and five-page macroeconomy screen have zero failures
+  in their narrower requested-screen ownership checks. This is not provenance
+  or native visual acceptance.
 - Installed 1.19.4.1 scenarios, exact source hashes, descriptor/archive metadata,
   explicit profiles and failed-gate summaries are retained under
   `docs/evidence/effective-dependencies/`.

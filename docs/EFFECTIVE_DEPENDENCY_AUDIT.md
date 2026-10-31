@@ -193,3 +193,14 @@ The all-installed scenario deliberately selects every discovered descriptor
 and maps the four integrated payloads for stress coverage; it is not a record
 of this user's actual enabled DLC. No native test was run, and normal
 installation files, profiles and saves were untouched.
+
+The latest reports inspect the composed repair, world-foundation, economy,
+Usean-partner and squadron-story payload, including all 162 story decision
+rows' owned icons. `macro-screen.json` separately records zero ownership
+failures for `countrydecisionview.gui` and `ac_macro_economy.gui`. That narrower
+check does not certify provenance, native rendering or the rest of the graph.
+The selected archive/music scenario retains 20,235 failed presentation entries;
+the explicitly mapped all-installed stress scenario retains 31,625. Those are
+dependency entries, including uncertain or unclassified resources, rather than
+counts of unique vanilla pictures. The source and profile hashes in
+`results.json` identify the exact audit which produced them.

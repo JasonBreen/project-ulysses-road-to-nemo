@@ -45,7 +45,7 @@ def build_country_rules(effects, triggers, decisions):
 
 
 def build_offers(effects, triggers, decisions):
-    sender_ticks = ""; recipient_cleanup = ""; interruption = ""
+    sender_ticks = ""; recipient_cleanup = ""; interruption = ""; recipient_interrupt = ""
     for offset, (tag, cfg) in enumerate(COUNTRIES.items()):
         lower = tag.lower(); pending = "ac_up_" + lower + "_pending"
         window = "ac_up_" + lower + "_offer_window"
@@ -82,6 +82,10 @@ def build_offers(effects, triggers, decisions):
         # FCU clears its own pending marker even if the sender no longer exists.
         recipient_cleanup += guard("has_country_flag = " + pending + " OR = { NOT = { country_exists = " + tag + " } " + tag + " = { " + valid + " = no } " + tag + " = { NOT = { has_country_flag = " + window + " } } }", "clr_country_flag = " + pending + "\n" + guard("country_exists = " + tag, tag + " = { " + tag + "_up_close_offer = yes set_country_flag = ac_up_offer_closed }"))
         recipient_cleanup += guard("has_country_flag = ac_up_" + lower + "_partner_active OR = { NOT = { country_exists = " + tag + " } " + tag + " = { " + valid + " = no } " + tag + " = { NOT = { has_country_flag = ac_up_partner_active } } }", "clr_country_flag = ac_up_" + lower + f"_partner_active\nremove_opinion_modifier = {{ target = {tag} modifier = ac_up_practical_services }}\n" + guard("country_exists = " + tag, tag + " = { clr_country_flag = ac_up_partner_active set_country_flag = ac_up_partner_interrupted remove_opinion_modifier = { target = FCU modifier = ac_up_practical_services } }"))
+        # Known recipient interruption callbacks cannot wait for a weekly
+        # observer: FCU may be restored inside an old offer's reply window.
+        recipient_interrupt += f"clr_country_flag = {pending}\nclr_country_flag = ac_up_{lower}_partner_active\nremove_opinion_modifier = {{ target = {tag} modifier = ac_up_practical_services }}\n"
+        recipient_interrupt += guard("country_exists = " + tag, tag + " = { " + guard("ac_up_participant = yes", "ac_up_interrupt_diplomacy = yes") + " }")
         ident = "ac_up." + str(101 + offset)
         loc(ident + ".t", cfg["name"] + ": A Bounded Service Offer")
         loc(ident + ".d", cfg["name"] + " has offered a defined civil service, with its own administrative cost already paid. Acceptance records a practical relationship and limited recovery work; it is not a request to create another faction, decide the war or commit unlimited capacity. The offer lapses if either participant becomes ineligible. A refusal leaves the sender with a domestic programme to pursue.")
@@ -94,5 +98,7 @@ def build_offers(effects, triggers, decisions):
     effects["ac_up_diplomacy_tick"] = sender_ticks
     effects["ac_up_interrupt_diplomacy"] = interruption
     effects["ac_up_fcu_cleanup"] = guard("tag = FCU original_tag = FCU", recipient_cleanup)
+    effects["ac_up_fcu_interrupt"] = guard("tag = FCU original_tag = FCU", recipient_interrupt)
+    effects["ac_up_status_diplomacy_interrupt"] = guard("ac_up_participant = yes", "ac_up_interrupt_diplomacy = yes\n") + "ac_up_fcu_interrupt = yes\n"
     emit("common/opinion_modifiers/ac_usean_partners.txt", block("opinion_modifiers", block("ac_up_practical_services", "value = 10")))
     loc("ac_up_practical_services", "Accountable Practical Services")

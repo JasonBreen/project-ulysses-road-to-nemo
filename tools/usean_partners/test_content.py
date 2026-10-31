@@ -7,6 +7,7 @@ calls are explicit contract adapters here; those owners have separate suites.
 import argparse
 from collections import Counter
 import copy
+import hashlib
 import importlib.util
 from itertools import product
 import json
@@ -28,6 +29,7 @@ ucw = importlib.util.module_from_spec(spec); sys.modules[spec.name] = ucw; spec.
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--require-dependencies", action="store_true")
+parser.add_argument("--engine", type=Path)
 args, remainder = parser.parse_known_args()
 
 
@@ -449,6 +451,92 @@ class PartnerTests(unittest.TestCase):
             self.assertNotIn("ac_up_" + tag.lower() + "_partner_active", p.flags)
             self.assertFalse(p.opinions); self.assertEqual(c.variables["ac_ucw_recovery"], 47)
 
+    def test_known_annex_capitulation_and_subject_hooks_prevent_rapid_return_revival(self):
+        actions = get(load("common/on_actions/ac_usean_partners.txt"), "on_actions")
+        names = ("on_annex", "on_capitulation_immediate", "on_subject_annexed",
+                 "on_puppet", "on_subject_free", "on_subject_autonomy_level_change")
+        for offset, tag in enumerate(COUNTRIES):
+            for accepted in (False, True):
+                for recipient in (False, True):
+                    for name in names:
+                        timings = (False, True) if name in ("on_annex", "on_capitulation_immediate", "on_puppet") else (True,)
+                        for flag_already_changed in timings:
+                            with self.subTest(tag=tag, accepted=accepted, recipient=recipient,
+                                              hook=name, status_set=flag_already_changed):
+                                w = World("2001.1.1", mode="full"); w.owner_start(); w.earn_programmes(tag, offer=True)
+                                c = w.countries[tag]; p = w.countries["FCU"]
+                                c.variables["ac_up_amber_slots"] = 1
+                                w.run(tag + "_up_send_offer", tag)
+                                if accepted: w.run(tag + "_up_accept_offer", "FCU")
+                                affected = p if recipient else c
+                                if name == "on_annex": affected.exists = not flag_already_changed
+                                if name == "on_capitulation_immediate": affected.capitulated = flag_already_changed
+                                if name in ("on_puppet", "on_subject_autonomy_level_change"): affected.subject = flag_already_changed
+                                after_cost = (c.pp, c.cash)
+                                body = get(get(actions, name), "effect")
+                                if name == "on_annex":
+                                    w.from_country = affected; w.execute(body, w.countries["ERU"])
+                                else:
+                                    w.from_country = w.countries["ERU"]; w.execute(body, affected)
+                                # Restore inside the original sixty-day reply
+                                # window, with NO weekly observer in between.
+                                affected.exists = True; affected.capitulated = False; affected.subject = False
+                                w.today += 1
+                                w.choose("ac_up." + str(101 + offset), 0, "FCU")
+                                w.run("ac_up_fcu_cleanup", "FCU"); w.run("ac_up_diplomacy_tick", tag)
+                                self.assertNotIn("ac_up_offer_pending", c.flags)
+                                self.assertNotIn("ac_up_partner_active", c.flags)
+                                self.assertNotIn("ac_up_" + tag.lower() + "_pending", p.flags)
+                                self.assertNotIn("ac_up_" + tag.lower() + "_partner_active", p.flags)
+                                self.assertFalse(c.opinions); self.assertFalse(p.opinions)
+                                self.assertEqual(47 if accepted else 45, c.variables["ac_ucw_recovery"])
+                                self.assertEqual(after_cost, (c.pp, c.cash))
+                                if tag == "AMB": self.assertEqual(0 if accepted else 1, c.variables["ac_up_amber_slots"])
+                                saved = copy.deepcopy((c, p))
+                                # A repeated callback/reply cannot refund twice.
+                                w.choose("ac_up." + str(101 + offset), 0, "FCU")
+                                w.run("ac_up_status_diplomacy_interrupt", affected.tag)
+                                self.assertEqual(saved, (c, p))
+
+    def test_new_bilateral_war_relation_closes_once_but_other_wars_do_not(self):
+        body = get(get(get(load("common/on_actions/ac_usean_partners.txt"), "on_actions"),
+                       "on_war_relation_added"), "effect")
+        for offset, tag in enumerate(COUNTRIES):
+            for accepted in (False, True):
+                for reverse in (False, True):
+                    w = World("2001.1.1"); w.owner_start(); w.earn_programmes(tag, offer=True)
+                    c = w.countries[tag]; p = w.countries["FCU"]; c.variables["ac_up_amber_slots"] = 1
+                    w.run(tag + "_up_send_offer", tag)
+                    if accepted: w.run(tag + "_up_accept_offer", "FCU")
+                    w.wars.add(frozenset((tag, "FCU")))
+                    w.from_country = c if reverse else p; w.execute(body, p if reverse else c)
+                    w.wars.clear(); w.today += 1
+                    w.choose("ac_up." + str(101 + offset), 0, "FCU")
+                    self.assertNotIn("ac_up_offer_pending", c.flags); self.assertNotIn("ac_up_partner_active", c.flags)
+                    self.assertFalse(c.opinions); self.assertFalse(p.opinions)
+                    self.assertEqual(47 if accepted else 45, c.variables["ac_ucw_recovery"])
+                    if tag == "AMB": self.assertEqual(0 if accepted else 1, c.variables["ac_up_amber_slots"])
+            for combatant in (tag, "FCU"):
+                w = World("2001.1.1"); w.owner_start(); w.earn_programmes(tag, offer=True)
+                c = w.countries[tag]; c.variables["ac_up_amber_slots"] = 1; w.run(tag + "_up_send_offer", tag)
+                w.wars.add(frozenset((combatant, "ERU")))
+                w.from_country = w.countries["ERU"]; w.execute(body, w.countries[combatant])
+                self.assertIn("ac_up_offer_pending", c.flags)
+                w.choose("ac_up." + str(101 + offset), 0, "FCU")
+                self.assertIn("ac_up_partner_active", c.flags)
+
+    def test_immediate_capitulation_cancels_services_before_liberation_without_a_weekly_tick(self):
+        body = get(get(get(load("common/on_actions/ac_usean_partners.txt"), "on_actions"),
+                       "on_capitulation_immediate"), "effect")
+        for tag in COUNTRIES:
+            w = World("2001.1.1"); w.owner_start(); w.earn_programmes(tag)
+            c = w.countries[tag]; first = tag + "_up_" + build.LEASES[tag][0][0] + "_programme"
+            w.run(first + "_start", tag); self.assertIn(first + "_active", c.flags)
+            w.from_country = w.countries["ERU"]; w.execute(body, c)
+            c.capitulated = False; w.today += 181; w.run(first + "_finish", tag)
+            self.assertNotIn(first + "_active", c.flags); self.assertNotIn(first + "_spirit", c.ideas)
+            self.assertEqual(45, c.variables["ac_ucw_recovery"])
+
     def test_programmes_and_offers_require_earned_focuses_and_capacity_milestones(self):
         for tag in COUNTRIES:
             w = World("2001.1.1"); c = w.countries[tag]
@@ -643,6 +731,14 @@ class PartnerTests(unittest.TestCase):
         self.assertEqual(71, len(ideas))
         for idea in ideas:
             self.assertEqual([('always', '=', 'no')], get(idea, 'allowed_civil_war'))
+        captured = json.loads((HERE / "engine_contracts.json").read_text())
+        hooks = get(load("common/on_actions/ac_usean_partners.txt"), "on_actions")
+        self.assertTrue(set(captured["hooks"]) <= {key for key, _, _ in hooks})
+        for row in captured["hooks"].values():
+            self.assertTrue(row["source"].startswith("engine://")); self.assertTrue(row["root"]); self.assertTrue(row["from"])
+        if args.engine:
+            for source in captured["sources"]:
+                self.assertEqual(source["sha256"], hashlib.sha256((args.engine / source["path"].removeprefix("engine://")).read_bytes()).hexdigest())
 
 
 if __name__ == "__main__":

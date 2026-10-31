@@ -4278,6 +4278,64 @@ ac_up_fcu_cleanup = {
 	}
 }
 
+ac_up_fcu_interrupt = {
+	if = {
+		limit = { tag = FCU original_tag = FCU }
+		clr_country_flag = ac_up_sns_pending
+		clr_country_flag = ac_up_sns_partner_active
+		remove_opinion_modifier = { target = SNS modifier = ac_up_practical_services }
+		if = {
+			limit = { country_exists = SNS }
+			SNS = { if = {
+				limit = { ac_up_participant = yes }
+				ac_up_interrupt_diplomacy = yes
+			}
+			 }
+		}
+		clr_country_flag = ac_up_amb_pending
+		clr_country_flag = ac_up_amb_partner_active
+		remove_opinion_modifier = { target = AMB modifier = ac_up_practical_services }
+		if = {
+			limit = { country_exists = AMB }
+			AMB = { if = {
+				limit = { ac_up_participant = yes }
+				ac_up_interrupt_diplomacy = yes
+			}
+			 }
+		}
+		clr_country_flag = ac_up_uge_pending
+		clr_country_flag = ac_up_uge_partner_active
+		remove_opinion_modifier = { target = UGE modifier = ac_up_practical_services }
+		if = {
+			limit = { country_exists = UGE }
+			UGE = { if = {
+				limit = { ac_up_participant = yes }
+				ac_up_interrupt_diplomacy = yes
+			}
+			 }
+		}
+		clr_country_flag = ac_up_del_pending
+		clr_country_flag = ac_up_del_partner_active
+		remove_opinion_modifier = { target = DEL modifier = ac_up_practical_services }
+		if = {
+			limit = { country_exists = DEL }
+			DEL = { if = {
+				limit = { ac_up_participant = yes }
+				ac_up_interrupt_diplomacy = yes
+			}
+			 }
+		}
+	}
+}
+
+ac_up_status_diplomacy_interrupt = {
+	if = {
+		limit = { ac_up_participant = yes }
+		ac_up_interrupt_diplomacy = yes
+	}
+	ac_up_fcu_interrupt = yes
+}
+
 SNS_up_scope_dispatch_chain_start = {
 	if = {
 		limit = { ac_up_active = yes tag = SNS ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = SNS_up_dispatch_register_done has_country_flag = SNS_up_route_permissions_done has_country_flag = SNS_up_depot_receipts_done has_country_flag = SNS_up_allocation_board_done check_variable = { ac_up_sns_contact_records > 0 } }

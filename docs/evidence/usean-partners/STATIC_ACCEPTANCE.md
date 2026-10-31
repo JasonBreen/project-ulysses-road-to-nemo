@@ -1,3 +1,28 @@
+# Current integrated evidence supersedes the component record
+
+The integrated candidate now passes **30 national-content tests and four tests
+against the actual fiscal and institutional owners**, including all 29 operational
+scopes in three fiscal modes. The dependency-required generator gate passes.
+The combined World/Erusean suite passes 20 cases, and the fresh full static
+wrapper plus repaired-screen, macro, ledger, institutional and strict authored
+asset checks pass. These are source/offline observations, not native acceptance
+or remote exact-head CI.
+
+Use the [integration review](../../USEAN_PARTNER_INTEGRATION.md),
+[retained integrated results](integration/results.json) and
+[additional compatibility results](integration/additional-results.json) for the
+current candidate. They include the repaired annexation/capitulation/subject/war
+interruption contracts, current roster and additive Erusean foundation, real tree
+selection priorities, unchanged artwork bytes and primary callback provenance.
+
+The original component was committed as `e7f770f`; its earlier standalone base
+intentionally lacked the real Package 1 owners. **The record below is historical.**
+Its uncommitted-state and missing-dependency statements describe that earlier
+checkpoint and are superseded by the integrated evidence above. Native testing
+remains paused, and publication/remote CI remain separate delivery actions.
+
+---
+
 # Usean partner Package 2: offline evidence
 
 Evidence date: 2026-10-31. Worktree: `G:\Project-Ulysses-Usean-Partners`, branch

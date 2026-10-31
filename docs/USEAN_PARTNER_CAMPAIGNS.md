@@ -102,6 +102,13 @@ refusal, war, subject status, capitulation and annexation close or suspend the
 relationship. Returning countries do not revive a stale agreement or repeat its
 recovery reward.
 
+Verified annexation, immediate capitulation, subject and war-relation callbacks
+also interrupt old offers before a rapid restoration can revive them. These
+handlers preserve paid costs and only return Amber's already-defined pending
+slot once. The [integration review](USEAN_PARTNER_INTEGRATION.md) records the
+captured primary scope contracts, actual regressions and the limitation for
+custom transitions that emit no observable callback.
+
 ## Calendar, outcomes and saves
 
 Only the third preparedness lane requires the April 1996 warning. It bypasses

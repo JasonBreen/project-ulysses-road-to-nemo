@@ -402,7 +402,19 @@ def outputs():
     hooks += block("on_weekly_FCU", block("effect", "ac_up_fcu_cleanup = yes"))
     # Engine on_annex: ROOT is the winner; FROM is the annexed country. Clear
     # paid work at the interruption, before a later release can finish it.
-    hooks += block("on_annex", block("effect", block("FROM", "ac_up_interrupt_services = yes")))
+    interrupted = "ac_up_interrupt_services = yes\nac_up_fcu_interrupt = yes\n"
+    hooks += block("on_annex", block("effect", block("FROM", interrupted)))
+    # Captured primary scope contracts are recorded in engine_contracts.json.
+    # These known callbacks close old work even before a weekly observer runs.
+    hooks += block("on_capitulation_immediate", block("effect", interrupted))
+    hooks += block("on_subject_annexed", block("effect", interrupted))
+    for action in ("on_puppet", "on_subject_free"):
+        hooks += block(action, block("effect", "ac_up_status_diplomacy_interrupt = yes"))
+    hooks += block("on_subject_autonomy_level_change", block("effect", guard("is_subject = yes", "ac_up_status_diplomacy_interrupt = yes")))
+    # A new relation can be a later entry into an existing war. Check both actual
+    # participants, closing only diplomacy whose bilateral owner is now invalid.
+    relation = "ac_up_diplomacy_tick = yes\nac_up_fcu_cleanup = yes\n"
+    hooks += block("on_war_relation_added", block("effect", relation + block("FROM", relation)))
     emit("common/on_actions/ac_usean_partners.txt", block("on_actions", hooks))
     OUT["localisation/english/ac_usean_partners_l_english.yml"] = "\ufeffl_english:\n" + "\n".join(f' {key}:0 "{value.replace(chr(10), chr(92) + "n").replace(chr(34), chr(39))}"' for key, value in LOC.items()) + "\n"
     return dict(OUT)

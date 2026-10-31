@@ -1,8 +1,8 @@
 # Package 1 shared-system integration review
 
-This Package1 candidate adds the full economy and institutional framework on
-the separately reviewable World Foundation prerequisite, PR33. That prerequisite
-includes the repair/privacy package, PR32; both descend from verified main3810d1a.
+This Package 1 candidate adds the full economy and institutional framework on
+the separately reviewable World Foundation prerequisite, PR #33. That prerequisite
+includes the repair/privacy package, PR #32; both descend from verified main `3810d1a`.
 The economy/institutions components retain their individual commits and their
 generated output. This PR adds no partner campaign or squadron story payload.
 The evidence is source/offline only; native acceptance remains paused.
@@ -60,16 +60,18 @@ standalone component testing; that fixture is under `tools/`, never under the
 delivered mod. In this integrated candidate it loads the real narrow owner.
 The combined suite above additionally executes the complete real quote path.
 
-Local checks with Python3.12, Pillow11.3.0 and numpy2.2.6:
+Final source checks use Python 3.12, Pillow 11.3.0 and numpy 2.2.6:
 
 | Check | Result |
 |---|---|
 | Macro source suite | 27 passed, including exact warning/correction/recovery boundaries and duplicate-callback protection. |
-| Institutions source suite | 19 passed, including real cloned-tag weekly dispatch. |
+| Settled-ledger source suite | 14 passed, including monetary carry, history and five-page geometry. |
+| Observable force-upkeep suite | 8 passed, including installed primary contract hashes. |
+| Institutions source suite | 20 passed, including real cloned-tag weekly dispatch. |
 | Shared real-owner suite | 4 passed. |
 | Retained experimental economy suite | 27 passed. |
 | Factions with installed reference | 35 passed, no skips. |
-| Full `Test-UlyssesStatic.ps1` with installed1.19.4.1 read-only reference | Passed. Map errors0; one placeholder-owned state and204 placeholder strategic regions retained. Reference warnings2007 and technology warnings1 remain; no warning-free claim. |
+| Full `Test-UlyssesStatic.ps1` with installed 1.19.4.1 read-only reference | Passed. Map errors 0; one placeholder-owned state and 204 placeholder strategic regions retained. Reference warnings 2006 and technology warnings 1 remain; no warning-free claim. |
 | Authored asset audit `--strict-all` | Passed; zero unresolved texture references and cleaned-family regressions. |
 | Anea foundation and starting-government generators `--check` | Passed with the new history eligibility markers. |
 | Marker regression after PR33 seam correction | Passed. |
@@ -87,11 +89,11 @@ Both authoring orders passed generation plus `--check`:
 1. Anea → world foundation → starting governments → economy.
 2. Economy → starting governments → world foundation → Anea.
 
-All69 country histories and both logistics files had identical byte hashes
+All 69 country histories and both logistics files had identical byte hashes
 after the two orders. The final review candidate also integrates the newer
-World/repair prerequisite2afd9fa. Both DEL sections are retained, the owners are
+World/repair prerequisite `2afd9fa`. Both DEL sections are retained, the owners are
 regenerated in their canonical order, and the registry is refreshed against the
-combined payload. The registry now joins all69 actual fiscal and institutional
+combined payload. The registry now joins all 69 actual fiscal and institutional
 profiles, leader representation, capital source layer, active/emergent/placeholder
 classification and explicit public regional participant declarations. Its source
 profile hashes normalize line endings for Windows/Linux reproducibility. The
@@ -155,10 +157,17 @@ installed engine only as a read-only script reference. Macro and Anea generated
 outputs plus the authored asset audit `--strict-all` passed. A fresh full
 `Test-UlyssesStatic.ps1` with the installed read-only reference also passed
 after the state-receipt changes: map errors 0, retained placeholder warnings 2,
-reference warnings 2007 and technology warnings 1. The retained `results.json`
+reference warnings 2006 and technology warnings 1. The retained `results.json`
 records each executed command and its source-only coverage.
-The initial integration table above describes the earlier checkpoint; the
-follow-up counts in this paragraph supersede its component-suite counts.
+The retained run tests source commit `8a96ff014412d4ca713ddad99168aa16b48d5485`.
+The subsequent review commit adds evidence and the explicitly labeled offline
+screen reconstruction; it does not change the delivered economy or institutions.
+
+The selected-screen consumer dependency audit also passes for
+`ac_macro_economy.gui` against the installed loose-file reference. This establishes
+the inspected screen's resolved source dependencies, not the completed world
+anti-vanilla gate. DLC archives and the global unresolved dependency backlog
+remain separate acceptance work.
 
 ## Native limits
 

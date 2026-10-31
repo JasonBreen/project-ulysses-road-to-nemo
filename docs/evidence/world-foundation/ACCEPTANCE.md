@@ -64,3 +64,10 @@ name and then exact spelling. The eleventh foundation regression compares
 PureWindowsPath and PurePosixPath ordering of mixed-case inputs. The capital
 workflow now runs the registry/foundation and eight capital checks on Windows
 and Linux; final-commit CI results remain separate from these local observations.
+
+The cross-platform job then exposed a last-bit floating-point difference in
+diagnostic squared distances. Capital selection now uses exact rational raster
+moments, with six-decimal diagnostic output. The additional tie regression raises
+the focused capital suite to nine. Both Windows and Linux jobs pass on697b65d;
+all fourteen selected states remain unchanged. This is source reproducibility,
+not native geographic or supply acceptance.

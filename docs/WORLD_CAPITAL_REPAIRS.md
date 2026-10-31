@@ -56,7 +56,7 @@ python -B tools/world_capitals/build.py --check
 python -B tools/Test-WorldCapitals.py
 ```
 
-The eight focused regressions check all69 dispositions, ownership for all62
+The nine focused regressions check all69 dispositions, ownership for all62
 landowning histories, raster-derived reproducibility, area versus province-count
 selection, state-centre tie rules, foreign section preservation and the narrowly
 bounded generated output. Existing foundation/economy packages can add their

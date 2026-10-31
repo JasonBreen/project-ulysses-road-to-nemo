@@ -15,7 +15,19 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install artwork validation dependency
-        run: python -m pip install Pillow==11.3.0
+        run: python -m pip install Pillow==11.3.0 numpy==2.2.6
+      - name: Check Anea country foundations and DLC rosters
+        run: python -B tools/anea/test_foundation.py
+      - name: Check Anea national campaigns
+        run: python -B tools/Test-AneaCampaign.py
+      - name: Check Anea aid and recovery lifecycle
+        run: python -B tools/Test-AneaSystems.py
+      - name: Check Anea original artwork and bindings
+        run: python -B tools/Test-AneaArt.py
+      - name: Check Anea country selection and office presentation
+        run: python -B tools/Test-AneaPresentation.py
+      - name: Check integrated Anea historical and alternate routes
+        run: python -B tools/Test-AneaIntegration.py
       - name: Check Usean expansion
         run: python -B tools/Test-UseaExpansion.py
       - name: Check interface repairs and starting governments

@@ -1,0 +1,23 @@
+Anea artwork packaging compatibility — 30 October 2026
+Coverage: offline packaging only; no desktop or native HOI4 use.
+
+CI dependency: Pillow==11.3.0
+Local default Pillow: 11.0.0
+Isolation: pip --target runtime-output/anea-pillow113 --no-deps
+The target is ignored by Git and system Python packages were not changed.
+
+Validation command from repository root:
+python -B -c "import sys,runpy;sys.path.insert(0,'runtime-output/anea-pillow113');import PIL;print('Pillow isolated target:',PIL.__version__);sys.argv=['tools/anea/build_art.py','--check'];runpy.run_path('tools/anea/build_art.py',run_name='__main__')"
+
+Observed output:
+Pillow isolated target: 11.3.0
+Anea artwork: 162 textures, 272 sprite bindings; 108 distinct focus compositions; sources and output verified.
+
+Delivered DDS files, asset manifests, sprite bindings and HTML reproduce exactly.
+Review PNG compression differed between Pillow versions; a separate RGBA pixel
+comparison returned no difference. Review PNG checks compare exact pixels, while
+delivered textures and metadata retain byte-for-byte verification.
+
+The two existing Anea country histories were compared byte-for-byte before and
+after starting-government packaging; neither changed during that packaging step.
+The existing character IDs, portrait sprite names and 51 asset rows are retained.

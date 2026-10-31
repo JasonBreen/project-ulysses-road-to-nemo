@@ -18,7 +18,7 @@ LOC = {}
 
 
 def block(key, body):
-    return key + ' = {\n' + '\n'.join('\t' + line if line else '' for line in body.splitlines()) + '\n}\n'
+    return key + ' = {\n' + '\n'.join('\t' + line.rstrip() if line.strip() else '' for line in body.splitlines()) + '\n}\n'
 
 
 def loc(key, text):

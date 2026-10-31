@@ -14,7 +14,7 @@ LOC = {}
 
 
 def block(name, body):
-    return name + ' = {\n' + '\n'.join('\t' + line for line in body.strip().splitlines()) + '\n}\n'
+    return name + ' = {\n' + '\n'.join('\t' + line.rstrip() if line.strip() else '' for line in body.strip().splitlines()) + '\n}\n'
 
 
 def put(path, body):

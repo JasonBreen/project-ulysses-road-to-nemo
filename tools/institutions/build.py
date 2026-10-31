@@ -19,7 +19,7 @@ from content import FOCUSES,CHOICES,BESPOKE,IDEAS,FORM_PROGRAMMES
 OUT={};LOC={}
 
 
-def block(key,body):return key+' = {\n'+''.join('\t'+line+'\n' for line in body.splitlines())+'}\n'
+def block(key,body):return key+' = {\n'+''.join(('\t'+line if line else '')+'\n' for line in body.splitlines())+'}\n'
 def guarded(condition,body):return block('if',block('limit',condition)+body)
 def loc(key,text):
     if key in LOC and LOC[key]!=text:raise ValueError('Localization conflict '+key)

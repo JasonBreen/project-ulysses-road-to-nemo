@@ -144,6 +144,7 @@ def country_output(tag, row):
     for kind, amount in [('infantry_equipment_1', 5000), ('support_equipment_1', 1000), ('artillery_equipment_1', 600), ('motorized_equipment_1', 1500), ('mechanized_equipment_1', 600), ('train_equipment_1', 120)]:
         text += block('add_equipment_to_stockpile', f'type = {kind}\namount = {amount}\nproducer = {tag}')
     # Preserve the starting-government generator's ownership marker verbatim.
+    text += '\n# BEGIN ECONOMY V2 NEW CAMPAIGN\n# New histories only; old saves are never reseeded.\nset_country_flag = ac_macro_history_eligible\n# END ECONOMY V2 NEW CAMPAIGN\n'
     text += '\n# BEGIN EXPANSION START LEADER\n# New campaigns only; provenance: tools/usea_expansion/leaders.json.\nrecruit_character = ' + tag + '_ac_government_office\n# END EXPANSION START LEADER\n'
     return text
 

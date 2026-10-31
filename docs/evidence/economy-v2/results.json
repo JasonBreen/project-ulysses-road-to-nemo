@@ -1,0 +1,120 @@
+{
+  "coverage": "source and offline validation only",
+  "base_commit": "3810d1abeb9749a265b7b48e8d9eccddf08b1be2",
+  "source_state": "working-tree candidate; validation logs are not native evidence",
+  "checks": [
+    {
+      "check": "macro",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-EconomyV2.py"
+      ],
+      "exit_code": 0,
+      "seconds": 30.94,
+      "log": "macro.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "legacy",
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_economy.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.44,
+      "log": "legacy.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "factions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-UlyssesFactions.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.41,
+      "log": "factions.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "interfaces",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-InterfaceRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.61,
+      "log": "interfaces.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "generated-macro",
+      "command": [
+        "python",
+        "-B",
+        "tools/economy_v2/build.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.25,
+      "log": "generated-macro.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "generated-anea",
+      "command": [
+        "python",
+        "-B",
+        "tools/anea/foundation.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.19,
+      "log": "generated-anea.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.69,
+      "log": "assets.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "core",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 281.97,
+      "log": "core.txt",
+      "coverage": "source/offline; not native acceptance"
+    }
+  ],
+  "native_status": "paused; untested"
+}

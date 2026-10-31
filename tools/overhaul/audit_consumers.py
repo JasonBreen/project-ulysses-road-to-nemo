@@ -68,7 +68,8 @@ class EffectiveFiles:
                 and (not authored_only or origin == "mod")]
 
     def resource(self, value, source=None):
-        relative = normal(value)
+        requested = normal(value)
+        relative = requested
         found = self._files.get(relative)
         if found is None and source:
             # Sound assets sometimes use a path relative to their definition.
@@ -82,11 +83,11 @@ class EffectiveFiles:
             return dict(path=normal(value), status="missing_asset", isolated_engine_path=True)
         # Engine shaders are services, not artwork, and are intentionally not
         # copied into the mod. Retain their ownership in the report.
-        candidate = self.engine / normal(value)
+        candidate = self.engine / requested
         if candidate.is_file():
             return dict(path=normal(value), status="engine_service" if candidate.suffix.lower() in (".lua", ".fx", ".shader", ".fxh") else "engine_asset")
-        if relative.endswith(".lua"):
-            shader = relative[:-4] + ".shader"
+        if requested.endswith(".lua"):
+            shader = requested[:-4] + ".shader"
             if (self.engine / shader).is_file():
                 return dict(path=shader, status="engine_service", legacy_alias=normal(value))
         return dict(path=normal(value), status="missing_asset")

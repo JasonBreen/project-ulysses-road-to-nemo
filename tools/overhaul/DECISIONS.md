@@ -22,7 +22,7 @@ python -B tools/Test-DecisionUI.py
 python -B tools/audit_visual_dependencies.py --strict-all
 ```
 
-Ordinary generation and all eleven focused tests need no installed game. The
+Ordinary generation and all twelve focused tests need no installed game. The
 explicit developer-only `--capture-contract <engine>` command refreshes format
 metadata; it is not part of a normal reproducible build. Capture normalizes old
 `.lua` effect aliases to existing `.shader` services without copying their code.

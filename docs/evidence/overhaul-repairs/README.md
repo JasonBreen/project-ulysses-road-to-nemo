@@ -31,7 +31,7 @@ oversized inline prefixes were removed without shortening narrative prose.
 
 The retained `validation/static-results.json` records **27 passing check groups**
 with their commands and logs. The focused suites include seven overview/fiscal/
-label regressions, eleven decision/dependency tests and nine focus-screen tests.
+label regressions, twelve decision/dependency tests and nine focus-screen tests.
 The focus geometry check resolves 25 trees and 950 focus instances, with zero
 caption intersections after seven inherited placement repairs. All 883 currently
 localized focus IDs fit the measured three-line caption contract.

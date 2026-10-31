@@ -130,6 +130,14 @@ class EffectiveConsumers(unittest.TestCase):
         screen = Audit(self.mod, self.engine).screen("countrydecisionview.gui")
         self.assertTrue(any("GFX_engine_thumb:engine_fallback" in f for f in screen["failures"]))
 
+    def test_shader_alias_uses_original_path_after_source_relative_probe(self):
+        self.put(self.engine, "gfx/fx/buttonstate.shader", "engine shader service")
+        resource = EffectiveFiles(self.mod, self.engine).resource(
+            "gfx/fx/buttonstate.lua", "interface/nationalfocusview.gfx")
+        self.assertEqual("engine_service", resource["status"])
+        self.assertEqual("gfx/fx/buttonstate.shader", resource["path"])
+        self.assertEqual("gfx/fx/buttonstate.lua", resource["legacy_alias"])
+
     def test_runtime_decision_icons_are_in_the_screen_gate(self):
         self.sprite(self.mod, "GFX_panel")
         self.put(self.mod, "interface/countrydecisionview.gui", 'guiTypes={containerWindowType={name="countrydecisionview" iconType={name="bg" spriteType="GFX_panel"}}}')

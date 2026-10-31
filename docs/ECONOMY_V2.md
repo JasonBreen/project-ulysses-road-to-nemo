@@ -98,9 +98,29 @@ arrears, pays old arrears from surplus, and updates real conditions/readiness,
 crisis state, replacement programmes and AI priorities. Forecasts are recomputed
 afterwards; last-settled values remain distinct.
 
+Monthly receipts and bills settle in **0.001-billion quanta**. Their forecasts
+accrue separately in milli-units, where one unit equals 0.001 billion. Fractional
+revenue and obligation remainders persist independently and are consumed only
+by the authorized monthly owner. Small bases are scaled before policy fractions
+and monthly division; larger bases are reduced before scaling to avoid needless
+large intermediates. A quote or UI action cannot round, reset or spend a carry.
+This is an approved provisional accounting rule, not a canonical currency.
+
 Without external transactions or consumed replacement escrow:
 
 `Δ(cash + escrow − debt − arrears) = settled revenue − billed obligations`.
+
+Including uncollected and unbilled accruals:
+
+`Δ(cash + escrow − debt − arrears + revenue_carry/1000 − bill_carry/1000)`
+`= new accrued revenue − new accrued obligations`.
+
+The two carries use milli-units. Rounding to the nearest integer and correcting
+any upward result implements floor settlement for nonnegative accruals without
+depending on a particular nearest-integer tie convention. Remainders are never
+forgiven. Their source implementation cannot reconstruct precision lost earlier
+by the native engine; smallest recurring charges and largest 2020 intermediates
+remain explicit native probes.
 
 Borrow/repay conserve this position. Unpaid obligations become arrears instead
 of disappearing. Paying those arrears reduces cash and arrears equally. Escrow
@@ -149,7 +169,7 @@ inheritance paths remain a required test.
 | `ac_macro_ready` | Full mode, initialized identity, and owned land. |
 | `ac_econ_ready` | Compatibility readiness: full or saved experimental mode. Disabled mode stays inactive. |
 | `ac_macro_quote` / `ac_econ_refresh_budget` | Recompute forecasts and display aliases; never settle money, advance production, or replay starting grants. |
-| `ac_macro_try_spend` | Positive temp `ac_macro_transaction_amount`, in billions; rechecks cash/arrears/readiness. Clears then sets `ac_macro_transaction_succeeded` on successful payment. Consumer gates its reward and once-only flag on success. |
+| `ac_macro_try_spend` | Temp `ac_macro_transaction_amount`, in billions, at least 0.001; rechecks cash/arrears/readiness. A smaller payment is rejected without success or reward. Clears the previous result before readiness, then sets `ac_macro_transaction_succeeded` only on successful payment. Consumer gates its reward and once-only flag on success. |
 | `ac_macro_receive` | Receives a positive temp amount. The originating deal/event owns its once-only and partner checks; this effect is not a bilateral-money-creation system. |
 | `ac_macro_change_commitment` | Adds signed temp `ac_macro_commitment_delta` to annual commitments. Consumer records the exact applied amount and owns once-only addition/removal. |
 | `ac_macro_apply_disruption` | Bounded positive temp `ac_macro_disruption_delta`, applied to currently controlled state economies; caller owns historical/once-only eligibility. |
@@ -169,19 +189,26 @@ on every country. No new border, tag, leader or historical outcome is authored.
 
 ## UI, verification and release gates
 
-The current full-mode HUD opens five direct-control pages: Economy, Budget, Finance,
-Industry and Forces. Direct visibility rules prevent the prior nested-page
-overlap defect. The 860×640 window uses original navy/cyan RGBA DDS geometry and
+The full-mode HUD opens five direct-control pages: Overview, Budget, Industry,
+Debt / contracts, and Ledger. Industry includes the physical force obligations
+and readiness. Direct visibility rules prevent the prior nested-page overlap
+defect. The 860×700 window uses original navy/cyan RGBA DDS geometry and
 the existing authored ACBriefing fonts. It retains Escape/close and dragging.
 The saved experimental mode retains its three-page directorate and its actual
 transaction owners. Full-mode source bounds and frame hashes are checked
 offline; actual rendering/input remains untested.
 
-This page arrangement is an implementation gap against the accepted Overview,
-Budget, Industry and readiness, Debt and contracts, and Ledger structure. A
-rolling settled-history ledger and its graphs are not implemented in this
-integration candidate; their follow-up remains required before claiming the
-approved economy interface complete.
+The ledger retains twelve **actual settlements**, newest first in its numeric
+table and oldest left/latest right in its graphs. Opening forecasts do not
+create zero-filled historical observations. Records preserve the output/prices
+used to bill the period, quantized receipts and obligations, paid amounts,
+borrowing, arrears additions/payments, closing stocks and separate carries.
+The internal ledger receipt is authorized and consumed once by settlement; it
+is cleared on new account initialization, including cloned identities. Quotes,
+tabs, reload initialization and forecast refresh never shift history. Graphs
+have 33 authored frames with a reserved baseline pixel, so the first nonzero
+level remains visible. The source tests inspect actual bitmap glyph ink and
+frame pixels; rendered engine acceptance is still pending.
 
 Reproduce and check from repository root:
 
@@ -190,6 +217,9 @@ python -B tools/economy_v2/build.py
 python -B tools/economy_v2/build.py --check
 python -B tools/usea_expansion/build_dashboard.py --check
 python -B tools/Test-EconomyV2.py
+python -B tools/Test-EconomyLedger.py
+python -B tools/Test-SharedSystems.py
+python -B tools/Test-Institutions.py
 python -B -m unittest discover -s tools -p test_economy.py
 python -B tools/Test-UlyssesFactions.py
 ```

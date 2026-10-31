@@ -14,6 +14,7 @@ ROOT = HERE.parents[1]
 MOD = ROOT / 'mod/2985041246'
 sys.path.insert(0, str(ROOT/'tools/usea_expansion'))
 from script import parse, render, get, setv, walk
+import ledger, money
 
 MARKER = '# BEGIN ECONOMY V2 NEW CAMPAIGN\n# New histories only; old saves are never reseeded.\nset_country_flag = ac_macro_history_eligible\n# END ECONOMY V2 NEW CAMPAIGN\n'
 CATEGORIES = ('administration', 'services', 'education', 'development', 'defense')
@@ -132,6 +133,7 @@ if = { limit = { has_variable = ac_macro_identity NOT = { check_variable = { var
  clr_country_flag = ac_macro_monthly_authorized
 }
 set_country_flag = ac_macro_initialized
+clr_country_flag = ac_macro_ledger_authorized
 set_variable = { ac_macro_schema = 2 }
 set_variable = { ac_macro_identity = THIS.id }
 set_variable = { ac_macro_ui_page = 0 }
@@ -173,6 +175,7 @@ set_variable = { ac_macro_construction_modifier = 0 }
 set_variable = { ac_macro_last_settlement = 0 }
 set_variable = { ac_macro_last_factories = num_of_controlled_factories }
 '''
+    init += ledger.initialize() + money.initialize()
     init += '\n'.join('set_variable = { ac_macro_budget_'+c+' = 1 }' for c in CATEGORIES)+'\n'
     init += '''ac_macro_profile = yes
 if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 }
@@ -230,73 +233,9 @@ add_to_variable = { ac_macro_effective_collection = 0.9 }
 multiply_variable = { ac_macro_effective_collection = ac_macro_collection }
 multiply_variable = { ac_macro_effective_collection = ac_macro_funding }
 clamp_variable = { var = ac_macro_effective_collection min = 0.1 max = 0.98 }
-set_variable = { ac_macro_revenue = 0 }
 '''
-    for tax,share in [('income',.55),('business',.25),('consumption',.65)]:
-        quote += f'''set_variable = {{ ac_macro_revenue_{tax} = ac_macro_tax_base }}
-multiply_variable = {{ ac_macro_revenue_{tax} = {share} }}
-multiply_variable = {{ ac_macro_revenue_{tax} = ac_macro_{tax}_tax }}
-multiply_variable = {{ ac_macro_revenue_{tax} = ac_macro_effective_collection }}
-divide_variable = {{ ac_macro_revenue_{tax} = 12 }}
-add_to_variable = {{ ac_macro_revenue = ac_macro_revenue_{tax} }}
-'''
-    quote += 'set_variable = { ac_macro_operating = 0 }\n'
-    for c,share in SHARES.items():
-        quote += f'''set_variable = {{ ac_macro_spending_{c} = ac_macro_nominal_gdp }}
-multiply_variable = {{ ac_macro_spending_{c} = {share} }}
-set_temp_variable = {{ ac_macro_category_factor = ac_macro_budget_{c} }}
-multiply_temp_variable = {{ ac_macro_category_factor = 0.25 }}
-add_to_temp_variable = {{ ac_macro_category_factor = 0.75 }}
-multiply_variable = {{ ac_macro_spending_{c} = ac_macro_category_factor }}
-divide_variable = {{ ac_macro_spending_{c} = 12 }}
-add_to_variable = {{ ac_macro_operating = ac_macro_spending_{c} }}
-'''
-    quote += '''# Aggregate real deployed-force snapshot: annual operating obligations.
-set_variable = { ac_macro_upkeep = deployed_army_manpower_k }
-set_temp_variable = { ac_macro_personnel = deployed_navy_manpower_k }
-add_to_temp_variable = { ac_macro_personnel = deployed_airforce_manpower_k }
-add_to_variable = { ac_macro_upkeep = ac_macro_personnel }
-multiply_variable = { ac_macro_upkeep = 0.06 }
-set_temp_variable = { ac_macro_air_ops = num_deployed_planes }
-multiply_temp_variable = { ac_macro_air_ops = 0.01 }
-add_to_variable = { ac_macro_upkeep = ac_macro_air_ops }
-set_temp_variable = { ac_macro_sea_ops = num_ships }
-multiply_temp_variable = { ac_macro_sea_ops = 0.08 }
-add_to_variable = { ac_macro_upkeep = ac_macro_sea_ops }
-set_temp_variable = { ac_macro_sea_ops = num_ships_with_type@carrier }
-multiply_temp_variable = { ac_macro_sea_ops = 0.8 }
-add_to_variable = { ac_macro_upkeep = ac_macro_sea_ops }
-set_temp_variable = { ac_macro_sea_ops = num_ships_with_type@submarine }
-multiply_temp_variable = { ac_macro_sea_ops = 0.02 }
-add_to_variable = { ac_macro_upkeep = ac_macro_sea_ops }
-if = { limit = { has_war = yes } multiply_variable = { ac_macro_upkeep = 1.5 } }
-divide_variable = { ac_macro_upkeep = 12 }
-# Defense allocation is the financed envelope; physical-force upkeep is the floor.
-if = { limit = { check_variable = { ac_macro_upkeep > ac_macro_spending_defense } }
- subtract_from_variable = { ac_macro_operating = ac_macro_spending_defense }
- set_variable = { ac_macro_spending_defense = ac_macro_upkeep }
- add_to_variable = { ac_macro_operating = ac_macro_spending_defense }
-}
-set_variable = { ac_macro_debt_ratio = 0 }
-if = { limit = { check_variable = { ac_macro_nominal_gdp > 0 } }
- set_variable = { ac_macro_debt_ratio = ac_macro_debt }
- divide_variable = { ac_macro_debt_ratio = ac_macro_nominal_gdp }
-}
-set_variable = { ac_macro_interest_rate = ac_macro_policy_rate }
-if = { limit = { check_variable = { ac_macro_debt_ratio > 0.6 } } add_to_variable = { ac_macro_interest_rate = 2 } }
-if = { limit = { check_variable = { ac_macro_debt_ratio > 1 } } add_to_variable = { ac_macro_interest_rate = 3 } }
-if = { limit = { check_variable = { ac_macro_arrears > 0 } } add_to_variable = { ac_macro_interest_rate = 3 } }
-set_variable = { ac_macro_interest = ac_macro_debt }
-multiply_variable = { ac_macro_interest = ac_macro_interest_rate }
-divide_variable = { ac_macro_interest = 1200 }
-set_variable = { ac_macro_bill = ac_macro_operating }
-add_to_variable = { ac_macro_bill = ac_macro_interest }
-set_temp_variable = { ac_macro_commitment_month = ac_macro_commitments_annual }
-divide_temp_variable = { ac_macro_commitment_month = 12 }
-add_to_variable = { ac_macro_bill = ac_macro_commitment_month }
-set_variable = { ac_macro_balance = ac_macro_revenue }
-subtract_from_variable = { ac_macro_balance = ac_macro_bill }
-set_variable = { ac_macro_credit_limit = ac_macro_nominal_gdp }
+    quote += money.quote(SHARES)
+    quote += '''set_variable = { ac_macro_credit_limit = ac_macro_nominal_gdp }
 set_variable = { ac_macro_credit_room = ac_macro_credit_limit }
 subtract_from_variable = { ac_macro_credit_room = ac_macro_debt }
 clamp_variable = { var = ac_macro_credit_room min = 0 }
@@ -304,9 +243,9 @@ set_variable = { ac_macro_loan_size = ac_macro_nominal_gdp }
 multiply_variable = { ac_macro_loan_size = 0.005 }
 clamp_variable = { var = ac_macro_loan_size min = 0.001 }
 set_variable = { ac_macro_defense_funding = 1 }
-if = { limit = { check_variable = { ac_macro_upkeep > 0 } }
- set_variable = { ac_macro_defense_funding = ac_macro_spending_defense }
- divide_variable = { ac_macro_defense_funding = ac_macro_upkeep }
+if = { limit = { check_variable = { ac_macro_upkeep_milli > 0 } }
+ set_variable = { ac_macro_defense_funding = ac_macro_spending_defense_milli }
+ divide_variable = { ac_macro_defense_funding = ac_macro_upkeep_milli }
  clamp_variable = { var = ac_macro_defense_funding min = 0 max = 1 }
 }
 multiply_variable = { ac_macro_defense_funding = ac_macro_funding }
@@ -324,31 +263,29 @@ if = { limit = { NOT = { has_dynamic_modifier = { modifier = ac_macro_economy_mo
 clr_country_flag = ac_macro_monthly_authorized
 set_variable = { ac_macro_last_settlement = date }
 ac_macro_quote = yes
-set_variable = { ac_macro_last_revenue = ac_macro_revenue }
-set_variable = { ac_macro_last_bill = ac_macro_bill }
-set_variable = { ac_macro_last_borrowed = 0 }
+''' + money.settle() + '''set_variable = { ac_macro_last_borrowed = 0 }
 set_variable = { ac_macro_last_arrears_added = 0 }
 set_variable = { ac_macro_last_arrears_paid = 0 }
 set_variable = { ac_macro_previous_arrears = ac_macro_arrears }
-add_to_variable = { ac_macro_cash = ac_macro_revenue }
-if = { limit = { check_variable = { ac_macro_cash < ac_macro_bill } }
- set_temp_variable = { ac_macro_financing = ac_macro_bill }
+add_to_variable = { ac_macro_cash = ac_macro_last_revenue }
+if = { limit = { check_variable = { ac_macro_cash < ac_macro_last_bill } }
+ set_temp_variable = { ac_macro_financing = ac_macro_last_bill }
  subtract_from_temp_variable = { ac_macro_financing = ac_macro_cash }
  if = { limit = { check_variable = { ac_macro_financing > ac_macro_credit_room } } set_temp_variable = { ac_macro_financing = ac_macro_credit_room } }
  add_to_variable = { ac_macro_cash = ac_macro_financing }
  add_to_variable = { ac_macro_debt = ac_macro_financing }
  set_variable = { ac_macro_last_borrowed = ac_macro_financing }
 }
-set_variable = { ac_macro_last_paid = ac_macro_bill }
+set_variable = { ac_macro_last_paid = ac_macro_last_bill }
 if = { limit = { check_variable = { ac_macro_last_paid > ac_macro_cash } } set_variable = { ac_macro_last_paid = ac_macro_cash } }
 subtract_from_variable = { ac_macro_cash = ac_macro_last_paid }
-set_variable = { ac_macro_last_arrears_added = ac_macro_bill }
+set_variable = { ac_macro_last_arrears_added = ac_macro_last_bill }
 subtract_from_variable = { ac_macro_last_arrears_added = ac_macro_last_paid }
 add_to_variable = { ac_macro_arrears = ac_macro_last_arrears_added }
 set_variable = { ac_macro_funding = 1 }
-if = { limit = { check_variable = { ac_macro_bill > 0 } }
+if = { limit = { check_variable = { ac_macro_last_bill > 0 } }
  set_variable = { ac_macro_funding = ac_macro_last_paid }
- divide_variable = { ac_macro_funding = ac_macro_bill }
+ divide_variable = { ac_macro_funding = ac_macro_last_bill }
 }
 if = { limit = { check_variable = { ac_macro_cash > 0 } check_variable = { ac_macro_arrears > 0 } }
  set_temp_variable = { ac_macro_payment = ac_macro_cash }
@@ -364,6 +301,9 @@ ac_macro_replacement_cycle = yes
 ac_macro_ai_policy = yes
 ac_macro_quote = yes
 '''
+    settle = settle.replace('ac_macro_quote = yes\n', 'ac_macro_quote = yes\n' + ledger.snapshot(), 1)
+    settle = settle.replace('ac_macro_ai_policy = yes\nac_macro_quote = yes',
+                            'ac_macro_ai_policy = yes\n' + ledger.record() + 'ac_macro_quote = yes', 1)
     effect('ac_macro_settle_month',block('if',settle))
     real = '''set_variable = { ac_macro_growth = ac_macro_base_growth }
 set_temp_variable = { ac_macro_capacity_change = ac_macro_factory_capacity }
@@ -491,7 +431,7 @@ subtract_from_variable = { ac_macro_debt = ac_macro_payment }
 ac_macro_quote = yes'''))
     # A result flag is per-call diagnostic state, not an inactive fiscal write.
     # Always clear it before readiness so a previous success cannot be reused.
-    effect('ac_macro_try_spend','clr_country_flag = ac_macro_transaction_succeeded\n'+guard('''if = { limit = { check_variable = { ac_macro_transaction_amount > 0 } check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= ac_macro_transaction_amount } }
+    effect('ac_macro_try_spend','clr_country_flag = ac_macro_transaction_succeeded\n'+guard('''if = { limit = { check_variable = { ac_macro_transaction_amount >= 0.001 } check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= ac_macro_transaction_amount } }
  subtract_from_variable = { ac_macro_cash = ac_macro_transaction_amount }
  set_country_flag = ac_macro_transaction_succeeded
 }
@@ -580,6 +520,7 @@ def build():
     out = legacy_and_adapters()
     out['common/scripted_effects/ac_macro_profiles.txt'] = profile_effects(data)
     out['common/scripted_effects/ac_macro_effects.txt'] = economic_effects()
+    out['common/scripted_effects/ac_macro_ledger.txt'] = ledger.effects()
     out['common/scripted_triggers/ac_macro_triggers.txt'] = macro_triggers()
     out['common/game_rules/ac_economy_rules.txt'] = rules()
     out['common/on_actions/ac_macro_on_actions.txt'] = '''on_actions = {

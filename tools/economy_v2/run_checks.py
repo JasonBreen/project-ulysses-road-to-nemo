@@ -32,6 +32,9 @@ def main():
     py=[sys.executable,'-B']
     checks={
         'macro':py+['tools/Test-EconomyV2.py'],
+        'ledger':py+['tools/Test-EconomyLedger.py'],
+        'shared-owners':py+['tools/Test-SharedSystems.py'],
+        'institutions':py+['tools/Test-Institutions.py'],
         'legacy':py+['-m','unittest','discover','-s','tools','-p','test_economy.py'],
         'factions':py+['tools/Test-UlyssesFactions.py'],
         'interfaces':py+['tools/Test-InterfaceRepairs.py'],
@@ -39,6 +42,7 @@ def main():
         'generated-anea':py+['tools/anea/foundation.py','--check'],
         'assets':py+['tools/audit_visual_dependencies.py','--strict-all'],
     }
+    if a.engine:checks['factions']+=['--reference-game-root',str(a.engine)]
     if a.core:
         checks['core']=['powershell','-NoProfile','-ExecutionPolicy','Bypass','-File','tools/Test-UlyssesStatic.ps1','-ModRoot','mod/2985041246']
         if a.engine:checks['core']+=['-ReferenceGameRoot',str(a.engine)]

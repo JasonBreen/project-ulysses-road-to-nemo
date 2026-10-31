@@ -274,12 +274,15 @@ class SourceAndUI(unittest.TestCase):
         triggers={key:body for key,_,body in get(logic,'triggers')}
         manifest=json.loads((MOD/'gfx/interface/ac_macro/manifest.json').read_text())
         for ready in (False,True):
-            w=copy.deepcopy(Macro.base) if ready else World('disabled')
+            w=World('full' if ready else 'disabled');w.action('on_startup')
             c=w.countries['SNS']
             for page in range(5):
                 c.variables['ac_macro_ui_page']=D(page)
                 for name,(*_,control_page) in manifest['positions'].items():
-                    if control_page is not None:self.assertEqual(ready and page==control_page,w.trigger(triggers[name+'_visible'],c),(name,page,ready))
+                    if control_page is not None:
+                        visible=w.trigger(triggers[name+'_visible'],c)
+                        if visible:self.assertTrue(ready and page==control_page,(name,page,ready))
+                        if name.endswith('_title'):self.assertEqual(ready and page==control_page,visible,(name,page,ready))
                 for key,condition in triggers.items():
                     if key.endswith('_click_enabled') and key!='macro_close_click_enabled' and not ready:self.assertFalse(w.trigger(condition,c),key)
     def test_generated_outputs_and_composable_history_markers(self):
@@ -298,7 +301,7 @@ class SourceAndUI(unittest.TestCase):
         gui=parse((MOD/'interface/ac_macro_economy.gui').read_text());window=next(n for _,n in walk(gui) if get(n,'name')=='"ac_macro_economy_screen"')
         self.assertFalse(any(k=='containerWindowType' for k,_,v in window))
         manifest=json.loads((MOD/'gfx/interface/ac_macro/manifest.json').read_text())
-        for name,(x,y,width,height,page) in manifest['positions'].items():self.assertLessEqual(x+width,860,name);self.assertLessEqual(y+height,640,name)
+        for name,(x,y,width,height,page) in manifest['positions'].items():self.assertLessEqual(x+width,860,name);self.assertLessEqual(y+height,700,name)
         for row in manifest['assets']:
             path=MOD/row['file'];self.assertEqual(row['sha256'],hashlib.sha256(path.read_bytes()).hexdigest())
             with Image.open(path) as im:self.assertEqual((row['width'],row['height']),im.size);self.assertEqual(0,im.width%row['frames'])

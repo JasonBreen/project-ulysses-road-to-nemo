@@ -91,12 +91,33 @@ into this PR. When PR33 is integrated, retain both DEL sections, regenerate with
 the corrected marker owner, and refresh any derived world registry against the
 combined payload.
 
-## Required follow-up and native limits
+## Settled ledger and monetary carry follow-up
 
-The current five-page interface still differs from the accepted Overview,
-Budget, Industry and readiness, Debt and contracts, and Ledger arrangement. The
-rolling12-month settled ledger and history graphs are a separate required
-follow-up; this integration does not claim that interface contract complete.
+The following source changes complete the previously recorded page/ledger gap.
+The five pages now present Overview, Budget, Industry and readiness, Debt and
+contracts, and a twelve-record settled Ledger in an 860×700 window. Ledger
+snapshots retain the period's billed bases and actual paid/unpaid flows; the
+opening forecast never becomes a historical observation. Only authorized
+settlement writes or shifts records. All33 graph frames are distinct, including
+the first nonzero level. Font tests read shipped bitmap advances and actual ink
+bounds, including the 19-pixel table rows.
+
+Monthly receipts and bills use a 0.001-billion payment quantum with separate
+fractional milli-unit carries. Forecasts remain estimates; settlement floors
+whole quanta and retains the remainder. The conservation identity includes
+uncollected revenue and unbilled obligation carries. A sub-quantum public spend
+is rejected after clearing any stale success result. This approved gameplay
+accounting rule cannot recover arithmetic already lost by native precision.
+
+`tools/Test-EconomyLedger.py` adds 12 actual-source/geometry cases: authorized
+history recording, twelve-entry order, no fabricated opening, pure UI/quotes,
+offline reload copies, clone and release identity, underfunding and arrears
+payment, tiny recurring commitments, the largest-profile synthetic 2020 path,
+conditional pages, actual glyph ink, and signed graph-frame pixels. The shared
+owner test now includes the carried institutional fraction in its comparison,
+instead of requiring a sub-quantum bill to be paid prematurely.
+
+## Native limits
 
 The interpreters use Decimal/ordinal-date models. They do not prove HOI4 fixed
 point precision, dynamic-variable observations, native save inheritance,

@@ -91,7 +91,12 @@ class SharedOwners(unittest.TestCase):
         self.assertEqual(cash, c.variables['ac_macro_cash']); self.assertEqual(0, c.variables['ac_macro_settlements'])
         snapshot = copy.deepcopy(c); w.run('ac_pol_sync_fiscal', 'SNS'); self.assertEqual(snapshot, c)
         w.month('SNS'); control.month('SNS')
-        self.assertLess(abs(c.variables['ac_macro_last_bill'] - control.countries['SNS'].variables['ac_macro_last_bill'] - applied / 12), D('1e-20'))
+        # Bills settle in0.001b quanta. The exact smaller obligation remains in
+        # the owner's separate milli-unit carry rather than disappearing.
+        reference=control.countries['SNS'].variables
+        accrued=c.variables['ac_macro_last_bill']+c.variables['ac_macro_bill_carry_milli']/1000
+        baseline=reference['ac_macro_last_bill']+reference['ac_macro_bill_carry_milli']/1000
+        self.assertLess(abs(accrued-baseline-applied/12),D('1e-20'))
         self.assertEqual(1, c.variables['ac_macro_settlements'])
         w.run('ac_pol_suspend_policy', 'SNS'); self.assertEqual(0, c.variables['ac_macro_commitments_annual'])
 

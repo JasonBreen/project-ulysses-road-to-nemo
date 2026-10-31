@@ -6,7 +6,7 @@ or native save serialization evidence.
 """
 from dataclasses import dataclass, field
 from datetime import date
-from decimal import Decimal as D
+from decimal import Decimal as D, ROUND_HALF_UP
 from pathlib import Path
 import json, sys
 
@@ -161,6 +161,11 @@ class World:
                 if 'min' in data:current=max(current,self.number(data['min'],context,temp,root,previous))
                 if 'max' in data:current=min(current,self.number(data['max'],context,temp,root,previous))
                 context.variables[name]=current
+            elif key in ('round_variable','round_temp_variable'):
+                # Engine-supported integer rounding. Graph inputs are positive;
+                # this offline model uses nearest with halves away from zero.
+                target=temp if key=='round_temp_variable' else context.variables
+                target[value]=target.get(value,D(0)).to_integral_value(rounding=ROUND_HALF_UP)
             elif key=='set_country_flag':
                 if isinstance(value,list):
                     data=fields(value);context.flags[data['flag']]=self.today+int(data['days'])

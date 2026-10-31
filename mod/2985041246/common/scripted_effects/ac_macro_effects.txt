@@ -40,6 +40,8 @@ ac_macro_initialize = {
 		set_variable = { ac_macro_last_arrears_added = 0 }
 		set_variable = { ac_macro_last_arrears_paid = 0 }
 		set_variable = { ac_macro_stress_months = 0 }
+		set_variable = { ac_macro_warning_months = 0 }
+		set_variable = { ac_macro_warning_months_left = 0 }
 		set_variable = { ac_macro_recovery_months = 0 }
 		set_variable = { ac_macro_readiness_modifier = -0.03 }
 		set_variable = { ac_macro_service_modifier = 0 }
@@ -253,6 +255,7 @@ ac_macro_settle_month = {
 		set_variable = { ac_macro_last_borrowed = 0 }
 		set_variable = { ac_macro_last_arrears_added = 0 }
 		set_variable = { ac_macro_last_arrears_paid = 0 }
+		set_variable = { ac_macro_previous_arrears = ac_macro_arrears }
 		add_to_variable = { ac_macro_cash = ac_macro_revenue }
 		if = { limit = { check_variable = { ac_macro_cash < ac_macro_bill } }
 		 set_temp_variable = { ac_macro_financing = ac_macro_bill }
@@ -373,17 +376,38 @@ ac_macro_real_cycle = {
 ac_macro_crisis_cycle = {
 	if = {
 		limit = { ac_macro_ready = yes }
+		# The warning begins after two failed settlements. Its three correction
+		# months begin with the next scheduled settlement, not the warning's own month.
+		if = { limit = { has_country_flag = ac_macro_warning }
+		 add_to_variable = { ac_macro_warning_months = 1 }
+		 set_variable = { ac_macro_warning_months_left = 3 }
+		 subtract_from_variable = { ac_macro_warning_months_left = ac_macro_warning_months }
+		 clamp_variable = { var = ac_macro_warning_months_left min = 0 max = 3 }
+		}
 		if = { limit = { check_variable = { ac_macro_funding < 0.9 } }
 		 add_to_variable = { ac_macro_stress_months = 1 }
 		 set_variable = { ac_macro_recovery_months = 0 }
-		 if = { limit = { NOT = { has_country_flag = ac_macro_warning } } set_country_flag = ac_macro_warning country_event = { id = ac_macro.1 days = 1 } }
-		 if = { limit = { check_variable = { ac_macro_stress_months > 2 } NOT = { has_country_flag = ac_macro_crisis } } set_country_flag = ac_macro_crisis country_event = { id = ac_macro.2 days = 1 } }
+		 if = { limit = { check_variable = { ac_macro_stress_months > 1 } NOT = { has_country_flag = ac_macro_warning } }
+		  set_country_flag = ac_macro_warning
+		  set_variable = { ac_macro_warning_months = 0 }
+		  set_variable = { ac_macro_warning_months_left = 3 }
+		  country_event = { id = ac_macro.1 days = 1 }
+		 }
+		 if = { limit = { has_country_flag = ac_macro_warning check_variable = { ac_macro_warning_months > 2 } NOT = { has_country_flag = ac_macro_crisis } }
+		  set_country_flag = ac_macro_crisis
+		  country_event = { id = ac_macro.2 days = 1 }
+		 }
 		}
 		else = {
 		 set_variable = { ac_macro_stress_months = 0 }
-		 add_to_variable = { ac_macro_recovery_months = 1 }
-		 if = { limit = { check_variable = { ac_macro_recovery_months > 2 } check_variable = { ac_macro_arrears = 0 } }
+		 if = { limit = { OR = { check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_arrears < ac_macro_previous_arrears } } }
+		  add_to_variable = { ac_macro_recovery_months = 1 }
+		 }
+		 else = { set_variable = { ac_macro_recovery_months = 0 } }
+		 if = { limit = { check_variable = { ac_macro_recovery_months > 2 } }
 		  clr_country_flag = ac_macro_warning
+		  set_variable = { ac_macro_warning_months = 0 }
+		  set_variable = { ac_macro_warning_months_left = 0 }
 		  if = { limit = { has_country_flag = ac_macro_crisis } clr_country_flag = ac_macro_crisis country_event = { id = ac_macro.3 days = 1 } }
 		 }
 		}

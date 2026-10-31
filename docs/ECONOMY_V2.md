@@ -55,7 +55,7 @@ procedural artwork are separately identified by their source files.
 | Borrowing | A tranche is 0.5% of GDP, minimum 0.001 billion. Aggregate domestic principal is retained; outstanding debt is never erased when the credit ceiling falls. |
 | Credit | Ceiling of one year's current nominal GDP; no additional voluntary debt or policy spending with arrears. Automatic settlement financing is limited to available credit. |
 | Interest | Annual variable sovereign rate starts at 4%, with pressure premiums above debt/GDP thresholds and during arrears. The monetary stance can move between 2% and 8%. No bond-lot or exchange-rate simulation is asserted. |
-| Crisis | A monthly funding ratio below 90% warns; three consecutive shortfall months activate a fiscal crisis. Three successful settlements and cleared arrears end it. Government, ideology and territory are never changed by this generic owner. |
+| Crisis | Two consecutive monthly funding ratios below 90% begin a three-settlement correction warning. Further underfunding after that window activates a fiscal crisis. Three funded settlements with arrears declining or already zero end it; remaining financial obligations are preserved. Government, ideology and territory are never changed by this generic owner. |
 
 Real growth responds to investment with a lag, high-tax drag, underfunding, war,
 crisis and changes in actual factory capacity. The capacity contribution is
@@ -78,6 +78,13 @@ settlement effect; a persisted last-settlement date rejects a repeated callback
 on the same date, including a reloaded state. Startup initializes/quotes only.
 Legacy weekly callbacks dispatch only to the saved experimental model. No UI,
 focus, story event or refresh invokes settlement.
+
+`ac_macro_warning_months_left` is the settled correction deadline, counting
+3→2→1→0 after the warning begins. `ac_macro_warning_months` records elapsed
+correction settlements. Repeated callbacks and quotes cannot advance either
+clock. A funded month with unchanged outstanding arrears does not advance the
+three-month recovery record; improvement must be sustained. Ending the active
+crisis does not forgive remaining debt or arrears.
 
 The first scheduled accounting boundary is February 1991. Newly released or
 identity-reset accounts settle at the next monthly callback, including the
@@ -162,13 +169,19 @@ on every country. No new border, tag, leader or historical outcome is authored.
 
 ## UI, verification and release gates
 
-The full-mode HUD opens five direct-control pages: Economy, Budget, Finance,
+The current full-mode HUD opens five direct-control pages: Economy, Budget, Finance,
 Industry and Forces. Direct visibility rules prevent the prior nested-page
 overlap defect. The 860×640 window uses original navy/cyan RGBA DDS geometry and
 the existing authored ACBriefing fonts. It retains Escape/close and dragging.
 The saved experimental mode retains its three-page directorate and its actual
 transaction owners. Full-mode source bounds and frame hashes are checked
 offline; actual rendering/input remains untested.
+
+This page arrangement is an implementation gap against the accepted Overview,
+Budget, Industry and readiness, Debt and contracts, and Ledger structure. A
+rolling settled-history ledger and its graphs are not implemented in this
+integration candidate; their follow-up remains required before claiming the
+approved economy interface complete.
 
 Reproduce and check from repository root:
 

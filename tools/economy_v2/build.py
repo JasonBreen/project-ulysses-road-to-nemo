@@ -161,6 +161,8 @@ set_variable = { ac_macro_last_borrowed = 0 }
 set_variable = { ac_macro_last_arrears_added = 0 }
 set_variable = { ac_macro_last_arrears_paid = 0 }
 set_variable = { ac_macro_stress_months = 0 }
+set_variable = { ac_macro_warning_months = 0 }
+set_variable = { ac_macro_warning_months_left = 0 }
 set_variable = { ac_macro_recovery_months = 0 }
 set_variable = { ac_macro_readiness_modifier = -0.03 }
 set_variable = { ac_macro_service_modifier = 0 }
@@ -327,6 +329,7 @@ set_variable = { ac_macro_last_bill = ac_macro_bill }
 set_variable = { ac_macro_last_borrowed = 0 }
 set_variable = { ac_macro_last_arrears_added = 0 }
 set_variable = { ac_macro_last_arrears_paid = 0 }
+set_variable = { ac_macro_previous_arrears = ac_macro_arrears }
 add_to_variable = { ac_macro_cash = ac_macro_revenue }
 if = { limit = { check_variable = { ac_macro_cash < ac_macro_bill } }
  set_temp_variable = { ac_macro_financing = ac_macro_bill }
@@ -441,17 +444,38 @@ multiply_variable = { ac_macro_research_modifier = ac_macro_funding }
 add_to_variable = { ac_macro_research_modifier = -0.015 }
 '''
     effect('ac_macro_real_cycle',guard(real))
-    crisis = '''if = { limit = { check_variable = { ac_macro_funding < 0.9 } }
+    crisis = '''# The warning begins after two failed settlements. Its three correction
+# months begin with the next scheduled settlement, not the warning's own month.
+if = { limit = { has_country_flag = ac_macro_warning }
+ add_to_variable = { ac_macro_warning_months = 1 }
+ set_variable = { ac_macro_warning_months_left = 3 }
+ subtract_from_variable = { ac_macro_warning_months_left = ac_macro_warning_months }
+ clamp_variable = { var = ac_macro_warning_months_left min = 0 max = 3 }
+}
+if = { limit = { check_variable = { ac_macro_funding < 0.9 } }
  add_to_variable = { ac_macro_stress_months = 1 }
  set_variable = { ac_macro_recovery_months = 0 }
- if = { limit = { NOT = { has_country_flag = ac_macro_warning } } set_country_flag = ac_macro_warning country_event = { id = ac_macro.1 days = 1 } }
- if = { limit = { check_variable = { ac_macro_stress_months > 2 } NOT = { has_country_flag = ac_macro_crisis } } set_country_flag = ac_macro_crisis country_event = { id = ac_macro.2 days = 1 } }
+ if = { limit = { check_variable = { ac_macro_stress_months > 1 } NOT = { has_country_flag = ac_macro_warning } }
+  set_country_flag = ac_macro_warning
+  set_variable = { ac_macro_warning_months = 0 }
+  set_variable = { ac_macro_warning_months_left = 3 }
+  country_event = { id = ac_macro.1 days = 1 }
+ }
+ if = { limit = { has_country_flag = ac_macro_warning check_variable = { ac_macro_warning_months > 2 } NOT = { has_country_flag = ac_macro_crisis } }
+  set_country_flag = ac_macro_crisis
+  country_event = { id = ac_macro.2 days = 1 }
+ }
 }
 else = {
  set_variable = { ac_macro_stress_months = 0 }
- add_to_variable = { ac_macro_recovery_months = 1 }
- if = { limit = { check_variable = { ac_macro_recovery_months > 2 } check_variable = { ac_macro_arrears = 0 } }
+ if = { limit = { OR = { check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_arrears < ac_macro_previous_arrears } } }
+  add_to_variable = { ac_macro_recovery_months = 1 }
+ }
+ else = { set_variable = { ac_macro_recovery_months = 0 } }
+ if = { limit = { check_variable = { ac_macro_recovery_months > 2 } }
   clr_country_flag = ac_macro_warning
+  set_variable = { ac_macro_warning_months = 0 }
+  set_variable = { ac_macro_warning_months_left = 0 }
   if = { limit = { has_country_flag = ac_macro_crisis } clr_country_flag = ac_macro_crisis country_event = { id = ac_macro.3 days = 1 } }
  }
 }
@@ -584,8 +608,11 @@ option = {{ name = ac_macro.{i}.a }}''') for i in (1,2,3))
 
 def history_marker(text):
     text = re.sub(r'# BEGIN ECONOMY V2 NEW CAMPAIGN\n.*?# END ECONOMY V2 NEW CAMPAIGN\n?', '', text, flags=re.S)
-    anchor = '# BEGIN EXPANSION START LEADER'
-    if anchor in text:
+    # Other new-campaign authors may own a trailing setup section even when a
+    # country already has a recruited leader. Keep eligibility before that
+    # foreign section so its generator and this one do not move it each turn.
+    anchor = next((marker for marker in ('# BEGIN EXPANSION START LEADER', '# BEGIN WORLD FOUNDATION') if marker in text), None)
+    if anchor is not None:
         prefix, suffix = text.split(anchor, 1)
         return prefix.rstrip()+'\n\n'+MARKER+'\n'+anchor+suffix
     return text.rstrip()+'\n\n'+MARKER

@@ -61,7 +61,7 @@ def build_ui():
              ('arrears','Unpaid obligations: [?ac_macro_arrears|.3]'),('new_arrears','Last new arrears: [?ac_macro_last_arrears_added|.3]'),
              ('stress','Consecutive shortfall months: [?ac_macro_stress_months|.0]'),('recovery','Successful recovery months: [?ac_macro_recovery_months|.0]')]
     for i,(name,text) in enumerate(finance):box('finance_'+name,text,28+(i%2)*410,210+(i//2)*42,page=2)
-    box('finance_note','Credit can cover a shortfall without erasing debt. Unfunded obligations become arrears. Three sustained shortfall months trigger a recoverable fiscal crisis.',28,400,790,52,page=2)
+    box('finance_note','Two failed settlements begin a three-month correction warning. Further underfunding after that window activates a recoverable crisis. Recovery needs three funded months with arrears declining or already cleared.',28,400,790,52,page=2)
     button('macro_borrow','Borrow tranche',28,474,'ac_macro_borrow = yes',2,'ac_macro_can_borrow = yes')
     button('macro_repay','Repay tranche',212,474,'ac_macro_repay = yes',2,'ac_macro_can_repay = yes')
     button('macro_ease','Ease credit',438,474,'ac_macro_policy_rate_down = yes',2,'ac_macro_can_change_policy = yes check_variable = { ac_macro_policy_rate > 2 }')
@@ -110,8 +110,8 @@ def build_ui():
                AC_MACRO_POLICY_TIMING='Tax, spending and monetary changes share a 30-day cooldown. Forecasts update immediately; public services and investment benefits are delivered through monthly settlement.',
                ac_macro_economy_modifier='Public accounts and force readiness',ac_macro_economy_modifier_desc='Delivered public services and sustained operating funds affect the national economy and military readiness.',
                **{'ac_macro.1.t':'A shortfall in public accounts','ac_macro.1.d':'The monthly accounts show that not all approved obligations were funded. Departments are carrying unpaid bills. The government still has time to reprioritize the budget, improve revenue or arrange financing.','ac_macro.1.a':'Review the accounts.',
-                  'ac_macro.2.t':'The fiscal warning becomes a crisis','ac_macro.2.d':'Three successive settlements have left a material funding gap. Readiness and civilian services are deteriorating. The state can recover through sustainable funding and repayment of arrears; no government or territorial outcome is imposed by this accounting crisis.','ac_macro.2.a':'Prepare a recovery budget.',
-                  'ac_macro.3.t':'Public accounts stabilize','ac_macro.3.d':'Three successful settlements and cleared arrears have ended the fiscal crisis. Departments can plan again, although readiness and productive conditions will take time to recover.','ac_macro.3.a':'Keep the recovery on course.'})
+                  'ac_macro.2.t':'The fiscal warning becomes a crisis','ac_macro.2.d':'Two failed settlements were followed by three correction months, but a material funding gap remains. Readiness and civilian services are deteriorating. Sustainable funding and repayment of arrears can restore the accounts without imposing a government or territorial outcome.','ac_macro.2.a':'Prepare a recovery budget.',
+                  'ac_macro.3.t':'Public accounts stabilize','ac_macro.3.d':'Three funded settlements with arrears declining or already cleared have ended the active fiscal crisis. Outstanding debt and unpaid obligations still have to be honored. Readiness and productive conditions will take time to recover.','ac_macro.3.a':'Keep the recovery on course.'})
     out['localisation/english/ac_macro_l_english.yml']=('l_english:\n'+'\n'.join(' '+key+':0 "'+value.replace('"','\\"')+'"' for key,value in sorted(loc.items()))+'\n').encode('utf-8-sig')
     # Metadata stays beside delivered textures so the source-only builder can
     # validate hashes without importing any installed reference imagery.

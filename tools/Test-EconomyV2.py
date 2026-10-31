@@ -213,13 +213,46 @@ class Macro(unittest.TestCase):
 
     def test_warning_crisis_and_recovery_follow_funded_months(self):
         w,c=self.world();c.variables.update(ac_macro_cash=D(0),ac_macro_debt=D(140),ac_macro_commitments_annual=D(3000))
-        for month in (2,3,4):w.month('SNS',1991,month)
+        w.month('SNS',1991,2);self.assertNotIn('ac_macro_warning',c.flags)
+        w.month('SNS',1991,3);self.assertIn('ac_macro_warning',c.flags)
+        self.assertEqual(0,c.variables['ac_macro_warning_months']);self.assertEqual(3,c.variables['ac_macro_warning_months_left']);self.assertNotIn('ac_macro_crisis',c.flags)
+        for age,month in enumerate((4,5),1):
+            w.month('SNS',1991,month);self.assertEqual(age,c.variables['ac_macro_warning_months'])
+            self.assertEqual(3-age,c.variables['ac_macro_warning_months_left'])
+            self.assertNotIn('ac_macro_crisis',c.flags)
+            saved=copy.deepcopy(c);w.action('on_monthly',['SNS']);self.assertEqual(saved,c)
+        w.month('SNS',1991,6)
         self.assertIn('ac_macro_warning',c.flags);self.assertIn('ac_macro_crisis',c.flags)
         c.variables['ac_macro_commitments_annual']=D(0)
         w.run('ac_macro_receive','SNS',dict(ac_macro_transaction_amount=D(10000)))
-        for month in (5,6,7):w.month('SNS',1991,month)
+        for month in (7,8,9):w.month('SNS',1991,month)
         self.assertNotIn('ac_macro_crisis',c.flags);self.assertEqual(0,c.variables['ac_macro_arrears'])
         self.assertEqual(1,w.events.count(('SNS','ac_macro.2')))
+
+    def test_warning_correction_window_can_recover_without_entering_crisis(self):
+        w,c=self.world();c.variables.update(ac_macro_cash=D(0),ac_macro_debt=D(140),ac_macro_commitments_annual=D(3000))
+        for month in (2,3):w.month('SNS',1991,month)
+        self.assertIn('ac_macro_warning',c.flags)
+        c.variables['ac_macro_commitments_annual']=D(0)
+        w.run('ac_macro_receive','SNS',dict(ac_macro_transaction_amount=D(10000)))
+        for month in (4,5,6):w.month('SNS',1991,month)
+        self.assertNotIn('ac_macro_warning',c.flags);self.assertNotIn('ac_macro_crisis',c.flags)
+        self.assertEqual(0,w.events.count(('SNS','ac_macro.2')))
+
+    def test_recovery_requires_declining_arrears_and_preserves_remaining_debt(self):
+        w,c=self.world();c.flags.update(ac_macro_warning=None,ac_macro_crisis=None)
+        c.variables.update(ac_macro_funding=D(1),ac_macro_arrears=D(30),ac_macro_previous_arrears=D(30))
+        w.run('ac_macro_crisis_cycle','SNS');self.assertEqual(0,c.variables['ac_macro_recovery_months'])
+        c.variables['ac_macro_arrears']=D(29);w.run('ac_macro_crisis_cycle','SNS')
+        self.assertEqual(1,c.variables['ac_macro_recovery_months'])
+        c.variables['ac_macro_previous_arrears']=D(29);w.run('ac_macro_crisis_cycle','SNS')
+        self.assertEqual(0,c.variables['ac_macro_recovery_months'])
+        debt=c.variables['ac_macro_debt']
+        for amount in (28,27,26):
+            c.variables.update(ac_macro_previous_arrears=D(amount+1),ac_macro_arrears=D(amount))
+            w.run('ac_macro_crisis_cycle','SNS')
+        self.assertNotIn('ac_macro_crisis',c.flags);self.assertEqual(D(26),c.variables['ac_macro_arrears'])
+        self.assertEqual(debt,c.variables['ac_macro_debt']);self.assertEqual(1,w.events.count(('SNS','ac_macro.3')))
 
     def test_long_run_all_country_budgets_and_ai_are_bounded(self):
         w=copy.deepcopy(self.base)
@@ -254,6 +287,12 @@ class SourceAndUI(unittest.TestCase):
         for path in (MOD/'history/countries').glob('*.txt'):
             text=path.read_text(encoding='utf-8-sig');self.assertEqual(1,text.count(MARKER));self.assertEqual(text,history_marker(text))
             if '# BEGIN EXPANSION START LEADER' in text:self.assertLess(text.index(MARKER),text.index('# BEGIN EXPANSION START LEADER'))
+        # DEL has an established leader, so future world setup is its only
+        # trailing generated section. Eligibility must not oscillate around it.
+        world='# BEGIN WORLD FOUNDATION\nset_convoys = 30\n# END WORLD FOUNDATION\n'
+        text=history_marker('recruit_character = DEL_artur_clarkson\n\n'+world)
+        self.assertLess(text.index(MARKER),text.index('# BEGIN WORLD FOUNDATION'))
+        self.assertEqual(text,history_marker(text));self.assertEqual(1,text.count('set_convoys = 30'))
 
     def test_five_pages_direct_controls_keyboard_and_frame_art(self):
         gui=parse((MOD/'interface/ac_macro_economy.gui').read_text());window=next(n for _,n in walk(gui) if get(n,'name')=='"ac_macro_economy_screen"')

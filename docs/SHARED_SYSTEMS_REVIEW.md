@@ -1,9 +1,11 @@
 # Package 1 shared-system integration review
 
-This candidate integrates economy component `7dffa0f` and the reviewed
-institutions components `b66fde0` / `e42a64e` on verified main `3810d1a`.
-The integration branch contains no world-foundation, partner-campaign or squadron
-story payload. This is source/offline evidence; native acceptance remains paused.
+This Package1 candidate adds the full economy and institutional framework on
+the separately reviewable World Foundation prerequisite, PR33. That prerequisite
+includes the repair/privacy package, PR32; both descend from verified main3810d1a.
+The economy/institutions components retain their individual commits and their
+generated output. This PR adds no partner campaign or squadron story payload.
+The evidence is source/offline only; native acceptance remains paused.
 
 ## Confirmed defects and corrections
 
@@ -86,10 +88,15 @@ Both authoring orders passed generation plus `--check`:
 2. Economy → starting governments → world foundation → Anea.
 
 All69 country histories and both logistics files had identical byte hashes
-after the two orders. These composition observations do not import world setup
-into this PR. When PR33 is integrated, retain both DEL sections, regenerate with
-the corrected marker owner, and refresh any derived world registry against the
-combined payload.
+after the two orders. The final review candidate also integrates the newer
+World/repair prerequisite2afd9fa. Both DEL sections are retained, the owners are
+regenerated in their canonical order, and the registry is refreshed against the
+combined payload. The registry now joins all69 actual fiscal and institutional
+profiles, leader representation, capital source layer, active/emergent/placeholder
+classification and explicit public regional participant declarations. Its source
+profile hashes normalize line endings for Windows/Linux reproducibility. The
+registry continues to expose incomplete physical country foundations rather than
+claiming global native playability.
 
 ## Settled ledger and monetary carry follow-up
 

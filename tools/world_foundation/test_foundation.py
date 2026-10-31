@@ -97,6 +97,29 @@ class WorldFoundationTests(unittest.TestCase):
             self.assertIn('provisional', row['political_institution']['source_layer'])
             self.assertIsInstance(row['regional_contracts'], list)
             self.assertIn('native', row['scope_note'])
+    def test_prerequisite_repair_workflow_gates_remain_separate(self):
+        workflow = (ROOT / '.github/workflows/static-validation.yml').read_text()
+        commands = re.findall(r'^\s+run:\s*([^\n]+)', workflow, re.M)
+        for script in ('tools/world_foundation/test_foundation.py', 'tools/overhaul/check_release_plan.py',
+                       'tools/Test-OverhaulRepairs.py', 'tools/Test-DecisionUI.py', 'tools/Test-FocusScreenRepairs.py'):
+            matching = [line for line in commands if script in line]
+            self.assertEqual(matching, ['python -B ' + script], script)
+
+    def test_prerequisite_regional_overlay_reuses_world_owned_names(self):
+        def labels(name):
+            return dict(re.findall(r'^\s*(\w+):\d+\s+"([^\n]*)"',
+                (MOD / 'localisation/english/replace' / name).read_text(encoding='utf-8-sig'), re.M))
+        repair = labels('ac_overhaul_regions_l_english.yml')
+        world = labels('ac_world_foundation_regions_l_english.yml')
+        shared = set(repair) & set(world)
+        self.assertEqual(len(shared), 8)
+        manifest = json.loads((ROOT / 'tools/overhaul/regional_labels.json').read_text())
+        changes = {r['key']: r for r in manifest['changes']}
+        for key in shared:
+            self.assertEqual(repair[key], world[key], key)
+            self.assertEqual(changes[key]['name_owner'], 'world_foundation')
+        self.assertEqual(repair['STATE_268'], 'Delarus Capital District')
+        self.assertEqual(repair['VICTORY_POINTS_7895'], 'San Salvacion Logistics Centre 7895')
 
     def test_registry_contains_all_69_without_claiming_universal_playability(self):
         expected = inspect()

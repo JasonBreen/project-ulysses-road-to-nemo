@@ -9,6 +9,13 @@ country tags, borders, cores, leader identities or event grants.
 Native testing is paused; source checks do not establish playable balance,
 AI behavior or final game acceptance.
 
+This review slice is stacked on prerequisite [PR32](https://github.com/JasonBreen/project-ulysses-road-to-nemo/pull/32),
+the repair/privacy package. Its source is merged into the World branch without
+merging main. The [combined acceptance record](evidence/world-foundation/repair-stack/README.md)
+records the refreshed overview/registry, independent CI steps and shared regional
+label ownership. World foundation labels take precedence by agreement between
+the two authored files, rather than by relying on localization load order.
+
 ## What the registry establishes
 
 [country_registry.json](../tools/world_foundation/country_registry.json) is

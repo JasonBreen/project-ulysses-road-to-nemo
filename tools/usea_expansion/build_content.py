@@ -45,14 +45,21 @@ def build_trees():
         ident='ac_exp_'+tag.lower()+'_opening'
         loc(ident,('Erusea' if tag=='ERU' else 'Central Usea')+': the Opening Decade')
         loc(ident+'_desc','Administration, preparedness and continental relations, 1991–1999.')
-        body='id = '+ident+'\ncountry = { factor = 0 modifier = { add = 20 original_tag = '+tag+' NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 } }\ndefault = no\ncontinuous_focus_position = { x = 1100 y = 1000 }\n'
+        imported=[]
+        if tag=='FCU':
+            imported=['FCU_ur_acknowledge','FCU_ur_unified_command','FCU_ur_scarface_sortie',
+                      'FCU_ur_stand_down','FCU_ur_keep_mobilized','FCU_ur_assessment']
+        imported_nodes=[node for kind,_,node in parse((MOD/'common/national_focus/ac_usean_rebellion.txt').read_text())
+                        if kind=='shared_focus' and get(node,'id') in imported] if imported else []
+        # Imported branches contribute to the canvas extent too. In particular,
+        # the rebellion branch reaches column23, beyond the old opening roots.
+        panel_x=(max([row.x for row in rows]+[int(get(node,'x')) for node in imported_nodes])+4)*96
+        body='id = '+ident+'\ncountry = { factor = 0 modifier = { add = 20 original_tag = '+tag+' NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 } }\ndefault = no\ncontinuous_focus_position = { x = '+str(panel_x)+' y = 16 }\n'
         rows_text='\n'.join(focus(r) for r in rows)
         # Hand-authored shared focuses live in ac_usean_rebellion.txt. Listing
         # them here keeps the 1997 branch on this tree without a second tree.
         if tag=='FCU':
-            rows_text+='\n'+'\n'.join('shared_focus = '+i for i in (
-                'FCU_ur_acknowledge','FCU_ur_unified_command','FCU_ur_scarface_sortie',
-                'FCU_ur_stand_down','FCU_ur_keep_mobilized','FCU_ur_assessment'))
+            rows_text+='\n'+'\n'.join('shared_focus = '+i for i in imported)
         put('common/national_focus/'+tag+'_opening.txt',block('focus_tree',body+rows_text))
     for tag in ('NPT','REC','YUK'):
         rows=[r for r in FOCUSES if r.tag==tag and r.phase=='support']

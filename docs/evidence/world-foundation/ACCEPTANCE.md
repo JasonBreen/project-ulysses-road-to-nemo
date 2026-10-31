@@ -1,5 +1,12 @@
 # World foundations — source acceptance, 31 October 2026
 
+The later [repair-stack record](repair-stack/README.md) validates this World slice
+with prerequisite PR32. It retains 27 passing focused check groups, the passing
+full current-PowerShell/reference/baseline gate, refreshed overview inputs and
+registry, and the explicit shared-label adapter. World regressions now total 13;
+the original observations below retain their original payload boundary. Native
+acceptance is still pending.
+
 The implementation commit is `fb08414`; current main `3810d1a` was merged as
 `60c3d97` before the final checks. The registry was then refreshed for main's
 six additional FCU rebellion focuses. Commands and metrics are retained in

@@ -9,6 +9,15 @@ Artwork is a separate gate and was not evaluated by this runtime review.
 
 ## Material inspected
 
+The subsequent primary-identifier review corrected the debrief spirit's
+misspelled air-experience modifier to the engine's documented
+`experience_gain_air_factor`. `tools/squadrons/engine_contracts.json` records
+the installed documentation and concrete country-idea source hashes. The runtime
+suite now checks the reward against that independent source contract, rather
+than merely checking a compiler-owned spelling. The temporary benefit also
+forbids civil-war inheritance, matching the story's current/original host rule.
+These source corrections do not establish native application or display.
+
 The compiler, schema, generated event/effect/trigger/on-action libraries and the
 actual-script harness were inspected together with every conditional continuation,
 its choices and the source/target of its callbacks. The six campaigns contain

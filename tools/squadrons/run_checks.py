@@ -31,6 +31,7 @@ def main():
     paths = [ROOT / 'tools/Test-SquadronStories.py', ROOT / 'tools/Test-ContinentalWar.py',
              ROOT / 'tools/economy_script.py', *sorted((ROOT/'tools/squadrons').glob('*.py')),
              ROOT/'tools/squadrons/campaigns.json', ROOT/'tools/squadrons/art_plan.json',
+             ROOT/'tools/squadrons/engine_contracts.json',
              *sorted((ROOT/'tools/squadrons/chapters').glob('*.json'))]
     # Artwork tooling is owned independently and is not a runtime input.
     paths = [p for p in paths if p.name not in ('build_art.py', 'run_checks.py')]

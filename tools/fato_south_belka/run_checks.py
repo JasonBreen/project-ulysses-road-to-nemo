@@ -10,13 +10,15 @@ import time
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
 from source_snapshot import capture,verify
+from evidence_journal import begin,finish
 def main():
     p=argparse.ArgumentParser();p.add_argument('--broad',action='store_true');p.add_argument('--only',action='append');p.add_argument('--reference',type=Path);p.add_argument('--output',type=Path,default=ROOT/'runtime-output/fato-south-belka/checks');p.add_argument('--pin-source',action='store_true');a=p.parse_args()
     commands=[('national-owners',['tools/fato_south_belka/test_campaign.py']),('national-source-art',['tools/fato_south_belka/test_source.py']),
         ('generated-content',['tools/fato_south_belka/build.py','--check']),('generated-art',['tools/fato_south_belka/build_art.py','--check']),
         ('inherited-primary-contract',['tools/fato_south_belka/source_contract.py']+(['--reference',str(a.reference)]if a.reference else [])),
         ('composed-registry',['tools/world_foundation/registry.py','--check']),('institution-generator',['tools/institutions/build.py','--check']),
-        ('focus-pacing',['tools/fato_south_belka/pacing.py','--check'])]
+        ('focus-pacing',['tools/fato_south_belka/pacing.py','--check']),
+        ('evidence-contracts',['tools/fato_south_belka/test_evidence.py'])]
     if a.broad:commands += [
         ('shared-owners',['tools/Test-SharedSystems.py']),('institutions',['tools/Test-Institutions.py']),
         ('macro-owner',['tools/Test-EconomyV2.py']),('ledger-owner',['tools/Test-EconomyLedger.py']),('force-upkeep',['tools/Test-ForceUpkeep.py']),('legacy-economy',['tools/test_economy.py']),
@@ -38,6 +40,7 @@ def main():
         commands=[row for row in commands if row[0]in requested]
     a.output.mkdir(parents=True,exist_ok=True);rows=[]
     source=capture(ROOT)if a.pin_source else None
+    directory,invocation=begin(ROOT,a.output,[name for name,_ in commands],source)
     for name,args in commands:
         start=time.monotonic();result=subprocess.run([sys.executable,'-B',*args],cwd=ROOT,capture_output=True,text=True,encoding='utf-8',errors='replace')
         (a.output/(name+'.txt')).write_text(result.stdout+result.stderr,encoding='utf-8',newline='\n')
@@ -47,6 +50,7 @@ def main():
     if source:verify(source,ROOT)
     report=dict(evidence='Static/offline source execution, not native engine, serialization or AI acceptance',native='paused',source_head=source['head']if source else None,source_inputs=source,checks=rows,
         source_sha256={p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes().replace(b'\r\n',b'\n')).hexdigest()for p in source_files})
+    report=finish(directory,invocation,report,a.output)
     (a.output/'checks.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
     if any(r['exit_code']for r in rows):raise SystemExit('One or more checks failed; inspect '+str(a.output))
     print(str(len(rows))+' source gates pass; native paused')

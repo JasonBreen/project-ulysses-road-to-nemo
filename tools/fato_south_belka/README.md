@@ -13,5 +13,17 @@ The complete purpose/source/contract ledger is [docs/FATO_SOUTH_BELKA.md](../../
 - `source_contract.py`: fifteen protected inherited owners and read-only primary syntax hashes. Deliberate `--capture --reference` is not a routine generation or CI action.
 - `pacing.py`: earliest legal source calendars for 24 exclusive paths; not natural AI.
 - `run_checks.py`: independently checked subprocesses and logs. `--broad` includes existing owners; `--only NAME` reruns a selected current-source check without repeating successful unrelated suites.
+- `evidence_journal.py` / `record_evidence.py`: durable invocation order, immutable per-invocation logs and exact tested-source collection. A newer failure or unfinished run cannot be superseded by an older folder's success. The collector requires `--pin-source` receipts matching current clean source, rejects legacy/unpinned or changed-source results, and retains prior attempts separately. No automatic formatting-equivalence exception is supplied.
+
+FATO's earned **Review the Standing Audit** decision ends its independent audit through `ac_fsb_remove_standing` and exact commitment reconciliation. It pays no refund or completion award. Reinstatement uses the ordinary paid audit authorization. South Belka retains its separate public-interest review.
+
+For a current source receipt, commit source first, run selected checks with `--pin-source`, then collect while the tested commit is still current:
+
+```text
+python -B tools/fato_south_belka/run_checks.py --pin-source --output runtime-output/fato-south-belka/current-checks
+python -B tools/fato_south_belka/record_evidence.py --output docs/evidence/fato-south-belka/current-source-receipts.json
+```
+
+The collector archives only the listed executed checks. Its current receipt does not relabel the original component's historical receipts or prove omitted, native or natural-progression behavior.
 
 Country profile/state/force/leader sources and war/faction/reintegration operations remain inherited and unchanged. The only P1 disposition change is that FAT/SBK select their dedicated trees rather than regional36 on new campaigns; old saves defer adoption while a generic/regional/continuous focus is selected. No new setup grant is attached to those handoffs. Native testing and publication are separate.

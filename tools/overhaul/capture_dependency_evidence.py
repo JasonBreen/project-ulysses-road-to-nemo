@@ -84,6 +84,7 @@ def main():
     args = parser.parse_args()
     engine = args.engine.resolve()
     sources = ["tools/overhaul/audit_consumers.py", "tools/overhaul/providers.py",
+               "tools/overhaul/text_structure.py", "tools/usea_expansion/script.py",
                "tools/overhaul/capture_dependency_evidence.py", "tools/overhaul/decisions_assets.json"]
     source_hashes = {path: digest(ROOT / path) for path in sources}
     started = datetime.now(timezone.utc).isoformat()

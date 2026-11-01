@@ -3,7 +3,7 @@
 This owner adds the approved remaining 44 Osean and 42 Yuktobanian definitions in
 independent country modules. Delivery status follows each completed component's
 evidence; an approved count or a source file is not delivered/native acceptance.
-The initial implemented component is Osea 44. Yuktobania, CPW and the two new story
+The national components are Osea 44 and Yuktobania 42. CPW and the two new story
 packets remain separate work until their own coherent handoffs.
 
 All procedures, scene incidents, indices, policy alternatives and calibration are

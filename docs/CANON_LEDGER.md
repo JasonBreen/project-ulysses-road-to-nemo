@@ -42,6 +42,14 @@ or unsourced local impact zones were inferred.
 
 ## Citation rule
 
+The [Pacific personal-story ledger](PACIFIC_STORIES_LEDGER.md) separates the
+official cold-war, 1999 Arkbird-cooperation and 2010 conflict context from the
+original Osean and Yuktobanian casts, incidents and chapter dates. Those personal
+stories are authored fiction and provisional gameplay. They read national
+capabilities and actual relations without controlling war or project outcomes;
+their people are never substitute national officeholders. Source, offline and
+native acceptance remain separate.
+
 The Anea foundation's [source and implementation ledger](ANEA_EXPANSION_LEDGER.md)
 records the1998 Anean risk/shelter entries,2000 aid,2002 sanctions,2004 agency
 and incomplete Chandelier separately from provisional gameplay. No1991 named
@@ -57,3 +65,15 @@ The [faction provenance ledger](FACTIONS_PROVENANCE.md#canon-ledger) classifies 
 ## 2026-10-30 starting-government repair
 
 Robert Sinclair at the 1991 FCU start is user-approved provisional chronology, not a new official-history claim. Unknown officeholders use user-approved office representations. Exact source layers, affected IDs, status and evidence are in [the interface/FCU addendum](USEA_INTERFACE_FCU_ADDENDUM.md).
+
+## FATO and South Belka national campaigns
+
+The [national campaign ledger](FATO_SOUTH_BELKA.md) separates the official
+1991/08.29 and 1995/03.25,06.01–04,06.20 Chronicle context from inherited FAT/SBK
+territorial, force, faction, release and reintegration contracts. All 96 national
+focus purposes, 20 dialogues, administrative institutions, later review dates,
+warrant quantities and civil-case policy details are provisional authored fiction
+and gameplay, individually mapped in `tools/fato_south_belka/purposes.json`.
+Eight original scene masters retain exact prompts and packaging provenance.
+No new government biography, border, core, force transfer or war is asserted.
+Implementation/source evidence is separate from paused native acceptance.

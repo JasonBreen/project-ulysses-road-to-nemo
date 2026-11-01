@@ -1,0 +1,54 @@
+ac_fsb_participant = {
+	custom_trigger_tooltip = {
+		tooltip = ac_fsb_participant_tt
+		OR = { AND = { tag = FAT original_tag = FAT } AND = { tag = SBK original_tag = SBK } }
+	}
+}
+ac_fsb_active = {
+	custom_trigger_tooltip = {
+		tooltip = ac_fsb_active_tt
+		ac_fsb_participant = yes has_country_flag = ac_fsb_initialized check_variable = { ac_fsb_identity = THIS.id } ac_pol_active = yes any_owned_state = { is_fully_controlled_by = PREV }
+	}
+}
+ac_fsb_can_fund = {
+	custom_trigger_tooltip = {
+		tooltip = ac_fsb_can_fund_tt
+		ac_fsb_active = yes OR = { ac_econ_enabled = no ac_econ_can_pay_programme = yes }
+	}
+}
+ac_fsb_has_warrant_slot = {
+	custom_trigger_tooltip = {
+		tooltip = ac_fsb_has_warrant_slot_tt
+		OR = { check_variable = { ac_fsb_warrants_open < 1 } AND = { has_country_flag = ac_fsb_second_warrant check_variable = { ac_fsb_warrants_open < 2 } } AND = { has_country_flag = ac_fsb_third_warrant check_variable = { ac_fsb_warrants_open < 3 } } }
+	}
+}
+ac_fsb_warrant_geb_valid = {
+	custom_trigger_tooltip = {
+		tooltip = ac_fsb_warrant_geb_valid_tt
+		tag = FAT original_tag = FAT has_capitulated = no is_subject = no any_owned_state = { always = yes } country_exists = GEB NOT = { has_war_with = GEB } GEB = { tag = GEB original_tag = GEB has_capitulated = no is_subject = no any_owned_state = { always = yes } }
+	}
+}
+ac_fsb_warrant_rec_valid = {
+	custom_trigger_tooltip = {
+		tooltip = ac_fsb_warrant_rec_valid_tt
+		tag = FAT original_tag = FAT has_capitulated = no is_subject = no any_owned_state = { always = yes } country_exists = REC NOT = { has_war_with = REC } REC = { tag = REC original_tag = REC has_capitulated = no is_subject = no any_owned_state = { always = yes } }
+	}
+}
+ac_fsb_warrant_ose_valid = {
+	custom_trigger_tooltip = {
+		tooltip = ac_fsb_warrant_ose_valid_tt
+		tag = FAT original_tag = FAT has_capitulated = no is_subject = no any_owned_state = { always = yes } country_exists = OSE NOT = { has_war_with = OSE } OSE = { tag = OSE original_tag = OSE has_capitulated = no is_subject = no any_owned_state = { always = yes } }
+	}
+}
+ac_fsb_has_case_slot = {
+	custom_trigger_tooltip = {
+		tooltip = ac_fsb_has_case_slot_tt
+		OR = { check_variable = { ac_fsb_cases_open < 1 } AND = { has_country_flag = ac_fsb_second_case check_variable = { ac_fsb_cases_open < 2 } } }
+	}
+}
+ac_fsb_adviser_valid = {
+	custom_trigger_tooltip = {
+		tooltip = ac_fsb_adviser_valid_tt
+		tag = SBK original_tag = SBK has_capitulated = no any_owned_state = { always = yes } country_exists = OSE NOT = { has_war_with = OSE } OR = { is_subject = no is_subject_of = OSE } OSE = { tag = OSE original_tag = OSE has_capitulated = no is_subject = no any_owned_state = { always = yes } }
+	}
+}

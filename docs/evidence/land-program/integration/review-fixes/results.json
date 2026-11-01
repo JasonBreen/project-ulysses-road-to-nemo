@@ -1,0 +1,104 @@
+{
+  "source_head": "6b3505eda882b470e21d5318da0318526a22043c",
+  "source_inputs": {
+    "head": "6b3505eda882b470e21d5318da0318526a22043c",
+    "files": 7147,
+    "sha256": "239b612073fc3e803d5c69e0f4350876537d823dc4dd86f3cc6d667b70dafa53",
+    "rule": "Sorted tracked repository-relative UTF8 path,NUL,raw working-tree bytes; docs/evidence excluded. Clean Git source required."
+  },
+  "payload_sha256": "3ec6ea8e13f72410a4f2bb9027cfe1c2c7e3c3bfb7b1601f0949114976c36c33",
+  "payload_hash_rule": "Sorted repository-relative POSIX path,NUL,raw bytes for every delivered mod file.",
+  "checks": [
+    {
+      "name": "land",
+      "command": [
+        "python",
+        "-B",
+        "tools/land_program/test_land.py",
+        "--engine",
+        "<installed-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 7.672,
+      "log": "land.txt"
+    },
+    {
+      "name": "assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 1.0,
+      "log": "assets.txt"
+    },
+    {
+      "name": "presentation",
+      "command": [
+        "python",
+        "-B",
+        "tools/check_presentation_sources.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.64,
+      "log": "presentation.txt"
+    },
+    {
+      "name": "fonts",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/test_fonts.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.407,
+      "log": "fonts.txt"
+    },
+    {
+      "name": "font-generated",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/build.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.281,
+      "log": "font-generated.txt"
+    },
+    {
+      "name": "font-measure",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/measure.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.828,
+      "log": "font-measure.txt"
+    },
+    {
+      "name": "ownership",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/capture_reference.py",
+        "--engine",
+        "<installed-reference>",
+        "--output",
+        "docs\\evidence\\land-program\\integration\\review-fixes\\authored-research-dependencies.json"
+      ],
+      "exit_code": 0,
+      "seconds": 29.359,
+      "log": "ownership.txt"
+    }
+  ],
+  "passed": 7,
+  "failed": 0,
+  "native_acceptance": false,
+  "research_inventory_scope": "Source inventory only; no complete presentation/provenance gate was requested. Screen failures remain visible in research-dependencies.json.",
+  "full_conversion_acceptance": false
+}

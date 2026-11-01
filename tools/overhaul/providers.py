@@ -15,6 +15,7 @@ from pathlib import Path, PurePosixPath
 import re
 import stat
 import zipfile
+from text_structure import validate_structure
 
 ROOTS = {"interface", "common", "gfx", "sound", "music", "events", "history", "portraits"}
 MAX_TEXT_BYTES = 8 * 1024 * 1024
@@ -97,7 +98,9 @@ class Providers:
         self.replace_paths = []
         descriptor = self.mod / "descriptor.mod"
         if descriptor.exists():
-            self.replace_paths = [normal(v.strip('"')) for k, _, v in parser(descriptor.read_text(encoding="utf-8-sig"))
+            declaration = descriptor.read_text(encoding="utf-8-sig")
+            validate_structure(declaration)
+            self.replace_paths = [normal(v.strip('"')) for k, _, v in parser(declaration)
                                   if k == "replace_path" and isinstance(v, str)]
         selected = set()
         if profile is not None:
@@ -142,7 +145,9 @@ class Providers:
                 if path.stat().st_size > MAX_TEXT_BYTES:
                     raise ValueError("Descriptor exceeds the bounded text-reader limit")
                 row["descriptor_sha256"] = digest(path)
-                fields = {k: v.strip('"') for k, _, v in parser(path.read_text(encoding="utf-8-sig")) if isinstance(v, str)}
+                declaration = path.read_text(encoding="utf-8-sig")
+                validate_structure(declaration)
+                fields = {k: v.strip('"') for k, _, v in parser(declaration) if isinstance(v, str)}
                 row.update(name=fields.get("name", ""), steam_id=fields.get("steam_id"),
                            payload_kind="archive" if "archive" in fields else "directory" if "path" in fields else "unresolved")
                 location = fields.get("archive", fields.get("path"))

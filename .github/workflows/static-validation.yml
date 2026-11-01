@@ -53,6 +53,8 @@ jobs:
         run: python -B tools/Test-UseaExpansion.py
       - name: Check interface repairs and starting governments
         run: python -B tools/Test-InterfaceRepairs.py
+      - name: Check retired Earth news compatibility handlers
+        run: python -B tools/Test-RetiredWorldNews.py
       - name: Check overhaul roadmap
         run: python -B tools/overhaul/check_release_plan.py
       - name: Check screenshot repairs
@@ -65,6 +67,9 @@ jobs:
       - name: Parse authored presentation sources and bound counter/audio categories
         shell: pwsh
         run: python -B tools/check_presentation_sources.py
+      - name: Reject malformed authored presentation fixtures
+        shell: pwsh
+        run: python -B tools/Test-PresentationSources.py
       - name: Check focus canvas and captions
         run: python -B tools/Test-FocusScreenRepairs.py
       - name: Check Continental War generated output

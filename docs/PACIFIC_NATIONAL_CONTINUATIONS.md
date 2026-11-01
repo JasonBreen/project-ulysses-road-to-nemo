@@ -20,10 +20,13 @@ focus, event, project, election, faction, roster and starting-history IDs remain
 
 The `ac_snc_*` national consumer does not own another budget, force-readiness
 stock or service reservation system. It asks the existing selected-lane SNP
-service to complete fresh work after a dated review request. The actual SNP
-owner publishes its finished period's start/date/identity receipt only upon a
-real successful finish. Historical completion flags and aggregate counts do not
-backfill this receipt. Cancellation at the due boundary cannot publish it.
+service to complete fresh work after a dated review request. The request also
+records the next eligible paid-start sequence, distinguishing a period already
+running earlier on that same calendar day. The actual SNP owner publishes its
+finished period's start/date/identity/sequence receipt only upon a real successful
+finish. Historical completion flags and aggregate counts do not backfill this
+receipt. Cancellation at the due boundary cannot publish it, and failed starts
+cannot increment the sequence.
 
 All ordinary service payment/reservation logic remains in SNP and the real P 1
 owners: Osea's finite three commitment units, political power, institutional
@@ -48,7 +51,10 @@ the political owner, starts a present-day request, and still requires the SNP
 service's separately paid fresh work. Subjects can retain domestic work. Wrong
 current/original identities, copied receipts, expired options and repeated
 initialization/reload cannot repeat benefits. No old-save historical reward or
-new resource/leader/force grant is introduced. Conclusions remain useful after 2020
+new resource/leader/force grant is introduced. Legacy in-flight periods retain
+their existing finish but publish sequence zero; date-only pending requests are
+closed without changing completed choices or receipts and offer the paid renewal.
+Conclusions remain useful after 2020
 and do not require another country's acceptance or any completed war.
 
 ## Public read surface for the later CPW owner

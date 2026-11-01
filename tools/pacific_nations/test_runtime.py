@@ -28,8 +28,12 @@ class NationalRuntime(unittest.TestCase):
     @classmethod
     def setUpClass(cls):cls.baselines={mode:initialized(mode)for mode in('full','experimental','disabled')}
 
-    def ready(self,b,choice=1,mode='full'):
+    def ready(self,b,choice=1,mode='full',request=True):
         w=copy.deepcopy(self.baselines[mode]);c=w.countries[b.tag];w.today=date(2021,1,1).toordinal()
+        if b.tag=='YUK':
+            # Observations of the earlier actor owner, never new grants by SNC.
+            c.flags['YUK_fp_stood_aside'if choice==1 else'YUK_fp_intervened']=None
+            c.ideas.add('yuk_reformed_field_command'if choice==1 else'yuk_expeditionary_command')
         parent=next(row for row in SNP_BRANCHES if row.tag==b.tag and row.key==b.parent)
         # Focus-completion observations represent the already-earned parent tree;
         # its funded period/payment/completion still executes the actual owner.
@@ -42,7 +46,7 @@ class NationalRuntime(unittest.TestCase):
         if b==module.BRANCHES[-1]:
             for before in module.BRANCHES[:2]:c.flags[before.id+'_review_done']=None
         w.complete(b.focus(0),b.tag);w.complete(b.focus(choice),b.tag)
-        if len(b.steps)>4:w.complete(b.id+'_protocol',b.tag)
+        if len(b.steps)>4 and request:w.complete(b.id+'_protocol',b.tag)
         return w,c,service
 
     def answer(self,w,tag,number,choice):
@@ -65,6 +69,9 @@ class NationalRuntime(unittest.TestCase):
                         else:self.assertEqual({k:v for k,v in before.variables.items()if k.startswith(('ac_macro_','ac_econ_'))},{k:v for k,v in c.variables.items()if k.startswith(('ac_macro_','ac_econ_'))})
                         w.complete(b.id+'_review',b.tag)
                         if len(b.steps)==8:w.complete(b.focus(5 if choice==1 else 6),b.tag)
+                    else:
+                        module=next(m for m in countries()if m.TAG==b.tag);number=10+module.BRANCHES.index(b)
+                        self.assertIn(prefix(b.tag)+'_message_'+str(number)+'_sent',c.flags)
                     w.complete(b.id+'_settlement',b.tag)
                     for i in([0,choice,3,4,5 if choice==1 else 6,7]if len(b.steps)==8 else[0,choice,3,4,5]if len(b.steps)==6 else[0,choice,3]):
                         ident=b.focus(i);visited.add(ident);before=copy.deepcopy(c);w.run(ident+'_apply',b.tag);self.assertEqual(before,c)
@@ -82,6 +89,42 @@ class NationalRuntime(unittest.TestCase):
             wrong=next(other for other in SERVICES if other.branch.tag==b.tag and other.branch.key!=b.parent)
             c.variables[wrong.prefix+'_last_completed_started']=D(w.today);c.variables[wrong.prefix+'_last_completed_on']=D(w.today)
             self.assertFalse(w.trigger(w.triggers[b.id+'_fresh_work'],c))
+
+    def test_same_day_prior_start_cannot_qualify_and_rapid_return_needs_a_new_serial(self):
+        for module in countries():
+            b=module.BRANCHES[0]
+            for choice in(1,2):
+                w,c,s=self.ready(b,choice,request=False);w.advance(90);w.run(s.id+'_start',b.tag)
+                self.assertEqual(2,c.variables[s.prefix+'_start_serial'])
+                w.complete(b.id+'_protocol',b.tag)
+                self.assertEqual(c.variables[s.prefix+'_started'],c.variables[prefix(b.tag)+'_'+b.key+'_requested'])
+                self.assertEqual(3,c.variables[prefix(b.tag)+'_'+b.key+'_required_start_'+str(choice)])
+                returned=copy.deepcopy(w)
+                w.advance(90);w.event(s.event,b.tag)
+                self.assertEqual(2,c.variables[s.prefix+'_last_completed_serial'])
+                self.assertFalse(w.trigger(w.triggers[b.id+'_fresh_work'],c))
+                finish_service(w,s);self.assertTrue(w.trigger(w.triggers[b.id+'_fresh_work'],c))
+                # Both actual hook owners run for a same-day annex and return.
+                r=returned.countries[b.tag];returned.snp_action('on_annex','ERU',b.tag)
+                returned.national_action(b.tag,'on_annex','ERU',b.tag)
+                returned.run(b.id+'_renew',b.tag);returned.run(s.id+'_start',b.tag)
+                self.assertEqual(3,r.variables[s.prefix+'_start_serial'])
+                returned.advance(89);self.assertFalse(returned.event(s.event,b.tag));self.assertFalse(returned.trigger(returned.triggers[b.id+'_fresh_work'],r))
+                returned.advance(1);returned.event(s.event,b.tag)
+                self.assertEqual(3,r.variables[s.prefix+'_last_completed_serial']);self.assertTrue(returned.trigger(returned.triggers[b.id+'_fresh_work'],r))
+                before=copy.deepcopy(r);returned.event(s.event,b.tag);self.assertEqual(before,r)
+
+    def test_date_only_requests_and_legacy_inflight_work_receive_no_retroactive_generation(self):
+        for module in countries():
+            b=module.BRANCHES[0];w,c,s=self.ready(b,request=False);w.advance(90);w.run(s.id+'_start',b.tag)
+            c.variables.pop(s.prefix+'_start_serial') # Existing in-flight pre-extension save.
+            w.complete(b.id+'_protocol',b.tag);w.advance(90);w.event(s.event,b.tag)
+            self.assertEqual(0,c.variables[s.prefix+'_last_completed_serial']);self.assertFalse(w.trigger(w.triggers[b.id+'_fresh_work'],c))
+            for lane in(1,2):c.variables.pop(prefix(b.tag)+'_'+b.key+'_required_start_'+str(lane))
+            old=copy.deepcopy(c);w.national_action(b.tag,'on_startup')
+            self.assertNotIn(b.id+'_request_open',c.flags);self.assertEqual(old.pp,c.pp)
+            self.assertEqual(old.variables,c.variables);self.assertEqual(old.completed,c.completed)
+            w.run(b.id+'_renew',b.tag);finish_service(w,s);self.assertTrue(w.trigger(w.triggers[b.id+'_fresh_work'],c))
 
     def test_interruption_and_rapid_return_require_paid_present_day_renewal(self):
         for hook in('on_annex','on_capitulation_immediate','on_subject_annexed'):
@@ -139,12 +182,22 @@ class NationalRuntime(unittest.TestCase):
             b=module.BRANCHES[1 if module.TAG=='OSE'else 0]
             for choice in(1,2):
                 w,c,s=self.ready(b,choice);index=module.BRANCHES.index(b)
-                if module.TAG=='YUK':c.ideas.add('yuk_reformed_field_command'if choice==1 else'yuk_expeditionary_command')
+                if module.TAG=='YUK':
+                    if choice==1:
+                        c.completed.add('YUK_army_reform_complete')
+                        w.run('ac_snp_yuk_shift_civil',b.tag) # Real paid allocation effect.
+                    else:c.flags['YUK_exp_command_assessment_done']=None
                 name='ac_snc_'+module.TAG.lower()+'_verification_earned'
                 self.assertFalse(w.trigger(w.triggers[name],c));self.answer(w,b.tag,10+index,choice-1)
                 finish_service(w,s);w.complete(b.id+'_review',b.tag);self.answer(w,b.tag,20+index,choice-1)
                 if len(b.steps)==8:w.complete(b.focus(5 if choice==1 else 6),b.tag)
                 w.complete(b.id+'_settlement',b.tag);self.assertTrue(w.trigger(w.triggers[name],c))
+                if module.TAG=='YUK':
+                    inherited=copy.deepcopy(c)
+                    if choice==1:c.completed.discard('YUK_army_reform_complete')
+                    else:c.flags.pop('YUK_exp_command_assessment_done')
+                    self.assertFalse(w.trigger(w.triggers[name],c))
+                    c.completed=inherited.completed;c.flags=inherited.flags
                 c.flags.pop(prefix(b.tag)+'_message_'+str(10+index)+'_public',None)
                 c.flags.pop(prefix(b.tag)+'_message_'+str(20+index)+'_staff',None)
                 self.assertFalse(w.trigger(w.triggers[name],c))

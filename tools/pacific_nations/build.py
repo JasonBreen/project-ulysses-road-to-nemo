@@ -86,7 +86,7 @@ def outputs():
         triggers[p+'_host']=host(tag)
         triggers[p+'_active']=host(tag)+' ac_snp_active = yes has_country_flag = '+p+'_initialized check_variable = { var = '+p+'_identity value = THIS.id compare = equals }'
         effects[p+'_initialize']=guard(host(tag)+' ac_snp_active = yes NOT = { has_country_flag = '+p+'_initialized }','set_variable = { '+p+'_identity = THIS.id }\nset_country_flag = '+p+'_initialized')
-        sync=[];interrupt=[];tick=[]
+        sync=[];interrupt=[];tick=[];request_repairs=[]
         opening=message(1,module.OPENING_TITLE,module.OPENING,'OR = { '+' '.join('has_country_flag = '+b.focus(0)+'_done'for b in module.BRANCHES)+' }')
         for number,b in enumerate(module.BRANCHES):
             branch=b.id
@@ -103,12 +103,19 @@ def outputs():
             fresh=[]
             for lane in(1,2):
                 receipt='ac_snp_'+tag.lower()+'_'+b.parent+'_'+str(lane)
-                condition='has_country_flag = '+branch+('_civil_done'if lane==1 else'_protected_done')+' has_variable = '+receipt+'_last_completed_started has_variable = '+receipt+'_last_completed_on has_variable = '+receipt+'_last_completed_identity check_variable = { var = '+receipt+'_last_completed_identity value = THIS.id compare = equals } check_variable = { var = '+receipt+'_last_completed_started value = '+p+'_'+b.key+'_requested compare = greater_than_or_equals } check_variable = { var = '+receipt+'_last_completed_on value = date compare = less_than_or_equals }'
+                required=p+'_'+b.key+'_required_start_'+str(lane)
+                condition='has_country_flag = '+branch+('_civil_done'if lane==1 else'_protected_done')+' has_variable = '+required+' has_variable = '+receipt+'_last_completed_serial has_variable = '+receipt+'_last_completed_started has_variable = '+receipt+'_last_completed_on has_variable = '+receipt+'_last_completed_identity check_variable = { var = '+receipt+'_last_completed_identity value = THIS.id compare = equals } check_variable = { var = '+receipt+'_last_completed_serial value = '+required+' compare = greater_than_or_equals } check_variable = { var = '+receipt+'_last_completed_started value = '+p+'_'+b.key+'_requested compare = greater_than_or_equals } check_variable = { var = '+receipt+'_last_completed_on value = date compare = less_than_or_equals }'
                 fresh.append(block('AND',condition))
-            triggers[branch+'_fresh_work']=active(tag)+' has_country_flag = '+branch+'_request_open has_variable = '+p+'_'+b.key+'_requested '+block('OR',''.join(fresh))
             request='set_variable = { '+p+'_'+b.key+'_requested = date }\nset_country_flag = '+branch+'_request_open\n'
-            effects[branch+'_request']=guard(active(tag)+' has_country_flag = '+branch+'_protocol_done NOT = { has_country_flag = '+branch+'_review_done }',request)
-            interrupt.append('clr_country_flag = '+branch+'_request_open\n')
+            if len(b.steps)>4:
+                required_fields=[]
+                for lane in(1,2):
+                    serial='ac_snp_'+tag.lower()+'_'+b.parent+'_'+str(lane)+'_start_serial';required=p+'_'+b.key+'_required_start_'+str(lane);required_fields.append('has_variable = '+required)
+                    request+='set_variable = { '+required+' = 1 }\n'+guard('has_variable = '+serial,'set_variable = { '+required+' = '+serial+' }\nadd_to_variable = { '+required+' = 1 }')
+                triggers[branch+'_fresh_work']=active(tag)+' has_country_flag = '+branch+'_request_open has_variable = '+p+'_'+b.key+'_requested '+block('OR',''.join(fresh))
+                effects[branch+'_request']=guard(active(tag)+' has_country_flag = '+branch+'_protocol_done NOT = { has_country_flag = '+branch+'_review_done }',request)
+                interrupt.append('clr_country_flag = '+branch+'_request_open\n')
+                request_repairs.append(guard('has_country_flag = '+branch+'_request_open NOT = { AND = { '+' '.join(required_fields)+' } }','clr_country_flag = '+branch+'_request_open'))
             for i,suffix in enumerate(b.suffixes):
                 ident=b.focus(i);title,description=b.steps[i];text(ident,title);text(ident+'_desc',description)
                 requirements=refs(b,i)
@@ -122,6 +129,7 @@ def outputs():
                 text(requirement_key,'From '+b.opens+', an active national administration and the required earlier work are available. '+('A corresponding selected-lane funded service must have genuinely completed after this branch requested its review.'if suffix=='review'else'The selected policy remains exclusive; conclusions remain available when their real prerequisites finish after the expected calendar.'))
                 action='set_country_flag = '+ident+'_done\n'
                 if suffix=='protocol':action+=request
+                if suffix=='review':action+='clr_country_flag = '+branch+'_request_open\n'
                 action+=p+'_sync_policies = yes\n'
                 effects[ident+'_apply']=guard(condition+' NOT = { has_country_flag = '+ident+'_done }',action+p+'_narrative_tick = yes')
                 summary=('Open a fresh review request. Complete the corresponding selected-lane SNP service after this request; existing payments and national reservations remain owned by that service.'if suffix=='protocol'else'Record the corresponding genuinely completed funded period after this branch requested it.'if suffix=='review'else'Improve the selected continuing policy by twenty percent while keeping its unfavorable cost.'if suffix=='settlement'else'Adopt the shown benefit with its distinct continuing political, civilian or readiness cost.'if suffix in('civil','protected','public_return','staff_return')else'Open the named national continuation from its earned prior settlement.')
@@ -133,7 +141,8 @@ def outputs():
                 body+=block('available',block('custom_trigger_tooltip','tooltip = '+requirement_key+'\n'+condition))+'cancel_if_invalid = yes\ncontinue_if_invalid = no\nai_will_do = { factor = 12 }\n'+block('completion_reward',shown+block('hidden_effect',ident+'_apply = yes'))
                 focuses.append(block('shared_focus',body));manifest.append(dict(id=ident,tag=tag,branch=b.key,stage=suffix,x=x,y=y))
             callback=branch+'_hearing_context';records=''
-            hearing=message(10+number,b.steps[0][0]+': The Hearing',b.hearing,'has_country_flag = '+branch+('_protocol_done'if len(b.steps)>4 else'_civil_done'))
+            hearing_ready='has_country_flag = '+branch+'_protocol_done'if len(b.steps)>4 else'OR = { has_country_flag = '+branch+'_civil_done has_country_flag = '+branch+'_protected_done }'
+            hearing=message(10+number,b.steps[0][0]+': The Hearing',b.hearing,hearing_ready)
             for kind,prose in(('public','The earlier hearing was opened to public scrutiny. Its signed objections remain attached to this assessment.'),('staff','The earlier hearing kept a signed professional account. The names beneath it remain responsible for what was omitted.'),('missed','The invitation went unanswered. This assessment records delivered work without inventing an agreement that nobody signed.')):
                 key=callback+'_'+kind;text(key,prose)
                 records+=block('text',('trigger = { has_country_flag = '+hearing+'_'+kind+' }\n'if kind!='missed'else'')+'localization_key = '+key)
@@ -153,6 +162,7 @@ def outputs():
             interrupt.append(guard('has_country_flag = '+token+'_pending','set_country_flag = '+token+'_missed\nclr_country_flag = '+token+'_pending\nclr_country_flag = '+token+'_window'))
             tick.append(guard('has_country_flag = '+token+'_pending NOT = { has_country_flag = '+token+'_window }','set_country_flag = '+token+'_missed\nclr_country_flag = '+token+'_pending'))
         effects[p+'_interrupt']=guard(host(tag),'\n'.join(interrupt))
+        effects[p+'_initialize']+=guard(active(tag),'\n'.join(request_repairs))
         effects[p+'_sync_policies']=guard(host(tag),'\n'.join(sync))
         effects[p+'_narrative_tick']=guard(active(tag),'\n'.join(token+'_send = yes'for token in messages))
         effects[p+'_weekly']=guard(host(tag),p+'_initialize = yes\n'+guard('NOT = { '+active(tag)+' }',p+'_interrupt = yes')+p+'_sync_policies = yes\n'+guard(active(tag),'\n'.join(tick)+'\n'+p+'_narrative_tick = yes'))

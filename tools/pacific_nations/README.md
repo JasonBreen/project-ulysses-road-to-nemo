@@ -23,15 +23,20 @@ and settlement commitments are 70. All real conclusions remain eligible after 20
 
 There is no new generic budget/register or parallel service reservation system.
 Six individual lanes use their actual existing SNP parent and selected-lane
-funded period. A protocol records the present request date. The review requires
-the matching period's actual completion receipt, with its start not earlier than
-the request and its identity matching the current country. Historical aggregate
+funded period. A protocol records the present request date and the next eligible
+paid-start sequence for each lane. The review requires the matching period's
+actual completion receipt, with its sequence at least that minimum, its start not
+earlier than the request and its identity matching the current country. Historical aggregate
 counts, old completion flags, another branch's work, cancellation at day 90 and
 copied receipts cannot substitute for that evidence.
 
-The SNP owner publishes three additive fields only when a real period finishes:
-`<scope>_last_completed_started`, `_last_completed_on`, and
-`_last_completed_identity`. Initialization does not backfill them. The consumer
+The SNP owner increments `<scope>_start_serial` only after a successful paid
+start. It publishes four additive fields only when a real period finishes:
+`<scope>_last_completed_started`, `_last_completed_on`,
+`_last_completed_identity`, and `_last_completed_serial`. A period already
+running earlier on the same calendar day cannot satisfy the later request.
+Initialization does not backfill them. Legacy in-flight work can finish under
+its existing contract but publishes sequence zero. The consumer
 never changes SNP shares, support, reservations, completion dates or payments.
 Its funded work therefore retains the actual three-unit Osean schedule or the
 Yuktobanian 100-point allocation/two-office bound, real PP/capacity costs, and
@@ -41,10 +46,13 @@ political/capacity costs. No fee is charged again by this review consumer.
 Immediate annexation, capitulation and subject-annexation hooks clear pending
 current requests/messages. Weekly checks repair eligibility and expiry. A rapid
 return cannot revive an old request. Renewing it costs 10 PP and 2 institutional
-capacity through the actual political owner and sets a fresh date; the matching
+capacity through the actual political owner and sets a fresh date and minimum
+paid-start sequences; the matching
 SNP service still pays/reserves its ordinary work. Domestic subject work remains
 eligible. Wrong current/original tags or a copied initialized identity receive
-no reward. Repeated initialization/reload grants no resources or old scenes.
+no reward. Old date-only requests are closed without changing completed choices,
+receipts, money or reservations; their explicit renewal remains available.
+Repeated initialization/reload grants no resources or old scenes.
 
 Four eight-node lanes retain two separate policy choices: the early civil or
 protected priority, then a public or signed staff return after actual work.

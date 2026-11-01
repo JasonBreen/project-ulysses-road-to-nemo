@@ -194,6 +194,7 @@ class SuperpowerProgrammes(unittest.TestCase):
             w.event(s.event,c.tag)
             self.assertEqual(first,c.variables[key]);self.assertEqual(w.today,c.variables[s.prefix+'_last_completed_on'])
             self.assertEqual(w.number('THIS.id',c,{},c,None),c.variables[s.prefix+'_last_completed_identity'])
+            self.assertEqual(1,c.variables[s.prefix+'_start_serial']);self.assertEqual(1,c.variables[s.prefix+'_last_completed_serial'])
             receipt={k:v for k,v in c.variables.items()if k.startswith(s.prefix+'_last_completed_')}
             w.advance(90);w.run(s.id+'_start',c.tag);w.advance(90)
             # A cancellation at the due boundary is not a successful completion,
@@ -201,7 +202,7 @@ class SuperpowerProgrammes(unittest.TestCase):
             w.run(s.id+'_cancel',c.tag);self.assertIn(s.id+'_completed',c.flags)
             self.assertEqual(receipt,{k:v for k,v in c.variables.items()if k.startswith(s.prefix+'_last_completed_')})
             w.run(s.id+'_start',c.tag);second=c.variables[s.prefix+'_started'];w.advance(90);w.event(s.event,c.tag)
-            self.assertEqual(second,c.variables[key]);self.assertGreater(second,first)
+            self.assertEqual(second,c.variables[key]);self.assertGreater(second,first);self.assertEqual(3,c.variables[s.prefix+'_last_completed_serial'])
 
     def test_ose_support_controls_price_access_standing_and_bounded_paid_recovery(self):
         for n,lane in((0,'public'),(1,'security')):

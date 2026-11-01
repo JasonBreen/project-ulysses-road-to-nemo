@@ -7,6 +7,52 @@ ac_snc_ose_initialize = {
 		set_variable = { ac_snc_ose_identity = THIS.id }
 		set_country_flag = ac_snc_ose_initialized
 	}
+	if = {
+		limit = {
+			ac_snc_ose_active = yes
+		}
+		if = {
+			limit = {
+				has_country_flag = OSE_snc_guarantor_limits_request_open NOT = { AND = { has_variable = ac_snc_ose_guarantor_limits_required_start_1 has_variable = ac_snc_ose_guarantor_limits_required_start_2 } }
+			}
+			clr_country_flag = OSE_snc_guarantor_limits_request_open
+		}
+
+		if = {
+			limit = {
+				has_country_flag = OSE_snc_contact_verification_request_open NOT = { AND = { has_variable = ac_snc_ose_contact_verification_required_start_1 has_variable = ac_snc_ose_contact_verification_required_start_2 } }
+			}
+			clr_country_flag = OSE_snc_contact_verification_request_open
+		}
+
+		if = {
+			limit = {
+				has_country_flag = OSE_snc_replacement_standards_request_open NOT = { AND = { has_variable = ac_snc_ose_replacement_standards_required_start_1 has_variable = ac_snc_ose_replacement_standards_required_start_2 } }
+			}
+			clr_country_flag = OSE_snc_replacement_standards_request_open
+		}
+
+		if = {
+			limit = {
+				has_country_flag = OSE_snc_pacific_channel_request_open NOT = { AND = { has_variable = ac_snc_ose_pacific_channel_required_start_1 has_variable = ac_snc_ose_pacific_channel_required_start_2 } }
+			}
+			clr_country_flag = OSE_snc_pacific_channel_request_open
+		}
+
+		if = {
+			limit = {
+				has_country_flag = OSE_snc_emergency_review_request_open NOT = { AND = { has_variable = ac_snc_ose_emergency_review_required_start_1 has_variable = ac_snc_ose_emergency_review_required_start_2 } }
+			}
+			clr_country_flag = OSE_snc_emergency_review_request_open
+		}
+
+		if = {
+			limit = {
+				has_country_flag = OSE_snc_federal_account_request_open NOT = { AND = { has_variable = ac_snc_ose_federal_account_required_start_1 has_variable = ac_snc_ose_federal_account_required_start_2 } }
+			}
+			clr_country_flag = OSE_snc_federal_account_request_open
+		}
+	}
 }
 
 ac_snc_ose_message_1_reply_0 = {
@@ -54,6 +100,22 @@ OSE_snc_guarantor_limits_request = {
 		}
 		set_variable = { ac_snc_ose_guarantor_limits_requested = date }
 		set_country_flag = OSE_snc_guarantor_limits_request_open
+		set_variable = { ac_snc_ose_guarantor_limits_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_guarantor_review_1_start_serial
+			}
+			set_variable = { ac_snc_ose_guarantor_limits_required_start_1 = ac_snp_ose_guarantor_review_1_start_serial }
+			add_to_variable = { ac_snc_ose_guarantor_limits_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_guarantor_limits_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_guarantor_review_2_start_serial
+			}
+			set_variable = { ac_snc_ose_guarantor_limits_required_start_2 = ac_snp_ose_guarantor_review_2_start_serial }
+			add_to_variable = { ac_snc_ose_guarantor_limits_required_start_2 = 1 }
+		}
 	}
 }
 
@@ -101,6 +163,22 @@ OSE_snc_guarantor_limits_protocol_apply = {
 		set_country_flag = OSE_snc_guarantor_limits_protocol_done
 		set_variable = { ac_snc_ose_guarantor_limits_requested = date }
 		set_country_flag = OSE_snc_guarantor_limits_request_open
+		set_variable = { ac_snc_ose_guarantor_limits_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_guarantor_review_1_start_serial
+			}
+			set_variable = { ac_snc_ose_guarantor_limits_required_start_1 = ac_snp_ose_guarantor_review_1_start_serial }
+			add_to_variable = { ac_snc_ose_guarantor_limits_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_guarantor_limits_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_guarantor_review_2_start_serial
+			}
+			set_variable = { ac_snc_ose_guarantor_limits_required_start_2 = ac_snp_ose_guarantor_review_2_start_serial }
+			add_to_variable = { ac_snc_ose_guarantor_limits_required_start_2 = 1 }
+		}
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -112,6 +190,7 @@ OSE_snc_guarantor_limits_review_apply = {
 			ac_snc_ose_active = yes NOT = { date < 2006.1.1 } has_completed_focus = OSE_snc_guarantor_limits_protocol OSE_snc_guarantor_limits_fresh_work = yes NOT = { has_country_flag = OSE_snc_guarantor_limits_review_done }
 		}
 		set_country_flag = OSE_snc_guarantor_limits_review_done
+		clr_country_flag = OSE_snc_guarantor_limits_request_open
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -239,6 +318,22 @@ OSE_snc_guarantor_limits_renew = {
 		ac_pol_change_capacity = yes
 		set_variable = { ac_snc_ose_guarantor_limits_requested = date }
 		set_country_flag = OSE_snc_guarantor_limits_request_open
+		set_variable = { ac_snc_ose_guarantor_limits_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_guarantor_review_1_start_serial
+			}
+			set_variable = { ac_snc_ose_guarantor_limits_required_start_1 = ac_snp_ose_guarantor_review_1_start_serial }
+			add_to_variable = { ac_snc_ose_guarantor_limits_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_guarantor_limits_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_guarantor_review_2_start_serial
+			}
+			set_variable = { ac_snc_ose_guarantor_limits_required_start_2 = ac_snp_ose_guarantor_review_2_start_serial }
+			add_to_variable = { ac_snc_ose_guarantor_limits_required_start_2 = 1 }
+		}
 	}
 }
 
@@ -249,6 +344,22 @@ OSE_snc_contact_verification_request = {
 		}
 		set_variable = { ac_snc_ose_contact_verification_requested = date }
 		set_country_flag = OSE_snc_contact_verification_request_open
+		set_variable = { ac_snc_ose_contact_verification_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_air_watch_1_start_serial
+			}
+			set_variable = { ac_snc_ose_contact_verification_required_start_1 = ac_snp_ose_air_watch_1_start_serial }
+			add_to_variable = { ac_snc_ose_contact_verification_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_contact_verification_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_air_watch_2_start_serial
+			}
+			set_variable = { ac_snc_ose_contact_verification_required_start_2 = ac_snp_ose_air_watch_2_start_serial }
+			add_to_variable = { ac_snc_ose_contact_verification_required_start_2 = 1 }
+		}
 	}
 }
 
@@ -296,6 +407,22 @@ OSE_snc_contact_verification_protocol_apply = {
 		set_country_flag = OSE_snc_contact_verification_protocol_done
 		set_variable = { ac_snc_ose_contact_verification_requested = date }
 		set_country_flag = OSE_snc_contact_verification_request_open
+		set_variable = { ac_snc_ose_contact_verification_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_air_watch_1_start_serial
+			}
+			set_variable = { ac_snc_ose_contact_verification_required_start_1 = ac_snp_ose_air_watch_1_start_serial }
+			add_to_variable = { ac_snc_ose_contact_verification_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_contact_verification_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_air_watch_2_start_serial
+			}
+			set_variable = { ac_snc_ose_contact_verification_required_start_2 = ac_snp_ose_air_watch_2_start_serial }
+			add_to_variable = { ac_snc_ose_contact_verification_required_start_2 = 1 }
+		}
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -307,6 +434,7 @@ OSE_snc_contact_verification_review_apply = {
 			ac_snc_ose_active = yes NOT = { date < 2006.1.1 } has_completed_focus = OSE_snc_contact_verification_protocol OSE_snc_contact_verification_fresh_work = yes NOT = { has_country_flag = OSE_snc_contact_verification_review_done }
 		}
 		set_country_flag = OSE_snc_contact_verification_review_done
+		clr_country_flag = OSE_snc_contact_verification_request_open
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -434,6 +562,22 @@ OSE_snc_contact_verification_renew = {
 		ac_pol_change_capacity = yes
 		set_variable = { ac_snc_ose_contact_verification_requested = date }
 		set_country_flag = OSE_snc_contact_verification_request_open
+		set_variable = { ac_snc_ose_contact_verification_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_air_watch_1_start_serial
+			}
+			set_variable = { ac_snc_ose_contact_verification_required_start_1 = ac_snp_ose_air_watch_1_start_serial }
+			add_to_variable = { ac_snc_ose_contact_verification_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_contact_verification_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_air_watch_2_start_serial
+			}
+			set_variable = { ac_snc_ose_contact_verification_required_start_2 = ac_snp_ose_air_watch_2_start_serial }
+			add_to_variable = { ac_snc_ose_contact_verification_required_start_2 = 1 }
+		}
 	}
 }
 
@@ -444,6 +588,22 @@ OSE_snc_replacement_standards_request = {
 		}
 		set_variable = { ac_snc_ose_replacement_standards_requested = date }
 		set_country_flag = OSE_snc_replacement_standards_request_open
+		set_variable = { ac_snc_ose_replacement_standards_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_procurement_scrutiny_1_start_serial
+			}
+			set_variable = { ac_snc_ose_replacement_standards_required_start_1 = ac_snp_ose_procurement_scrutiny_1_start_serial }
+			add_to_variable = { ac_snc_ose_replacement_standards_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_replacement_standards_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_procurement_scrutiny_2_start_serial
+			}
+			set_variable = { ac_snc_ose_replacement_standards_required_start_2 = ac_snp_ose_procurement_scrutiny_2_start_serial }
+			add_to_variable = { ac_snc_ose_replacement_standards_required_start_2 = 1 }
+		}
 	}
 }
 
@@ -491,6 +651,22 @@ OSE_snc_replacement_standards_protocol_apply = {
 		set_country_flag = OSE_snc_replacement_standards_protocol_done
 		set_variable = { ac_snc_ose_replacement_standards_requested = date }
 		set_country_flag = OSE_snc_replacement_standards_request_open
+		set_variable = { ac_snc_ose_replacement_standards_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_procurement_scrutiny_1_start_serial
+			}
+			set_variable = { ac_snc_ose_replacement_standards_required_start_1 = ac_snp_ose_procurement_scrutiny_1_start_serial }
+			add_to_variable = { ac_snc_ose_replacement_standards_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_replacement_standards_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_procurement_scrutiny_2_start_serial
+			}
+			set_variable = { ac_snc_ose_replacement_standards_required_start_2 = ac_snp_ose_procurement_scrutiny_2_start_serial }
+			add_to_variable = { ac_snc_ose_replacement_standards_required_start_2 = 1 }
+		}
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -502,6 +678,7 @@ OSE_snc_replacement_standards_review_apply = {
 			ac_snc_ose_active = yes NOT = { date < 2006.1.1 } has_completed_focus = OSE_snc_replacement_standards_protocol OSE_snc_replacement_standards_fresh_work = yes NOT = { has_country_flag = OSE_snc_replacement_standards_review_done }
 		}
 		set_country_flag = OSE_snc_replacement_standards_review_done
+		clr_country_flag = OSE_snc_replacement_standards_request_open
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -629,6 +806,22 @@ OSE_snc_replacement_standards_renew = {
 		ac_pol_change_capacity = yes
 		set_variable = { ac_snc_ose_replacement_standards_requested = date }
 		set_country_flag = OSE_snc_replacement_standards_request_open
+		set_variable = { ac_snc_ose_replacement_standards_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_procurement_scrutiny_1_start_serial
+			}
+			set_variable = { ac_snc_ose_replacement_standards_required_start_1 = ac_snp_ose_procurement_scrutiny_1_start_serial }
+			add_to_variable = { ac_snc_ose_replacement_standards_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_replacement_standards_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_procurement_scrutiny_2_start_serial
+			}
+			set_variable = { ac_snc_ose_replacement_standards_required_start_2 = ac_snp_ose_procurement_scrutiny_2_start_serial }
+			add_to_variable = { ac_snc_ose_replacement_standards_required_start_2 = 1 }
+		}
 	}
 }
 
@@ -639,6 +832,22 @@ OSE_snc_pacific_channel_request = {
 		}
 		set_variable = { ac_snc_ose_pacific_channel_requested = date }
 		set_country_flag = OSE_snc_pacific_channel_request_open
+		set_variable = { ac_snc_ose_pacific_channel_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_civil_space_1_start_serial
+			}
+			set_variable = { ac_snc_ose_pacific_channel_required_start_1 = ac_snp_ose_civil_space_1_start_serial }
+			add_to_variable = { ac_snc_ose_pacific_channel_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_pacific_channel_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_civil_space_2_start_serial
+			}
+			set_variable = { ac_snc_ose_pacific_channel_required_start_2 = ac_snp_ose_civil_space_2_start_serial }
+			add_to_variable = { ac_snc_ose_pacific_channel_required_start_2 = 1 }
+		}
 	}
 }
 
@@ -686,6 +895,22 @@ OSE_snc_pacific_channel_protocol_apply = {
 		set_country_flag = OSE_snc_pacific_channel_protocol_done
 		set_variable = { ac_snc_ose_pacific_channel_requested = date }
 		set_country_flag = OSE_snc_pacific_channel_request_open
+		set_variable = { ac_snc_ose_pacific_channel_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_civil_space_1_start_serial
+			}
+			set_variable = { ac_snc_ose_pacific_channel_required_start_1 = ac_snp_ose_civil_space_1_start_serial }
+			add_to_variable = { ac_snc_ose_pacific_channel_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_pacific_channel_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_civil_space_2_start_serial
+			}
+			set_variable = { ac_snc_ose_pacific_channel_required_start_2 = ac_snp_ose_civil_space_2_start_serial }
+			add_to_variable = { ac_snc_ose_pacific_channel_required_start_2 = 1 }
+		}
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -697,6 +922,7 @@ OSE_snc_pacific_channel_review_apply = {
 			ac_snc_ose_active = yes NOT = { date < 2006.1.1 } has_completed_focus = OSE_snc_pacific_channel_protocol OSE_snc_pacific_channel_fresh_work = yes NOT = { has_country_flag = OSE_snc_pacific_channel_review_done }
 		}
 		set_country_flag = OSE_snc_pacific_channel_review_done
+		clr_country_flag = OSE_snc_pacific_channel_request_open
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -824,6 +1050,22 @@ OSE_snc_pacific_channel_renew = {
 		ac_pol_change_capacity = yes
 		set_variable = { ac_snc_ose_pacific_channel_requested = date }
 		set_country_flag = OSE_snc_pacific_channel_request_open
+		set_variable = { ac_snc_ose_pacific_channel_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_civil_space_1_start_serial
+			}
+			set_variable = { ac_snc_ose_pacific_channel_required_start_1 = ac_snp_ose_civil_space_1_start_serial }
+			add_to_variable = { ac_snc_ose_pacific_channel_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_pacific_channel_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_civil_space_2_start_serial
+			}
+			set_variable = { ac_snc_ose_pacific_channel_required_start_2 = ac_snp_ose_civil_space_2_start_serial }
+			add_to_variable = { ac_snc_ose_pacific_channel_required_start_2 = 1 }
+		}
 	}
 }
 
@@ -834,6 +1076,22 @@ OSE_snc_emergency_review_request = {
 		}
 		set_variable = { ac_snc_ose_emergency_review_requested = date }
 		set_country_flag = OSE_snc_emergency_review_request_open
+		set_variable = { ac_snc_ose_emergency_review_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_crisis_authority_1_start_serial
+			}
+			set_variable = { ac_snc_ose_emergency_review_required_start_1 = ac_snp_ose_crisis_authority_1_start_serial }
+			add_to_variable = { ac_snc_ose_emergency_review_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_emergency_review_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_crisis_authority_2_start_serial
+			}
+			set_variable = { ac_snc_ose_emergency_review_required_start_2 = ac_snp_ose_crisis_authority_2_start_serial }
+			add_to_variable = { ac_snc_ose_emergency_review_required_start_2 = 1 }
+		}
 	}
 }
 
@@ -881,6 +1139,22 @@ OSE_snc_emergency_review_protocol_apply = {
 		set_country_flag = OSE_snc_emergency_review_protocol_done
 		set_variable = { ac_snc_ose_emergency_review_requested = date }
 		set_country_flag = OSE_snc_emergency_review_request_open
+		set_variable = { ac_snc_ose_emergency_review_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_crisis_authority_1_start_serial
+			}
+			set_variable = { ac_snc_ose_emergency_review_required_start_1 = ac_snp_ose_crisis_authority_1_start_serial }
+			add_to_variable = { ac_snc_ose_emergency_review_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_emergency_review_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_crisis_authority_2_start_serial
+			}
+			set_variable = { ac_snc_ose_emergency_review_required_start_2 = ac_snp_ose_crisis_authority_2_start_serial }
+			add_to_variable = { ac_snc_ose_emergency_review_required_start_2 = 1 }
+		}
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -892,6 +1166,7 @@ OSE_snc_emergency_review_review_apply = {
 			ac_snc_ose_active = yes NOT = { date < 2010.1.1 } has_completed_focus = OSE_snc_emergency_review_protocol OSE_snc_emergency_review_fresh_work = yes NOT = { has_country_flag = OSE_snc_emergency_review_review_done }
 		}
 		set_country_flag = OSE_snc_emergency_review_review_done
+		clr_country_flag = OSE_snc_emergency_review_request_open
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -994,6 +1269,22 @@ OSE_snc_emergency_review_renew = {
 		ac_pol_change_capacity = yes
 		set_variable = { ac_snc_ose_emergency_review_requested = date }
 		set_country_flag = OSE_snc_emergency_review_request_open
+		set_variable = { ac_snc_ose_emergency_review_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_crisis_authority_1_start_serial
+			}
+			set_variable = { ac_snc_ose_emergency_review_required_start_1 = ac_snp_ose_crisis_authority_1_start_serial }
+			add_to_variable = { ac_snc_ose_emergency_review_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_emergency_review_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_crisis_authority_2_start_serial
+			}
+			set_variable = { ac_snc_ose_emergency_review_required_start_2 = ac_snp_ose_crisis_authority_2_start_serial }
+			add_to_variable = { ac_snc_ose_emergency_review_required_start_2 = 1 }
+		}
 	}
 }
 
@@ -1004,6 +1295,22 @@ OSE_snc_federal_account_request = {
 		}
 		set_variable = { ac_snc_ose_federal_account_requested = date }
 		set_country_flag = OSE_snc_federal_account_request_open
+		set_variable = { ac_snc_ose_federal_account_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_appropriations_1_start_serial
+			}
+			set_variable = { ac_snc_ose_federal_account_required_start_1 = ac_snp_ose_appropriations_1_start_serial }
+			add_to_variable = { ac_snc_ose_federal_account_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_federal_account_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_appropriations_2_start_serial
+			}
+			set_variable = { ac_snc_ose_federal_account_required_start_2 = ac_snp_ose_appropriations_2_start_serial }
+			add_to_variable = { ac_snc_ose_federal_account_required_start_2 = 1 }
+		}
 	}
 }
 
@@ -1051,6 +1358,22 @@ OSE_snc_federal_account_protocol_apply = {
 		set_country_flag = OSE_snc_federal_account_protocol_done
 		set_variable = { ac_snc_ose_federal_account_requested = date }
 		set_country_flag = OSE_snc_federal_account_request_open
+		set_variable = { ac_snc_ose_federal_account_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_appropriations_1_start_serial
+			}
+			set_variable = { ac_snc_ose_federal_account_required_start_1 = ac_snp_ose_appropriations_1_start_serial }
+			add_to_variable = { ac_snc_ose_federal_account_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_federal_account_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_appropriations_2_start_serial
+			}
+			set_variable = { ac_snc_ose_federal_account_required_start_2 = ac_snp_ose_appropriations_2_start_serial }
+			add_to_variable = { ac_snc_ose_federal_account_required_start_2 = 1 }
+		}
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -1062,6 +1385,7 @@ OSE_snc_federal_account_review_apply = {
 			ac_snc_ose_active = yes NOT = { date < 2011.1.1 } has_completed_focus = OSE_snc_federal_account_protocol OSE_snc_federal_account_fresh_work = yes NOT = { has_country_flag = OSE_snc_federal_account_review_done }
 		}
 		set_country_flag = OSE_snc_federal_account_review_done
+		clr_country_flag = OSE_snc_federal_account_request_open
 		ac_snc_ose_sync_policies = yes
 		ac_snc_ose_narrative_tick = yes
 	}
@@ -1164,6 +1488,22 @@ OSE_snc_federal_account_renew = {
 		ac_pol_change_capacity = yes
 		set_variable = { ac_snc_ose_federal_account_requested = date }
 		set_country_flag = OSE_snc_federal_account_request_open
+		set_variable = { ac_snc_ose_federal_account_required_start_1 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_appropriations_1_start_serial
+			}
+			set_variable = { ac_snc_ose_federal_account_required_start_1 = ac_snp_ose_appropriations_1_start_serial }
+			add_to_variable = { ac_snc_ose_federal_account_required_start_1 = 1 }
+		}
+		set_variable = { ac_snc_ose_federal_account_required_start_2 = 1 }
+		if = {
+			limit = {
+				has_variable = ac_snp_ose_appropriations_2_start_serial
+			}
+			set_variable = { ac_snc_ose_federal_account_required_start_2 = ac_snp_ose_appropriations_2_start_serial }
+			add_to_variable = { ac_snc_ose_federal_account_required_start_2 = 1 }
+		}
 	}
 }
 

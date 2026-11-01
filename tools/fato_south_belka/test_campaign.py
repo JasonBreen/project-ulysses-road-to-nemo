@@ -267,6 +267,42 @@ class CampaignOwners(unittest.TestCase):
             else:w.fsb_action('on_annex','BLK','OSE')
             self.assertNotIn('ac_fsb_sbk_limited_adviser',c.ideas,interrupted);self.assertNotIn('ac_fsb_adviser_visit',c.flags)
 
+    def test_osean_interruption_without_arrangement_preserves_sbk_and_earned_conclusion(self):
+        for callback,history,resolved in product(('capitulation','annexation'),('never_requested','completed_visit','stale_notice'),(0,1)):
+            with self.subTest(callback=callback,history=history,resolved=resolved):
+                w=self.world();c=enable(w,'SBK');ose=w.countries['OSE']
+                c.variables['ac_fsb_cases_resolved']=D(resolved)
+                if history=='completed_visit':c.flags['ac_fsb_adviser_accepted']=None
+                elif history=='stale_notice':ose.flags['ac_fsb_adviser_notice']=None
+                before=copy.deepcopy(vars(c))
+                if callback=='capitulation':w.fsb_action('on_capitulation_immediate','OSE')
+                else:w.fsb_action('on_annex','BLK','OSE')
+                self.assertEqual(before,vars(c))
+                self.assertNotIn('ac_fsb_adviser_notice',ose.flags)
+                self.assertTrue(w.choose('SBK_fsb_final_arrangement','SBK'))
+                expected='accountable' if resolved else 'interim'
+                self.assertIn('ac_fsb_sbk_final_arrangement_'+expected,c.ideas)
+                self.assertNotIn('ac_fsb_sbk_final_arrangement_domestic',c.ideas)
+
+    def test_osean_interruption_closes_only_existing_adviser_arrangements_once(self):
+        for callback,accepted in product(('capitulation','annexation'),(False,True)):
+            with self.subTest(callback=callback,accepted=accepted):
+                w=self.world();c=enable(w,'SBK')
+                self.assertTrue(w.choose('SBK_fsb_request_adviser','SBK'))
+                if accepted:self.assertTrue(w.choose('OSE_fsb_accept_sbk_adviser','OSE'))
+                paid=(account(c),c.pp,copy.deepcopy(c.equipment))
+                for _ in range(2):
+                    if callback=='capitulation':w.fsb_action('on_capitulation_immediate','OSE')
+                    else:w.fsb_action('on_annex','BLK','OSE')
+                    self.assertEqual(paid,(account(c),c.pp,c.equipment))
+                    self.assertIn('ac_fsb_adviser_refused',c.flags)
+                    for flag in ('ac_fsb_adviser_open','ac_fsb_adviser_window','ac_fsb_adviser_visit'):
+                        self.assertNotIn(flag,c.flags)
+                    self.assertNotIn('ac_fsb_sbk_limited_adviser',c.ideas)
+                    self.assertNotIn('ac_fsb_adviser_notice',w.countries['OSE'].flags)
+                    if _==0:closed=copy.deepcopy(vars(c))
+                    else:self.assertEqual(closed,vars(c))
+
     def test_removed_standing_policy_can_be_costed_again_without_double_commitment(self):
         w=self.world();c=enable(w,'SBK');initial=c.variables['ac_macro_commitments_annual'];w.choose('SBK_fsb_maintenance_account','SBK');delta=c.variables['ac_fsb_fiscal_applied']
         self.assertTrue(w.choose('SBK_fsb_public_interest','SBK'));self.assertEqual(initial,c.variables['ac_macro_commitments_annual']);cash=c.variables['ac_macro_cash']

@@ -4840,7 +4840,14 @@ ac_fsb_adviser_receiver_interrupt = {
 			tag = OSE original_tag = OSE
 		}
 		clr_country_flag = ac_fsb_adviser_notice
-		SBK = { ac_fsb_close_adviser = yes remove_ideas = ac_fsb_sbk_limited_adviser set_country_flag = ac_fsb_adviser_refused }
+		SBK = {
+			if = {
+				limit = {
+					OR = { has_country_flag = ac_fsb_adviser_open has_country_flag = ac_fsb_adviser_visit }
+				}
+				ac_fsb_close_adviser = yes remove_ideas = ac_fsb_sbk_limited_adviser set_country_flag = ac_fsb_adviser_refused
+			}
+		}
 	}
 }
 ac_fsb_scene_1_queue = {

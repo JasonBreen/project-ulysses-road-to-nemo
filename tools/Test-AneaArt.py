@@ -23,7 +23,7 @@ class AneaArt(unittest.TestCase):
         cls.gfx = (MOD / 'interface/ac_anea_art.gfx').read_text()
 
     def test_every_texture_has_verified_format_dimensions_frames_and_hash(self):
-        self.assertEqual(162, len(self.assets))
+        self.assertEqual(165, len(self.assets))
         self.assertEqual(len(self.assets), len({row['file'] for row in self.assets}))
         for row in self.assets:
             with self.subTest(texture=row['file']):

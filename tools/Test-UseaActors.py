@@ -93,11 +93,22 @@ class UseaActorContracts(unittest.TestCase):
             self.assertEqual(tag, mapping(modifier["modifier"])["original_tag"])
 
     def test_tree_imports_every_focus_and_prerequisites_resolve(self):
+        # Additive owners may import separately authored continuations. Keep
+        # exact coverage of this suite's baseline, and resolve every extra ID
+        # against real committed definitions rather than exempting a prefix.
+        shared = {}
+        for path in sorted((MOD / 'common/national_focus').glob('*.txt')):
+            for key, _, node in parse(path.read_text(encoding='utf-8-sig')):
+                if key == 'shared_focus' and isinstance(node, list):
+                    ident = mapping(node)['id']
+                    self.assertNotIn(ident, shared, ident)
+                    shared[ident] = node
         for tag in TREES:
             container, focuses = tree(tag)
             imports = [v for k, _, v in container if k == "shared_focus"]
             self.assertEqual(len(imports), len(set(imports)), tag)
-            self.assertEqual(set(focuses), set(imports), tag)
+            self.assertEqual(set(focuses), set(imports) & set(focuses), tag)
+            self.assertFalse(set(imports) - set(shared), (tag, set(imports) - set(shared)))
             self.assertGreaterEqual(len(focuses), 12, tag)
             for ident, nodes in focuses.items():
                 self.assertTrue(ident.startswith(tag + "_"), ident)

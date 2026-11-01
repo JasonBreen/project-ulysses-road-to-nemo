@@ -30,6 +30,10 @@ def variant(name, equipment, modules):
 
 
 def production(equipment, amount, tag, version=None):
+    if amount == 0:
+        return ""
+    if amount < 0:
+        raise ValueError("Negative replacement allocation: " + tag + ":" + equipment)
     details = f"type = {equipment}\ncreator = {tag}"
     if version:
         details += f'\nversion_name = "{version}"'
@@ -188,7 +192,10 @@ def air_output(tag, row, profile, dlc):
             details += f'\nversion_name = "{tag} {version}"'
         wings += block(kind, details)
     fighter = "small_plane_airframe_1" if dlc else "fighter_equipment_1"
-    return NOTE + block("air_wings", block(str(row["capital"]), wings)) + block("instant_effect", production(fighter, profile["production"]["fighter"], tag, tag + " Service Fighter" if dlc else None))
+    lines = production(fighter, profile["production"]["fighter"], tag, tag + " Service Fighter" if dlc else None)
+    if profile["production"].get("cas"):
+        lines += production("small_plane_cas_airframe_1" if dlc else "CAS_equipment_1", profile["production"]["cas"], tag, tag + " Service Support" if dlc else None)
+    return NOTE + block("air_wings", block(str(row["capital"]), wings)) + block("instant_effect", lines)
 
 
 def navy_output(tag, row, profile, dlc):
@@ -201,7 +208,7 @@ def navy_output(tag, row, profile, dlc):
             ships += ship; groups[kind] += ship
     p = row.get("naval_base", row["ports"][0]["province"])
     fleet = block("fleet", f'name = "{tag} Coastal Service"\nnaval_base = {p}\n' + block("task_force", f'name = "{tag} Coastal Patrol"\nlocation = {p}\n' + ships))
-    if "naval_production" in profile:
+    if profile.get("split_naval_roles", tag == "ERU"):
         tasks = "".join(block("task_force", f'name = "{tag} Coastal {role}"\nlocation = {p}\n' + body)
                         for role, body in groups.items() if body)
         fleet = block("fleet", f'name = "{tag} Coastal Service"\nnaval_base = {p}\n' + tasks)
@@ -211,11 +218,11 @@ def navy_output(tag, row, profile, dlc):
         for role, modern, legacy, version in [("convoy", "convoy_1", "convoy_1", None),
                                               ("destroyer", "ship_hull_light_2", "destroyer_2", "Coastal Escort"),
                                               ("submarine", "ship_hull_submarine_2", "submarine_2", "Coastal Submarine")]:
-            lines += production(modern if dlc else legacy, profile["naval_production"][role], tag, tag + " " + version if dlc and version else None)
+            lines += production(modern if dlc else legacy, profile["naval_production"].get(role, 0), tag, tag + " " + version if dlc and version else None)
     return NOTE + block("units", fleet) + block("instant_effect", lines)
 
 
-def ai_output(tag):
+def ai_output(tag, replacement_priorities=True):
     base = f"allowed = {{ tag = {tag} original_tag = {tag} }}\nenable = {{ has_capitulated = no }}\nabort_when_not_enabled = yes\n"
     # Roles add to engine defaults; cancel the generic infantry/armor/mountain
     # ratios while selecting one country-specific affordable territorial role.
@@ -234,6 +241,13 @@ def ai_output(tag):
                                   ("equipment_production_factor", "motorized", 10),
                                   ("build_building", "air_base", 5), ("build_building", "infrastructure", 10)]:
             base += block("ai_strategy", f"type = {typ}\nid = {ident}\nvalue = {value}")
+    elif replacement_priorities and tag in ("SNS", "AMB", "UGE", "DEL"):
+        # These are additive priorities, not an automatic yard/air-line
+        # rotation controller. The visible notes state the actual limits.
+        for typ, ident, value in [("unit_ratio", "screen_ship", 8), ("unit_ratio", "submarine", 0)]:
+            base += block("ai_strategy", f"type = {typ}\nid = {ident}\nvalue = {value}")
+        if tag in ("SNS", "AMB"):
+            base += block("ai_strategy", "type = equipment_production_factor\nid = cas\nvalue = 10")
     return NOTE + block(tag + "_wf_sustainment", base) + block(tag + "_wf_civilian", peace) + block(tag + "_wf_defense", war)
 
 

@@ -61,6 +61,20 @@ class SquadronArt(unittest.TestCase):
                 self.assertEqual((record['width'], record['height']), image.size)
                 self.assertGreater(image.width, 800)
             actual[record['id']] = record['sha256']
+        # Preserve the immutable initial78 portfolio while admitting only the
+        # separately approved26 Pacific masters. Never exempt an entire prefix
+        # or silently ignore an unknown selected source.
+        pacific_plan = ROOT / 'tools/squadrons/pacific_art/plan.json'
+        admitted = set()
+        if pacific_plan.exists():
+            admitted = {'rhea_calder','malik_renn','june_carver','sana_ivers',
+                        'irina_sokol','anton_rask','daria_vesnin','lev_miren'}
+            admitted |= {f'{tag}_scene_{slot}' for tag in ('ose','yuk') for slot in range(1,9)}
+            admitted |= {'ose_loading','yuk_loading'}
+            self.assertEqual(26,len(admitted))
+            self.assertEqual(admitted,{r['id']for r in json.loads(pacific_plan.read_text())['assets']})
+        self.assertEqual(expected | admitted,set(actual),'Unknown, missing or unapproved selected source')
+        actual = {key:value for key,value in actual.items()if key in expected}
         self.assertEqual(expected, set(actual))
         self.assertEqual(78, len(set(actual.values())))
 

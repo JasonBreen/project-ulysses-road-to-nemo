@@ -1,0 +1,103 @@
+{
+  "source_before": {
+    "head": "bef1305c1b7a472c82c80b1492eccd6e87e77d44",
+    "files": 8773,
+    "sha256": "0c5099da79af9379ed4d70ce07ae9a32b3ef1c4ff506977f1a51d8ef0d07418c",
+    "rule": "Sorted tracked repository-relative UTF8 path,NUL,raw working-tree bytes; docs/evidence excluded. Clean Git source required."
+  },
+  "checks": [
+    {
+      "check": "event-style",
+      "command": [
+        "G:\\Project-Ulysses-Overhaul\\.venv-ci\\Scripts\\python.exe",
+        "-B",
+        "tools/Test-EventStyle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 76.796,
+      "log": "event-style.txt"
+    },
+    {
+      "check": "original-interfaces",
+      "command": [
+        "G:\\Project-Ulysses-Overhaul\\.venv-ci\\Scripts\\python.exe",
+        "-B",
+        "tools/Test-InterfaceRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.641,
+      "log": "original-interfaces.txt"
+    },
+    {
+      "check": "event-fit",
+      "command": [
+        "G:\\Project-Ulysses-Overhaul\\.venv-ci\\Scripts\\python.exe",
+        "-B",
+        "tools/Test-EventPictures.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.313,
+      "log": "event-fit.txt"
+    },
+    {
+      "check": "fit-review",
+      "command": [
+        "G:\\Project-Ulysses-Overhaul\\.venv-ci\\Scripts\\python.exe",
+        "-B",
+        "tools/event_picture_fit/review.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 4.234,
+      "log": "fit-review.txt"
+    },
+    {
+      "check": "effective-base-only",
+      "command": [
+        "G:\\Project-Ulysses-Overhaul\\.venv-ci\\Scripts\\python.exe",
+        "-B",
+        "tools/overhaul/audit_consumers.py",
+        "G:\\steamlbirary\\steamapps\\common\\Hearts of Iron IV",
+        "--profile",
+        "docs/evidence/effective-dependencies/profiles/base-only.json",
+        "--gate-screen",
+        "eventwindow.gui",
+        "--gate-decisions",
+        "--summary-only",
+        "--output",
+        "docs\\evidence\\event-style\\ci-generator-composition\\effective-base-only.json"
+      ],
+      "exit_code": 0,
+      "seconds": 27.047,
+      "log": "effective-base-only.txt"
+    },
+    {
+      "check": "strict-authored-assets",
+      "command": [
+        "G:\\Project-Ulysses-Overhaul\\.venv-ci\\Scripts\\python.exe",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.89,
+      "log": "strict-authored-assets.txt"
+    },
+    {
+      "check": "static-reference",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "G:\\Project-Ulysses-Event-Defaults\\mod\\2985041246",
+        "-ReferenceGameRoot",
+        "G:\\steamlbirary\\steamapps\\common\\Hearts of Iron IV"
+      ],
+      "exit_code": 1,
+      "seconds": 38.125,
+      "log": "static-reference.txt"
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "source_head": "86279c79c501d248e72450e2160666143150a09a",
+  "selection": [
+    "reconstruction-art",
+    "registry",
+    "release-inventory",
+    "physical-coverage",
+    "decisions",
+    "authored-assets",
+    "core"
+  ],
+  "payload_sha256": "c4027bb91104554f59c862693832d57d23fe33a3b35133a898b907eaad68d47f",
+  "payload_hash_rule": "Sorted repository-relative POSIX path,NUL,raw bytes for each delivered mod file.",
+  "passed": 7,
+  "failed": 0,
+  "coverage": "Source, primary-reference metadata and offline execution; not native rendering, save/reload, AI pacing or balance acceptance.",
+  "native_status": "Paused; no native game, desktop control or installation synchronization.",
+  "full_conversion_acceptance": false,
+  "checks": [
+    {
+      "name": "reconstruction-art",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-ReconstructionAssets.py"
+      ],
+      "exit_code": 0,
+      "seconds": 6.5,
+      "log": "reconstruction-art.txt"
+    },
+    {
+      "name": "registry",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_foundation/registry.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.906,
+      "log": "registry.txt"
+    },
+    {
+      "name": "physical-coverage",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_starts/coverage.py",
+        "--check",
+        "--require-integrated-owner"
+      ],
+      "exit_code": 0,
+      "seconds": 3.531,
+      "log": "physical-coverage.txt"
+    },
+    {
+      "name": "release-inventory",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_starts/release_inventory.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.797,
+      "log": "release-inventory.txt"
+    },
+    {
+      "name": "decisions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-DecisionUI.py"
+      ],
+      "exit_code": 0,
+      "seconds": 25.719,
+      "log": "decisions.txt"
+    },
+    {
+      "name": "authored-assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 1.125,
+      "log": "authored-assets.txt"
+    },
+    {
+      "name": "core",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-reference>",
+        "-BaselineRoot",
+        "<immutable-baseline>"
+      ],
+      "exit_code": 0,
+      "seconds": 54.063,
+      "log": "core.txt"
+    }
+  ]
+}

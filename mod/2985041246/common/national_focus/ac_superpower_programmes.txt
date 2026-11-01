@@ -1,0 +1,2520 @@
+# Original provisional gameplay; source: tools/superpowers. Native acceptance pending.
+shared_focus = {
+	id = OSE_snp_appropriations_register
+	icon = GFX_ac_snp_focus_OSE_snp_appropriations_register
+	x = 20
+	y = 20
+	cost = 5
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_appropriations_register_effect_tt
+		hidden_effect = {
+			OSE_snp_appropriations_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_appropriations_civil_policy
+	icon = GFX_ac_snp_focus_OSE_snp_appropriations_civil_policy
+	x = 18
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_appropriations_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_appropriations_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_appropriations_register NOT = { has_country_flag = OSE_snp_appropriations_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_appropriations_civil_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_appropriations_civil_policy_spirit
+		hidden_effect = {
+			OSE_snp_appropriations_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_appropriations_protected_policy
+	icon = GFX_ac_snp_focus_OSE_snp_appropriations_protected_policy
+	x = 22
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_appropriations_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_appropriations_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_appropriations_register NOT = { has_country_flag = OSE_snp_appropriations_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_appropriations_protected_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_appropriations_protected_policy_spirit
+		hidden_effect = {
+			OSE_snp_appropriations_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_appropriations_protocol
+	icon = GFX_ac_snp_focus_OSE_snp_appropriations_protocol
+	x = 20
+	y = 22
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_appropriations_civil_policy
+		focus = OSE_snp_appropriations_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 OR = { has_completed_focus = OSE_snp_appropriations_civil_policy has_completed_focus = OSE_snp_appropriations_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_appropriations_protocol_effect_tt
+		hidden_effect = {
+			OSE_snp_appropriations_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_appropriations_review
+	icon = GFX_ac_snp_focus_OSE_snp_appropriations_review
+	x = 20
+	y = 23
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_appropriations_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_appropriations_protocol has_country_flag = OSE_snp_appropriations_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_appropriations_review_effect_tt
+		hidden_effect = {
+			OSE_snp_appropriations_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_appropriations_settlement
+	icon = GFX_ac_snp_focus_OSE_snp_appropriations_settlement
+	x = 20
+	y = 24
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_appropriations_review
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_appropriations_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_appropriations_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_appropriations_civil_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_appropriations_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_appropriations_protected_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_appropriations_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			OSE_snp_appropriations_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_productive_capacity_register
+	icon = GFX_ac_snp_focus_OSE_snp_productive_capacity_register
+	x = 38
+	y = 20
+	cost = 5
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_productive_capacity_register_effect_tt
+		hidden_effect = {
+			OSE_snp_productive_capacity_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_productive_capacity_civil_policy
+	icon = GFX_ac_snp_focus_OSE_snp_productive_capacity_civil_policy
+	x = 36
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_productive_capacity_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_productive_capacity_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_productive_capacity_register NOT = { has_country_flag = OSE_snp_productive_capacity_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_productive_capacity_civil_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_productive_capacity_civil_policy_spirit
+		hidden_effect = {
+			OSE_snp_productive_capacity_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_productive_capacity_protected_policy
+	icon = GFX_ac_snp_focus_OSE_snp_productive_capacity_protected_policy
+	x = 40
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_productive_capacity_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_productive_capacity_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_productive_capacity_register NOT = { has_country_flag = OSE_snp_productive_capacity_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_productive_capacity_protected_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_productive_capacity_protected_policy_spirit
+		hidden_effect = {
+			OSE_snp_productive_capacity_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_productive_capacity_protocol
+	icon = GFX_ac_snp_focus_OSE_snp_productive_capacity_protocol
+	x = 38
+	y = 22
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_productive_capacity_civil_policy
+		focus = OSE_snp_productive_capacity_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 OR = { has_completed_focus = OSE_snp_productive_capacity_civil_policy has_completed_focus = OSE_snp_productive_capacity_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_productive_capacity_protocol_effect_tt
+		hidden_effect = {
+			OSE_snp_productive_capacity_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_productive_capacity_review
+	icon = GFX_ac_snp_focus_OSE_snp_productive_capacity_review
+	x = 38
+	y = 23
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_productive_capacity_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_productive_capacity_protocol has_country_flag = OSE_snp_productive_capacity_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_productive_capacity_review_effect_tt
+		hidden_effect = {
+			OSE_snp_productive_capacity_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_productive_capacity_settlement
+	icon = GFX_ac_snp_focus_OSE_snp_productive_capacity_settlement
+	x = 38
+	y = 24
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_productive_capacity_review
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_productive_capacity_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_productive_capacity_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_productive_capacity_civil_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_productive_capacity_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_productive_capacity_protected_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_productive_capacity_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			OSE_snp_productive_capacity_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_continental_transport_register
+	icon = GFX_ac_snp_focus_OSE_snp_continental_transport_register
+	x = 56
+	y = 20
+	cost = 5
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_continental_transport_register_effect_tt
+		hidden_effect = {
+			OSE_snp_continental_transport_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_continental_transport_civil_policy
+	icon = GFX_ac_snp_focus_OSE_snp_continental_transport_civil_policy
+	x = 54
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_continental_transport_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_continental_transport_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_continental_transport_register NOT = { has_country_flag = OSE_snp_continental_transport_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_continental_transport_civil_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_continental_transport_civil_policy_spirit
+		hidden_effect = {
+			OSE_snp_continental_transport_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_continental_transport_protected_policy
+	icon = GFX_ac_snp_focus_OSE_snp_continental_transport_protected_policy
+	x = 58
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_continental_transport_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_continental_transport_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_continental_transport_register NOT = { has_country_flag = OSE_snp_continental_transport_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_continental_transport_protected_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_continental_transport_protected_policy_spirit
+		hidden_effect = {
+			OSE_snp_continental_transport_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_continental_transport_protocol
+	icon = GFX_ac_snp_focus_OSE_snp_continental_transport_protocol
+	x = 56
+	y = 22
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_continental_transport_civil_policy
+		focus = OSE_snp_continental_transport_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 OR = { has_completed_focus = OSE_snp_continental_transport_civil_policy has_completed_focus = OSE_snp_continental_transport_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_continental_transport_protocol_effect_tt
+		hidden_effect = {
+			OSE_snp_continental_transport_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_continental_transport_review
+	icon = GFX_ac_snp_focus_OSE_snp_continental_transport_review
+	x = 56
+	y = 23
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_continental_transport_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_continental_transport_protocol has_country_flag = OSE_snp_continental_transport_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_continental_transport_review_effect_tt
+		hidden_effect = {
+			OSE_snp_continental_transport_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_continental_transport_settlement
+	icon = GFX_ac_snp_focus_OSE_snp_continental_transport_settlement
+	x = 56
+	y = 24
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_continental_transport_review
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_continental_transport_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_continental_transport_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_continental_transport_civil_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_continental_transport_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_continental_transport_protected_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_continental_transport_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			OSE_snp_continental_transport_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_air_watch_register
+	icon = GFX_ac_snp_focus_OSE_snp_air_watch_register
+	x = 74
+	y = 20
+	cost = 5
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_air_watch_register_effect_tt
+		hidden_effect = {
+			OSE_snp_air_watch_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_air_watch_civil_policy
+	icon = GFX_ac_snp_focus_OSE_snp_air_watch_civil_policy
+	x = 72
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_air_watch_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_air_watch_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_air_watch_register NOT = { has_country_flag = OSE_snp_air_watch_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_air_watch_civil_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_air_watch_civil_policy_spirit
+		hidden_effect = {
+			OSE_snp_air_watch_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_air_watch_protected_policy
+	icon = GFX_ac_snp_focus_OSE_snp_air_watch_protected_policy
+	x = 76
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_air_watch_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_air_watch_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_air_watch_register NOT = { has_country_flag = OSE_snp_air_watch_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_air_watch_protected_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_air_watch_protected_policy_spirit
+		hidden_effect = {
+			OSE_snp_air_watch_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_air_watch_protocol
+	icon = GFX_ac_snp_focus_OSE_snp_air_watch_protocol
+	x = 74
+	y = 22
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_air_watch_civil_policy
+		focus = OSE_snp_air_watch_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 OR = { has_completed_focus = OSE_snp_air_watch_civil_policy has_completed_focus = OSE_snp_air_watch_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_air_watch_protocol_effect_tt
+		hidden_effect = {
+			OSE_snp_air_watch_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_air_watch_review
+	icon = GFX_ac_snp_focus_OSE_snp_air_watch_review
+	x = 74
+	y = 23
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_air_watch_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_air_watch_protocol has_country_flag = OSE_snp_air_watch_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_air_watch_review_effect_tt
+		hidden_effect = {
+			OSE_snp_air_watch_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_air_watch_settlement
+	icon = GFX_ac_snp_focus_OSE_snp_air_watch_settlement
+	x = 74
+	y = 24
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_air_watch_review
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 1990.12.31 has_completed_focus = OSE_snp_air_watch_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_air_watch_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_air_watch_civil_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_air_watch_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_air_watch_protected_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_air_watch_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			OSE_snp_air_watch_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_guarantor_review_register
+	icon = GFX_ac_snp_focus_OSE_snp_guarantor_review_register
+	x = 20
+	y = 28
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_appropriations_settlement
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_appropriations_settlement
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_guarantor_review_register_effect_tt
+		hidden_effect = {
+			OSE_snp_guarantor_review_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_guarantor_review_civil_policy
+	icon = GFX_ac_snp_focus_OSE_snp_guarantor_review_civil_policy
+	x = 18
+	y = 29
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_guarantor_review_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_guarantor_review_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_guarantor_review_register NOT = { has_country_flag = OSE_snp_guarantor_review_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_guarantor_review_civil_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_guarantor_review_civil_policy_spirit
+		hidden_effect = {
+			OSE_snp_guarantor_review_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_guarantor_review_protected_policy
+	icon = GFX_ac_snp_focus_OSE_snp_guarantor_review_protected_policy
+	x = 22
+	y = 29
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_guarantor_review_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_guarantor_review_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_guarantor_review_register NOT = { has_country_flag = OSE_snp_guarantor_review_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_guarantor_review_protected_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_guarantor_review_protected_policy_spirit
+		hidden_effect = {
+			OSE_snp_guarantor_review_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_guarantor_review_protocol
+	icon = GFX_ac_snp_focus_OSE_snp_guarantor_review_protocol
+	x = 20
+	y = 30
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_guarantor_review_civil_policy
+		focus = OSE_snp_guarantor_review_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 OR = { has_completed_focus = OSE_snp_guarantor_review_civil_policy has_completed_focus = OSE_snp_guarantor_review_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_guarantor_review_protocol_effect_tt
+		hidden_effect = {
+			OSE_snp_guarantor_review_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_guarantor_review_review
+	icon = GFX_ac_snp_focus_OSE_snp_guarantor_review_review
+	x = 20
+	y = 31
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_guarantor_review_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_guarantor_review_protocol has_country_flag = OSE_snp_guarantor_review_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_guarantor_review_review_effect_tt
+		hidden_effect = {
+			OSE_snp_guarantor_review_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_guarantor_review_settlement
+	icon = GFX_ac_snp_focus_OSE_snp_guarantor_review_settlement
+	x = 20
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_guarantor_review_review
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_guarantor_review_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_guarantor_review_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_guarantor_review_civil_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_guarantor_review_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_guarantor_review_protected_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_guarantor_review_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			OSE_snp_guarantor_review_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_civil_space_register
+	icon = GFX_ac_snp_focus_OSE_snp_civil_space_register
+	x = 38
+	y = 28
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_air_watch_settlement
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_air_watch_settlement
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_civil_space_register_effect_tt
+		hidden_effect = {
+			OSE_snp_civil_space_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_civil_space_civil_policy
+	icon = GFX_ac_snp_focus_OSE_snp_civil_space_civil_policy
+	x = 36
+	y = 29
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_civil_space_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_civil_space_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_civil_space_register NOT = { has_country_flag = OSE_snp_civil_space_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_civil_space_civil_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_civil_space_civil_policy_spirit
+		hidden_effect = {
+			OSE_snp_civil_space_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_civil_space_protected_policy
+	icon = GFX_ac_snp_focus_OSE_snp_civil_space_protected_policy
+	x = 40
+	y = 29
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_civil_space_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_civil_space_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_civil_space_register NOT = { has_country_flag = OSE_snp_civil_space_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_civil_space_protected_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_civil_space_protected_policy_spirit
+		hidden_effect = {
+			OSE_snp_civil_space_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_civil_space_protocol
+	icon = GFX_ac_snp_focus_OSE_snp_civil_space_protocol
+	x = 38
+	y = 30
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_civil_space_civil_policy
+		focus = OSE_snp_civil_space_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 OR = { has_completed_focus = OSE_snp_civil_space_civil_policy has_completed_focus = OSE_snp_civil_space_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_civil_space_protocol_effect_tt
+		hidden_effect = {
+			OSE_snp_civil_space_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_civil_space_review
+	icon = GFX_ac_snp_focus_OSE_snp_civil_space_review
+	x = 38
+	y = 31
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_civil_space_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_civil_space_protocol has_country_flag = OSE_snp_civil_space_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_civil_space_review_effect_tt
+		hidden_effect = {
+			OSE_snp_civil_space_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_civil_space_settlement
+	icon = GFX_ac_snp_focus_OSE_snp_civil_space_settlement
+	x = 38
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_civil_space_review
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_civil_space_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_civil_space_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_civil_space_civil_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_civil_space_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_civil_space_protected_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_civil_space_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			OSE_snp_civil_space_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_procurement_scrutiny_register
+	icon = GFX_ac_snp_focus_OSE_snp_procurement_scrutiny_register
+	x = 56
+	y = 28
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_productive_capacity_settlement
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_productive_capacity_settlement
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_procurement_scrutiny_register_effect_tt
+		hidden_effect = {
+			OSE_snp_procurement_scrutiny_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_procurement_scrutiny_civil_policy
+	icon = GFX_ac_snp_focus_OSE_snp_procurement_scrutiny_civil_policy
+	x = 54
+	y = 29
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_procurement_scrutiny_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_procurement_scrutiny_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_procurement_scrutiny_register NOT = { has_country_flag = OSE_snp_procurement_scrutiny_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_procurement_scrutiny_civil_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_procurement_scrutiny_civil_policy_spirit
+		hidden_effect = {
+			OSE_snp_procurement_scrutiny_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_procurement_scrutiny_protected_policy
+	icon = GFX_ac_snp_focus_OSE_snp_procurement_scrutiny_protected_policy
+	x = 58
+	y = 29
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_procurement_scrutiny_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_procurement_scrutiny_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_procurement_scrutiny_register NOT = { has_country_flag = OSE_snp_procurement_scrutiny_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_procurement_scrutiny_protected_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_procurement_scrutiny_protected_policy_spirit
+		hidden_effect = {
+			OSE_snp_procurement_scrutiny_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_procurement_scrutiny_protocol
+	icon = GFX_ac_snp_focus_OSE_snp_procurement_scrutiny_protocol
+	x = 56
+	y = 30
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_procurement_scrutiny_civil_policy
+		focus = OSE_snp_procurement_scrutiny_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 OR = { has_completed_focus = OSE_snp_procurement_scrutiny_civil_policy has_completed_focus = OSE_snp_procurement_scrutiny_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_procurement_scrutiny_protocol_effect_tt
+		hidden_effect = {
+			OSE_snp_procurement_scrutiny_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_procurement_scrutiny_review
+	icon = GFX_ac_snp_focus_OSE_snp_procurement_scrutiny_review
+	x = 56
+	y = 31
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_procurement_scrutiny_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_procurement_scrutiny_protocol has_country_flag = OSE_snp_procurement_scrutiny_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_procurement_scrutiny_review_effect_tt
+		hidden_effect = {
+			OSE_snp_procurement_scrutiny_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_procurement_scrutiny_settlement
+	icon = GFX_ac_snp_focus_OSE_snp_procurement_scrutiny_settlement
+	x = 56
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_procurement_scrutiny_review
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_procurement_scrutiny_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_procurement_scrutiny_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_procurement_scrutiny_civil_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_procurement_scrutiny_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_procurement_scrutiny_protected_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_procurement_scrutiny_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			OSE_snp_procurement_scrutiny_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_crisis_authority_register
+	icon = GFX_ac_snp_focus_OSE_snp_crisis_authority_register
+	x = 74
+	y = 28
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_continental_transport_settlement
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_continental_transport_settlement
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_crisis_authority_register_effect_tt
+		hidden_effect = {
+			OSE_snp_crisis_authority_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_crisis_authority_civil_policy
+	icon = GFX_ac_snp_focus_OSE_snp_crisis_authority_civil_policy
+	x = 72
+	y = 29
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_crisis_authority_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_crisis_authority_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_crisis_authority_register NOT = { has_country_flag = OSE_snp_crisis_authority_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_crisis_authority_civil_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_crisis_authority_civil_policy_spirit
+		hidden_effect = {
+			OSE_snp_crisis_authority_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_crisis_authority_protected_policy
+	icon = GFX_ac_snp_focus_OSE_snp_crisis_authority_protected_policy
+	x = 76
+	y = 29
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_crisis_authority_register
+	}
+	mutually_exclusive = {
+		focus = OSE_snp_crisis_authority_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_crisis_authority_register NOT = { has_country_flag = OSE_snp_crisis_authority_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_crisis_authority_protected_policy_effect_tt
+		show_ideas_tooltip = OSE_snp_crisis_authority_protected_policy_spirit
+		hidden_effect = {
+			OSE_snp_crisis_authority_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_crisis_authority_protocol
+	icon = GFX_ac_snp_focus_OSE_snp_crisis_authority_protocol
+	x = 74
+	y = 30
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_crisis_authority_civil_policy
+		focus = OSE_snp_crisis_authority_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 OR = { has_completed_focus = OSE_snp_crisis_authority_civil_policy has_completed_focus = OSE_snp_crisis_authority_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_crisis_authority_protocol_effect_tt
+		hidden_effect = {
+			OSE_snp_crisis_authority_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_crisis_authority_review
+	icon = GFX_ac_snp_focus_OSE_snp_crisis_authority_review
+	x = 74
+	y = 31
+	cost = 5
+	prerequisite = {
+		focus = OSE_snp_crisis_authority_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_crisis_authority_protocol has_country_flag = OSE_snp_crisis_authority_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_crisis_authority_review_effect_tt
+		hidden_effect = {
+			OSE_snp_crisis_authority_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = OSE_snp_crisis_authority_settlement
+	icon = GFX_ac_snp_focus_OSE_snp_crisis_authority_settlement
+	x = 74
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = OSE_snp_crisis_authority_review
+	}
+	available = {
+		ac_snp_active = yes tag = OSE original_tag = OSE date > 2005.12.31 has_completed_focus = OSE_snp_crisis_authority_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = OSE_snp_crisis_authority_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_crisis_authority_civil_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_crisis_authority_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = OSE_snp_crisis_authority_protected_policy_done
+			}
+			show_ideas_tooltip = OSE_snp_crisis_authority_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			OSE_snp_crisis_authority_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_allocation_register
+	icon = GFX_ac_snp_focus_YUK_snp_allocation_register
+	x = 2
+	y = 12
+	cost = 5
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_allocation_register_effect_tt
+		hidden_effect = {
+			YUK_snp_allocation_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_allocation_civil_policy
+	icon = GFX_ac_snp_focus_YUK_snp_allocation_civil_policy
+	x = 0
+	y = 13
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_allocation_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_allocation_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_allocation_register NOT = { has_country_flag = YUK_snp_allocation_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_allocation_civil_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_allocation_civil_policy_spirit
+		hidden_effect = {
+			YUK_snp_allocation_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_allocation_protected_policy
+	icon = GFX_ac_snp_focus_YUK_snp_allocation_protected_policy
+	x = 4
+	y = 13
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_allocation_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_allocation_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_allocation_register NOT = { has_country_flag = YUK_snp_allocation_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_allocation_protected_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_allocation_protected_policy_spirit
+		hidden_effect = {
+			YUK_snp_allocation_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_allocation_protocol
+	icon = GFX_ac_snp_focus_YUK_snp_allocation_protocol
+	x = 2
+	y = 14
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_allocation_civil_policy
+		focus = YUK_snp_allocation_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 OR = { has_completed_focus = YUK_snp_allocation_civil_policy has_completed_focus = YUK_snp_allocation_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_allocation_protocol_effect_tt
+		hidden_effect = {
+			YUK_snp_allocation_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_allocation_review
+	icon = GFX_ac_snp_focus_YUK_snp_allocation_review
+	x = 2
+	y = 15
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_allocation_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_allocation_protocol has_country_flag = YUK_snp_allocation_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_allocation_review_effect_tt
+		hidden_effect = {
+			YUK_snp_allocation_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_allocation_settlement
+	icon = GFX_ac_snp_focus_YUK_snp_allocation_settlement
+	x = 2
+	y = 16
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_allocation_review
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_allocation_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_allocation_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_allocation_civil_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_allocation_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_allocation_protected_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_allocation_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			YUK_snp_allocation_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_industrial_orders_register
+	icon = GFX_ac_snp_focus_YUK_snp_industrial_orders_register
+	x = 15
+	y = 12
+	cost = 5
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_industrial_orders_register_effect_tt
+		hidden_effect = {
+			YUK_snp_industrial_orders_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_industrial_orders_civil_policy
+	icon = GFX_ac_snp_focus_YUK_snp_industrial_orders_civil_policy
+	x = 13
+	y = 13
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_industrial_orders_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_industrial_orders_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_industrial_orders_register NOT = { has_country_flag = YUK_snp_industrial_orders_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_industrial_orders_civil_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_industrial_orders_civil_policy_spirit
+		hidden_effect = {
+			YUK_snp_industrial_orders_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_industrial_orders_protected_policy
+	icon = GFX_ac_snp_focus_YUK_snp_industrial_orders_protected_policy
+	x = 17
+	y = 13
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_industrial_orders_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_industrial_orders_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_industrial_orders_register NOT = { has_country_flag = YUK_snp_industrial_orders_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_industrial_orders_protected_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_industrial_orders_protected_policy_spirit
+		hidden_effect = {
+			YUK_snp_industrial_orders_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_industrial_orders_protocol
+	icon = GFX_ac_snp_focus_YUK_snp_industrial_orders_protocol
+	x = 15
+	y = 14
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_industrial_orders_civil_policy
+		focus = YUK_snp_industrial_orders_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 OR = { has_completed_focus = YUK_snp_industrial_orders_civil_policy has_completed_focus = YUK_snp_industrial_orders_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_industrial_orders_protocol_effect_tt
+		hidden_effect = {
+			YUK_snp_industrial_orders_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_industrial_orders_review
+	icon = GFX_ac_snp_focus_YUK_snp_industrial_orders_review
+	x = 15
+	y = 15
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_industrial_orders_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_industrial_orders_protocol has_country_flag = YUK_snp_industrial_orders_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_industrial_orders_review_effect_tt
+		hidden_effect = {
+			YUK_snp_industrial_orders_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_industrial_orders_settlement
+	icon = GFX_ac_snp_focus_YUK_snp_industrial_orders_settlement
+	x = 15
+	y = 16
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_industrial_orders_review
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_industrial_orders_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_industrial_orders_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_industrial_orders_civil_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_industrial_orders_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_industrial_orders_protected_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_industrial_orders_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			YUK_snp_industrial_orders_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_logistics_register
+	icon = GFX_ac_snp_focus_YUK_snp_logistics_register
+	x = 28
+	y = 12
+	cost = 5
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_logistics_register_effect_tt
+		hidden_effect = {
+			YUK_snp_logistics_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_logistics_civil_policy
+	icon = GFX_ac_snp_focus_YUK_snp_logistics_civil_policy
+	x = 26
+	y = 13
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_logistics_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_logistics_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_logistics_register NOT = { has_country_flag = YUK_snp_logistics_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_logistics_civil_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_logistics_civil_policy_spirit
+		hidden_effect = {
+			YUK_snp_logistics_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_logistics_protected_policy
+	icon = GFX_ac_snp_focus_YUK_snp_logistics_protected_policy
+	x = 30
+	y = 13
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_logistics_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_logistics_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_logistics_register NOT = { has_country_flag = YUK_snp_logistics_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_logistics_protected_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_logistics_protected_policy_spirit
+		hidden_effect = {
+			YUK_snp_logistics_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_logistics_protocol
+	icon = GFX_ac_snp_focus_YUK_snp_logistics_protocol
+	x = 28
+	y = 14
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_logistics_civil_policy
+		focus = YUK_snp_logistics_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 OR = { has_completed_focus = YUK_snp_logistics_civil_policy has_completed_focus = YUK_snp_logistics_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_logistics_protocol_effect_tt
+		hidden_effect = {
+			YUK_snp_logistics_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_logistics_review
+	icon = GFX_ac_snp_focus_YUK_snp_logistics_review
+	x = 28
+	y = 15
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_logistics_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_logistics_protocol has_country_flag = YUK_snp_logistics_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_logistics_review_effect_tt
+		hidden_effect = {
+			YUK_snp_logistics_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_logistics_settlement
+	icon = GFX_ac_snp_focus_YUK_snp_logistics_settlement
+	x = 28
+	y = 16
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_logistics_review
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_logistics_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_logistics_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_logistics_civil_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_logistics_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_logistics_protected_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_logistics_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			YUK_snp_logistics_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_training_register
+	icon = GFX_ac_snp_focus_YUK_snp_training_register
+	x = 41
+	y = 12
+	cost = 5
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_training_register_effect_tt
+		hidden_effect = {
+			YUK_snp_training_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_training_civil_policy
+	icon = GFX_ac_snp_focus_YUK_snp_training_civil_policy
+	x = 39
+	y = 13
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_training_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_training_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_training_register NOT = { has_country_flag = YUK_snp_training_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_training_civil_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_training_civil_policy_spirit
+		hidden_effect = {
+			YUK_snp_training_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_training_protected_policy
+	icon = GFX_ac_snp_focus_YUK_snp_training_protected_policy
+	x = 43
+	y = 13
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_training_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_training_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_training_register NOT = { has_country_flag = YUK_snp_training_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_training_protected_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_training_protected_policy_spirit
+		hidden_effect = {
+			YUK_snp_training_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_training_protocol
+	icon = GFX_ac_snp_focus_YUK_snp_training_protocol
+	x = 41
+	y = 14
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_training_civil_policy
+		focus = YUK_snp_training_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 OR = { has_completed_focus = YUK_snp_training_civil_policy has_completed_focus = YUK_snp_training_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_training_protocol_effect_tt
+		hidden_effect = {
+			YUK_snp_training_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_training_review
+	icon = GFX_ac_snp_focus_YUK_snp_training_review
+	x = 41
+	y = 15
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_training_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_training_protocol has_country_flag = YUK_snp_training_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_training_review_effect_tt
+		hidden_effect = {
+			YUK_snp_training_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_training_settlement
+	icon = GFX_ac_snp_focus_YUK_snp_training_settlement
+	x = 41
+	y = 16
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_training_review
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 1990.12.31 has_completed_focus = YUK_snp_training_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_training_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_training_civil_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_training_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_training_protected_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_training_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			YUK_snp_training_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_distribution_review_register
+	icon = GFX_ac_snp_focus_YUK_snp_distribution_review_register
+	x = 2
+	y = 20
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_allocation_settlement
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_allocation_settlement
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_distribution_review_register_effect_tt
+		hidden_effect = {
+			YUK_snp_distribution_review_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_distribution_review_civil_policy
+	icon = GFX_ac_snp_focus_YUK_snp_distribution_review_civil_policy
+	x = 0
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_distribution_review_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_distribution_review_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_distribution_review_register NOT = { has_country_flag = YUK_snp_distribution_review_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_distribution_review_civil_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_distribution_review_civil_policy_spirit
+		hidden_effect = {
+			YUK_snp_distribution_review_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_distribution_review_protected_policy
+	icon = GFX_ac_snp_focus_YUK_snp_distribution_review_protected_policy
+	x = 4
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_distribution_review_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_distribution_review_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_distribution_review_register NOT = { has_country_flag = YUK_snp_distribution_review_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_distribution_review_protected_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_distribution_review_protected_policy_spirit
+		hidden_effect = {
+			YUK_snp_distribution_review_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_distribution_review_protocol
+	icon = GFX_ac_snp_focus_YUK_snp_distribution_review_protocol
+	x = 2
+	y = 22
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_distribution_review_civil_policy
+		focus = YUK_snp_distribution_review_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 OR = { has_completed_focus = YUK_snp_distribution_review_civil_policy has_completed_focus = YUK_snp_distribution_review_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_distribution_review_protocol_effect_tt
+		hidden_effect = {
+			YUK_snp_distribution_review_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_distribution_review_review
+	icon = GFX_ac_snp_focus_YUK_snp_distribution_review_review
+	x = 2
+	y = 23
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_distribution_review_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_distribution_review_protocol has_country_flag = YUK_snp_distribution_review_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_distribution_review_review_effect_tt
+		hidden_effect = {
+			YUK_snp_distribution_review_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_distribution_review_settlement
+	icon = GFX_ac_snp_focus_YUK_snp_distribution_review_settlement
+	x = 2
+	y = 24
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_distribution_review_review
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_distribution_review_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_distribution_review_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_distribution_review_civil_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_distribution_review_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_distribution_review_protected_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_distribution_review_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			YUK_snp_distribution_review_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_maritime_support_register
+	icon = GFX_ac_snp_focus_YUK_snp_maritime_support_register
+	x = 15
+	y = 20
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_logistics_settlement
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_logistics_settlement
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_maritime_support_register_effect_tt
+		hidden_effect = {
+			YUK_snp_maritime_support_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_maritime_support_civil_policy
+	icon = GFX_ac_snp_focus_YUK_snp_maritime_support_civil_policy
+	x = 13
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_maritime_support_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_maritime_support_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_maritime_support_register NOT = { has_country_flag = YUK_snp_maritime_support_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_maritime_support_civil_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_maritime_support_civil_policy_spirit
+		hidden_effect = {
+			YUK_snp_maritime_support_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_maritime_support_protected_policy
+	icon = GFX_ac_snp_focus_YUK_snp_maritime_support_protected_policy
+	x = 17
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_maritime_support_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_maritime_support_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_maritime_support_register NOT = { has_country_flag = YUK_snp_maritime_support_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_maritime_support_protected_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_maritime_support_protected_policy_spirit
+		hidden_effect = {
+			YUK_snp_maritime_support_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_maritime_support_protocol
+	icon = GFX_ac_snp_focus_YUK_snp_maritime_support_protocol
+	x = 15
+	y = 22
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_maritime_support_civil_policy
+		focus = YUK_snp_maritime_support_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 OR = { has_completed_focus = YUK_snp_maritime_support_civil_policy has_completed_focus = YUK_snp_maritime_support_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_maritime_support_protocol_effect_tt
+		hidden_effect = {
+			YUK_snp_maritime_support_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_maritime_support_review
+	icon = GFX_ac_snp_focus_YUK_snp_maritime_support_review
+	x = 15
+	y = 23
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_maritime_support_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_maritime_support_protocol has_country_flag = YUK_snp_maritime_support_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_maritime_support_review_effect_tt
+		hidden_effect = {
+			YUK_snp_maritime_support_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_maritime_support_settlement
+	icon = GFX_ac_snp_focus_YUK_snp_maritime_support_settlement
+	x = 15
+	y = 24
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_maritime_support_review
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_maritime_support_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_maritime_support_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_maritime_support_civil_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_maritime_support_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_maritime_support_protected_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_maritime_support_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			YUK_snp_maritime_support_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_technical_cooperation_register
+	icon = GFX_ac_snp_focus_YUK_snp_technical_cooperation_register
+	x = 28
+	y = 20
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_industrial_orders_settlement
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_industrial_orders_settlement
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_technical_cooperation_register_effect_tt
+		hidden_effect = {
+			YUK_snp_technical_cooperation_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_technical_cooperation_civil_policy
+	icon = GFX_ac_snp_focus_YUK_snp_technical_cooperation_civil_policy
+	x = 26
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_technical_cooperation_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_technical_cooperation_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_technical_cooperation_register NOT = { has_country_flag = YUK_snp_technical_cooperation_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_technical_cooperation_civil_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_technical_cooperation_civil_policy_spirit
+		hidden_effect = {
+			YUK_snp_technical_cooperation_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_technical_cooperation_protected_policy
+	icon = GFX_ac_snp_focus_YUK_snp_technical_cooperation_protected_policy
+	x = 30
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_technical_cooperation_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_technical_cooperation_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_technical_cooperation_register NOT = { has_country_flag = YUK_snp_technical_cooperation_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_technical_cooperation_protected_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_technical_cooperation_protected_policy_spirit
+		hidden_effect = {
+			YUK_snp_technical_cooperation_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_technical_cooperation_protocol
+	icon = GFX_ac_snp_focus_YUK_snp_technical_cooperation_protocol
+	x = 28
+	y = 22
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_technical_cooperation_civil_policy
+		focus = YUK_snp_technical_cooperation_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 OR = { has_completed_focus = YUK_snp_technical_cooperation_civil_policy has_completed_focus = YUK_snp_technical_cooperation_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_technical_cooperation_protocol_effect_tt
+		hidden_effect = {
+			YUK_snp_technical_cooperation_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_technical_cooperation_review
+	icon = GFX_ac_snp_focus_YUK_snp_technical_cooperation_review
+	x = 28
+	y = 23
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_technical_cooperation_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_technical_cooperation_protocol has_country_flag = YUK_snp_technical_cooperation_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_technical_cooperation_review_effect_tt
+		hidden_effect = {
+			YUK_snp_technical_cooperation_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_technical_cooperation_settlement
+	icon = GFX_ac_snp_focus_YUK_snp_technical_cooperation_settlement
+	x = 28
+	y = 24
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_technical_cooperation_review
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_technical_cooperation_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_technical_cooperation_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_technical_cooperation_civil_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_technical_cooperation_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_technical_cooperation_protected_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_technical_cooperation_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			YUK_snp_technical_cooperation_settlement_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_orders_review_register
+	icon = GFX_ac_snp_focus_YUK_snp_orders_review_register
+	x = 41
+	y = 20
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_training_settlement
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_training_settlement
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_orders_review_register_effect_tt
+		hidden_effect = {
+			YUK_snp_orders_review_register_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_orders_review_civil_policy
+	icon = GFX_ac_snp_focus_YUK_snp_orders_review_civil_policy
+	x = 39
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_orders_review_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_orders_review_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_orders_review_register NOT = { has_country_flag = YUK_snp_orders_review_protected_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_orders_review_civil_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_orders_review_civil_policy_spirit
+		hidden_effect = {
+			YUK_snp_orders_review_civil_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_orders_review_protected_policy
+	icon = GFX_ac_snp_focus_YUK_snp_orders_review_protected_policy
+	x = 43
+	y = 21
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_orders_review_register
+	}
+	mutually_exclusive = {
+		focus = YUK_snp_orders_review_civil_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_orders_review_register NOT = { has_country_flag = YUK_snp_orders_review_civil_policy_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_orders_review_protected_policy_effect_tt
+		show_ideas_tooltip = YUK_snp_orders_review_protected_policy_spirit
+		hidden_effect = {
+			YUK_snp_orders_review_protected_policy_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_orders_review_protocol
+	icon = GFX_ac_snp_focus_YUK_snp_orders_review_protocol
+	x = 41
+	y = 22
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_orders_review_civil_policy
+		focus = YUK_snp_orders_review_protected_policy
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 OR = { has_completed_focus = YUK_snp_orders_review_civil_policy has_completed_focus = YUK_snp_orders_review_protected_policy }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_orders_review_protocol_effect_tt
+		hidden_effect = {
+			YUK_snp_orders_review_protocol_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_orders_review_review
+	icon = GFX_ac_snp_focus_YUK_snp_orders_review_review
+	x = 41
+	y = 23
+	cost = 5
+	prerequisite = {
+		focus = YUK_snp_orders_review_protocol
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_orders_review_protocol has_country_flag = YUK_snp_orders_review_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_orders_review_review_effect_tt
+		hidden_effect = {
+			YUK_snp_orders_review_review_apply = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = YUK_snp_orders_review_settlement
+	icon = GFX_ac_snp_focus_YUK_snp_orders_review_settlement
+	x = 41
+	y = 24
+	cost = 10
+	prerequisite = {
+		focus = YUK_snp_orders_review_review
+	}
+	available = {
+		ac_snp_active = yes tag = YUK original_tag = YUK date > 2005.12.31 has_completed_focus = YUK_snp_orders_review_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		custom_effect_tooltip = YUK_snp_orders_review_settlement_effect_tt
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_orders_review_civil_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_orders_review_civil_policy_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = YUK_snp_orders_review_protected_policy_done
+			}
+			show_ideas_tooltip = YUK_snp_orders_review_protected_policy_spirit_settled
+		}
+		hidden_effect = {
+			YUK_snp_orders_review_settlement_apply = yes
+		}
+	}
+}

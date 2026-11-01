@@ -19,6 +19,10 @@ ac_econ_cancel_procurement = {
 }
 ac_econ_initialize = {
 	if = {
+		limit = { ac_econ_release_history = yes }
+		ac_econ_adopt_release_account = yes
+	}
+	else_if = {
 		limit = { ac_macro_mode = yes }
 		ac_macro_initialize = yes
 	}
@@ -110,6 +114,31 @@ ac_econ_weekly_settlement = {
 		ac_econ_legacy_weekly_settlement = yes
 	}
 }
+ac_econ_adopt_release_account = {
+	if = {
+		limit = { ac_econ_release_history = yes }
+		if = {
+			limit = { ac_macro_mode = yes }
+			ac_macro_initialize = yes
+		}
+		else_if = {
+			limit = { ac_econ_legacy_enabled = yes }
+			if = {
+				limit = { NOT = { has_country_flag = ac_econ_initialized } }
+				set_country_flag = ac_econ_initialized
+				if = {
+					limit = { NOT = { has_variable = ac_econ_tax_level } }
+					set_variable = { ac_econ_tax_level = 1 }
+				}
+				if = {
+					limit = { NOT = { has_variable = ac_econ_civilian_level } }
+					set_variable = { ac_econ_civilian_level = 0 }
+				}
+			}
+			ac_econ_legacy_refresh_budget = yes
+		}
+	}
+}
 ac_econ_pay_programme = {
 	if = {
 		limit = { ac_macro_ready = yes }
@@ -119,5 +148,29 @@ ac_econ_pay_programme = {
 	else_if = {
 		limit = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 2 } }
 		subtract_from_variable = { ac_econ_treasury = 2 }
+	}
+}
+ac_econ_try_fund_release_project = {
+	clr_country_flag = ac_econ_release_project_funded
+	if = {
+		limit = { ac_econ_release_history = yes }
+		if = {
+			limit = { ac_macro_ready = yes }
+			set_temp_variable = { ac_macro_transaction_amount = 0.02 }
+			ac_macro_try_spend = yes
+			if = {
+				limit = { has_country_flag = ac_macro_transaction_succeeded }
+				set_country_flag = ac_econ_release_project_funded
+			}
+		}
+		else_if = {
+			limit = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 20 } }
+			subtract_from_variable = { ac_econ_treasury = 20 }
+			set_country_flag = ac_econ_release_project_funded
+		}
+		else_if = {
+			limit = { ac_econ_enabled = no }
+			set_country_flag = ac_econ_release_project_funded
+		}
 	}
 }

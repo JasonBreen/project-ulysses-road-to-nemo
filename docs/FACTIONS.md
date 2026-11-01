@@ -1,6 +1,6 @@
 # Factions, internal councils and subpacts
 
-The ac_fac_, ac_corp_, ac_sub_ IDs and ac_factions.1 through .3 events are provisional gameplay systems, not assertions of Project Aces history. Sam requested joinable diplomatic/military blocs, internal country/corporate factions, applicable DLC integration and OEM-style subpacts. No canon alliance, border, country, company or future war was added.
+The ac_fac_, ac_corp_, ac_sub_ IDs and ac_factions.1 through .3 events are provisional gameplay systems, not assertions of Project Aces history. The user requested joinable diplomatic/military blocs, internal country/corporate factions, applicable DLC integration and OEM-style subpacts. No canon alliance, border, country, company or future war was added.
 
 ## Campaign entry and player controls
 

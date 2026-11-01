@@ -79,8 +79,17 @@ def main():
  portraits = {{ civilian = {{ large = "{sprite}" }} }}
  country_leader = {{ ideology = {SUBTYPES[row['party']]} traits = {{ }} expire = "2066.1.1.1" desc = {ident}_desc }}
 }}''')
-        target=MOD/row['history'];old=target.read_text(encoding='utf-8-sig').split(MARKER)[0].rstrip()
-        outputs[row['history']]=(old+'\n\n'+MARKER+'\n# New campaigns only; provenance: tools/usea_expansion/leaders.json.\nrecruit_character = '+ident+'\n# END EXPANSION START LEADER\n').encode()
+        target=MOD/row['history'];old=target.read_text(encoding='utf-8-sig')
+        section=MARKER+'\n# New campaigns only; provenance: tools/usea_expansion/leaders.json.\nrecruit_character = '+ident+'\n# END EXPANSION START LEADER\n'
+        # Own only this marked section. Later country foundations and economy
+        # eligibility sections must survive starting-government regeneration.
+        if MARKER in old:
+            pattern=re.escape(MARKER)+r'.*?\# END EXPANSION START LEADER\r?\n?'
+            if old.count(MARKER)!=1 or '# END EXPANSION START LEADER' not in old:
+                raise SystemExit('Invalid starting-government section: '+row['history'])
+            updated=re.sub(pattern,lambda _:section,old,count=1,flags=re.S)
+        else:updated=old.rstrip()+'\n\n'+section
+        outputs[row['history']]=updated.encode()
     outputs['common/characters/ac_starting_governments.txt']=('characters = {\n'+'\n'.join(chars)+'\n}\n').encode()
     outputs['localisation/english/ac_starting_governments_l_english.yml']=('l_english:\n'+'\n'.join(loc)+'\n').encode('utf-8-sig')
     outputs['interface/ac_starting_governments.gfx']=('spriteTypes = {\n'+'\n'.join(gfx)+'\n}\n').encode()

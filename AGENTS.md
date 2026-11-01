@@ -5,7 +5,7 @@
 - This repository is a private, local continuation of the April 5, 2024 Project Ulysses archive. Preserve `source/archive-original` and `source/baseline`; never rewrite either.
 - Keep work in an isolated Git worktree/branch. Do not force-push, merge automatically, change repository visibility, publish a release, contact the original developers, or alter `G:\Project-Swallow`.
 - Do not launch HOI4, change display settings, alter user saves/settings, or run downloaded mod code unless the user separately approves native testing. Static inspection and static validators are the default.
-- Do not invent official ACE COMBAT history, postwar borders, corporate history, or future events to fill the 2065 engineering horizon. Label archive material as mod provenance, Sam's material as user-authored continuity, and balance mechanics as provisional gameplay.
+- Do not invent official ACE COMBAT history, postwar borders, corporate history, or future events to fill the 2065 engineering horizon. Label archive material as mod provenance, the supplied creative material as user-authored continuity, and balance mechanics as provisional gameplay.
 
 ## Canon and content workflow
 

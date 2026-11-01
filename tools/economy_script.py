@@ -110,6 +110,14 @@ class Harness:
         self.enabled = enabled
         self.effects = definitions("common/scripted_effects")
         self.triggers = definitions("common/scripted_triggers")
+        # This harness intentionally remains the saved experimental-mode
+        # interpreter. Full-mode owners have their own actual-script harness;
+        # foreign readiness is false here, never an invented full-mode result.
+        self.external_effects = {key for path in (MOD / "common/scripted_effects").glob("ac_macro*.txt")
+                                 for key, _, _ in read(path)}
+        self.external_triggers = {key for path in (MOD / "common/scripted_triggers").glob("ac_macro*.txt")
+                                  for key, _, _ in read(path)}
+        self.triggers.update({key: [("always", "=", "no")] for key in self.external_triggers})
         self.actions = read(MOD / "common/on_actions/ac_economy_on_actions.txt")[0][2]
         self.decisions = definitions("common/decisions")["ac_economy_budget"]
 
@@ -119,7 +127,7 @@ class Harness:
         except Exception:
             if value == "num_of_controlled_factories":
                 return Decimal(country.factories)
-            if value.startswith("ac_econ_"):
+            if value.startswith(("ac_econ_", "ac_macro_")):
                 return temporary.get(value, country.value(value))
             raise ValueError("Unknown numeric input: " + value)
 
@@ -134,6 +142,8 @@ class Harness:
                 answers.append(not self.trigger(value, country, temporary))
             elif key == "OR":
                 answers.append(any(self.trigger([child], country, temporary) for child in value))
+            elif key == "AND":
+                answers.append(all(self.trigger([child], country, temporary) for child in value))
             elif key == "always":
                 answers.append(value == "yes")
             elif key == "has_game_rule":
@@ -258,7 +268,7 @@ def validate_content(harness):
     effect_native = {"if", "else_if", "else", "set_variable", "add_to_variable", "subtract_from_variable",
                      "multiply_variable", "set_temp_variable", "add_to_temp_variable", "multiply_temp_variable",
                      "set_country_flag", "add_dynamic_modifier", "add_equipment_to_stockpile", "every_country"}
-    trigger_native = {"NOT", "OR", "always", "has_game_rule", "any_owned_state", "has_country_flag",
+    trigger_native = {"NOT", "OR", "AND", "always", "has_game_rule", "any_owned_state", "has_country_flag",
                       "has_dynamic_modifier", "check_variable", "has_war", "is_ai", "has_capitulated", "has_tech",
                       "num_of_military_factories"}
 
@@ -270,15 +280,16 @@ def validate_content(harness):
         for key, operator, value in block:
             library = harness.triggers if is_trigger else harness.effects
             native = trigger_native if is_trigger else effect_native
-            if key not in library and key not in native:
+            foreign = harness.external_triggers if is_trigger else harness.external_effects
+            if key not in library and key not in native and key not in foreign:
                 raise ValueError("Unresolved script symbol: " + key)
             if key in library:
-                if value != "yes" or operator != "=":
+                if value not in (("yes", "no") if is_trigger else ("yes",)) or operator != "=":
                     raise ValueError("Invalid scripted call: " + key)
             elif key in ("if", "else_if", "else", "every_country"):
                 for child in value:
                     check(child[2] if child[0] == "limit" else [child], child[0] == "limit")
-            elif key in ("NOT", "OR", "any_owned_state"):
+            elif key in ("NOT", "OR", "AND", "any_owned_state"):
                 check(value, True)
             elif key == "check_variable":
                 if len(value) == 1 and value[0][0] not in {"var", "value", "compare"}:
@@ -289,21 +300,21 @@ def validate_content(harness):
                         raise ValueError("Invalid variable comparison")
                     variable = comparison_fields["var"]
                     operand = comparison_fields["value"]
-                if not variable.startswith("ac_econ_"):
+                if not variable.startswith(("ac_econ_", "ac_macro_")):
                     raise ValueError("Invalid economy variable")
                 used.add(variable)
-                if operand.startswith("ac_econ_"):
+                if operand.startswith(("ac_econ_", "ac_macro_")):
                     used.add(operand)
-                if not (re.fullmatch(r"-?\d+(?:\.\d+)?", operand) or operand.startswith("ac_econ_") or operand == "num_of_controlled_factories"):
+                if not (re.fullmatch(r"-?\d+(?:\.\d+)?", operand) or operand.startswith(("ac_econ_", "ac_macro_")) or operand == "num_of_controlled_factories"):
                     raise ValueError("Unknown numeric symbol: " + operand)
             elif "variable" in key:
-                if len(value) != 1 or not value[0][0].startswith("ac_econ_"):
+                if len(value) != 1 or not value[0][0].startswith(("ac_econ_", "ac_macro_")):
                     raise ValueError("Invalid economy variable")
                 operand = value[0][2]
                 (used if is_trigger else assigned).add(value[0][0])
-                if operand.startswith("ac_econ_"):
+                if operand.startswith(("ac_econ_", "ac_macro_")):
                     used.add(operand)
-                if not (re.fullmatch(r"-?\d+(?:\.\d+)?", operand) or operand.startswith("ac_econ_") or operand == "num_of_controlled_factories"):
+                if not (re.fullmatch(r"-?\d+(?:\.\d+)?", operand) or operand.startswith(("ac_econ_", "ac_macro_")) or operand == "num_of_controlled_factories"):
                     raise ValueError("Unknown numeric symbol: " + operand)
             elif key in ("has_dynamic_modifier", "add_dynamic_modifier"):
                 if fields(value)["modifier"] not in modifiers:
@@ -345,11 +356,15 @@ def validate_content(harness):
     if needed - keys:
         raise ValueError("Missing English keys: " + str(sorted(needed - keys)))
     used.update(re.findall(r'\[\?(ac_econ_\w+)', raw.decode("utf-8-sig")))
-    if used - assigned:
-        raise ValueError("Unassigned economy variables: " + str(sorted(used - assigned)))
-    rules = fields(definitions("common/game_rules")["ac_economy"])
-    if fields(rules["default"])["name"] != "disabled":
-        raise ValueError("Economy must be default-off")
+    missing_legacy = {name for name in used - assigned if name.startswith("ac_econ_")}
+    if missing_legacy:
+        raise ValueError("Unassigned economy variables: " + str(sorted(missing_legacy)))
+    rules = definitions("common/game_rules")["ac_economy"]
+    default = next(value for key, _, value in rules if key == "default")
+    if fields(default)["name"] != "full":
+        raise ValueError("New campaigns must default to the full economy")
+    if not {"disabled", "experimental"}.issubset({fields(value)["name"] for key, _, value in rules if key == "option"}):
+        raise ValueError("Saved legacy economy modes must remain available")
     equipment_path = MOD / "common/units/equipment/infantry.txt"
     if equipment_path.exists():
         equipment = fields(read(equipment_path))["equipments"]

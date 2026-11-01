@@ -54,6 +54,11 @@ class World:
         self.effects=mapping(load("common/scripted_effects/ac_factions_effects.txt"))
         self.triggers=mapping(load("common/scripted_triggers/ac_factions_triggers.txt"))
         self.triggers.update(mapping(load("common/scripted_triggers/ac_economy_triggers.txt")))
+        self.triggers.update(mapping(load("common/scripted_triggers/ac_economy_compat.txt")))
+        # This suite exercises legacy/off fiscal integration. Full-mode amounts
+        # and transactions are covered against actual owners by EconomyV2.
+        self.triggers.update({key:[("always","=","no")] for key in mapping(load("common/scripted_triggers/ac_macro_triggers.txt"))})
+        self.effects["ac_econ_pay_programme"]=mapping(load("common/scripted_effects/ac_economy_compat.txt"))["ac_econ_pay_programme"]
         self.decisions={};self.categories=mapping(load("common/decisions/categories/ac_factions_categories.txt"))
         for cat,op,body in load("common/decisions/ac_factions_decisions.txt"):
             for key,op,value in body:self.decisions[key]=(cat,mapping(value))
@@ -81,7 +86,7 @@ class World:
             if c is None:return D(0)
             return D(c.id) if key=="id" else c.get(key)
         if s=="num_faction_members":return D(sum(x.faction==c.faction and x.exists for x in self.countries.values())) if c.faction else D(0)
-        if s.startswith(("ac_fac_","ac_sub_","ac_corp_","ac_econ_")):return c.get(s)
+        if s.startswith(("ac_fac_","ac_sub_","ac_corp_","ac_econ_","ac_macro_")):return c.get(s)
         raise ValueError("Unknown number "+s)
     def compare(self,a,op,b):
         return {"=":a==b,"equals":a==b,">":a>b,"greater_than":a>b,">=":a>=b,"greater_than_or_equals":a>=b,"<":a<b,"less_than":a<b,"<=":a<=b,"less_than_or_equals":a<=b,"!=":a!=b}[op]
@@ -149,6 +154,11 @@ class World:
                 if branch is None:raise ValueError("Unpaired else")
                 if not branch:self.effect(v,ctx)
                 branch=None
+            elif key=="else_if":
+                if branch is None:raise ValueError("Unpaired else_if")
+                if not branch:
+                    branch=self.trig(mapping(v).get("limit",[]),ctx)
+                    if branch:self.effect([n for n in v if n[0]!="limit"],ctx)
             elif key in self.effects:self.effect(self.effects[key],ctx)
             elif key in ("set_variable","add_to_variable","subtract_from_variable","multiply_variable"):
                 name,operator,value=v[0];n=self.num(value,ctx)

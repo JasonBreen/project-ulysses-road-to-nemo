@@ -3,7 +3,7 @@
 Uses only authored geometry, the bundled OFL font and recorded format metadata.
 No installed-game pixels or fonts are read. Official art is packaged separately.
 """
-import argparse,hashlib,json,math,re,sys
+import argparse,hashlib,io,json,math,re,sys
 from pathlib import Path
 from PIL import Image,ImageDraw,ImageFont,ImageOps
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'port_1_19'))
@@ -184,16 +184,22 @@ def skin(spec):
         elif 'link' in name or 'exclusive_line' in name:
             cx,cy=fw//2,h//2
             if 'exclusive' in name:
-                d.line((0,cy,fw,cy),fill=accent,width=max(1,h//8))
-                if 'link_exclusive' in name:glyph(tile,'security',(1,1,max(1,fw-2),max(1,h-2)),accent)
+                d.rectangle((0,cy-1,fw-1,cy),fill=accent)
+                if 'link_exclusive' in name:
+                    d.polygon([(cx,4),(fw-4,cy),(cx,h-4),(4,cy)],fill=NAVY,outline=accent)
+                    d.line((cx-4,cy-4,cx+4,cy+4),fill=accent,width=1)
+                    d.line((cx-4,cy+4,cx+4,cy-4),fill=accent,width=1)
             else:
-                # Directional tiles repeat along the graph. Drawing a full
-                # cross in every left/right tile produces a rail-like fence.
+                # Pillow's even-width line rasterization shifts opposite draw
+                # directions to opposite sides of the centre. Fixed rectangles
+                # keep every tiled arm on the same pixel rows/columns.
                 directions=name.split('focus_link')[-1].strip('_').split('_')
-                ends={'up':(cx,0),'down':(cx,h),'left':(0,cy),'right':(fw,cy)}
                 if directions==['']:directions=['up','down']
                 for direction in directions:
-                    if direction in ends:d.line(((cx,cy),ends[direction]),fill=accent,width=2)
+                    if direction=='up':d.rectangle((cx-1,0,cx,cy),fill=accent)
+                    elif direction=='down':d.rectangle((cx-1,cy-1,cx,h-1),fill=accent)
+                    elif direction=='left':d.rectangle((0,cy-1,cx,cy),fill=accent)
+                    elif direction=='right':d.rectangle((cx-1,cy-1,fw-1,cy),fill=accent)
         elif ('progress' in name or 'bar3' in name) and h<50:
             d.rectangle((0,0,fw-1,h-1),fill=PANEL,outline=accent)
             if 'frame' not in name:d.rectangle((2,2,max(2,fw-3),max(2,h-3)),fill=accent)
@@ -253,6 +259,28 @@ def build_ui():
     (MOD/'interface/nationalfocusview.gfx').write_text('spriteTypes = {\n'+''.join(engine)+'}\n')
 
 
+def build_focus_ui(check=False):
+    """Repackage focus-only textures without rewriting other screen contracts."""
+    records=[]
+    for spec in json.loads((HERE/'ui_assets.json').read_text()):
+        if spec['role'] not in ('focus_ui','engine_focus'):continue
+        image=skin(spec)
+        stream=io.BytesIO();image.convert('RGBA').save(stream,format='DDS');data=stream.getvalue()
+        relative='gfx/interface/ac_expansion/ui/'+spec['name']+'.dds'
+        target=MOD/relative
+        if check:
+            if not target.exists() or target.read_bytes()!=data:raise SystemExit('Focus UI texture differs: '+relative)
+        else:target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+        records.append(dict(file=relative,width=image.width,height=image.height,frames=spec['frames'],role='original UI artwork',sha256=hashlib.sha256(data).hexdigest()))
+    path=HERE/'assets.json';previous=json.loads(path.read_text());updates={r['file']:r for r in records}
+    merged=[updates.pop(row['file'],row) for row in previous]
+    if updates:raise SystemExit('Focus UI assets are absent from the complete manifest: '+', '.join(updates))
+    if check:
+        if previous!=merged:raise SystemExit('Focus UI asset manifest differs')
+    else:path.write_text(json.dumps(merged,indent=2)+'\n')
+    print('Focus UI artwork:',len(records),'textures;', 'verified' if check else 'packaged','without changing other screen artwork.')
+
+
 def focus_records():
     loc={}
     for p in (MOD/'localisation/english').glob('*.yml'):
@@ -296,7 +324,10 @@ def build_focuses():
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--ui-only',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--ui-only',action='store_true');p.add_argument('--focus-ui-only',action='store_true');p.add_argument('--check',action='store_true');a=p.parse_args()
+    if a.focus_ui_only:
+        build_focus_ui(a.check);return
+    if a.check:raise SystemExit('--check currently requires --focus-ui-only')
     build_ui()
     if not a.ui_only:
         build_focuses()

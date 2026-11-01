@@ -1,0 +1,3268 @@
+ac_sq_initialize = {
+	if = {
+		limit = {
+			ac_sq_enabled = yes ac_sq_host = yes NOT = { has_country_flag = ac_sq_initialized }
+		}
+		set_country_flag = ac_sq_initialized
+		set_variable = { ac_sq_chapter = 0 }
+		set_variable = { ac_sq_pending_chapter = 0 }
+		set_variable = { ac_sq_ending_kind = -1 }
+		set_variable = { ac_sq_cohesion = 50 }
+		set_variable = { ac_sq_credibility = 50 }
+		if = {
+			limit = {
+				date > 1991.1.31 NOT = { date > 2005.12.31 }
+			}
+			if = {
+				limit = {
+					tag = BLK original_tag = BLK country_exists = BLK
+				}
+				set_variable = { ac_sq_chapter = 1 }
+				set_country_flag = ac_sq_blk_missed_1
+			}
+			if = {
+				limit = {
+					tag = UST original_tag = UST country_exists = UST
+				}
+				set_variable = { ac_sq_chapter = 1 }
+				set_country_flag = ac_sq_ust_missed_1
+			}
+			if = {
+				limit = {
+					tag = ERU original_tag = ERU country_exists = ERU
+				}
+				set_variable = { ac_sq_chapter = 1 }
+				set_country_flag = ac_sq_eru_missed_1
+			}
+			if = {
+				limit = {
+					tag = SNS original_tag = SNS country_exists = SNS
+				}
+				set_variable = { ac_sq_chapter = 1 }
+				set_country_flag = ac_sq_sns_missed_1
+			}
+			if = {
+				limit = {
+					tag = EMM original_tag = EMM country_exists = EMM
+				}
+				set_variable = { ac_sq_chapter = 1 }
+				set_country_flag = ac_sq_emm_missed_1
+			}
+			if = {
+				limit = {
+					tag = EVA original_tag = EVA country_exists = EVA
+				}
+				set_variable = { ac_sq_chapter = 1 }
+				set_country_flag = ac_sq_eva_missed_1
+			}
+		}
+		if = {
+			limit = {
+				date > 2005.12.31
+			}
+			set_country_flag = ac_sq_closed
+			set_country_flag = ac_sq_late_archive
+		}
+	}
+}
+ac_sq_blk_repair_pending = {
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 1 } check_variable = { ac_sq_chapter = 0 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_1
+		set_variable = { ac_sq_chapter = 1 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 2 } check_variable = { ac_sq_chapter = 1 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_2
+		set_variable = { ac_sq_chapter = 2 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 3 } check_variable = { ac_sq_chapter = 2 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_3
+		set_variable = { ac_sq_chapter = 3 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 4 } check_variable = { ac_sq_chapter = 3 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_4
+		set_variable = { ac_sq_chapter = 4 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 5 } check_variable = { ac_sq_chapter = 4 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_5
+		set_variable = { ac_sq_chapter = 5 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 6 } check_variable = { ac_sq_chapter = 5 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1996.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_6
+		set_variable = { ac_sq_chapter = 6 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 7 } check_variable = { ac_sq_chapter = 6 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1996.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_7
+		set_variable = { ac_sq_chapter = 7 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 8 } check_variable = { ac_sq_chapter = 7 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1996.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_8
+		set_variable = { ac_sq_chapter = 8 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 9 } check_variable = { ac_sq_chapter = 8 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1996.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_9
+		set_variable = { ac_sq_chapter = 9 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 10 } check_variable = { ac_sq_chapter = 9 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1996.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_10
+		set_variable = { ac_sq_chapter = 10 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 11 } check_variable = { ac_sq_chapter = 10 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_11
+		set_variable = { ac_sq_chapter = 11 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 12 } check_variable = { ac_sq_chapter = 11 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_12
+		set_variable = { ac_sq_chapter = 12 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 13 } check_variable = { ac_sq_chapter = 12 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_13
+		set_variable = { ac_sq_chapter = 13 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 14 } check_variable = { ac_sq_chapter = 13 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_14
+		set_variable = { ac_sq_chapter = 14 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 15 } check_variable = { ac_sq_chapter = 14 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_15
+		set_variable = { ac_sq_chapter = 15 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 16 } check_variable = { ac_sq_chapter = 15 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_16
+		set_variable = { ac_sq_chapter = 16 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 17 } check_variable = { ac_sq_chapter = 16 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_17
+		set_variable = { ac_sq_chapter = 17 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 18 } check_variable = { ac_sq_chapter = 17 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_18
+		set_variable = { ac_sq_chapter = 18 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 19 } check_variable = { ac_sq_chapter = 18 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_19
+		set_variable = { ac_sq_chapter = 19 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 20 } check_variable = { ac_sq_chapter = 19 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_blk_missed_20
+		set_variable = { ac_sq_chapter = 20 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+}
+ac_sq_blk_dispatch = {
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 1 }
+		set_country_flag = ac_sq_blk_missed_1
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1991.1.1 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 1 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.101 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 2 }
+		set_country_flag = ac_sq_blk_missed_2
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1991.5.1 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 2 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.102 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 3 }
+		set_country_flag = ac_sq_blk_missed_3
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1992.2.1 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 3 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.103 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 4 }
+		set_country_flag = ac_sq_blk_missed_4
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1993.4.1 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 4 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.104 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 5 }
+		set_country_flag = ac_sq_blk_missed_5
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1994.10.10 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 5 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.105 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } date > 1996.12.31
+		}
+		set_variable = { ac_sq_chapter = 6 }
+		set_country_flag = ac_sq_blk_missed_6
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1995.3.1 } NOT = { date > 1996.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 6 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.106 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } date > 1996.12.31
+		}
+		set_variable = { ac_sq_chapter = 7 }
+		set_country_flag = ac_sq_blk_missed_7
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1995.6.1 } NOT = { date > 1996.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 7 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.107 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } date > 1996.12.31
+		}
+		set_variable = { ac_sq_chapter = 8 }
+		set_country_flag = ac_sq_blk_missed_8
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1995.10.1 } NOT = { date > 1996.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 8 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.108 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } date > 1996.12.31
+		}
+		set_variable = { ac_sq_chapter = 9 }
+		set_country_flag = ac_sq_blk_missed_9
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1996.3.1 } NOT = { date > 1996.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 9 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.109 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } date > 1996.12.31
+		}
+		set_variable = { ac_sq_chapter = 10 }
+		set_country_flag = ac_sq_blk_missed_10
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1996.10.1 } NOT = { date > 1996.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 10 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.110 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 11 }
+		set_country_flag = ac_sq_blk_missed_11
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1997.3.1 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 11 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.111 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 12 }
+		set_country_flag = ac_sq_blk_missed_12
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1997.11.1 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 12 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.112 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 13 }
+		set_country_flag = ac_sq_blk_missed_13
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1998.7.1 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 13 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.113 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 14 }
+		set_country_flag = ac_sq_blk_missed_14
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.1.1 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 14 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.114 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 15 }
+		set_country_flag = ac_sq_blk_missed_15
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.8.1 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 15 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.115 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 15 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2000.5.1 }
+		}
+		set_variable = { ac_sq_pending_chapter = 16 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.116 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 16 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2001.4.1 }
+		}
+		set_variable = { ac_sq_pending_chapter = 17 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.117 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 17 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2002.7.1 }
+		}
+		set_variable = { ac_sq_pending_chapter = 18 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.118 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 18 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.1.1 }
+		}
+		set_variable = { ac_sq_pending_chapter = 19 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.119 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 19 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2005.9.1 }
+		}
+		set_variable = { ac_sq_pending_chapter = 20 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.120 days = 1 }
+	}
+}
+ac_sq_blk_finish = {
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes check_variable = { ac_sq_chapter = 20 } NOT = { has_country_flag = ac_sq_ending_pending }
+		}
+		set_country_flag = { flag = ac_sq_ending_pending days = 30 }
+		if = {
+			limit = {
+				NOT = { check_variable = { ac_sq_cohesion < 65 } } NOT = { check_variable = { ac_sq_credibility < 65 } }
+			}
+			set_variable = { ac_sq_ending_kind = 0 }
+			country_event = { id = ac_sq.190 days = 1 }
+		}
+		else_if = {
+			limit = {
+				check_variable = { ac_sq_cohesion < 45 }
+			}
+			set_variable = { ac_sq_ending_kind = 2 }
+			country_event = { id = ac_sq.192 days = 1 }
+		}
+		else = {
+			set_variable = { ac_sq_ending_kind = 1 }
+			country_event = { id = ac_sq.191 days = 1 }
+		}
+	}
+}
+ac_sq_ust_repair_pending = {
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 1 } check_variable = { ac_sq_chapter = 0 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_1
+		set_variable = { ac_sq_chapter = 1 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 2 } check_variable = { ac_sq_chapter = 1 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_2
+		set_variable = { ac_sq_chapter = 2 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 3 } check_variable = { ac_sq_chapter = 2 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_3
+		set_variable = { ac_sq_chapter = 3 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 4 } check_variable = { ac_sq_chapter = 3 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_4
+		set_variable = { ac_sq_chapter = 4 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 5 } check_variable = { ac_sq_chapter = 4 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_5
+		set_variable = { ac_sq_chapter = 5 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 6 } check_variable = { ac_sq_chapter = 5 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1996.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_6
+		set_variable = { ac_sq_chapter = 6 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 7 } check_variable = { ac_sq_chapter = 6 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1996.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_7
+		set_variable = { ac_sq_chapter = 7 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 8 } check_variable = { ac_sq_chapter = 7 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1996.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_8
+		set_variable = { ac_sq_chapter = 8 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 9 } check_variable = { ac_sq_chapter = 8 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1996.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_9
+		set_variable = { ac_sq_chapter = 9 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 10 } check_variable = { ac_sq_chapter = 9 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1996.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_10
+		set_variable = { ac_sq_chapter = 10 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 11 } check_variable = { ac_sq_chapter = 10 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_11
+		set_variable = { ac_sq_chapter = 11 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 12 } check_variable = { ac_sq_chapter = 11 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_12
+		set_variable = { ac_sq_chapter = 12 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 13 } check_variable = { ac_sq_chapter = 12 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_13
+		set_variable = { ac_sq_chapter = 13 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 14 } check_variable = { ac_sq_chapter = 13 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_14
+		set_variable = { ac_sq_chapter = 14 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 15 } check_variable = { ac_sq_chapter = 14 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_15
+		set_variable = { ac_sq_chapter = 15 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 16 } check_variable = { ac_sq_chapter = 15 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_16
+		set_variable = { ac_sq_chapter = 16 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 17 } check_variable = { ac_sq_chapter = 16 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_17
+		set_variable = { ac_sq_chapter = 17 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 18 } check_variable = { ac_sq_chapter = 17 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_18
+		set_variable = { ac_sq_chapter = 18 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 19 } check_variable = { ac_sq_chapter = 18 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_19
+		set_variable = { ac_sq_chapter = 19 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 20 } check_variable = { ac_sq_chapter = 19 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_ust_missed_20
+		set_variable = { ac_sq_chapter = 20 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+}
+ac_sq_ust_dispatch = {
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 1 }
+		set_country_flag = ac_sq_ust_missed_1
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1991.1.1 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 1 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.201 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 2 }
+		set_country_flag = ac_sq_ust_missed_2
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1991.7.1 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 2 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.202 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 3 }
+		set_country_flag = ac_sq_ust_missed_3
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1992.3.1 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 3 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.203 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 4 }
+		set_country_flag = ac_sq_ust_missed_4
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1993.5.1 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 4 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.204 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 5 }
+		set_country_flag = ac_sq_ust_missed_5
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1994.9.1 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 5 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.205 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } date > 1996.12.31
+		}
+		set_variable = { ac_sq_chapter = 6 }
+		set_country_flag = ac_sq_ust_missed_6
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1995.3.1 } NOT = { date > 1996.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 6 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.206 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } date > 1996.12.31
+		}
+		set_variable = { ac_sq_chapter = 7 }
+		set_country_flag = ac_sq_ust_missed_7
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1995.4.15 } NOT = { date > 1996.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 7 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.207 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } date > 1996.12.31
+		}
+		set_variable = { ac_sq_chapter = 8 }
+		set_country_flag = ac_sq_ust_missed_8
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1995.6.15 } NOT = { date > 1996.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 8 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.208 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } date > 1996.12.31
+		}
+		set_variable = { ac_sq_chapter = 9 }
+		set_country_flag = ac_sq_ust_missed_9
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1995.10.1 } NOT = { date > 1996.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 9 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.209 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } date > 1996.12.31
+		}
+		set_variable = { ac_sq_chapter = 10 }
+		set_country_flag = ac_sq_ust_missed_10
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1996.5.1 } NOT = { date > 1996.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 10 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.210 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 11 }
+		set_country_flag = ac_sq_ust_missed_11
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1997.2.1 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 11 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.211 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 12 }
+		set_country_flag = ac_sq_ust_missed_12
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1997.10.1 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 12 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.212 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 13 }
+		set_country_flag = ac_sq_ust_missed_13
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1998.8.1 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 13 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.213 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 14 }
+		set_country_flag = ac_sq_ust_missed_14
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.3.1 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 14 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.214 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 15 }
+		set_country_flag = ac_sq_ust_missed_15
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.9.1 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 15 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.215 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 15 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2000.6.1 }
+		}
+		set_variable = { ac_sq_pending_chapter = 16 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.216 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 16 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2001.8.1 }
+		}
+		set_variable = { ac_sq_pending_chapter = 17 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.217 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 17 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2002.11.1 }
+		}
+		set_variable = { ac_sq_pending_chapter = 18 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.218 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 18 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.3.1 }
+		}
+		set_variable = { ac_sq_pending_chapter = 19 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.219 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 19 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2005.11.1 }
+		}
+		set_variable = { ac_sq_pending_chapter = 20 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.220 days = 1 }
+	}
+}
+ac_sq_ust_finish = {
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes check_variable = { ac_sq_chapter = 20 } NOT = { has_country_flag = ac_sq_ending_pending }
+		}
+		set_country_flag = { flag = ac_sq_ending_pending days = 30 }
+		if = {
+			limit = {
+				NOT = { check_variable = { ac_sq_cohesion < 65 } } NOT = { check_variable = { ac_sq_credibility < 65 } }
+			}
+			set_variable = { ac_sq_ending_kind = 0 }
+			country_event = { id = ac_sq.290 days = 1 }
+		}
+		else_if = {
+			limit = {
+				check_variable = { ac_sq_cohesion < 45 }
+			}
+			set_variable = { ac_sq_ending_kind = 2 }
+			country_event = { id = ac_sq.292 days = 1 }
+		}
+		else = {
+			set_variable = { ac_sq_ending_kind = 1 }
+			country_event = { id = ac_sq.291 days = 1 }
+		}
+	}
+}
+ac_sq_eru_repair_pending = {
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 1 } check_variable = { ac_sq_chapter = 0 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_1
+		set_variable = { ac_sq_chapter = 1 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 2 } check_variable = { ac_sq_chapter = 1 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_2
+		set_variable = { ac_sq_chapter = 2 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 3 } check_variable = { ac_sq_chapter = 2 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_3
+		set_variable = { ac_sq_chapter = 3 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 4 } check_variable = { ac_sq_chapter = 3 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_4
+		set_variable = { ac_sq_chapter = 4 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 5 } check_variable = { ac_sq_chapter = 4 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_5
+		set_variable = { ac_sq_chapter = 5 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 6 } check_variable = { ac_sq_chapter = 5 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_6
+		set_variable = { ac_sq_chapter = 6 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 7 } check_variable = { ac_sq_chapter = 6 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_7
+		set_variable = { ac_sq_chapter = 7 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 8 } check_variable = { ac_sq_chapter = 7 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_8
+		set_variable = { ac_sq_chapter = 8 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 9 } check_variable = { ac_sq_chapter = 8 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_9
+		set_variable = { ac_sq_chapter = 9 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 10 } check_variable = { ac_sq_chapter = 9 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_10
+		set_variable = { ac_sq_chapter = 10 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 11 } check_variable = { ac_sq_chapter = 10 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2003.5.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_11
+		set_variable = { ac_sq_chapter = 11 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 12 } check_variable = { ac_sq_chapter = 11 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2003.5.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_12
+		set_variable = { ac_sq_chapter = 12 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 13 } check_variable = { ac_sq_chapter = 12 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2003.5.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_13
+		set_variable = { ac_sq_chapter = 13 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 14 } check_variable = { ac_sq_chapter = 13 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2003.5.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_14
+		set_variable = { ac_sq_chapter = 14 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 15 } check_variable = { ac_sq_chapter = 14 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2003.5.31
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_15
+		set_variable = { ac_sq_chapter = 15 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 16 } check_variable = { ac_sq_chapter = 15 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_16
+		set_variable = { ac_sq_chapter = 16 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 17 } check_variable = { ac_sq_chapter = 16 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_17
+		set_variable = { ac_sq_chapter = 17 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 18 } check_variable = { ac_sq_chapter = 17 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_18
+		set_variable = { ac_sq_chapter = 18 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 19 } check_variable = { ac_sq_chapter = 18 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_19
+		set_variable = { ac_sq_chapter = 19 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 20 } check_variable = { ac_sq_chapter = 19 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_eru_missed_20
+		set_variable = { ac_sq_chapter = 20 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+}
+ac_sq_eru_dispatch = {
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 1 }
+		set_country_flag = ac_sq_eru_missed_1
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1991.1.1 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 1 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.301 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 2 }
+		set_country_flag = ac_sq_eru_missed_2
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1991.9.12 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 2 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.302 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 3 }
+		set_country_flag = ac_sq_eru_missed_3
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1992.8.3 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 3 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.303 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 4 }
+		set_country_flag = ac_sq_eru_missed_4
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1993.6.18 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 4 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.304 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 5 }
+		set_country_flag = ac_sq_eru_missed_5
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1994.10.7 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 5 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.305 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 6 }
+		set_country_flag = ac_sq_eru_missed_6
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1995.6.9 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 6 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.306 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 7 }
+		set_country_flag = ac_sq_eru_missed_7
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1996.9.21 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 7 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.307 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 8 }
+		set_country_flag = ac_sq_eru_missed_8
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1997.2.16 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 8 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.308 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 9 }
+		set_country_flag = ac_sq_eru_missed_9
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1998.4.24 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 9 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.309 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 10 }
+		set_country_flag = ac_sq_eru_missed_10
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.10.12 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 10 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.310 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } date > 2003.5.31
+		}
+		set_variable = { ac_sq_chapter = 11 }
+		set_country_flag = ac_sq_eru_missed_11
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2000.3.8 } NOT = { date > 2003.5.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 11 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.311 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } date > 2003.5.31
+		}
+		set_variable = { ac_sq_chapter = 12 }
+		set_country_flag = ac_sq_eru_missed_12
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2000.11.19 } NOT = { date > 2003.5.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 12 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.312 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } date > 2003.5.31
+		}
+		set_variable = { ac_sq_chapter = 13 }
+		set_country_flag = ac_sq_eru_missed_13
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2001.6.2 } NOT = { date > 2003.5.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 13 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.313 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } date > 2003.5.31
+		}
+		set_variable = { ac_sq_chapter = 14 }
+		set_country_flag = ac_sq_eru_missed_14
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2002.3.15 } NOT = { date > 2003.5.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 14 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.314 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } date > 2003.5.31
+		}
+		set_variable = { ac_sq_chapter = 15 }
+		set_country_flag = ac_sq_eru_missed_15
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2003.4.5 } NOT = { date > 2003.5.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 15 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.315 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 15 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2003.8.22 }
+		}
+		set_variable = { ac_sq_pending_chapter = 16 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.316 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 16 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.2.11 }
+		}
+		set_variable = { ac_sq_pending_chapter = 17 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.317 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 17 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.6.26 }
+		}
+		set_variable = { ac_sq_pending_chapter = 18 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.318 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 18 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.11.9 }
+		}
+		set_variable = { ac_sq_pending_chapter = 19 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.319 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 19 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2005.3.18 }
+		}
+		set_variable = { ac_sq_pending_chapter = 20 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.320 days = 1 }
+	}
+}
+ac_sq_eru_finish = {
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes check_variable = { ac_sq_chapter = 20 } NOT = { has_country_flag = ac_sq_ending_pending }
+		}
+		set_country_flag = { flag = ac_sq_ending_pending days = 30 }
+		if = {
+			limit = {
+				NOT = { check_variable = { ac_sq_cohesion < 65 } } NOT = { check_variable = { ac_sq_credibility < 65 } }
+			}
+			set_variable = { ac_sq_ending_kind = 0 }
+			country_event = { id = ac_sq.390 days = 1 }
+		}
+		else_if = {
+			limit = {
+				check_variable = { ac_sq_cohesion < 45 }
+			}
+			set_variable = { ac_sq_ending_kind = 2 }
+			country_event = { id = ac_sq.392 days = 1 }
+		}
+		else = {
+			set_variable = { ac_sq_ending_kind = 1 }
+			country_event = { id = ac_sq.391 days = 1 }
+		}
+	}
+}
+ac_sq_sns_repair_pending = {
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 1 } check_variable = { ac_sq_chapter = 0 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_1
+		set_variable = { ac_sq_chapter = 1 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 2 } check_variable = { ac_sq_chapter = 1 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_2
+		set_variable = { ac_sq_chapter = 2 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 3 } check_variable = { ac_sq_chapter = 2 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_3
+		set_variable = { ac_sq_chapter = 3 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 4 } check_variable = { ac_sq_chapter = 3 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_4
+		set_variable = { ac_sq_chapter = 4 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 5 } check_variable = { ac_sq_chapter = 4 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1994.12.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_5
+		set_variable = { ac_sq_chapter = 5 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 6 } check_variable = { ac_sq_chapter = 5 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_6
+		set_variable = { ac_sq_chapter = 6 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 7 } check_variable = { ac_sq_chapter = 6 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_7
+		set_variable = { ac_sq_chapter = 7 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 8 } check_variable = { ac_sq_chapter = 7 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_8
+		set_variable = { ac_sq_chapter = 8 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 9 } check_variable = { ac_sq_chapter = 8 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_9
+		set_variable = { ac_sq_chapter = 9 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 10 } check_variable = { ac_sq_chapter = 9 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_10
+		set_variable = { ac_sq_chapter = 10 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 11 } check_variable = { ac_sq_chapter = 10 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2003.5.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_11
+		set_variable = { ac_sq_chapter = 11 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 12 } check_variable = { ac_sq_chapter = 11 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2003.5.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_12
+		set_variable = { ac_sq_chapter = 12 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 13 } check_variable = { ac_sq_chapter = 12 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2003.5.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_13
+		set_variable = { ac_sq_chapter = 13 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 14 } check_variable = { ac_sq_chapter = 13 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2003.5.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_14
+		set_variable = { ac_sq_chapter = 14 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 15 } check_variable = { ac_sq_chapter = 14 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2003.5.31
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_15
+		set_variable = { ac_sq_chapter = 15 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 16 } check_variable = { ac_sq_chapter = 15 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_16
+		set_variable = { ac_sq_chapter = 16 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 17 } check_variable = { ac_sq_chapter = 16 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_17
+		set_variable = { ac_sq_chapter = 17 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 18 } check_variable = { ac_sq_chapter = 17 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_18
+		set_variable = { ac_sq_chapter = 18 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 19 } check_variable = { ac_sq_chapter = 18 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_19
+		set_variable = { ac_sq_chapter = 19 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 20 } check_variable = { ac_sq_chapter = 19 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_sns_missed_20
+		set_variable = { ac_sq_chapter = 20 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+}
+ac_sq_sns_dispatch = {
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 1 }
+		set_country_flag = ac_sq_sns_missed_1
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1991.1.1 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 1 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.401 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 2 }
+		set_country_flag = ac_sq_sns_missed_2
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1991.8.17 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 2 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.402 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 3 }
+		set_country_flag = ac_sq_sns_missed_3
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1992.5.6 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 3 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.403 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 4 }
+		set_country_flag = ac_sq_sns_missed_4
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1993.3.29 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 4 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.404 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } date > 1994.12.31
+		}
+		set_variable = { ac_sq_chapter = 5 }
+		set_country_flag = ac_sq_sns_missed_5
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1994.11.4 } NOT = { date > 1994.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 5 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.405 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 6 }
+		set_country_flag = ac_sq_sns_missed_6
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1995.5.19 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 6 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.406 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 7 }
+		set_country_flag = ac_sq_sns_missed_7
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1996.9.13 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 7 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.407 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 8 }
+		set_country_flag = ac_sq_sns_missed_8
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1997.7.9 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 8 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.408 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 9 }
+		set_country_flag = ac_sq_sns_missed_9
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1998.3.23 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 9 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.409 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 10 }
+		set_country_flag = ac_sq_sns_missed_10
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.10.25 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 10 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.410 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } date > 2003.5.31
+		}
+		set_variable = { ac_sq_chapter = 11 }
+		set_country_flag = ac_sq_sns_missed_11
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2000.4.14 } NOT = { date > 2003.5.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 11 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.411 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } date > 2003.5.31
+		}
+		set_variable = { ac_sq_chapter = 12 }
+		set_country_flag = ac_sq_sns_missed_12
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2000.12.8 } NOT = { date > 2003.5.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 12 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.412 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } date > 2003.5.31
+		}
+		set_variable = { ac_sq_chapter = 13 }
+		set_country_flag = ac_sq_sns_missed_13
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2001.8.31 } NOT = { date > 2003.5.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 13 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.413 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } date > 2003.5.31
+		}
+		set_variable = { ac_sq_chapter = 14 }
+		set_country_flag = ac_sq_sns_missed_14
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2002.6.17 } NOT = { date > 2003.5.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 14 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.414 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } date > 2003.5.31
+		}
+		set_variable = { ac_sq_chapter = 15 }
+		set_country_flag = ac_sq_sns_missed_15
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2003.4.21 } NOT = { date > 2003.5.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 15 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.415 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 15 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2003.8.19 }
+		}
+		set_variable = { ac_sq_pending_chapter = 16 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.416 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 16 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.3.11 }
+		}
+		set_variable = { ac_sq_pending_chapter = 17 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.417 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 17 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.8.7 }
+		}
+		set_variable = { ac_sq_pending_chapter = 18 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.418 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 18 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.11.24 }
+		}
+		set_variable = { ac_sq_pending_chapter = 19 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.419 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 19 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2005.4.2 }
+		}
+		set_variable = { ac_sq_pending_chapter = 20 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.420 days = 1 }
+	}
+}
+ac_sq_sns_finish = {
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes check_variable = { ac_sq_chapter = 20 } NOT = { has_country_flag = ac_sq_ending_pending }
+		}
+		set_country_flag = { flag = ac_sq_ending_pending days = 30 }
+		if = {
+			limit = {
+				NOT = { check_variable = { ac_sq_cohesion < 65 } } NOT = { check_variable = { ac_sq_credibility < 65 } }
+			}
+			set_variable = { ac_sq_ending_kind = 0 }
+			country_event = { id = ac_sq.490 days = 1 }
+		}
+		else_if = {
+			limit = {
+				check_variable = { ac_sq_cohesion < 45 }
+			}
+			set_variable = { ac_sq_ending_kind = 2 }
+			country_event = { id = ac_sq.492 days = 1 }
+		}
+		else = {
+			set_variable = { ac_sq_ending_kind = 1 }
+			country_event = { id = ac_sq.491 days = 1 }
+		}
+	}
+}
+ac_sq_emm_repair_pending = {
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 1 } check_variable = { ac_sq_chapter = 0 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1997.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_1
+		set_variable = { ac_sq_chapter = 1 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 2 } check_variable = { ac_sq_chapter = 1 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1997.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_2
+		set_variable = { ac_sq_chapter = 2 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 3 } check_variable = { ac_sq_chapter = 2 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1997.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_3
+		set_variable = { ac_sq_chapter = 3 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 4 } check_variable = { ac_sq_chapter = 3 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1997.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_4
+		set_variable = { ac_sq_chapter = 4 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 5 } check_variable = { ac_sq_chapter = 4 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1997.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_5
+		set_variable = { ac_sq_chapter = 5 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 6 } check_variable = { ac_sq_chapter = 5 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_6
+		set_variable = { ac_sq_chapter = 6 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 7 } check_variable = { ac_sq_chapter = 6 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_7
+		set_variable = { ac_sq_chapter = 7 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 8 } check_variable = { ac_sq_chapter = 7 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_8
+		set_variable = { ac_sq_chapter = 8 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 9 } check_variable = { ac_sq_chapter = 8 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_9
+		set_variable = { ac_sq_chapter = 9 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 10 } check_variable = { ac_sq_chapter = 9 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_10
+		set_variable = { ac_sq_chapter = 10 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 11 } check_variable = { ac_sq_chapter = 10 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2002.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_11
+		set_variable = { ac_sq_chapter = 11 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 12 } check_variable = { ac_sq_chapter = 11 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2002.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_12
+		set_variable = { ac_sq_chapter = 12 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 13 } check_variable = { ac_sq_chapter = 12 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2002.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_13
+		set_variable = { ac_sq_chapter = 13 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 14 } check_variable = { ac_sq_chapter = 13 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2002.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_14
+		set_variable = { ac_sq_chapter = 14 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 15 } check_variable = { ac_sq_chapter = 14 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2002.12.31
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_15
+		set_variable = { ac_sq_chapter = 15 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 16 } check_variable = { ac_sq_chapter = 15 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_16
+		set_variable = { ac_sq_chapter = 16 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 17 } check_variable = { ac_sq_chapter = 16 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_17
+		set_variable = { ac_sq_chapter = 17 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 18 } check_variable = { ac_sq_chapter = 17 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_18
+		set_variable = { ac_sq_chapter = 18 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 19 } check_variable = { ac_sq_chapter = 18 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_19
+		set_variable = { ac_sq_chapter = 19 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 20 } check_variable = { ac_sq_chapter = 19 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_emm_missed_20
+		set_variable = { ac_sq_chapter = 20 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+}
+ac_sq_emm_dispatch = {
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } date > 1997.12.31
+		}
+		set_variable = { ac_sq_chapter = 1 }
+		set_country_flag = ac_sq_emm_missed_1
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1991.1.1 } NOT = { date > 1997.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 1 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.501 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } date > 1997.12.31
+		}
+		set_variable = { ac_sq_chapter = 2 }
+		set_country_flag = ac_sq_emm_missed_2
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1992.8.15 } NOT = { date > 1997.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 2 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.502 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } date > 1997.12.31
+		}
+		set_variable = { ac_sq_chapter = 3 }
+		set_country_flag = ac_sq_emm_missed_3
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1993.9.6 } NOT = { date > 1997.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 3 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.503 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } date > 1997.12.31
+		}
+		set_variable = { ac_sq_chapter = 4 }
+		set_country_flag = ac_sq_emm_missed_4
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1995.4.27 } NOT = { date > 1997.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 4 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.504 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } date > 1997.12.31
+		}
+		set_variable = { ac_sq_chapter = 5 }
+		set_country_flag = ac_sq_emm_missed_5
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1997.11.12 } NOT = { date > 1997.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 5 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.505 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 6 }
+		set_country_flag = ac_sq_emm_missed_6
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1998.2.18 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 6 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.506 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 7 }
+		set_country_flag = ac_sq_emm_missed_7
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1998.8.30 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 7 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.507 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 8 }
+		set_country_flag = ac_sq_emm_missed_8
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.2.9 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 8 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.508 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 9 }
+		set_country_flag = ac_sq_emm_missed_9
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.6.16 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 9 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.509 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 10 }
+		set_country_flag = ac_sq_emm_missed_10
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.11.3 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 10 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.510 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } date > 2002.12.31
+		}
+		set_variable = { ac_sq_chapter = 11 }
+		set_country_flag = ac_sq_emm_missed_11
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2000.3.24 } NOT = { date > 2002.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 11 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.511 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } date > 2002.12.31
+		}
+		set_variable = { ac_sq_chapter = 12 }
+		set_country_flag = ac_sq_emm_missed_12
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2000.10.7 } NOT = { date > 2002.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 12 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.512 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } date > 2002.12.31
+		}
+		set_variable = { ac_sq_chapter = 13 }
+		set_country_flag = ac_sq_emm_missed_13
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2001.6.20 } NOT = { date > 2002.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 13 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.513 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } date > 2002.12.31
+		}
+		set_variable = { ac_sq_chapter = 14 }
+		set_country_flag = ac_sq_emm_missed_14
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2002.2.12 } NOT = { date > 2002.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 14 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.514 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } date > 2002.12.31
+		}
+		set_variable = { ac_sq_chapter = 15 }
+		set_country_flag = ac_sq_emm_missed_15
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2002.10.22 } NOT = { date > 2002.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 15 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.515 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 15 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2003.3.6 }
+		}
+		set_variable = { ac_sq_pending_chapter = 16 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.516 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 16 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2003.11.14 }
+		}
+		set_variable = { ac_sq_pending_chapter = 17 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.517 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 17 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.5.21 }
+		}
+		set_variable = { ac_sq_pending_chapter = 18 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.518 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 18 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.11.10 }
+		}
+		set_variable = { ac_sq_pending_chapter = 19 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.519 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 19 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2005.6.4 }
+		}
+		set_variable = { ac_sq_pending_chapter = 20 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.520 days = 1 }
+	}
+}
+ac_sq_emm_finish = {
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes check_variable = { ac_sq_chapter = 20 } NOT = { has_country_flag = ac_sq_ending_pending }
+		}
+		set_country_flag = { flag = ac_sq_ending_pending days = 30 }
+		if = {
+			limit = {
+				NOT = { check_variable = { ac_sq_cohesion < 65 } } NOT = { check_variable = { ac_sq_credibility < 65 } }
+			}
+			set_variable = { ac_sq_ending_kind = 0 }
+			country_event = { id = ac_sq.590 days = 1 }
+		}
+		else_if = {
+			limit = {
+				check_variable = { ac_sq_cohesion < 45 }
+			}
+			set_variable = { ac_sq_ending_kind = 2 }
+			country_event = { id = ac_sq.592 days = 1 }
+		}
+		else = {
+			set_variable = { ac_sq_ending_kind = 1 }
+			country_event = { id = ac_sq.591 days = 1 }
+		}
+	}
+}
+ac_sq_eva_repair_pending = {
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 1 } check_variable = { ac_sq_chapter = 0 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1997.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_1
+		set_variable = { ac_sq_chapter = 1 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 2 } check_variable = { ac_sq_chapter = 1 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1997.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_2
+		set_variable = { ac_sq_chapter = 2 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 3 } check_variable = { ac_sq_chapter = 2 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1997.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_3
+		set_variable = { ac_sq_chapter = 3 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 4 } check_variable = { ac_sq_chapter = 3 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1997.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_4
+		set_variable = { ac_sq_chapter = 4 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 5 } check_variable = { ac_sq_chapter = 4 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1997.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_5
+		set_variable = { ac_sq_chapter = 5 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 6 } check_variable = { ac_sq_chapter = 5 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_6
+		set_variable = { ac_sq_chapter = 6 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 7 } check_variable = { ac_sq_chapter = 6 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_7
+		set_variable = { ac_sq_chapter = 7 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 8 } check_variable = { ac_sq_chapter = 7 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_8
+		set_variable = { ac_sq_chapter = 8 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 9 } check_variable = { ac_sq_chapter = 8 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_9
+		set_variable = { ac_sq_chapter = 9 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 10 } check_variable = { ac_sq_chapter = 9 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_10
+		set_variable = { ac_sq_chapter = 10 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 11 } check_variable = { ac_sq_chapter = 10 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2002.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_11
+		set_variable = { ac_sq_chapter = 11 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 12 } check_variable = { ac_sq_chapter = 11 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2002.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_12
+		set_variable = { ac_sq_chapter = 12 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 13 } check_variable = { ac_sq_chapter = 12 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2002.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_13
+		set_variable = { ac_sq_chapter = 13 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 14 } check_variable = { ac_sq_chapter = 13 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2002.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_14
+		set_variable = { ac_sq_chapter = 14 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 15 } check_variable = { ac_sq_chapter = 14 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending } date > 2002.12.31
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_15
+		set_variable = { ac_sq_chapter = 15 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 16 } check_variable = { ac_sq_chapter = 15 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_16
+		set_variable = { ac_sq_chapter = 16 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 17 } check_variable = { ac_sq_chapter = 16 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_17
+		set_variable = { ac_sq_chapter = 17 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 18 } check_variable = { ac_sq_chapter = 17 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_18
+		set_variable = { ac_sq_chapter = 18 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 19 } check_variable = { ac_sq_chapter = 18 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_19
+		set_variable = { ac_sq_chapter = 19 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_pending_chapter = 20 } check_variable = { ac_sq_chapter = 19 } OR = {
+				NOT = { has_country_flag = ac_sq_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sq_eva_missed_20
+		set_variable = { ac_sq_chapter = 20 }
+		clr_country_flag = ac_sq_dispatch_pending
+		set_variable = { ac_sq_pending_chapter = 0 }
+	}
+}
+ac_sq_eva_dispatch = {
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } date > 1997.12.31
+		}
+		set_variable = { ac_sq_chapter = 1 }
+		set_country_flag = ac_sq_eva_missed_1
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 0 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1991.1.1 } NOT = { date > 1997.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 1 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.601 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } date > 1997.12.31
+		}
+		set_variable = { ac_sq_chapter = 2 }
+		set_country_flag = ac_sq_eva_missed_2
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 1 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1992.3.14 } NOT = { date > 1997.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 2 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.602 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } date > 1997.12.31
+		}
+		set_variable = { ac_sq_chapter = 3 }
+		set_country_flag = ac_sq_eva_missed_3
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 2 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1993.7.2 } NOT = { date > 1997.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 3 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.603 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } date > 1997.12.31
+		}
+		set_variable = { ac_sq_chapter = 4 }
+		set_country_flag = ac_sq_eva_missed_4
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 3 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1995.5.22 } NOT = { date > 1997.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 4 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.604 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } date > 1997.12.31
+		}
+		set_variable = { ac_sq_chapter = 5 }
+		set_country_flag = ac_sq_eva_missed_5
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 4 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1997.10.9 } NOT = { date > 1997.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 5 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.605 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 6 }
+		set_country_flag = ac_sq_eva_missed_6
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 5 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1998.2.11 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 6 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.606 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 7 }
+		set_country_flag = ac_sq_eva_missed_7
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 6 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1998.9.23 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 7 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.607 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 8 }
+		set_country_flag = ac_sq_eva_missed_8
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 7 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.2.5 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 8 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.608 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 9 }
+		set_country_flag = ac_sq_eva_missed_9
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 8 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.6.18 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 9 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.609 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } date > 1999.12.31
+		}
+		set_variable = { ac_sq_chapter = 10 }
+		set_country_flag = ac_sq_eva_missed_10
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 9 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 1999.11.27 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 10 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.610 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } date > 2002.12.31
+		}
+		set_variable = { ac_sq_chapter = 11 }
+		set_country_flag = ac_sq_eva_missed_11
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 10 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2000.3.13 } NOT = { date > 2002.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 11 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.611 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } date > 2002.12.31
+		}
+		set_variable = { ac_sq_chapter = 12 }
+		set_country_flag = ac_sq_eva_missed_12
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 11 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2000.10.26 } NOT = { date > 2002.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 12 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.612 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } date > 2002.12.31
+		}
+		set_variable = { ac_sq_chapter = 13 }
+		set_country_flag = ac_sq_eva_missed_13
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 12 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2001.7.16 } NOT = { date > 2002.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 13 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.613 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } date > 2002.12.31
+		}
+		set_variable = { ac_sq_chapter = 14 }
+		set_country_flag = ac_sq_eva_missed_14
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 13 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2002.2.21 } NOT = { date > 2002.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 14 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.614 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } date > 2002.12.31
+		}
+		set_variable = { ac_sq_chapter = 15 }
+		set_country_flag = ac_sq_eva_missed_15
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 14 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2002.11.8 } NOT = { date > 2002.12.31 }
+		}
+		set_variable = { ac_sq_pending_chapter = 15 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.615 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 15 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2003.3.28 }
+		}
+		set_variable = { ac_sq_pending_chapter = 16 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.616 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 16 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2003.12.3 }
+		}
+		set_variable = { ac_sq_pending_chapter = 17 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.617 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 17 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.5.17 }
+		}
+		set_variable = { ac_sq_pending_chapter = 18 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.618 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 18 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2004.11.22 }
+		}
+		set_variable = { ac_sq_pending_chapter = 19 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.619 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_dispatch_pending } check_variable = { ac_sq_chapter = 19 } NOT = { has_country_flag = ac_sq_cooldown } NOT = { date < 2005.6.16 }
+		}
+		set_variable = { ac_sq_pending_chapter = 20 }
+		set_country_flag = { flag = ac_sq_dispatch_pending days = 30 }
+		country_event = { id = ac_sq.620 days = 1 }
+	}
+}
+ac_sq_eva_finish = {
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes check_variable = { ac_sq_chapter = 20 } NOT = { has_country_flag = ac_sq_ending_pending }
+		}
+		set_country_flag = { flag = ac_sq_ending_pending days = 30 }
+		if = {
+			limit = {
+				NOT = { check_variable = { ac_sq_cohesion < 65 } } NOT = { check_variable = { ac_sq_credibility < 65 } }
+			}
+			set_variable = { ac_sq_ending_kind = 0 }
+			country_event = { id = ac_sq.690 days = 1 }
+		}
+		else_if = {
+			limit = {
+				check_variable = { ac_sq_cohesion < 45 }
+			}
+			set_variable = { ac_sq_ending_kind = 2 }
+			country_event = { id = ac_sq.692 days = 1 }
+		}
+		else = {
+			set_variable = { ac_sq_ending_kind = 1 }
+			country_event = { id = ac_sq.691 days = 1 }
+		}
+	}
+}
+ac_sq_tick = {
+	ac_sq_initialize = yes
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes
+		}
+		ac_sq_blk_repair_pending = yes
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK ac_sq_active = yes NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_blk_dispatch = yes
+	}
+	if = {
+		limit = {
+			tag = BLK original_tag = BLK country_exists = BLK NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_blk_finish = yes
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes
+		}
+		ac_sq_ust_repair_pending = yes
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST ac_sq_active = yes NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_ust_dispatch = yes
+	}
+	if = {
+		limit = {
+			tag = UST original_tag = UST country_exists = UST NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_ust_finish = yes
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes
+		}
+		ac_sq_eru_repair_pending = yes
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU ac_sq_active = yes NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_eru_dispatch = yes
+	}
+	if = {
+		limit = {
+			tag = ERU original_tag = ERU country_exists = ERU NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_eru_finish = yes
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes
+		}
+		ac_sq_sns_repair_pending = yes
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS ac_sq_active = yes NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_sns_dispatch = yes
+	}
+	if = {
+		limit = {
+			tag = SNS original_tag = SNS country_exists = SNS NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_sns_finish = yes
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes
+		}
+		ac_sq_emm_repair_pending = yes
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM ac_sq_active = yes NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_emm_dispatch = yes
+	}
+	if = {
+		limit = {
+			tag = EMM original_tag = EMM country_exists = EMM NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_emm_finish = yes
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes
+		}
+		ac_sq_eva_repair_pending = yes
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA ac_sq_active = yes NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_eva_dispatch = yes
+	}
+	if = {
+		limit = {
+			tag = EVA original_tag = EVA country_exists = EVA NOT = { has_country_flag = ac_sq_paused }
+		}
+		ac_sq_eva_finish = yes
+	}
+}

@@ -35,6 +35,9 @@ spec = importlib.util.spec_from_file_location('ulysses_art_symbols', ROOT / 'too
 symbols = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(symbols)
 glyph = symbols.glyph
+row_spec = importlib.util.spec_from_file_location('anea_decision_rows', ROOT / 'tools/decision_row_art/geometry.py')
+row_geometry = importlib.util.module_from_spec(row_spec)
+row_spec.loader.exec_module(row_geometry)
 
 OUTPUTS = {}
 ASSETS = []
@@ -237,7 +240,9 @@ def build_policies():
         texture(relative, emblem(*motifs, 'EMM', (100, 100)),
                 'original decision category artwork', 'GFX_ac_anea_category_' + suffix)
         alias('GFX_decision_category_ac_anea_' + suffix, relative)
-        alias('GFX_decision_ac_anea_' + suffix, relative)
+        texture(f'gfx/AC_anea/decisions/{suffix}.dds', row_geometry.row_icon(suffix),
+                'original compact decision row composition', 'GFX_decision_ac_anea_' + suffix,
+                source=ROOT / 'tools/decision_row_art/geometry.py', subject=suffix)
 
 
 def contained(source, size):

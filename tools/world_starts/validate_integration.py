@@ -52,6 +52,7 @@ def main():
         ("decisions", ["tools/Test-DecisionUI.py"]),
         ("focus-canvas", ["tools/Test-FocusScreenRepairs.py"]),
         ("interface", ["tools/Test-InterfaceRepairs.py"]),
+        ("retired-news", ["tools/Test-RetiredWorldNews.py", *reference]),
         ("screenshot-repairs", ["tools/Test-OverhaulRepairs.py"]),
         ("effective-providers", ["tools/Test-EffectiveDependencies.py"]),
         ("authored-presentation", ["tools/check_presentation_sources.py"]),

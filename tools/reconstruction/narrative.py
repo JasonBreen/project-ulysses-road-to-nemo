@@ -126,7 +126,15 @@ def build_narrative(effects, triggers, loc, idea):
             values = {k: round(v * .5,3) for k,v in branch.services[n][3].items()}
             if n == 0:
                 values["consumer_goods_factor" if "political_power_gain" in values else "political_power_gain"] = .005 if "political_power_gain" in values else -.03
-            else: values["stability_factor"] = values.get("stability_factor",0) - .005
+            else:
+                # A smaller benefit is not a countervailing cost. Reserve a
+                # different modifier so a stability-support reply still pays.
+                for cost_key, cost in (("stability_factor", -.005), ("consumer_goods_factor", .005), ("political_power_gain", -.03)):
+                    if cost_key not in values:
+                        values[cost_key] = cost
+                        break
+                else:
+                    raise ValueError("Reply requires a distinct opportunity cost: " + ident)
             idea(ident + "_spirit", branch.titles[0] + (": Public Return" if n == 0 else ": Protected Working Return"),
                  "This ninety-day response supports the chosen reporting procedure. " + branch.services[n][1] + " Public attention or reserved staff time remains committed to that work.", values)
             choices.append((label, "set_country_flag = " + ident + "\nadd_timed_idea = { idea = " + ident + "_spirit days = 90 }"))

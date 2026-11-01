@@ -77,6 +77,26 @@ paid periods. Wartime domestic continuity uses 65% of the ordinary modifiers,
 rounded to three decimal places; it describes records, training liaison and
 maintenance administration. It asserts no flight or foreign delivery.
 
+Future national/conflict content may read the following surface after checking
+`ac_snp_active = yes`. These remain owned state; consumers must not write their
+values or independently release reservations.
+
+| Read surface | Meaning |
+|---|---|
+| `ac_snp_ose_public`, `ac_snp_ose_security` | Osean support lanes, 0–100 |
+| `ac_snp_ose_used` | Reconstructed active federal commitment units, at most three |
+| `ac_snp_yuk_civil`, `ac_snp_yuk_command` | Complementary allocation shares, total 100 |
+| `ac_snp_yuk_civil_used`, `ac_snp_yuk_command_used` | Active reserved shares in 25-point units |
+| `ac_snp_yuk_offices` | Reconstructed active receiving offices, at most two |
+| `ac_snp_completed` | Number of genuinely completed funded periods |
+| `<TAG>_snp_<branch>_service_completed` | At least one qualifying service in that branch |
+| `<TAG>_snp_<branch>_reply_civil` / `_reply_protected` | Persistent branch-response choice |
+| `<TAG>_snp_<branch>_last_domestic` | Latest qualifying branch completion used wartime domestic continuity |
+
+The owner maintains these through `ac_snp_reconcile` and the guarded service
+lifecycle. Its verified interruption hooks remain authoritative. Future consumers
+can use the recorded choices without redefining an existing war or project result.
+
 ## Payment, capacity and lifecycle contracts
 
 Every service costs 35 political power, or 30 under its earned Osean support lane,
@@ -172,7 +192,8 @@ evidence JSON, not this intermediate capture.
 
 Native HOI4 arithmetic and performance, actual save/reload, AI selection and pacing,
 balance, DLC-enabled gameplay, focus/detail scrolling and all three requested
-viewport/input configurations remain pending. Native/desktop testing is paused.
+viewport/input configurations remain pending: 3440×1440 at scale 1.0,
+1920×1080 at 1.0, and 2560×1440 at 1.25. Native/desktop testing is paused.
 Source checks, Python Decimal execution, geometry and galleries establish only
 their stated offline properties. Final evidence lives in
 `docs/evidence/superpowers/`; reproduction commands are in

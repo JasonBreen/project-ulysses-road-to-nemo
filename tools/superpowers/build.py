@@ -228,7 +228,7 @@ def output():
             idea(ident+'_settled',title+': Standing Settlement',focus_description(b,5)+' The chosen continuing cost remains.',improve(benefit,cost))
         for i in range(6):
             ident=focus_id(b,i);text(ident,b.titles[i]);text(ident+'_desc',focus_description(b,i));x,y=coords[ident]
-            available=active(b.tag)+' date > '+('1990.12.31'if b.opens=='1991.1.1'else'2005.12.31')+' '+requirement_text(b,i)
+            available=(active(b.tag)+' date > '+('1990.12.31'if b.opens=='1991.1.1'else'2005.12.31')+' '+requirement_text(b,i)).strip()
             other=focus_id(b,3-i)if i in(1,2)else None
             if other:available+=' NOT = { has_country_flag = '+other+'_done }'
             reward='set_country_flag = '+ident+'_done\n'

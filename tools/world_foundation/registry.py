@@ -94,6 +94,27 @@ def inspect():
     if active_profiles_path.exists():
         active_profiles = support_profile('tools/world_starts/profiles.json', 'object').get('countries', {})
         covered.update(active_profiles)
+    legacy_profiles = support_profile('tools/world_starts/legacy_profiles.json', 'object').get('countries', {})
+    legacy_inputs = support_profile('tools/world_starts/legacy_inputs.json', 'object') if legacy_profiles else {}
+    legacy_dependency_gaps = []
+    if legacy_profiles:
+        active_profiles.update(legacy_profiles); covered.update(legacy_profiles)
+        target = ROOT / legacy_inputs['component_manifest']
+        if not target.exists() or hashlib.sha256(target.read_bytes()).hexdigest() != legacy_inputs['component_manifest_sha256']:
+            legacy_dependency_gaps.append('legacy manifest receipt pending or stale')
+        for relative, expected in legacy_inputs['component_inputs_sha256'].items():
+            target = ROOT / relative
+            if not target.exists() or hashlib.sha256(target.read_bytes()).hexdigest() != expected:
+                legacy_dependency_gaps.append(relative)
+        physical=support_profile('tools/world_starts/legacy_foundation.json','object')
+        technical=physical.get('primary_sources_sha256',{})
+        if any(case['unresolved_component_technology'] for row in physical.get('countries',{}).values() for case in row['external_cases']):
+            legacy_dependency_gaps.append('unresolved force-owner technical compatibility definition')
+        for relative, expected in technical.items():
+            if relative.startswith('mod/'):
+                target=MOD/relative.removeprefix('mod/')
+                if not target.exists() or hashlib.sha256(target.read_bytes()).hexdigest()!=expected:
+                    legacy_dependency_gaps.append('effective technical source: '+relative)
     for path in sorted((MOD / "history/countries").glob("*.txt")):
         tag = path.name[:3]; history = read(path)
         owned = {i: s for i, s in states.items() if s["owner"] == tag}
@@ -159,10 +180,23 @@ def inspect():
         issues = [key for key, value in checks.items() if not value and key not in dispositions]
         personnel_gate = role.get('inherited_personnel_debt')
         if personnel_gate: issues.append('inherited_personnel_reinforcement_debt')
+        legacy_gates = []
+        if tag in legacy_profiles:
+            if legacy_dependency_gaps: issues.append('legacy_force_component_dependency_pending')
+            if legacy_inputs.get('lar_disabled_gap_profiles'):
+                legacy_gates.append('La Resistance-disabled reconnaissance mission availability has no established acceptance')
+                issues.append('legacy_reconnaissance_DLC_release_gate')
+            if legacy_inputs.get('unprojected_nsb'):
+                legacy_gates.append('No Step Back armor source projection is pending its actual force owner')
+                issues.append('legacy_NSB_source_release_gate')
         if tag == "PLH" or 171 in owned:
             status = "unresolved_placeholder_do_not_infer"
         elif not owned:
             status = "dormant_or_emergent_entry_requires_review"
+        elif tag in legacy_profiles and legacy_dependency_gaps:
+            status = 'staged_physical_foundation_force_dependency_pending'
+        elif tag in legacy_profiles and legacy_gates:
+            status = 'authored_foundation_extra_DLC_release_gates_pending'
         elif personnel_gate and issues == ['inherited_personnel_reinforcement_debt']:
             status = 'authored_foundation_with_inherited_policy_debt_native_pending'
         elif issues:
@@ -200,6 +234,9 @@ def inspect():
             "missing_roster_files": missing, "roster_offline_parser_errors": parse_errors, "initial_production_assignments": dict(sorted(production.items())),
             "source_checks": checks, "source_gaps": issues, "role_not_required": dispositions,
             "inherited_personnel_gate": personnel_gate,
+            "external_force_owner": ('tools/world_legacy' if tag in legacy_profiles else None),
+            "external_force_binding_gaps": (legacy_dependency_gaps if tag in legacy_profiles else []),
+            "extra_DLC_release_gates": legacy_gates,
             "scope_note": "Direct history/OOB source inspection only. Event-driven forces and native AI, supply reach, engine parsing and balance are separate acceptance."})
     summary = {"country_histories": len(rows), "currently_landowning": sum(bool(r["owned_states"]) for r in rows),
         "support_status_counts": dict(sorted(Counter(r["support_status"] for r in rows).items())),
@@ -225,7 +262,7 @@ def main():
         if not target.exists() or target.read_text() != text:
             raise SystemExit("Country registry differs; inspect actual source changes before regenerating")
     elif args.output:
-        args.output.parent.mkdir(parents=True, exist_ok=True); args.output.write_text(text, encoding="utf-8")
+        args.output.parent.mkdir(parents=True, exist_ok=True); args.output.write_text(text, encoding="utf-8", newline="\n")
     print(json.dumps(report["summary"], indent=2))
 
 

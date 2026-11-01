@@ -86,3 +86,29 @@ fuel/convoy/supply throughput, AI growth, natural pacing or save/reload acceptan
 Retained-army mode composes original cumulative units blocks without loading a second army. NSB armor roles have explicit additional source cases and narrow history-only unlocks; see the calibration ledger for the unresolved native/extra-DLC boundaries.
 
 `personnel.py --check` verifies the selected OOB report and exposes the preserved UST reinforcement debt. Universal sustainable-start acceptance remains false; see docs/WORLD_STARTS_ACCEPTANCE.md. `policies.py` captures actual starting laws/ideas and relevant technology effects; conservative core capacity and explicit import deficits replace raw-count/default-law assumptions.
+
+The final-four physical adapter is `legacy_foundation.py`. It owns only state
+history additions, exact owned-component routes, supply nodes and provisional
+hub captions for BLK/OSE/SAP/FAT. Their armies, named hulls, aircraft, stocks,
+production, research and AI belong to `tools/world_legacy`; this adapter cannot
+write their histories or OOBs. `legacy_inputs.json` records the actual force
+owner's manifest and every selected history/OOB receipt. A missing or changed
+local component fails `--require-integrated-owner`; an external worktree capture
+alone cannot satisfy that gate. The separate `legacy_sustainment.json` applies
+their actual opening laws and inherited spirit costs to production inputs,
+trade-CIV allowances, personnel and fuel sensitivity cases.
+
+```powershell
+python -B tools/world_starts/legacy_foundation.py --capture-source . --reference '<read-only HOI4 root>'
+python -B tools/world_starts/legacy_worksheet.py
+python -B tools/world_starts/test_legacy_logistics.py --require-integrated-owner
+python -B tools/world_starts/legacy_foundation.py --check --require-integrated-owner
+python -B tools/world_starts/coverage.py --check --require-integrated-owner
+```
+
+`coverage.json` partitions the 61 active starts among fifty profiles here, five
+World Foundation profiles, two Anea profiles and four Legacy profiles. It reads
+all 244 base BBA/MTG country-history branches and the separate FATO context.
+NSB/La Resistance cases remain identified with their owners. This is source
+coverage, with UST's established policy debt and extra DLC/native release gaps
+preserved; it is not universal sustainable-start acceptance.

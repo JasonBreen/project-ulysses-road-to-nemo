@@ -85,6 +85,7 @@ class Engine:
         values = {k: float(body.get(k, 0)) for k in ('build_cost_ic', 'fuel_consumption', 'manpower')}
         resources = {k: float(v) for k, _, v in body.get('resources', [])}; multipliers = Counter()
         for module in modules:
+            if module == 'empty': continue
             part = self.resolve(module, self.modules, self.module_files)
             for key, _, value in part.get('add_stats', []):
                 if key in values:

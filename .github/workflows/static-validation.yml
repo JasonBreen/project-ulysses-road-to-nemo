@@ -22,6 +22,12 @@ jobs:
         run: python -B tools/world_starts/test_world_starts.py
       - name: Check actual selected personnel and explicit inherited liabilities
         run: python -B tools/world_starts/personnel.py --check
+      - name: Check inherited-force logistics and exact integrated owner receipts
+        run: python -B tools/world_starts/test_legacy_logistics.py --require-integrated-owner
+      - name: Check legacy force projections and generated source consistency
+        run: python -B tools/world_legacy/test_legacy.py
+      - name: Check all 61 active physical owners and selected starting branches
+        run: python -B tools/world_starts/coverage.py --check --require-integrated-owner
       - name: Check full national economy and legacy continuity
         run: python -B tools/Test-EconomyV2.py
       - name: Check settled ledger, monetary carry and briefing page geometry

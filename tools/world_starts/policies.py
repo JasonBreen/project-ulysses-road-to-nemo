@@ -11,9 +11,9 @@ KEYS = {'min_export', 'local_resources_factor', 'resources_factor', 'resource_ga
         'local_factories', 'local_building_slots_factor', 'fuel_gain_factor_from_states', 'max_fuel_factor', 'max_fuel'}
 
 
-def history_signature(source, tag, dlcs=()):
+def history_signature(source, tag, dlcs=(), human_tags=()):
     return [[key, [k for k, _, _ in value] if isinstance(value, list) else [value]]
-            for key, _, value in selected(parse(source), set(dlcs), tag) if key in ('add_ideas', 'remove_ideas')]
+            for key, _, value in selected(parse(source), set(dlcs), tag, human_tags) if key in ('add_ideas', 'remove_ideas')]
 
 
 def catalog(engine):
@@ -40,10 +40,10 @@ def catalog(engine):
     return engine._start_ideas
 
 
-def capture(source, tag, engine, dlcs=()):
+def capture(source, tag, engine, dlcs=(), human_tags=()):
     ideas, groups, defaults, unparsed = catalog(engine)
     active = set(defaults.values()); chosen = dict(defaults)
-    for key, _, value in selected(parse(source), set(dlcs), tag):
+    for key, _, value in selected(parse(source), set(dlcs), tag, human_tags):
         if key not in ('add_ideas', 'remove_ideas'): continue
         names = [k for k, _, _ in value] if isinstance(value, list) else [value]
         for ident in names:
@@ -60,6 +60,6 @@ def capture(source, tag, engine, dlcs=()):
         modifiers.update(values); negative.update({k: min(0, v) for k, v in values.items()})
         rows.append(dict(idea=ident, category=groups[ident], modifiers=values))
     return dict(laws=chosen, active_ideas=rows, modifiers=dict(modifiers), negative_modifiers=dict(negative),
-                history_policy_signature=history_signature(source, tag, dlcs),
+                history_policy_signature=history_signature(source, tag, dlcs, human_tags),
                 unparsed_unreferenced_primary_files=unparsed,
                 coverage='Direct history/default laws and literal idea modifiers; later decisions, dynamic modifiers and native mobilization timing remain separate.')

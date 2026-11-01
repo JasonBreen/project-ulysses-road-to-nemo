@@ -19,14 +19,14 @@ from script import parse, get, walk
 from foundation_map import topology, components
 
 
-def condition(nodes, dlcs, current, human_tags):
+def condition(nodes, dlcs, current, human_tags, flags=None):
     values = []
     for key, _, value in nodes:
         name = key.lower()
         if name == 'has_dlc':
             result = value.strip('"') in dlcs
         elif name in ('and', 'or', 'not'):
-            children = [condition([n], dlcs, current, human_tags) for n in value]
+            children = [condition([n], dlcs, current, human_tags, flags) for n in value]
             result = any(children) if name == 'or' else not all(children) if name == 'not' else all(children)
         elif name == 'always':
             result = value == 'yes'
@@ -34,37 +34,42 @@ def condition(nodes, dlcs, current, human_tags):
             result = (current not in human_tags) == (value == 'yes')
         elif name in ('tag', 'original_tag'):
             result = value == current
+        elif name == 'has_country_flag' and isinstance(value, str) and flags is not None:
+            result = value in flags.get(current, set())
         elif re.fullmatch('[A-Z]{3}', key) and isinstance(value, list):
-            result = condition(value, dlcs, key, human_tags)
+            result = condition(value, dlcs, key, human_tags, flags)
         else:
             raise ValueError('Uninspected history condition: ' + key)
         values.append(result)
     return all(values)
 
 
-def selected(nodes, dlcs, current, human_tags=()):
+def selected(nodes, dlcs, current, human_tags=(), flags=None):
+    if flags is None: flags = {}
     previous = None
     for key, op, value in nodes:
         if key == 'if':
-            chosen = condition(get(value, 'limit', []), dlcs, current, human_tags)
+            chosen = condition(get(value, 'limit', []), dlcs, current, human_tags, flags)
             previous = chosen
             if chosen:
-                yield from selected([n for n in value if n[0] not in ('limit', 'else', 'else_if')], dlcs, current, human_tags)
+                yield from selected([n for n in value if n[0] not in ('limit', 'else', 'else_if')], dlcs, current, human_tags, flags)
             else:
                 alternatives = [n for n in value if n[0] in ('else_if', 'else')]
                 for kind, _, body in alternatives:
-                    if kind == 'else' or condition(get(body, 'limit', []), dlcs, current, human_tags):
-                        yield from selected([n for n in body if n[0] != 'limit'], dlcs, current, human_tags)
+                    if kind == 'else' or condition(get(body, 'limit', []), dlcs, current, human_tags, flags):
+                        yield from selected([n for n in body if n[0] != 'limit'], dlcs, current, human_tags, flags)
                         previous = True
                         break
         elif key in ('else', 'else_if'):
             if previous is None:
                 raise ValueError('Orphan history alternative')
-            if not previous and (key == 'else' or condition(get(value, 'limit', []), dlcs, current, human_tags)):
-                yield from selected([n for n in value if n[0] != 'limit'], dlcs, current, human_tags)
+            if not previous and (key == 'else' or condition(get(value, 'limit', []), dlcs, current, human_tags, flags)):
+                yield from selected([n for n in value if n[0] != 'limit'], dlcs, current, human_tags, flags)
                 previous = True
         else:
             previous = None
+            if key == 'set_country_flag': flags.setdefault(current, set()).add(value)
+            elif key == 'clr_country_flag': flags.setdefault(current, set()).discard(value)
             yield key, op, value
 
 

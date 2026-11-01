@@ -24,3 +24,9 @@ jobs:
         run: python -B tools/world_starts/test_world_starts.py
       - name: Verify actual selected forces and personnel liability report
         run: python -B tools/world_starts/personnel.py --check
+      - name: Verify inherited-force logistics and exact integrated source receipts
+        run: python -B tools/world_starts/test_legacy_logistics.py --require-integrated-owner
+      - name: Verify legacy force projections and generated source consistency
+        run: python -B tools/world_legacy/test_legacy.py
+      - name: Verify all 61 active physical owners and selected starting branches
+        run: python -B tools/world_starts/coverage.py --check --require-integrated-owner

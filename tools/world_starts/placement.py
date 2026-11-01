@@ -139,9 +139,10 @@ def capture_technical(profile, engine, row=None):
             'production_inputs_max_DLC': input_requirements(profile, engine)}
 
 
-def derive(reference):
-    profiles = json.loads((HERE / 'profiles.json').read_text())['countries']
-    prior = json.loads((HERE / 'foundation.json').read_text()) if (HERE / 'foundation.json').exists() else None
+def derive(reference, profiles_path=None, manifest_path=None, capture_external=None):
+    profiles_path = profiles_path or HERE / 'profiles.json'; manifest_path = manifest_path or HERE / 'foundation.json'
+    profiles = json.loads(profiles_path.read_text())['countries']
+    prior = json.loads(manifest_path.read_text()) if manifest_path.exists() else None
     current = {int(get(get(parse(p.read_text(encoding='utf-8-sig')), 'state'), 'id')): p for p in (MOD / 'history/states').glob('*.txt')}
     states = {i: base_state(path) for i, path in current.items()}
     defs, graph, _, pixels, _ = topology(); engine = Engine(reference) if reference else None
@@ -204,7 +205,7 @@ def derive(reference):
             raise ValueError('Capital supply origin is not retained owned land')
         main = groups[0]; eligible = [i for i in ids if airports[i] in main]
         core_ids = {i for i in ids if tag in baseline[str(i)]['cores']}
-        industrial_eligible = [i for i in eligible if i in core_ids]
+        industrial_eligible = [i for i in eligible if i in core_ids and i not in profile.get('excluded_new_target_states', [])]
         if not industrial_eligible: raise ValueError('No owned-core industrial terminal: ' + tag)
         total_industry = sum(profile['target_industry'].values())
         industry = separated(industrial_eligible, airports, graph, main, capital, max(3, math.ceil(total_industry / 7)))
@@ -219,10 +220,20 @@ def derive(reference):
         row['profile_sha256'] = digest
         if profile['mode'] == 'retained_start':
             row['retained_land_source'] = previous['retained_land_source'] if previous else (MOD / ('history/units/' + profile['inherited_land_file'] + '.txt')).read_text(encoding='utf-8-sig')
-        contracts = capture_technical(profile, engine, row) if engine else {k: copy.deepcopy(previous[k]) for k in
-            ('starting_tech', 'economic_technology_modifiers', 'trade_terms', 'recipe_contracts', 'unit_contracts', 'gear_archetypes', 'gear_stats', 'production_inputs_max_DLC')}
+        contract_fields = ('starting_tech', 'economic_technology_modifiers', 'trade_terms', 'recipe_contracts', 'unit_contracts', 'gear_archetypes', 'gear_stats', 'production_inputs_max_DLC')
+        if profile['mode'] == 'external_owner':
+            if engine:
+                if capture_external is None: raise ValueError('External force owner needs an explicit source capture adapter')
+                contracts = capture_external(tag, profile, engine, row)
+            else:
+                contracts = copy.deepcopy(previous['external_contracts'])
+            row['external_contracts'] = contracts
+        else:
+            contracts = capture_technical(profile, engine, row) if engine else {k: copy.deepcopy(previous[k]) for k in contract_fields}
         row.update(contracts)
         row['opening_policies'] = capture_policies(source, tag, engine) if engine else copy.deepcopy(previous['opening_policies'])
+        if profile['mode'] == 'external_owner' and any(case.get('opening_policies',row['opening_policies'])['modifiers'] != row['opening_policies']['modifiers'] for case in row['external_cases']):
+            raise ValueError('DLC/AI-specific economic policy needs a separately reviewed physical allocator: ' + tag)
         row['core_states'] = sorted(core_ids)
         if row['opening_policies']['negative_modifiers'].get('local_factories', 0) < 0:
             raise ValueError('Opening factory-count penalty needs explicit capacity calibration: ' + tag)
@@ -231,6 +242,7 @@ def derive(reference):
             row['placements'][str(i)] = {**copy.deepcopy(old['buildings']), 'naval_bases': copy.deepcopy(old['ports']),
                 'resources': copy.deepcopy(old['resources'])}
         cfg = row['placements']
+        row['existing_industrial_states'] = [i for i in ids if any(baseline[str(i)]['buildings'][key] for key in ('civilian', 'military', 'dockyard'))]
         for key in ('civilian', 'military'):
             remaining = profile['target_industry'][key] - sum(v[key] for v in cfg.values())
             if remaining < 0:
@@ -251,10 +263,15 @@ def derive(reference):
                 root_hint = cap_p if cap_p in group else airports[next(i for i in ids if airports[i] in group)] if any(airports[i] in group for i in ids) else min(group)
                 d = distances(root_hint, graph, group); p = min(coasts, key=lambda p: (d[p], p))
                 cfg[str(province_state[p])]['naval_bases'][str(p)] = 1; ports = [p]
+            sealed = next((record for record in profile.get('sealed_components', []) if set(record['provinces']) == group), None)
             if index and not ports:
-                raise ValueError('Detached component has no valid receiving port: ' + tag)
+                if not sealed: raise ValueError('Detached component has no valid receiving port: ' + tag)
+                forbidden = set(profile.get('required_land_deployments', [])) | {airports[int(i)] for i in profile.get('required_air_bases', {})}
+                if cap_p in group or forbidden & group or any(airports[i] in group for i in row['existing_industrial_states']):
+                    raise ValueError('A sealed component cannot host a mandatory foundation target: ' + tag)
             root = cap_p if cap_p in group else ports[0] if ports else min(group)
-            row['components'].append({'index': index, 'provinces': sorted(group), 'root': root, 'ports': ports, 'routes': [], 'terminals': []})
+            row['components'].append({'index': index, 'provinces': sorted(group), 'root': root, 'ports': ports, 'routes': [], 'terminals': [],
+                **({'sealed_source_exception': sealed['reason']} if sealed else {})})
             for p in ports:
                 all_ports[p] = {'province': p, 'state': province_state[p], 'component': index}
         # Large new dockyard programmes need several real industrial receiving
@@ -273,6 +290,14 @@ def derive(reference):
             cfg[str(province_state[p])]['naval_bases'][str(p)] = 3
             all_ports[p] = {'province': p, 'state': province_state[p], 'component': naval_component['index']}
             naval_component['ports'].append(p)
+        row['ports'] = [all_ports[p] for p in sorted(all_ports)]
+        for p in profile.get('required_naval_ports', []):
+            if p not in owned or not defs[p]['coastal'] or not any(defs[n]['kind'] == 'sea' and (province_state[p], n) in spawns for n in graph[p]):
+                raise ValueError('External fleet deployment needs an owned, valid coastal spawn: ' + tag + ':' + str(p))
+            if p not in all_ports:
+                cfg[str(province_state[p])]['naval_bases'][str(p)] = 3
+                component = next(c for c in row['components'] if p in c['provinces'])
+                component['ports'].append(p); all_ports[p] = dict(province=p, state=province_state[p], component=component['index'])
         row['ports'] = [all_ports[p] for p in sorted(all_ports)]
         naval_ports = [p for p in all_ports if p in naval_land]
         if profile['target_industry']['dockyard'] and not naval_ports:
@@ -299,6 +324,9 @@ def derive(reference):
             if sum(profile['navy'].values()) and not inherited_port:
                 cfg[str(base['state'])]['naval_bases'][str(base['province'])] = max(cfg[str(base['state'])]['naval_bases'][str(base['province'])], 5 if len(owned) > 500 else 3)
         air_states = separated(eligible, airports, graph, main, capital, profile['airfield_count'])[:profile['airfield_count']] if profile['airfield_count'] else []
+        if profile['mode'] == 'external_owner':
+            air_states = sorted(map(int, profile['required_air_bases']))
+            if not set(air_states) <= set(ids): raise ValueError('External air wing deploys outside owned states: ' + tag)
         row['air_states'] = air_states; row['airports'] = {str(i): airports[i] for i in air_states}
         row['air_deployments'] = []
         for n, i in enumerate(air_states):
@@ -307,6 +335,8 @@ def derive(reference):
                 deployment[role] = amount // len(air_states) + (n < amount % len(air_states))
             row['air_deployments'].append(deployment)
             cfg[str(i)]['air_base'] = max(cfg[str(i)]['air_base'], math.ceil(sum(deployment[r] for r in profile['air']) / 200))
+            if profile['mode'] == 'external_owner':
+                cfg[str(i)]['air_base'] = max(cfg[str(i)]['air_base'], math.ceil(profile['required_air_bases'][str(i)] / 200))
         for n in range(max(0, profile['fuel_silos'] - sum(v['fuel_silo'] for v in cfg.values()))):
             silo_states = list(dict.fromkeys([capital] + industry))
             cfg[str(silo_states[n % len(silo_states)])]['fuel_silo'] += 1
@@ -316,8 +346,8 @@ def derive(reference):
         for component in row['components']:
             group = set(component['provinces']); root = component['root']
             hubs = list(dict.fromkeys(([cap_p] if cap_p in group else []) + [p for p in industrial_hubs if p in group]))
-            inherited_deployments = [int(get(body, 'location')) for body in divisions(retained_tree(row))] if profile['mode'] == 'retained_start' else []
-            terminals = list(dict.fromkeys(hubs + component['ports'] + [airports[i] for i in industry + air_states if airports[i] in group] + [p for p in inherited_deployments if p in group]))
+            inherited_deployments = [int(get(body, 'location')) for body in divisions(retained_tree(row))] if profile['mode'] == 'retained_start' else profile.get('required_land_deployments', [])
+            terminals = list(dict.fromkeys(hubs + component['ports'] + [airports[i] for i in industry + air_states + row['existing_industrial_states'] if airports[i] in group] + [p for p in inherited_deployments if p in group]))
             component['terminals'] = terminals; component['supply_hubs'] = hubs
             component['routes'] = [shortest(root, p, graph, group) for p in terminals if p != root]
             row['routes'].extend(component['routes']); row['all_supply_hubs'].extend(hubs)
@@ -327,11 +357,14 @@ def derive(reference):
         if profile['mode'] == 'retained_start':
             row['land_deployments'] = [int(get(body, 'location')) for body in divisions(retained_tree(row))]
             if not set(row['land_deployments']) <= owned: raise ValueError('Inherited army has foreign deployment: ' + tag)
+        elif profile['mode'] == 'external_owner':
+            row['land_deployments'] = profile['required_land_deployments']
+            if not set(row['land_deployments']) <= owned: raise ValueError('External army has foreign deployment: ' + tag)
         row['railway_rows'], row['reused_inherited_rail_edges'] = new_rail_rows(row['routes'], inherited_rails)
         all_vps = {p for b in baseline.values() for p in b['victory_points']}
         row['new_victory_points'] = {str(p): 20 if p == cap_p else 5 for p in row['all_supply_hubs'] if str(p) not in all_vps}
         needs = row['production_inputs_max_DLC']
-        resource_states = [i for i in dict.fromkeys([capital] + industry) if i in core_ids][:3]
+        resource_states = [i for i in dict.fromkeys([capital] + industry) if i in core_ids and i not in profile.get('excluded_new_target_states', [])][:3]
         modifiers = row['opening_policies']['modifiers']; negative = row['opening_policies']['negative_modifiers']
         retention = max(0, 1 - modifiers.get('min_export', .5))
         resource_gain_lower = max(0, 1 + sum(negative.get(k, 0) for k in ('local_resources_factor', 'resources_factor', 'resource_gain_efficiency')))
@@ -357,9 +390,10 @@ def derive(reference):
         row['resource_policy_lower'] = dict(export_fraction=1-retention, negative_resource_factor=resource_gain_lower,
             non_core_resources_counted=0, positive_extraction_bonuses_counted=False,
             note='Known trade and negative idea modifiers applied; non-core output excluded instead of assuming native compliance/rounding.')
-        if sum(profile['production'].values()) > row['usable_core_industry_lower']['military']:
+        requested = row.get('external_requested_capacity', dict(mil=sum(profile['production'].values()), yards=sum(profile['naval_production'].values())))
+        if requested['mil'] > row['usable_core_industry_lower']['military']:
             raise ValueError('Production exceeds conservative core MIL capacity: ' + tag)
-        if sum(profile['naval_production'].values()) > row['usable_core_industry_lower']['dockyard']:
+        if requested['yards'] > row['usable_core_industry_lower']['dockyard']:
             raise ValueError('Production exceeds conservative core yard capacity: ' + tag)
         output['countries'][tag] = row
     output['primary_sources_sha256'] = dict(sorted(engine.used.items())) if engine else prior['primary_sources_sha256']

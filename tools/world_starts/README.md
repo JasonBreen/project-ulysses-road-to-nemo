@@ -112,3 +112,9 @@ all 244 base BBA/MTG country-history branches and the separate FATO context.
 NSB/La Resistance cases remain identified with their owners. This is source
 coverage, with UST's established policy debt and extra DLC/native release gaps
 preserved; it is not universal sustainable-start acceptance.
+
+`release_inventory.py --check` separately records the seven dormant histories'
+literal entry events, callers, unit transfers, force loads and known setup-owner
+gaps. It grants nothing. See `docs/WORLD_RELEASE_FOUNDATIONS.md`; the 61 active
+owners and generic political/fiscal profiles do not establish release-time
+physical acceptance.

@@ -17,6 +17,7 @@ def main():
     parser.add_argument("--engine", type=Path, help="Read-only installed script reference")
     parser.add_argument("--baseline", type=Path, help="Read-only immutable mod baseline")
     parser.add_argument("--output", type=Path, default=ROOT / "docs/evidence/world-starts/composed")
+    parser.add_argument("--only", nargs="+", help="Run explicitly named affected gates; record this bounded selection")
     args = parser.parse_args()
     reference = ["--reference", str(args.engine.resolve())] if args.engine else []
     python_checks = [
@@ -44,6 +45,9 @@ def main():
         ("registry", ["tools/world_foundation/registry.py", "--check"]),
         ("physical-coverage", ["tools/world_starts/coverage.py", "--check", "--require-integrated-owner"]),
         ("release-inventory", ["tools/world_starts/release_inventory.py", "--check"]),
+        ("release-inventory-regressions", ["tools/world_starts/test_release_inventory.py"]),
+        ("startup-chronology-regressions", ["tools/Test-StartupChronology.py"]),
+        ("startup-chronology", ["tools/compatibility/variant_order.py"]),
         ("overview", ["tools/overhaul/build_overview.py", "--check"]),
         ("decisions", ["tools/Test-DecisionUI.py"]),
         ("focus-canvas", ["tools/Test-FocusScreenRepairs.py"]),
@@ -51,6 +55,7 @@ def main():
         ("screenshot-repairs", ["tools/Test-OverhaulRepairs.py"]),
         ("effective-providers", ["tools/Test-EffectiveDependencies.py"]),
         ("authored-presentation", ["tools/check_presentation_sources.py"]),
+        ("presentation-structure", ["tools/Test-PresentationSources.py"]),
         ("authored-assets", ["tools/audit_visual_dependencies.py", "--strict-all"]),
         ("briefing", ["tools/frontend_briefing/validate.py"]),
         ("typography", ["tools/frontend_typography/validate.py"]),
@@ -67,7 +72,13 @@ def main():
     if args.baseline:
         core += ["-BaselineRoot", str(args.baseline.resolve())]
     checks.append(("core", core))
+    if args.only:
+        unknown = set(args.only) - {name for name, _ in checks}
+        if unknown:
+            raise SystemExit("Unknown gate names: " + ", ".join(sorted(unknown)))
+        checks = [(name, command) for name, command in checks if name in args.only]
     args.output.mkdir(parents=True, exist_ok=True)
+    source_head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     environment = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}
     results = []
     for name, command in checks:
@@ -89,7 +100,10 @@ def main():
     for path in sorted((ROOT / "mod/2985041246").rglob("*"), key=lambda path: path.as_posix()):
         if path.is_file():
             payload.update(path.relative_to(ROOT).as_posix().encode() + b"\0" + path.read_bytes())
-    report = dict(schema=1, source_head=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+    end_head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    if end_head != source_head:
+        raise SystemExit("Source commit changed during verification; results were not published as a final candidate")
+    report = dict(schema=1, source_head=source_head, selection=args.only or "all",
                   payload_sha256=payload.hexdigest(), payload_hash_rule="Sorted repository-relative POSIX path,NUL,raw bytes for each delivered mod file.",
                   passed=sum(row["exit_code"] == 0 for row in results), failed=sum(row["exit_code"] != 0 for row in results),
                   coverage="Source, primary-reference metadata and offline execution; not native rendering, save/reload, AI pacing or balance acceptance.",

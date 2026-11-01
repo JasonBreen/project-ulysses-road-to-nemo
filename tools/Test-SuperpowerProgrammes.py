@@ -126,6 +126,19 @@ class SuperpowerProgrammes(unittest.TestCase):
         for i in([0]if s.index==0 else[0,1,3]):w.complete(focus_id(s.branch,i),c.tag)
         return w,c
 
+    def test_enabled_unready_accounts_cannot_start_any_superpower_service(self):
+        for service in SERVICES:
+            for mode,fault in (('full','identity'),('full','initialized'),('full','wrong_identity'),('experimental','initialized')):
+                with self.subTest(service=service.id,mode=mode,fault=fault):
+                    w,c=self.ready(service,mode)
+                    if fault=='identity':c.variables.pop('ac_macro_identity')
+                    elif fault=='wrong_identity':c.variables['ac_macro_identity']=D(-1)
+                    else:c.flags.pop('ac_macro_initialized'if mode=='full'else'ac_econ_initialized')
+                    self.assertTrue(w.trigger([('ac_econ_enabled','=','yes')],c))
+                    self.assertFalse(w.trigger([('ac_econ_ready','=','yes')],c))
+                    before=copy.deepcopy(vars(c));w.run(service.id+'_start',c.tag)
+                    self.assertEqual(before,vars(c))
+
     def test_all_32_scopes_pay_real_owners_once_in_three_fiscal_modes(self):
         for s in SERVICES:
             for mode in self.baselines:
@@ -185,6 +198,24 @@ class SuperpowerProgrammes(unittest.TestCase):
             self.assertNotIn(s.id+'_completed',c.flags);self.assertIn(s.id+'_active',c.flags)
             c.variables.pop(s.prefix+'_started');before=copy.deepcopy(c)
             self.assertFalse(w.event(s.event,c.tag));self.assertEqual(before,c)
+
+    def test_fresh_completion_receipt_is_published_only_by_the_actual_successful_period(self):
+        for s in SERVICES:
+            w,c=self.ready(s);key=s.prefix+'_last_completed_started'
+            self.assertNotIn(key,c.variables)
+            w.run(s.id+'_start',c.tag);first=c.variables[s.prefix+'_started'];w.advance(90)
+            w.event(s.event,c.tag)
+            self.assertEqual(first,c.variables[key]);self.assertEqual(w.today,c.variables[s.prefix+'_last_completed_on'])
+            self.assertEqual(w.number('THIS.id',c,{},c,None),c.variables[s.prefix+'_last_completed_identity'])
+            self.assertEqual(1,c.variables[s.prefix+'_start_serial']);self.assertEqual(1,c.variables[s.prefix+'_last_completed_serial'])
+            receipt={k:v for k,v in c.variables.items()if k.startswith(s.prefix+'_last_completed_')}
+            w.advance(90);w.run(s.id+'_start',c.tag);w.advance(90)
+            # A cancellation at the due boundary is not a successful completion,
+            # even when the historic completed flag and elapsed90 remain true.
+            w.run(s.id+'_cancel',c.tag);self.assertIn(s.id+'_completed',c.flags)
+            self.assertEqual(receipt,{k:v for k,v in c.variables.items()if k.startswith(s.prefix+'_last_completed_')})
+            w.run(s.id+'_start',c.tag);second=c.variables[s.prefix+'_started'];w.advance(90);w.event(s.event,c.tag)
+            self.assertEqual(second,c.variables[key]);self.assertGreater(second,first);self.assertEqual(3,c.variables[s.prefix+'_last_completed_serial'])
 
     def test_ose_support_controls_price_access_standing_and_bounded_paid_recovery(self):
         for n,lane in((0,'public'),(1,'security')):

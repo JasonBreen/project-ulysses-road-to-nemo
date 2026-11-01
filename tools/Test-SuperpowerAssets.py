@@ -60,6 +60,11 @@ class SuperpowerAssets(unittest.TestCase):
         contract=json.loads((ROOT/'tools/superpowers/tree_contracts.json').read_text())
         for tag,row in contract['countries'].items():
             source=parse((MOD/'common/national_focus'/f'{tag}.txt').read_text())
+            # The later national owner validates/removes only its registered
+            # exact imports. Unknown additions and all foreign AST remain visible.
+            if (ROOT/'tools/pacific_nations/build.py').is_file():
+                from pacific_nations.build import strip_imports
+                source=strip_imports(source,tag)
             for key,_,tree in source:
                 if key=='focus_tree':tree[:]=[r for r in tree if r[0]!='continuous_focus_position'and not(r[0]=='shared_focus'and isinstance(r[2],str)and'_snp_'in r[2])]
             digest=hashlib.sha256(json.dumps(source,separators=(',',':')).encode()).hexdigest()
@@ -69,7 +74,7 @@ class SuperpowerAssets(unittest.TestCase):
         self.assertEqual(320,len(self.assets));self.assertEqual(Counter({'focus':96,'idea':136,'decision row':68,'category':2,'event illustration':18}),Counter(a['role']for a in self.assets))
         sprites={get(v,'name').strip('"'):v for k,_,v in get(parse((MOD/'interface/ac_superpower_programmes.gfx').read_text()),'spriteTypes')}
         self.assertEqual(416,len(sprites));self.assertEqual(96,len({a['sha256']for a in self.assets if a['role']=='focus'}))
-        dims={'focus':(96,96),'idea':(75,75),'decision row':(26,29),'category':(100,100),'event illustration':(640,260)}
+        dims={'focus':(96,96),'idea':(75,75),'decision row':(26,29),'category':(100,100),'event illustration':(210,176)}
         for a in self.assets:
             path=MOD/a['file'];image=Image.open(path).convert('RGBA');self.assertEqual(dims[a['role']],image.size)
             self.assertEqual((1,image.width),(a['frames'],a['frame_width']));self.assertEqual(a['sha256'],hashlib.sha256(path.read_bytes()).hexdigest())

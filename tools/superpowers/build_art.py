@@ -23,6 +23,7 @@ from superpowers.mechanics import COUNTRIES,SERVICES,SUBJECTS
 from superpowers.build import output,bid
 from reconstruction.build_art import BitmapFont,glyphs
 from usea_expansion.script import parse,get
+from event_picture_fit.fit import contain as fit_event
 
 NAVY=(8,22,33,255);LIGHT=(222,238,243,255);GOLD=(190,166,104,255);GRID=(20,43,57,255)
 ACCENT={'OSE':(98,207,234,255),'YUK':(111,197,207,255)}
@@ -138,13 +139,14 @@ def outputs():
             texture(f'gfx/AC_superpowers/decisions/{ident}.dds',image,'GFX_decision_'+get(node,'icon'),'decision row',tag,id=ident)
     for tag,name in COUNTRIES.items():
         subjects=('assembly','document')if tag=='OSE'else('economy','command');image=event_image(tag,*subjects);ident=tag.lower()+'_national';source=f'tools/superpowers/source/events/{ident}.png'
-        result[ROOT/source]=encode(image,'PNG');texture(f'gfx/AC_superpowers/events/{ident}.dds',image,'GFX_ac_snp_event_'+ident,'event illustration',tag,title=name+': National Register',master=source)
+        result[ROOT/source]=encode(image,'PNG');texture(f'gfx/AC_superpowers/events/{ident}.dds',fit_event(image),'GFX_ac_snp_event_'+ident,'event illustration',tag,title=name+': National Register',master=source,transform='Full-source Lanczos contain to210x176; opaque navy padding; no crop or content edit')
     for b in BRANCHES:
         ident=bid(b);image=event_image(b.tag,*SUBJECTS[b.key]);source=f'tools/superpowers/source/events/{ident}.png';result[ROOT/source]=encode(image,'PNG')
-        texture(f'gfx/AC_superpowers/events/{ident}.dds',image,'GFX_ac_snp_event_'+ident,'event illustration',b.tag,title=b.titles[0],master=source)
+        texture(f'gfx/AC_superpowers/events/{ident}.dds',fit_event(image),'GFX_ac_snp_event_'+ident,'event illustration',b.tag,title=b.titles[0],master=source,transform='Full-source Lanczos contain to210x176; opaque navy padding; no crop or content edit')
     result[MOD/'interface/ac_superpower_programmes.gfx']=('spriteTypes = {\n'+'\n'.join(sprites)+'\n}\n').encode()
     sources=['tools/superpowers/build_art.py','tools/superpowers/mechanics.py','tools/superpowers/content.py','tools/superpowers/build.py','tools/superpowers/narrative.py','tools/reconstruction/build_art.py','tools/usea_expansion/build_art.py',
-             'mod/2985041246/gfx/fonts/ACBriefing16.fnt','mod/2985041246/gfx/fonts/ACBriefing16.dds']
+             'mod/2985041246/gfx/fonts/ACBriefing16.fnt','mod/2985041246/gfx/fonts/ACBriefing16.dds',
+             'tools/event_picture_fit/fit.py','tools/event_picture_fit/bitmap.py']
     manifest=dict(schema=1,pillow='11.3.0',source_layer='Original procedural artwork; abstract programme framing, not official national crests',
         source_hashes={p:source_digest(p)for p in sources},
         source_hash_normalization='Python and FNT text use CRLF-normalized LF bytes; DDS dependencies and delivered textures retain raw byte hashes.',

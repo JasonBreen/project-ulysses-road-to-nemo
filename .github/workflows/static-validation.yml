@@ -91,6 +91,16 @@ jobs:
         run: python -B tools/regional_labels/test_labels.py
       - name: Check decision controls and dependencies
         run: python -B tools/Test-DecisionUI.py
+      - name: Check actual event picture consumers and picture-only preservation
+        run: python -B tools/Test-EventPictures.py
+      - name: Check fresh event audit reports and failed-current receipts
+        run: python -B tools/Test-EventEvidence.py
+      - name: Reproduce offline event-picture geometry review
+        run: python -B tools/event_picture_fit/review.py --check
+      - name: Check scoped original event defaults and immutable layout restoration
+        run: python -B tools/Test-EventStyle.py
+      - name: Check explicit event fit/style runner contracts
+        run: python -B tools/Test-EventRunner.py
       - name: Check explicit DLC provider and presentation-closure regressions
         shell: pwsh
         run: python -B tools/Test-EffectiveDependencies.py
@@ -128,6 +138,10 @@ jobs:
       - name: Check superpower imports, English, layout and original artwork
         shell: pwsh
         run: python -B tools/Test-SuperpowerAssets.py
+      - name: Check Pacific national continuations and fresh work against real owners
+        run: python -B tools/pacific_nations/test_runtime.py
+      - name: Check Pacific national imports, event apertures and original artwork
+        run: python -B tools/pacific_nations/test_source.py
       - name: Check selected startup research and design consumer regressions
         shell: pwsh
         run: python -B tools/Test-StartupChronology.py

@@ -22,6 +22,8 @@ from content import FOCUSES,COUNTRIES
 import build
 
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246'
+sys.path.insert(0,str(ROOT/'tools'))
+from event_picture_fit.fit import contain as fit_event
 SOURCE=ROOT/'source/artwork/fato_south_belka';NAVY=(8,22,33,255);WHITE=(219,236,240,255)
 ACCENT={'FAT':(97,204,222,255),'SBK':(147,202,179,255)}
 LIBRARY=ROOT/'tools/usea_expansion/build_art.py'
@@ -84,12 +86,12 @@ def outputs():
             if master.width<1500 or master.width/master.height<2:raise ValueError('Wide high-resolution master required')
             if not record['prompt'] or 'visually inspected' not in record['status']:raise ValueError('Prompt/review provenance required')
             # Preserve the entire scene with opaque navy padding as needed.
-            im=Image.new('RGBA',(450,150),NAVY);fitted=ImageOps.contain(master.convert('RGBA'),im.size,Image.Resampling.LANCZOS);im.alpha_composite(fitted,((450-fitted.width)//2,(150-fitted.height)//2))
+            im=fit_event(master)
             ident=path.stem
-            row=texture('gfx/AC_fato_south_belka/events/'+ident+'.dds',im,'GFX_ac_fsb_event_'+ident,'original narrative illustration',source=path.relative_to(ROOT).as_posix(),source_sha256=sha(path.read_bytes()),transform='Lanczos contain; centered opaque navy padding; no semantic edit',event_uses=record['event_uses'])
+            row=texture('gfx/AC_fato_south_belka/events/'+ident+'.dds',im,'GFX_ac_fsb_event_'+ident,'original narrative illustration',source=path.relative_to(ROOT).as_posix(),source_sha256=sha(path.read_bytes()),transform='Full-source Lanczos contain to210x176; centered opaque navy padding; no crop or semantic edit',event_uses=record['event_uses'])
             source_receipts.append(dict(file=path.relative_to(ROOT).as_posix(),sha256=sha(path.read_bytes()),width=master.width,height=master.height,prompt_record='source/artwork/fato_south_belka/prompts.json',scene=record['scene'],review=record['status']))
     out[MOD/'interface/ac_fato_south_belka.gfx']=('spriteTypes = {\n'+ '\n'.join(sprites)+'\n}\n').encode()
-    sources=[HERE/n for n in ('content.py','build.py','programmes.py','obligations.py','narrative.py','build_art.py')]+[LIBRARY,SOURCE/'prompts.json']
+    sources=[HERE/n for n in ('content.py','build.py','programmes.py','obligations.py','narrative.py','build_art.py')]+[LIBRARY,SOURCE/'prompts.json',ROOT/'tools/event_picture_fit/fit.py']
     manifest=dict(schema=1,source_layer='original code-native technical art and original imagegen narrative fiction',renderer='Pillow11.3.0',focus_compositions=96,narrative_masters=8,source_hashes={p.relative_to(ROOT).as_posix():sha(p.read_text(encoding='utf-8').replace('\r\n','\n').encode()) for p in sources},masters=source_receipts,assets=assets,native='pending')
     out[HERE/'assets.json']=(json.dumps(manifest,indent=2)+'\n').encode()
     sheet=Image.new('RGBA',(1200,10*134),NAVY);d=ImageDraw.Draw(sheet);font=ImageFont.truetype(str(ROOT/'tools/frontend_typography/source/DINish-Regular.ttf'),10)

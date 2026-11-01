@@ -148,9 +148,14 @@ class Audit:
                 for kind, _, node in get(tree, "objectTypes", []):
                     if isinstance(node, list):
                         self.register("presentation_object", scalar(get(node, "name", "")), rel, origin, kind, node)
-                for kind, node in walk(tree):
-                    if kind.lower() in ("bitmapfont", "font"):
-                        self.register("font", scalar(get(node, "name", "")), rel, origin, kind, node)
+                # Native registration requires a direct child of bitmapfonts.
+                # Root or arbitrarily nested aliases do not become usable fonts.
+                for section, _, children in tree:
+                    if section.lower() != "bitmapfonts" or not isinstance(children, list):
+                        continue
+                    for kind, _, node in children:
+                        if kind.lower() in ("bitmapfont", "font") and isinstance(node, list):
+                            self.register("font", scalar(get(node, "name", "")), rel, origin, kind, node)
             else:
                 for kind, _, node in get(tree, "guiTypes", []):
                     if isinstance(node, list):

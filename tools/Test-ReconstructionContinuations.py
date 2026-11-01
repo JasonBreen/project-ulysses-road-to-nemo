@@ -140,6 +140,19 @@ class ReconstructionRuntime(unittest.TestCase):
         self.assertEqual(D('.008'),c.variables['ac_macro_cash']);self.assertIn(ident+'_spirit',c.ideas)
         paid=copy.deepcopy(c);w.run(ident+'_start','REC');self.assertEqual(paid,c)
 
+    def test_enabled_unready_accounts_cannot_start_any_reconstruction_service(self):
+        for branch,number,ident in build.SERVICES:
+            for mode,fault in (('full','identity'),('full','initialized'),('full','wrong_identity'),('experimental','initialized')):
+                with self.subTest(service=ident,mode=mode,fault=fault):
+                    w,c=self.ready(branch,mode,number)
+                    if fault=='identity':c.variables.pop('ac_macro_identity')
+                    elif fault=='wrong_identity':c.variables['ac_macro_identity']=D(-1)
+                    else:c.flags.pop('ac_macro_initialized'if mode=='full'else'ac_econ_initialized')
+                    self.assertTrue(w.trigger([('ac_econ_enabled','=','yes')],c))
+                    self.assertFalse(w.trigger([('ac_econ_ready','=','yes')],c))
+                    before=copy.deepcopy(vars(c));w.run(ident+'_start',c.tag)
+                    self.assertEqual(before,vars(c))
+
     def test_all_twenty_services_pay_both_real_owners_once_in_three_modes(self):
         for b,n,ident in build.SERVICES:
             for mode in self.baselines:

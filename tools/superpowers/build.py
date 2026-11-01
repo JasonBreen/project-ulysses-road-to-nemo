@@ -116,7 +116,7 @@ def output():
     triggers['ac_snp_participant']='OR = { AND = { '+host('OSE')+' } AND = { '+host('YUK')+' } }'
     triggers['ac_snp_eligible']='ac_snp_participant = yes OR = { AND = { '+host('OSE')+' any_owned_state = { is_controlled_by = OSE } } AND = { '+host('YUK')+' any_owned_state = { is_controlled_by = YUK } } } has_capitulated = no date > 1990.12.31'
     triggers['ac_snp_active']='ac_snp_eligible = yes has_country_flag = ac_snp_initialized'
-    triggers['ac_snp_service_resources']='ac_snp_active = yes ac_pol_active = yes check_variable = { ac_pol_capacity >= 4 } OR = { ac_econ_ready = no ac_econ_can_pay_programme = yes }'
+    triggers['ac_snp_service_resources']='ac_snp_active = yes ac_pol_active = yes check_variable = { ac_pol_capacity >= 4 } OR = { ac_econ_enabled = no ac_econ_can_pay_programme = yes }'
     initialize=''
     for name,value in [('ose_public',50),('ose_security',50),('ose_used',0),('yuk_civil',50),('yuk_command',50),('yuk_civil_used',0),('yuk_command_used',0),('yuk_offices',0),('completed',0),('last_interrupted',0),('last_interrupted_days',0)]:
         tag='OSE'if name.startswith('ose_')else'YUK'if name.startswith('yuk_')else None
@@ -171,7 +171,8 @@ def output():
         pay_pp=guard('check_variable = { '+support+' >= 65 }','add_political_power = -30')+block('else','add_political_power = -35')if tag=='OSE'else'add_political_power = -35\n'
         start='clr_country_flag = ac_snp_payment_authorized\n'+guard(ident+'_can_start = yes',fee()+guard('has_country_flag = ac_snp_payment_authorized',
             'clr_country_flag = ac_snp_payment_authorized\n'+pay_pp+'set_temp_variable = { ac_pol_capacity_delta = -4 }\nac_pol_change_capacity = yes\n'+
-            'set_country_flag = '+ident+'_active\nset_variable = { '+prefix+'_started = date }\nset_variable = { '+prefix+'_due = date }\nadd_to_variable = { '+prefix+'_due = 90 }\nset_variable = { '+prefix+'_elapsed = 0 }\n'+
+            'set_country_flag = '+ident+'_active\n'+guard('NOT = { has_variable = '+prefix+'_start_serial }','set_variable = { '+prefix+'_start_serial = 0 }')+
+            'add_to_variable = { '+prefix+'_start_serial = 1 }\nset_variable = { '+prefix+'_started = date }\nset_variable = { '+prefix+'_due = date }\nadd_to_variable = { '+prefix+'_due = 90 }\nset_variable = { '+prefix+'_elapsed = 0 }\n'+
             guard('has_war = yes','set_country_flag = '+ident+'_wartime\nadd_timed_idea = { idea = '+ident+'_domestic_spirit days = 90 }')+
             block('else','clr_country_flag = '+ident+'_wartime\nadd_timed_idea = { idea = '+ident+'_spirit days = 90 }')+
             'country_event = { id = '+s.event+' days = 90 }\nac_snp_reconcile = yes'))
@@ -183,7 +184,9 @@ def output():
         release='remove_ideas = '+ident+'_spirit\nremove_ideas = '+ident+'_domestic_spirit\nclr_country_flag = '+ident+'_active\n'
         support_reward=''
         if tag=='OSE':support_reward='add_to_variable = { '+support+' = 3 }\nadd_to_variable = { ac_snp_ose_'+('security'if s.index==0 else'public')+' = 1 }\n'
-        finish=('set_country_flag = '+ident+'_completed\nset_country_flag = '+bid(s.branch)+'_service_completed\nadd_to_variable = { ac_snp_completed = 1 }\nset_variable = { '+prefix+'_elapsed = 90 }\n'+release+
+        finish=('set_country_flag = '+ident+'_completed\nset_country_flag = '+bid(s.branch)+'_service_completed\nadd_to_variable = { ac_snp_completed = 1 }\nset_variable = { '+prefix+'_elapsed = 90 }\n'+
+            'set_variable = { '+prefix+'_last_completed_started = '+prefix+'_started }\nset_variable = { '+prefix+'_last_completed_on = date }\nset_variable = { '+prefix+'_last_completed_identity = THIS.id }\nset_variable = { '+prefix+'_last_completed_serial = 0 }\n'+
+            guard('has_variable = '+prefix+'_start_serial','set_variable = { '+prefix+'_last_completed_serial = '+prefix+'_start_serial }')+release+
             guard('has_country_flag = '+ident+'_wartime','set_country_flag = '+bid(s.branch)+'_last_domestic')+block('else','clr_country_flag = '+bid(s.branch)+'_last_domestic')+
             'clr_country_flag = '+ident+'_wartime\nset_country_flag = { flag = '+ident+'_cooldown days = 90 }\n'+support_reward+'ac_snp_reconcile = yes\n')
         effects[ident+'_finish']=ident+'_progress = yes\n'+guard(ident+'_finishable = yes check_variable = { '+prefix+'_elapsed >= 90 }',finish)

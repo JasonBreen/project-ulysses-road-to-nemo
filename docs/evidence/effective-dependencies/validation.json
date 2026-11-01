@@ -216,5 +216,43 @@
     ],
     "game_payload_changes": false,
     "native_coverage": "None; testing remains paused. Final-commit CI is separate."
+  },
+  "structural_reader_followup": {
+    "source_head": "337ae8e6d5b2d71dea424b3c7b97112106930e2e",
+    "originating_review": {
+      "pr": 39,
+      "comment": 4433844265
+    },
+    "changes": [
+      "Validate delimiter/quoted-token structure before effective definitions or descriptor parsing.",
+      "Keep comments and escaped literal braces valid; unsupported engine grammar remains a reader limitation.",
+      "Capture exact hashes for lexical preflight and underlying AST reader as well as audit/provider sources."
+    ],
+    "checks": [
+      {
+        "command": "python -B tools/Test-EffectiveDependencies.py",
+        "exit_code": 0,
+        "tests": 41,
+        "log": "structure-tests.txt"
+      },
+      {
+        "command": "python -B tools/Test-DecisionUI.py",
+        "exit_code": 0,
+        "tests": 16,
+        "log": "structure-decisions.txt"
+      },
+      {
+        "command": "python -B tools/overhaul/capture_dependency_evidence.py <engine>",
+        "exit_code": 0,
+        "result": "Requested ownershipPASS; completed gatesFAIL20272/31854 entries with exact source/profile hashes."
+      },
+      {
+        "command": "python -B tools/overhaul/audit_consumers.py <engine> --gate-decisions --gate-screen ac_macro_economy.gui --summary-only",
+        "exit_code": 0,
+        "result": "Both requested screen ownership gates zero failures."
+      }
+    ],
+    "game_payload_changes": false,
+    "native_coverage": "None; testing remains paused."
   }
 }

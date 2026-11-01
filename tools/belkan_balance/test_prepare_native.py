@@ -96,6 +96,12 @@ save_as_binary=yes
             prepare_native.payload_manifest(self.source),
             prepare_native.payload_manifest(result["payload"]),
         )
+        self.assertEqual(
+            result["profile"].as_posix().encode("utf-8"),
+            (result["engine"] / "userdir.txt").read_bytes(),
+        )
+        self.assertNotIn(b"\r", (result["engine"] / "userdir.txt").read_bytes())
+        self.assertNotIn(b"\n", (result["engine"] / "userdir.txt").read_bytes())
         settings = (result["profile"] / "settings.txt").read_text(encoding="utf-8")
         self.assertEqual(settings.count("{"), settings.count("}"))
         self.assertIn("graphics={\n\tsize={\n\t\tx=3440\n\t\ty=1440 }", settings)

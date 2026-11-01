@@ -243,7 +243,10 @@ def prepare(
     (profile / "logs").mkdir()
     (profile / "save games").mkdir()
     (profile / "mod").mkdir()
-    (engine / "userdir.txt").write_text(profile.as_posix() + "\n", encoding="utf-8")
+    # Clausewitz reads this marker as a literal path. A Windows text-mode
+    # newline becomes CRLF and causes this engine build to fall back to the
+    # normal Documents profile, so write the exact UTF-8 bytes with no suffix.
+    (engine / "userdir.txt").write_bytes(profile.as_posix().encode("utf-8"))
     copied_launcher = dict(launcher)
     copied_launcher["gameDataPath"] = profile.as_posix()
     write_json(engine / "launcher-settings.json", copied_launcher)

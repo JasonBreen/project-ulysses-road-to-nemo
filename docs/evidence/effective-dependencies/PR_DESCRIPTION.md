@@ -37,7 +37,7 @@ authored/fallback scripted GUIs.
 
 Validation:
 
-- 34 synthetic provider/closure regressions and 16 existing decision tests,
+- 39 synthetic provider/closure regressions and 16 existing decision tests,
   including program-as-texture/audio rejection and valid shader-alias context.
 - Focus canvas 9, overview/screenshot 7, briefing and typography checks pass.
 - `audit_visual_dependencies.py --strict-all` passes with zero authored-GFX

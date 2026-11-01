@@ -12,4 +12,6 @@ From clean committed source, reproduce with Python3.12/Pillow11.3.0/NumPy2.2.6:
 python -B tools/programme_funding/run_checks.py --output docs/evidence/programme-funding/final --reference <read-only-installed-game> --baseline <immutable-baseline-payload>
 ```
 
-The runner pins all tracked raw source inputs outside review evidence before and after execution. It retains only this invocation's current results. The optional primary reference is read-only; native testing remains paused. CPW's analogous caller correction is delivered by its separate owner.
+The runner pins all tracked raw source inputs outside review evidence before and after execution. It retains only this invocation's current results; `--only <name>` selects a separately recorded affected phase without carrying old rows forward. The optional primary reference is read-only; native testing remains paused. CPW's analogous caller correction is delivered by its separate owner.
+
+The older partner campaign/chronology suite uses declared enabled/off contract adapters. Its adapter recognizes the new public enabled query; readiness distinctions and all financial/capacity accounting remain the responsibility of the separate actual-owner integration suite, which has no substitute for those public triggers.

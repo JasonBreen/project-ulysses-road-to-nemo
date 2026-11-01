@@ -16,6 +16,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--reference',type=Path);parser.add_argument('--baseline',type=Path)
+    parser.add_argument('--only',action='append')
     args=parser.parse_args();py=[sys.executable,'-B']
     jobs=[('partner-runtime',py+['tools/usean_partners/test_integration.py']),
         ('reconstruction-runtime',py+['tools/Test-ReconstructionContinuations.py']),
@@ -34,6 +35,10 @@ def main():
         command=['pwsh','-NoProfile','-File','tools/Test-UlyssesStatic.ps1','-ModRoot','mod/2985041246','-ReferenceGameRoot',str(args.reference)]
         if args.baseline:command+=['-BaselineRoot',str(args.baseline)]
         jobs.append(('full-static',command))
+    if args.only:
+        requested=set(args.only);known={name for name,_ in jobs}
+        if requested-known:raise SystemExit('Unknown checks: '+str(requested-known))
+        jobs=[row for row in jobs if row[0]in requested]
     source=capture(ROOT);args.output.mkdir(parents=True,exist_ok=True)
     def run(item):
         name,command=item;start=time.monotonic()
@@ -41,7 +46,7 @@ def main():
         output=result.stdout+result.stderr
         (args.output/(name+'.txt')).write_text(output,encoding='utf-8',newline='\n')
         print(name+': '+('PASS'if result.returncode==0 else'FAIL'),flush=True)
-        if result.returncode:print(output,flush=True)
+        if result.returncode:print('Failure excerpt; full output in '+str(args.output/(name+'.txt'))+'\n'+'\n'.join(output.splitlines()[-40:]),flush=True)
         return dict(name=name,command=['python'if part==sys.executable else part for part in command],exit_code=result.returncode,seconds=round(time.monotonic()-start,2),log=name+'.txt')
     with ThreadPoolExecutor(max_workers=2)as executor:rows=list(executor.map(run,jobs))
     payload=hashlib.sha256()

@@ -121,7 +121,7 @@ def outputs():
     triggers["ac_rc_eligible"] = "ac_rc_participant = yes any_owned_state = { always = yes } has_capitulated = no " + ready_date()
     triggers["ac_rc_active"] = "ac_rc_eligible = yes has_country_flag = ac_rc_initialized"
     triggers["ac_rc_idle"] = "NOT = { has_country_flag = ac_rc_service_active } check_variable = { ac_rc_current_service = 0 } NOT = { has_country_flag = ac_rc_service_cooldown }"
-    triggers["ac_rc_can_fund"] = "ac_rc_active = yes has_war = no ac_rc_idle = yes political_power >= 35 ac_pol_active = yes check_variable = { ac_pol_capacity >= 4 } OR = { ac_econ_ready = no ac_econ_can_pay_programme = yes }"
+    triggers["ac_rc_can_fund"] = "ac_rc_active = yes has_war = no ac_rc_idle = yes political_power >= 35 ac_pol_active = yes check_variable = { ac_pol_capacity >= 4 } OR = { ac_econ_enabled = no ac_econ_can_pay_programme = yes }"
     initialize = ""
     for variable in ("ac_rc_current_service", "ac_rc_elapsed", "ac_rc_completed_services", "ac_rc_last_delivered_days"):
         initialize += guard("NOT = { has_variable = " + variable + " }", "set_variable = { " + variable + " = 0 }")

@@ -75,18 +75,30 @@ a recruitable option without a manpower/core/law gift. Actual deployment still
 needs real manpower and equipment.
 
 Ten replacement roles cover rifles, support, artillery, trucks, trains,
-fighters, CAS, convoys, escorts and submarines. A line costs 15 PP, requests one
-currently available factory/yard and requires the current selected recipe's
-material balance. The adapter counts its previously reserved lines and
-rechecks eligibility in completion. Technical research/designs precede the
-typed consumer; independent negative mutations reject the reverse order.
-Nothing is automatically produced or placed on a mission at registration.
+fighters, CAS, convoys, escorts and submarines. **5 PP certification** unlocks
+the selected DLC technical recipe once, without opening or reserving a line.
+Assign or rotate industry in the Production screen; actual manufacturing still
+requires sufficient materials, imports and fuel. Certification grants no
+factory, yard, resources, equipment or personnel. Tests check all four BBA/MTG
+recipes and negative research/design ordering without claiming native allocation.
 
-An alternative 5 PP certification unlocks a recipe without opening another line,
-so a government whose industry is fully assigned can rotate production manually.
-The source does not claim automatic AI rotation, guaranteed imports, complete
-replacement coverage for every dynamically transferred mixed formation, or
-unlimited fuel. Regular Production edits remain under player control.
+Automatic 15 PP line purchases are retired. Their stable decision, trigger and
+effect IDs remain unavailable/inert for compatibility. A stale/direct completion
+costs nothing, creates no line and consumes no historical receipt. Existing
+production lines, old purchase receipts and cumulative counters are retained;
+counters no longer participate in capacity checks and are not reset at maintenance
+registration. Deleting a line cannot leave another role falsely reserved.
+
+Installed1.19.4.1 primary documentation lists
+`num_of_available_military_factories` and `num_of_available_naval_factories`, but
+does not establish whether “available” means unassigned rather than usable total.
+No installed common/event consumer clarifies that distinction. No new runtime
+probe was authorized, so these values are not advertised as live free slots.
+Normal AI/Production allocation and manual rotation remain authoritative. The
+source claims no automatic AI rotation, guaranteed imports, complete replacement
+coverage for arbitrary transferred forces or unlimited fuel. The captured
+`physical_contract.json` keeps its original technical input/provenance; old queue
+wording there is historical metadata, superseded by this policy and `worksheet.json`.
 
 One CIV and one MIL project per country each cost 100 PP plus **0.02b in full
 mode or 20 FU in legacy mode**, take 90 days, and require a controlled core capital

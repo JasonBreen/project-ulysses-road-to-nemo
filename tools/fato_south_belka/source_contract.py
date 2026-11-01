@@ -18,6 +18,26 @@ PROTECTED=(
 PRIMARY=('documentation/effects_documentation.md','documentation/triggers_documentation.md',
  'common/on_actions/_documentation.md','common/decisions/AST.txt','events/AAT_Denmark.txt')
 def digest(data):return hashlib.sha256(data.replace(b'\r\n',b'\n')).hexdigest()
+
+# Keep engine_contract.json's original fifteen captures. Only this exact,
+# separately reviewed release-owner revision is permitted in their composition.
+# It retires automatic production-line purchases; no national caller edits it.
+REVIEWED_RELEASE_UPDATE=dict(
+    path='common/scripted_effects/ac_release_maintenance.txt',
+    original_sha256='b73a36358dbcd17f41719c127302afac16c3fdb056668e043bcdc2c284e1dce0',
+    reviewed_sha256='837d9946a1a72c93c67107f9243fe65ac1a6a2ea0ec1b133dbc7033fa867d67a',
+    reviewed_commit='45da6a51393edd6b909f5bb45930e09d0c1350e5',
+    tested_source='ec2f7f325945c85bb3381cc9fabc116fe1dd8e09',
+)
+
+def validate_protected(path,expected,data):
+    actual=digest(data)
+    if actual==expected:return 'original'
+    update=REVIEWED_RELEASE_UPDATE
+    if (path==update['path'] and expected==update['original_sha256']
+            and actual==update['reviewed_sha256']):return 'reviewed-release-owner'
+    raise ValueError('Inherited owner changed: '+path)
+
 def capture(reference):
     protected={}
     for relative in PROTECTED:
@@ -41,7 +61,7 @@ def capture(reference):
 def validate(reference=None):
     row=json.loads((HERE/'engine_contract.json').read_text())
     for path,expected in row['protected_sha256'].items():
-        if digest((MOD/path).read_bytes())!=expected:raise ValueError('Inherited owner changed: '+path)
+        validate_protected(path,expected,(MOD/path).read_bytes())
     if reference:
         for path,expected in row['primary_sources_sha256'].items():
             if digest((reference/path).read_bytes())!=expected:raise ValueError('Installed primary source differs: '+path)
@@ -51,4 +71,4 @@ if __name__=='__main__':
     if a.capture:
         if a.reference is None:raise SystemExit('--capture requires a read-only --reference')
         (HERE/'engine_contract.json').write_text(json.dumps(capture(a.reference),indent=2)+'\n',encoding='utf-8',newline='\n')
-    print('Protected owner signatures and primary syntax:',len(validate(a.reference)['protected_sha256']),'unchanged sources; native pending')
+    print('Protected owner signatures and primary syntax:',len(validate(a.reference)['protected_sha256']),'captured sources with exact reviewed owner versions; native pending')

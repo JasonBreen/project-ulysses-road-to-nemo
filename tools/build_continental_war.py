@@ -10,6 +10,7 @@ import argparse
 from pathlib import Path
 import re
 from usea_expansion.content import FOCUSES, partner
+from event_picture_fit.ucw import news_picture, outputs as news_art_outputs
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD = ROOT / "mod/2985041246"
@@ -61,6 +62,8 @@ def gonce(flag, body, condition="always = yes"):
 
 def event(number, title, desc, options, trigger_text="always = yes", picture="GFX_report_event_treaty_2", news=False):
     key = "ac_ucw.%d" % number
+    if news:
+        picture = news_picture(number, picture)
     loc(key + ".t", title)
     # Long-form briefings live in TEXT; the inline desc is the fallback summary.
     loc(key + ".d", TEXT.get(number, desc))
@@ -880,6 +883,16 @@ def main():
         if args.check:
             if not path.exists() or path.read_bytes().replace(b"\r\n", b"\n") != data:
                 failures.append(relative)
+        else:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+    for path, data in news_art_outputs().items():
+        if args.check:
+            current = path.read_bytes() if path.exists() else b''
+            if path.suffix in ('.json', '.gfx'):
+                current = current.replace(b'\r\n', b'\n')
+            if current != data:
+                failures.append(path.relative_to(ROOT).as_posix())
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)

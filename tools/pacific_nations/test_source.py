@@ -12,12 +12,13 @@ import sys
 import tempfile
 import unittest
 
-from PIL import Image
+from PIL import Image,ImageOps
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools'))
 from pacific_nations.model import HERE,MOD,countries,branches,refs,positions
 from pacific_nations import build,build_art
 from superpowers import build as old
 from usea_expansion.script import parse,get
+from event_picture_fit.audit import audit as audit_event_pictures
 
 
 def descend(nodes):
@@ -140,7 +141,7 @@ class NationalSource(unittest.TestCase):
         self.assertFalse({ord(c)for value in self.loc.values()for c in value if c not in'\r\n\t'}-glyphs)
 
     def test_actual_textures_frames_alpha_masters_and_all_unprefixed_row_bindings(self):
-        dims={'focus':(96,96),'idea':(75,75),'decision row':(26,29),'category':(100,100),'event illustration':(640,260)}
+        dims={'focus':(96,96),'idea':(75,75),'decision row':(26,29),'category':(100,100),'event illustration':(210,176)}
         for module in countries():
             assets=json.loads((HERE/('assets_'+module.TAG+'.json')).read_text())['assets'];sprites={get(v,'name').strip('"'):v for k,_,v in get(parse((MOD/'interface'/('ac_snc_'+module.TAG.lower()+'.gfx')).read_text()),'spriteTypes')}
             focuses=[a for a in assets if a['role']=='focus'];self.assertEqual(44 if module.TAG=='OSE'else 42,len(focuses));self.assertEqual(len(focuses),len({a['sha256']for a in focuses}))
@@ -154,6 +155,27 @@ class NationalSource(unittest.TestCase):
             for _,_,rows in parse(self.out['common/decisions/ac_snc_'+module.TAG.lower()+'.txt']):
                 for ident,_,node in rows:
                     binding='GFX_decision_'+get(node,'icon');self.assertIn(binding,sprites);self.assertEqual('decision row',next(a['role']for a in assets if a['sprite']==binding))
+
+    def test_actual_country_event_consumers_fit_and_keep_complete_wide_masters(self):
+        modules=countries()
+        report=audit_event_pictures(['events/ac_snc_'+module.TAG.lower()+'.txt'for module in modules])
+        self.assertEqual(14*len(modules),report['explicit_consumers'])
+        self.assertTrue(all(row['hidden']for row in report['implicit_picture_events']))
+        for row in report['consumers']:
+            self.assertEqual('country_event',row['event_type'])
+            self.assertEqual([210.0,176.0],row['frame_size'])
+            self.assertEqual([5.0,5.0,215.0,181.0],row['bounds'])
+        for module in modules:
+            assets=json.loads((HERE/('assets_'+module.TAG+'.json')).read_text())['assets']
+            for asset in (row for row in assets if row['role']=='event illustration'):
+                with self.subTest(country=module.TAG,event=asset['id']):
+                    with Image.open(ROOT/asset['master'])as master:
+                        self.assertEqual((640,260),master.size)
+                        full=ImageOps.contain(master.convert('RGBA'),(210,176),Image.Resampling.LANCZOS)
+                    expected=Image.new('RGBA',(210,176),(8,22,33,255))
+                    expected.alpha_composite(full,((210-full.width)//2,(176-full.height)//2))
+                    with Image.open(MOD/asset['file'])as delivered:
+                        self.assertEqual(expected.tobytes(),delivered.convert('RGBA').tobytes())
 
     def test_exact_hash_provenance_has_no_family_or_filename_exemption(self):
         for module in countries():

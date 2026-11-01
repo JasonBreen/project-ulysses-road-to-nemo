@@ -1,14 +1,20 @@
 """Literal release inventory must retain scalar operations and short callers."""
 import sys
-from pathlib import Path
+from pathlib import Path,PureWindowsPath,PurePosixPath
 import unittest
 import tempfile
 
 HERE=Path(__file__).resolve().parent;sys.path.insert(0,str(HERE))
-from release_inventory import report,walk,parse,source_digest
+from release_inventory import report,walk,parse,source_digest,path_order
 
 
 class ReleaseInventoryTests(unittest.TestCase):
+    def test_mixed_case_source_paths_have_the_same_order_on_both_platforms(self):
+        names=('ac_release_projects.txt','Belka.txt','AWWNB.txt')
+        for kind in (PureWindowsPath,PurePosixPath):
+            paths=[kind('fixture/events')/name for name in names]
+            self.assertEqual(['AWWNB.txt','Belka.txt','ac_release_projects.txt'],[path.name for path in sorted(paths,key=path_order)])
+
     def test_source_digest_ignores_only_checkout_line_endings(self):
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory)/'release-source.txt'

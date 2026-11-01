@@ -23,6 +23,12 @@ spaces, comments, tokens or binary data. A negative regression changes internal
 spacing and proves its digest still changes. Native payload/texture hashes and
 the immutable original captures remain separate and untouched.
 
+The second Linux check isolated an additional ordering dependency: WindowsPath
+sorts case-insensitively, whereas PosixPath preserves case. All scanned source,
+roster and input-hash paths now use the same explicit POSIX-string key. A fourth
+inventory regression compares mixed-case Windows and POSIX fixture paths and
+requires identical ordering. Text/JSON equality remains a strict gate.
+
 The economy-review input receipt was regenerated from the combined canonical
 macro owner after merging PR #46's receipt correction. Its five rendered pages,
 twelve settled monthly results and zero source-bound findings remain unchanged.

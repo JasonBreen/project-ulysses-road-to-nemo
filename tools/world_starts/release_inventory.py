@@ -27,6 +27,10 @@ def source_digest(path):
     """Portable authored-text identity; native payload hashes remain separate."""
     return hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
 
+def path_order(path):
+    """Explicit case-sensitive order, independent of WindowsPath comparison."""
+    return path.as_posix()
+
 
 def report():
     registry=json.loads((ROOT/'tools/world_foundation/country_registry.json').read_text())
@@ -34,7 +38,7 @@ def report():
     if set(emergent)!={'AWW','REC','REL','SBK','SER','SHI','TER'}:raise ValueError('Dormant entry scope changed; inspect the legitimate release owners')
     files={};definitions={};callers={}
     for folder in ('events','common/on_actions','common/scripted_effects','common/national_focus','common/decisions'):
-        for path in sorted((MOD/folder).rglob('*.txt')):
+        for path in sorted((MOD/folder).rglob('*.txt'),key=path_order):
             relative=path.relative_to(MOD).as_posix();tree=parse(path.read_text(encoding='utf-8-sig'));files[relative]=tree
             if folder=='events':
                 for key,_,body in tree:
@@ -71,7 +75,7 @@ def report():
                 trigger=get(body,'trigger',[])))
             used.update(MOD/p for p in callers.get(ident,[]))
         rosters=[]
-        for path in sorted((MOD/'history/units').glob(tag+'_*.txt')):
+        for path in sorted((MOD/'history/units').glob(tag+'_*.txt'),key=path_order):
             used.add(path);parsed=parse(path.read_text(encoding='utf-8-sig'))
             rosters.append(dict(source=path.relative_to(MOD).as_posix(),divisions=sum(key=='division' for key,_ in walk(parsed)),
                 production_lines=sum(key=='add_equipment_production' for key,_ in walk(parsed))))
@@ -101,7 +105,7 @@ def report():
         active_tag_clarification='RAT is the active Ratio country, covered by WorldStarts; SBL is not a registered country history/tag here. South Belka is SBK.',
         excluded_placeholder='PLH/state171 remains unresolved and receives no inferred release or setup.',
         source_input_hash_convention='SHA256 of authored UTF8 text with CRLF normalized to LF; no other whitespace or content normalization. Not a native payload hash.',
-        source_inputs_sha256={path.relative_to(MOD).as_posix():source_digest(path) for path in sorted(used)},countries=rows)
+        source_inputs_sha256={path.relative_to(MOD).as_posix():source_digest(path) for path in sorted(used,key=path_order)},countries=rows)
 
 
 if __name__=='__main__':

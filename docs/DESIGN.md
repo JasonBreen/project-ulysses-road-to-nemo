@@ -213,7 +213,7 @@ Runtime gates remain open. No runtime success is claimed by this document.
 
 Official Project Aces/ACE COMBAT sources are authoritative for lore-sensitive facts such as dates, borders, country/faction names, characters, and named equipment. The official ACES site describes the shared Strangereal setting and its series chronology; repository content and the April 2024 archive are provenance for this mod, not proof of official canon. See [docs/CANON_POLICY.md](CANON_POLICY.md) and [docs/CANON_LEDGER.md](CANON_LEDGER.md).
 
-Sam's established Joker 1 continuity is an explicitly permitted user-authored layer alongside official canon. It is not to be discarded as unofficial, but it must be compiled from Sam's established material before implementation. The current planning note records only the unverified outline: Ustian-born Joker 1; Belkan connections; history with Moon11/Shadow22; Watchtowerorganization; connection with Cope; and Tasha's mother as the pilot who shot him down. Dates, details, and causal links remain unverified and must not be invented or promoted into the official canon ledger.
+The established user-authored Joker 1 continuity is an explicitly permitted user-authored layer alongside official canon. It is not to be discarded as unofficial, but it must be compiled from the established creative material before implementation. The current planning note records only the unverified outline: Ustian-born Joker 1; Belkan connections; history with Moon11/Shadow22; Watchtowerorganization; connection with Cope; and Tasha's mother as the pilot who shot him down. Dates, details, and causal links remain unverified and must not be invented or promoted into the official canon ledger.
 
 ## 10. Coordinated agent development
 
@@ -226,7 +226,7 @@ Agents should work in narrow, reviewable slices:
 - **Localization/art:** labels and descriptions grounded in existing comments, effects, or established identifiers; no placeholder lore presented as canon.
 - **Testing:** static regression, isolated runtime, save/load, and long-run AI checks when authorized.
 
-Every agent should state whether a change is implemented, proposed, or an open decision; preserve the baseline; add or update a regression check when practical; and leave unresolved design questions explicit for Sam.
+Every agent should state whether a change is implemented, proposed, or an open decision; preserve the baseline; add or update a regression check when practical; and leave unresolved design questions explicit for the user.
 
 ### Economy and portable workspace integration
 

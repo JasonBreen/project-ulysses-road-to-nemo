@@ -1,0 +1,123 @@
+# Stable public API; full-mode calls dispatch to the monthly owner.
+ac_econ_borrow = {
+	if = {
+		limit = { ac_macro_mode = yes }
+		ac_macro_borrow = yes
+	}
+	else = {
+		ac_econ_legacy_borrow = yes
+	}
+}
+ac_econ_cancel_procurement = {
+	if = {
+		limit = { ac_macro_mode = yes }
+		ac_macro_cancel_replacements = yes
+	}
+	else = {
+		ac_econ_legacy_cancel_procurement = yes
+	}
+}
+ac_econ_initialize = {
+	if = {
+		limit = { ac_macro_mode = yes }
+		ac_macro_initialize = yes
+	}
+	else = {
+		ac_econ_legacy_initialize = yes
+	}
+}
+ac_econ_order_infantry = {
+	if = {
+		limit = { ac_macro_mode = yes }
+		ac_macro_fund_replacements = yes
+	}
+	else = {
+		ac_econ_legacy_order_infantry = yes
+	}
+}
+ac_econ_progress_procurement = {
+	if = {
+		limit = { ac_macro_mode = no }
+		ac_econ_legacy_progress_procurement = yes
+	}
+}
+ac_econ_refresh_budget = {
+	if = {
+		limit = { ac_macro_mode = yes }
+		ac_macro_quote = yes
+	}
+	else = {
+		ac_econ_legacy_refresh_budget = yes
+	}
+}
+ac_econ_repay = {
+	if = {
+		limit = { ac_macro_mode = yes }
+		ac_macro_repay = yes
+	}
+	else = {
+		ac_econ_legacy_repay = yes
+	}
+}
+ac_econ_set_basic_services = {
+	if = {
+		limit = { ac_macro_mode = yes }
+		ac_macro_preset_balanced = yes
+	}
+	else = {
+		ac_econ_legacy_set_basic_services = yes
+	}
+}
+ac_econ_set_high_tax = {
+	if = {
+		limit = { ac_macro_mode = yes }
+		ac_macro_tax_high = yes
+	}
+	else = {
+		ac_econ_legacy_set_high_tax = yes
+	}
+}
+ac_econ_set_low_tax = {
+	if = {
+		limit = { ac_macro_mode = yes }
+		ac_macro_tax_low = yes
+	}
+	else = {
+		ac_econ_legacy_set_low_tax = yes
+	}
+}
+ac_econ_set_reconstruction = {
+	if = {
+		limit = { ac_macro_mode = yes }
+		ac_macro_preset_relief = yes
+	}
+	else = {
+		ac_econ_legacy_set_reconstruction = yes
+	}
+}
+ac_econ_set_standard_tax = {
+	if = {
+		limit = { ac_macro_mode = yes }
+		ac_macro_tax_standard = yes
+	}
+	else = {
+		ac_econ_legacy_set_standard_tax = yes
+	}
+}
+ac_econ_weekly_settlement = {
+	if = {
+		limit = { ac_macro_mode = no }
+		ac_econ_legacy_weekly_settlement = yes
+	}
+}
+ac_econ_pay_programme = {
+	if = {
+		limit = { ac_macro_ready = yes }
+		set_temp_variable = { ac_macro_transaction_amount = 0.002 }
+		ac_macro_try_spend = yes
+	}
+	else_if = {
+		limit = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 2 } }
+		subtract_from_variable = { ac_econ_treasury = 2 }
+	}
+}

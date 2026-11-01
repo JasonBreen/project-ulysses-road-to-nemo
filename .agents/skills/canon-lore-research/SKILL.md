@@ -1,6 +1,6 @@
 ---
 name: canon-lore-research
-description: Build source-traceable Project Ulysses lore and event coverage without conflating official ACE COMBAT material, Sam's continuity, archive provenance, or gameplay abstractions.
+description: Build source-traceable Project Ulysses lore and event coverage without conflating official ACE COMBAT material, user-authored continuity, archive provenance, or gameplay abstractions.
 ---
 
 # Canon and lore research

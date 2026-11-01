@@ -1,0 +1,189 @@
+{
+  "coverage": "source and offline validation only",
+  "base_commit": "dd17c754f6bf4103ece706fe5881ad1027c341a1",
+  "source_state": "working-tree candidate; validation logs are not native evidence",
+  "checks": [
+    {
+      "check": "macro",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-EconomyV2.py"
+      ],
+      "exit_code": 0,
+      "seconds": 124.05,
+      "log": "macro.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "ledger",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-EconomyLedger.py"
+      ],
+      "exit_code": 0,
+      "seconds": 7.59,
+      "log": "ledger.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "forces",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-ForceUpkeep.py",
+        "--engine",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 3.86,
+      "log": "forces.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "shared-owners",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-SharedSystems.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.25,
+      "log": "shared-owners.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "institutions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-Institutions.py"
+      ],
+      "exit_code": 0,
+      "seconds": 10.64,
+      "log": "institutions.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "legacy",
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_economy.py"
+      ],
+      "exit_code": 0,
+      "seconds": 5.09,
+      "log": "legacy.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "factions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-UlyssesFactions.py",
+        "--reference-game-root",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 1.66,
+      "log": "factions.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "interfaces",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-InterfaceRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.89,
+      "log": "interfaces.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "generated-macro",
+      "command": [
+        "python",
+        "-B",
+        "tools/economy_v2/build.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.42,
+      "log": "generated-macro.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "generated-anea",
+      "command": [
+        "python",
+        "-B",
+        "tools/anea/foundation.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.62,
+      "log": "generated-anea.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 1.53,
+      "log": "assets.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "core",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 53.8,
+      "log": "core.txt",
+      "coverage": "source/offline; not native acceptance"
+    },
+    {
+      "check": "screen-dependencies",
+      "command": [
+        "python",
+        "-B",
+        "tools\\overhaul\\audit_consumers.py",
+        "<installed-engine-reference>",
+        "--gate-screen",
+        "ac_macro_economy.gui",
+        "--output",
+        "G:\\Project-Ulysses-Shared-Review\\docs\\evidence\\economy-v2\\engine-dependencies.json"
+      ],
+      "exit_code": 0,
+      "seconds": 17.09,
+      "log": "screen-dependencies.txt",
+      "coverage": "source/offline; not native acceptance"
+    }
+  ],
+  "native_status": "paused; untested"
+}

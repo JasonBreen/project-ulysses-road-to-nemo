@@ -29,9 +29,7 @@ def style(text):
     for old,new in SPRITES.items():
         text = text.replace('"GFX_'+old+'"', '"GFX_ac_briefing_'+new+'"')
     text = re.sub(r'"(Aces(?:12|14|16))_black"',r'"\1"',text)
-    if 'name = "ac_briefing_map_statistics"' not in text:
-        # Match this unique existing control rather than numeric source lines.
-        marker = re.search(r'\t\tinstantTextBoxType = \{\s*name = "history".*?\n\t\t\}',text,re.S)
-        if not marker:raise ValueError('Country-selection history control missing')
-        text = text[:marker.end()]+'\n'+OVERLAY+text[marker.end():]
+    # The legacy statistics were baked into oversized inline map images and
+    # have no live engine binding. The bounded overview author owns this area.
+    text = re.sub(r'\s*iconType\s*=\s*\{\s*name\s*=\s*"ac_briefing_map_statistics".*?alwaystransparent\s*=\s*yes\s*\}', '', text, flags=re.S)
     return text

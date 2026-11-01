@@ -1,5 +1,11 @@
 # Experimental fiscal economy
 
+Historical/legacy contract: the saved `experimental` mode below remains intact.
+New 1991 campaigns now default to the separately authored [national economy
+v2](ECONOMY_V2.md). Its fictional national accounts, monthly owner, compatibility
+API, new-history guards and pending native acceptance are documented there.
+The original mode's balances and pending contracts are not converted.
+
 This branch adds an opt-in weekly budget and a small domestic procurement contract to the preserved Ulysses campaign. It does not replace original country, focus, event, map, equipment or technology files. The implementation is statically and offline tested; the HOI4 1.19 parser, UI, native arithmetic, save/load and balance are not runtime accepted.
 
 ## Baseline and integration order

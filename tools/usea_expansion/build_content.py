@@ -11,6 +11,7 @@ from fcu_content import OPTIONS as FCU_OPTIONS, POLICIES as FCU_POLICIES
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246'
 sys.path.insert(0,str(ROOT/'tools'))
 from usea_expansion.script import parse,get,render
+from port_1_19.pdx import children,strip_comments_mask
 
 OUT={};LOC={};EFFECTS=[];EVENTS=['add_namespace = ac_expansion'];IDEAS=[]
 TAGS=('ERU','FCU','NPT','REC','YUK')
@@ -39,27 +40,65 @@ def focus(row):
     body+=block('completion_reward',once(ident+'_done',reward,available))+'search_filters = { }'
     return block('focus' if row.phase=='opening' else 'shared_focus',body)
 
+def remove_owned_support(source, rows):
+    """Migrate the historical open-ended marker without truncating foreign tails.
+
+    Only this generator's IDs and marker lines are removable. Other shared
+    definitions, imports, comments and owner sections survive in place.
+    """
+    ids={row.id for row in rows}
+    definitions_begin='# BEGIN EXPANSION FOCUSES';definitions_end='# END EXPANSION FOCUSES'
+    if source.count(definitions_begin)>1 or source.count(definitions_end)>1 or (definitions_end in source and definitions_begin not in source):
+        raise ValueError('Unbalanced expansion definitions')
+    if definitions_end in source:
+        owned=source[source.index(definitions_begin):source.index(definitions_end)]
+        if any(k!='shared_focus' or not isinstance(v,list) or get(v,'id') not in ids for k,_,v in parse(owned)):
+            raise ValueError('Foreign content inside expansion definitions')
+    start='# BEGIN EXPANSION IMPORTS';finish='# END EXPANSION IMPORTS'
+    if source.count(start)!=source.count(finish) or source.count(start)>1:
+        raise ValueError('Unbalanced expansion imports')
+    if start in source:
+        a=source.index(start);b=source.index(finish)+len(finish)
+        if any(k!='shared_focus' or v not in ids for k,_,v in parse(source[a:b])):
+            raise ValueError('Foreign content inside expansion imports')
+        # Validate here; replace at the existing location in build_trees.
+    mask=strip_comments_mask(source)
+    spans=[]
+    for key,a,b,bs,be in children(source,0,len(source),mask):
+        if key=='shared_focus' and get(parse(source[bs:be]),'id') in ids:
+            while b<len(source) and source[b] in '\r\n':b+=1
+            spans.append((a,b))
+    for a,b in reversed(spans):source=source[:a]+source[b:]
+    source=re.sub(r'(?m)^[ \t]*# (?:BEGIN|END) EXPANSION FOCUSES[^\n]*\n?','',source)
+    return source.rstrip()+'\n'
+
 def build_trees():
     for tag in ('ERU','FCU'):
         rows=[r for r in FOCUSES if r.tag==tag and r.phase=='opening']
         ident='ac_exp_'+tag.lower()+'_opening'
         loc(ident,('Erusea' if tag=='ERU' else 'Central Usea')+': the Opening Decade')
         loc(ident+'_desc','Administration, preparedness and continental relations, 1991–1999.')
-        body='id = '+ident+'\ncountry = { factor = 0 modifier = { add = 20 original_tag = '+tag+' NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 } }\ndefault = no\ncontinuous_focus_position = { x = 1100 y = 1000 }\n'
+        imported=[]
+        if tag=='FCU':
+            imported=['FCU_ur_acknowledge','FCU_ur_unified_command','FCU_ur_scarface_sortie',
+                      'FCU_ur_stand_down','FCU_ur_keep_mobilized','FCU_ur_assessment']
+        imported_nodes=[node for kind,_,node in parse((MOD/'common/national_focus/ac_usean_rebellion.txt').read_text())
+                        if kind=='shared_focus' and get(node,'id') in imported] if imported else []
+        # Imported branches contribute to the canvas extent too. In particular,
+        # the rebellion branch reaches column23, beyond the old opening roots.
+        panel_x=(max([row.x for row in rows]+[int(get(node,'x')) for node in imported_nodes])+4)*96
+        body='id = '+ident+'\ncountry = { factor = 0 modifier = { add = 20 original_tag = '+tag+' NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 } }\ndefault = no\ncontinuous_focus_position = { x = '+str(panel_x)+' y = 16 }\n'
         rows_text='\n'.join(focus(r) for r in rows)
         # Hand-authored shared focuses live in ac_usean_rebellion.txt. Listing
         # them here keeps the 1997 branch on this tree without a second tree.
         if tag=='FCU':
-            rows_text+='\n'+'\n'.join('shared_focus = '+i for i in (
-                'FCU_ur_acknowledge','FCU_ur_unified_command','FCU_ur_scarface_sortie',
-                'FCU_ur_stand_down','FCU_ur_keep_mobilized','FCU_ur_assessment'))
+            rows_text+='\n'+'\n'.join('shared_focus = '+i for i in imported)
         put('common/national_focus/'+tag+'_opening.txt',block('focus_tree',body+rows_text))
     for tag in ('NPT','REC','YUK'):
         rows=[r for r in FOCUSES if r.tag==tag and r.phase=='support']
         treepath='common/national_focus/'+tag+'.txt'
         source=(MOD/treepath).read_text(encoding='utf-8-sig')
-        source=re.sub(r'\s*# BEGIN EXPANSION IMPORTS.*?# END EXPANSION IMPORTS','',source,flags=re.S)
-        source=source.split('# BEGIN EXPANSION FOCUSES')[0].rstrip()+'\n'
+        source=remove_owned_support(source,rows)
         # Locate the first tree's closing brace without reformatting old content.
         start=source.index('{',source.index('focus_tree'));depth=1;end=start+1
         while depth:
@@ -67,11 +106,15 @@ def build_trees():
             elif source[end]=='}':depth-=1
             end+=1
         imports='\n\t# BEGIN EXPANSION IMPORTS\n'+''.join('\tshared_focus = '+r.id+'\n' for r in rows)+'\t# END EXPANSION IMPORTS\n'
-        source=source[:end-1]+imports+source[end-1:]
-        definitions='# BEGIN EXPANSION FOCUSES\n'+''.join(focus(r) for r in rows)
+        begin='# BEGIN EXPANSION IMPORTS';finish='# END EXPANSION IMPORTS'
+        if begin in source:
+            a=source.index(begin);b=source.index(finish)+len(finish)
+            source=source[:a]+imports.strip()+source[b:]
+        else:source=source[:end-1]+imports+source[end-1:]
+        definitions='# BEGIN EXPANSION FOCUSES\n'+''.join(focus(r) for r in rows)+'# END EXPANSION FOCUSES\n'
         if tag=='NPT':
             path='common/national_focus/NPT_pre_continental_war.txt'
-            old=(MOD/path).read_text(encoding='utf-8-sig').split('# BEGIN EXPANSION FOCUSES')[0].rstrip()+'\n\n'
+            old=remove_owned_support((MOD/path).read_text(encoding='utf-8-sig'),rows).rstrip()+'\n\n'
             put(path,old+definitions)
         else:source+='\n'+definitions
         put(treepath,source)

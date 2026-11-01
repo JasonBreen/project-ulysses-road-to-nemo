@@ -1,6 +1,6 @@
 # Workspace and source evidence
 
-This is a local-only continuation workspace for Sam's private Project Ulysses HOI4 Strangereal mod work. No remote repository, publishing, developer contact, release, or downloaded-code execution is part of this workspace.
+This is a local-only continuation workspace for the private Project Ulysses HOI4 Strangereal mod work. No remote repository, publishing, developer contact, release, or downloaded-code execution is part of this workspace.
 
 ## Local layout
 

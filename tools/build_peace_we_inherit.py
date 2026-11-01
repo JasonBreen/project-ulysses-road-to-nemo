@@ -274,7 +274,9 @@ def build_partners():
         previous = None
         for i, (suffix, title, desc, reward, condition) in enumerate(entries):
             prerequisites = [previous] if previous else None
-            x, y = 60, i
+            # Sapin's inherited army occupies columns 55–65. Keep its complete
+            # recovery branch in a separate channel, including all descendants.
+            x, y = (70 if tag == "SAP" else 60), i
             excludes = ()
             if tag in ("OSE", "UST"):
                 if i == 4:

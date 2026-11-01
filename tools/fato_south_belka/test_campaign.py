@@ -272,6 +272,26 @@ class CampaignOwners(unittest.TestCase):
         self.assertTrue(w.choose('SBK_fsb_public_interest','SBK'));self.assertEqual(initial,c.variables['ac_macro_commitments_annual']);cash=c.variables['ac_macro_cash']
         self.assertTrue(w.choose('SBK_fsb_maintenance_account','SBK'));self.assertEqual(cash-D('.002'),c.variables['ac_macro_cash']);self.assertEqual(initial+delta,c.variables['ac_macro_commitments_annual'])
 
+    def test_fato_can_revoke_its_earned_audit_without_refund_or_duplicate_reconciliation(self):
+        for mode in ('full','experimental','disabled'):
+            w=self.world(mode);c=w.countries['FAT']
+            self.assertFalse(w.choose('FAT_fsb_review_independent_audit','FAT'))
+            c=enable(w,'FAT');base=c.variables.get('ac_macro_commitments_annual',D(0))
+            self.assertTrue(w.choose('FAT_fsb_independent_audit','FAT'))
+            paid=copy.deepcopy(c);applied=c.variables.get('ac_fsb_fiscal_applied',D(0))
+            if mode=='full':self.assertGreater(applied,0)
+            self.assertTrue(w.choose('FAT_fsb_review_independent_audit','FAT'))
+            self.assertNotIn('ac_fsb_fat_independent_audit',c.ideas)
+            self.assertNotIn('ac_fsb_independent_audit_standing',c.flags)
+            self.assertEqual(paid.pp,c.pp);self.assertEqual(paid.equipment,c.equipment)
+            self.assertEqual(paid.variables['ac_pol_capacity'],c.variables['ac_pol_capacity'])
+            for field in ('ac_macro_cash','ac_econ_treasury','ac_macro_debt','ac_econ_debt'):
+                self.assertEqual(paid.variables.get(field),c.variables.get(field))
+            if mode=='full':self.assertEqual(base,c.variables['ac_macro_commitments_annual'])
+            closed=copy.deepcopy(c);self.assertFalse(w.choose('FAT_fsb_review_independent_audit','FAT'));self.assertEqual(closed,c)
+            self.assertTrue(w.choose('FAT_fsb_independent_audit','FAT'))
+            if mode=='full':self.assertEqual(base+applied,c.variables['ac_macro_commitments_annual'])
+
     def test_only_latest_earned_policy_family_can_be_reinstated_after_interruption(self):
         w=self.world();c=w.countries['FAT'];c.flags['FAT_nat_civilian_priority_done']=None;c.flags['FAT_nat_essential_quota_done']=None
         self.assertFalse(w.choose('FAT_fsb_restore_civilian_priority','FAT'));self.assertTrue(w.choose('FAT_fsb_restore_essential_quota','FAT'))

@@ -26,5 +26,15 @@ hashes, and runs the canonical economy generator in strict check mode. The other
 1991 equipment, histories, forces, technologies and project/on-action contracts.
 No whole source, GUI capture or manifest was recaptured to make composition pass.
 
+The PR #47 review successor `45da6a51` tightens the same reviewed macro initializer:
+partial stocks and receipt fragments are preserved and review-locked. The current
+normalized effect-file hash is `fba2577bf92630a7e9236769fbacbd93ebaa855cb924a7fdb741ad482a256f96`;
+the initializer AST hash is `bef7f228eb057e12dcf5978fabaab5542ade4cd9aecf0f39b655fa1bf7f79d62`.
+The previous approved `cfac214a` file and `4a6318e4` initializer version remain
+explicitly recorded in the separate update table. All 53 unchanged function hashes
+remain exact. Companion trigger additions are checked through the canonical
+financial generator and 16 actual-owner release-finance cases; they are not a new
+blanket exception to the captured effect files.
+
 This is source ownership and generated-output evidence. It changes no AIR design,
 aircraft grant, starting force, strategic project, territory or native acceptance.

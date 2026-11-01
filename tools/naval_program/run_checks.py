@@ -16,12 +16,12 @@ from source_snapshot import capture,verify
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--engine',type=Path);parser.add_argument('--core',action='store_true');parser.add_argument('--only');parser.add_argument('--exact-source',action='store_true')
-    parser.add_argument('--baseline',type=Path);parser.add_argument('--output',type=Path)
+    parser.add_argument('--baseline',type=Path);parser.add_argument('--output',type=Path);parser.add_argument('--pin-source',action='store_true')
     args=parser.parse_args();py=[sys.executable,'-B'];reference=['--reference',str(args.engine)] if args.engine else []
     out=args.output or OUT
     if args.baseline and not (args.baseline/'map').is_dir():raise SystemExit('Baseline must be the immutable payload containing map/')
     if args.exact_source and args.only:raise SystemExit('An exact-source receipt requires a full run; retained earlier checks cannot be relabelled for a new commit')
-    before=capture(ROOT) if args.exact_source else None
+    before=capture(ROOT) if args.exact_source or args.pin_source else None
     checks={
         'naval':py+['tools/naval_program/test_naval.py']+(['--engine',str(args.engine)] if args.engine else []),
         'air':py+['tools/air_program/test_air.py'],
@@ -44,6 +44,7 @@ def main():
     }
     if (ROOT/'tools/release_foundations/test_finance.py').exists():checks['release-finance']=py+['tools/release_foundations/test_finance.py']
     if (ROOT/'tools/fato_south_belka/test_campaign.py').exists():checks['national-owners']=py+['tools/fato_south_belka/test_campaign.py']
+    if (ROOT/'tools/fato_south_belka/test_evidence.py').exists():checks['receipt-contracts']=py+['tools/fato_south_belka/test_evidence.py']
     # audit's read-only argument is --reference; the same reference list applies.
     if args.core:
         host=shutil.which('pwsh')
@@ -62,7 +63,7 @@ def main():
         names=set(args.only.split(','))
         if names-set(checks):raise SystemExit('Unknown checks: '+str(names-set(checks)))
         checks={k:v for k,v in checks.items() if k in names}
-        if (out/'results.json').exists():old=[r for r in json.loads((out/'results.json').read_text())['checks'] if r['check'] not in names]
+        if not before and (out/'results.json').exists():old=[r for r in json.loads((out/'results.json').read_text())['checks'] if r['check'] not in names]
     out.mkdir(parents=True,exist_ok=True)
     def run(pair):
         name,command=pair;start=time.monotonic();result=subprocess.run(command,cwd=ROOT,capture_output=True)

@@ -78,7 +78,9 @@ class World(ucw.World):
                 result = self.compare(self.number(var, country), operation, self.number(operand, country))
             elif key == "ac_pol_active":
                 result = (country.politics and country.exists and not country.capitulated) == (value == "yes")
-            elif key == "ac_econ_ready":
+            elif key in ("ac_econ_ready", "ac_econ_enabled"):
+                # This coarse campaign suite models only enabled/off modes.
+                # test_integration executes the real owner's unready accounts.
                 result = (self.mode != "off") == (value == "yes")
             elif key == "ac_econ_can_pay_programme":
                 result = (self.mode != "off" and not country.arrears and country.cash >= (2 if self.mode == "legacy" else .002)) == (value == "yes")

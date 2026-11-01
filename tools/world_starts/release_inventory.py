@@ -42,6 +42,8 @@ def report():
                     if ident=='country_event':
                         target=get(value,'id') if isinstance(value,list) else value
                         if isinstance(target,str):callers.setdefault(target.strip('"'),[]).append(relative)
+    release_path=ROOT/'tools/release_foundations/worksheet.json'
+    release=json.loads(release_path.read_text())['countries'] if release_path.exists() else {}
     rows=[];used=set()
     for tag,registered in sorted(emergent.items()):
         history=MOD/registered['history'];used.add(history);source=history.read_text(encoding='utf-8-sig');tree=parse(source)
@@ -74,9 +76,22 @@ def report():
         elif tag=='REC':gaps+=['recta.1 loads ten formations without an explicit setup-once flag; later Belkan treaty state transfers can also recreate REC without calling recta.1.']
         elif tag=='SBK':gaps+=['Three individually fire-only-once events transfer a BLK army fraction; no shared group setup-once flag is established by those definitions. Belkan treaty creation is a separate path without the same transfer.']
         else:gaps+=['No authored release/setup event owner identified for this dormant tag; generic engine release behavior is not acceptance evidence.']
+        status='pending_legitimate_release_owner_review'
+        if tag in release:
+            for relative in ('common/scripted_effects/ac_release_foundations.txt','common/scripted_effects/ac_release_maintenance.txt','common/scripted_triggers/ac_release_foundations.txt','common/scripted_triggers/ac_release_maintenance.txt','common/on_actions/ac_release_foundations.txt','events/ac_release_projects.txt'):
+                target=MOD/relative
+                if not target.exists():raise ValueError('Release worksheet has no actual owner: '+relative)
+                used.add(target)
+            status='guarded_legitimate_release_owner_source_implemented_native_pending'
+            gaps=['Native release/loading, transfer selection, DLC replacement operation, supply/AI pacing and save/reload remain untested.',
+                  release[tag]['unknown_footprint_status'],
+                  'Replacement imports are conditional live material checks, not guaranteed authored trade contracts; existing mixed transferred roles may exceed domestic replacement capacity.']
+            if tag=='AWW':gaps+=['awwnb.1 still has no authored literal activation caller; no new war/activation was invented.',
+                'Preserved disarmed/no-core personnel and non-core industry liability; only the original optionA retains its existing weekly recruiting idea. Other inherited warfront OOB positions are not newly validated owned deployment sites.']
+            elif tag in ('REL','SER','SHI','TER'):gaps+=['No authored forced activation route; the adapter waits for an actual legitimate engine release.']
         rows.append(dict(tag=tag,history=registered['history'],owned_states=registered['owned_states'],
             history_force_loads=[value.strip('"') for key,_,value in tree if key in ('load_oob','set_oob','set_air_oob','set_naval_oob')],
-            entry_events=owners,other_observed_entry_scopes=entry_scopes,existing_tag_rosters=rosters,status='pending_legitimate_release_owner_review',gaps=gaps))
+            entry_events=owners,other_observed_entry_scopes=entry_scopes,existing_tag_rosters=rosters,status=status,gaps=gaps))
     return dict(schema=1,scope='Seven nonlandowning inherited histories; no start grant, retroactive setup, new war or tag is introduced.',
         source_evidence='Literal source inventory only; native release, event reachability, transfer randomness, re-release and save/reload are not established.',
         active_tag_clarification='RAT is the active Ratio country, covered by WorldStarts; SBL is not a registered country history/tag here. South Belka is SBK.',
@@ -90,4 +105,4 @@ if __name__=='__main__':
     if args.check:
         if not path.exists() or path.read_text()!=text:raise SystemExit('Dormant release inventory differs; inspect the owning contracts before updating')
     else:path.write_text(text,encoding='utf-8',newline='\n')
-    print('Dormant histories:',len(data['countries']),'; all retain explicit legitimate-release owner gaps; no setup is granted.')
+    print('Dormant histories:',len(data['countries']),'; source owners and remaining entry/native obligations inventoried; no country is spawned by this inspector.')

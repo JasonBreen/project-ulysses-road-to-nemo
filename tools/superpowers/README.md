@@ -63,8 +63,8 @@ Existing 1991 political/election/war content is mod provenance. Source anchors
 are recorded separately in `sources.json`; this draft changes no leader, border,
 core, raster, state history, starting roster or protected user-authored continuity.
 
-Reserved prefix: shared owner `ac_sp_`; national IDs `OSE_sp_` and `YUK_sp_`;
-event namespace `ac_sp`. The later conflict owner must be distinct and read these
+Reserved prefix: shared owner `ac_snp_`; national IDs `OSE_snp_` and `YUK_snp_`;
+event namespace `ac_snp`. The later conflict owner must be distinct and read these
 earned choices without allowing this national runtime to own war or peace.
 Extend the existing reproducible generator/import seams. Dino's builder and
 desktop/native testing remain paused and optional.

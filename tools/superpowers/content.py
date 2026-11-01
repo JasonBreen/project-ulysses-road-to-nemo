@@ -260,7 +260,7 @@ assert all(sum(b.tag == tag for b in BRANCHES) == 8 for tag in ("OSE", "YUK"))
 
 
 def focus_id(item, index):
-    return f"{item.tag}_sp_{item.key}_{('register','civil_policy','protected_policy','protocol','review','settlement')[index]}"
+    return f"{item.tag}_snp_{item.key}_{('register','civil_policy','protected_policy','protocol','review','settlement')[index]}"
 
 
 def focus_description(item, index):

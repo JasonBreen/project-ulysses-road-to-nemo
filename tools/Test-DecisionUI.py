@@ -6,6 +6,7 @@ import importlib.util
 from pathlib import Path
 import sys
 import tempfile
+import subprocess
 import unittest
 
 from PIL import Image
@@ -14,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools/overhaul"))
 from build_decisions_ui import CONTRACT, MOD, SCROLLBAR, build, get, parse, scalar, walk
 from audit_consumers import Audit, EffectiveFiles
+row_spec=importlib.util.spec_from_file_location('decision_row_bounds',ROOT/'tools/decision_row_art/bounds.py')
+decision_rows=importlib.util.module_from_spec(row_spec);row_spec.loader.exec_module(decision_rows)
 
 
 def named(tree, name):
@@ -26,6 +29,7 @@ class DecisionUI(unittest.TestCase):
         cls.contract = json.loads(CONTRACT.read_text())
         cls.tree = parse((MOD / "interface/countrydecisionview.gui").read_text())
         cls.manifest = json.loads((CONTRACT.parent / "decisions_assets.json").read_text())
+        cls.row_report=decision_rows.inspect(MOD)
 
     def test_required_control_identities_and_keyboard_binding(self):
         # Compare each engine template, including repeated child names in their
@@ -153,6 +157,66 @@ class DecisionUI(unittest.TestCase):
                     self.assertEqual(row["frames"], len(frames))
 
 
+    def test_actual_row_consumers_fit_real_frame_scale_and_all_three_templates(self):
+        self.assertEqual([],self.row_report['problems'])
+        self.assertGreaterEqual(len(self.row_report['consumers']),549)
+        rows=self.row_report['consumers']
+        compact={row['sprite'] for row in rows if row['width']==26 and row['height']==29}
+        required={'GFX_decision_ac_anea_recovery','GFX_decision_ac_anea_relief','GFX_decision_ac_pol_institutions'}
+        required|={'GFX_decision_ac_sp_'+x for x in ('excalibur','v2','stonehenge','arkbird','megalith','rhongomyniad')}
+        required|={'GFX_decision_BLK_garrison_control_'+x for x in ('none','low','mid','big')}
+        self.assertTrue(required<=compact)
+        for row in rows:
+            self.assertEqual(set(decision_rows.TEMPLATES),{v['template'] for v in row['templates']})
+            self.assertEqual(0,row['width']%row['frames'])
+            for layout in row['templates']:
+                x,y,w,h=layout['icon_rect'];self.assertGreaterEqual(x,0);self.assertGreaterEqual(y,0)
+                self.assertLessEqual(x+w,layout['title_x']);self.assertLessEqual(y+h,layout['row_height'])
+
+    def test_every_belkan_dynamic_icon_alternative_and_default_is_measured(self):
+        for region in ('hugelse','hoffnung','friede'):
+            ident='BLK_expand_influence_in_the_'+region+'_garrison'
+            rows=[r for r in self.row_report['consumers'] if r['id']==ident]
+            expected={'GFX_decision_BLK_garrison_control_'+x for x in ('none','low','mid','big')}|{'GFX_decision_unknown'}
+            self.assertEqual(expected,{r['sprite'] for r in rows})
+            self.assertEqual(5,len(rows))
+
+    def test_compact_row_art_is_independent_and_large_art_is_byte_preserved(self):
+        baseline=json.loads((ROOT/'tools/decision_row_art/source/preserved_assets.json').read_text())
+        for path,expected in baseline.items():self.assertEqual(expected,hashlib.sha256((MOD/path).read_bytes()).hexdigest(),path)
+        before=json.loads((ROOT/'tools/decision_row_art/source/before_bindings.json').read_text())['bindings']
+        for row in before.values():self.assertEqual(row['texture_sha256'],hashlib.sha256((MOD/row['texture']).read_bytes()).hexdigest())
+        manifests=[json.loads((ROOT/p).read_text()) for p in ('tools/anea/assets.json','tools/institutions/assets.json','tools/decision_row_art/assets.json')]
+        compact=[row for entries in manifests for row in entries if row['width']==26 and row['height']==29]
+        self.assertEqual(13,len(compact));self.assertEqual(13,len({r['sha256'] for r in compact}))
+        for row in compact:
+            self.assertEqual(1,row['frames']);self.assertEqual(26,row['frame_width']);self.assertEqual((0,255),(row['alpha_min'],row['alpha_max']))
+            with Image.open(MOD/row['file']) as im:self.assertEqual((26,29),im.size)
+            if row.get('subject','').startswith('garrison_'):
+                self.assertEqual('gfx/flags/BLK.tga',row['flag']);self.assertEqual(row['flag_sha256'],hashlib.sha256((MOD/row['flag']).read_bytes()).hexdigest())
+        for script in ('build.py','render_review.py'):
+            result=subprocess.run([sys.executable,'-B',str(ROOT/'tools/decision_row_art'/script),'--check'],capture_output=True,text=True)
+            self.assertEqual(0,result.returncode,result.stdout+result.stderr)
+
+    def test_three_garrison_titles_descriptions_and_actual_action_tooltips_resolve(self):
+        import re
+        path=MOD/'localisation/english/ac_garrison_rows_l_english.yml';raw=path.read_bytes();self.assertTrue(raw.startswith(b'\xef\xbb\xbf'))
+        strings=dict(re.findall(r'^\s*(\w+):0\s+"([^"]+)"',raw.decode('utf-8-sig'),re.M))
+        spec=importlib.util.spec_from_file_location('garrison_title_metrics',ROOT/'tools/Test-FocusScreenRepairs.py')
+        metrics=importlib.util.module_from_spec(spec);spec.loader.exec_module(metrics);height,advances=metrics.font_metrics()
+        script=get(parse((MOD/'common/decisions/BLK_civil_war_decisions.txt').read_text()),'BLK_civil_war_cat')
+        for region in ('Hugelse','Hoffnung','Friede'):
+            ident='BLK_expand_influence_in_the_'+region.lower()+'_garrison';title=strings[ident];description=strings[ident+'_desc']
+            self.assertIn(region,title);self.assertIn(region,description);self.assertIn('25 political power',description);self.assertIn('14-day',description)
+            action=get(script,ident);self.assertEqual('25',get(action,'cost'));self.assertEqual('14',get(action,'days_remove'))
+            for template in decision_rows.TEMPLATES:
+                control=named([['row','=',named(self.tree,template)]],'name_text');width=int(get(control,'maxWidth'))
+                lines=metrics.wrapped_lines(title,width,advances)
+                self.assertLessEqual(len(lines)*height,int(get(control,'maxHeight')))
+                self.assertTrue(all(sum(advances.get(ord(c),8) for c in line)<=width for line in lines))
+        for ident in ('BLK_expand_influence_trigger_tt','BLK_expand_influence_nationalists_tt'):self.assertTrue(strings[ident])
+
+
 class EffectiveConsumers(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -166,6 +230,37 @@ class EffectiveConsumers(unittest.TestCase):
     def sprite(self, base, name, path="gfx/panel.dds", filename="interface/panel.gfx"):
         self.put(base, filename, 'spriteTypes = { spriteType = { name = "' + name + '" texturefile = "' + path + '" } }')
         self.put(base, path, "test texture payload")
+
+    def row_fixture(self,width,height,frames=1,scale=1,conditional=False):
+        gui=(MOD/'interface/countrydecisionview.gui').read_text(encoding='utf-8-sig')
+        if scale!=1:
+            # Mutate the real standard icon's scale, keeping the shipped row.
+            from script import render
+            tree=parse(gui);icon=named([['row','=',named(tree,'decision_item')]],'icon');icon.append(['scale','=',str(scale)]);gui=render(tree)
+        self.put(self.mod,'interface/countrydecisionview.gui',gui)
+        self.put(self.mod,'interface/rows.gfx','spriteTypes={spriteType={name="GFX_decision_test" texturefile="gfx/test.dds" noOfFrames='+str(frames)+'}}')
+        self.put(self.mod,'common/decisions/choices.txt','category={choice={icon=test}}')
+        target=self.mod/'gfx/test.dds';target.parent.mkdir(parents=True,exist_ok=True);Image.new('RGBA',(width,height),(93,208,223,255)).save(target)
+        if conditional:
+            self.put(self.mod,'common/decisions/choices.txt','category={choice={icon={key=test trigger={always=yes}} icon={key=oversized trigger={always=no}}}}')
+            self.put(self.mod,'interface/rows.gfx','spriteTypes={spriteType={name="GFX_decision_test" texturefile="gfx/test.dds"} spriteType={name="GFX_decision_oversized" texturefile="gfx/oversized.dds"} spriteType={name="GFX_decision_unknown" texturefile="gfx/test.dds"}}')
+            Image.new('RGBA',(100,100),(93,208,223,255)).save(self.mod/'gfx/oversized.dds')
+        return decision_rows.inspect(self.mod,self.engine)
+
+    def test_real_consumer_bounds_reject_oversized_dds_without_manifest_exemption(self):
+        report=self.row_fixture(100,100)
+        self.assertTrue(report['problems']);self.assertEqual({'decision_item','targeted_decision_item','timed_decision_item'},
+            {r['template'] for r in report['problems']})
+        self.assertTrue(any('title' in r['problem'] for r in report['problems']))
+
+    def test_real_frame_width_passes_but_gui_scale_can_make_the_same_frame_oversized(self):
+        self.assertEqual([],self.row_fixture(104,29,frames=4)['problems'])
+        report=self.row_fixture(104,29,frames=4,scale=2)
+        self.assertTrue(report['problems']);self.assertTrue(any(r.get('template')=='decision_item' for r in report['problems']))
+
+    def test_hidden_conditional_alternative_cannot_evade_actual_dds_bounds(self):
+        report=self.row_fixture(26,29,conditional=True)
+        self.assertTrue(report['problems']);self.assertEqual({'GFX_decision_oversized'},{r['sprite'] for r in report['problems']})
 
     def test_same_path_override_and_descriptor_isolation(self):
         self.sprite(self.engine, "GFX_old")
@@ -189,7 +284,7 @@ class EffectiveConsumers(unittest.TestCase):
     def test_shader_alias_uses_original_path_after_source_relative_probe(self):
         self.put(self.engine, "gfx/fx/buttonstate.shader", "engine shader service")
         resource = EffectiveFiles(self.mod, self.engine).resource(
-            "gfx/fx/buttonstate.lua", "interface/nationalfocusview.gfx")
+            "gfx/fx/buttonstate.lua", "interface/nationalfocusview.gfx", usage="program")
         self.assertEqual("engine_service", resource["status"])
         self.assertEqual("gfx/fx/buttonstate.shader", resource["path"])
         self.assertEqual("gfx/fx/buttonstate.lua", resource["legacy_alias"])

@@ -403,7 +403,7 @@ class Institutions(unittest.TestCase):
                 if row['width']==96:
                     self.assertEqual(0,image.getchannel('A').getpixel((0,0)));hashes.append(row['sha256'])
         self.assertEqual(36,len(hashes));self.assertEqual(36,len(set(hashes)))
-        self.assertEqual(101,len(assets))
+        self.assertEqual(102,len(assets))
 
     def test_foreign_owners_and_legacy_generic_contract_are_preserved(self):
         text=(MOD/'common/scripted_effects/ac_politics.txt').read_text()

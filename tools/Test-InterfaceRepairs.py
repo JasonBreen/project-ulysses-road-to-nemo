@@ -118,7 +118,7 @@ class Repairs(unittest.TestCase):
         from build_retired_mechanics import IDEAS,MISSIONS
         contracts=json.loads((SRC/'retired_event_contract.json').read_text())
         for row in contracts:
-            events=[n for k,_,n in read('events/'+row['file']) if k=='country_event']
+            events=[n for k,_,n in read('events/'+row['file']) if k==row.get('event_kind','country_event')]
             self.assertEqual(set(row['events']),{get(n,'id') for n in events})
             for node in events:
                 self.assertEqual('yes',get(node,'hidden'));self.assertEqual('yes',get(node,'is_triggered_only'))

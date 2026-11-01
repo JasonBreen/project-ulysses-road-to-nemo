@@ -161,7 +161,29 @@ class Definitions(Captured):
         text=(MOD/'common/technologies/ac_air_program.txt').read_text()
         self.assertNotIn('ac_wl_transport_support',text);self.assertNotIn('ac_sp_',text)
         baseline=json.loads((HERE/'preserved_sources.json').read_text())
-        for path,expected in baseline['sources'].items():self.assertEqual(expected,digest(ROOT/path),path)
+        updates=json.loads((HERE/'reviewed_owner_updates.json').read_text())['files']
+        for path,expected in baseline['sources'].items():
+            update=updates.get(path)
+            if update:self.assertEqual(expected,update['old_sha256'],path)
+            self.assertEqual(update['new_sha256']if update else expected,digest(ROOT/path),path)
+
+    def test_reviewed_release_owner_delta_matches_canonical_generator(self):
+        updates=json.loads((HERE/'reviewed_owner_updates.json').read_text());files=updates['files']
+        prefix='mod/2985041246/common/scripted_effects/'
+        self.assertEqual({prefix+'ac_economy_compat.txt',prefix+'ac_macro_effects.txt'},set(files))
+        expected={prefix+'ac_economy_compat.txt':({'ac_econ_initialize'},{'ac_econ_adopt_release_account','ac_econ_try_fund_release_project'}),
+                  prefix+'ac_macro_effects.txt':({'ac_macro_initialize'},set())}
+        for path,row in files.items():
+            self.assertEqual([],row['removed']);self.assertEqual(expected[path],(set(row['changed']),set(row['added'])))
+            current={key:value for key,_,value in read(ROOT/path)}
+            old=row['unchanged_function_ast_sha256'];reviewed=row['reviewed_function_ast_sha256']
+            self.assertEqual(set(current),set(old)|set(reviewed))
+            self.assertFalse(set(old)&set(reviewed))
+            for name,body in current.items():
+                actual=hashlib.sha256(json.dumps(body,separators=(',',':')).encode()).hexdigest()
+                self.assertEqual((reviewed if name in reviewed else old)[name],actual,(path,name))
+        result=subprocess.run([sys.executable,'-B','tools/economy_v2/build.py','--check'],cwd=ROOT,capture_output=True,text=True)
+        self.assertEqual(0,result.returncode,result.stdout+result.stderr)
 
     def test_ai_designs_require_research_current_components_dates_and_dlc(self):
         groups=read(MOD/'common/ai_equipment/ac_air_designs.txt')

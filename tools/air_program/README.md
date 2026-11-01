@@ -35,7 +35,19 @@ The first command is an explicit primary recapture, appropriate only after revie
 | `air_ui.py`, `build_ui.py` | Pure common-screen extension, engine-bound card templates and actual designer blueprint controls |
 | `build_art.py`, `source/art/*.svg` | Original geometric masters, DDS packaging, sprite aliases, dimensions, alpha and hashes |
 | `presentation.py`, `render_review.py` | Actual blueprint consumer bounds and page reconstruction from shipped controls, localization, DDS and BMFont glyph metrics |
-| `preserved_sources.json` | 1,107 inherited technical/history sources pinned to the reviewed parent; no wholesale recapture on mismatch |
+| `preserved_sources.json` | 1,107 original inherited source hashes, never recaptured; two separately reviewed financial-owner changes have exact version/function proofs in `reviewed_owner_updates.json` |
+
+The reviewed release owner changes only two captured financial files. Its old/new
+hashes and all unchanged function AST hashes are recorded separately; all other
+1,105 originals, including starting histories/equipment, remain pinned. See
+`docs/evidence/air-program/OWNER_COMPOSITION.md`. The current suite has 32 cases,
+including strict canonical-owner generation and this bounded composition proof.
+
+For an integration phase, `run_checks.py --pin-source --output
+docs/evidence/air-program/integration/final` rejects dirty inputs and fingerprints
+the tracked non-evidence source before/after execution. `--baseline` supplies the
+immutable payload to `--core`; it must point at its `map/` parent. Original
+component receipts remain separate from these strengthened-runner phases.
 
 ## Dated research and paid manufacture
 

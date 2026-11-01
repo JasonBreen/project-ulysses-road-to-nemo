@@ -120,6 +120,9 @@ if ($BaselineRoot) {
     }
 }
 
+$previousBytecodeSetting = $env:PYTHONDONTWRITEBYTECODE
+try {
+$env:PYTHONDONTWRITEBYTECODE = '1'
 $pathPython = Get-Command python -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
 $pythonHost = if ($pathPython) {
     $pathPython.Source
@@ -168,3 +171,6 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Output 'Static regression checks passed.'
 exit 0
+} finally {
+    $env:PYTHONDONTWRITEBYTECODE = $previousBytecodeSetting
+}

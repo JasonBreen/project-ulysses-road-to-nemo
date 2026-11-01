@@ -1,0 +1,22 @@
+name: Original Pacific squadron campaigns
+on:
+  push:
+  pull_request:
+jobs:
+  personal-campaigns:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned artwork dependency
+        run: python -m pip install Pillow==11.3.0
+      - name: Execute new stories with actual national and fiscal owners
+        run: python -B tools/squadrons/pacific/test_runtime.py
+      - name: Check new source and exact preserved original content
+        run: python -B tools/squadrons/pacific/test_source.py
+      - name: Preserve original six campaign runtime contracts
+        run: python -B tools/Test-SquadronStories.py
+      - name: Verify original and explicitly admitted Pacific source artwork
+        run: python -B tools/Test-SquadronArt.py

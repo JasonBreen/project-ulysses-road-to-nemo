@@ -1,0 +1,715 @@
+ac_sqp_initialize = {
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_enabled = yes NOT = { has_country_flag = ac_sqp_initialized }
+		}
+		set_country_flag = ac_sqp_initialized
+		set_variable = { ac_sqp_identity = THIS.id }
+		set_variable = { ac_sqp_chapter = 0 }
+		set_variable = { ac_sqp_pending_chapter = 0 }
+		set_variable = { ac_sqp_ending_kind = -1 }
+		set_variable = { ac_sqp_cohesion = 50 }
+		set_variable = { ac_sqp_credibility = 50 }
+		if = {
+			limit = {
+				date > 2020.12.31
+			}
+			set_country_flag = ac_sqp_closed
+			set_country_flag = ac_sqp_late_archive
+		}
+		else_if = {
+			limit = {
+				date > 1991.1.31
+			}
+			set_variable = { ac_sqp_chapter = 1 }
+			set_country_flag = ac_sqp_ose_missed_1
+		}
+	}
+}
+ac_sqp_ose_repair_pending = {
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 1 } check_variable = { ac_sqp_chapter = 0 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_1
+		set_variable = { ac_sqp_chapter = 1 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 2 } check_variable = { ac_sqp_chapter = 1 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_2
+		set_variable = { ac_sqp_chapter = 2 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 3 } check_variable = { ac_sqp_chapter = 2 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_3
+		set_variable = { ac_sqp_chapter = 3 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 4 } check_variable = { ac_sqp_chapter = 3 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_4
+		set_variable = { ac_sqp_chapter = 4 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 5 } check_variable = { ac_sqp_chapter = 4 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 1999.12.31
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_5
+		set_variable = { ac_sqp_chapter = 5 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 6 } check_variable = { ac_sqp_chapter = 5 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 2008.12.31
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_6
+		set_variable = { ac_sqp_chapter = 6 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 7 } check_variable = { ac_sqp_chapter = 6 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 2008.12.31
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_7
+		set_variable = { ac_sqp_chapter = 7 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 8 } check_variable = { ac_sqp_chapter = 7 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 2008.12.31
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_8
+		set_variable = { ac_sqp_chapter = 8 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 9 } check_variable = { ac_sqp_chapter = 8 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 2008.12.31
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_9
+		set_variable = { ac_sqp_chapter = 9 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 10 } check_variable = { ac_sqp_chapter = 9 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 2008.12.31
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_10
+		set_variable = { ac_sqp_chapter = 10 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 11 } check_variable = { ac_sqp_chapter = 10 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 2010.9.27
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_11
+		set_variable = { ac_sqp_chapter = 11 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 12 } check_variable = { ac_sqp_chapter = 11 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 2010.9.27
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_12
+		set_variable = { ac_sqp_chapter = 12 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 13 } check_variable = { ac_sqp_chapter = 12 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 2010.9.27
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_13
+		set_variable = { ac_sqp_chapter = 13 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 14 } check_variable = { ac_sqp_chapter = 13 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 2010.9.27
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_14
+		set_variable = { ac_sqp_chapter = 14 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 15 } check_variable = { ac_sqp_chapter = 14 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending } date > 2010.9.27
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_15
+		set_variable = { ac_sqp_chapter = 15 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 16 } check_variable = { ac_sqp_chapter = 15 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_16
+		set_variable = { ac_sqp_chapter = 16 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 17 } check_variable = { ac_sqp_chapter = 16 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_17
+		set_variable = { ac_sqp_chapter = 17 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 18 } check_variable = { ac_sqp_chapter = 17 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_18
+		set_variable = { ac_sqp_chapter = 18 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 19 } check_variable = { ac_sqp_chapter = 18 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_19
+		set_variable = { ac_sqp_chapter = 19 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_pending_chapter = 20 } check_variable = { ac_sqp_chapter = 19 } OR = {
+				NOT = { has_country_flag = ac_sqp_dispatch_pending }
+			}
+		}
+		set_country_flag = ac_sqp_ose_missed_20
+		set_variable = { ac_sqp_chapter = 20 }
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+	}
+}
+ac_sqp_ose_dispatch = {
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 0 } date > 1999.12.31
+		}
+		set_variable = { ac_sqp_chapter = 1 }
+		set_country_flag = ac_sqp_ose_missed_1
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 0 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 1991.1.1 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 1 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.701 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 1 } date > 1999.12.31
+		}
+		set_variable = { ac_sqp_chapter = 2 }
+		set_country_flag = ac_sqp_ose_missed_2
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 1 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 1991.3.15 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 2 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.702 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 2 } date > 1999.12.31
+		}
+		set_variable = { ac_sqp_chapter = 3 }
+		set_country_flag = ac_sqp_ose_missed_3
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 2 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 1992.8.20 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 3 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.703 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 3 } date > 1999.12.31
+		}
+		set_variable = { ac_sqp_chapter = 4 }
+		set_country_flag = ac_sqp_ose_missed_4
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 3 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 1994.4.7 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 4 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.704 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 4 } date > 1999.12.31
+		}
+		set_variable = { ac_sqp_chapter = 5 }
+		set_country_flag = ac_sqp_ose_missed_5
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 4 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 1997.11.12 } NOT = { date > 1999.12.31 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 5 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.705 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 5 } date > 2008.12.31
+		}
+		set_variable = { ac_sqp_chapter = 6 }
+		set_country_flag = ac_sqp_ose_missed_6
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 5 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2000.2.3 } NOT = { date > 2008.12.31 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 6 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.706 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 6 } date > 2008.12.31
+		}
+		set_variable = { ac_sqp_chapter = 7 }
+		set_country_flag = ac_sqp_ose_missed_7
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 6 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2002.8.9 } NOT = { date > 2008.12.31 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 7 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.707 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 7 } date > 2008.12.31
+		}
+		set_variable = { ac_sqp_chapter = 8 }
+		set_country_flag = ac_sqp_ose_missed_8
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 7 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2005.2.18 } NOT = { date > 2008.12.31 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 8 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.708 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 8 } date > 2008.12.31
+		}
+		set_variable = { ac_sqp_chapter = 9 }
+		set_country_flag = ac_sqp_ose_missed_9
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 8 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2006.11.6 } NOT = { date > 2008.12.31 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 9 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.709 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 9 } date > 2008.12.31
+		}
+		set_variable = { ac_sqp_chapter = 10 }
+		set_country_flag = ac_sqp_ose_missed_10
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 9 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2008.8.22 } NOT = { date > 2008.12.31 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 10 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.710 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 10 } date > 2010.9.27
+		}
+		set_variable = { ac_sqp_chapter = 11 }
+		set_country_flag = ac_sqp_ose_missed_11
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 10 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2009.1.16 } NOT = { date > 2010.9.27 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 11 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.711 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 11 } date > 2010.9.27
+		}
+		set_variable = { ac_sqp_chapter = 12 }
+		set_country_flag = ac_sqp_ose_missed_12
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 11 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2009.9.4 } NOT = { date > 2010.9.27 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 12 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.712 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 12 } date > 2010.9.27
+		}
+		set_variable = { ac_sqp_chapter = 13 }
+		set_country_flag = ac_sqp_ose_missed_13
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 12 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2010.2.11 } NOT = { date > 2010.9.27 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 13 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.713 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 13 } date > 2010.9.27
+		}
+		set_variable = { ac_sqp_chapter = 14 }
+		set_country_flag = ac_sqp_ose_missed_14
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 13 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2010.6.8 } NOT = { date > 2010.9.27 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 14 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.714 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 14 } date > 2010.9.27
+		}
+		set_variable = { ac_sqp_chapter = 15 }
+		set_country_flag = ac_sqp_ose_missed_15
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 14 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2010.8.10 } NOT = { date > 2010.9.27 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 15 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.715 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 15 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2010.10.2 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 16 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.716 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 16 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2011.6.14 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 17 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.717 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 17 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2014.5.21 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 18 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.718 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 18 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2017.9.7 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 19 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.719 days = 1 }
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_dispatch_pending } check_variable = { ac_sqp_chapter = 19 } NOT = { has_country_flag = ac_sqp_cooldown } NOT = { date < 2020.6.18 }
+		}
+		set_variable = { ac_sqp_pending_chapter = 20 }
+		set_country_flag = { flag = ac_sqp_dispatch_pending days = 30 }
+		country_event = { id = ac_sqp.720 days = 1 }
+	}
+}
+ac_sqp_ose_finish = {
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes check_variable = { ac_sqp_chapter = 20 } NOT = { has_country_flag = ac_sqp_ending_pending }
+		}
+		set_country_flag = { flag = ac_sqp_ending_pending days = 30 }
+		if = {
+			limit = {
+				NOT = { check_variable = { ac_sqp_cohesion < 65 } } NOT = { check_variable = { ac_sqp_credibility < 65 } }
+			}
+			set_variable = { ac_sqp_ending_kind = 0 }
+			country_event = { id = ac_sqp.790 days = 1 }
+		}
+		else_if = {
+			limit = {
+				check_variable = { ac_sqp_cohesion < 45 }
+			}
+			set_variable = { ac_sqp_ending_kind = 2 }
+			country_event = { id = ac_sqp.792 days = 1 }
+		}
+		else = {
+			set_variable = { ac_sqp_ending_kind = 1 }
+			country_event = { id = ac_sqp.791 days = 1 }
+		}
+	}
+}
+ac_sqp_tick = {
+	ac_sqp_initialize = yes
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes
+		}
+		ac_sqp_ose_repair_pending = yes
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE ac_sqp_active = yes NOT = { has_country_flag = ac_sqp_paused }
+		}
+		ac_sqp_ose_dispatch = yes
+	}
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE country_exists = OSE NOT = { has_country_flag = ac_sqp_paused }
+		}
+		ac_sqp_ose_finish = yes
+	}
+}
+ac_sqp_interrupt = {
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE has_country_flag = ac_sqp_initialized has_variable = ac_sqp_identity check_variable = { var = ac_sqp_identity value = THIS.id compare = equals } NOT = { has_country_flag = ac_sqp_closed }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 1 } check_variable = { ac_sqp_chapter = 0 }
+			}
+			set_country_flag = ac_sqp_ose_missed_1
+			set_variable = { ac_sqp_chapter = 1 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 2 } check_variable = { ac_sqp_chapter = 1 }
+			}
+			set_country_flag = ac_sqp_ose_missed_2
+			set_variable = { ac_sqp_chapter = 2 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 3 } check_variable = { ac_sqp_chapter = 2 }
+			}
+			set_country_flag = ac_sqp_ose_missed_3
+			set_variable = { ac_sqp_chapter = 3 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 4 } check_variable = { ac_sqp_chapter = 3 }
+			}
+			set_country_flag = ac_sqp_ose_missed_4
+			set_variable = { ac_sqp_chapter = 4 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 5 } check_variable = { ac_sqp_chapter = 4 }
+			}
+			set_country_flag = ac_sqp_ose_missed_5
+			set_variable = { ac_sqp_chapter = 5 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 6 } check_variable = { ac_sqp_chapter = 5 }
+			}
+			set_country_flag = ac_sqp_ose_missed_6
+			set_variable = { ac_sqp_chapter = 6 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 7 } check_variable = { ac_sqp_chapter = 6 }
+			}
+			set_country_flag = ac_sqp_ose_missed_7
+			set_variable = { ac_sqp_chapter = 7 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 8 } check_variable = { ac_sqp_chapter = 7 }
+			}
+			set_country_flag = ac_sqp_ose_missed_8
+			set_variable = { ac_sqp_chapter = 8 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 9 } check_variable = { ac_sqp_chapter = 8 }
+			}
+			set_country_flag = ac_sqp_ose_missed_9
+			set_variable = { ac_sqp_chapter = 9 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 10 } check_variable = { ac_sqp_chapter = 9 }
+			}
+			set_country_flag = ac_sqp_ose_missed_10
+			set_variable = { ac_sqp_chapter = 10 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 11 } check_variable = { ac_sqp_chapter = 10 }
+			}
+			set_country_flag = ac_sqp_ose_missed_11
+			set_variable = { ac_sqp_chapter = 11 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 12 } check_variable = { ac_sqp_chapter = 11 }
+			}
+			set_country_flag = ac_sqp_ose_missed_12
+			set_variable = { ac_sqp_chapter = 12 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 13 } check_variable = { ac_sqp_chapter = 12 }
+			}
+			set_country_flag = ac_sqp_ose_missed_13
+			set_variable = { ac_sqp_chapter = 13 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 14 } check_variable = { ac_sqp_chapter = 13 }
+			}
+			set_country_flag = ac_sqp_ose_missed_14
+			set_variable = { ac_sqp_chapter = 14 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 15 } check_variable = { ac_sqp_chapter = 14 }
+			}
+			set_country_flag = ac_sqp_ose_missed_15
+			set_variable = { ac_sqp_chapter = 15 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 16 } check_variable = { ac_sqp_chapter = 15 }
+			}
+			set_country_flag = ac_sqp_ose_missed_16
+			set_variable = { ac_sqp_chapter = 16 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 17 } check_variable = { ac_sqp_chapter = 16 }
+			}
+			set_country_flag = ac_sqp_ose_missed_17
+			set_variable = { ac_sqp_chapter = 17 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 18 } check_variable = { ac_sqp_chapter = 17 }
+			}
+			set_country_flag = ac_sqp_ose_missed_18
+			set_variable = { ac_sqp_chapter = 18 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 19 } check_variable = { ac_sqp_chapter = 18 }
+			}
+			set_country_flag = ac_sqp_ose_missed_19
+			set_variable = { ac_sqp_chapter = 19 }
+		}
+		if = {
+			limit = {
+				check_variable = { ac_sqp_pending_chapter = 20 } check_variable = { ac_sqp_chapter = 19 }
+			}
+			set_country_flag = ac_sqp_ose_missed_20
+			set_variable = { ac_sqp_chapter = 20 }
+		}
+		clr_country_flag = ac_sqp_dispatch_pending
+		set_variable = { ac_sqp_pending_chapter = 0 }
+		clr_country_flag = ac_sqp_ending_pending
+		set_country_flag = ac_sqp_interrupted
+	}
+}

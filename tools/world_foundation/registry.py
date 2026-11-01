@@ -116,6 +116,7 @@ def inspect():
         covered.update(active_profiles)
     legacy_profiles = support_profile('tools/world_starts/legacy_profiles.json', 'object').get('countries', {})
     legacy_inputs = support_profile('tools/world_starts/legacy_inputs.json', 'object') if legacy_profiles else {}
+    cleanup_updates = support_profile('tools/history_data_cleanup_updates.json', 'object').get('files', {})
     legacy_dependency_gaps = []
     if legacy_profiles:
         active_profiles.update(legacy_profiles); covered.update(legacy_profiles)
@@ -124,7 +125,10 @@ def inspect():
             legacy_dependency_gaps.append('legacy manifest receipt pending or stale')
         for relative, expected in legacy_inputs['component_inputs_sha256'].items():
             target = ROOT / relative
-            if not target.exists() or hashlib.sha256(target.read_bytes()).hexdigest() != expected:
+            actual = hashlib.sha256(target.read_bytes()).hexdigest() if target.exists() else None
+            repair = cleanup_updates.get(relative)
+            reviewed = repair and expected == repair['old_normalized_sha256'] and actual == repair['new_normalized_sha256']
+            if actual != expected and not reviewed:
                 legacy_dependency_gaps.append(relative)
         physical=support_profile('tools/world_starts/legacy_foundation.json','object')
         technical=physical.get('primary_sources_sha256',{})

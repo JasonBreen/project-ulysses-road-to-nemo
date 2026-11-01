@@ -4,7 +4,10 @@ from pathlib import Path
 HERE=Path(__file__).resolve().parent;sys.path.insert(0,str(HERE))
 from release_harness import World,parse,get
 STATES={'AWW':272,'REC':316,'SHI':426}
-NAMED={'AWW':('neutrality','aww_the_council'),'REC':('communism','REC_urs_gross'),'SHI':('neutrality','DEL_artur_clarkson')}
+CONTRACT=json.loads((HERE/'leader_contract.json').read_text())
+NAMED={tag:next((government,ident) for ident,governments in row['identities'].items() for government in governments)
+       for tag,row in CONTRACT['countries'].items()}
+def office(tag,ident):return ident if ident.endswith('_ac_government_office') else CONTRACT['countries'][tag]['fallback']
 def release(w,tag):
     w.release_action('on_startup');state=STATES[tag];w.states[state].owner=w.states[state].controller=tag;w.release_action('on_release_as_free',tag,'BLK')
     return w.countries[tag]
@@ -19,11 +22,14 @@ class Leaders(unittest.TestCase):
             w=World();w.countries[tag].government=government;w.ruling_leader[tag]='unimplemented_engine_default';release(w,tag)
             self.assertEqual(ident,w.ruling_leader[tag]);self.assertNotIn(tag+'_ac_release_government_office',w.character_ids[tag])
     def test_all_current_governments_get_existing_identity_or_a_readable_new_office_once(self):
-        taxonomy=json.loads((HERE/'leader_contract.json').read_text())['subtypes']
+        taxonomy=CONTRACT['subtypes']
         for tag,(original,ident) in NAMED.items():
             for government in taxonomy:
                 w=World();w.countries[tag].government=government;before=copy.deepcopy(w.character_roles[ident]);release(w,tag)
-                self.assertEqual(ident if government==original else tag+'_ac_release_government_office',w.ruling_leader[tag]);self.assertEqual(before,w.character_roles[ident])
+                self.assertEqual(ident if government==original else office(tag,ident),w.ruling_leader[tag])
+                if office(tag,ident)==ident:
+                    self.assertTrue(before<=w.character_roles[ident]);self.assertIn(government,w.character_roles[ident])
+                else:self.assertEqual(before,w.character_roles[ident])
                 first=copy.deepcopy(promotions(w));w.run('ac_release_'+tag+'_ensure_ruling_office',tag);w.run('ac_release_'+tag+'_physical_registration',tag);w.release_action('on_monthly',tag)
                 self.assertEqual(first,promotions(w))
     def test_adoption_and_rerelease_never_replace_saved_leader_or_duplicate_roles(self):
@@ -37,7 +43,7 @@ class Leaders(unittest.TestCase):
         self.assertEqual('FCU_robert_sinclair',w.ruling_leader['REC']);self.assertNotIn('REC_ac_release_government_office',w.character_ids['REC'])
     def test_shared_clarkson_identity_is_not_stolen_or_duplicated(self):
         w=World();w.character_ids['DEL'].add('DEL_artur_clarkson');w.ruling_leader['DEL']='DEL_artur_clarkson';release(w,'SHI')
-        self.assertIn('DEL_artur_clarkson',w.character_ids['DEL']);self.assertNotIn('DEL_artur_clarkson',w.character_ids['SHI']);self.assertEqual('SHI_ac_release_government_office',w.ruling_leader['SHI'])
+        self.assertIn('DEL_artur_clarkson',w.character_ids['DEL']);self.assertNotIn('DEL_artur_clarkson',w.character_ids['SHI']);self.assertEqual('SHI_ac_government_office',w.ruling_leader['SHI'])
         self.assertEqual('DEL_artur_clarkson',w.ruling_leader['DEL'])
     def test_office_roles_use_current_taxonomy_and_local_emblem_art_without_biographies(self):
         data=json.loads((HERE/'leader_contract.json').read_text());self.assertEqual(3,len(data['countries']));source=(HERE/'leader_contract.json').read_text()

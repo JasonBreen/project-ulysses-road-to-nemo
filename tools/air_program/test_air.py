@@ -162,10 +162,15 @@ class Definitions(Captured):
         self.assertNotIn('ac_wl_transport_support',text);self.assertNotIn('ac_sp_',text)
         baseline=json.loads((HERE/'preserved_sources.json').read_text())
         updates=json.loads((HERE/'reviewed_owner_updates.json').read_text())['files']
+        cleanup=json.loads((ROOT/'tools/history_data_cleanup_updates.json').read_text())['files']
         for path,expected in baseline['sources'].items():
             update=updates.get(path)
+            repair=cleanup.get(path)
+            self.assertFalse(update and repair,path)
             if update:self.assertEqual(expected,update['old_sha256'],path)
-            self.assertEqual(update['new_sha256']if update else expected,digest(ROOT/path),path)
+            if repair:self.assertEqual(expected,repair['old_normalized_sha256'],path)
+            current=update['new_sha256'] if update else repair['new_normalized_sha256'] if repair else expected
+            self.assertEqual(current,digest(ROOT/path),path)
 
     def test_reviewed_release_owner_delta_matches_canonical_generator(self):
         updates=json.loads((HERE/'reviewed_owner_updates.json').read_text());files=updates['files']

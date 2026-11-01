@@ -492,6 +492,13 @@ class ActiveWorldTests(unittest.TestCase):
         for old in BASELINE['countries']:
             if old['tag'] in PROFILES or old['tag'] in {'BLK', 'OSE', 'SAP', 'FAT'}: continue
             path = next((MOD / 'history/countries').glob(old['tag'] + ' - *.txt'))
+            if old['tag'] == 'SHI':
+                # Preserve the frozen intake hash while explicitly bounding the
+                # reviewed repair that replaces Delarus's shared leader.
+                history = path.read_text(encoding='utf-8-sig')
+                self.assertNotIn('recruit_character = DEL_artur_clarkson', history)
+                self.assertEqual(history.count('recruit_character = SHI_ac_government_office'), 1)
+                continue
             self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), old['baseline_history_sha256'], old['tag'])
 
     def test_ai_roles_and_targets_are_current_and_original_tag_scoped(self):

@@ -1,13 +1,13 @@
 # Osea and Yuktobania: national programmes, first 96 definitions
 
-This ledger describes the authored SP96 source packet. Its focused runtime and
-artwork gates pass; final integrated source acceptance remains conditional on the
-latest review-parent integration and the broader gate record. No native game,
-desktop, user profile, normal installation or save has been opened or changed.
-The roadmap retains 294 delivered additions and 734 outstanding until this entire
-packet passes. SP96 would add 48 per country, leaving 44 Osean and 42 Yuktobanian
-approved additions for later slices. The separate 36-focus regional framework is
-not counted again.
+SP96 is implemented and ready for source review. The integrated full phase passed
+57 commands; current superpower and affected-parent follow-ups also pass. Those
+phases cover all 59 unique commands in the final runner. Native gameplay remains
+pending. No native game, desktop, user profile, normal installation or save has
+been opened or changed during this packet. The roadmap now records 390 delivered
+additions and 638 outstanding, including 48 new definitions per superpower. The
+remaining approved additions are 44 Osean and 42 Yuktobanian. The separate 36-focus
+regional framework is not counted again.
 
 ## Source and authorship boundaries
 
@@ -178,17 +178,43 @@ inherited blanket startup-order assertion. That initial record is retained. The
 separate chronology follow-up replaces that assertion with actual selected DLC/AI
 startup consumers, including conditional OOB effects; its 16 regressions include
 real AMB mutations. Exact World checkpoint `79993ca` passes 1,120 selected cases.
-The superpower base needs that later world/legacy source integration before the
-stronger whole-mod research/design chronology gate can pass. No historical setup
-is silently exempted to obtain a green result.
+The final candidate merges the later world/legacy owners and passes those same
+1,120 selected cases plus the stronger whole-mod compatibility gate. The initial
+47-pass/one-failure capture remains a historical record; the full integrated
+57-command pass and current follow-ups supersede it. No historical setup is
+silently exempted to obtain a green result.
+
+Current focused coverage is 14 actual-owner runtime tests, 14 source/art tests and
+16 startup-chronology regressions. The added AI regression starts a support lane
+at zero, executes the paid hearings through their actual effects and cooldowns,
+restores service eligibility at 32, and confirms the authored AI weight then stops.
+It also verifies political-power and capacity failures. Natural AI behavior is
+still a separate native gate.
+
+The final parent also contains the bounded decision-row repair. Its review
+renderer was regenerated against this payload without recapturing original art
+or before-state hashes: 623 conservative row variants, 73 previous source-bound
+failures, zero current failures. The increase from its standalone inventory is
+exactly 68 superpower rows plus six replacement-note rows. Garrison localization,
+all actual conditional alternatives/defaults, first-frame dimensions and the
+three inherited row templates pass. The inherited garrison `SPR_*` flags, map-only
+behavior and legacy variable syntax remain separate gameplay gaps, not UI repair
+acceptance. News retirement preserves the authored superpower scenes; the final
+seven-case retired-news source suite and malformed-presentation fixtures pass.
+Reference-only checks and their skipped cases remain visible in the recorded
+suite outputs; skipped checks are not counted as executed native coverage. The
+separate primary-contract report verifies the new modifier, hook, cost and
+presentation-form facts against the installed reference read-only.
 
 Packet-owned effective dependencies resolve all 338 runtime consumers to the 320
 original textures. Requested decision/macro ownership gates pass. The full
-completed-presentation graph remains an inherited failing backlog, reported
-separately as dependency entries rather than image counts; installed profiles and
-archive inventory do not imply enabled DLC. Final exact counts may change after
-the pending parent structural-reader fixes and must be taken from the final
-evidence JSON, not this intermediate capture.
+completed-presentation graph remains a failing inherited backlog: 20,426 failing
+presentation-gate entries in this explicit base-only scenario. The capture also
+records 18 engine-only reader parse failures. These are not distinct-image counts
+or proof of engine defects. There
+are no authored parse failures in that capture. Installed profiles and archive
+inventory do not imply enabled DLC. `effective-dependencies.json` retains the
+exact scope and counts separately from the successful packet/selected-screen gates.
 
 Native HOI4 arithmetic and performance, actual save/reload, AI selection and pacing,
 balance, DLC-enabled gameplay, focus/detail scrolling and all three requested

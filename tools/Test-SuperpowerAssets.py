@@ -8,6 +8,7 @@ import re
 import subprocess
 import sys
 import unittest
+from unittest.mock import patch
 
 from PIL import Image
 
@@ -135,6 +136,19 @@ class SuperpowerAssets(unittest.TestCase):
         self.assertEqual({a['file']:a['sha256']for a in self.assets},{r['path']:r['sha256']for r in records})
         for row in records:
             self.assertEqual(('mod','authored'),(row['provider'],row['classification']));self.assertNotRegex(row['path'],r'[*?\[]');self.assertTrue(row['reason']);self.assertTrue(row['evidence'])
+
+    def test_actual_packager_outputs_are_identical_for_lf_and_crlf_font_metadata(self):
+        from superpowers import build_art
+        font=MOD/'gfx/fonts/ACBriefing16.fnt';original=Path.read_bytes
+        normalized=original(font).replace(b'\r\n',b'\n');outputs=[]
+        for encoded in(normalized,normalized.replace(b'\n',b'\r\n')):
+            def read(candidate,*args,**kwargs):
+                return encoded if candidate==font else original(candidate,*args,**kwargs)
+            with patch.object(Path,'read_bytes',read):outputs.append(build_art.outputs())
+        self.assertEqual(outputs[0],outputs[1])
+        manifest=json.loads(outputs[0][ROOT/'tools/superpowers/assets.json'])
+        self.assertEqual(hashlib.sha256(normalized).hexdigest(),manifest['source_hashes']['mod/2985041246/gfx/fonts/ACBriefing16.fnt'])
+        self.assertIn('raw byte hashes',manifest['source_hash_normalization'])
 
     def test_all_continuous_panels_clear_resolved_nodes_and_fit_the_expanded_canvas(self):
         spec=importlib.util.spec_from_file_location('snp_geometry',ROOT/'tools/Test-FocusScreenRepairs.py');geometry=importlib.util.module_from_spec(spec);spec.loader.exec_module(geometry)

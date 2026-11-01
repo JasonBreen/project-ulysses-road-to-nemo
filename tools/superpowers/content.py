@@ -1,8 +1,8 @@
-"""Individually authored SP96 source; not yet delivered or runtime validated.
+"""Individually authored SP96 definitions; source validated, native acceptance pending.
 
 Domestic procedures and all quantitative effects are provisional gameplay.
-The compiler must bind every node's purpose to real owned runtime before this
-source can count toward the approved national programme.
+The compiler binds each node to the national programme owner. Source/offline
+execution is recorded separately from native campaign acceptance.
 """
 from dataclasses import dataclass
 

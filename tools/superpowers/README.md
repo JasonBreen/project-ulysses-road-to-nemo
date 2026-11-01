@@ -3,7 +3,8 @@
 SP96 compiles **96 additional definitions**, forty-eight for Osea and forty-eight
 for Yuktobania. They are the first slice of the approved 92/90 additions; a later
 slice still owes 44/42. Definitions include mutually exclusive alternatives.
-The delivered ledger remains unchanged until this packet's broad gates pass.
+Its integrated source gates pass. The delivered ledger is now 390 additions with
+638 outstanding; native acceptance remains pending.
 
 Sixteen individual branches connect a register, one of two enduring policies,
 an operational protocol, an actual completed-service review and a standing
@@ -44,6 +45,11 @@ baseline of 50, for 20 PP and 2 institutional capacity. Both hearing routes shar
 30-day cooldown. They cannot purchase the earned 65-point mandate. They provide
 a useful recovery route after repeated interruption without manufacturing money,
 equipment or another commitment unit.
+
+The authored AI weights use paid hearings only when a lane is below the thirty
+support required for a service. They stop once that minimum is restored; the
+player may continue toward fifty. The same PP, capacity and cooldown guards apply.
+Natural AI selection and pacing still require native testing.
 
 ## Yuktobania: allocation and reservations
 

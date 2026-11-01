@@ -14,16 +14,34 @@ from reconstruction.validate import COMMANDS as PREVIOUS_COMMANDS
 NEW=[['python','-B','tools/Test-SuperpowerProgrammes.py'],['python','-B','tools/Test-SuperpowerAssets.py'],
      ['python','-B','tools/Test-StartupChronology.py']]
 EXTRA=[['python','-B',path]for path in(
- 'tools/Test-StrangerealProjects.py','tools/Test-ForceUpkeep.py','tools/Test-UstioContinuity.py',
+ 'tools/Test-PresentationSources.py','tools/Test-RetiredWorldNews.py','tools/Test-StrangerealProjects.py','tools/Test-ForceUpkeep.py','tools/Test-UstioContinuity.py',
  'tools/Test-NativeCompatibilityContracts.py','tools/test_economy.py',
  'tools/Test-CampaignReviewRegressions.py','tools/Test-CampaignContractMutations.py',
  'tools/anea/test_foundation.py','tools/Test-AneaCampaign.py','tools/Test-AneaSystems.py',
  'tools/Test-AneaArt.py','tools/Test-AneaPresentation.py','tools/Test-AneaIntegration.py')]
+WORLD=[['python','-B',*args]for args in(
+ ['tools/world_starts/test_world_starts.py'],
+ ['tools/world_starts/test_legacy_logistics.py','--require-integrated-owner'],
+ ['tools/world_legacy/test_legacy.py'],
+ ['tools/replacements/test_replacements.py'],
+ ['tools/world_starts/coverage.py','--check','--require-integrated-owner'],
+ ['tools/world_starts/compile.py','--check'],
+ ['tools/world_legacy/build.py','--check'],
+ ['tools/world_legacy/audit.py','--check'])]
 
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--report',type=Path);p.add_argument('--only-new',action='store_true');a=p.parse_args();results=[]
- for command in NEW if a.only_new else NEW+PREVIOUS_COMMANDS+EXTRA:
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--report',type=Path)
+ mode=p.add_mutually_exclusive_group();mode.add_argument('--only-new',action='store_true');mode.add_argument('--integration-only',action='store_true');a=p.parse_args();results=[]
+ integration={'tools/Test-ReconstructionAssets.py','tools/Test-FocusScreenRepairs.py','tools/Test-DecisionUI.py',
+  'tools/Test-EffectiveDependencies.py','tools/check_presentation_sources.py','tools/Test-PresentationSources.py',
+  'tools/Test-InterfaceRepairs.py','tools/Test-OverhaulRepairs.py','tools/validate_campaign.py',
+  'tools/world_foundation/registry.py','tools/overhaul/check_release_plan.py','tools/audit_visual_dependencies.py',
+  'tools/Test-UlyssesStatic.ps1','tools/anea/test_foundation.py','tools/Test-AneaCampaign.py','tools/Test-AneaSystems.py',
+  'tools/Test-AneaArt.py','tools/Test-AneaPresentation.py','tools/Test-AneaIntegration.py',
+  'tools/Test-UstioContinuity.py','tools/Test-RetiredWorldNews.py','tools/Test-Institutions.py','tools/Test-StrangerealProjects.py'}
+ commands=NEW if a.only_new else NEW[1:]+[c for c in PREVIOUS_COMMANDS+EXTRA if c[2]in integration or len(c)>3 and c[3]in integration]if a.integration_only else NEW+PREVIOUS_COMMANDS+EXTRA+WORLD
+ for command in commands:
   actual=[sys.executable,*command[1:]]if command[0]=='python'else command
   start=time.monotonic();r=subprocess.run(actual,cwd=ROOT,capture_output=True,text=True,encoding='utf-8',errors='replace')
   output=(r.stdout+r.stderr).replace(str(ROOT),'repo://').replace(str(ROOT).replace('\\','/'),'repo://')

@@ -219,6 +219,30 @@ class SuperpowerProgrammes(unittest.TestCase):
         self.assertEqual((50,50),(c.variables['ac_snp_yuk_civil'],c.variables['ac_snp_yuk_command']));self.assertNotIn('ac_snp_yuk_civil_standing',c.ideas)
         self.assertEqual(25,c.variables['ac_snp_yuk_civil_used'])
 
+    def test_ai_can_pay_to_restore_a_blocked_lane_and_stops_at_service_threshold(self):
+        decisions={ident:node for _,_,rows in parse((MOD/'common/decisions/ac_superpower_programmes.txt').read_text())for ident,_,node in rows}
+        def weight(w,c,node):
+            score=D(get(node,'base','1'))
+            for key,_,modifier in node:
+                if key=='modifier'and w.trigger([r for r in modifier if r[0]!='factor'],c):score*=D(get(modifier,'factor'))
+            return score
+        for index,lane in enumerate(('public','security')):
+            w,c=self.ready(SERVICES[index]);c.pp=D(500)
+            c.variables.update(ac_snp_ose_public=D(0),ac_snp_ose_security=D(0));w.run('ac_snp_reconcile',c.tag)
+            node=decisions['ac_snp_ose_'+lane+'_consultation'];ai=get(node,'ai_will_do')
+            self.assertFalse(w.trigger(w.triggers[SERVICES[index].id+'_can_start'],c))
+            for points in (0,8,16,24):
+                self.assertEqual(points,c.variables['ac_snp_ose_'+lane]);self.assertGreater(weight(w,c,ai),0)
+                self.assertTrue(w.trigger(get(node,'available'),c));before=copy.deepcopy(c)
+                w.execute(get(node,'complete_effect'),c)
+                self.assertEqual(before.pp-20,c.pp);self.assertEqual(before.variables['ac_pol_capacity']-2,c.variables['ac_pol_capacity'])
+                self.assertFalse(w.trigger(get(node,'available'),c));w.advance(30)
+            self.assertEqual(32,c.variables['ac_snp_ose_'+lane]);self.assertEqual(0,weight(w,c,ai))
+            self.assertTrue(w.trigger(w.triggers[SERVICES[index].id+'_can_start'],c))
+            self.assertTrue(w.trigger(get(node,'available'),c)) # Player can still repair toward fifty.
+            before=copy.deepcopy(c);c.pp=D(19);self.assertFalse(w.trigger(get(node,'available'),c))
+            c.pp=before.pp;c.variables['ac_pol_capacity']=D(1);self.assertFalse(w.trigger(get(node,'available'),c))
+
     def test_war_interrupts_ordinary_work_and_allows_reduced_domestic_continuity(self):
         for s in SERVICES:
             w,c=self.ready(s);w.run(s.id+'_start',c.tag);w.advance(37);paid=c.pp

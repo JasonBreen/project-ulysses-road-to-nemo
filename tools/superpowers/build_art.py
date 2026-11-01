@@ -39,6 +39,12 @@ def encode(image,kind='DDS'):
     buffer=io.BytesIO();image.save(buffer,format=kind);return buffer.getvalue()
 
 
+def source_digest(name):
+    data=(ROOT/name).read_bytes()
+    if Path(name).suffix in('.py','.fnt'):data=data.replace(b'\r\n',b'\n')
+    return hashlib.sha256(data).hexdigest()
+
+
 def frame(tag,settled=False):
     image=Image.new('RGBA',(192,192));d=ImageDraw.Draw(image);color=ACCENT[tag]
     shape=([(28,13),(164,13),(179,29),(173,147),(146,177),(46,177),(19,147),(13,29)]if tag=='OSE'else
@@ -137,9 +143,11 @@ def outputs():
         ident=bid(b);image=event_image(b.tag,*SUBJECTS[b.key]);source=f'tools/superpowers/source/events/{ident}.png';result[ROOT/source]=encode(image,'PNG')
         texture(f'gfx/AC_superpowers/events/{ident}.dds',image,'GFX_ac_snp_event_'+ident,'event illustration',b.tag,title=b.titles[0],master=source)
     result[MOD/'interface/ac_superpower_programmes.gfx']=('spriteTypes = {\n'+'\n'.join(sprites)+'\n}\n').encode()
-    sources=['tools/superpowers/build_art.py','tools/superpowers/mechanics.py','tools/superpowers/content.py','tools/superpowers/build.py','tools/superpowers/narrative.py','tools/reconstruction/build_art.py','tools/usea_expansion/build_art.py']
+    sources=['tools/superpowers/build_art.py','tools/superpowers/mechanics.py','tools/superpowers/content.py','tools/superpowers/build.py','tools/superpowers/narrative.py','tools/reconstruction/build_art.py','tools/usea_expansion/build_art.py',
+             'mod/2985041246/gfx/fonts/ACBriefing16.fnt','mod/2985041246/gfx/fonts/ACBriefing16.dds']
     manifest=dict(schema=1,pillow='11.3.0',source_layer='Original procedural artwork; abstract programme framing, not official national crests',
-        source_hashes={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest()for p in sources},
+        source_hashes={p:source_digest(p)for p in sources},
+        source_hash_normalization='Python and FNT text use CRLF-normalized LF bytes; DDS dependencies and delivered textures retain raw byte hashes.',
         framing='Navy/cyan national structures; branch subject pairs plus stage subject; restrained gold settlement highlight; transparent icon corners.',
         native='Not rendered in HOI4; native viewport and input acceptance pending',assets=assets)
     result[HERE/'assets.json']=(json.dumps(manifest,indent=2)+'\n').encode()

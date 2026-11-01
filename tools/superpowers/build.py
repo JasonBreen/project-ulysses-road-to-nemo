@@ -106,7 +106,11 @@ def output():
                  'Restore up to eight support points toward the ordinary baseline of fifty; commit twenty political power and two institutional-capacity points, with a shared thirty-day hearing cooldown.'if tag=='OSE'else
                  'Reassign ten existing allocation points while protecting active reservations. Commit the displayed political cost and two institutional-capacity points, with a shared thirty-day reassignment cooldown.')
         text(ident+'_effect_tt',summary)
-        body+=block('complete_effect','custom_effect_tooltip = '+ident+'_effect_tt\n'+block('hidden_effect',effect))+'ai_will_do = { base = '+('2'if fee else'0')+' }\n'
+        weight='base = '+('2'if fee else'0')
+        if tag=='OSE'and ident.endswith('_consultation'):
+            lane='public'if'_public_'in ident else'security'
+            weight='base = 2\n'+block('modifier','factor = 0\ncheck_variable = { ac_snp_ose_'+lane+' >= 30 }')
+        body+=block('complete_effect','custom_effect_tooltip = '+ident+'_effect_tt\n'+block('hidden_effect',effect))+block('ai_will_do',weight)
         decisions['ac_snp_'+tag.lower()+'_programmes'].append(block(ident,body))
 
     triggers['ac_snp_participant']='OR = { AND = { '+host('OSE')+' } AND = { '+host('YUK')+' } }'

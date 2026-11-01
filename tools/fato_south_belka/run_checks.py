@@ -46,6 +46,7 @@ def main():
         (a.output/(name+'.txt')).write_text(result.stdout+result.stderr,encoding='utf-8',newline='\n')
         rows.append(dict(name=name,command=[Path(sys.executable).name,'-B',*args],exit_code=result.returncode,seconds=round(time.monotonic()-start,2)))
         print(name+': '+('PASS'if result.returncode==0 else 'FAIL'),flush=True)
+        if result.returncode:print(result.stdout+result.stderr,flush=True)
     source_files=[p for p in HERE.glob('*.py')]+[ROOT/'mod/2985041246/common/scripted_effects/ac_fato_south_belka.txt']
     if source:verify(source,ROOT)
     report=dict(evidence='Static/offline source execution, not native engine, serialization or AI acceptance',native='paused',source_head=source['head']if source else None,source_inputs=source,checks=rows,

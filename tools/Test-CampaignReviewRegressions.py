@@ -71,6 +71,29 @@ def focus_blocks(text: str) -> dict[str, str]:
     return blocks
 
 
+def focus_tree_blocks(text: str) -> dict[str, str]:
+    blocks: dict[str, str] = {}
+    for match in re.finditer(r"(?m)^\s*focus_tree\s*=\s*\{", text):
+        opening = text.find("{", match.start())
+        depth = 0
+        end = None
+        for index in range(opening, len(text)):
+            if text[index] == "{":
+                depth += 1
+            elif text[index] == "}":
+                depth -= 1
+                if depth == 0:
+                    end = index + 1
+                    break
+        if end is None:
+            continue
+        block = text[match.start():end]
+        tree_id = re.search(r"(?m)^\s*id\s*=\s*([A-Za-z0-9_]+)", block)
+        if tree_id:
+            blocks[tree_id.group(1)] = block
+    return blocks
+
+
 def focus_positions(texts: list[str]) -> dict[str, tuple[int, int]]:
     blocks: dict[str, str] = {}
     for text in texts:
@@ -109,8 +132,10 @@ def main() -> int:
     world_events = read("events/ac_world_events.txt")
     continuation = read("events/ac_continuation.txt")
     focus = read("common/national_focus/ac_belkan_campaign.txt")
+    focus_trees = read("common/national_focus/BLK.txt")
     inherited_focus = read("common/national_focus/BLK_start.txt")
     decisions = read("common/decisions/ac_belkan_campaign.txt")
+    campaign_effects = read("common/scripted_effects/ac_campaign_effects.txt")
     continuation_decisions = read("common/decisions/ac_continuation_decisions.txt")
     categories = read("common/decisions/categories/ac_belkan_campaign.txt")
     weekly = read("common/on_actions/ac_on_weekly_on_action.txt")
@@ -130,6 +155,67 @@ def main() -> int:
     require("clr_global_flag = ac_postwar_wait_for_defeat_tree" in world_events, "world_event.2 does not clear deferral state")
 
     require("prerequisite = { focus = BLK_the_crisis_continues }" in focus, "campaign opening is not attached to the inherited prewar focus")
+
+    trees = focus_tree_blocks(focus_trees)
+    for tree_id in ("belka_start", "belka_dlp_pre_war"):
+        require(tree_id in trees, f"Belkan focus tree is missing: {tree_id}")
+        require(
+            trees[tree_id].count("shared_focus = ac_belkan_prewar_briefing") == 1,
+            f"{tree_id} does not expose exactly one stable campaign opening",
+        )
+
+    opening_focus = focus_blocks(focus)["ac_belkan_prewar_briefing"]
+    opening_ai = named_block(opening_focus, "ai_will_do")
+    opening_available = named_block(opening_focus, "available")
+    require("factor = 100" in opening_ai, "campaign opening lost its post-election AI priority")
+    require("factor = 0" in opening_ai, "campaign opening does not suppress pre-election AI selection")
+    require(
+        "NOT = { has_country_flag = BLK_DLP_won_flag }" in opening_ai,
+        "campaign opening AI suppression is not tied to the DLP election result",
+    )
+    require("date" not in opening_available, "campaign opening was calendar-locked for human players")
+
+    council = named_block(decisions, "ac_belkan_war_council")
+    council_complete = named_block(council, "complete_effect")
+    require("ac_commit_belkan_war_campaign = yes" in council_complete, "War Council bypasses the shared commitment effect")
+    require("set_country_flag = ac_campaign_war_committed" not in council_complete, "War Council duplicates the shared commitment flags")
+    require("country_event = { id = belka_dlp_war.1" not in council_complete, "War Council dispatches the start event directly")
+    require("ai_will_do = { base = 0 }" in council, "historical AI can still take the early War Council decision")
+    require(council.count("NOT = { has_country_flag = ac_campaign_war_committed }") >= 2, "War Council remains visible or available after commitment")
+
+    commit = named_block(campaign_effects, "ac_commit_belkan_war_campaign")
+    for token in (
+        "original_tag = BLK",
+        "NOT = { has_country_flag = ac_campaign_war_committed }",
+        "NOT = { has_country_flag = ac_postwar_ready }",
+        "NOT = { has_active_mission = BLK_war_start_timer_dec }",
+        "NOT = { has_global_flag = ac_campaign_arc_started }",
+        "NOT = { has_global_flag = belkan_war_is_happening }",
+        "NOT = { has_global_flag = belka_won_belkan_war }",
+        "NOT = { has_global_flag = belka_lost_belkan_war }",
+        "NOT = { has_global_flag = belka_won_belkan_war_wacht_am_wal }",
+        "set_country_flag = ac_campaign_war_committed",
+        "set_global_flag = ac_campaign_arc_started",
+        "set_variable = { ac_campaign_war_weeks = 0 }",
+        "country_event = { id = belka_dlp_war.1 days = 1 }",
+    ):
+        require(token in commit, f"shared Belkan commitment effect lost contract token: {token}")
+    require("set_global_flag = belka_won_belkan_war" not in commit, "shared commitment effect scripts a war winner")
+
+    legacy_start = event_block(world_events, "world_event.1")
+    require("BLK = { ac_commit_belkan_war_campaign = yes }" in legacy_start, "historical start bypasses the shared commitment effect")
+    require("country_event = { id = belka_dlp_war.1" not in legacy_start, "historical start still dispatches the Belkan start event directly")
+    for token in (
+        "news_event = { id = ac_news_event.10 days = 1 }",
+        "UST = { country_event = { id = ustio.18 }}",
+        "UST = {  country_event = { id = ustio.17 days = 2 }}",
+    ):
+        require(token in legacy_start, f"historical start lost an inherited notification: {token}")
+
+    require(
+        "later preparation is not granted retroactively" in localization,
+        "War Council localization does not warn players about natural early-war risk",
+    )
     require("NOT = { has_decision = ac_belkan_civilian_reserve }" in decisions, "logistics decision is not mutually exclusive")
     require("NOT = { has_decision = ac_belkan_logistics_requisition }" in decisions, "civilian-reserve decision is not mutually exclusive")
     for decision_id in ("ac_belkan_logistics_requisition", "ac_belkan_civilian_reserve"):

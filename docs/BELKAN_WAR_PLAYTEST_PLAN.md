@@ -1,15 +1,31 @@
 # Belkan War playtest plan
 
-Plan for the first native HOI4 1.19.3 run that confirms the Belkan War and
-postwar branches in `mod/2985041246` are reachable. It expands
+Plan for the first native HOI4 1.19.4 balance round that confirms the Belkan
+War and postwar branches in `mod/2985041246` are reachable. It expands
 [NATIVE_PLAYTEST_CHECKLIST.md](NATIVE_PLAYTEST_CHECKLIST.md) into concrete
 routes, conditions and console steps for issue #8.
 
-**Status: plan only.** Written from static reading of `main` at
-`2a55a2f` and refreshed against `main` at `3be18ca` after PRs #13, #14, #19
-and #20 merged. HOI4 was not launched. Per `AGENTS.md`, nothing here is run until
-the owner approves an isolated native test. Every result below starts as
-"not exercised".
+**Status: implementation and native acceptance in progress.** The 1 November
+2026 balance round is based on post-stack `main` at
+`797f941e04e51a884b2d26f14eb1b9d66d49ce95`. Its source changes and offline
+checks do not count as native results. The owner separately approved an isolated
+native run for this bounded Belkan War scope; every native result remains
+"not exercised" until it is entered in the dated acceptance ledger.
+
+## Source and gameplay status
+
+- The official ACES Chronicle entry for 25 March 1995 is the date reference for
+  the historical declaration window. It does not establish the mod's focus,
+  decision, stage, economy, or alternate-outcome mechanics.
+- The 1991 bookmark, inherited Belkan focus/event chains, countries, borders and
+  outcome flags are **mod provenance** from the preserved Project Ulysses work.
+- `ac_commit_belkan_war_campaign`, the shared focus exposure, AI timing, the
+  90–210 day duration target, the observer sample and all balance thresholds are
+  **provisional gameplay**. They are not statements of official history.
+- The affected contract IDs are `ac_belkan_prewar_briefing`,
+  `ac_belkan_war_council`, `ac_commit_belkan_war_campaign`, `world_event.1`,
+  `belka_dlp_war.1`, `BLK_war_start_timer_dec` and the existing campaign-stage
+  flags. No border, state, government biography, or official outcome is added.
 
 ## How to read this plan
 
@@ -23,19 +39,42 @@ the owner approves an isolated native test. Every result below starts as
 
 ### Tested head
 
-The steps below describe current `main`, which includes the PR #13 campaign
-fixes and the PR #14/#19 Ustio handoff. Test whichever head the owner
-approves, and record its SHA.
+The steps below describe the exact candidate recorded in the dated acceptance
+ledger. Every retained checkpoint must name its full source SHA, payload-manifest
+hash, copied-engine build and checksum. If the candidate changes, rerun affected
+native cases; do not transfer a result to a different commit by assumption.
+
+### Round-one matrix
+
+| Run | Controller | Economy | Required endpoint |
+| --- | --- | --- | --- |
+| `blk-full-historical` | Human Belka | Full/default | Historical automatic start, natural outcome and one complete postwar loop |
+| `blk-full-early` | Human Belka | Full/default | Earliest legal council start, natural outcome, then continue beyond the 1995 automatic window |
+| `ust-full` | Human Ustio | Full/default | Historical start, natural outcome and immediate postwar handoff |
+| `ose-full` | Human Osea | Full/default | Historical start, natural outcome and one complete coalition postwar loop |
+| `obs-full-01`–`03` | All-AI observer | Full/default | Three fresh 1991 games through outcome and 30 postwar days |
+| `obs-econ-off-01` | All-AI observer | Economy disabled | Fresh control game through outcome and 30 postwar days |
+
+The historical-start acceptance window is 15 March–15 April 1995, centered on
+25 March. Its natural war must last 90–210 days. At least two of the three
+full-economy observer runs should be coalition-favorable, but no event, date or
+AI condition may directly select the winner. A deliberately early human war is
+not required to fit the 90–210 day window; it must be harder only through the
+live forces, stockpiles, readiness, economy and diplomatic situation.
 
 ## 0. Preflight
 
-1. Copy the approved commit into an isolated HOI4 user directory or playset
-   that contains only this descriptor. Do not touch existing saves or settings.
-2. Record: HOI4 build (1.19.3 checksum), DLC list, mod commit SHA, game rules,
-   OS, and the playset contents.
-3. Delete or empty `error.log` before launching, because mod scripts are
-   parsed during load. Launch with `-debug` so the console and `error.log` are available, then
-   open the console (`` ` `` or `~`).
+1. Use a fresh physical copy of the installed engine and a disposable `userdir`
+   profile. Enable only the exact candidate payload. Do not use or rewrite the
+   normal launcher profile, saves, settings or logs.
+2. Record: copied-engine version/build/checksum, DLC list, full mod commit SHA,
+   payload-manifest hash, game rules, difficulty and launch arguments. Use
+   Regular difficulty, historical AI, text saves, local monthly autosaves and
+   the full currently owned DLC set for natural runs.
+3. Snapshot the normal profile's settings/log/save manifests before launch.
+   Start the copied executable with its explicit disposable `userdir`; track its
+   process ID and close only that process. Capture `error.log` and `game.log` as
+   deltas rather than deleting unrelated normal-profile logs.
 4. **Confirm the console commands.** Run `help` and check that each command in
    the [cheat sheet](#console-cheat-sheet) exists in this build. Note any
    substitute before using it. The command names below are standard HOI4
@@ -53,10 +92,12 @@ Name every save `pt<step>_<short label>` so failures can be replayed.
 ```
 1991 start (belka_start tree)
 ├─ Crisis chain: BLK_the_crisis_continues ... → belka.12 → (35 days) → belka.13 election
-│     └─ loads belka_dlp_pre_war (BLK_DLP tree, coup chain, Wacht counter)
+│     └─ loads belka_dlp_pre_war while retaining the same campaign shared-focus ID
 └─ Campaign opening: ac_belkan_prewar_briefing → 3 preparations → ac_belkan_ultimatum
       → ac_belkan_council_mandate (flag ac_campaign_prepared)
-         └─ decision ac_belkan_war_council → belka_dlp_war.1 → 60-day mission
+         └─ human decision ac_belkan_war_council ┐
+1995 automatic world_event.1 (AI or waiting human) ┴→ ac_commit_belkan_war_campaign
+                                                    → belka_dlp_war.1 → 60-day mission
 War start: BLK_war_start_timer_dec timeout → war on UST/OSE/SAP/FAT/GEB/REC,
            flag belkan_war_is_happening, belka_dlp_war.2 loads war tree
 ├─ Campaign stages (player decisions or AI weekly fallback)
@@ -84,12 +125,15 @@ Postwar: world_event.2 → ac_continuation.1 → one of four outcomes → ac_bel
   `ac_campaign_ultimatum_issued`, `ac_campaign_prepared` are set (check with
   `list_flags` while playing BLK; see the cheat sheet).
 - **Forced route.** `focus.autocomplete`, then click each focus in order.
-- **Risk to watch.** The crisis chain ends in `belka.13`, which loads
-  `belka_dlp_pre_war` with `keep_completed = yes`. Any campaign focus not yet
-  completed at that moment disappears with the old tree. Run this twice:
-  once finishing the campaign opening first (expected pass), once leaving it
-  half done when `belka.13` fires (record whether the council decision is
-  stranded). Save `pt1_prepared` once `ac_campaign_prepared` is set.
+- **Tree-swap regression.** The crisis chain ends in `belka.13`, which loads
+  `belka_dlp_pre_war` with `keep_completed = yes`. That tree now includes the
+  same `ac_belkan_prewar_briefing` shared-focus ID. Run the transition before
+  selecting it, while it is in progress, and after it is complete. The branch
+  must remain present without a duplicate focus or lost completion. Save
+  `pt1_prepared` once `ac_campaign_prepared` is set.
+- **AI/player split.** Before `BLK_DLP_won_flag`, AI weight for the opening is
+  suppressed to zero. Human availability has no calendar lock. After the DLP
+  election, AI priority returns.
 
 ### P2. DLP election and coup chain
 
@@ -118,24 +162,25 @@ Postwar: world_event.2 → ac_continuation.1 → one of four outcomes → ac_bel
      loads `belka_dlp_belkan_war`; mission `BLK_belkan_war_collapse` (player)
      or `BLK_belkan_war_collapse_AI` (AI) starts; global flag
      `belkan_war_is_happening` set; news `ac_news_event.7`.
-- **Forced route.** `pp 100`, then click the decision; or skip the decision
-  and run `event belka_dlp_war.1 BLK` (this skips the campaign flags, so it
-  tests W2 instead).
+- **Forced route.** `pp 100`, then click the decision. Directly firing
+  `belka_dlp_war.1` deliberately bypasses the shared contract and is useful only
+  as a downstream fixture; it is not a W1/W2 reachability pass.
 - Run it both before and after the DLP election (`pt1_prepared` and
   `pt2_dlp`). Main lets the council fire before the election; record what the
   war tree looks like under a non-DLP government.
 - Save `pt3_war_day1` the day the war starts.
 
-### W2. Legacy start (`world_event.1`)
+### W2. Historical automatic start (`world_event.1`)
 
 - **Natural route.** After 1995-01-15, the weekly on-action fires
   `world_event.1` for whoever controls state 358. If Belka exists and is
-  fascist, it fires `belka_dlp_war.1`.
-- **Check.** War starts the same way as W1, but `ac_campaign_war_committed` is
-  not set, so the stage decisions in section 4 never appear and the weekly
-  counter never runs. Record whether that is acceptable or a gap.
-- Also check that W1 followed later by `world_event.1` does not restart the
-  timer mission or fire `belka_dlp_war.1` twice.
+  fascist, it invokes `ac_commit_belkan_war_campaign` in BLK scope.
+- **Check.** It establishes the same commitment flag, global arc flag and
+  stage-relative week counter as W1, then starts `belka_dlp_war.1` exactly once.
+  The inherited news event and both Ustio events still fire.
+- Also check that an early W1 start followed later by `world_event.1` does not
+  restart the timer, reset `ac_campaign_war_weeks`, or fire
+  `belka_dlp_war.1` twice. Repeat after a completed settlement and save/reload.
 - **Forced route.** `event world_event.1 BLK` from `pt2_dlp`.
 
 ## 4. War stages
@@ -158,9 +203,10 @@ All from `pt3_war_day1` with Belka played by a human.
 
 ### W4. AI fallback
 
-- Run Belka as AI from `pt1_prepared`: take `ac_belkan_war_council` first
-  (the weekly fallback needs `ac_campaign_war_committed`, which the legacy
-  start in W2 never sets), then switch away (`observe`, or `tag OSE`) before the 60-day `BLK_war_start_timer_dec` mission expires.
+- Run Belka as AI from a fresh historical game. The AI War Council weight is
+  zero; the automatic W2 route must establish `ac_campaign_war_committed`.
+  Remain in observer mode before the 60-day `BLK_war_start_timer_dec` mission
+  expires.
   Its timeout checks `is_ai` once: it schedules the AI-only events below and
   picks the player or AI collapse mission. A save made after the war starts
   under human control keeps the player mission and lacks the AI events, so
@@ -292,13 +338,14 @@ that forced run as a postwar pass.
 | --- | --- | --- | --- |
 | 1 | `belka_dlp_war.103` has no caller, so the defeat outcome flag is never set naturally | `events/Belka.txt`, `events/ac_continuation.txt` | O5, defeat postwar branch |
 | 2 | Fixed by PR #13: the nuclear ending used to fire `world_event.2` right after loading the lost tree; confirm the lost tree now survives | `events/Belka.txt` (`belka_dlp_war.101`) | O3 |
-| 3 | Uncompleted campaign opening focuses vanish when `belka.13` loads the DLP tree | `events/Belka.txt` (`belka.13`), `common/national_focus/BLK.txt` | P1 |
-| 4 | The legacy war start (`world_event.1`, 1995+) skips the campaign stage decisions | `events/ac_world_events.txt`, `common/decisions/ac_belkan_campaign.txt` | W2 |
+| 3 | Repaired statically in this round: `belka_dlp_pre_war` now exposes the same campaign shared-focus ID; selected/in-progress behavior still requires native observation | `common/national_focus/BLK.txt`, `ac_belkan_campaign.txt` | P1 |
+| 4 | Repaired statically in this round: War Council and the 1995 route use one guarded `ac_commit_belkan_war_campaign` effect; duplicate prevention and stage availability still require native observation | `events/ac_world_events.txt`, `common/decisions/ac_belkan_campaign.txt`, `common/scripted_effects/ac_campaign_effects.txt` | W1/W2 |
 | 5 | Wacht am Wal failures (`belka_wacht_am_wal.4` and `.7`) have no scripted ending | `events/Belka.txt` | O4 |
 | 6 | `world_event.2` is `fire_only_once` and `ac_continuation.1` is blocked once the contract starts, so only the first ending reaches the postwar tree | `events/ac_world_events.txt`, `events/ac_continuation.txt` | all outcomes |
 
-These are read from the scripts, not observed in game. Each needs a native
-result before anyone changes the code.
+These findings remain source observations until the dated native ledger records
+the corresponding exact-head result. Rows 3 and 4 describe implemented repairs,
+not an assertion that the engine accepted or reached them.
 
 ## 7. Postwar (run once per outcome reached)
 
@@ -336,11 +383,13 @@ From each handoff save (`pt5_o1_handoff`, O3, `pt5_o4_handoff`, O5, O6):
 5. Save and reload after the handoff and after the legacy focus. Flags, ideas
    and focus progress persist.
 
-## 8. Long run and AI observer
+## 8. Historical run and AI observer
 
-- From `pt0_start`, `observe` with all AI to 1992-01-01 and 1995-01-01. Record
-  whether AI Belka takes the campaign opening, starts the war, which outcome
-  it reaches, and whether the postwar tree loads.
+- From a fresh 1991 start, run all three full-economy observer games and the one
+  disabled-economy control in the matrix above. Record whether AI Belka waits
+  for the DLP election, starts the countdown in the historical window, which
+  stages it takes, the declaration/outcome dates, which side prevails, and
+  whether the postwar tree loads.
 - At each checkpoint: save, reload, scan `error.log` and `game.log`, note
   stalled focuses, supply, and diplomacy.
 

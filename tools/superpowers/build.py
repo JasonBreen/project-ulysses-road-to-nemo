@@ -183,7 +183,8 @@ def output():
         release='remove_ideas = '+ident+'_spirit\nremove_ideas = '+ident+'_domestic_spirit\nclr_country_flag = '+ident+'_active\n'
         support_reward=''
         if tag=='OSE':support_reward='add_to_variable = { '+support+' = 3 }\nadd_to_variable = { ac_snp_ose_'+('security'if s.index==0 else'public')+' = 1 }\n'
-        finish=('set_country_flag = '+ident+'_completed\nset_country_flag = '+bid(s.branch)+'_service_completed\nadd_to_variable = { ac_snp_completed = 1 }\nset_variable = { '+prefix+'_elapsed = 90 }\n'+release+
+        finish=('set_country_flag = '+ident+'_completed\nset_country_flag = '+bid(s.branch)+'_service_completed\nadd_to_variable = { ac_snp_completed = 1 }\nset_variable = { '+prefix+'_elapsed = 90 }\n'+
+            'set_variable = { '+prefix+'_last_completed_started = '+prefix+'_started }\nset_variable = { '+prefix+'_last_completed_on = date }\nset_variable = { '+prefix+'_last_completed_identity = THIS.id }\n'+release+
             guard('has_country_flag = '+ident+'_wartime','set_country_flag = '+bid(s.branch)+'_last_domestic')+block('else','clr_country_flag = '+bid(s.branch)+'_last_domestic')+
             'clr_country_flag = '+ident+'_wartime\nset_country_flag = { flag = '+ident+'_cooldown days = 90 }\n'+support_reward+'ac_snp_reconcile = yes\n')
         effects[ident+'_finish']=ident+'_progress = yes\n'+guard(ident+'_finishable = yes check_variable = { '+prefix+'_elapsed >= 90 }',finish)

@@ -198,7 +198,23 @@ class Land(unittest.TestCase):
 
     def test_existing_source_contract_and_61_start_coverage_stay_unchanged(self):
         baseline=json.loads((HERE/'preserved_sources.json').read_text())
-        for name,expected in baseline['protected_sources_sha256'].items():self.assertEqual(expected,sha(ROOT/name),name)
+        repairs=baseline.get('reviewed_source_repairs',{})
+        self.assertEqual({'mod/2985041246/history/units/UST_band_of_broders_units.txt'},set(repairs))
+        for name,expected in baseline['protected_sources_sha256'].items():
+            if name not in repairs:
+                self.assertEqual(expected,sha(ROOT/name),name)
+                continue
+            repair=repairs[name]
+            self.assertEqual(expected,repair['old_normalized_sha256'])
+            self.assertEqual(repair['new_normalized_sha256'],sha(ROOT/name),name)
+            data=(ROOT/name).read_bytes().replace(b'\r\n',b'\n')
+            self.assertTrue(data.endswith(b'\n}\n'))
+            self.assertEqual(expected,hashlib.sha256(data[:-3]).hexdigest())
+            with self.assertRaisesRegex(ValueError,'Unclosed block'):parse(data[:-3].decode('utf-8-sig'))
+            self.assertTrue(parse(data.decode('utf-8-sig')))
+            evidence=json.loads((ROOT/repair['evidence']).read_text())
+            for field in ('old_normalized_sha256','new_normalized_sha256'):
+                self.assertEqual(repair[field],evidence[field])
         self.assertEqual({'active_countries':61,'base_cases':244},baseline['starting_coverage'])
         current=json.loads((ROOT/'tools/world_starts/coverage.json').read_text())
         self.assertEqual(61,current['active_countries']);self.assertEqual(244,current['base_BBA_MTG_selected_cases'])

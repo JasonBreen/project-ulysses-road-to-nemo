@@ -1,29 +1,19 @@
 """Fail closed on protected entry operations, geography and primary hooks."""
 import argparse,hashlib,json,sys
-from collections import Counter
 from pathlib import Path
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246'
 sys.path.insert(0,str(ROOT/'tools/usea_expansion'))
 from script import parse,get
-PROTECTED={'transfer_state','add_state_core','inherit_technology','load_oob','transfer_units_fraction','declare_war_on','change_tag_from','set_province_controller','set_politics','set_popularities','white_peace','end_puppet','annex_country','load_focus_tree','mark_focus_tree_layout_dirty','add_to_faction','add_ideas','remove_ideas','news_event','country_event','add_popularity','add_war_support','add_stability'}
-MODIFIED={'awwnb.1','awwnb.2','recta.1','south_belka.2','south_belka.3','south_belka.4','belka_dlp_war.101','belka_dlp_war.103'}
+from event_contract import validate_file,MODIFIED
 def walk(nodes):
     for key,_,value in nodes:
         yield key,value
         if isinstance(value,list):yield from walk(value)
 def events(text):return {get(body,'id'):body for key,_,body in parse(text) if key=='country_event'}
-def native_operations(body):return Counter((key,json.dumps(value,ensure_ascii=False)) for key,value in walk(body) if key in PROTECTED)
 def validate_event_operations(candidates=None):
     source=json.loads((HERE/'event_inputs.json').read_text())['files']
     for relative,before in source.items():
-        old=events(before);new=events(candidates[relative] if candidates and relative in candidates else (MOD/relative).read_text(encoding='utf-8-sig'))
-        if old.keys()!=new.keys():raise ValueError('Established event IDs changed: '+relative)
-        for ident,body in old.items():
-            if ident in MODIFIED:
-                if native_operations(body)!=native_operations(new[ident]):raise ValueError('Protected native entry operation changed: '+ident)
-                for key in ('title','desc','picture','hidden','is_triggered_only','fire_only_once'):
-                    if get(body,key)!=get(new[ident],key):raise ValueError('Established event presentation/dispatch changed: '+ident+':'+key)
-            elif body!=new[ident]:raise ValueError('Unrelated event changed: '+ident)
+        validate_file(before,candidates[relative]if candidates and relative in candidates else (MOD/relative).read_text(encoding='utf-8-sig'),relative)
 
 def primary(reference):
     reference=Path(reference);paths=('documentation/effects_documentation.md','documentation/triggers_documentation.md','common/on_actions/_documentation.md','common/on_actions/00_on_actions.txt','common/on_actions/12_wuw_on_actions.txt')

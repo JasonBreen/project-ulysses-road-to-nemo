@@ -13,13 +13,21 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / 'tools'), str(ROOT / 'tools/usea_expansion')]
-from port_1_19.pdx import strip_comments_mask
+from overhaul.text_structure import validate_structure
 from script import parse
 from research_fonts.policy import BINDINGS
 
 
 def migrate(source: str) -> str:
-    mask = strip_comments_mask(source)
+    validate_structure(source)
+    # Retain quote delimiters so assignment whitespace stops before its value.
+    # Escaped quotes inside display strings are covered by the whole token.
+    def hidden(match):
+        token=match[0]
+        if token.startswith('"'):
+            return '"'+''.join('\n'if char=='\n'else' 'for char in token[1:-1])+'"'
+        return ' '*len(token)
+    mask=re.sub(r'"(?:\\.|[^"\\])*"|#[^\r\n]*',hidden,source)
     replacements = []
     for match in re.finditer(r'\b(?:font|buttonFont)\s*=\s*', mask, re.I):
         token = re.match(r'"(?:\\.|[^"\\])*"|[^\s{}#]+', source[match.end():])

@@ -12,7 +12,14 @@ import sys
 
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246'
 sys.path.insert(0,str(ROOT/'tools/usea_expansion'))
-from script import parse,get,walk
+from script import parse,get
+
+
+def walk(nodes):
+    """Visit scalar effects as well as blocks; script.walk visits blocks only."""
+    for key,_,value in nodes:
+        yield key,value
+        if isinstance(value,list):yield from walk(value)
 
 OWNERS={'AWW':('awwnb.1','awwnb.2'),'REC':('recta.1',),'SBK':('south_belka.2','south_belka.3','south_belka.4')}
 

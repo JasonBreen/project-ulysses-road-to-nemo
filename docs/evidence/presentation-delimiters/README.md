@@ -22,6 +22,13 @@ existence and effective-provider checks. Its current result is 81 parsed files,
 authored-source failures. It uses the audit reader, so unsupported engine syntax
 and native acceptance remain separate concerns.
 
+The PR review exposed permissive-token false greens in that reader. The shared
+structural preflight now rejects lone/unmatched braces and unterminated quotes
+before AST parsing. Three regression tests keep all required group/audio
+bindings intact while adding malformed extra files, verify escaped strings and
+comments remain valid, and check that the command exits unsuccessfully on bad
+source. These checks do not claim full engine-schema coverage.
+
 Reproduction from the repository root:
 
 ```powershell

@@ -69,7 +69,7 @@ class SuperpowerAssets(unittest.TestCase):
         self.assertEqual(320,len(self.assets));self.assertEqual(Counter({'focus':96,'idea':136,'decision row':68,'category':2,'event illustration':18}),Counter(a['role']for a in self.assets))
         sprites={get(v,'name').strip('"'):v for k,_,v in get(parse((MOD/'interface/ac_superpower_programmes.gfx').read_text()),'spriteTypes')}
         self.assertEqual(416,len(sprites));self.assertEqual(96,len({a['sha256']for a in self.assets if a['role']=='focus'}))
-        dims={'focus':(96,96),'idea':(75,75),'decision row':(26,29),'category':(100,100),'event illustration':(640,260)}
+        dims={'focus':(96,96),'idea':(75,75),'decision row':(26,29),'category':(100,100),'event illustration':(210,176)}
         for a in self.assets:
             path=MOD/a['file'];image=Image.open(path).convert('RGBA');self.assertEqual(dims[a['role']],image.size)
             self.assertEqual((1,image.width),(a['frames'],a['frame_width']));self.assertEqual(a['sha256'],hashlib.sha256(path.read_bytes()).hexdigest())

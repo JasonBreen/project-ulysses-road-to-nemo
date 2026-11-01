@@ -95,7 +95,7 @@ class ReconstructionAssets(unittest.TestCase):
         self.assertEqual(198,len(self.assets));self.assertEqual(Counter({'focus':60,'idea':96,'decision row':24,'category':4,'event illustration':14}),Counter(a['role']for a in self.assets))
         sprites={get(v,'name').strip('"'):v for k,_,v in get(parse((MOD/'interface/ac_reconstruction.gfx').read_text()),'spriteTypes')}
         self.assertEqual(258,len(sprites));self.assertEqual(60,len({a['sha256']for a in self.assets if a['role']=='focus'}))
-        dimensions={'focus':(96,96),'idea':(75,75),'decision row':(26,29),'category':(100,100),'event illustration':(640,260)}
+        dimensions={'focus':(96,96),'idea':(75,75),'decision row':(26,29),'category':(100,100),'event illustration':(210,176)}
         for a in self.assets:
             path=MOD/a['file'];image=Image.open(path).convert('RGBA')
             self.assertEqual(dimensions[a['role']],image.size);self.assertEqual(1,a['frames']);self.assertEqual(image.width,a['frame_width'])

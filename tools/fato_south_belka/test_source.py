@@ -112,7 +112,7 @@ class SourceAndArt(unittest.TestCase):
                 self.assertEqual((r['width'],r['height']),im.size);self.assertEqual(1,r['frames']);self.assertEqual(im.width,r['frame_width']);self.assertEqual((r['alpha_min'],r['alpha_max']),im.getchannel('A').getextrema())
                 if r['role']=='compact decision-row artwork':self.assertEqual((26,29),im.size);self.assertEqual(0,im.getpixel((0,0))[3])
                 elif r['role']=='category artwork':self.assertEqual((100,100),im.size)
-                elif r['role']=='original narrative illustration':self.assertEqual((450,150),im.size);self.assertEqual((255,255),im.getchannel('A').getextrema())
+                elif r['role']=='original narrative illustration':self.assertEqual((210,176),im.size);self.assertEqual((255,255),im.getchannel('A').getextrema())
         for row in FOCUSES:
             self.assertIn('GFX_ac_fsb_focus_'+row.id,sprites);self.assertIn('GFX_ac_fsb_focus_'+row.id+'_shine',sprites)
         for tag,items in build.DECISIONS.items():

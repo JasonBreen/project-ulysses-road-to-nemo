@@ -23,6 +23,8 @@ sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'tools/usea_expansion')]
 from reconstruction.content import BRANCHES,COUNTRY_NAMES,focus_id,branch_id
 from reconstruction.build import outputs as content_outputs
 from usea_expansion.script import parse,get
+from event_picture_fit.fit import contain as fit_event
+from event_picture_fit.bitmap import BitmapFont
 
 LIBRARY=ROOT/'tools/usea_expansion/build_art.py'
 spec=importlib.util.spec_from_file_location('reconstruction_original_glyphs',LIBRARY)
@@ -81,31 +83,6 @@ def event_image(tag,subjects):
     return image
 
 
-class BitmapFont:
-    """Shipped glyph pixels keep galleries independent of FreeType versions."""
-    def __init__(self):
-        self.atlas=Image.open(MOD/'gfx/fonts/ACBriefing16.dds').convert('RGBA')
-        raw=(MOD/'gfx/fonts/ACBriefing16.fnt').read_text();self.glyphs={}
-        for line in raw.splitlines():
-            if not line.startswith('char id='):continue
-            row={k:int(v)for k,v in re.findall(r'(\w+)=(-?\d+)',line)};self.glyphs[row['id']]=row
-        self.height=int(re.search(r'common lineHeight=(\d+)',raw)[1])
-    def width(self,text):return sum(self.glyphs.get(ord(c),self.glyphs[63])['xadvance']for c in text)
-    def draw(self,image,text,xy,width):
-        lines=[];line=''
-        for word in text.split():
-            candidate=(line+' '+word).strip()
-            if line and self.width(candidate)>width:lines.append(line);line=word
-            else:line=candidate
-        if line:lines.append(line)
-        for n,line in enumerate(lines):
-            x=xy[0]
-            for c in line:
-                g=self.glyphs.get(ord(c),self.glyphs[63]);sprite=self.atlas.crop((g['x'],g['y'],g['x']+g['width'],g['y']+g['height']))
-                image.alpha_composite(sprite,(x+g['xoffset'],xy[1]+n*self.height+g['yoffset']));x+=g['xadvance']
-        return len(lines)*self.height
-
-
 def outputs():
     if PIL.__version__!='11.3.0':raise SystemExit('Reproducible art requires Pillow11.3.0; current '+PIL.__version__)
     result={};assets=[];sprites=[];previews=[];used=Counter();by_branch={branch_id(b):b for b in BRANCHES}
@@ -157,15 +134,19 @@ def outputs():
     for tag in COUNTRY_NAMES:
         image=event_image(tag,THEMES[tag]);ident=tag.lower()+'_national'
         result[HERE/'source/events'/f'{ident}.png']=encoded(image,'PNG')
-        texture(f'gfx/AC_reconstruction/events/{ident}.dds',image,'GFX_ac_rc_event_'+ident,'event illustration',tag,
-                title=COUNTRY_NAMES[tag]+': National Review',master=f'tools/reconstruction/source/events/{ident}.png')
+        texture(f'gfx/AC_reconstruction/events/{ident}.dds',fit_event(image),'GFX_ac_rc_event_'+ident,'event illustration',tag,
+                title=COUNTRY_NAMES[tag]+': National Review',master=f'tools/reconstruction/source/events/{ident}.png',
+                transform='Full-source Lanczos contain to210x176; opaque navy padding; no crop or content edit')
     for b in BRANCHES:
         ident=branch_id(b);image=event_image(b.tag,b.subjects[0]);result[HERE/'source/events'/f'{ident}.png']=encoded(image,'PNG')
-        texture(f'gfx/AC_reconstruction/events/{ident}.dds',image,'GFX_ac_rc_event_'+ident,'event illustration',b.tag,
-                title=b.titles[0],master=f'tools/reconstruction/source/events/{ident}.png')
+        texture(f'gfx/AC_reconstruction/events/{ident}.dds',fit_event(image),'GFX_ac_rc_event_'+ident,'event illustration',b.tag,
+                title=b.titles[0],master=f'tools/reconstruction/source/events/{ident}.png',
+                transform='Full-source Lanczos contain to210x176; opaque navy padding; no crop or content edit')
     result[MOD/'interface/ac_reconstruction.gfx']=('spriteTypes = {\n'+'\n'.join(sprites)+'\n}\n').encode()
     manifest=dict(schema=1,pillow='11.3.0',source_layer='original provisional artwork; no engine/DLC/remote pixels or baked text',
-        vector_sources=['tools/reconstruction/build_art.py','tools/reconstruction/content.py','tools/usea_expansion/build_art.py'],
+        vector_sources=['tools/reconstruction/build_art.py','tools/reconstruction/content.py','tools/usea_expansion/build_art.py',
+                        'tools/event_picture_fit/fit.py','tools/event_picture_fit/bitmap.py'],
+        event_packaging_helper_sha256=hashlib.sha256((ROOT/'tools/event_picture_fit/fit.py').read_bytes().replace(b'\r\n',b'\n')).hexdigest(),
         glyph_library_sha256=hashlib.sha256(LIBRARY.read_bytes()).hexdigest(),
         framing='Shared navy/cyan family, country-specific structural frames and subject pairs; restrained gold marks settled policies.',
         native='Not rendered in HOI4; native viewport/input acceptance remains pending',assets=assets)

@@ -30,6 +30,15 @@ def aviation_extension():
     if extension.NAMES!={'ac_air_folder','ac_air_folder_tab'}:raise ValueError('Unreviewed aviation GUI registration')
     return extension
 
+def naval_extension():
+    """Explicit second extension owner; all original controls stay protected."""
+    path=ROOT/'tools/naval_program/naval_ui.py'
+    if not path.exists():return None
+    spec=importlib.util.spec_from_file_location('ac_naval_research_extension',path)
+    extension=importlib.util.module_from_spec(spec);spec.loader.exec_module(extension)
+    if extension.NAMES!={'ac_naval_folder','ac_naval_folder_tab'}:raise ValueError('Unreviewed naval GUI registration')
+    return extension
+
 
 def block(name,text):return name+' = {\n'+'\n'.join('\t'+v for v in text.splitlines())+'\n}\n'
 def text(name,value,x,y,width,height,font='ACBriefing16'):
@@ -72,7 +81,8 @@ def item(small=False):
 
 def normalized(tree):
     tree=copy.deepcopy(tree)
-    extension=aviation_extension();registered={'ac_land_folder','ac_land_folder_tab'}|(extension.NAMES if extension else set())
+    extensions=[e for e in (aviation_extension(),naval_extension()) if e]
+    registered={'ac_land_folder','ac_land_folder_tab'}|set().union(*(e.NAMES for e in extensions))
     def clean(nodes):
         kept=[]
         for key,op,value in nodes:
@@ -101,6 +111,8 @@ def generated():
     if count!=2:raise ValueError('Expected both inherited research detail descriptions')
     extension=aviation_extension()
     if extension:value=extension.extend(value)
+    navy=naval_extension()
+    if navy:value=navy.extend(value)
     if normalized(parse(value))!=parse(base):raise ValueError('Land page changed an unrelated inherited GUI control')
     templates='guiTypes = {\n'+item()+item(True)+'}\n'
     contract=dict(base_sha256=hashlib.sha256(base.replace('\r\n','\n').encode()).hexdigest(),
@@ -109,7 +121,7 @@ def generated():
         content=[CONTENT_W,CONTENT_H],new_roots=[f'ac_land_{v.id}_2006_tree' for v in FAMILIES],
         intentional_existing_changes='Two description scrollbarType attributes and reviewed research font substitutions only; original geometry and all other controls unchanged.',
         reviewed_font_migration='tools/research_fonts/assets.json; strict restoration preserves the unchanged captured GUI fingerprint.',
-        registered_extensions=['tools/air_program/air_ui.py:ac_air_folder/ac_air_folder_tab'] if extension else [],
+        registered_extensions=(['tools/air_program/air_ui.py:ac_air_folder/ac_air_folder_tab'] if extension else [])+(['tools/naval_program/naval_ui.py:ac_naval_folder/ac_naval_folder_tab'] if navy else []),
         search='No search/editbox/filter binding exists in the captured mod or installed1.19.4.1 research screen; no unbound search widget is added.',
         native='New tab/control discovery, native scrolling and state rendering remain untested.')
     return value,templates,json.dumps(contract,indent=2)+'\n'

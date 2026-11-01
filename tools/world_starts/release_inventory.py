@@ -23,6 +23,10 @@ def walk(nodes):
 
 OWNERS={'AWW':('awwnb.1','awwnb.2'),'REC':('recta.1',),'SBK':('south_belka.2','south_belka.3','south_belka.4')}
 
+def source_digest(path):
+    """Portable authored-text identity; native payload hashes remain separate."""
+    return hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
+
 
 def report():
     registry=json.loads((ROOT/'tools/world_foundation/country_registry.json').read_text())
@@ -96,7 +100,8 @@ def report():
         source_evidence='Literal source inventory only; native release, event reachability, transfer randomness, re-release and save/reload are not established.',
         active_tag_clarification='RAT is the active Ratio country, covered by WorldStarts; SBL is not a registered country history/tag here. South Belka is SBK.',
         excluded_placeholder='PLH/state171 remains unresolved and receives no inferred release or setup.',
-        source_inputs_sha256={path.relative_to(MOD).as_posix():hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(used)},countries=rows)
+        source_input_hash_convention='SHA256 of authored UTF8 text with CRLF normalized to LF; no other whitespace or content normalization. Not a native payload hash.',
+        source_inputs_sha256={path.relative_to(MOD).as_posix():source_digest(path) for path in sorted(used)},countries=rows)
 
 
 if __name__=='__main__':

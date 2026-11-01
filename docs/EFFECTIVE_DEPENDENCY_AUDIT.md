@@ -129,8 +129,18 @@ binding. A shader or legacy `.lua` alias used as `texturefile`, mask, normal map
 portrait or sound is unresolved, even when the program file exists. Valid
 `effectFile`/effect program bindings keep their original-root shader alias.
 Two additional negative/positive fixtures cover this false-green path; the
-dependency regression suite now contains 31 tests. Resource metadata records
+dependency regression suite initially contained 31 tests. Resource metadata records
 the inspected usage where the binding supplies it.
+
+The PR review added three further regressions, bringing the current suite to
+34. Music definitions now require audio usage just like sound definitions;
+hash approval cannot turn a shader or picture into an audio resource. ZIP
+providers containing duplicate normalized regular-file names are rejected
+before any member is mounted, including case and slash aliases. That keeps
+the file-size bound, hash and read attached to one unambiguous member. Scripted
+GUI traversal now finishes before the complete gate snapshots parse failures,
+and the same binding results are returned rather than re-parsing after the
+decision. Both authored and fallback malformed bindings fail the complete gate.
 
 ## Supported dependency edges and limits
 

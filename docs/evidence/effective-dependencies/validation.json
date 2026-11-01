@@ -134,5 +134,44 @@
     ],
     "runtime_payload_changed_by_audit": false,
     "conversion_acceptance": false
+  },
+  "review_followup": {
+    "source_head": "4e16f4754d629addc1d6e089d3e864600e2380a4",
+    "review_comments": [
+      4433651336,
+      4433651338,
+      4433754690
+    ],
+    "changes": [
+      "Music definitions require audio resource usage even with an exact provenance approval.",
+      "Reject duplicate normalized ZIP member names before mounting; member bounds and bytes cannot diverge.",
+      "Collect scripted GUI binding parse errors before the completed gate failure snapshot."
+    ],
+    "checks": [
+      {
+        "command": "python -B tools/Test-EffectiveDependencies.py",
+        "exit_code": 0,
+        "tests": 34,
+        "log": "review-tests.txt"
+      },
+      {
+        "command": "python -B tools/Test-DecisionUI.py",
+        "exit_code": 0,
+        "tests": 16,
+        "log": "review-decisions.txt"
+      },
+      {
+        "command": "python -B tools/overhaul/capture_dependency_evidence.py <engine>",
+        "exit_code": 0,
+        "result": "Current executed hashes/results.json; ownershipPASS, fullconversionFAIL retained"
+      },
+      {
+        "command": "python -B tools/overhaul/audit_consumers.py <engine> --gate-decisions --gate-screen ac_macro_economy.gui --summary-only --output docs/evidence/effective-dependencies/macro-screen.json",
+        "exit_code": 0,
+        "result": "Both requested screen ownership checks have zero failures."
+      }
+    ],
+    "game_payload_changes": false,
+    "native_coverage": "None; testing remains paused. The earlier full static pass and final-commit CI remain separate evidence."
   }
 }

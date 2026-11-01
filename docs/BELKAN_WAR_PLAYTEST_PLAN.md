@@ -418,3 +418,21 @@ date in game, result (`native-pass`, `native-pass (forced)`, `native-fail`,
 `not exercised`), and for failures the event/focus/decision ID, `error.log`
 excerpt and steps to reproduce. Never record a static check as a runtime
 pass.
+
+Raw saves remain outside Git. Create a sanitized checkpoint with:
+
+```text
+py tools/belkan_balance/native_checkpoint.py SAVE_PATH \
+  --run-id RUN_ID \
+  --provenance natural|disabled-control|forced \
+  --output OUTPUT_JSON
+```
+
+The isolated native root must contain `native-provenance.json` with schema 1,
+the exact 40-character source commit, a relative payload-manifest filename and
+SHA-256, and copied-engine version/build/checksum. The extractor verifies the
+manifest hash, rejects binary/malformed saves, never edits the save, and emits
+only bounded observations for BLK/OSE/UST/SAP/GEB/FAT/REC. Missing optional
+fields are `null` with structured warnings. A forced checkpoint may validate
+downstream wiring but never counts toward reachability, duration, outcome bias,
+economy balance or player fairness.

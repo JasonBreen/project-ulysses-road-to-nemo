@@ -19,6 +19,8 @@ def main():
     parser.add_argument("--output", type=Path, default=ROOT / "docs/evidence/world-starts/composed")
     parser.add_argument("--only", nargs="+", help="Run explicitly named affected gates; record this bounded selection")
     args = parser.parse_args()
+    if args.baseline and not (args.baseline / "map").is_dir():
+        raise SystemExit("Baseline must point to the immutable mod payload containing map/, not its parent container")
     reference = ["--reference", str(args.engine.resolve())] if args.engine else []
     python_checks = [
         ("world-starts", ["tools/world_starts/test_world_starts.py", *reference]),

@@ -351,6 +351,18 @@ def stocks(tag,airtree):
 def compile_tag(tag,contract):
     filename=next((HERE/'baseline/countries').glob(tag+' - *.txt')).name
     original=read_source('countries',filename)
+    if tag=='BLK':
+        # Keep the captured baseline immutable, but reproduce the reviewed
+        # history cleanup that removes/replaces its two placeholder icons.
+        repairs=(
+            ('\tcreate_equipment_variant = {\n\t\ticon = "xxx"\n\t\tname = "Guinevere Mark II"',
+             '\tcreate_equipment_variant = {\n\t\tname = "Guinevere Mark II"'),
+            ('\t\t\tspecial_type_slot_3 = non_strategic_materials_medium\n\t\t}\n\t\ticon = "xxx"\n\t}\n\tcreate_equipment_variant = {\n\t\tname = "Locust Mark III"',
+             '\t\t\tspecial_type_slot_3 = non_strategic_materials_medium\n\t\t}\n\t\ticon = "GFX_BLK_iw_medium_plane_medium"\n\t}\n\tcreate_equipment_variant = {\n\t\tname = "Locust Mark III"'),
+        )
+        for old,new in repairs:
+            if original.count(old)!=1:raise ValueError('Reviewed BLK icon repair source changed')
+            original=original.replace(old,new)
     # The original bookmark erroneously selected the designer navy in both arms.
     if tag=='OSE':original=original.replace('set_naval_oob = "OSE_navy_dlc"\n\t}', 'set_naval_oob = "OSE_navy_1991_legacy"\n\t}')
     else:original=original.replace('set_naval_oob = "'+tag+'_navy"','set_naval_oob = "'+tag+'_navy_1991_legacy"')

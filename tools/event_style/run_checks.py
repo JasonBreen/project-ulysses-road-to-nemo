@@ -4,10 +4,11 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools'))
 from source_snapshot import capture,verify
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--engine',type=Path,required=True);p.add_argument('--output',type=Path,default=ROOT/'docs/evidence/event-style/source-checks');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--engine',type=Path,required=True);p.add_argument('--output',type=Path,default=ROOT/'docs/evidence/event-style/source-checks');p.add_argument('--only',action='append');a=p.parse_args()
     source=capture(ROOT);a.output.mkdir(parents=True,exist_ok=True);py=[sys.executable,'-B']
     commands=[
         ('event-style',py+['tools/Test-EventStyle.py']),
+        ('original-interfaces',py+['tools/Test-InterfaceRepairs.py']),
         ('event-fit',py+['tools/Test-EventPictures.py']),
         ('fit-review',py+['tools/event_picture_fit/review.py','--check']),
         ('primary-contract',py+['tools/event_style/primary.py','--engine',str(a.engine),'--check']),
@@ -21,6 +22,10 @@ def main():
         ('presentation-source',py+['tools/Test-PresentationSources.py']),
         ('strict-authored-assets',py+['tools/audit_visual_dependencies.py','--strict-all']),
         ('static-reference',['pwsh','-NoProfile','-File','tools/Test-UlyssesStatic.ps1','-ModRoot',str(ROOT/'mod/2985041246'),'-ReferenceGameRoot',str(a.engine)])]
+    if a.only:
+        selected=set(a.only);known={name for name,_ in commands}
+        if selected-known:raise SystemExit('Unknown event-style checks: '+str(selected-known))
+        commands=[row for row in commands if row[0]in selected]
     rows=[]
     for name,command in commands:
         started=time.monotonic();result=subprocess.run(command,cwd=ROOT,capture_output=True,env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'})

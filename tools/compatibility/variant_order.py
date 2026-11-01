@@ -133,8 +133,8 @@ def inspect_history(tag,history,unit_reader,unlocks,always_available,dlcs,ai,tag
     technologies=set();variants={};errors=[];uses=0;flags={};loading=[]
     local={(get(v,'type'),get(v,'name'))for k,_,v in walk(history)if k=='create_equipment_variant'}
     def researched(ident,family,where):
-        if family=='equipment'and ident in always_available:return
         choices=unlocks[family].get(ident,set())
+        if family=='equipment'and ident in always_available and not choices:return
         if not choices:errors.append(f'{where}: no effective captured {family} unlock for {ident}')
         elif not choices&technologies:errors.append(f'{where}: {family} {ident} used before required research {sorted(choices)}')
     def use(equipment,version,creator,where):

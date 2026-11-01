@@ -76,11 +76,11 @@ class EffectiveFiles:
                 found = [(shader, self._files[shader][1])]; alias = requested
         if found:
             relative, asset = found[0]
-            ambiguous = relative in self.providers.ambiguities
+            ambiguous = any(probe in self.providers.ambiguities for probe, _ in found)
             if len(found)>1:
                 try:
                     ambiguous |= len({candidate.sha256() for _, candidate in found})>1
-                except (OSError, RuntimeError, zipfile.BadZipFile, NotImplementedError):
+                except (ValueError, OSError, RuntimeError, zipfile.BadZipFile, NotImplementedError):
                     ambiguous = True
             classification, evidence = self.providers.classify(asset, usage)
             wrong_type = usage in RESOURCE_SUFFIXES and asset.suffix.lower() not in RESOURCE_SUFFIXES[usage]
@@ -95,7 +95,9 @@ class EffectiveFiles:
             if usage:
                 result["binding_usage"] = usage
             if ambiguous:
-                result["provider_candidates"] = self.providers.ambiguities.get(relative, [a.metadata() for _, a in found])
+                result["provider_candidates"] = [dict(binding_probe=probe, **row)
+                    for probe, candidate in found
+                    for row in self.providers.ambiguities.get(probe, [candidate.metadata()])]
             if alias:
                 result["legacy_alias"] = alias
             if asset.suffix.lower() == ".mesh":
@@ -258,8 +260,8 @@ class Audit:
             dependencies.append(dict(family="animation_binding", name="clone_mesh_override", status="runtime_binding_uninspected",
                                      classification="unresolved", resources=[],
                                      reason="Entity overrides a cloned mesh; effective inherited state/animation replacement needs native binding inspection"))
-        for name in sorted(state_animations - animation_ids):
-            dependencies.append(dict(family="animation_binding", name=name, status="runtime_binding_uninspected",
+        for animation_name in sorted(state_animations - animation_ids):
+            dependencies.append(dict(family="animation_binding", name=animation_name, status="runtime_binding_uninspected",
                                      classification="unresolved", resources=[],
                                      reason="Entity state label has no resolved inherited mesh animation ID; embedded native bindings are uninspected"))
         issues = {r["status"] for r in resources if r["status"] in ("missing_asset", "engine_asset", "ambiguous_asset", "unsupported_resource_kind")}
@@ -417,6 +419,15 @@ class Audit:
             for kind, node in walk(self.read(rel, origin, path)):
                 if kind.lower() == "containerwindowtype" and get(node, "name"):
                     windows[scalar(get(node, "name"))].append((rel, node))
+        def window_problems(name):
+            found = windows.get(name, [])
+            if not found:
+                return ["missing window " + name]
+            signatures = {json.dumps([posixpath.dirname(source), body], sort_keys=True) for source, body in found}
+            problems = ["conflicting window definitions " + name] if len(signatures) > 1 else []
+            if any(source in self.vfs.providers.ambiguities for source, _ in found):
+                problems.append("ambiguous window provider " + name)
+            return problems
         rows = []
         for rel, origin, path in self.vfs.files("common/scripted_guis", {".txt"}, authored_only=not include_fallback):
             for ident, _, node in get(self.read(rel, origin, path), "scripted_gui", []):
@@ -424,20 +435,17 @@ class Audit:
                     continue
                 window = scalar(get(node, "window_name", ""))
                 found = windows.get(window, [])
-                problems = []
-                if not found:
-                    problems.append("missing window " + window)
-                    controls = set()
-                else:
-                    controls = {scalar(get(child, "name", "")) for _, body in found for _, child in walk([["window", "=", body]])}
+                problems = window_problems(window)
+                controls = set() if problems else {scalar(get(child, "name", ""))
+                    for _, child in walk([["window", "=", found[0][1]]])}
                 for effect, _, _ in get(node, "effects", []):
                     button = re.sub(r"_(?:(?:alt|control|shift|right)_)*click$", "", effect)
                     if button not in controls:
                         problems.append("missing click target " + button)
                 for _, _, dynamic in get(node, "dynamic_lists", []):
                     template = scalar(get(dynamic, "entry_container", ""))
-                    if template and template not in windows:
-                        problems.append("missing dynamic-list entry " + template)
+                    if template:
+                        problems.extend("dynamic-list entry: " + problem for problem in window_problems(template))
                 rows.append(dict(source=rel, scripted_gui=ident, window=window,
                                  status="missing_binding" if problems else "bindings_resolved",
                                  definitions=sorted({source for source, _ in found}), problems=problems))

@@ -120,13 +120,15 @@ if ($BaselineRoot) {
     }
 }
 
-$pythonHost = if ($env:OS -eq 'Windows_NT' -and (Get-Command py -ErrorAction SilentlyContinue)) {
-    'py'
-} elseif (Get-Command python -ErrorAction SilentlyContinue) {
-    'python'
+$pathPython = Get-Command python -CommandType Application -ErrorAction SilentlyContinue
+$pythonHost = if ($pathPython) {
+    $pathPython.Source
+} elseif ($env:OS -eq 'Windows_NT' -and (Get-Command py -CommandType Application -ErrorAction SilentlyContinue)) {
+    (Get-Command py -CommandType Application).Source
 } else {
     throw 'Could not locate Python for aftermath contract checks.'
 }
+Write-Output "Python contract host: $pythonHost"
 Write-Output 'The Peace We Inherit: offline transition and content checks'
 & $pythonHost (Join-Path $PSScriptRoot 'Test-PeaceWeInherit.py') --mod-root $ModRoot
 $aftermathExitCode = $LASTEXITCODE

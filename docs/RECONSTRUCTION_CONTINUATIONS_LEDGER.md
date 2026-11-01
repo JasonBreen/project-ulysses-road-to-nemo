@@ -162,3 +162,21 @@ ownership, authored text parsing and texture existence do not certify every engi
 fallback, active DLC presentation, model, audio dependency or native screen.
 The inherited engine parse limitations remain explicit in that audit. No normal
 installation, actual save, game launch or native screenshot was involved.
+
+
+## Review corrections and current source verification
+
+The Sapin/Gebet post-2005 fallback now explicitly requires peace. The completed
+legacy route remains independent and can still progress during war. The actual
+runtime regression checks both branches in all three fiscal modes. North Point's
+mandate ministerial reply keeps its stability benefit and adds a separate
+consumer-goods burden; subtracting from a positive stability bonus was not a
+real countervailing cost. The source/art test follows the actual event-to-effect
+closure and checks all 36 narrative support spirits for both benefit and cost.
+
+The corrected source passes **16 actual-runtime and 10 source/art tests**. After
+merging the final presentation parent, 41 provider regressions, three malformed
+presentation fixtures, the 82-file authored presentation gate, generated output
+and requested decision/macro ownership checks pass again. The original broad
+33-command snapshot remains recorded separately from these affected-suite reruns
+in `docs/evidence/reconstruction/review-followup/`. None is native acceptance.

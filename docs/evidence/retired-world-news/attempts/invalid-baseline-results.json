@@ -1,0 +1,95 @@
+{
+  "source_head": "15dc1e6a5914e70c888da76b40b321b1c5583c4e",
+  "commands": [
+    {
+      "name": "retired-news",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-RetiredWorldNews.py",
+        "--reference",
+        "<installed-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 0.765,
+      "log": "retired-news.txt"
+    },
+    {
+      "name": "interface",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-InterfaceRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.516,
+      "log": "interface.txt"
+    },
+    {
+      "name": "strict-assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 1.109,
+      "log": "strict-assets.txt"
+    },
+    {
+      "name": "structure",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-PresentationSources.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.547,
+      "log": "structure.txt"
+    },
+    {
+      "name": "authored-source",
+      "command": [
+        "python",
+        "-B",
+        "tools/check_presentation_sources.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.703,
+      "log": "authored-source.txt"
+    },
+    {
+      "name": "registry",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_foundation/registry.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.641,
+      "log": "registry.txt"
+    },
+    {
+      "name": "static-reference",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-reference>",
+        "-BaselineRoot",
+        "source/baseline"
+      ],
+      "exit_code": 1,
+      "seconds": 45.875,
+      "log": "static-reference.txt"
+    }
+  ],
+  "native_acceptance": false,
+  "scope": "Source and read-only primary metadata only; not native news, rendering, saves or engine dynamic calls."
+}

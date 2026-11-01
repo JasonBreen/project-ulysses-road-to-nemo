@@ -24,6 +24,7 @@ def main():
         'air':py+['tools/air_program/test_air.py']+(['--engine',str(args.engine)] if args.engine else []),
         'land':py+['tools/land_program/test_land.py'],
         'fonts':py+['tools/research_fonts/test_fonts.py'],
+        'git-filters':py+['tools/Test-AssetGitFilters.py'],
         'macro':py+['tools/Test-EconomyV2.py'],
         'upkeep':py+['tools/Test-ForceUpkeep.py']+(['--engine',str(args.engine)] if args.engine else []),
         'world-50':py+['tools/world_starts/test_world_starts.py']+reference,

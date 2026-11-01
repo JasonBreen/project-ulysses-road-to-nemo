@@ -30,6 +30,14 @@ or unsourced local impact zones were inferred.
 
 ## Citation rule
 
+The [Pacific personal-story ledger](PACIFIC_STORIES_LEDGER.md) separates the
+official cold-war, 1999 Arkbird-cooperation and 2010 conflict context from the
+original Osean and Yuktobanian casts, incidents and chapter dates. Those personal
+stories are authored fiction and provisional gameplay. They read national
+capabilities and actual relations without controlling war or project outcomes;
+their people are never substitute national officeholders. Source, offline and
+native acceptance remain separate.
+
 The Anea foundation's [source and implementation ledger](ANEA_EXPANSION_LEDGER.md)
 records the1998 Anean risk/shelter entries,2000 aid,2002 sanctions,2004 agency
 and incomplete Chandelier separately from provisional gameplay. No1991 named

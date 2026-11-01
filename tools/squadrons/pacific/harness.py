@@ -1,20 +1,25 @@
-"""Execute new personal scripts alongside actual CPW/SNC/SNP/P1 owners.
+"""Execute personal scripts alongside the actual SNC/SNP/P1 owners.
 
 Only game observations, event delivery and the new personal arithmetic prefix
-are adapters. No fiscal, political, readiness or war-owner substitute is used.
+are adapters. War relations are engine observations; no war owner is installed
+or simulated. No fiscal, political or readiness formula is substituted.
 Decimal/deepcopy execution is offline evidence, not native save/gameplay proof.
 """
+from datetime import date
 from decimal import Decimal as D
 from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parents[3];sys.path.insert(0,str(ROOT/'tools'))
-from circum_pacific.harness import World as OwnerWorld,parse,get
+from pacific_nations.harness import World as OwnerWorld,parse,get
 from config import MOD,campaigns
 
 
 class World(OwnerWorld):
     def __init__(self,mode='full',enabled=True):
         super().__init__(mode);self.story_enabled=enabled;self.story_queue=[];self.story_deliveries=[]
+        self.wars=set();self.goals=set();self.from_country=None
+        for country in self.countries.values():
+            country.exists=any(state.owner==country.tag for state in self.states.values())
         for folder,library in(('scripted_effects',self.effects),('scripted_triggers',self.triggers)):
             for key,_,value in parse((MOD/'common'/folder/'ac_squadrons_pacific.txt').read_text(encoding='utf-8-sig')):
                 if key in library:raise ValueError('Conflicting personal owner '+key)
@@ -29,9 +34,16 @@ class World(OwnerWorld):
         return super().number(value,context,temp,root,previous)
 
     def trigger(self,nodes,context,temp=None,root=None,previous=None):
-        results=[]
+        results=[];root=context if root is None else root
         for key,op,value in nodes:
-            if key=='has_game_rule'and get(value,'rule')=='ac_sq_stories':
+            if key in('FROM','ROOT','PREV'):
+                target=self.from_country if key=='FROM'else root if key=='ROOT'else previous
+                answer=target is not None and self.trigger(value,target,temp,root,context)
+            elif key=='country_exists':answer=self.countries[value].exists
+            elif key in self.countries:answer=self.countries[key].exists and self.trigger(value,self.countries[key],temp,root,context)
+            elif key=='has_war':answer=any(context.tag in pair for pair in self.wars)==(value=='yes')
+            elif key=='has_war_with':answer=frozenset((context.tag,value))in self.wars
+            elif key=='has_game_rule'and get(value,'rule')=='ac_sq_stories':
                 if get(value,'option')!='enabled':raise ValueError('Unknown story option')
                 answer=self.story_enabled
             else:answer=super().trigger([(key,op,value)],context,temp,root,previous)
@@ -48,7 +60,9 @@ class World(OwnerWorld):
                     self.execute([r for r in value if r[0]!='limit'],context,temp,root,previous);branch=True
                 continue
             branch=None
-            if key in('set_variable','add_to_variable')and value[0][0].startswith('ac_sqp_'):
+            if key=='FROM':
+                if self.from_country is not None:self.execute(value,self.from_country,temp,root,context)
+            elif key in('set_variable','add_to_variable')and value[0][0].startswith('ac_sqp_'):
                 name,_,operand=value[0];amount=self.number(operand,context,temp,root,previous)
                 context.variables[name]=amount if key=='set_variable'else context.variables.get(name,D(0))+amount
             elif key=='country_event'and get(value,'id').startswith('ac_sqp.'):
@@ -59,6 +73,9 @@ class World(OwnerWorld):
         prior=self.from_country;self.from_country=self.countries.get(other)
         try:self.execute(get(get(self.story_actions,name),'effect'),self.countries.get(tag),root=self.countries.get(tag),previous=self.countries.get(other))
         finally:self.from_country=prior
+
+    def at(self,when):
+        self.today=date(*map(int,when.split('.'))).toordinal();return self
 
     def descriptions(self,ident,tag):
         result=[];c=self.countries[tag]
@@ -99,4 +116,4 @@ def initialized(mode='full',enabled=True):
     for module in countries():w.national_action(module.TAG,'on_startup')
     if mode=='experimental':
         for tag in('OSE','YUK'):w.run('ac_econ_legacy_initialize',tag)
-    w.cpw_action('on_startup');w.story_action('on_startup');return w
+    w.story_action('on_startup');return w

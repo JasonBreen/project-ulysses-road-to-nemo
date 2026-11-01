@@ -16,6 +16,8 @@ STORIES=campaigns()
 
 def flag(row,key):return'ac_sqp_'+row['tag'].lower()+'_'+key
 def key(row,n):return'ac_sqp.'+str(row['base']+n)
+def state(country):return copy.deepcopy(vars(country))
+def countries_state(world):return {tag:state(country)for tag,country in world.countries.items()}
 def ending(c,h):return'trusted'if c>=65 and h>=65 else'fractured'if c<45 else'compromised'
 def paths(row):
     states={(50,50):()}
@@ -49,9 +51,9 @@ class PacificStories(unittest.TestCase):
                         self.assertIn(flag(row,o['flag']),c.flags);self.assertNotIn('ac_sqp_dispatch_pending',c.flags)
                         self.assertEqual(prior.pp,c.pp);self.assertEqual(prior.equipment,c.equipment);self.assertEqual(prior.ideas,c.ideas)
                         self.assertEqual({k:v for k,v in prior.variables.items()if not k.startswith('ac_sqp_')},{k:v for k,v in c.variables.items()if not k.startswith('ac_sqp_')})
-                        self.assertEqual(foreign,(w.globals,w.wars,w.goals,w.states));saved=copy.deepcopy(c)
+                        self.assertEqual(foreign,(w.globals,w.wars,w.goals,w.states));saved=state(c)
                         for j in range(len(w.options(ident))):w.choose(ident,j,c.tag,stale=True)
-                        self.assertEqual(saved,c)
+                        self.assertEqual(saved,vars(c))
 
     def test_every_context_callback_is_exactly_one_and_archive_freezes_external_changes(self):
         for row in STORIES:
@@ -62,11 +64,11 @@ class PacificStories(unittest.TestCase):
                     w.globals.update(('ac_cpw_started','ac_cpw_tainted','ac_cpw_prevented','ac_cpw_declaration_withheld'))
                     w.wars.add(frozenset(('OSE','YUK')));c.capitulated=True;c.observables.update(num_deployed_planes=20,deployed_airforce_manpower_k=1)
                     if ch.get('callback'):c.flags.pop(flag(row,ch['callback']['flag']),None)
-                    archive=key(row,10000+ch['id']);before=copy.deepcopy((w.countries,w.states,w.globals,w.wars,w.story_queue))
+                    archive=key(row,10000+ch['id']);before=copy.deepcopy((countries_state(w),w.states,w.globals,w.wars,w.story_queue))
                     self.assertTrue(w.deliver(archive,c.tag));self.assertEqual(expected,w.descriptions(archive,c.tag));w.choose(archive,0,c.tag)
-                    self.assertEqual(before,(w.countries,w.states,w.globals,w.wars,w.story_queue))
+                    self.assertEqual(before,(countries_state(w),w.states,w.globals,w.wars,w.story_queue))
 
-    def test_live_cpw_capability_negative_and_positive_contexts_then_frozen_archive(self):
+    def test_live_war_and_optional_outcomes_then_frozen_archive_without_a_conflict_owner(self):
         for row in STORIES:
             ch=row['chapters'][15];other='YUK'if row['tag']=='OSE'else'OSE'
             for variant in ch['condition_variants']:
@@ -87,10 +89,47 @@ class PacificStories(unittest.TestCase):
                     expected='cap'if c.capitulated else next((v['id']for v in ch['condition_variants']if w.trigger(parse(v['trigger'].replace('ac_sq_','ac_sqp_')),c)),'base')
                     self.assertEqual([ident+'.d_'+expected+'_callback'],w.descriptions(ident,c.tag))
                     if fault is None:self.assertEqual(variant['id'],expected)
-                    if variant['id']=='owned_flight'and fault in('no_planes','no_air_personnel','wrong_war','owner_absent'):self.assertEqual('base',expected)
+                    if variant['id']=='owned_flight'and fault in('no_planes','no_air_personnel','wrong_war'):self.assertEqual('base',expected)
+                    if variant['id']=='owned_flight'and fault=='owner_absent':self.assertEqual('owned_flight',expected)
                     w.choose(ident,0,c.tag);archive=key(row,10016);before=w.descriptions(ident,c.tag)
                     w.wars.clear();w.globals.clear();c.capitulated=not c.capitulated;c.observables.clear()
                     self.assertTrue(w.deliver(archive,c.tag));self.assertEqual(before,w.descriptions(archive,c.tag))
+
+    def test_added_aviation_scenes_have_grounded_fallbacks_and_frozen_records(self):
+        for row in STORIES:
+            for number in(2,3,12):
+                chapter=row['chapters'][number-1];variant=chapter['condition_variants'][0]['id']
+                for fault in(None,'no_planes','no_personnel','capitulated','war'):
+                    with self.subTest(country=row['tag'],chapter=number,fault=fault):
+                        w=self.world();c=w.countries[row['tag']]
+                        c.observables.update(num_deployed_planes=10,deployed_airforce_manpower_k=1)
+                        if fault=='no_planes':c.observables['num_deployed_planes']=0
+                        elif fault=='no_personnel':c.observables['deployed_airforce_manpower_k']=0
+                        elif fault=='capitulated':c.capitulated=True
+                        elif fault=='war':w.wars.add(frozenset((c.tag,'BLK')))
+                        ident,c=w.open_scene(row,chapter,True)
+                        suffix='_callback'if chapter.get('callback')else''
+                        expected=[ident+'.d_'+(variant if fault is None else'base')+suffix]
+                        self.assertEqual(expected,w.descriptions(ident,c.tag))
+                        w.choose(ident,0,c.tag);w.wars.clear();c.capitulated=not c.capitulated;c.observables.clear()
+                        archive=key(row,10000+number);before=countries_state(w)
+                        self.assertTrue(w.deliver(archive,c.tag));self.assertEqual(expected,w.descriptions(archive,c.tag))
+                        self.assertEqual(before,countries_state(w))
+
+    def test_no_unpublished_conflict_library_is_required_for_an_actual_war_scene(self):
+        for row in STORIES:
+            w=self.world();c=w.countries[row['tag']];other='YUK'if c.tag=='OSE'else'OSE'
+            self.assertFalse(any(name.startswith('ac_cpw_')for name in w.effects))
+            self.assertFalse(any(name.startswith('ac_cpw_')for name in w.triggers))
+            self.assertFalse(any(name.startswith('ac_cpw_')for name in w.globals))
+            w.wars.add(frozenset((c.tag,other)))
+            c.observables.update(num_deployed_planes=10,deployed_airforce_manpower_k=1)
+            ident,c=w.open_scene(row,row['chapters'][15])
+            self.assertEqual([ident+'.d_owned_flight'],w.descriptions(ident,c.tag))
+            before=(copy.deepcopy(w.globals),copy.deepcopy(w.wars),countries_state(w))
+            w.choose(ident,0,c.tag)
+            self.assertEqual(before[:2],(w.globals,w.wars))
+            self.assertEqual(before[2][other],vars(w.countries[other]))
 
     def test_pending_expiry_and_stale_answer_do_not_apply_or_reissue_old_choice(self):
         for row in STORIES:
@@ -98,7 +137,7 @@ class PacificStories(unittest.TestCase):
             w.run('ac_sqp_'+c.tag.lower()+'_repair_pending',c.tag)
             self.assertIn(flag(row,'missed_2'),c.flags);self.assertEqual(2,c.variables['ac_sqp_chapter'])
             self.assertEqual(before.variables['ac_sqp_cohesion'],c.variables['ac_sqp_cohesion'])
-            saved=copy.deepcopy(c);w.choose(ident,0,c.tag,stale=True);w.run('ac_sqp_'+c.tag.lower()+'_repair_pending',c.tag);self.assertEqual(saved,c)
+            saved=state(c);w.choose(ident,0,c.tag,stale=True);w.run('ac_sqp_'+c.tag.lower()+'_repair_pending',c.tag);self.assertEqual(saved,vars(c))
             w.run('ac_sqp_'+c.tag.lower()+'_dispatch',c.tag);self.assertEqual(1,sum(q[2]==ident for q in w.story_queue))
 
     def test_pending_act_boundary_and_annexed_stale_event_cannot_clear_new_reservation(self):
@@ -108,11 +147,11 @@ class PacificStories(unittest.TestCase):
                 w.run('ac_sqp_'+c.tag.lower()+'_repair_pending',c.tag);self.assertIn(flag(row,'missed_'+str(n)),c.flags)
                 self.assertEqual(50,c.variables['ac_sqp_cohesion']);self.assertEqual(50,c.variables['ac_sqp_credibility'])
                 w.at(row['chapters'][n]['earliest']);w.run('ac_sqp_'+c.tag.lower()+'_dispatch',c.tag)
-                self.assertEqual(n+1,c.variables['ac_sqp_pending_chapter']);before=copy.deepcopy(c)
-                w.choose(ident,0,c.tag,stale=True);self.assertEqual(before,c)
+                self.assertEqual(n+1,c.variables['ac_sqp_pending_chapter']);before=state(c)
+                w.choose(ident,0,c.tag,stale=True);self.assertEqual(before,vars(c))
             w=self.world();ident,c=w.open_scene(row,row['chapters'][2]);w.story_action('on_annex',other=c.tag)
             w.at(row['chapters'][3]['earliest']);w.run('ac_sqp_'+c.tag.lower()+'_dispatch',c.tag)
-            self.assertEqual(4,c.variables['ac_sqp_pending_chapter']);before=copy.deepcopy(c);w.choose(ident,0,c.tag,stale=True);self.assertEqual(before,c)
+            self.assertEqual(4,c.variables['ac_sqp_pending_chapter']);before=state(c);w.choose(ident,0,c.tag,stale=True);self.assertEqual(before,vars(c))
 
     def test_training_and_science_variants_require_their_actual_independent_capabilities(self):
         for row in STORIES:
@@ -151,8 +190,8 @@ class PacificStories(unittest.TestCase):
                     w.story_action('on_annex',other=row['tag'])if fault=='annex'else w.story_action('on_subject_annexed',row['tag'])
                     c.exists=False;c.exists=True
                     self.assertIn(flag(row,'missed_3'),c.flags)
-                before=copy.deepcopy((w.countries,w.globals,w.states,w.story_queue));w.choose(ident,0,row['tag'],stale=True)
-                w.run('ac_sqp_initialize',row['tag']);self.assertEqual(before,(w.countries,w.globals,w.states,w.story_queue))
+                before=copy.deepcopy((countries_state(w),w.globals,w.states,w.story_queue));w.choose(ident,0,row['tag'],stale=True)
+                w.run('ac_sqp_initialize',row['tag']);self.assertEqual(before,(countries_state(w),w.globals,w.states,w.story_queue))
                 if fault in('identity','original','current'):self.assertFalse(w.deliver(key(row,10001),row['tag']))
 
     def test_startup_reload_and_late_admission_archive_without_historical_choice_rewards(self):
@@ -164,7 +203,7 @@ class PacificStories(unittest.TestCase):
                 self.assertGreaterEqual(position,minimum);self.assertEqual(50,c.variables['ac_sqp_cohesion']);self.assertEqual(50,c.variables['ac_sqp_credibility'])
                 self.assertFalse(any(flag(row,o['flag'])in c.flags for ch in row['chapters']for o in ch['options']));self.assertNotIn('ac_sqp_professional_debrief',c.ideas)
                 if when=='2021.1.1':self.assertIn('ac_sqp_late_archive',c.flags);self.assertIn('ac_sqp_closed',c.flags)
-                clone=copy.deepcopy(w);w.story_action('on_startup');clone.story_action('on_startup');self.assertEqual(w.countries,clone.countries);self.assertEqual(w.story_queue,clone.story_queue)
+                clone=copy.deepcopy(w);w.story_action('on_startup');clone.story_action('on_startup');self.assertEqual(countries_state(w),countries_state(clone));self.assertEqual(w.story_queue,clone.story_queue)
 
     def test_all_three_personal_endings_reachable_with_actual_mixed_choice_path(self):
         for row in STORIES:
@@ -179,16 +218,16 @@ class PacificStories(unittest.TestCase):
                 ident=key(row,90+next(i for i,e in enumerate(row['endings'])if e['id']==name));self.assertTrue(w.deliver(ident,c.tag));w.choose(ident,0,c.tag)
                 self.assertIn(flag(row,'ending_'+name),c.flags);self.assertIn('ac_sqp_closed',c.flags)
                 self.assertEqual(name=='trusted','ac_sqp_professional_debrief'in c.ideas)
-                saved=copy.deepcopy(c);w.choose(ident,0,c.tag,stale=True);w.run('ac_sqp_'+c.tag.lower()+'_finish',c.tag);self.assertEqual(saved,c)
+                saved=state(c);w.choose(ident,0,c.tag,stale=True);w.run('ac_sqp_'+c.tag.lower()+'_finish',c.tag);self.assertEqual(saved,vars(c))
 
     def test_no_reading_ui_refresh_pays_or_advances_and_both_hosts_are_independent(self):
-        w=self.world();before=copy.deepcopy((w.countries,w.globals,w.story_queue))
+        w=self.world();before=copy.deepcopy((countries_state(w),w.globals,w.story_queue))
         for _ in range(3):
             for ident,(category,node)in w.story_decisions.items():
                 for part in('allowed','visible','available'):w.trigger(get(node,part,[]),w.countries['OSE'])
-        self.assertEqual(before,(w.countries,w.globals,w.story_queue))
+        self.assertEqual(before,(countries_state(w),w.globals,w.story_queue))
         for row in STORIES:
-            other='YUK'if row['tag']=='OSE'else'OSE';foreign=copy.deepcopy(w.countries[other]);ident,c=w.open_scene(row,row['chapters'][0]);w.choose(ident,0,c.tag);self.assertEqual(foreign,w.countries[other])
+            other='YUK'if row['tag']=='OSE'else'OSE';foreign=state(w.countries[other]);ident,c=w.open_scene(row,row['chapters'][0]);w.choose(ident,0,c.tag);self.assertEqual(foreign,vars(w.countries[other]))
 
 
 if __name__=='__main__':unittest.main(verbosity=2)

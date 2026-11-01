@@ -3,8 +3,11 @@
 The national and Circum-Pacific owners remain separate components. This ledger
 records original supporting fiction, not new official characters, government
 terms, flown historical missions or military telemetry. The official chronology
-and alternate declaration procedures remain documented in
-[the CPW ledger](CIRCUM_PACIFIC_LEDGER.md). Existing protected creative continuity
+remains documented in the [national campaign ledger](PACIFIC_NATIONAL_CONTINUATIONS.md).
+The [official Chronicle](https://acecombat.jp/en/chronicle/details/), consulted
+1 November 2026, supplies the broad cold-war, 1999 Arkbird-cooperation and 2010
+conflict context. It supplies none of these original people, incidents, dialogue,
+sorties, injuries or losses. Existing protected creative continuity
 is untouched.
 
 ## First component: Osea, Second Frequency
@@ -65,3 +68,45 @@ projections. Natural campaign pacing, AI selection, game parsing, serialization,
 fixed-point precision, event layout and loading behavior at the three display
 configurations remain untested. Native and desktop testing is paused. These
 source components do not install, synchronize, merge or publish themselves.
+
+## Independent review packaging, 1 November 2026
+
+The original component receipts above describe their original development
+checkpoints. They are historical evidence, including the earlier CPW dependency;
+they are not relabelled as validation of the current independent package.
+
+The current story harness loads the actual national, SNP, institutional and
+financial owners without loading a CPW library. The stories read actual war
+relations and observed national air capability. Existing optional CPW outcome
+flags may select a scene, but neither story creates them, requires them for an
+ordinary continuation or declares war. No new national military forces,
+government, border, project outcome or settlement is introduced.
+
+The Osean flying additions cover a misunderstood clearance, an uncertain
+coastal distress call, a difficult return and a wartime withdrawal. The
+Yuktobanian additions cover shared responsibility during a winter exercise,
+competing communications, a difficult approach and a wartime return. Peacetime
+flight variants require peace, noncapitulation, deployed aircraft and deployed
+air personnel; wartime perspectives require the actual counterpart relation.
+Grounded scenes remain useful without aircraft. Delivered perspectives stay
+frozen in the archives. These are authored incidents, not observed sortie or
+combat telemetry. Anton remains on the ground after his hearing injury.
+
+Portrait cards explicitly describe their 1991 personnel files. The portrait
+masters are archival references rather than a claim that the cast does not age;
+later chapters address rest, changed work, teaching and final handover. Original
+1991 national governments and protected creative continuity remain untouched.
+
+| Content | Source layer and exact reference | Affected IDs/files | Status |
+| --- | --- | --- | --- |
+| Broad cold-war, Arkbird and 2010 context | Official, ACES Chronicle: 1980s, 1999/10.08 and 2010/09.27 entries at the URL above | Chapter act framing only | Read and separated from original fiction |
+| Rhea, Malik, June, Sana and their incidents | Authored fiction / provisional gameplay; approved Strangereal overhaul squadron-story requirement and editable OSE chapter/metadata JSON | `ac_sqp.701`–`.720`, `tools/squadrons/chapters/OSE.json`, `tools/squadrons/pacific/metadata/OSE.json` | Source implemented; native pending |
+| Irina, Anton, Daria, Lev and their incidents | Authored fiction / provisional gameplay; same approved requirement and editable YUK chapter/metadata JSON | `ac_sqp.801`–`.820`, `tools/squadrons/chapters/YUK.json`, `tools/squadrons/pacific/metadata/YUK.json` | Separate Yuktobanian review component |
+| Relationship thresholds, schedules and temporary debrief benefit | Provisional gameplay, compiler and metadata in this package | `ac_sqp_*`, `tools/squadrons/pacific/build.py` | Source fixtures; native balance pending |
+
+The current exact-source runner is `tools/squadrons/pacific/run_checks.py`.
+It records clean raw source before/after, independent process exits, log hashes,
+payload bytes and current failed receipts. It preserves prior invocations.
+The dependency audit checks event-window, decision and economy controls plus
+every new actual resource consumer; the inherited full-mod backlog stays
+separate. Native testing and normal-install synchronization remain paused.

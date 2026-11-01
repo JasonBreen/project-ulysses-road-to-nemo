@@ -51,10 +51,12 @@ enforces them. Refreshing UI triggers does not advance or pay anything.
 
 ## Read-only integration and presentation
 
-Ordinary scenes need no aircraft. Training-return variants require peace,
-noncapitulation, deployed aircraft and deployed air personnel. The2010 flight
-perspective additionally reads the actual CPW owner and actual counterpart war
-relation. Expanded fighting, reciprocal restraint, unilateral declaration
+Ordinary scenes need no aircraft. The training, weather-contact and uncertain-
+return variants require peace, noncapitulation, deployed aircraft and deployed
+air personnel. The wartime flight perspective reads the actual counterpart war
+relation and current air capability. The unpublished CPW component is not a
+dependency and no war owner is installed by either story. Optional existing
+outcome flags are read only. Expanded fighting, reciprocal restraint, unilateral declaration
 withholding and capitulation have distinct useful continuations. The scientific
 variant requires completed earlier Arkbird cooperation and its actual Yuktobanian
 partner receipt; it never asserts a surviving operational platform. Delivered
@@ -83,8 +85,16 @@ python -B tools/Test-SquadronStories.py
 python -B tools/Test-SquadronArt.py
 ```
 
-The actual-script harness includes the real CPW, SNC, SNP, political and fiscal
+The actual-script harness includes the real SNC, SNP, political and fiscal
 libraries. Only engine observations, event delivery and personal arithmetic are
 adapted. Decimal/deepcopy execution, source geometry, asset closure and CI are
 not native parser, save serialization, UI, fixed-point arithmetic, battles,
 natural progression or AI-pacing acceptance. Native/desktop testing is paused.
+
+The source runner pins clean raw inputs before and after every invocation,
+archives superseded receipts, writes a failed current receipt after exceptions,
+and selects this interpreter on PATH for child PowerShell checks. Generate the
+dependency profile explicitly with `capture_dependencies.py --write-profile`
+before committing; validation checks it without rewriting source. Current
+event, decision and economy consumers are audited separately from the inherited
+global dependency backlog.

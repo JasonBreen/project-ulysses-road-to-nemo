@@ -9,8 +9,10 @@ import sys
 
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246'
 sys.path.insert(0,str(ROOT/'tools/usea_expansion'))
+sys.path.insert(0,str(ROOT/'tools'))
 from script import parse,get,walk
 from land_content import FAMILIES
+from research_fonts.migration import migrate,restore
 
 SOURCE=HERE/'source/research_base.gui'
 TARGET=MOD/'interface/countrytechtreeview.gui'
@@ -70,11 +72,11 @@ def normalized(tree):
             kept.append([key,op,value])
         nodes[:]=kept
     clean(tree)
-    return tree
+    return restore(tree,SOURCE.read_text(encoding='utf-8-sig'))
 
 
 def generated():
-    base=SOURCE.read_text(encoding='utf-8-sig');value=base
+    base=SOURCE.read_text(encoding='utf-8-sig');value=migrate(base)
     marker=re.search(r'(?m)^\s*containerWindowType\s*=\s*\{\s*\n\s*name\s*=\s*"folder_tabs"',value)
     if not marker:raise ValueError('Required research folder_tabs control missing')
     value=value[:marker.start()]+'\n'+folder()+'\n'+value[marker.start():]
@@ -91,7 +93,8 @@ def generated():
         source='tools/land_program/source/research_base.gui',tab_x=TAB_X,card=[CARD_W,CARD_H],
         root_grid=[GRID_X,GRID_Y],row_pitch=ROW_PITCH,tier_pitch=TIER_PITCH,slot_width=SLOT_X,
         content=[CONTENT_W,CONTENT_H],new_roots=[f'ac_land_{v.id}_2006_tree' for v in FAMILIES],
-        intentional_existing_changes='Only scrollbarType added to the two engine-bound tech_info_description controls; original geometry and all other controls unchanged.',
+        intentional_existing_changes='Two description scrollbarType attributes and reviewed research font substitutions only; original geometry and all other controls unchanged.',
+        reviewed_font_migration='tools/research_fonts/assets.json; strict restoration preserves the unchanged captured GUI fingerprint.',
         search='No search/editbox/filter binding exists in the captured mod or installed1.19.4.1 research screen; no unbound search widget is added.',
         native='New tab/control discovery, native scrolling and state rendering remain untested.')
     return value,templates,json.dumps(contract,indent=2)+'\n'

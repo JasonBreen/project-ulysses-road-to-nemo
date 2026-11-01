@@ -28,9 +28,16 @@ while both retained complete-presentation scenarios fail and expose the wider
 conversion backlog. Source tests and the existing authored-GFX strict gate do
 not turn those failed scenarios into conversion acceptance.
 
+The automated review findings are fixed: music uses an explicit audio binding,
+providers with duplicate normalized ZIP member names are rejected before
+mounting, and scripted GUI parsing completes before the gate snapshots errors.
+Regressions cover approved shaders/images used as tracks, unequal duplicate
+members (including an oversized first entry), case/slash aliases, and malformed
+authored/fallback scripted GUIs.
+
 Validation:
 
-- 31 synthetic provider/closure regressions and 16 existing decision tests,
+- 34 synthetic provider/closure regressions and 16 existing decision tests,
   including program-as-texture/audio rejection and valid shader-alias context.
 - Focus canvas 9, overview/screenshot 7, briefing and typography checks pass.
 - `audit_visual_dependencies.py --strict-all` passes with zero authored-GFX

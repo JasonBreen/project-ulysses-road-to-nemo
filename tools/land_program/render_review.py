@@ -25,6 +25,12 @@ def locs():
     return {key:value.replace('\\n','\n') for key,value in re.findall(r'^\s*(\w+):\d*\s+"(.*)"$',source,re.M)}
 
 
+def same_review_png(first,second):
+    """Require exact review pixels while allowing platform PNG compression."""
+    with Image.open(io.BytesIO(first)) as old,Image.open(io.BytesIO(second)) as new:
+        return old.size==new.size and old.convert('RGBA').tobytes()==new.convert('RGBA').tobytes()
+
+
 class Atlas:
     def __init__(self,name):
         source=(MOD/'gfx/fonts'/(name+'.fnt')).read_text();self.rows={};self.kern={}
@@ -120,6 +126,7 @@ if __name__=='__main__':
     for path,data in files.items():
         if args.check:
             existing=path.read_bytes() if path.exists() else b''
+            if path.suffix=='.png' and existing and same_review_png(existing,data):continue
             if path.suffix=='.json':existing=existing.replace(b'\r\n',b'\n')
             if existing!=data:raise SystemExit('Stale land review artifact: '+str(path))
         else:path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)

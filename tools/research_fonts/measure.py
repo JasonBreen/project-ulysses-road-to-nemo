@@ -14,7 +14,7 @@ from script import parse
 from research_fonts.build import SOURCE,inventory
 from research_fonts.policy import BINDINGS
 from research_fonts.metrics import envelope,text_ink,fits
-from render_review import Atlas
+from render_review import Atlas,same_review_png
 spec=importlib.util.spec_from_file_location('research_fonts_measure_land',ROOT/'tools/land_program/build_ui.py')
 land=importlib.util.module_from_spec(spec);spec.loader.exec_module(land)
 OUT=ROOT/'docs/evidence/research-fonts'
@@ -110,6 +110,7 @@ if __name__=='__main__':
     for path,data in outputs().items():
         if a.check:
             old=path.read_bytes()if path.exists()else b''
+            if path.suffix=='.png' and old and same_review_png(old,data):continue
             if path.suffix=='.json':old=old.replace(b'\r\n',b'\n')
             if old!=data:raise SystemExit('Stale font measurement: '+str(path.relative_to(ROOT)))
         else:path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)

@@ -8,6 +8,8 @@ Shilage/Delarus shared-leader conflict, and ship/division name groups for
 countries whose starting fleets and templates reference them.
 """
 import argparse
+import hashlib
+import json
 from pathlib import Path
 import re
 import sys
@@ -30,6 +32,36 @@ def fleet_ship_types(tag):
 
 
 class HistoryDataCleanupTests(unittest.TestCase):
+    def test_reviewed_source_update_receipts_match_protected_baselines(self):
+        updates = json.loads((ROOT / "tools/history_data_cleanup_updates.json").read_text(encoding="utf-8"))["files"]
+        expected = {
+            "mod/2985041246/history/countries/BLK - Belka.txt",
+            "mod/2985041246/history/countries/NEC - Nordennavic.txt",
+            "mod/2985041246/history/countries/SHI - Shilage.txt",
+            "mod/2985041246/history/units/PBL_land.txt",
+            "mod/2985041246/history/units/SYC_land.txt",
+            "mod/2985041246/history/units/SYC_ws_land.txt",
+        }
+        self.assertEqual(expected, set(updates))
+
+        protected = []
+        for relative, key in (
+            ("tools/air_program/preserved_sources.json", "sources"),
+            ("tools/land_program/preserved_sources.json", "protected_sources_sha256"),
+            ("tools/naval_program/preserved_sources.json", "sources"),
+        ):
+            protected.append(json.loads((ROOT / relative).read_text(encoding="utf-8"))[key])
+
+        for relative, row in updates.items():
+            old_hash = row["old_normalized_sha256"]
+            new_hash = row["new_normalized_sha256"]
+            self.assertNotEqual(old_hash, new_hash, relative)
+            self.assertTrue(row["reason"], relative)
+            for manifest in protected:
+                self.assertEqual(old_hash, manifest[relative], relative)
+            data = (ROOT / relative).read_bytes().replace(b"\r\n", b"\n")
+            self.assertEqual(new_hash, hashlib.sha256(data).hexdigest(), relative)
+
     def test_popularities_sum_to_100(self):
         for path in sorted((MOD / "history/countries").glob("*.txt")):
             match = re.search(r"set_popularities\s*=\s*\{(.*?)\}", path.read_text(encoding="utf-8-sig", errors="replace"), re.S)

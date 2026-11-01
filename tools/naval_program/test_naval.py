@@ -136,10 +136,15 @@ class Sources(unittest.TestCase):
     def test_preserved_sources_and_no_early_grants_or_new_war_project_owners(self):
         manifest=json.loads((HERE/'preserved_sources.json').read_text());self.assertEqual(1110,len(manifest['sources']))
         updates=json.loads((ROOT/'tools/air_program/reviewed_owner_updates.json').read_text())['files']
+        cleanup=json.loads((ROOT/'tools/history_data_cleanup_updates.json').read_text())['files']
         for path,expected in manifest['sources'].items():
             update=updates.get(path)
+            repair=cleanup.get(path)
+            self.assertFalse(update and repair,path)
             if update:self.assertEqual(expected,update['old_sha256'],path)
-            self.assertEqual(update['new_sha256']if update else expected,digest(ROOT/path),path)
+            if repair:self.assertEqual(expected,repair['old_normalized_sha256'],path)
+            current=update['new_sha256'] if update else repair['new_normalized_sha256'] if repair else expected
+            self.assertEqual(current,digest(ROOT/path),path)
         forbidden={'set_technology','load_oob','create_unit','add_equipment_to_stockpile','create_equipment_variant','transfer_state','set_country_flag','set_global_flag','declare_war_on','country_event','add_to_faction'}
         for path in [MOD/'common/technologies/ac_naval_program.txt',MOD/'common/ai_equipment/ac_naval_designs.txt',MOD/'common/ai_strategy/ac_naval_replacements.txt']:
             nodes=read(path);self.assertFalse(forbidden&{k for b in [nodes]+[v for _,v in walk(nodes)] for k,_,v in b})

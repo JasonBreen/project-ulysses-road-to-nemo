@@ -273,6 +273,40 @@ class ActiveWorldTests(unittest.TestCase):
             stocks = {get(v, 'type'): int(get(v, 'amount')) for k, _, v in history if k == 'add_equipment_to_stockpile'}
             for kind, amount in p['stocks'].items(): self.assertEqual(stocks[kind], amount)
 
+    def test_selected_land_production_consumes_only_already_unlocked_declared_designs(self):
+        def inspect(tag,row,dlcs,effects):
+            tech=set();variants={};contracts=row['recipe_contracts'][case_key('By Blood Alone' in dlcs,'Man the Guns' in dlcs,'No Step Back' in dlcs)]
+            for name,_,body in effects:
+                if name=='set_technology':
+                    for ident,_,value in body:
+                        if value=='1':tech.add(ident)
+                        elif value=='0':tech.discard(ident)
+                elif name=='create_equipment_variant':
+                    variants[get(body,'name')]=(get(body,'type'),{k:v for k,_,v in get(body,'modules',[])})
+                elif name in ('set_oob','set_air_oob','set_naval_oob'):
+                    # effective_roster selects each instant_effect under the
+                    # same DLC case. Inspecting raw OOBs would consume BOTH the
+                    # NSB and legacy branches and invent chronology failures.
+                    roster=effective_roster(body.strip('"'),dlcs,tag)
+                    for kind,details in walk(roster):
+                        if kind!='add_equipment_production':continue
+                        equipment=get(details,'equipment');ident=get(equipment,'type');version=get(equipment,'version_name');modules={}
+                        if version:
+                            self.assertIn(version,variants,(tag,ident,'production used before variant'))
+                            declared,modules=variants[version];self.assertEqual(ident,declared)
+                        matched=[c for c in contracts.values() if c['equipment']==ident and c['modules']==modules]
+                        self.assertTrue(matched,(tag,ident,version,'No captured actual production contract'))
+                        needed={matched[0]['equipment_technology'],*matched[0]['module_technologies'].values()}-{None}
+                        self.assertTrue(needed<=tech,(tag,ident,'production used before research',needed-tech))
+        for tag,row in MANIFEST['countries'].items():
+            for _,_,dlcs in cases(PROFILES[tag]):inspect(tag,row,dlcs,list(selected(read(row['country_history']),dlcs,tag)))
+        row=MANIFEST['countries']['YUK'];dlcs={'By Blood Alone','Man the Guns','No Step Back'}
+        effects=list(selected(read(row['country_history']),dlcs,'YUK'));load=next(n for n in effects if n[0]=='set_oob')
+        early=[n for n in effects if n is not load];index=next(i for i,n in enumerate(early) if n[0]=='create_equipment_variant' and get(n[2],'type')=='modern_tank_chassis_1');early.insert(index,load)
+        with self.assertRaisesRegex(AssertionError,'production used before variant'):inspect('YUK',row,dlcs,early)
+        dlcs={'By Blood Alone','Man the Guns'};effects=list(selected(read(row['country_history']),dlcs,'YUK'));load=next(n for n in effects if n[0]=='set_oob')
+        with self.assertRaisesRegex(AssertionError,'production used before research'):inspect('YUK',row,dlcs,[load]+[n for n in effects if n is not load])
+
     def test_retained_armies_keep_every_cumulative_block_and_formation_identity(self):
         for tag, p in PROFILES.items():
             if p['mode'] != 'retained_start': continue

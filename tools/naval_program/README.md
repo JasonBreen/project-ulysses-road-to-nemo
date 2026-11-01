@@ -6,7 +6,7 @@ All new names, dates, specifications and costs are **provisional gameplay**, not
 
 ## Reproduction
 
-Use Python 3.12 and CI-pinned `Pillow==11.3.0`. Text generation and captured-primary replay do not require the installed game. Packaging and offline review use Pillow and the shipped original briefing font atlas. No commercial editor, desktop interaction or game launch is required.
+Use Python 3.12 and CI-pinned `Pillow==11.3.0` and `numpy==2.2.6`. Text generation and captured-primary replay do not require the installed game. Packaging and offline review use Pillow and the shipped original briefing font atlas; the integrated start/map checks require NumPy. No commercial editor, desktop interaction or game launch is required.
 
 ```powershell
 python -B tools/naval_program/build.py
@@ -95,6 +95,8 @@ The new page preserves real native drag, wheel and horizontal/vertical scrollbar
 The package preserves and inventories **32 legacy naval, 40 MTG hull and 47 MTG support technology definitions**. Their old IDs, labels, unlocks and 1922–1999/2000 dates remain. Battleship/battlecruiser modernization, older imagery, native 3D ships and attachments, naval doctrines, MIO identities, convoys/support vessels and specialized advanced systems remain separate work. This additive page is not completion of the whole anti-vanilla military conversion.
 
 The 1,110-source preservation manifest pins existing histories, equipment, technologies, defines, on-actions and authoritative owner scripts. A legitimate upstream owner change requires an enumerated reviewed exception and its generator proof; never repin the whole manifest merely to make a check pass.
+
+The composed review branch retains that original manifest. It accepts only the two already-reviewed release-account updates recorded in `tools/air_program/reviewed_owner_updates.json`: `ac_economy_compat.txt` and `ac_macro_effects.txt`. Each must match its exact original and replacement hash. The AIR composition test also checks all 53 unchanged functions, the four specifically added/changed functions, no removed functions and canonical generator output. All other 1,108 captured sources remain exact. This admits the release account's zero-seed adoption and guarded payment contract; it does not authorize a new naval financial writer or a general source exception.
 
 The evidence directory contains original-art galleries, actual default-category composites and a reconstruction of the shipped research page using real coordinates, sprites, localization and BMFont metrics. These are **offline artifacts**, not native screenshots. Native testing remains paused.
 

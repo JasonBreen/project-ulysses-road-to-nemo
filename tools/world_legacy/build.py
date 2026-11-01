@@ -19,6 +19,8 @@ MOD = ROOT / 'mod/2985041246'
 sys.path.insert(0, str(ROOT / 'tools/usea_expansion'))
 from script import parse, get, setv, walk, render
 from primary import Primary
+sys.path.insert(0,str(ROOT/'tools/world_starts'))
+from armor import ARMOR
 
 TAGS = ('BLK', 'OSE', 'SAP', 'FAT')
 BUDGETS = {'BLK': (45,12), 'OSE': (50,23), 'SAP': (8,8), 'FAT': (12,6)}
@@ -47,6 +49,7 @@ def put(relative, data):
         data=re.sub(r'\A[ \t]+\n','\n',data)
         data=re.sub(r'(?m)^}[ \t]+$','}',data)
         data=re.sub(r'(?m)^(\s*name = "1st Task Force")[ \t]+$',r'\1',data)
+        data=re.sub(r'(?m)^(\s*creator\s*=\s*"[^"]+")[ \t]+$',r'\1',data)
     OUTPUTS[MOD / relative] = data.encode() if isinstance(data, str) else data
 
 
@@ -126,6 +129,9 @@ def capture(reference):
                       'destroyer_1','destroyer_2','light_cruiser_1','light_cruiser_2',
                       'heavy_cruiser_1','heavy_cruiser_2','battleship_1','battleship_2',
                       'carrier_1','carrier_2','submarine_1','submarine_2'))
+    for recipe in ARMOR.values():
+        equipment.update((recipe['legacy'],recipe['modern']))
+        modules.update(recipe['modules'].values())
     modules.add('ship_armor_cruiser_2')
     result=dict(schema=1,reference='Installed HOI4 primary definitions; source-only facts, no native validation',
         equipment={ident:primary.equipment_row(ident) for ident in sorted(equipment)},
@@ -139,6 +145,10 @@ def capture(reference):
     # installed transport technology survives the effective mod file override.
     result['equipment']['transport_plane_equipment_1']['technology']='ac_wl_transport_support'
     result['equipment']['transport_plane_equipment_1']['compatibility_owner']='common/technologies/ac_world_legacy_support.txt'
+    result['production_context_sources']={relative:normalized_hash((Path(reference)/relative).read_bytes()) for relative in (
+        'documentation/effects_documentation.md','history/units/USA_1936.txt','history/units/GER_1936.txt')}
+    result['production_context_note']='Standalone ship-effect example uses efficiency0.1; native infantry OOB examples use efficiency50. Preserve inherited history values, use50 for new lines; native numeric interpretation unverified.'
+    result['deployment_context_sources']={'history/units/AFG_1936_nsb.txt':normalized_hash((Path(reference)/'history/units/AFG_1936_nsb.txt').read_bytes())}
     (HERE/'primary_contract.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n')
 
 
@@ -149,7 +159,7 @@ def variant_map(history, dlcs, tag):
 def clean_production(tree):
     for kind,body in walk(tree):
         if kind=='add_equipment_production':
-            for key in ('progress','efficiency'):
+            for key in ('progress',):
                 value=float(get(body,key,'0'))
                 if value>1:setv(body,key,format(value/100,'.8g'))
 
@@ -163,7 +173,7 @@ def ensure_instant(tree):
 
 def add_line(tree,tag,equipment,version=None,factories=1):
     details=f'equipment = {{ type = {equipment} creator = {tag} '+(f'version_name = {version} ' if version else '')+'}\n'
-    details+=f'requested_factories = {factories}\nprogress = 0\nefficiency = 0.25'
+    details+=f'requested_factories = {factories}\nprogress = 0\nefficiency = 50'
     ensure_instant(tree).extend(parse(block('add_equipment_production',details)))
 
 
@@ -272,7 +282,36 @@ def prepare_rosters(tag,history):
                 scout_variants.extend(parse(block('create_equipment_variant',f'name = {name}\ntype = scout_plane_equipment_1\nupgrades = {{ plane_range_upgrade = 1 }}')))
     projected,supplements=project_navy(tag,history,copy.deepcopy(trees[tag+'_navy_dlc']))
     trees[tag+'_navy_1991_legacy']=projected
-    return trees,supplements,scout_variants
+    armor_roles=set()
+    for name in [n for n in names if '_land' in n]:
+        original=trees[name];templates={get(v,'name'):v for k,v in walk(original) if k=='division_template'}
+        present={role for role,recipe in ARMOR.items() if any(recipe['subunit'] in [k for k,_,_ in get(v,'regiments',[])] for v in templates.values())}
+        armor_roles.update(present)
+        # Retained Belkan/Osean tracked artillery previously had no replacement
+        # line. Belka reallocates one of its fifteen tank factories; Osea has
+        # spare MIL. Keep all industrial budgets and standing formations.
+        queued={get(get(v,'equipment'),'type') for k,v in walk(original) if k=='add_equipment_production'}
+        for role in sorted(present-queued):
+            if tag=='BLK':
+                donor=next(v for k,v in walk(original) if k=='add_equipment_production' and get(get(v,'equipment'),'type')=='modern_tank_equipment_1')
+                setv(donor,'requested_factories',str(int(get(donor,'requested_factories'))-1))
+            add_line(original,tag,role)
+        modern=copy.deepcopy(original)
+        for kind,body in walk(modern):
+            if kind=='add_equipment_production':
+                equipment=get(body,'equipment');ident=get(equipment,'type')
+                if ident in ARMOR:
+                    recipe=ARMOR[ident];setv(equipment,'type',recipe['modern']);setv(equipment,'version_name','"'+tag+' '+recipe['label']+'"')
+            elif kind=='division':
+                template=templates[get(body,'division_template')];regiments=[k for k,_,_ in get(template,'regiments',[])]
+                forced=[]
+                for role in sorted(present):
+                    recipe=ARMOR[role]
+                    if recipe['subunit'] in regiments:
+                        forced.append([recipe['modern'],'=',parse(f'owner = {tag}\ncreator = {tag}\nversion_name = "{tag} {recipe["label"]}"')])
+                if forced:setv(body,'force_equipment_variants',forced)
+        trees[name+'_nsb']=modern
+    return trees,supplements,scout_variants,sorted(armor_roles)
 
 
 def requirements(effects,rosters,contract):
@@ -320,28 +359,42 @@ def compile_tag(tag,contract):
     if tag=='OSE':
         original=re.sub(r'(name\s*=\s*"P-3 Orion"[^\n]*\n\s*type\s*=\s*)large_plane_airframe_0',
                         r'\1large_plane_maritime_patrol_plane_airframe_0',original)
-    history=parse(original);trees,supplements,scouts=prepare_rosters(tag,parse(read_source('countries',filename)))
+    history=parse(original);trees,supplements,scouts,armor_roles=prepare_rosters(tag,parse(read_source('countries',filename)))
     supplement=block('if','limit = { NOT = { has_dlc = "Man the Guns" } }\n'+render(supplements)) if supplements else ''
     if scouts:supplement+=block('if','limit = { NOT = { has_dlc = "By Blood Alone" } }\n'+render(scouts))
+    armor=''
+    for role in armor_roles:
+        recipe=ARMOR[role]
+        armor+=block('create_equipment_variant',f'name = "{tag} {recipe["label"]}"\ntype = {recipe["modern"]}\n'+
+                     block('modules','\n'.join(slot+' = '+module for slot,module in recipe['modules'].items())))
+    supplement+=block('if','limit = { has_dlc = "No Step Back" }\n'+armor)
     stocks_common=stocks(tag,parse('air_wings = {}'))
     tail=block('if',f'limit = {{ NOT = {{ has_country_flag = {FLAG} }} }}\n'+stocks_common+
         block('if','limit = { has_dlc = "By Blood Alone" }\n'+stocks(tag,trees[tag+'_air_dlc']).replace(stocks_common,'')+
               block('else',stocks(tag,trees[tag+'_air']).replace(stocks_common,'')))+
+        block('if','limit = { has_dlc = "No Step Back" }\n'+''.join(block('add_equipment_to_stockpile',
+            f'type = {ARMOR[role]["modern"]}\namount = 100\nproducer = {tag}\nvariant_name = "{tag} {ARMOR[role]["label"]}"') for role in armor_roles)+
+            block('else',''.join(block('add_equipment_to_stockpile',f'type = {role}\namount = 100\nproducer = {tag}') for role in armor_roles)))+
         f'set_country_flag = {FLAG}')
+    original=re.sub(r'(?m)^(\s*)set_oob\s*=\s*"('+tag+r'_land(?:_vs_ai)?)"',
+        lambda m:'\n'+m[1]+block('if','limit = { has_dlc = "No Step Back" }\n'+
+        'set_oob = "'+m[2]+'_nsb"\n'+block('else','set_oob = "'+m[2]+'"')),original)
     # Guard each loader while leaving all original country and politics code intact.
     original=re.sub(r'(?m)^(\s*)((?:set_oob|set_air_oob|set_naval_oob)\s*=\s*"[^"]+")',
         lambda m:m[1]+f'if = {{ limit = {{ NOT = {{ has_country_flag = {FLAG} }} }} '+m[2]+' }',original)
     provisional=supplement+original+'\n# BEGIN LEGACY WORLD START STOCKS (new histories only)\n'+tail+'# END LEGACY WORLD START STOCKS\n'
     provisional_tree=parse(provisional)
     cases=[];techblocks=''
-    for bba,mtg in [(False,False),(True,False),(False,True),(True,True)]:
-        dlcs=({'By Blood Alone'} if bba else set())|({'Man the Guns'} if mtg else set())
+    for bba,mtg,nsb in [(b,m,n) for b,m in [(False,False),(True,False),(False,True),(True,True)] for n in (False,True)]:
+        dlcs=({'By Blood Alone'} if bba else set())|({'Man the Guns'} if mtg else set())|({'No Step Back'} if nsb else set())
         effects=list(selected(provisional_tree,dlcs,tag));names=[v.strip('"') for k,_,v in effects if k in ('set_oob','set_air_oob','set_naval_oob')]
         required=requirements(effects,[trees[n] for n in names],contract)
+        required=sorted(set(required)|{contract['equipment'][ARMOR[role]['modern'] if nsb else role]['technology'] for role in armor_roles})
         condition_text=('' if bba else 'NOT = { ')+'has_dlc = "By Blood Alone"'+('' if bba else ' }')+'\n'
         condition_text+=('' if mtg else 'NOT = { ')+'has_dlc = "Man the Guns"'+('' if mtg else ' }')
+        condition_text+='\n'+('' if nsb else 'NOT = { ')+'has_dlc = "No Step Back"'+('' if nsb else ' }')
         techblocks+=block('if',block('limit',condition_text)+block('set_technology','\n'.join(t+' = 1' for t in required)))
-        cases.append(dict(bba=bba,mtg=mtg,required_technology=required,rosters=names))
+        cases.append(dict(bba=bba,mtg=mtg,nsb=nsb,required_technology=required,rosters=names))
     payload='# Generated dependency prelude; mod provenance and provisional gameplay, not canonical forces.\n'+techblocks+'# END LEGACY DEPENDENCY PRELUDE\n'+provisional
     put('history/countries/'+filename,payload)
     for name,tree in trees.items():
@@ -349,8 +402,9 @@ def compile_tag(tag,contract):
         if name==tag+'_navy':
             if tag=='FAT':put('history/units/'+name+'.txt',read_source('units',name+'.txt'))
             continue
-        if name==tag+'_navy_1991_legacy':
-            payload='# Generated compatibility projection of the active designer roster; original hull names retained.\n'+render(tree)+'\n'
+        if name==tag+'_navy_1991_legacy' or name.endswith('_nsb'):
+            contract_note='original formations and experience retained' if name.endswith('_nsb') else 'original hull names retained'
+            payload='# Generated compatibility projection; '+contract_note+'.\n'+render(tree)+'\n'
         else:
             payload=preserve_unmodified_blocks(read_source('units',name+'.txt'),tree)
         put('history/units/'+name+'.txt',payload)

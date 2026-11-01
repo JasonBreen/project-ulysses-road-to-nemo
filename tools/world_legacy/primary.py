@@ -59,15 +59,18 @@ class Primary:
             if value == 'inherit':
                 continue
             if key == 'module_slots' and isinstance(value, list):
-                inherited = {k: [k, op, v] for k, op, v in result.get(key, [])}
+                inherited = {k: v for k, op, v in result.get(key, [])}
+                resolved = {}
                 for name, op, entry in value:
-                    if entry != 'inherit':
-                        if isinstance(entry, str):
-                            if entry not in inherited:
-                                raise ValueError('Unknown module-slot alias ' + ident + ':' + entry)
-                            entry = copy.deepcopy(inherited[entry][2])
-                        inherited[name] = [name, op, entry]
-                result[key] = list(inherited.values())
+                    if entry == 'inherit':
+                        if name not in inherited:raise ValueError('Unknown inherited slot '+ident+':'+name)
+                        entry=inherited[name]
+                    elif isinstance(entry,str):
+                        if entry not in resolved and entry not in inherited:
+                            raise ValueError('Unknown module-slot alias ' + ident + ':' + entry)
+                        entry=resolved.get(entry,inherited.get(entry))
+                    resolved[name]=copy.deepcopy(entry)
+                result[key] = [[k,'=',v] for k,v in resolved.items()]
             else:
                 result[key] = value
         return result
@@ -81,14 +84,17 @@ class Primary:
     def equipment_row(self, ident):
         body = self.resolve(ident)
         slots = {key: dict(required=get(entry, 'required', 'no'),
-                          categories=[k for k, _, _ in get(entry, 'allowed_module_categories', [])])
+                          categories=[k for k, _, _ in get(entry, 'allowed_module_categories', [])],
+                          allowed_modules=[k for k,_,_ in get(entry,'allowed_modules',[])])
                  for key, _, entry in body.get('module_slots', []) if isinstance(entry, list)}
         missions = body.get('allow_mission_type', [])
         return dict(technology=self.unlock(ident, 'equipment'),
                     resources={k: float(v) for k, _, v in body.get('resources', [])},
                     build_cost_ic=float(body.get('build_cost_ic', '0')),
                     fuel_consumption=float(body.get('fuel_consumption', '0')),
+                    can_be_produced=body.get('can_be_produced'),
                     module_slots=slots,
+                    default_modules={k:v for k,_,v in body.get('default_modules',[])},
                     allowed_missions=[k for k, _, _ in missions] if isinstance(missions, list) else missions)
 
     def module_row(self, ident):
@@ -96,4 +102,6 @@ class Primary:
         return dict(technology=self.unlock(ident, 'modules'), category=body.get('category'),
                     add_resources={k: float(v) for k, _, v in body.get('add_resources', [])},
                     add_stats={k: float(v) for k, _, v in body.get('add_stats', [])},
-                    multiply_stats={k: float(v) for k, _, v in body.get('multiply_stats', [])})
+                    multiply_stats={k: float(v) for k, _, v in body.get('multiply_stats', [])},
+                    build_cost_resources={k:float(v) for k,_,v in body.get('build_cost_resources',[])},
+                    allowed_module_categories={k:[c for c,_,_ in v] for k,_,v in body.get('allowed_module_categories',[])})

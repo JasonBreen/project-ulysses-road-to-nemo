@@ -20,32 +20,50 @@ def geography():
     return province_owner,state_owner,buildings,capacities
 
 
-def actual_case(tag,bba,mtg,human=(),lar=True):
+def actual_case(tag,bba,mtg,human=(),lar=True,nsb=False):
     contract=json.loads((HERE/'primary_contract.json').read_text())
     path=next((MOD/'history/countries').glob(tag+' - *.txt'))
     history=parse(path.read_text(encoding='utf-8-sig'))
-    dlcs=({'By Blood Alone'} if bba else set())|({'Man the Guns'} if mtg else set())|({'La Resistance'} if lar else set())
+    dlcs=({'By Blood Alone'} if bba else set())|({'Man the Guns'} if mtg else set())|({'La Resistance'} if lar else set())|({'No Step Back'} if nsb else set())
     effects=list(selected(history,dlcs,tag,human));technologies=set();variants={};rosters=[];stocks=[];errors=[]
+    ideas={key for kind,_,body in effects if kind=='add_ideas' and isinstance(body,list) for key,_,_ in body}
+    ideas.update(body for kind,_,body in effects if kind=='add_ideas' and isinstance(body,str))
     province_owner,state_owner,buildings,capacities=geography()
-    def check_equipment(ident,version=None):
+    def check_equipment(ident,version=None,production=False):
         if ident not in contract['equipment']:
             errors.append('Uncaptured equipment '+ident);return
         tech=contract['equipment'][ident]['technology']
         if tech and tech not in technologies:errors.append('Equipment before research '+ident+':'+tech)
         if version and (ident,version) not in variants:errors.append('Equipment before variant '+ident+':'+version)
+        availability=contract['equipment'][ident].get('can_be_produced')
+        if production and availability:
+            if isinstance(availability,list):
+                def substitute_predicates(nodes):
+                    result=[]
+                    for key,op,value in nodes:
+                        if key=='has_idea':result.append(['always','=', 'yes' if value in ideas else 'no'])
+                        elif key=='has_tech':result.append(['always','=', 'yes' if value in technologies else 'no'])
+                        else:result.append([key,op,substitute_predicates(value) if isinstance(value,list) else value])
+                    return result
+                effective=list(selected(availability,dlcs,tag,human))
+                if not condition(substitute_predicates(effective),dlcs,tag,human):errors.append('Equipment blocked by effective production rule '+ident)
+            elif availability=='no':errors.append('Equipment not producible '+ident)
     for kind,_,body in effects:
         if kind=='set_technology':technologies.update(k for k,_,v in body if v=='1')
         elif kind=='create_equipment_variant':
             equipment=get(body,'type');name=get(body,'name');check_equipment(equipment)
-            metadata=contract['equipment'][equipment];slots=metadata['module_slots'];used={}
+            metadata=contract['equipment'][equipment];slots=metadata['module_slots'];used={};overrides={}
             for slot,_,module in get(body,'modules',[]):
                 if module=='empty':continue
                 row=contract['modules'][module];used[slot]=module
                 if row['technology'] and row['technology'] not in technologies:errors.append('Module before research '+module)
-                if slot not in slots or row['category'] not in slots[slot]['categories']:errors.append('Invalid slot/category '+equipment+':'+slot+':'+module)
+                allowed=set(slots.get(slot,{}).get('categories',[]))|overrides.get(slot,set())
+                explicit=slots.get(slot,{}).get('allowed_modules',[])
+                if slot not in slots or (row['category'] not in allowed and module not in explicit):errors.append('Invalid slot/category '+equipment+':'+slot+':'+module)
+                for target,categories in row.get('allowed_module_categories',{}).items():overrides.setdefault(target,set()).update(categories)
             if get(body,'modules') is not None:
                 for slot,details in slots.items():
-                    if details['required']=='yes' and slot not in used:errors.append('Required slot missing '+equipment+':'+slot)
+                    if details['required']=='yes' and slot not in used and metadata['default_modules'].get(slot) in (None,'empty'):errors.append('Required slot missing '+equipment+':'+slot)
             if (equipment,name) in variants:errors.append('Duplicate selected variant '+equipment+':'+name)
             variants[(equipment,name)]=dict(equipment=equipment,name=name,modules=used)
         elif kind in ('set_oob','set_air_oob','set_naval_oob'):
@@ -53,7 +71,11 @@ def actual_case(tag,bba,mtg,human=(),lar=True):
             divisions=[];ships=[];production=[];wings=[];templates=[]
             for key,value in walk(tree):
                 if key=='division':
-                    province=int(get(value,'location'));divisions.append(dict(name=get(value,'name'),location=province,template=get(value,'division_template')))
+                    province=int(get(value,'location'));forced=[]
+                    for equipment,_,details in get(value,'force_equipment_variants',[]):
+                        version=get(details,'version_name');check_equipment(equipment,version,production=True)
+                        forced.append(dict(equipment=equipment,version=version))
+                    divisions.append(dict(name=get(value,'name'),location=province,template=get(value,'division_template'),forced_equipment=forced))
                     if province_owner.get(province)!=tag:errors.append('Invalid owned land placement '+name+':'+str(province))
                 elif key=='division_template':
                     templates.append(dict(name=get(value,'name'),
@@ -66,10 +88,10 @@ def actual_case(tag,bba,mtg,human=(),lar=True):
                     equipment,_,details=get(value,'equipment')[0];version=get(details,'version_name');check_equipment(equipment,version)
                     ships.append(dict(name=get(value,'name'),definition=get(value,'definition'),equipment=equipment,version=version))
                 elif key=='add_equipment_production':
-                    eq=get(value,'equipment');equipment=get(eq,'type');version=get(eq,'version_name');check_equipment(equipment,version)
+                    eq=get(value,'equipment');equipment=get(eq,'type');version=get(eq,'version_name');check_equipment(equipment,version,production=True)
                     queue=dict(equipment=equipment,version=version,factories=int(get(value,'requested_factories','0')),
                                progress=float(get(value,'progress','0')),efficiency=float(get(value,'efficiency','0')),amount=int(get(value,'amount','0')))
-                    if not 0<=queue['progress']<=1 or not 0<=queue['efficiency']<=1:errors.append('Unbounded queue fraction '+name)
+                    if not 0<=queue['progress']<=1 or not 0<=queue['efficiency']<=100:errors.append('Unbounded queue parameter '+name)
                     if queue['factories']<=0:errors.append('Invalid zero queue capacity '+name)
                     production.append(queue)
                 elif key=='add_equipment_to_stockpile':
@@ -100,7 +122,7 @@ def actual_case(tag,bba,mtg,human=(),lar=True):
     military=sum(q['factories'] for r in rosters if '_navy' not in r['name'] for q in r['production'])
     yards=sum(q['factories'] for r in rosters if '_navy' in r['name'] for q in r['production'])
     if military>capacities[tag]['mil'] or yards>capacities[tag]['yards']:errors.append('Production exceeds core-owned capacity')
-    return dict(tag=tag,bba=bba,mtg=mtg,lar=lar,human_tags=list(human),nsb='not projected by this BBA/MTG slice; separate armor compatibility owner',
+    return dict(tag=tag,bba=bba,mtg=mtg,lar=lar,human_tags=list(human),nsb=nsb,
         capability_status='Source-equipment parity checked; native behavior untested' if lar else 'RELEASE GAP: reconnaissance-mission capability without La Resistance is not established; specialist aircraft retained',
         division_count=sum(len(r['divisions']) for r in rosters),ship_count=sum(len(r['ships']) for r in rosters),
         aircraft_count=sum(w['amount'] for r in rosters for w in r['wings']),
@@ -111,9 +133,9 @@ def actual_case(tag,bba,mtg,human=(),lar=True):
 def report():
     cases=[]
     for tag in TAGS:
-        for bba,mtg in [(False,False),(True,False),(False,True),(True,True)]:
+        for bba,mtg,nsb in [(b,m,n) for b,m in [(False,False),(True,False),(False,True),(True,True)] for n in (False,True)]:
             for human in (((),('BLK',)) if tag=='FAT' else ((),)):
-                for lar in (True,False):cases.append(actual_case(tag,bba,mtg,human,lar))
+                for lar in (True,False):cases.append(actual_case(tag,bba,mtg,human,lar,nsb))
     divergences={}
     for tag in TAGS:
         data={}
@@ -125,11 +147,11 @@ def report():
         divergences[tag]=data
     return dict(schema=1,source_layer='Retained mod provenance plus explicit provisional compatibility/calibration.',
         evidence='Actual branch-sensitive shipped history and OOB inspection; not engine parsing, native DLC behavior, balance, supply or fuel acceptance.',
-        primary_contract='tools/world_legacy/primary_contract.json',core_profiles=20,lar_disabled_gap_profiles=20,
+        primary_contract='tools/world_legacy/primary_contract.json',core_profiles=40,lar_disabled_gap_profiles=40,
         cases=cases,legacy_naval_divergences=divergences,
         release_gaps=['Native DLC loading, equipment consumption, crew assignments and mission operation remain untested.',
                       'La Resistance-disabled reconnaissance mission availability is not established by hidden tech grants.',
-                      'No Step Back-specific armored replacement support remains owned by the separate world armor compatibility component.'])
+                      'Native No Step Back designer initialization and replacement operation remain untested despite valid source recipes and production gates.'])
 
 
 if __name__=='__main__':

@@ -42,3 +42,15 @@ Initial runs retained for audit:
 The earlier `3b8a3d26...` payload receipts continue to identify their original
 mechanical-test phases. The English addition produces a new final payload;
 it must not be described as byte-identical to those earlier receipts.
+
+The later combined reconstruction suite exposed an outdated funded-service
+fixture: it released REC and relied on the former automatic opening cash. The
+new release account correctly has zero cash/debt, so paid services correctly
+refused to start. The funded fixture now receives an explicit 0.02 accounting
+unit receipt through the actual macro owner's public `ac_macro_receive` API.
+Production initialization, costs and eligibility are not weakened. A new
+seventeenth reconstruction regression independently verifies zero opening cash
+and debt, refusal without charging PP/capacity, actual payment after a public
+receipt, and no duplicate start. Legacy/disabled modes retain their own existing
+fixtures. The original failed combined run is retained:
+<https://github.com/JasonBreen/project-ulysses-road-to-nemo/actions/runs/41272557984>.

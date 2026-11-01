@@ -109,6 +109,10 @@ class ReconstructionRuntime(unittest.TestCase):
         cls.baselines={mode:World(mode).initialize_both() for mode in ('full','experimental','disabled')}
         for mode,w in cls.baselines.items():
             w.today=date(2006,1,1).toordinal();w.rc_action('on_startup')
+            # The service fixtures need funded accounts. A legitimate Rectan
+            # release now correctly starts with no second opening cash seed.
+            # Supply an explicit fixture receipt through the actual owner.
+            if mode=='full':w.run('ac_macro_receive','REC',dict(ac_macro_transaction_amount=D('.02')))
             for tag in COUNTRY_NAMES:
                 c=w.countries[tag];c.variables['ac_pol_capacity']=D(40)
                 if mode=='experimental':
@@ -119,6 +123,22 @@ class ReconstructionRuntime(unittest.TestCase):
         c.completed.add(branch.entry)
         for n in ([0] if service==0 else [0,1,3]):w.complete(focus_id(branch,n),branch.tag)
         return w,c
+
+    def test_new_rectan_release_has_no_seed_and_needs_a_real_receipt_before_service(self):
+        w=World('full').initialize_both();w.today=date(2006,1,1).toordinal();w.rc_action('on_startup')
+        c=w.countries['REC'];c.variables['ac_pol_capacity']=D(40)
+        self.assertEqual(D(0),c.variables['ac_macro_cash']);self.assertEqual(D(0),c.variables['ac_macro_debt'])
+        branch=next(b for b in BRANCHES if b.tag=='REC');c.completed.add(branch.entry)
+        w.complete(focus_id(branch,0),'REC')
+        ident=next(ident for b,n,ident in build.SERVICES if b==branch and n==0)
+        pp=c.pp;w.run(ident+'_start','REC')
+        self.assertEqual(pp,c.pp);self.assertEqual(40,c.variables['ac_pol_capacity'])
+        self.assertNotIn(ident+'_spirit',c.ideas);self.assertEqual(D(0),c.variables['ac_macro_cash'])
+        w.run('ac_macro_receive','REC',dict(ac_macro_transaction_amount=D('.01')))
+        w.run(ident+'_start','REC')
+        self.assertEqual(pp-35,c.pp);self.assertEqual(36,c.variables['ac_pol_capacity'])
+        self.assertEqual(D('.008'),c.variables['ac_macro_cash']);self.assertIn(ident+'_spirit',c.ideas)
+        paid=copy.deepcopy(c);w.run(ident+'_start','REC');self.assertEqual(paid,c)
 
     def test_all_twenty_services_pay_both_real_owners_once_in_three_modes(self):
         for b,n,ident in build.SERVICES:

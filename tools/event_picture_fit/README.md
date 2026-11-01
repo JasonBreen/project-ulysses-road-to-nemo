@@ -51,7 +51,7 @@ existing authoritative generators and committed output change together. The
 Continental War generator also packages the six original news sources/bindings.
 Do not run `capture.py` over an existing contract to bless another change.
 
-The14 focused regressions include real temporary event→sprite→DDS→GUI fixtures
+The15 focused regressions include real temporary event→sprite→DDS→GUI fixtures
 for oversized textures, news/country misuse, missing controls/bindings, actual
 scale/sibling-bound mutations and invalid frame dimensions. Review PNG compression
 variation is accepted only with exact dimensions/RGBA; changed pixels fail.

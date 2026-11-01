@@ -112,5 +112,10 @@ class EventPictures(unittest.TestCase):
         self.assertTrue(same_review_png(a.getvalue(),b.getvalue()))
         image.putpixel((0,0),(21,40,60,255));b=io.BytesIO();image.save(b,format='PNG');self.assertFalse(same_review_png(a.getvalue(),b.getvalue()))
         b=io.BytesIO();image.resize((3,4)).save(b,format='PNG');self.assertFalse(same_review_png(a.getvalue(),b.getvalue()))
+    def test_existing_original_contract_cannot_be_recaptured(self):
+        p=HERE/'contract.json';before=p.read_bytes()
+        result=subprocess.run([sys.executable,'-B',str(HERE/'capture.py')],cwd=ROOT,capture_output=True,text=True)
+        self.assertNotEqual(0,result.returncode);self.assertIn('Refusing to recapture',result.stdout+result.stderr)
+        self.assertEqual(before,p.read_bytes())
 
 if __name__=='__main__':unittest.main(verbosity=2)

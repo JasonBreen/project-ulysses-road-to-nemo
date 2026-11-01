@@ -1,5 +1,5 @@
 """One-time review capture; refuses to replace an existing preservation record."""
-import hashlib,json,sys,subprocess
+import argparse,hashlib,json,sys,subprocess
 from pathlib import Path
 from PIL import Image
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools'))
@@ -9,6 +9,10 @@ from usea_expansion.script import parse,get
 HERE=Path(__file__).resolve().parent
 target=HERE/'contract.json'
 if target.exists():raise SystemExit('Refusing to recapture the original fit/provenance contract')
+BASE='a85d783038e113a3ee8fec8c6a4dea9a2e22b143'
+if subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()!=BASE:
+    raise SystemExit('One-time capture requires the original reviewed parent; never refresh this contract on a later payload')
+parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--engine',type=Path,required=True);args=parser.parse_args()
 def sha(path):
     raw=path.read_bytes()
     if path.suffix in ('.py','.txt','.gui','.gfx','.json','.md'):raw=raw.replace(b'\r\n',b'\n')
@@ -35,7 +39,7 @@ for family,key,count in [('land_program','protected_sources_sha256',1050),('air_
     overlap=[name for name in data[key] if name.removeprefix('mod/2985041246/') in event_sources]
     assert not overlap
     military[p.relative_to(ROOT).as_posix()]=dict(sha256=sha(p),protected_count=count,changed_event_overlap=overlap)
-primary_root=Path(r'G:\steamlbirary\steamapps\common\Hearts of Iron IV')
+primary_root=args.engine.resolve()
 primary={}
 for family,filename in [('country_event','report_event_001.dds'),('news_event','news_event_001.dds')]:
     p=primary_root/'gfx/event_pictures'/filename

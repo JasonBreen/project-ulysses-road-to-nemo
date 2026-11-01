@@ -4,6 +4,24 @@ The implementation and provenance ledger is
 [docs/EVENT_PICTURE_FIT.md](../../docs/EVENT_PICTURE_FIT.md).
 Use Python3.12/Pillow11.3.0, matching CI. No engine or desktop is launched.
 
+On the composed style-enabled tree, the live runner defaults to the explicit
+reviewed `event-style` screen contract: exact23-field restoration, actual native
+sprite metadata and zero eventwindow/decision ownership failures under the
+explicit base-only profile. It writes a **new** `composed-source-checks` directory;
+the original `source-checks`15-fallback receipts and immutable capture remain
+historical evidence. Wider pools/global/native presentation are not accepted.
+
+```powershell
+python -B tools/event_picture_fit/run_checks.py --engine $env:ULYSSES_GAME_ROOT --event-screen-contract event-style
+# After a runner-only change, retain independent affected-contract receipts:
+python -B tools/event_picture_fit/run_checks.py --engine $env:ULYSSES_GAME_ROOT --event-screen-contract event-style --screen-contract-only --output docs/evidence/event-style/runner-compatibility
+python -B tools/Test-EventRunner.py
+```
+
+`--event-screen-contract original-fit` is an explicit historical contract and
+requires the original unstyled GUI; the composed GUI cannot silently satisfy it.
+That mode checks the exact original15 failures, never an arbitrary nonzero list.
+
 ```python
 from event_picture_fit.fit import contain
 country_texture = contain(original_master, 'country_event')  #210×176

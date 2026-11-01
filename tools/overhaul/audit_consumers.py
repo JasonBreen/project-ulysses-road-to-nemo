@@ -31,6 +31,7 @@ RESOURCE_SUFFIXES = {"image": {".dds", ".tga", ".png", ".jpg", ".jpeg", ".bmp"},
 sys.path.insert(0, str(ROOT / "tools/usea_expansion"))
 from script import get, parse, walk
 from providers import Providers
+from text_structure import validate_structure
 
 
 def scalar(value):
@@ -123,7 +124,9 @@ class Audit:
         if rel in self.trees:
             return self.trees[rel]
         try:
-            tree = parse(path.read_text(encoding="utf-8-sig", errors="replace"))
+            source = path.read_text(encoding="utf-8-sig", errors="replace")
+            validate_structure(source)
+            tree = parse(source)
         except (ValueError, IndexError, OSError, RuntimeError, zipfile.BadZipFile, NotImplementedError) as exc:
             self.parse_failures.append(dict(source=rel, origin=origin, provider=getattr(path,"provider",origin), provider_source=getattr(path,"source",rel), error=str(exc).replace(str(self.vfs.engine), "engine://").replace(str(self.vfs.mod), "mod://")))
             tree = []

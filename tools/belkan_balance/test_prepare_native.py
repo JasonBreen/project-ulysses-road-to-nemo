@@ -137,6 +137,13 @@ save_as_binary=yes
         self.assertIn("\tsize={\n\t\tx=3440\n\t\ty=1440 }", settings)
         self.assertIn("\tgui_scale=1.000000", settings)
 
+    def test_accepts_already_correct_multiline_graphics_size(self) -> None:
+        source = "graphics={\n\tsize={\n\t\tx=3440\n\t\ty=1440 }\n\tgui_scale=1.000000\n}\n"
+        settings = prepare_native.disposable_settings(source, 3440, 1440)
+        self.assertEqual(settings.count("{"), settings.count("}"))
+        self.assertIn("\tsize={\n\t\tx=3440\n\t\ty=1440 }", settings)
+        self.assertIn("\tgui_scale=1.000000", settings)
+
     def test_rejects_nonpositive_display_dimensions(self) -> None:
         with self.assertRaisesRegex(prepare_native.PreparationError, "positive integers"):
             prepare_native.prepare(
@@ -167,6 +174,11 @@ save_as_binary=yes
         self.assertFalse(report["clean"])
         self.assertEqual(["logs/error.log"], report["changed"])
         self.assertEqual("changed externally\n", log.read_text(encoding="utf-8"))
+        report_path = self.target / "evidence" / "normal-run-01-verification.json"
+        original_report = report_path.read_bytes()
+        with self.assertRaisesRegex(prepare_native.PreparationError, "Refusing to overwrite"):
+            prepare_native.verify_normal(self.target, self.normal, "run-01")
+        self.assertEqual(original_report, report_path.read_bytes())
 
 
 if __name__ == "__main__":

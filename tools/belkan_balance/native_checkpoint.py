@@ -24,9 +24,10 @@ from pathlib import Path
 from typing import Any, Iterable
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 TAGS = ("BLK", "OSE", "UST", "SAP", "GEB", "FAT", "REC")
 PROVENANCE_VALUES = ("natural", "disabled-control", "forced")
+ECONOMY_MODES = ("full", "disabled", "experimental")
 RUN_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,79}\Z")
 HEX_40_RE = re.compile(r"[0-9a-fA-F]{40}\Z")
 HEX_64_RE = re.compile(r"[0-9a-fA-F]{64}\Z")
@@ -50,7 +51,6 @@ GLOBAL_FLAG_PREFIXES = (
 VARIABLE_PREFIXES = ("ac_campaign_", "ac_macro_", "ac_econ_", "BLK_")
 
 MACRO_FIELDS = {
-    "mode": "ac_macro_mode",
     "cash": "ac_macro_cash",
     "debt": "ac_macro_debt",
     "debt_ratio": "ac_macro_debt_ratio",
@@ -63,8 +63,6 @@ MACRO_FIELDS = {
     "potential_gdp": "ac_macro_potential_gdp",
     "growth": "ac_macro_growth",
     "inflation": "ac_macro_inflation",
-    "crisis": "ac_macro_crisis",
-    "warning": "ac_macro_warning",
     "stress_months": "ac_macro_stress_months",
     "recovery_months": "ac_macro_recovery_months",
     "upkeep": "ac_macro_upkeep",
@@ -174,6 +172,58 @@ def named_blocks(text: str, indent: int, names: Iterable[str] | None = None) -> 
     return result
 
 
+def _loose_scalar(text: str, name: str) -> str | None:
+    """Read a scalar at any indentation, including quoted rule keys."""
+
+    match = re.search(
+        r'^\s*"?' + re.escape(name) + r'"?\s*=\s*("(?:\\.|[^"\\])*"|[^\s{}]+)',
+        text,
+        re.M,
+    )
+    if match is None:
+        return None
+    value = match.group(1)
+    return value[1:-1] if value.startswith('"') and value.endswith('"') else value
+
+
+def game_rule_value(game_rules: str | None, rule_name: str) -> str | None:
+    """Extract one rule option from the common HOI4 save serializations.
+
+    Saves have used both direct ``rule=option`` entries and record blocks with
+    separate ``rule``/``option`` scalars. Supporting both keeps the checkpoint
+    schema tied to the real game-rule value rather than a synthetic variable.
+    """
+
+    if game_rules is None:
+        return None
+    values: set[str] = set()
+    direct_pattern = re.compile(
+        r'^\s*"?' + re.escape(rule_name) + r'"?\s*=\s*("(?:\\.|[^"\\])*"|[^\s{}]+)',
+        re.M,
+    )
+    for match in direct_pattern.finditer(game_rules):
+        value = match.group(1)
+        values.add(value[1:-1] if value.startswith('"') and value.endswith('"') else value)
+
+    block_pattern = re.compile(r'^\s*"?([A-Za-z0-9_.@:-]+)"?\s*=\s*\{', re.M)
+    for match in block_pattern.finditer(game_rules):
+        block_name = match.group(1)
+        body = game_rules[match.end():_block_end(game_rules, match.end(), block_name)]
+        if block_name == rule_name:
+            option = _loose_scalar(body, "option") or _loose_scalar(body, "value")
+            if option is not None:
+                values.add(option)
+        serialized_rule = _loose_scalar(body, "rule")
+        if serialized_rule == rule_name:
+            option = _loose_scalar(body, "option") or _loose_scalar(body, "value")
+            if option is not None:
+                values.add(option)
+
+    if len(values) > 1:
+        raise CheckpointError(f"Save contains conflicting values for game rule {rule_name}: {', '.join(sorted(values))}")
+    return next(iter(values), None)
+
+
 def parsed_value(value: str | None) -> Any:
     if value is None:
         return None
@@ -280,7 +330,12 @@ def _optional_scalar(
     return parsed
 
 
-def country_snapshot(tag: str, body: str | None, warnings: list[dict[str, str]]) -> dict[str, Any]:
+def country_snapshot(
+    tag: str,
+    body: str | None,
+    warnings: list[dict[str, str]],
+    economy_mode: str | None,
+) -> dict[str, Any]:
     scope = f"countries.{tag}"
     if body is None:
         warnings.append(warning("missing_country", scope, "present", f"{tag} is absent from the save's country table."))
@@ -319,15 +374,21 @@ def country_snapshot(tag: str, body: str | None, warnings: list[dict[str, str]])
     manpower = block_at(body, "manpower", 2)
     fuel = block_at(body, "fuel_status", 2)
     politics = block_at(body, "politics", 2)
+    macro_initialized = "ac_macro_initialized" in country_flags
     economy = {
-        "macro": {name: country_variables.get(variable) for name, variable in MACRO_FIELDS.items()},
+        "macro": {
+            "mode": economy_mode,
+            "initialized": macro_initialized,
+            "crisis": "ac_macro_crisis" in country_flags,
+            "warning": "ac_macro_warning" in country_flags,
+            **{name: country_variables.get(variable) for name, variable in MACRO_FIELDS.items()},
+        },
         "legacy": {name: country_variables.get(variable) for name, variable in LEGACY_ECONOMY_FIELDS.items()},
     }
-    macro_ready = "ac_macro_ready" in country_flags or "ac_macro_initialized" in country_flags
-    if macro_ready:
-        for required in ("cash", "debt", "arrears", "funding", "readiness", "nominal_gdp", "growth", "inflation", "crisis"):
+    if macro_initialized:
+        for required in ("cash", "debt", "arrears", "funding", "readiness", "nominal_gdp", "growth", "inflation"):
             if economy["macro"][required] is None:
-                warnings.append(warning("missing_economy_field", scope, required, f"Economy v2 is marked ready but {required} is absent."))
+                warnings.append(warning("missing_economy_field", scope, required, f"Economy v2 is initialized but {required} is absent."))
 
     return {
         "present": True,
@@ -447,6 +508,7 @@ def capture(save: Path, run_id: str, provenance: str) -> dict[str, Any]:
     states_body = block_at(text, "states", 0)
     global_flags_body = block_at(text, "flags", 0)
     global_variables_body = block_at(text, "variables", 0)
+    game_rules_body = block_at(text, "game_rules", 0)
     missing_required = [
         name
         for name, value in (
@@ -469,7 +531,29 @@ def capture(save: Path, run_id: str, provenance: str) -> dict[str, Any]:
     if "BLK" not in country_blocks:
         raise CheckpointError("Belka is missing from the save's country table; campaign lifecycle cannot be established.")
     warnings: list[dict[str, str]] = []
-    countries = {tag: country_snapshot(tag, country_blocks.get(tag), warnings) for tag in TAGS}
+    economy_mode = game_rule_value(game_rules_body, "ac_economy")
+    if economy_mode is None:
+        warnings.append(
+            warning(
+                "missing_optional_field",
+                "run",
+                "game_rules.ac_economy",
+                "The save does not expose the ac_economy game-rule option.",
+            )
+        )
+    elif economy_mode not in ECONOMY_MODES:
+        warnings.append(
+            warning(
+                "unsupported_game_rule_option",
+                "run",
+                "game_rules.ac_economy",
+                f"The save contains an unrecognized ac_economy option: {economy_mode}.",
+            )
+        )
+    countries = {
+        tag: country_snapshot(tag, country_blocks.get(tag), warnings, economy_mode)
+        for tag in TAGS
+    }
     global_flags = flags_at(global_flags_body or "", 1)
     selected_global_flags = {flag for flag in global_flags if flag.startswith(GLOBAL_FLAG_PREFIXES)}
     global_variables = variables_at(global_variables_body or "", 1)
@@ -494,6 +578,7 @@ def capture(save: Path, run_id: str, provenance: str) -> dict[str, Any]:
             "date": date,
             "player_tag": player,
             "observer": player in {"---", "observer", "spectator"},
+            "game_rules": {"ac_economy": economy_mode},
         },
         "source": {
             "commit": native["source_commit"].lower(),
@@ -507,7 +592,6 @@ def capture(save: Path, run_id: str, provenance: str) -> dict[str, Any]:
             "save_checksum": save_checksum,
         },
         "save": {
-            "filename": save.name,
             "sha256": hashlib.sha256(raw).hexdigest(),
         },
         "lifecycle": None,

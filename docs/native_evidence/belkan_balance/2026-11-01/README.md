@@ -38,10 +38,11 @@ The implementation head passed:
 - 16 startup-chronology tests;
 - Economy v2 generation parity, 27 macro tests and 14 ledger/UI tests;
 - all nine force-upkeep tests with the installed engine reference;
-- 13 Belkan native-evidence unit tests, including text-save rejection cases,
-  privacy bounds, exact payload provenance, fail-closed root preparation,
-  normal-profile comparison, exact `userdir.txt` bytes and both supported
-  graphics-settings layouts;
+- 15 Belkan native-evidence unit tests, including text-save rejection cases,
+  schema-2 privacy bounds, real game-rule/flag economy-state extraction, exact
+  payload provenance, fail-closed root preparation and verification receipts,
+  normal-profile comparison, exact `userdir.txt` bytes, and unchanged or
+  engine-rewritten graphics-settings layouts;
 - `git diff --check` and a clean tracked worktree after checks.
 
 These are static/offline results only. They do not establish that a focus was

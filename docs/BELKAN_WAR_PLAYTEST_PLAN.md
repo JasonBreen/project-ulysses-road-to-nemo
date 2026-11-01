@@ -5,12 +5,14 @@ War and postwar branches in `mod/2985041246` are reachable. It expands
 [NATIVE_PLAYTEST_CHECKLIST.md](NATIVE_PLAYTEST_CHECKLIST.md) into concrete
 routes, conditions and console steps for issue #8.
 
-**Status: implementation and native acceptance in progress.** The 1 November
-2026 balance round is based on post-stack `main` at
+**Status: static-only; native playtesting is paused by the owner.** The 1
+November 2026 balance round is based on post-stack `main` at
 `797f941e04e51a884b2d26f14eb1b9d66d49ce95`. Its source changes and offline
-checks do not count as native results. The owner separately approved an isolated
-native run for this bounded Belkan War scope; every native result remains
-"not exercised" until it is entered in the dated acceptance ledger.
+checks do not count as native results. The earlier authorization for bounded
+isolation boot preflight is no longer active for this round. Do not launch a
+copied engine, control the game UI, create a save, or resume any gameplay case
+without renewed explicit approval. Every native gameplay result remains "not
+exercised" in the [dated acceptance ledger](native_evidence/belkan_balance/2026-11-01/README.md).
 
 ## Source and gameplay status
 
@@ -446,11 +448,11 @@ Confirm each in preflight; mark missing ones in the run log.
 
 ## Recording each result
 
-For every step record: step ID, head SHA, natural or forced, save name,
-date in game, result (`native-pass`, `native-pass (forced)`, `native-fail`,
-`not exercised`), and for failures the event/focus/decision ID, `error.log`
-excerpt and steps to reproduce. Never record a static check as a runtime
-pass.
+If native testing is separately reauthorized, record for every step: step ID,
+head SHA, natural or forced, an opaque off-repository save label, date in game,
+result (`native-pass`, `native-pass (forced)`, `native-fail`, `not exercised`),
+and for failures the event/focus/decision ID, `error.log` excerpt and steps to
+reproduce. Never record a static check as a runtime pass.
 
 Raw saves remain outside Git. Create a sanitized checkpoint with:
 
@@ -461,11 +463,14 @@ py tools/belkan_balance/native_checkpoint.py SAVE_PATH \
   --output OUTPUT_JSON
 ```
 
-The isolated native root must contain `native-provenance.json` with schema 1,
-the exact 40-character source commit, a relative payload-manifest filename and
-SHA-256, and copied-engine version/build/checksum. The extractor verifies the
-manifest hash, rejects binary/malformed saves, never edits the save, and emits
-only bounded observations for BLK/OSE/UST/SAP/GEB/FAT/REC. Missing optional
-fields are `null` with structured warnings. A forced checkpoint may validate
-downstream wiring but never counts toward reachability, duration, outcome bias,
-economy balance or player fairness.
+The isolated native root must contain `native-provenance.json` with sidecar
+schema 1, the exact 40-character source commit, a relative payload-manifest
+filename and SHA-256, and copied-engine version/build/checksum. Checkpoint JSON
+uses schema 2. The extractor verifies the manifest hash, rejects
+binary/malformed saves, never edits the save, reads the Economy v2 mode from
+the `ac_economy` game rule and crisis/warning state from country flags, and
+emits only bounded observations for BLK/OSE/UST/SAP/GEB/FAT/REC. It retains the
+save-content SHA-256 but deliberately omits the raw save filename and path.
+Missing optional fields are `null` with structured warnings. A forced
+checkpoint may validate downstream wiring but never counts toward reachability,
+duration, outcome bias, economy balance or player fairness.

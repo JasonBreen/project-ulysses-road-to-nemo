@@ -50,7 +50,7 @@ class NativeCheckpoint(unittest.TestCase):
 
     def test_extracts_bounded_campaign_economy_and_control_evidence(self) -> None:
         result = checkpoint.capture(self.save, "obs-full-01-war-day-30", "natural")
-        self.assertEqual(1, result["schema_version"])
+        self.assertEqual(2, result["schema_version"])
         self.assertEqual("native_observation", result["evidence_class"])
         self.assertEqual(COMMIT, result["source"]["commit"])
         self.assertEqual("1995.3.25.12", result["run"]["date"])
@@ -61,6 +61,11 @@ class NativeCheckpoint(unittest.TestCase):
         self.assertTrue(result["lifecycle"]["stages"]["one"])
         self.assertEqual("belka_dlp_belkan_war", result["countries"]["BLK"]["focus_tree"])
         self.assertEqual("BLK_dlp_war", result["countries"]["BLK"]["selected_focus"])
+        self.assertEqual("full", result["run"]["game_rules"]["ac_economy"])
+        self.assertEqual("full", result["countries"]["BLK"]["economy"]["macro"]["mode"])
+        self.assertTrue(result["countries"]["BLK"]["economy"]["macro"]["initialized"])
+        self.assertTrue(result["countries"]["BLK"]["economy"]["macro"]["crisis"])
+        self.assertFalse(result["countries"]["BLK"]["economy"]["macro"]["warning"])
         self.assertEqual(100, result["countries"]["BLK"]["economy"]["macro"]["cash"])
         self.assertEqual(64000, result["countries"]["BLK"]["fuel"]["current"])
         self.assertEqual(73.25, result["countries"]["BLK"]["political_power"])
@@ -74,6 +79,12 @@ class NativeCheckpoint(unittest.TestCase):
         self.assertNotIn(str(self.root), serialized)
         self.assertNotIn("player_countries", serialized)
         self.assertNotIn("raw", serialized)
+        self.assertNotIn("checkpoint.hoi4", serialized)
+        self.assertNotIn("filename", checkpoint.capture(self.save, "blk-full", "natural")["save"])
+
+    def test_reads_record_style_game_rule_serialization(self) -> None:
+        serialized = '\t0={\n\t\trule="ac_economy"\n\t\toption="disabled"\n\t}\n'
+        self.assertEqual("disabled", checkpoint.game_rule_value(serialized, "ac_economy"))
 
     def test_missing_optional_fields_are_null_with_structured_warnings(self) -> None:
         result = checkpoint.capture(self.save, "blk-full", "natural")

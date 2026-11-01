@@ -107,6 +107,9 @@ def verify_normal(target: Path, normal: Path, label: str) -> dict[str, Any]:
     before_path = target / "evidence" / f"normal-{label}-before.json"
     if not before_path.is_file():
         raise PreparationError(f"Missing before snapshot for label {label}.")
+    report_path = target / "evidence" / f"normal-{label}-verification.json"
+    if report_path.exists():
+        raise PreparationError(f"Refusing to overwrite an existing normal-profile verification: {report_path.name}")
     before = json.loads(before_path.read_text(encoding="utf-8"))["files"]
     after = protected_manifest(normal)
     changed = sorted(path for path in before.keys() & after.keys() if before[path] != after[path])
@@ -123,7 +126,7 @@ def verify_normal(target: Path, normal: Path, label: str) -> dict[str, Any]:
         "removed": removed,
         "action": "No restoration attempted; report any unrelated activity separately.",
     }
-    write_json(target / "evidence" / f"normal-{label}-verification.json", report)
+    write_json(report_path, report)
     return report
 
 
@@ -162,7 +165,7 @@ def parse_build_id(app_manifest: Path) -> str:
 
 
 def disposable_settings(source: str, width: int, height: int) -> str:
-    settings = re.sub(
+    settings, replacements = re.subn(
         r"(?m)^([ \t]*)size=\{\r?\n[ \t]*x=\d+\r?\n[ \t]*y=\d+[ \t]*\}",
         lambda match: (
             f"{match.group(1)}size={{\n"
@@ -172,8 +175,8 @@ def disposable_settings(source: str, width: int, height: int) -> str:
         source,
         count=1,
     )
-    if settings == source:
-        settings = re.sub(
+    if replacements == 0:
+        settings, replacements = re.subn(
             r"(?m)^([ \t]*)size=\{[ \t]*x=\d+[ \t]+y=\d+[ \t]*\}",
             lambda match: (
                 f"{match.group(1)}size={{\n"
@@ -183,7 +186,7 @@ def disposable_settings(source: str, width: int, height: int) -> str:
             source,
             count=1,
         )
-    if settings == source:
+    if replacements == 0:
         raise PreparationError("Normal settings do not contain a supported graphics size block.")
 
     def replace_or_append(name: str, value: str) -> None:

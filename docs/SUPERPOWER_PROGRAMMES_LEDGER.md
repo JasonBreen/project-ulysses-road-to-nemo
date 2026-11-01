@@ -4,8 +4,9 @@ SP96 is implemented and ready for source review. The integrated full phase passe
 57 commands; current superpower and affected-parent follow-ups also pass. Those
 phases cover all 59 unique commands in the final runner. Native gameplay remains
 pending. No native game, desktop, user profile, normal installation or save has
-been opened or changed during this packet. The roadmap now records 390 delivered
-additions and 638 outstanding, including 48 new definitions per superpower. The
+been opened or changed during this packet. The candidate review ledger records
+390 implemented additions and 638 outstanding, including 48 new definitions per
+superpower. This count describes the composed review stack, not merged main. The
 remaining approved additions are 44 Osean and 42 Yuktobanian. The separate 36-focus
 regional framework is not counted again.
 

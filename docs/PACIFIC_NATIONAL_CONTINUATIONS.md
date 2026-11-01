@@ -1,10 +1,10 @@
 # Pacific national continuations: separate delivery components
 
-The Osean component delivers 44 additional focus definitions, including mutually
-exclusive alternatives, bringing Osea to its approved 150 total. Yuktobania's
-remaining 42 definitions and the separate CPW/two-story packets are still pending
+The independent national components deliver 44 Osean and 42 Yuktobanian focus
+definitions, including mutually exclusive alternatives, bringing their totals
+to the approved 150 and 120. The separate CPW and two-story packets remain pending
 their own coherent implementation and evidence. The country-addition ledger is
-434 delivered and 594 remaining; the regional 36 definitions and story chapters
+476 delivered and 552 remaining; the regional 36 definitions and story chapters
 are separate counts. Native acceptance remains pending.
 
 Osea's six lanes are guarantor limits 8, contact verification 8, replacement
@@ -58,6 +58,24 @@ Conclusions remain useful after 2020
 and do not require another country's acceptance or any completed war.
 
 ## Public read surface for the later CPW owner
+
+Yuktobania's six lanes are field answers 8, readiness beside the workshop 8,
+port orders 8, scientific custody 8, civil receiving 6 and the national return 4.
+They preserve the real inherited intervention and command-reform choices.
+The final four-node account requires earned prior reviews and adds no artificial
+extra service. Either policy receives its hearing. All conclusions remain useful
+after refusal, interruption, subject status or a continuing outside conflict.
+
+`ac_snc_yuk_verification_earned` requires the field-answer settlement and either
+the actual completed legacy field reform, a civilian allocation of at least 60,
+the new civil policy and public hearing, or the actual expeditionary command and
+its earlier assessment, a civilian floor of 40, protected policy, staff return and
+signed assessment. The runtime regression uses the real paid allocation effect;
+removing the inherited reform/assessment invalidates the corresponding route.
+`ac_snc_yuk_channel_earned` requires the scientific-custody settlement. Its
+stronger scientific variant additionally reads completed technical cooperation,
+the existing Arkbird partnership/completion and Osea's earned channel. None of
+these records establishes a foreign government's current eligibility or consent.
 
 `ac_snc_ose_verification_earned` requires the completed contact-verification
 settlement plus the corresponding real policy and recorded public hearing, or
@@ -139,3 +157,32 @@ user playset, settings or saves were touched. The next component remains separat
 
 Reproduction and ownership details are in `tools/pacific_nations/README.md` and
 the source-layer record is `tools/pacific_nations/sources.json`.
+
+## Yuktobanian component evidence
+
+The Yuktobanian packet adds 122 original DDS textures, 56 editable PNG masters
+and 164 bindings: 42 distinct focus compositions and shines, 60 spirits, five
+native 26 x 29 renewal rows, one category and fourteen national illustrations.
+The [Yuktobanian gallery](../tools/pacific_nations/gallery/YUK.png) was inspected
+offline. Its [actual dependency capture](evidence/pacific-nations/YUK/dependencies.json)
+resolves all 122 new consumer references to 122 exact hash-pinned authored
+resources; decisions and macro ownership each report zero failures. The full
+inherited graph remains FAIL with 20,898 dependency entries and 18 inherited
+reference-parser failures under this deliberately country-scoped profile. These
+are dependency entries, not image counts or a full-conversion acceptance claim.
+
+The [initial broad run](evidence/pacific-nations/YUK/attempts/unpinned-row-review/results.json)
+retains 21 passing groups and one failure: decision-row review PNGs had been
+rendered with the environment's unpinned Pillow version. Re-rendering those
+review artifacts with Pillow 11.3.0 changes no delivered gameplay or textures.
+The [final eight affected gates](evidence/pacific-nations/YUK/final/results.json)
+repeat the national runtime/source/art, full caption geometry, decision controls
+and consumer bounds, presentation, strict assets, campaign and full installed
+reference/baseline static checks. Other passing broad-run groups retain their
+original source hashes and logs. The paired national suite executes all 86
+focus definitions and real funded paths in full, experimental and disabled
+fiscal modes, persistent replies, same-day serial boundaries, interruptions,
+copied identities, late conclusions and Decimal/deepcopy reloads. Registry
+reproduction retains all 69 fiscal and political profiles and now inventories
+Osea 150/Yuktobania 120. Native GUI, saves, campaign pacing and engine arithmetic
+remain untested.

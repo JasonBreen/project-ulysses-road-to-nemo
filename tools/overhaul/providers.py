@@ -18,6 +18,7 @@ import zipfile
 
 ROOTS = {"interface", "common", "gfx", "sound", "music", "events", "history", "portraits"}
 MAX_TEXT_BYTES = 8 * 1024 * 1024
+DEFINITION_SUFFIXES = {".gfx", ".gui", ".asset", ".txt", ".dlc"}
 
 
 def normal(value):
@@ -65,6 +66,8 @@ class Asset:
         return self.read_bytes().decode(encoding, errors=errors)
 
     def sha256(self):
+        if self.suffix.lower() in DEFINITION_SUFFIXES and self.bytes > MAX_TEXT_BYTES:
+            raise ValueError("Definition exceeds the bounded text-reader limit; not hashed or decompressed")
         if self._hash is None:
             if self.member is None:
                 self._hash = digest(self.path)
@@ -134,8 +137,11 @@ class Providers:
         for path in sorted(descriptors):
             relative = path.relative_to(self.engine).as_posix()
             ident = normal(relative); described.add(ident)
-            row = dict(descriptor="engine://" + relative, descriptor_sha256=digest(path), selected=ident in selected)
+            row = dict(descriptor="engine://" + relative, descriptor_sha256=None, selected=ident in selected)
             try:
+                if path.stat().st_size > MAX_TEXT_BYTES:
+                    raise ValueError("Descriptor exceeds the bounded text-reader limit")
+                row["descriptor_sha256"] = digest(path)
                 fields = {k: v.strip('"') for k, _, v in parser(path.read_text(encoding="utf-8-sig")) if isinstance(v, str)}
                 row.update(name=fields.get("name", ""), steam_id=fields.get("steam_id"),
                            payload_kind="archive" if "archive" in fields else "directory" if "path" in fields else "unresolved")
@@ -188,7 +194,7 @@ class Providers:
                     if row["selected"]:
                         self.directory(payload, provider, "engine", row["payload"] + "/")
                 row["inspection"] = "mounted_by_explicit_audit_profile" if row["selected"] else "inventory_only_not_enabled"
-            except (ValueError, OSError, zipfile.BadZipFile) as exc:
+            except (ValueError, IndexError, OSError, zipfile.BadZipFile) as exc:
                 row.update(inspection="unresolved_provider", error=str(exc).replace(str(self.engine), "engine://"))
                 if row["selected"]:
                     self.errors.append("Selected provider cannot be inspected: " + relative)
@@ -208,7 +214,7 @@ class Providers:
             winner = candidates[-1]
             try:
                 differing = len(candidates) > 1 and len({a.sha256() for a in candidates}) > 1
-            except (OSError, RuntimeError, zipfile.BadZipFile, NotImplementedError):
+            except (ValueError, OSError, RuntimeError, zipfile.BadZipFile, NotImplementedError):
                 self.errors.append("Provider collision cannot be read: " + rel)
                 differing = True
             if differing:
@@ -217,7 +223,7 @@ class Providers:
             if choice:
                 try:
                     matching = [a for a in candidates if a.provider == choice["provider"] and a.sha256() == choice["sha256"]]
-                except (OSError, RuntimeError, zipfile.BadZipFile, NotImplementedError):
+                except (ValueError, OSError, RuntimeError, zipfile.BadZipFile, NotImplementedError):
                     matching = []
                 if len(matching) == 1:
                     winner = matching[0]; self.ambiguities.pop(rel, None)
@@ -263,7 +269,7 @@ class Providers:
         approval = self.approvals.get((asset.relative, asset.provider))
         try:
             matches = approval and asset.sha256() == approval["sha256"]
-        except (OSError, RuntimeError, zipfile.BadZipFile, NotImplementedError):
+        except (ValueError, OSError, RuntimeError, zipfile.BadZipFile, NotImplementedError):
             return "unresolved", "Hash-pinned resource cannot be read"
         if matches:
             if approval["classification"] == "authored" and asset.origin != "mod":

@@ -24,14 +24,15 @@ hashes of every other authored event file as a preservation receipt for this
 package. Future changes to those files belong to their own owners; these
 receipts are not an instruction to freeze later campaign development.
 
-The six focused regressions check the independent ID union, every actual
+The seven focused regressions check the independent ID union, every actual
 handler's AST, literal event callers, quoted/commented text, generator ownership
 and reproducibility. With a supplied read-only reference, they also recapture the
 installed ID set and verify the hidden-news examples. The caller scan covers
 literal block and short-form calls in the mod's common/events/history text. It
 does not claim that engine, DLC or dynamically assembled calls are absent.
-Without an installed reference, that one primary-metadata test is explicitly
-skipped; the five source regressions still run in CI.
+Adjacent inline comments are tokenized separately even when no space precedes
+`#`; quoted text remains atomic. Without an installed reference, the one
+primary-metadata test is explicitly skipped; six source regressions run in CI.
 
 Reproduce the bounded source checks from the repository root:
 

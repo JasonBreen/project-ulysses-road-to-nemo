@@ -23,6 +23,14 @@ from harness import World
 ENGINE=None
 def digest(path):return hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
 def read(path):return parse(path.read_text(encoding='utf-8-sig'))
+def reviewed_updates():
+    files={}
+    for name in ('reviewed_owner_updates.json','reviewed_campaign_updates.json'):
+        receipt=ROOT/'tools/air_program'/name
+        for path,row in json.loads(receipt.read_text())['files'].items():
+            if path in files:raise ValueError('Duplicate reviewed source update '+path)
+            files[path]=row
+    return files
 
 class Sources(unittest.TestCase):
     @classmethod
@@ -135,7 +143,7 @@ class Sources(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Multiple averaged'):self.p.stats(ident,selected)
     def test_preserved_sources_and_no_early_grants_or_new_war_project_owners(self):
         manifest=json.loads((HERE/'preserved_sources.json').read_text());self.assertEqual(1110,len(manifest['sources']))
-        updates=json.loads((ROOT/'tools/air_program/reviewed_owner_updates.json').read_text())['files']
+        updates=reviewed_updates()
         for path,expected in manifest['sources'].items():
             update=updates.get(path)
             if update:self.assertEqual(expected,update['old_sha256'],path)

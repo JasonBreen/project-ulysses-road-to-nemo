@@ -173,5 +173,48 @@
     ],
     "game_payload_changes": false,
     "native_coverage": "None; testing remains paused. The earlier full static pass and final-commit CI remain separate evidence."
+  },
+  "second_review_followup": {
+    "source_head": "a4abc0e4ef5757db2a093d8325e0429e3631d6a2",
+    "review_comments": [
+      4433843427,
+      4433843461,
+      4433843489,
+      4433843523,
+      4433843552
+    ],
+    "changes": [
+      "All found resource probes preserve provider ambiguity, with exact candidate metadata.",
+      "Scripted controls bind to one unambiguous window; differing windows and dynamic-list templates fail.",
+      "Missing animation names no longer overwrite the containing entity identity.",
+      "Oversized definitions are rejected before collision/override hashing without restricting streaming hashes of large media.",
+      "Truncated/malformed descriptor parsing records selected/unselected inventory failures instead of throwing IndexError."
+    ],
+    "checks": [
+      {
+        "command": "python -B tools/Test-EffectiveDependencies.py",
+        "exit_code": 0,
+        "tests": 39,
+        "log": "second-review-tests.txt"
+      },
+      {
+        "command": "python -B tools/Test-DecisionUI.py",
+        "exit_code": 0,
+        "tests": 16,
+        "log": "second-review-decisions.txt"
+      },
+      {
+        "command": "python -B tools/overhaul/capture_dependency_evidence.py <engine>",
+        "exit_code": 0,
+        "result": "Current executed hashes/results.json; ownershipPASS, fullconversionFAIL20271/31853 entries retained"
+      },
+      {
+        "command": "python -B tools/overhaul/audit_consumers.py <engine> --gate-decisions --gate-screen ac_macro_economy.gui --summary-only",
+        "exit_code": 0,
+        "result": "Both requested screen ownership gates zero failures; no native acceptance"
+      }
+    ],
+    "game_payload_changes": false,
+    "native_coverage": "None; testing remains paused. Final-commit CI is separate."
   }
 }

@@ -25,7 +25,7 @@ def literal_retired_calls(text):
     # Token inspection deliberately does not assert that this small AST reader
     # supports every tagged country-color/history grammar. Quoted strings and
     # comments are atomic; the actual compatibility handlers are parsed below.
-    tokens = [token for token in re.findall(r'"(?:\\.|[^"\\])*"|\#[^\n]*|[{}=]|[^\s{}=]+', text)
+    tokens = [token for token in re.findall(r'"(?:\\.|[^"\\])*"|\#[^\n]*|[{}=]|[^\s{}=#]+', text)
               if not token.startswith('#')]
     calls = []
     for index, token in enumerate(tokens):
@@ -90,6 +90,12 @@ class RetiredWorldNews(unittest.TestCase):
     def test_call_scan_preserves_quoted_ids_and_ignores_comments_and_display_text(self):
         source = '# news_event={id=news.3}\nlog="news_event={id=news.4}"\neffect={news_event={id="news.1"} country_event={id=news.2} news_event=news.5 country_event="news.6"}'
         self.assertEqual(["news.1", "news.2", "news.5", "news.6"], literal_retired_calls(source))
+
+    def test_inline_comments_are_separate_even_without_whitespace(self):
+        self.assertEqual(['news.1'], literal_retired_calls('news_event = news.1# comment'))
+        self.assertEqual([], literal_retired_calls('log = yes# news_event={id=news.3}'))
+        self.assertEqual(['news.2'], literal_retired_calls('news_event={id=news.2# comment\n}'))
+        self.assertEqual([], literal_retired_calls('log="yes# news_event={id=news.4}"'))
 
     def test_generator_has_only_explicit_retirement_ownership(self):
         expected = {"events/" + row["file"] for row in json.loads((SOURCE / "retired_event_contract.json").read_text())}

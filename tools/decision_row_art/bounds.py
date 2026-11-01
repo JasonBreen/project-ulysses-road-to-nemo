@@ -69,5 +69,8 @@ def inspect(mod=MOD,engine=None,overrides=None):
             rows.append(row)
             for layout in layouts:
                 for failure in layout['failures']:problems.append(dict(id=row['id'],sprite=name,template=layout['template'],problem=failure))
+    problems.extend(dict(source=entry['source'],problem='Decision source parse failure: '+entry['error'])
+                    for entry in audit.parse_failures
+                    if entry['origin']=='mod' and entry['source'].startswith('common/decisions/'))
     return dict(coverage='Actual authored decision row consumers, all conditional alternatives/defaults, actual DDS frame sizes and shipped GUI scale/bounds. Offline only.',
         consumers=rows,problems=problems)

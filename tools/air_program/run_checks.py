@@ -39,6 +39,8 @@ def main():
     }
     if (ROOT/'tools/release_foundations/test_finance.py').exists():
         checks['release-finance']=py+['tools/release_foundations/test_finance.py']
+    if (ROOT/'tools/Test-ReconstructionContinuations.py').exists():
+        checks['reconstruction']=py+['tools/Test-ReconstructionContinuations.py']
     # audit's read-only argument is --reference; the same reference list applies.
     if args.core:
         host=shutil.which('pwsh')
@@ -57,7 +59,8 @@ def main():
         names=set(args.only.split(','))
         if names-set(checks):raise SystemExit('Unknown checks: '+str(names-set(checks)))
         checks={k:v for k,v in checks.items() if k in names}
-        if (out/'results.json').exists():old=[r for r in json.loads((out/'results.json').read_text())['checks'] if r['check'] not in names]
+        if (out/'results.json').exists()and not args.pin_source:
+            old=[r for r in json.loads((out/'results.json').read_text())['checks'] if r['check'] not in names]
     out.mkdir(parents=True,exist_ok=True)
     source=capture(ROOT)if args.pin_source else None
     def run(pair):
@@ -71,12 +74,12 @@ def main():
         print(name+': '+('PASS' if result.returncode==0 else 'FAIL'),flush=True)
         return dict(check=name,command=safe,exit_code=result.returncode,seconds=round(time.monotonic()-start,2),log=name+'.txt',coverage='source/offline; no native game execution')
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:rows=list(pool.map(run,checks.items()))
-    if source:verify(source,ROOT)
     payload=hashlib.sha256()
     for path in sorted((ROOT/'mod/2985041246').rglob('*'),key=lambda p:p.as_posix()):
         if path.is_file():payload.update(path.relative_to(ROOT).as_posix().encode()+b'\0'+path.read_bytes())
+    if source:verify(source,ROOT)
     result=dict(schema=1,base_commit=json.loads((ROOT/'tools/air_program/preserved_sources.json').read_text())['base_commit'],
-        source_head=source['head']if source else None,source_inputs=source,payload_sha256=payload.hexdigest(),
+        source_head=source['head']if source else None,source_inputs=source,selection=list(checks),payload_sha256=payload.hexdigest(),
         payload_hash_rule='Sorted repository-relative POSIX path,NUL,raw delivered mod bytes.',
         source_state='Clean tracked inputs checked before/after execution'if source else'Working-tree candidate; clean-source boundary not requested',native_acceptance=False,
         native_status='Paused; research UI/designer/AI/production/save behavior remains untested',checks=sorted(old+rows,key=lambda r:r['check']))

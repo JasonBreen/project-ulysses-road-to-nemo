@@ -1,0 +1,536 @@
+"""Actual-script active-start regressions; no native game or save emulation."""
+import argparse
+from collections import Counter
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+import tempfile
+import unittest
+from unittest.mock import patch
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import compile as compiler
+from placement import derive, topology
+from inventory import selected, condition
+from technical import Engine
+from capabilities import AIR, NAVY, ARMOR, equipment_for, design_for, dlc_cases, case_key, template_plans, divisions
+from worksheet import report
+from script import parse, get, walk
+
+ROOT = compiler.ROOT; MOD = compiler.MOD
+parser = argparse.ArgumentParser(); parser.add_argument('--reference', type=Path); args, remainder = parser.parse_known_args()
+REF = args.reference
+MANIFEST = json.loads((HERE / 'foundation.json').read_text())
+PROFILES = json.loads((HERE / 'profiles.json').read_text())['countries']
+BASELINE = json.loads((HERE / 'baseline_inventory.json').read_text())
+
+
+def read(relative):
+    return parse((MOD / relative).read_text(encoding='utf-8-sig'))
+
+
+def cases(profile):
+    for bba, mtg, nsb in dlc_cases(profile):
+        yield bba, mtg, ({'By Blood Alone'} if bba else set()) | ({'Man the Guns'} if mtg else set()) | ({'No Step Back'} if nsb else set())
+
+
+def effective_roster(name, dlcs, tag):
+    return [[key, op, list(selected(body, dlcs, tag)) if key == 'instant_effect' else body]
+            for key, op, body in read('history/units/' + name + '.txt')]
+
+
+class ActiveWorldTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.defs, cls.graph, _, _, _ = topology()
+
+    def test_all61_intake_and_excluded_release_contracts_are_explicit(self):
+        self.assertEqual(BASELINE['active'], 61)
+        self.assertEqual(len(BASELINE['active_industry_empty']), 25)
+        self.assertEqual(len({r['tag'] for r in BASELINE['countries']}), 69)
+        self.assertEqual({r['tag'] for r in BASELINE['countries'] if r['classification'] == 'emergent'},
+                         {'AWW', 'REC', 'REL', 'SBK', 'SER', 'SHI', 'TER'})
+        self.assertNotIn('PLH', PROFILES)
+        for tag in PROFILES:
+            self.assertEqual(next(r for r in BASELINE['countries'] if r['tag'] == tag)['classification'], 'active')
+
+    def test_empty_country_roles_have_real_logistics_lines_and_honest_absences(self):
+        registry = json.loads((ROOT / 'tools/world_foundation/country_registry.json').read_text())
+        registered = {r['tag']: r for r in registry['countries']}
+        for tag in BASELINE['active_industry_empty']:
+            p = PROFILES[tag]
+            self.assertEqual(sum(p['production'].values()), p['target_industry']['military'])
+            self.assertEqual(sum(p['naval_production'].values()), p['target_industry']['dockyard'])
+            for role in ('infantry_equipment_1', 'motorized_equipment_1', 'train_equipment_1'):
+                self.assertGreater(p['production'][role], 0)
+                self.assertGreater(p['stocks'][role], 0)
+            for role in p['air']: self.assertGreater(p['production'][role], 0)
+            for role in p['navy']: self.assertGreater(p['naval_production'][role], 0)
+            self.assertFalse(registered[tag]['source_gaps'], tag)
+            if not p['air']:
+                self.assertFalse(registered[tag]['source_checks']['has_direct_air_roster'])
+                self.assertIn('has_direct_air_roster', registered[tag]['role_not_required'])
+                self.assertFalse((MOD / f'history/units/{tag}_ws_air.txt').exists())
+                self.assertFalse((MOD / f'history/units/{tag}_ws_air_bba.txt').exists())
+                for key, _, body in read(f'history/units/{tag}_ws_land.txt'):
+                    if key == 'division_template': self.assertFalse(get(body, 'support', []))
+            if not p['navy']:
+                if p['naval_production']:
+                    self.assertFalse(any(key == 'ship' for key, _ in walk(read(f'history/units/{tag}_ws_navy.txt'))))
+                else:
+                    self.assertFalse((MOD / f'history/units/{tag}_ws_navy.txt').exists())
+
+    def test_raw_registry_gaps_are_not_hidden_without_a_reviewed_role(self):
+        sys.path.insert(0, str(ROOT / 'tools/world_foundation'))
+        from registry import inspect as inspect_registry
+        original = json.loads
+        with patch.object(json, 'loads', wraps=original) as decoder:
+            # Only alter the profile input; the real registry parser still reads
+            # the actual microstate history, rather than a synthetic green row.
+            def without_dispositions(raw, *a, **kw):
+                data = original(raw, *a, **kw)
+                if isinstance(data, dict) and isinstance(data.get('countries'), dict) and data['countries'].get('CRS', {}).get('capability_dispositions'):
+                    data['countries']['CRS']['capability_dispositions'] = {}
+                return data
+            decoder.side_effect = without_dispositions
+            rows = {r['tag']: r for r in inspect_registry()['countries']}
+        self.assertIn('has_direct_air_roster', rows['CRS']['source_gaps'])
+        self.assertEqual(rows['CRS']['support_status'], 'inherited_foundation_gaps')
+
+    def test_real_generators_and_captured_primary_contracts_reproduce_without_game(self):
+        self.assertEqual(derive(None), MANIFEST)
+        for relative, text in compiler.outputs().items():
+            self.assertEqual((MOD / relative).read_text(encoding='utf-8'), text, relative)
+        self.assertEqual(report(), json.loads((HERE / 'sustainment.json').read_text()))
+        for tag, row in MANIFEST['countries'].items():
+            self.assertEqual(row['profile_sha256'], hashlib.sha256(json.dumps(PROFILES[tag], sort_keys=True).encode()).hexdigest())
+
+    def test_individual_inherited_buildings_resources_identity_and_vps_do_not_fall(self):
+        capacity = {'wasteland': 0, 'enclave': 0, 'tiny_island': 0, 'small_island': 1, 'pastoral': 1,
+                    'rural': 2, 'large_island': 2, 'town': 4, 'large_town': 5, 'city': 6,
+                    'large_city': 8, 'metropolis': 10, 'megalopolis': 12}
+        for tag, row in MANIFEST['countries'].items():
+            totals = Counter()
+            for ident, old in row['baseline'].items():
+                state = get(read(old['path']), 'state'); history = get(state, 'history'); buildings = get(history, 'buildings')
+                self.assertEqual(get(history, 'owner'), old['owner'])
+                self.assertEqual([v for k, _, v in history if k == 'add_core_of'], old['cores'])
+                self.assertEqual(int(get(state, 'manpower')), old['manpower'])
+                self.assertEqual([int(k) for k, _, _ in get(state, 'provinces')], old['provinces'])
+                self.assertNotEqual(int(ident), 171)
+                for key, field in [('civilian', 'industrial_complex'), ('military', 'arms_factory'), ('dockyard', 'dockyard'),
+                                   ('air_base', 'air_base'), ('infrastructure', 'infrastructure'), ('fuel_silo', 'fuel_silo')]:
+                    amount = int(get(buildings, field, '0'))
+                    self.assertGreaterEqual(amount, old['buildings'][key]); totals[key] += amount
+                slots = sum(int(get(buildings, key, '0')) for key in ('industrial_complex', 'arms_factory', 'dockyard', 'fuel_silo'))
+                control = 1 if tag in old['cores'] else 1 + row['non_core_controller_modifiers']['local_building_slots_factor']
+                self.assertLessEqual(slots, capacity[get(state, 'state_category')] * float(get(state, 'buildings_max_level_factor', '1')) * control)
+                resources = {k: float(v) for k, _, v in get(state, 'resources')}
+                for resource, value in old['resources'].items():
+                    self.assertGreaterEqual(resources[resource], float(value))
+                for p, amount in old['ports'].items():
+                    self.assertEqual(int(get(get(buildings, p), 'naval_base')), amount)
+                points = {v[0][0]: int(v[1][0]) for k, _, v in history if k == 'victory_points'}
+                for p, value in old['victory_points'].items():
+                    self.assertEqual(points[p], value)
+            self.assertEqual({k: totals[k] for k in PROFILES[tag]['target_industry']}, PROFILES[tag]['target_industry'])
+
+    def test_owned_components_ports_spawn_positions_and_no_water_rails(self):
+        building_rows = [r.split(';') for r in (MOD / 'map/buildings.txt').read_text().splitlines() if ';' in r]
+        spawns = {(int(r[0]), int(r[6])) for r in building_rows if r[1] == 'naval_base_spawn'}
+        for tag, row in MANIFEST['countries'].items():
+            self.assertEqual(sum(len(c['provinces']) for c in row['components']), len(row['provinces']))
+            for component in row['components']:
+                owned = set(component['provinces']); reached = {component['root']}
+                for route in component['routes']:
+                    self.assertEqual(route[0], component['root']); self.assertTrue(set(route) <= owned)
+                    for p, q in zip(route, route[1:]):
+                        self.assertIn(q, self.graph[p]); self.assertTrue(self.defs[p]['land'] and self.defs[q]['land'])
+                    reached.update(route)
+                self.assertTrue(set(component['terminals']) <= reached)
+                if component['index']:
+                    self.assertTrue(component['ports']); self.assertIn(component['root'], component['ports'])
+            for port in row['ports']:
+                p = port['province']; self.assertIn(p, row['provinces']); self.assertTrue(self.defs[p]['coastal'])
+                self.assertTrue(any(self.defs[n]['kind'] == 'sea' and (port['state'], n) in spawns for n in self.graph[p]))
+            self.assertEqual(row['routes'], [r for c in row['components'] for r in c['routes']])
+            connected = {p for c in row['components'] for p in c['terminals']} | {c['root'] for c in row['components']}
+            self.assertTrue(set(row['land_deployments']) <= connected)
+
+    def test_fcu_landlocked_capital_is_not_replaced_with_a_fictional_coast(self):
+        if 'FCU' not in MANIFEST['countries']:
+            self.skipTest('FCU owned by another foundation slice')
+        row = MANIFEST['countries']['FCU']; component = next(c for c in row['components'] if row['capital_province'] in c['provinces'])
+        self.assertFalse(component['ports']); self.assertEqual(row['capital'], 478)
+        self.assertEqual(set(row['naval_access_note']['existing_faction_members']), {'AMB', 'UGE', 'SNS', 'DEL'})
+        for partner in row['naval_access_note']['existing_faction_members']:
+            self.assertIn('add_to_faction = ' + partner, row['country_history_source'])
+
+    def test_four_real_dlc_branches_load_once_and_assign_exact_factory_roles(self):
+        for tag, row in MANIFEST['countries'].items():
+            p = PROFILES[tag]; results = []
+            for bba, mtg, dlcs in cases(p):
+                nsb = 'No Step Back' in dlcs
+                effects = list(selected(read(row['country_history']), dlcs, tag))
+                refs = [v.strip('"') for k, _, v in effects if k in ('set_oob', 'load_oob', 'set_air_oob', 'set_naval_oob')]
+                expected = 1 + int(bool(p['air'])) + int(bool(p['navy'] or p['naval_production']))
+                self.assertEqual(len(refs), expected); self.assertEqual(len(set(refs)), expected)
+                divisions = planes = ships = 0; assigned = Counter(); actual_types = Counter()
+                for name in refs:
+                    roster = effective_roster(name, dlcs, tag)
+                    for key, body in walk(roster):
+                        if key == 'division':
+                            divisions += 1; self.assertIn(int(get(body, 'location')), row['land_deployments'])
+                            if p['mode'] != 'retained_start': self.assertEqual(get(body, 'start_equipment_factor'), '1.0')
+                        elif key == 'ship':
+                            ships += 1; actual_types[get(body, 'definition')] += 1
+                        elif key == 'add_equipment_production':
+                            eq = get(body, 'equipment'); kind = get(eq, 'type'); version = get(eq, 'version_name')
+                            roles = [role for role in {**p['production'], **p['naval_production']} if equipment_for(role, bba, mtg, nsb) == kind and
+                                ((not design_for(role, bba, mtg, nsb) and not version) or version == '"' + tag + ' ' + design_for(role, bba, mtg, nsb)['label'] + '"')]
+                            self.assertEqual(len(roles), 1, (kind, version)); assigned[roles[0]] += int(get(body, 'requested_factories'))
+                            self.assertEqual(get(eq, 'creator'), tag); self.assertEqual(get(body, 'efficiency'), '50')
+                    for state, _, wings in get(roster, 'air_wings', []):
+                        count = sum(int(get(body, 'amount')) for _, _, body in wings); planes += count
+                        self.assertLessEqual(count, row['placements'][state]['air_base'] * 200)
+                self.assertEqual(dict(assigned), {**p['production'], **p['naval_production']})
+                self.assertEqual(dict(actual_types), p['navy'])
+                results.append((divisions, planes, ships))
+                self.assertEqual([v for k, _, v in effects if k == 'set_convoys'][-1], str(p['convoys']))
+                self.assertGreaterEqual(p['convoys'], max([int(v) for k, _, v in parse(row['country_history_source']) if k == 'set_convoys'] + [0]))
+                self.assertEqual([v for k, _, v in effects if k == 'set_fuel_ratio'][-1], '1.0')
+            self.assertEqual(len(set(results)), 1)
+            self.assertEqual(results[0], (sum(p['formations'].values()), sum(p['air'].values()), sum(p['navy'].values())))
+
+    def test_actual_variant_stock_and_roster_bindings_follow_real_unlock_sequence(self):
+        engine = Engine(REF) if REF else None
+        for tag, row in MANIFEST['countries'].items():
+            for bba, mtg, dlcs in cases(PROFILES[tag]):
+                nsb = 'No Step Back' in dlcs
+                key = case_key(bba, mtg, nsb); tech = set(); variants = {}
+                for name, _, body in selected(read(row['country_history']), dlcs, tag):
+                    if name == 'set_technology':
+                        tech.update(k for k, _, v in body if v == '1')
+                    elif name == 'create_equipment_variant':
+                        ident = get(body, 'name'); equipment = get(body, 'type'); modules = {k: v for k, _, v in get(body, 'modules')}
+                        roles = [r for r, c in row['recipe_contracts'][key].items() if c['equipment'] == equipment and c['modules'] == modules]
+                        if roles:
+                            contract = row['recipe_contracts'][key][roles[0]]
+                            self.assertIn(contract['equipment_technology'], tech)
+                            self.assertTrue(set(contract['module_technologies'].values()) <= tech)
+                        else:
+                            self.assertIn(dict(name=ident, equipment=equipment, modules=modules), PROFILES[tag].get('inherited_variants', []))
+                            if engine:
+                                self.assertIn(engine.equipment_tech(equipment), tech)
+                                self.assertTrue({engine.module_tech(m) for m in modules.values()} <= tech)
+                        variants[ident] = equipment
+                    elif name == 'add_equipment_to_stockpile':
+                        ident = get(body, 'type'); variant = get(body, 'variant_name')
+                        if variant:
+                            self.assertEqual(variants[variant], ident)
+                        else:
+                            self.assertIn(ident, row['gear_archetypes'] | {AIR[r]['legacy']: '' for r in PROFILES[tag]['air']})
+                    elif name in ('set_oob', 'set_air_oob', 'set_naval_oob'):
+                        roster = effective_roster(body.strip('"'), dlcs, tag)
+                        for _, _, wings in get(roster, 'air_wings', []):
+                            for equipment, _, details in wings:
+                                if get(details, 'version_name'):
+                                    self.assertEqual(variants[get(details, 'version_name')], equipment)
+                        for node, values in walk(roster):
+                            if node == 'equipment' and not get(values, 'type'):
+                                for equipment, _, details in values:
+                                    if get(details, 'version_name'):
+                                        self.assertEqual(variants[get(details, 'version_name')], equipment)
+                self.assertTrue(set(row['starting_tech'][key]) <= tech)
+                if engine:
+                    enabled = {'convoy_1'}; modules = set()
+                    for t in tech:
+                        self.assertIn(t, engine.tech)
+                        for section, _, entries in engine.tech[t]:
+                            if section == 'enable_equipments': enabled.update(k for k, _, _ in entries)
+                            if section == 'enable_equipment_modules': modules.update(k for k, _, _ in entries)
+                    for contract in row['recipe_contracts'][key].values():
+                        self.assertIn(contract['equipment'], enabled)
+                        self.assertTrue(set(contract['modules'].values()) <= modules)
+
+    def test_actual_equipment_needs_have_owned_production_and_replacement_stock(self):
+        for tag, row in MANIFEST['countries'].items():
+            p = PROFILES[tag]; gear = row['gear_archetypes']; produced = {gear[k] for k in p['production'] if k in gear}
+            tree = read(f'history/units/{tag}_ws_land.txt')
+            for key, _, template in tree:
+                if key != 'division_template': continue
+                for subunit, _, _ in get(template, 'regiments') + get(template, 'support', []):
+                    for need, _, amount in row['unit_contracts'][subunit]['need']:
+                        self.assertIn(need, produced, (tag, subunit, need))
+                        self.assertTrue(any(gear[k] == need and n > 0 for k, n in p['stocks'].items()))
+            history = list(selected(read(row['country_history']), {'By Blood Alone', 'Man the Guns'}, tag))
+            stocks = {get(v, 'type'): int(get(v, 'amount')) for k, _, v in history if k == 'add_equipment_to_stockpile'}
+            for kind, amount in p['stocks'].items(): self.assertEqual(stocks[kind], amount)
+
+    def test_selected_land_production_consumes_only_already_unlocked_declared_designs(self):
+        def inspect(tag,row,dlcs,effects):
+            tech=set();variants={};contracts=row['recipe_contracts'][case_key('By Blood Alone' in dlcs,'Man the Guns' in dlcs,'No Step Back' in dlcs)]
+            for name,_,body in effects:
+                if name=='set_technology':
+                    for ident,_,value in body:
+                        if value=='1':tech.add(ident)
+                        elif value=='0':tech.discard(ident)
+                elif name=='create_equipment_variant':
+                    variants[get(body,'name')]=(get(body,'type'),{k:v for k,_,v in get(body,'modules',[])})
+                elif name in ('set_oob','set_air_oob','set_naval_oob'):
+                    # effective_roster selects each instant_effect under the
+                    # same DLC case. Inspecting raw OOBs would consume BOTH the
+                    # NSB and legacy branches and invent chronology failures.
+                    roster=effective_roster(body.strip('"'),dlcs,tag)
+                    for kind,details in walk(roster):
+                        if kind!='add_equipment_production':continue
+                        equipment=get(details,'equipment');ident=get(equipment,'type');version=get(equipment,'version_name');modules={}
+                        if version:
+                            self.assertIn(version,variants,(tag,ident,'production used before variant'))
+                            declared,modules=variants[version];self.assertEqual(ident,declared)
+                        matched=[c for c in contracts.values() if c['equipment']==ident and c['modules']==modules]
+                        self.assertTrue(matched,(tag,ident,version,'No captured actual production contract'))
+                        needed={matched[0]['equipment_technology'],*matched[0]['module_technologies'].values()}-{None}
+                        self.assertTrue(needed<=tech,(tag,ident,'production used before research',needed-tech))
+        for tag,row in MANIFEST['countries'].items():
+            for _,_,dlcs in cases(PROFILES[tag]):inspect(tag,row,dlcs,list(selected(read(row['country_history']),dlcs,tag)))
+        row=MANIFEST['countries']['YUK'];dlcs={'By Blood Alone','Man the Guns','No Step Back'}
+        effects=list(selected(read(row['country_history']),dlcs,'YUK'));load=next(n for n in effects if n[0]=='set_oob')
+        early=[n for n in effects if n is not load];index=next(i for i,n in enumerate(early) if n[0]=='create_equipment_variant' and get(n[2],'type')=='modern_tank_chassis_1');early.insert(index,load)
+        with self.assertRaisesRegex(AssertionError,'production used before variant'):inspect('YUK',row,dlcs,early)
+        dlcs={'By Blood Alone','Man the Guns'};effects=list(selected(read(row['country_history']),dlcs,'YUK'));load=next(n for n in effects if n[0]=='set_oob')
+        with self.assertRaisesRegex(AssertionError,'production used before research'):inspect('YUK',row,dlcs,[load]+[n for n in effects if n is not load])
+
+    def test_retained_armies_keep_every_cumulative_block_and_formation_identity(self):
+        for tag, p in PROFILES.items():
+            if p['mode'] != 'retained_start': continue
+            row = MANIFEST['countries'][tag]; original = parse(row['retained_land_source']); candidate = read(f'history/units/{tag}_ws_land.txt')
+            self.assertEqual(divisions(candidate), divisions(original), tag)
+            self.assertEqual(sum(p['formations'].values()), next(r for r in BASELINE['countries'] if r['tag'] == tag)['cases'][0]['divisions'])
+            self.assertEqual((MOD / f'history/units/{p["inherited_land_file"]}.txt').read_text(encoding='utf-8-sig'), row['retained_land_source'])
+            if tag != 'PBL':
+                self.assertEqual([n for n in candidate if n[0] == 'division_template'], [n for n in original if n[0] == 'division_template'])
+            else:
+                self.assertEqual(len(divisions(candidate)), 29)
+                before = {get(v, 'name'): v for k, _, v in original if k == 'division_template'}
+                names = {k for k, _, _ in read('common/units/names_divisions/PBL_world_start.txt')}
+                for k, _, template in candidate:
+                    if k != 'division_template': continue
+                    old = before[get(template, 'name')]
+                    self.assertIn(get(template, 'division_names_group'), names)
+                    self.assertNotIn('medium_sp_artillery', {key for key, _, _ in get(template, 'support', [])})
+                    expected = sum(unit == 'medium_sp_artillery' for unit, _, _ in get(old, 'support', []))
+                    self.assertEqual(len(get(template, 'regiments')), len(get(old, 'regiments')) + expected)
+
+    def test_nsb_support_is_a_real_bounded_owner_and_replacements_match_unit_needs(self):
+        technology = get(read('common/technologies/ac_ws_armour_support.txt'), 'technologies')
+        self.assertEqual({k for k, _, _ in technology}, {d['technology'] for d in ARMOR.values()})
+        engine = Engine(REF) if REF else None
+        for role, design in ARMOR.items():
+            body = get(technology, design['technology'])
+            self.assertEqual(get(get(body, 'allow'), 'always'), 'no')
+            self.assertIsNone(get(body, 'folder'))
+            self.assertEqual({k for k, _, _ in get(body, 'enable_equipments')}, {design['modern']})
+            self.assertEqual({k for k, _, _ in get(body, 'enable_equipment_modules')}, set(design['modules'].values()))
+        for tag, p in PROFILES.items():
+            if not set(p['production']) & set(ARMOR): continue
+            row = MANIFEST['countries'][tag]
+            for bba, mtg, dlcs in cases(p):
+                nsb = 'No Step Back' in dlcs; key = case_key(bba, mtg, nsb)
+                effects = list(selected(read(row['country_history']), dlcs, tag))
+                technologies = {k for kind, _, body in effects if kind == 'set_technology' for k, _, _ in body}
+                stock = {get(v, 'type'): v for kind, _, v in effects if kind == 'add_equipment_to_stockpile'}
+                for role in set(p['production']) & set(ARMOR):
+                    design = ARMOR[role]; target = equipment_for(role, bba, mtg, nsb)
+                    self.assertEqual(design['technology'] in technologies, nsb)
+                    self.assertEqual(int(get(stock[target], 'amount')), p['stocks'][role])
+                    contract = row['recipe_contracts'][key][role]
+                    if nsb:
+                        self.assertEqual(set(contract['design_slots']), set(design['modules']))
+                        if engine:
+                            self.assertEqual(engine.resolve(target, engine.equipment, engine.eq_files)['archetype'], row['gear_archetypes'][role])
+                        for slot in contract['design_slots'].values(): self.assertIn(slot['category'], slot['allowed_categories'])
+                    else:
+                        self.assertNotIn('variant_name', {k for k, _, _ in stock[target]})
+
+    @unittest.skipUnless(REF, 'No read-only installed primary reference supplied')
+    def test_primary_slot_inheritance_aliases_and_rejected_wrong_module(self):
+        engine = Engine(REF)
+        hull = engine.resolve('ship_hull_cruiser_2', engine.equipment, engine.eq_files)
+        slots = {k: v for k, _, v in hull['module_slots']}
+        self.assertEqual(slots['mid_2_custom_slot'], slots['mid_1_custom_slot'])
+        self.assertIsInstance(slots['fixed_ship_engine_slot'], list)
+        wrong = dict(ARMOR['modern_tank_equipment_1']['modules']); wrong['engine_type_slot'] = 'bomb_locks'
+        with self.assertRaisesRegex(ValueError, 'Incompatible module category'):
+            engine.design_slots('modern_tank_chassis_1', wrong)
+
+    def test_input_margins_import_constraints_and_army_fuel_uncertainty_are_explicit(self):
+        worksheet = report(REF) if REF else report()
+        for tag, country in worksheet['countries'].items():
+            for case in country['cases']:
+                for resource, value in case['domestic_industrial_margins'].items():
+                    self.assertGreaterEqual(value + PROFILES[tag].get('planned_resource_imports', {}).get(resource, 0), 0)
+                self.assertGreaterEqual(case['import_trade_CIV_budget_margin'], 0, tag)
+                mobile_units = {'motorized', 'mechanized', 'modern_armor', 'light_armor', 'ifv', 'imv'}
+                if set(MANIFEST['countries'][tag]['unit_contracts']) & mobile_units:
+                    self.assertGreater(case['daily_army_per_subunit_equipment_stat_proxy'], 0)
+                    self.assertGreater(case['daily_army_literal_equipment_sum_stress_scenario'], case['daily_army_per_subunit_equipment_stat_proxy'])
+            self.assertTrue(any('aggregation is unverified' in text for text in country['limits']))
+        self.assertTrue(any(c['full_operation_proxy_oil_import_units'] > 0 for c in worksheet['countries']['YUK']['cases']))
+
+    def test_new_industry_resources_and_capacity_use_owned_cores_and_real_policies(self):
+        for tag, row in MANIFEST['countries'].items():
+            for ident, new in row['placements'].items():
+                old = row['baseline'][ident]
+                if any(new[k] > old['buildings'][k] for k in ('civilian', 'military', 'dockyard')):
+                    self.assertIn(tag, old['cores'])
+            for addition in row['resource_additions']:
+                self.assertIn(tag, row['baseline'][str(addition['state'])]['cores'])
+            self.assertLessEqual(sum(PROFILES[tag]['production'].values()), row['usable_core_industry_lower']['military'])
+            self.assertLessEqual(sum(PROFILES[tag]['naval_production'].values()), row['usable_core_industry_lower']['dockyard'])
+        fru = MANIFEST['countries']['FRU']['opening_policies']
+        self.assertEqual(fru['laws']['trade_laws'], 'free_trade')
+        self.assertEqual(fru['laws']['economy'], 'low_economic_mobilisation')
+        self.assertEqual(fru['modifiers']['min_export'], .75)
+        self.assertEqual(fru['modifiers']['local_resources_factor'], -.5)
+        for case in report()['countries']['FRU']['cases']:
+            self.assertEqual(case['resource_import_deficits'], {'aluminium': 4.0, 'rubber': 0, 'steel': 6.0})
+            self.assertEqual(case['import_trade_CIV_ceil_per_resource'], 2)
+            self.assertEqual(case['CIV_after_rounded_up_history_consumer_goods_lower'], 2)
+        self.assertEqual(PROFILES['DOR']['target_industry']['military'], 13)
+        self.assertEqual(MANIFEST['countries']['DOR']['usable_core_industry_lower']['military'], 10)
+
+    def test_rails_preserve_inherited_levels_without_duplicate_precedence(self):
+        from shared_logistics import declared_owners
+        anchor = min((m['map_baselines']['map/railways.txt'] for _, m in declared_owners(ROOT)), key=lambda m: m['lines'])
+        inherited = {}
+        for line in (MOD / 'map/railways.txt').read_text().splitlines()[:anchor['lines']]:
+            level, _, *path = map(int, line.split())
+            for a, b in zip(path, path[1:]): inherited[tuple(sorted((a, b)))] = level
+        high = 0
+        for row in MANIFEST['countries'].values():
+            new = set()
+            for line in row['railway_rows']:
+                level, count, *path = map(int, line.split()); self.assertEqual(count, len(path)); self.assertEqual(level, 2)
+                for a, b in zip(path, path[1:]):
+                    edge = tuple(sorted((a, b)))
+                    self.assertNotIn(edge, inherited); self.assertNotIn(edge, new); new.add(edge)
+            for path in row['routes']:
+                self.assertTrue(all(tuple(sorted(edge)) in set(inherited) | new for edge in zip(path, path[1:])))
+            high += sum(record['level'] >= 3 for record in row['reused_inherited_rail_edges'])
+        self.assertGreater(high, 0)
+
+    def test_actual_personnel_budget_and_negative_oob_mutation(self):
+        import personnel
+        actual = personnel.report(REF)
+        self.assertEqual(actual, json.loads((HERE / 'personnel.json').read_text()))
+        self.assertNotIn('unapproved_personnel_deficit', actual['summary'])
+        self.assertEqual({tag for tag, row in actual['countries'].items() if row['status'] == 'inherited_reinforcement_debt'}, {'UST'})
+        self.assertEqual(actual['countries']['CSO']['cases'][0]['deployed_personnel'], 13380)
+        original = personnel.read_tree
+        def enlarged(relative):
+            tree = original(relative)
+            if relative == 'history/units/CSO_ws_land.txt':
+                template = next(v for k, _, v in tree if k == 'division_template')
+                for y in (1, 2):
+                    get(template, 'regiments').append(['infantry', '=', [['x', '=', '1'], ['y', '=', str(y)]]])
+            return tree
+        with patch.object(personnel, 'read_tree', side_effect=enlarged):
+            self.assertEqual(personnel.report()['countries']['CSO']['status'], 'unapproved_personnel_deficit')
+
+    def test_offline_personnel_rejects_changed_history_law(self):
+        import personnel
+        original = personnel.read_source
+        def changed(relative):
+            text = original(relative)
+            return text + '\nadd_ideas = disarmed_nation\n' if relative == MANIFEST['countries']['CSO']['country_history'] else text
+        with patch.object(personnel, 'read_source', side_effect=changed):
+            with self.assertRaisesRegex(ValueError, 'history policy'):
+                personnel.report()
+
+    def test_preserved_ust_debt_has_conditional_existing_reform_routes(self):
+        shared = {get(body, 'id'): body for key, _, body in read('common/national_focus/UST_shared.txt') if key == 'shared_focus'}
+        trees = {get(body, 'id'): body for key, _, body in read('common/national_focus/UST.txt') if key == 'focus_tree'}
+        self.assertIn('UST_army_debate', [v for k, _, v in trees['ustio_democracy'] if k == 'shared_focus'])
+        self.assertIn('UST_army_debate', [v for k, _, v in trees['ustio_non_ali'] if k == 'shared_focus'])
+        self.assertNotIn('UST_army_debate', [v for k, _, v in trees['ustio_start'] if k == 'shared_focus'])
+        national = shared['UST_national_army']
+        self.assertEqual(get(get(national, 'prerequisite'), 'focus'), 'UST_army_debate')
+        reward = get(national, 'completion_reward')
+        self.assertEqual(get(get(reward, 'swap_ideas'), 'remove_idea'), 'UST_militia_army')
+        self.assertEqual(get(reward, 'clr_country_flag'), 'cons_laws_blocked')
+        self.assertEqual(get(get(shared['UST_to_catch_up'], 'prerequisite'), 'focus'), 'UST_national_army')
+        self.assertIsNone(get(shared['UST_to_catch_up'], 'available'))
+        self.assertTrue(any(k == 'swap_ideas' and get(v, 'add_idea') == 'UST_national_army_3' for k, v in walk(get(shared['UST_to_catch_up'], 'completion_reward'))))
+        idea = [entry for category, _, entries in get(read('common/ideas/ustio.txt'), 'ideas') if category == 'country' for entry in entries]
+        before = float(get(get(get(idea, 'UST_militia_army'), 'modifier'), 'conscription_factor'))
+        after = float(get(get(get(idea, 'UST_national_army_3'), 'modifier'), 'conscription_factor'))
+        self.assertGreater(after, before)
+        events = {get(v, 'id'): v for k, _, v in read('events/Ustio.txt') if k == 'country_event'}
+        options = [v for k, _, v in events['ustio.1'] if k == 'option']
+        self.assertEqual({get(v, 'load_focus_tree') for v in options}, {'ustio_democracy', 'ustio_non_ali'})
+        # The route is event/policy-dependent and is not a1991 instant cure.
+        self.assertEqual(PROFILES['UST']['mode'], 'retained_start')
+        self.assertIn('inherited_personnel_reinforcement_debt', next(r for r in json.loads((ROOT/'tools/world_foundation/country_registry.json').read_text())['countries'] if r['tag']=='UST')['source_gaps'])
+
+    def test_new_campaign_only_identity_faction_and_disabled_fiscal_compatibility(self):
+        for tag, row in MANIFEST['countries'].items():
+            before = parse(row['country_history_source']); after = read(row['country_history'])
+            for key in ('capital', 'recruit_character', 'set_party_name', 'set_popularities', 'add_ideas', 'create_faction', 'add_to_faction'):
+                self.assertEqual([v for k, _, v in before if k == key], [v for k, _, v in after if k == key], (tag, key))
+            for prefix in ('common/on_actions', 'events', 'common/scripted_effects'):
+                for path in (MOD / prefix).glob('*.txt'):
+                    self.assertNotIn(tag + '_ws_land', path.read_text(encoding='utf-8-sig'))
+            text = (MOD / row['country_history']).read_text()
+            self.assertNotIn('ac_econ_try', text); self.assertNotIn('ac_macro_try', text)
+        for old in BASELINE['countries']:
+            if old['tag'] in PROFILES or old['tag'] in {'BLK', 'OSE', 'SAP', 'FAT'}: continue
+            path = next((MOD / 'history/countries').glob(old['tag'] + ' - *.txt'))
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), old['baseline_history_sha256'], old['tag'])
+
+    def test_ai_roles_and_targets_are_current_and_original_tag_scoped(self):
+        for tag, profile in PROFILES.items():
+            strategies = read(f'common/ai_strategy/{tag}_world_start.txt')
+            for _, _, strategy in strategies:
+                self.assertEqual(get(get(strategy, 'allowed'), 'tag'), tag)
+                self.assertEqual(get(get(strategy, 'allowed'), 'original_tag'), tag)
+                self.assertIn(tag + '_ws_foundation', (MOD / f'common/ai_strategy/{tag}_world_start.txt').read_text())
+            templates = read(f'common/ai_templates/{tag}_world_start.txt')
+            self.assertEqual(len(templates), len(template_plans(tag, MANIFEST['countries'][tag], profile)))
+            text = (MOD / f'common/ai_strategy/{tag}_world_start.txt').read_text()
+            self.assertNotIn('declare_war_on', text); self.assertNotIn('conquer', text)
+
+    def test_fiscal_marker_rejects_hidden_effects_and_preserves_valid_owner(self):
+        with tempfile.TemporaryDirectory() as temp:
+            for tag, row in MANIFEST['countries'].items():
+                path = Path(temp) / row['country_history']; path.parent.mkdir(parents=True, exist_ok=True)
+                source = (MOD / row['country_history']).read_text(); path.write_text(source)
+                with patch.object(compiler, 'MOD', Path(temp)):
+                    self.assertEqual(compiler.country_output(tag, row, PROFILES[tag]), source)
+                    path.write_text(source.replace('set_country_flag = ac_macro_history_eligible', 'add_political_power = 999\nset_country_flag = ac_macro_history_eligible'))
+                    with self.assertRaisesRegex(ValueError, 'Unexpected fiscal'):
+                        compiler.country_output(tag, row, PROFILES[tag])
+
+    @unittest.skipUnless(REF, 'No read-only installed primary reference supplied')
+    def test_actual_primary_contract_recapture_matches_committed_metadata(self):
+        self.assertEqual(derive(REF), MANIFEST)
+        self.assertEqual(compiler.outputs(REF), compiler.outputs())
+        self.assertEqual(report(REF), report())
+
+    @unittest.skipUnless(REF, 'No read-only installed primary reference supplied')
+    def test_primary_recapture_is_byte_stable_across_hash_seeds(self):
+        for seed in ('1', '83'):
+            result = subprocess.run([sys.executable, '-B', str(HERE/'placement.py'), '--reference', str(REF), '--check'],
+                cwd=ROOT, env={**os.environ, 'PYTHONHASHSEED': seed, 'PYTHONDONTWRITEBYTECODE': '1'},
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout)
+
+
+if __name__ == '__main__':
+    unittest.main(argv=[sys.argv[0]] + remainder, verbosity=2)

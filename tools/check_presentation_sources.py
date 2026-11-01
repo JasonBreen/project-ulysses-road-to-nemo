@@ -14,6 +14,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools/overhaul"))
 from audit_consumers import get, parse, scalar, walk
+from text_structure import validate_structure
 
 
 def inspect(mod):
@@ -27,8 +28,10 @@ def inspect(mod):
             data = path.read_bytes()
             files.append(dict(path=relative, sha256=hashlib.sha256(data).hexdigest()))
             try:
-                trees[relative] = parse(data.decode("utf-8-sig"))
-            except (ValueError, UnicodeError) as exc:
+                text = data.decode("utf-8-sig")
+                validate_structure(text)
+                trees[relative] = parse(text)
+            except (ValueError, IndexError, UnicodeError) as exc:
                 failures.append(dict(path=relative, problem=str(exc)))
 
     counters = "interface/subuniticons.gfx"

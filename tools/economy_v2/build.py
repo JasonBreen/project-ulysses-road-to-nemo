@@ -556,7 +556,7 @@ def history_marker(text):
     # Other new-campaign authors may own a trailing setup section even when a
     # country already has a recruited leader. Keep eligibility before that
     # foreign section so its generator and this one do not move it each turn.
-    anchor = next((marker for marker in ('# BEGIN EXPANSION START LEADER', '# BEGIN WORLD FOUNDATION') if marker in text), None)
+    anchor = next((marker for marker in ('# BEGIN EXPANSION START LEADER', '# BEGIN WORLD FOUNDATION', '# BEGIN LEGACY WORLD START STOCKS') if marker in text), None)
     if anchor is not None:
         prefix, suffix = text.split(anchor, 1)
         return prefix.rstrip()+'\n\n'+MARKER+'\n'+anchor+suffix

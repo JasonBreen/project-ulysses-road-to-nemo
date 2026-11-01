@@ -1,3 +1,119 @@
+# Active-world foundation: provisional gameplay; tools/world_starts profiles, placements and primary worksheets.
+# BEGIN ACTIVE WORLD UNLOCKS
+if = {
+	limit = {
+		NOT = { has_dlc = "By Blood Alone" }
+		NOT = { has_dlc = "Man the Guns" }
+	}
+	set_technology = {
+		CAS1 = 1
+		basic_destroyer = 1
+		basic_machine_tools = 1
+		basic_submarine = 1
+		basic_train = 1
+		construction1 = 1
+		electronic_mechanical_engineering = 1
+		fighter1 = 1
+		fuel_refining = 1
+		fuel_silos = 1
+		gw_artillery = 1
+		infantry_weapons = 1
+		infantry_weapons1 = 1
+		motorised_infantry = 1
+		tech_engineers = 1
+		tech_recon = 1
+		tech_support = 1
+	}
+}
+if = {
+	limit = {
+		has_dlc = "By Blood Alone"
+		NOT = { has_dlc = "Man the Guns" }
+	}
+	set_technology = {
+		aa_lmg = 1
+		basic_destroyer = 1
+		basic_machine_tools = 1
+		basic_small_airframe = 1
+		basic_submarine = 1
+		basic_train = 1
+		construction1 = 1
+		early_bombs = 1
+		electronic_mechanical_engineering = 1
+		engines_2 = 1
+		fuel_refining = 1
+		fuel_silos = 1
+		gw_artillery = 1
+		infantry_weapons = 1
+		infantry_weapons1 = 1
+		motorised_infantry = 1
+		tech_engineers = 1
+		tech_recon = 1
+		tech_support = 1
+	}
+}
+if = {
+	limit = {
+		NOT = { has_dlc = "By Blood Alone" }
+		has_dlc = "Man the Guns"
+	}
+	set_technology = {
+		CAS1 = 1
+		basic_battery = 1
+		basic_depth_charges = 1
+		basic_machine_tools = 1
+		basic_ship_hull_light = 1
+		basic_ship_hull_submarine = 1
+		basic_torpedo = 1
+		basic_train = 1
+		construction1 = 1
+		early_ship_hull_submarine = 1
+		electronic_mechanical_engineering = 1
+		fighter1 = 1
+		fuel_refining = 1
+		fuel_silos = 1
+		gw_artillery = 1
+		infantry_weapons = 1
+		infantry_weapons1 = 1
+		motorised_infantry = 1
+		tech_engineers = 1
+		tech_recon = 1
+		tech_support = 1
+	}
+}
+if = {
+	limit = {
+		has_dlc = "By Blood Alone"
+		has_dlc = "Man the Guns"
+	}
+	set_technology = {
+		aa_lmg = 1
+		basic_battery = 1
+		basic_depth_charges = 1
+		basic_machine_tools = 1
+		basic_ship_hull_light = 1
+		basic_ship_hull_submarine = 1
+		basic_small_airframe = 1
+		basic_torpedo = 1
+		basic_train = 1
+		construction1 = 1
+		early_bombs = 1
+		early_ship_hull_submarine = 1
+		electronic_mechanical_engineering = 1
+		engines_2 = 1
+		fuel_refining = 1
+		fuel_silos = 1
+		gw_artillery = 1
+		infantry_weapons = 1
+		infantry_weapons1 = 1
+		motorised_infantry = 1
+		tech_engineers = 1
+		tech_recon = 1
+		tech_support = 1
+	}
+}
+# END ACTIVE WORLD UNLOCKS
+
 capital = 398
 
 set_research_slots = 3
@@ -42,3 +158,112 @@ set_country_flag = ac_macro_history_eligible
 # New campaigns only; provenance: tools/usea_expansion/leaders.json.
 recruit_character = ARK_ac_government_office
 # END EXPANSION START LEADER
+
+# BEGIN WORLD FOUNDATION
+# Active-world foundation: provisional gameplay; tools/world_starts profiles, placements and primary worksheets.
+set_country_flag = ARK_ws_foundation
+set_convoys = 260
+starting_train_buffer = 1
+set_fuel_ratio = 1.0
+set_grand_doctrine = new_superior_firepower
+set_grand_doctrine = new_fleet_in_being
+set_grand_doctrine = new_operational_integrity
+if = {
+	limit = { has_dlc = "By Blood Alone" }
+	create_equipment_variant = {
+		name = "ARK Service Fighter"
+		type = small_plane_airframe_1
+		modules = {
+			fixed_main_weapon_slot = light_mg_4x
+			engine_type_slot = engine_2_1x
+		}
+	}
+	create_equipment_variant = {
+		name = "ARK Service Support"
+		type = small_plane_cas_airframe_1
+		modules = {
+			fixed_main_weapon_slot = bomb_locks
+			engine_type_slot = engine_2_1x
+		}
+	}
+	add_equipment_to_stockpile = {
+		type = small_plane_airframe_1
+		amount = 24
+		producer = ARK
+		variant_name = "ARK Service Fighter"
+	}
+	add_equipment_to_stockpile = {
+		type = small_plane_cas_airframe_1
+		amount = 6
+		producer = ARK
+		variant_name = "ARK Service Support"
+	}
+	set_air_oob = "ARK_ws_air_bba"
+	else = {
+		add_equipment_to_stockpile = {
+			type = fighter_equipment_1
+			amount = 24
+			producer = ARK
+		}
+		add_equipment_to_stockpile = {
+			type = CAS_equipment_1
+			amount = 6
+			producer = ARK
+		}
+		set_air_oob = "ARK_ws_air"
+	}
+}
+if = {
+	limit = { has_dlc = "Man the Guns" }
+	create_equipment_variant = {
+		name = "ARK Coastal Escort"
+		type = ship_hull_light_2
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_engine_slot = light_ship_engine_2
+			fixed_ship_torpedo_slot = ship_torpedo_1
+			rear_1_custom_slot = ship_depth_charge_1
+		}
+	}
+	create_equipment_variant = {
+		name = "ARK Coastal Submarine"
+		type = ship_hull_submarine_2
+		modules = {
+			fixed_ship_torpedo_slot = ship_torpedo_sub_1
+			fixed_ship_engine_slot = sub_ship_engine_2
+		}
+	}
+	set_naval_oob = "ARK_ws_navy_mtg"
+	else = {
+		set_naval_oob = "ARK_ws_navy"
+	}
+}
+set_oob = "ARK_ws_land"
+add_equipment_to_stockpile = {
+	type = infantry_equipment_1
+	amount = 1920
+	producer = ARK
+}
+add_equipment_to_stockpile = {
+	type = motorized_equipment_1
+	amount = 1040
+	producer = ARK
+}
+add_equipment_to_stockpile = {
+	type = train_equipment_1
+	amount = 32
+	producer = ARK
+}
+add_equipment_to_stockpile = {
+	type = support_equipment_1
+	amount = 384
+	producer = ARK
+}
+add_equipment_to_stockpile = {
+	type = artillery_equipment_1
+	amount = 240
+	producer = ARK
+}
+# END WORLD FOUNDATION

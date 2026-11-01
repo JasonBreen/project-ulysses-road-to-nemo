@@ -154,6 +154,14 @@ resources retain their separate streaming hash behavior. Malformed/truncated
 descriptors become inventory failures; only explicitly selected invalid providers
 fail the complete gate rather than aborting the inventory for an unselected pack.
 
+The authored-presentation review added two further dependency regressions,
+bringing this suite to 41. A shared lexical preflight rejects unmatched braces
+and unterminated quoted tokens before the supported AST reader runs. Comments,
+escaped quotes and literal braces inside strings remain valid. Effective source
+definitions and mod/DLC descriptors use this check; it does not claim complete
+engine-schema validation. Captured audit-source fingerprints now also include
+the structural validator and the underlying AST reader.
+
 ## Supported dependency edges and limits
 
 The audit inspects effective GUI sprites and literal texture fields, bitmap-font resources, scrollbar
@@ -221,8 +229,8 @@ Usean-partner and squadron-story payload, including all 162 story decision
 rows' owned icons. `macro-screen.json` separately records zero ownership
 failures for `countrydecisionview.gui` and `ac_macro_economy.gui`. That narrower
 check does not certify provenance, native rendering or the rest of the graph.
-The selected archive/music scenario retains 20,271 failed presentation entries;
-the explicitly mapped all-installed stress scenario retains 31,853. Those are
+The selected archive/music scenario retains 20,272 failed presentation entries;
+the explicitly mapped all-installed stress scenario retains 31,854. Those are
 dependency entries, including uncertain or unclassified resources, rather than
 counts of unique vanilla pictures. The source and profile hashes in
 `results.json` identify the exact audit which produced them.

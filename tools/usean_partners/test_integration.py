@@ -125,6 +125,19 @@ class RealNationalContracts(unittest.TestCase):
             country.tag = tag; country.original_tag = 'ZZZ'
             self.assertEqual(0, weight(own_tree, country), (tag, 'changed original tag'))
 
+    def test_enabled_unready_accounts_cannot_start_any_partner_programme(self):
+        for scope in SCOPES:
+            for mode,fault in (('full','identity'),('full','initialized'),('full','wrong_identity'),('experimental','initialized')):
+                with self.subTest(scope=scope.id,mode=mode,fault=fault):
+                    world,country=self.ready(scope,mode)
+                    if fault=='identity':country.variables.pop('ac_macro_identity')
+                    elif fault=='wrong_identity':country.variables['ac_macro_identity']=D(-1)
+                    else:country.flags.pop('ac_macro_initialized'if mode=='full'else'ac_econ_initialized')
+                    self.assertTrue(world.trigger([('ac_econ_enabled','=','yes')],country))
+                    self.assertFalse(world.trigger([('ac_econ_ready','=','yes')],country))
+                    before=copy.deepcopy(country);world.run(scope.id+'_start',scope.tag)
+                    self.assertEqual(before,country)
+
     def test_all_29_scopes_pay_real_owners_once_in_each_fiscal_mode(self):
         self.assertEqual(29, len(SCOPES))
         for scope in SCOPES:

@@ -14,7 +14,42 @@ class Source(unittest.TestCase):
     def test_actual_fraction_and_treaty_mutations_fail_closed(self):
         for relative,old,new in [('events/AWWNB.txt','size = 0.25','size = 0.35'),('events/Belka.txt','transfer_state = 316','transfer_state = 345')]:
             text=(MOD/relative).read_text(encoding='utf-8-sig');self.assertIn(old,text)
-            with self.assertRaisesRegex(ValueError,'Protected native'):source_contract.validate_event_operations({relative:text.replace(old,new,1)})
+            with self.assertRaisesRegex(ValueError,'Protected ordered'):source_contract.validate_event_operations({relative:text.replace(old,new,1)})
+    def test_scope_order_option_and_unreviewed_guard_mutations_fail_closed(self):
+        from script import render
+        def tree(relative):return source_contract.parse((MOD/relative).read_text(encoding='utf-8-sig'))
+        def event(nodes,ident):return next(v for k,_,v in nodes if k=='country_event'and get(v,'id')==ident)
+        def descendants(nodes):
+            for node in nodes:
+                yield node
+                if isinstance(node[2],list):yield from descendants(node[2])
+        relative='events/Recta.txt'
+        original=tree(relative);birth=event(original,'recta.1')
+        for mutation in ('country_scope','execution_order','extra_reward','guard_condition'):
+            candidate=copy.deepcopy(original);body=event(candidate,'recta.1')
+            recipient=next(n for n in descendants(body)if n[0]=='REC'and any(x[0]=='load_oob'for x in n[2]))
+            if mutation=='country_scope':recipient[0]='GEB'
+            elif mutation=='execution_order':
+                option=next(v for k,_,v in body if k=='option');payload=option[-1][2]
+                self.assertGreaterEqual(len(payload),3);payload[1],payload[2]=payload[2],payload[1]
+            elif mutation=='extra_reward':recipient[2].insert(0,['add_political_power','=','7'])
+            else:
+                option=next(v for k,_,v in body if k=='option');wrapper=option[-1]
+                self.assertEqual('if',wrapper[0]);wrapper[2][0][2].append(['always','=','yes'])
+            with self.assertRaisesRegex(ValueError,'Protected ordered',msg=mutation):source_contract.validate_event_operations({relative:render(candidate)})
+        relative='events/AWWNB.txt';original=tree(relative)
+        for mutation in ('option_ownership','missing_transfer_guard','snapshot_order'):
+            candidate=copy.deepcopy(original);body=event(candidate,'awwnb.1')
+            if mutation=='option_ownership':
+                options=[i for i,n in enumerate(body)if n[0]=='option'];self.assertGreaterEqual(len(options),2)
+                body[options[0]],body[options[1]]=body[options[1]],body[options[0]]
+            elif mutation=='snapshot_order':
+                immediate=get(body,'immediate');self.assertGreaterEqual(len(immediate),2);immediate[0],immediate[1]=immediate[1],immediate[0]
+            else:
+                blk=next(n for n in descendants(body)if n[0]=='BLK'and any(x[0]=='if'and isinstance(x[2],list)and any(y[0]=='transfer_units_fraction'for y in x[2])for x in n[2]))
+                index=next(i for i,n in enumerate(blk[2])if n[0]=='if'and any(x[0]=='transfer_units_fraction'for x in n[2]))
+                blk[2][index]=next(n for n in blk[2][index][2]if n[0]=='transfer_units_fraction')
+            with self.assertRaisesRegex(ValueError,'Protected ordered',msg=mutation):source_contract.validate_event_operations({relative:render(candidate)})
     def test_generated_lifecycle_and_maintenance_match_exact_text(self):
         for relative,text in (author.outputs()|physical.outputs()|leaders.outputs()).items():self.assertEqual(text,(MOD/relative).read_text(encoding='utf-8-sig'),relative)
     def test_network_edges_are_existing_owned_land_geometry_and_never_replace_a_rail(self):

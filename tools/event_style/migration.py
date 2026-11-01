@@ -117,8 +117,14 @@ def assert_preserved(text):
     if restored_ast!=parse(original):raise ValueError('Unregistered event GUI ordered AST change')
     return restored
 
+def generated_from(original):
+    """Compose the actual upstream producer only at the immutable base contract."""
+    if normalized(original)!=normalized(source()):
+        raise ValueError('Upstream event GUI differs from the immutable fit contract')
+    output=replace(original);assert_preserved(output);return normalized(output)
+
 def generated():
-    output=replace(source());assert_preserved(output);return normalized(output)
+    return generated_from(source())
 
 def report(text):
     restored=assert_preserved(text)

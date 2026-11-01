@@ -108,8 +108,17 @@ class EventStyle(unittest.TestCase):
                 self.assertIsNotNone(colors,'Unexpected non-geometric full-color event texture')
                 self.assertFalse(any(r>150 and g>130 and b<100 and a>0 for _,(r,g,b,a) in colors))
     def test_generated_source_art_and_review(self):
-        for command in (['tools/event_style/build.py','--check'],['tools/event_style/review.py','--check']):
+        for command in (['tools/usea_expansion/build_events_ui.py','--check'],['tools/event_style/build.py','--check'],['tools/event_style/review.py','--check']):
             result=subprocess.run([sys.executable,'-B']+command,cwd=ROOT,capture_output=True,text=True)
             self.assertEqual(0,result.returncode,result.stdout+result.stderr)
+
+    def test_original_event_producer_composes_only_the_registered_style(self):
+        from usea_expansion import build_events_ui
+        original=build_events_ui.build_base()
+        self.assertEqual(m.source(),original)
+        self.assertEqual(self.current,build_events_ui.build())
+        for before,after in (('x = 215','x = 216'),('moveable = yes','moveable = no'),('clicksound = click_default','clicksound = changed_sound')):
+            with self.subTest(change=after),self.assertRaisesRegex(ValueError,'Upstream event GUI'):
+                m.generated_from(original.replace(before,after,1))
 
 if __name__=='__main__':unittest.main(verbosity=2)

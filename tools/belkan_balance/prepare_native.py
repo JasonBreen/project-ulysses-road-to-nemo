@@ -173,6 +173,17 @@ def disposable_settings(source: str, width: int, height: int) -> str:
         count=1,
     )
     if settings == source:
+        settings = re.sub(
+            r"(?m)^([ \t]*)size=\{[ \t]*x=\d+[ \t]+y=\d+[ \t]*\}",
+            lambda match: (
+                f"{match.group(1)}size={{\n"
+                f"{match.group(1)}\tx={width}\n"
+                f"{match.group(1)}\ty={height} }}"
+            ),
+            source,
+            count=1,
+        )
+    if settings == source:
         raise PreparationError("Normal settings do not contain a supported graphics size block.")
 
     def replace_or_append(name: str, value: str) -> None:

@@ -130,6 +130,13 @@ save_as_binary=yes
         with self.assertRaisesRegex(prepare_native.PreparationError, "graphics size block"):
             prepare_native.disposable_settings("graphics={}\n", 3440, 1440)
 
+    def test_accepts_engine_rewritten_single_line_graphics_size(self) -> None:
+        source = "graphics={\n\tsize={ x=1920 y=1080 }\n\tgui_scale=1.000000\n}\n"
+        settings = prepare_native.disposable_settings(source, 3440, 1440)
+        self.assertEqual(settings.count("{"), settings.count("}"))
+        self.assertIn("\tsize={\n\t\tx=3440\n\t\ty=1440 }", settings)
+        self.assertIn("\tgui_scale=1.000000", settings)
+
     def test_rejects_nonpositive_display_dimensions(self) -> None:
         with self.assertRaisesRegex(prepare_native.PreparationError, "positive integers"):
             prepare_native.prepare(

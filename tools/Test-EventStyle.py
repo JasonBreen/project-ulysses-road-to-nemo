@@ -66,6 +66,13 @@ class EventStyle(unittest.TestCase):
             shutil.copyfile(MOD/'interface/eventwindow.gui',mod/'interface/eventwindow.gui')
             Image.new('RGBA',(640,260),(10,30,45,255)).save(mod/'gfx/AC_event_style/country_default.dds')
             with self.assertRaisesRegex(ValueError,'dimensions'):validate_art(mod)
+    def test_font_aliases_require_native_registration_not_root_or_nested_declarations(self):
+        gfx=(MOD/'interface/ac_event_style.gfx').read_text();tree=parse(gfx)
+        fonts=get(tree,'bitmapfonts');self.assertEqual(2,len(fonts))
+        root_only=[node for node in tree if node[0]!='bitmapfonts']+fonts
+        with self.assertRaisesRegex(ValueError,'bitmapfonts'):validate_art(gfx=render(root_only))
+        nested=[node for node in tree if node[0]!='bitmapfonts']+[['unregistered_wrapper','=',[['bitmapfonts','=',fonts]]]]
+        with self.assertRaisesRegex(ValueError,'bitmapfonts'):validate_art(gfx=render(nested))
     def test_all24_operative_frames_actual_kind_and_animation_metadata(self):
         image=Image.open(MOD/'gfx/AC_event_style/operative_background.dds').convert('RGBA')
         self.assertEqual((12672,596),image.size);self.assertEqual(24,len({hashlib.sha256(image.crop((n*528,0,(n+1)*528,596)).tobytes()).hexdigest() for n in range(24)}))
@@ -87,6 +94,19 @@ class EventStyle(unittest.TestCase):
             for name in ('eventwindow.gui','ac_event_style.gfx'):shutil.copyfile(MOD/'interface'/name,mod/'interface'/name)
             image=Image.open(mod/'gfx/AC_event_style/leader_frame.dds').convert('RGBA');image.putpixel((10,11),(80,190,210,255));image.save(mod/'gfx/AC_event_style/leader_frame.dds')
             with self.assertRaisesRegex(ValueError,'aperture'):validate_art(mod)
+    def test_same_sized_opaque_bound_frame_rebinding_fails_file_and_supplied_gfx(self):
+        with tempfile.TemporaryDirectory() as folder:
+            mod=Path(folder);shutil.copytree(MOD/'gfx/AC_event_style',mod/'gfx/AC_event_style');(mod/'interface').mkdir()
+            for name in ('eventwindow.gui','ac_event_style.gfx'):shutil.copyfile(MOD/'interface'/name,mod/'interface'/name)
+            opaque=mod/'gfx/opaque_frame.dds';Image.new('RGBA',(172,232),(30,60,90,255)).save(opaque)
+            path=mod/'interface/ac_event_style.gfx';original=path.read_text()
+            rebound=original.replace('gfx/AC_event_style/leader_frame.dds','gfx/opaque_frame.dds')
+            self.assertEqual(1,rebound.count('gfx/opaque_frame.dds'))
+            with self.assertRaisesRegex(ValueError,'aperture'):validate_art(mod,gfx=rebound)
+            path.write_text(rebound)
+            with self.assertRaisesRegex(ValueError,'aperture'):validate_art(mod)
+            self.assertFalse(review.apertures(mod)['leader']['fully_transparent'])
+            self.assertEqual('gfx/opaque_frame.dds',review.apertures(mod)['leader']['frame_binding']['texture'])
     def test_existing_atlas_raw_bytes_and_no_global_alias_override(self):
         for relative,digest in self.manifest['unchanged_font_bytes'].items():self.assertEqual(digest,hashlib.sha256((MOD/relative).read_bytes()).hexdigest())
         gfx=(MOD/'interface/ac_event_style.gfx').read_text()
@@ -97,6 +117,37 @@ class EventStyle(unittest.TestCase):
         for name in ('EventWindow_leader','EventWindow_Operative'):self.assertEqual(0,self.measure['template_text_counts'][name])
         self.assertEqual(4,len(self.measure['leader_template_stress']))
         self.assertTrue(any(row['clipped'] for row in self.measure['leader_template_stress']))
+    def text_body(self,width=120,height=18):
+        body=copy.deepcopy(review.named(parse(self.current))[('EventWindow','midsection','Description')])
+        for node in body:
+            if node[0]=='maxWidth':node[2]=str(width)
+            if node[0]=='maxHeight':node[2]=str(height)
+        return body
+    def test_vertical_scroll_only_accesses_wrapped_bottom_overflow(self):
+        positive=review.metrics('alpha beta gamma '*80,self.text_body())
+        self.assertTrue(positive['overflow']['bottom']);self.assertTrue(positive['accessible_by_scroll'])
+        for text in ('MMMMMMMMMMMMMMMMMMMMMMMMMMMM','first\nMMMMMMMMMMMMMMMMMMMMMMMMMMMM'):
+            row=review.metrics(text,self.text_body(width=12))
+            self.assertTrue(row['clipped']);self.assertTrue(row['overflow']['unbreakable_word']);self.assertFalse(row['accessible_by_scroll'])
+        font=review.FONTS['ACBriefing16'];old=font.rows[ord('A')]
+        for key,value,overflow in [('xoffset',-30,'left'),('yoffset',-40,'top')]:
+            with patch.dict(font.rows,{ord('A'):{**old,key:value}}):
+                row=review.metrics('A word '*80,self.text_body())
+                self.assertTrue(row['overflow'][overflow]);self.assertTrue(row['overflow']['bottom']);self.assertFalse(row['accessible_by_scroll'])
+    def test_every_repeated_title_description_and_conditional_variant_is_measured(self):
+        with tempfile.TemporaryDirectory() as folder:
+            mod=Path(folder);(mod/'interface').mkdir();(mod/'events').mkdir();(mod/'localisation').mkdir()
+            shutil.copyfile(MOD/'interface/eventwindow.gui',mod/'interface/eventwindow.gui')
+            (mod/'events/test.txt').write_text('country_event={id=fixture.1 title=title_short title={trigger={always=yes} text=title_long} desc=desc_short desc={text=desc_long} desc={random_valid={text=desc_narrow text=desc_missing}}}')
+            strings={'title_short':'Short title','title_long':'W'*400,'desc_short':'Short description','desc_long':'alpha beta '*300,'desc_narrow':'W'*800}
+            (mod/'localisation/test_l_english.yml').write_text('l_english:\n'+''.join(' '+key+':0 "'+value+'"\n' for key,value in strings.items()),encoding='utf-8-sig')
+            result=review.measurement(mod,include_stress=False)
+            self.assertEqual(5,result['measured_fields']);self.assertEqual(list(strings),[row['key'] for row in result['fields']])
+            self.assertEqual(['title_long'],[row['key'] for row in result['static_title_clips']])
+            self.assertEqual(['desc_narrow'],[row['key'] for row in result['unscrollable_static_body_clips']])
+            self.assertEqual(['desc_missing'],[row['key'] for row in result['unresolved_localization']])
+            self.assertEqual([0,1,0,1,2],[row['field_occurrence'] for row in result['fields']])
+            self.assertTrue(result['fields'][3]['accessible_by_scroll']);self.assertFalse(result['fields'][4]['accessible_by_scroll'])
     def test_art_sources_frames_alpha_and_no_yellow_artifact(self):
         self.assertEqual(12,len(self.manifest['assets']))
         for row in self.manifest['assets']:

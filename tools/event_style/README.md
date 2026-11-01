@@ -50,7 +50,9 @@ Midsection and bottom use distinct sprite aliases over one shared seamless tile.
 The geometry is authored for this project and asserts no real agency identity.
 
 The two `ACEvent16`/`ACEvent20` aliases use the existing ACBriefing16/20 bitmap
-atlases and metrics byte for byte. Global engine font/leader/agency aliases are
+atlases and metrics byte for byte, registered directly inside native
+`bitmapfonts`. Root-only declarations and aliases nested in arbitrary wrappers
+are not registered fonts and fail actual effective resolution. Global engine font/leader/agency aliases are
 not overridden. Unknown faces use a neutral office document/building mark;
 dynamic character and agency control bindings remain unchanged.
 
@@ -85,9 +87,17 @@ stress overflow is recorded; no real current event is claimed to fit there.
 Only well-formed English quoted localization lines are measured. Missing keys,
 malformed inherited lines and runtime substitutions are retained as explicit
 measurement exclusions, not silently fitted or rewritten. Existing country/news
-scrollbars remain the mechanism for long descriptions. Native wrap, input,
+scrollbars only make properly wrapped **bottom** overflow accessible. Left,
+right, top and unbreakable-word overflow stay failed findings. Every repeated
+title/description node and its conditional variants is measured in source order,
+with occurrence and variant paths retained. Native wrap, input,
 scrolling, portrait substitutions, reflow, frame slicing and display scales need
 separate acceptance.
+
+Aperture checks resolve the actual GUI-bound sprite from the supplied GFX table,
+then its texture and selected frame. They never inspect a hard-coded original
+texture in place of the active binding. Same-sized opaque rebinding negatives
+exercise both an on-disk GFX change and an in-memory GFX override.
 
 The effective eventwindow ownership gate is bounded to that screen. Wider
 portrait pools, agencies, event pictures, models, MIOs, audio and DLC/runtime

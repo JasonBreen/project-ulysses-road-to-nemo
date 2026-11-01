@@ -37,13 +37,17 @@ def validate_art(mod=MOD,gfx=None):
         if name=='GFX_ac_event_news_default':assert_fits('news_event',(w,h))
         if name=='GFX_ac_event_transparent' and image.getchannel('A').getextrema()!=(0,0):raise ValueError('Technical transparent quad has painted pixels')
         result.append(dict(sprite=name,kind=kind,texture=str(path.relative_to(mod)).replace('\\','/'),dimensions=[w,h],frames=frames,frame_size=[w//frames,h]))
-    fonts=[body for kind,_,body in parse(gfx) if kind=='bitmapfont']
+    tree=parse(gfx);containers=[body for kind,_,body in tree if kind.lower()=='bitmapfonts' and isinstance(body,list)]
+    if len(containers)!=1:raise ValueError('Event fonts require one native bitmapfonts registration block')
+    fonts=[body for kind,_,body in containers[0] if kind.lower()=='bitmapfont' and isinstance(body,list)]
+    if len(fonts)!=2 or len(containers[0])!=2 or any(kind.lower() in ('bitmapfont','font') for kind,_,_ in tree):
+        raise ValueError('Event font aliases are outside native bitmapfonts registration context')
     if {get(body,'name').strip('"') for body in fonts}!={'ACEvent16','ACEvent20'}:raise ValueError('Event font aliases differ')
     for font in fonts:
         name=get(font,'name').strip('"');expected='gfx/fonts/ACBriefing'+name.removeprefix('ACEvent')
         if get(font,'path').strip('"')!=expected:raise ValueError('Event font pixels rebound')
     from event_style.review import apertures
-    a=apertures(mod)
+    a=apertures(mod,actual)
     if not a['leader']['fully_transparent'] or not a['agency']['inside_body'] or not a['agency']['clear_of_title']:
         raise ValueError('Actual event portrait/agency aperture is obstructed')
     return result

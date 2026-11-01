@@ -47,17 +47,31 @@ The neutral agency strip is deliberately normalized from233×119/two fractional
 fits the source slot; native agency slicing is not accepted.
 
 Both `ACEvent16`/`ACEvent20` aliases reuse the existing ACBriefing atlases and
-metrics byte for byte. Global engine aliases remain untouched.
+metrics byte for byte. They are direct children of the native `bitmapfonts`
+registration block. Root-only or arbitrarily nested declarations fail both the
+direct validator and the effective font collector. Global engine aliases remain
+untouched.
 
 ## Text, bounds and acceptance limits
 
-The strict English audit measures **1,624** well-formed authored fields:1,535
-country and89 news. There are **zero static current title clips**, **zero current
-unscrollable static body clips**, and **zero missing glyphs** in those measured
-fields. **213** overlength bodies retain the existing scrollbar. **130** dynamic
-fields and **90** missing/malformed localization references remain separately
-listed; they are not represented as accepted runtime text. These are inherited
-content exclusions and no localization is rewritten by this art packet.
+The corrected PR #55 audit measures **1,892** well-formed authored fields:
+**1,803 country and 89 news**, including every repeated title/description and its
+conditional variants. There are **zero static current title clips** and **zero
+missing glyphs**, but **16 description instances have one-pixel horizontal ink
+overflow**. These remain failed source fit findings. A vertical scrollbar only
+counts **properly wrapped bottom overflow** as accessible: it cannot repair left,
+right, top or unbreakable-word overflow. **256** long bodies satisfy that limited
+scroll-accessibility condition. **130** dynamic fields and **90** inherited
+missing/malformed localization references remain separately listed; none is
+represented as accepted runtime text. No localization is rewritten here.
+
+The 16 findings are repeated variants in `ac_sq.217`/`ac_sq.10217`,
+`ac_sq.301`/`ac_sq.10301`, `ac_sq.316`/`ac_sq.10316`,
+`ac_sq.414`/`ac_sq.10414`, plus `gebet.3` and `sapin_politics.6`.
+Exact localization keys, field occurrences, conditional paths, ink rectangles
+and overflow directions are retained in the regenerated measurements. The
+earlier 1,624-field/zero-body-clip results remain historical receipts; they are
+superseded by this stricter measurement, not silently reinterpreted as passing.
 
 There are no authored leader/operative events in this payload. Their two template
 reviews therefore use explicit actual-country-text stress proxies. Those long
@@ -65,7 +79,10 @@ proxies overflow the existing unscrollable description fields and the narrow
 operative title; the report retains that limitation instead of changing layout.
 The actual portrait-frame aperture is transparent over the full scaled office
 image; the two117×119 agency states end at(478,154), inside the528px body and above
-the title at y170.
+the title at y170. Aperture tests follow the actual GUI sprite through the
+supplied GFX definitions and selected frame to its bound texture. A same-sized
+opaque texture rebinding fails even when the original authored frame remains
+present and transparent on disk.
 
 The four offline drawings retain literal source anchors. Native automatic section
 sizing, zero-height leader roots, dynamic options/reflow, portrait rotation and

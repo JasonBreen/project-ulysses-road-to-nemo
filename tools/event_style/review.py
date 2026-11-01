@@ -26,17 +26,28 @@ def named(tree):
         for _,_,value in rows:
             if isinstance(value,list):visit(value,path)
     visit(tree);return result
-def locs():
+def locs(mod=MOD):
     result={}
-    for file in sorted((MOD/'localisation').rglob('*english.yml'),key=lambda p:('replace' in p.parts,p.as_posix())):
+    for file in sorted((mod/'localisation').rglob('*english.yml'),key=lambda p:('replace' in p.parts,p.as_posix())):
         for key,value in re.findall(r'^\s*([^\s:#]+):\d*\s+"((?:\\.|[^"\\\r\n])*)"\s*(?:#[^\r\n]*)?$',file.read_text(encoding='utf-8-sig'),re.M):
             result[key]=value.replace('\\n','\n').replace('\\"','"')
     return result
 def visible(text):return re.sub(r'§.', '',text)
-def options(value):
-    if isinstance(value,str):return [unquote(value)]
-    if isinstance(value,list):return [unquote(v) for k,_,v in value if k=='text' and isinstance(v,str)]
-    return []
+def localization_options(value,path=()):
+    if isinstance(value,str):yield unquote(value),path
+    elif isinstance(value,list):
+        for index,(key,_,child) in enumerate(value):
+            address=path+(key+'['+str(index)+']',)
+            if key=='text' and isinstance(child,str):yield unquote(child),address
+            elif isinstance(child,list) and key!='trigger':yield from localization_options(child,address)
+
+def repeated_fields(body,field):
+    occurrence=0
+    for node_index,(key,_,value) in enumerate(body):
+        if key!=field:continue
+        for variant_index,(localization,path) in enumerate(localization_options(value)):
+            yield localization,dict(field_node_index=node_index,field_occurrence=occurrence,variant_index=variant_index,variant_path=list(path))
+        occurrence+=1
 def geometry(body):
     p=get(body,'position',[])
     return dict(x=float(get(p,'x','0')),y=float(get(p,'y','0')),width=int(get(body,'maxWidth','0')),height=int(get(body,'maxHeight','0')),
@@ -56,14 +67,16 @@ def metrics(text,body):
             if bbox:ink.append((x+v['xoffset']+bbox[0],n*font.height+v['yoffset']+bbox[1],x+v['xoffset']+bbox[2],n*font.height+v['yoffset']+bbox[3]))
             x+=v['xadvance'];previous=ident
     bounds=[min(v[0] for v in ink),min(v[1] for v in ink),max(v[2] for v in ink),max(v[3] for v in ink)] if ink else [0,0,0,0]
-    clipped=long_word or bounds[0]<0 or bounds[1]<0 or bounds[2]>g['width'] or bounds[3]>g['height']
+    overflow=dict(left=bounds[0]<0,top=bounds[1]<0,right=bounds[2]>g['width'],bottom=bounds[3]>g['height'],unbreakable_word=long_word)
+    clipped=any(overflow.values())
+    vertical_only=overflow['bottom'] and not any(overflow[key] for key in ('left','top','right','unbreakable_word'))
     return dict(**g,text=clean,missing_glyphs=[],dynamic=dynamic,lines=lines,line_height=font.height,ink_bounds=bounds,
-                required_line_box_height=len(lines)*font.height,clipped=clipped,accessible_by_scroll=bool(g['scrollbar']) and clipped)
+                required_line_box_height=len(lines)*font.height,overflow=overflow,clipped=clipped,accessible_by_scroll=bool(g['scrollbar']) and vertical_only)
 
-def measurement():
-    tree=load(MOD/'interface/eventwindow.gui');controls=named(tree);strings=locs();rows=[];unresolved=[];ignored=[]
+def measurement(mod=MOD,include_stress=True):
+    tree=load(mod/'interface/eventwindow.gui');controls=named(tree);strings=locs(mod);rows=[];unresolved=[];ignored=[]
     type_template={'country_event':'EventWindow','news_event':'EventWindow_News','unit_leader_event':'EventWindow_leader','operative_leader_event':'EventWindow_Operative'}
-    for file in sorted((MOD/'events').glob('*.txt')):
+    for file in sorted((mod/'events').glob('*.txt')):
         try:events=load(file)
         except ValueError as error:ignored.append(dict(file=file.name,error=str(error)));continue
         for kind,_,body in events:
@@ -71,14 +84,15 @@ def measurement():
             if get(body,'hidden')=='yes' or get(body,'hide_window')=='yes':continue
             template=type_template[kind];ident=unquote(get(body,'id'))
             for field,part,name in [('title','top_Window','Title'),('desc','midsection','Description')]:
-                for key in options(get(body,field)):
-                    if key not in strings:unresolved.append(dict(id=ident,event_type=kind,field=field,key=key));continue
-                    path=(template,part,name);m=metrics(strings[key],controls[path]);rows.append(dict(id=ident,file=file.name,event_type=kind,field=field,key=key,path=list(path),**m))
+                for key,address in repeated_fields(body,field):
+                    if key not in strings:unresolved.append(dict(id=ident,event_type=kind,field=field,key=key,**address));continue
+                    path=(template,part,name);m=metrics(strings[key],controls[path]);rows.append(dict(id=ident,file=file.name,event_type=kind,field=field,key=key,path=list(path),**address,**m))
     counts={template:sum(row['path'][0]==template for row in rows) for template in type_template.values()}
     proxies=[]
     # There are no authored leader/operative events in this payload. Stress their
     # unchanged fields using actual country text, explicitly not a reachable bind.
     for template in ('EventWindow_leader','EventWindow_Operative'):
+        if not include_stress:continue
         if counts[template]:continue
         for field,part,name in [('title','top_Window','Title'),('desc','midsection','Description')]:
             candidates=[r for r in rows if r['field']==field and not r['dynamic'] and not r['missing_glyphs']]
@@ -93,28 +107,39 @@ def measurement():
         dynamic_text_fields=sum(r['dynamic'] for r in rows),missing_glyph_fields=[r for r in rows if r['missing_glyphs']],
         unresolved_localization=unresolved,unparsed_inherited_event_files=ignored,leader_template_stress=proxies,fields=rows)
 
-def apertures(mod=MOD):
-    with Image.open(mod/'gfx/AC_event_style/leader_frame.dds') as image:frame=image.convert('RGBA').getchannel('A')
+def apertures(mod=MOD,sprites=None):
+    if sprites is None:sprites=all_sprites(mod)
+    def bound(body):
+        names=[unquote(value) for key,_,value in body if key in ('spriteType','quadTextureSprite')]
+        if len(names)!=1 or names[0] not in sprites:raise ValueError('Missing or ambiguous actual aperture sprite binding')
+        _,definition=sprites[names[0]];texture=unquote(get(definition,'texturefile'));path=mod/texture
+        with Image.open(path) as source:image=source.convert('RGBA')
+        frames=int(get(definition,'noOfFrames','1'));frame=int(get(body,'frame','1'))-1
+        if frames<1 or image.width%frames or not 0<=frame<frames:raise ValueError('Invalid actual aperture frame binding')
+        fw=image.width//frames;return image.crop((frame*fw,0,(frame+1)*fw,image.height)),dict(sprite=names[0],texture=texture,frame=frame+1,frames=frames)
     # World-relative scaled positions derived independently from the actual GUI.
     controls=named(load(mod/'interface/eventwindow.gui'));base=('EventWindow_leader','midsection','leader_picture_container')
     leader=controls[base+('leader',)];border=controls[base+('leader_frame',)]
+    portrait,portrait_binding=bound(leader);border_image,border_binding=bound(border);frame=border_image.getchannel('A')
     def p(body):return [float(get(get(body,'position'),'x')),float(get(get(body,'position'),'y'))]
     a=p(leader);b=p(border);ls=float(get(leader,'scale'));fs=float(get(border,'scale'))
-    rect=[(a[0]-b[0])/fs,(a[1]-b[1])/fs,(a[0]-b[0]+156*ls)/fs,(a[1]-b[1]+210*ls)/fs]
+    rect=[(a[0]-b[0])/fs,(a[1]-b[1])/fs,(a[0]-b[0]+portrait.width*ls)/fs,(a[1]-b[1]+portrait.height*ls)/fs]
     integer=[math.floor(rect[0]),math.floor(rect[1]),math.ceil(rect[2]),math.ceil(rect[3])]
-    clear=frame.crop(tuple(integer)).getextrema()==(0,0)
-    agency=controls[('EventWindow_Operative','top_Window','agency_insignia')];ap=p(agency);rect_agency=ap+[ap[0]+117,ap[1]+119]
-    return dict(leader=dict(portrait_source=[156,210],frame_source=[172,232],portrait_scale=ls,frame_scale=fs,
+    clear=0<=integer[0]<integer[2]<=frame.width and 0<=integer[1]<integer[3]<=frame.height and frame.crop(tuple(integer)).getextrema()==(0,0)
+    agency=controls[('EventWindow_Operative','top_Window','agency_insignia')];agency_image,agency_binding=bound(agency)
+    ap=p(agency);scale=float(get(agency,'scale','1'));rect_agency=ap+[ap[0]+agency_image.width*scale,ap[1]+agency_image.height*scale]
+    return dict(leader=dict(portrait_source=list(portrait.size),frame_source=list(border_image.size),portrait_scale=ls,frame_scale=fs,
+        portrait_binding=portrait_binding,frame_binding=border_binding,
         portrait_in_frame=rect,conservative_integer_aperture=integer,fully_transparent=clear),
-        agency=dict(frame_source=[117,119],bounds=rect_agency,body_width=528,title_top=170,
+        agency=dict(frame_source=list(agency_image.size),binding=agency_binding,bounds=rect_agency,body_width=528,title_top=170,
                     inside_body=rect_agency[2]<=528,clear_of_title=rect_agency[3]<=170),
         operative_portrait=dict(source=[156,210],scale=.7,rotation=.05,
             limitation='Literal rotation preserved; native units/pivot and dynamic portrait dimensions unaccepted'),
         layout='Existing zero-height leader roots and engine section reflow are retained, not simulated')
 
-def all_sprites():
+def all_sprites(mod=MOD):
     result={}
-    for file in sorted((MOD/'interface').glob('*.gfx')):
+    for file in sorted((mod/'interface').glob('*.gfx')):
         for kind,_,body in get(load(file),'spriteTypes',[]):
             if not isinstance(body,list) or get(body,'texturefile') is None:continue
             name=unquote(get(body,'name'));result[name]=(kind,body)

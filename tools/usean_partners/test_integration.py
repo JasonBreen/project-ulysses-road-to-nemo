@@ -135,8 +135,8 @@ class RealNationalContracts(unittest.TestCase):
                     else:country.flags.pop('ac_macro_initialized'if mode=='full'else'ac_econ_initialized')
                     self.assertTrue(world.trigger([('ac_econ_enabled','=','yes')],country))
                     self.assertFalse(world.trigger([('ac_econ_ready','=','yes')],country))
-                    before=copy.deepcopy(country);world.run(scope.id+'_start',scope.tag)
-                    self.assertEqual(before,country)
+                    before=copy.deepcopy(vars(country));world.run(scope.id+'_start',scope.tag)
+                    self.assertEqual(before,vars(country))
 
     def test_all_29_scopes_pay_real_owners_once_in_each_fiscal_mode(self):
         self.assertEqual(29, len(SCOPES))

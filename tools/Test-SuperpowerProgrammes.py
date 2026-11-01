@@ -136,8 +136,8 @@ class SuperpowerProgrammes(unittest.TestCase):
                     else:c.flags.pop('ac_macro_initialized'if mode=='full'else'ac_econ_initialized')
                     self.assertTrue(w.trigger([('ac_econ_enabled','=','yes')],c))
                     self.assertFalse(w.trigger([('ac_econ_ready','=','yes')],c))
-                    before=copy.deepcopy(c);w.run(service.id+'_start',c.tag)
-                    self.assertEqual(before,c)
+                    before=copy.deepcopy(vars(c));w.run(service.id+'_start',c.tag)
+                    self.assertEqual(before,vars(c))
 
     def test_all_32_scopes_pay_real_owners_once_in_three_fiscal_modes(self):
         for s in SERVICES:

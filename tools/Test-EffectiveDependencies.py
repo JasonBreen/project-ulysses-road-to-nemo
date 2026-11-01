@@ -60,6 +60,20 @@ class EffectiveDependencies(unittest.TestCase):
         self.put(self.mod,"gfx/panel.dds",b"synthetic-pixels")
         return self.record("gfx/panel.dds",b"synthetic-pixels")
 
+    def test_font_aliases_register_only_as_direct_children_of_native_bitmapfonts(self):
+        alias='bitmapfont={name="FixtureFont" path="gfx/fonts/fixture"}'
+        self.put(self.mod,'gfx/fonts/fixture.fnt','synthetic font metrics');self.put(self.mod,'gfx/fonts/fixture.dds',b'synthetic atlas')
+        self.put(self.mod,'interface/countrydecisionview.gui','guiTypes={containerWindowType={name="window" instantTextBoxType={name="label" font="FixtureFont"}}}')
+        for declaration in (alias,'wrapper={bitmapfonts={'+alias+'}}','bitmapfonts={wrapper={'+alias+'}}'):
+            self.put(self.mod,'interface/fonts.gfx',declaration)
+            audit=Audit(self.mod,self.engine,self.profile())
+            self.assertEqual('missing_definition',audit.resolve('font','FixtureFont')['status'])
+            self.assertTrue(audit.run(['countrydecisionview.gui'])['gate_covered_screens']['countrydecisionview.gui']['failures'])
+        self.put(self.mod,'interface/fonts.gfx','bitmapfonts={'+alias+'}')
+        audit=Audit(self.mod,self.engine,self.profile())
+        self.assertEqual('mod_resolved',audit.resolve('font','FixtureFont')['status'])
+        self.assertFalse(audit.run(['countrydecisionview.gui'])['gate_covered_screens']['countrydecisionview.gui']['failures'])
+
     def test_installed_archive_is_not_activated_without_an_explicit_profile(self):
         pack=self.pack("pack_one",{"gfx/archive.dds":b"pack-pixels"})
         for profile in (None,self.profile()):

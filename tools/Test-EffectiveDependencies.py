@@ -217,6 +217,85 @@ class EffectiveDependencies(unittest.TestCase):
         self.put(self.mod,"sound/sound/clip.wav",b"relative")
         self.assertEqual("mod_asset",EffectiveFiles(self.mod,self.engine,self.profile()).resource("sound/clip.wav","sound/clips.asset")["status"])
 
+    def test_source_relative_provider_ambiguity_cannot_hide_behind_approved_root(self):
+        local = self.window()
+        relative = "interface/gfx/panel.dds"
+        self.put(self.engine, relative, b"different-fallback")
+        pack = self.pack("relative_collision", {relative: b"synthetic-pixels"})
+        profile = self.profile(pack, provenance=[local])
+        audit = Audit(self.mod, self.engine, profile)
+        result = audit.resolve("sprite", "GFX_panel")
+        self.assertEqual("unresolved", result["classification"])
+        self.assertEqual("ambiguous_asset", result["resources"][0]["status"])
+        candidates = result["resources"][0]["provider_candidates"]
+        self.assertEqual(2, sum(row["binding_probe"] == relative for row in candidates))
+        report = audit.run(["countrydecisionview.gui"], True)
+        self.assertTrue(report["gate_covered_screens"]["countrydecisionview.gui"]["failures"])
+        self.assertFalse(report["completed_presentation_gate"]["passed"])
+
+    def test_scripted_window_controls_cannot_be_combined_across_conflicting_definitions(self):
+        local = self.window()
+        self.put(self.mod, "interface/left.gui", 'guiTypes={containerWindowType={name="dual" buttonType={name="left"}}}')
+        self.put(self.mod, "interface/right.gui", 'guiTypes={containerWindowType={name="dual" buttonType={name="right"}}}')
+        self.put(self.mod, "common/scripted_guis/dual.txt", 'scripted_gui={dual_script={window_name="dual" effects={left_click={} right_click={}}}}')
+        profile = self.profile(provenance=[local])
+        report = Audit(self.mod, self.engine, profile).run(["countrydecisionview.gui"], True)
+        row = next(row for row in report["scripted_gui_bindings"] if row["scripted_gui"] == "dual_script")
+        self.assertIn("conflicting window definitions dual", row["problems"])
+        self.assertIn("missing click target left", row["problems"])
+        self.assertIn("missing click target right", row["problems"])
+        self.assertFalse(report["completed_presentation_gate"]["passed"])
+        identical = 'guiTypes={containerWindowType={name="dual" buttonType={name="left"} buttonType={name="right"}}}'
+        self.put(self.mod, "interface/left.gui", identical)
+        self.put(self.mod, "interface/right.gui", identical)
+        self.assertTrue(Audit(self.mod, self.engine, profile).run(["countrydecisionview.gui"], True)["completed_presentation_gate"]["passed"])
+
+    def test_missing_animation_does_not_replace_the_entity_identity(self):
+        self.put(self.mod, "gfx/entities/unit.asset", 'entity={name="unit_entity" state={name="idle" animation="missing_clip"}}')
+        audit = Audit(self.mod, self.engine, self.profile())
+        result = audit.resolve("entity", "unit_entity")
+        self.assertEqual("unit_entity", result["name"])
+        self.assertEqual("unit_entity", audit.resolve("entity", "unit_entity")["name"])
+        self.assertEqual("missing_clip", result["dependencies"][0]["name"])
+
+    def test_oversized_definition_is_not_decompressed_for_collision_or_override_hashing(self):
+        local = self.window()
+        oversized = b"#" * (8 * 1024 * 1024 + 1)
+        pack = self.pack("large_hash", {"interface/large.gfx": oversized, "gfx/large.dds": oversized})
+        original_open = zipfile.ZipFile.open
+        def bounded_open(archive, name, *args, **kwargs):
+            member = name.filename if isinstance(name, zipfile.ZipInfo) else name
+            if member == "interface/large.gfx":
+                self.fail("Oversized definition was decompressed before rejection")
+            return original_open(archive, name, *args, **kwargs)
+        override = self.record("interface/large.gfx", oversized, "dlc:" + pack, "approved_sourced")
+        media = self.record("gfx/large.dds", oversized, "dlc:" + pack, "approved_sourced")
+        for collision in (False, True):
+            with self.subTest(collision=collision), patch.object(zipfile.ZipFile, "open", bounded_open):
+                if collision:
+                    self.put(self.engine, "interface/large.gfx", "spriteTypes={}")
+                profile = self.profile(pack, provenance=[local, media], overrides=[override])
+                audit = Audit(self.mod, self.engine, profile)
+                self.assertTrue(audit.vfs.providers.errors)
+                self.assertEqual("approved_sourced", audit.vfs.resource("gfx/large.dds")["classification"])
+                report = audit.run(["countrydecisionview.gui"], True)
+                self.assertFalse(report["completed_presentation_gate"]["passed"])
+                self.assertTrue(any("bounded text-reader" in row["error"] for row in report["parse_failures"]))
+
+    def test_truncated_descriptor_is_inventory_failure_not_an_uncaught_exception(self):
+        local = self.window()
+        descriptor = "dlc/truncated/truncated.dlc"
+        self.put(self.engine, descriptor, "name =")
+        for selected in (False, True):
+            with self.subTest(selected=selected):
+                profile = self.profile(*([descriptor] if selected else []), provenance=[local])
+                audit = Audit(self.mod, self.engine, profile)
+                row = audit.vfs.providers.inventory[0]
+                self.assertEqual("unresolved_provider", row["inspection"])
+                self.assertTrue(row["error"])
+                self.assertEqual(selected, bool(audit.vfs.providers.errors))
+                self.assertEqual(not selected, audit.run(["countrydecisionview.gui"], True)["completed_presentation_gate"]["passed"])
+
     def test_direct_portrait_and_archive_ui_audio_use_exact_resource_provenance(self):
         local=self.window()
         pack=self.pack("ui_audio",{"sound/ui.asset":'sound={name="click" file="clip.wav"} soundeffect={name="click_effect" sounds={sound=click}}',

@@ -15,6 +15,7 @@ from script import parse,get
 from research_fonts.build import SOURCE,inventory,outputs
 from research_fonts.policy import BINDINGS
 from research_fonts.migration import migrate,restore
+from research_fonts.metrics import envelope,text_ink,fits
 from render_review import Atlas
 spec=importlib.util.spec_from_file_location('research_font_land_ui',ROOT/'tools/land_program/build_ui.py')
 land=importlib.util.module_from_spec(spec);spec.loader.exec_module(land)
@@ -57,7 +58,8 @@ class ResearchFonts(unittest.TestCase):
     def test_every_actual_font_consumer_resolves_to_exact_authored_font_resources(self):
         old=inventory(self.original);now=inventory(self.current)
         self.assertEqual(301,len(old));self.assertEqual(set(BINDINGS),{r['font']for r in old})
-        self.assertEqual(316,len(now))
+        self.assertEqual(inventory(parse(land.generated()[0])),now)
+        self.assertEqual(301,sum(r['font'].startswith('ACResearch')for r in now))
         self.assertEqual({b.name for b in BINDINGS.values()}|{'ACBriefing16','ACBriefing20'},{r['font']for r in now})
         self.assertFalse(set(BINDINGS)&{r['font']for r in now})
         for row in now:
@@ -126,6 +128,33 @@ class ResearchFonts(unittest.TestCase):
             ('ACBriefing16','+125.5%',100,20),('ACBriefing20','RESEARCH',261,34)]
         for name,text,width,height in cases:
             font=atlases[name];self.assertLessEqual(len(font.wrap(text,width))*font.height,height,(name,text))
+
+    def test_actual_alpha_envelopes_and_accented_names_fit_vertical_budgets(self):
+        atlases={name:Atlas(name)for name in('ACBriefing16','ACBriefing20')}
+        envelopes={name:envelope(font)for name,font in atlases.items()}
+        for row in inventory(self.original):
+            shape=envelopes[BINDINGS[row['font']].atlas]
+            self.assertEqual(361,shape['glyph_count'])
+            self.assertGreaterEqual(shape['ink_top'],0,row['path'])
+            if row['max_height']is not None:self.assertLessEqual(shape['ink_bottom'],int(row['max_height']),row['path'])
+        # Real alpha from the shipped atlases, rather than FNT lineHeight/base alone.
+        self.assertEqual((1,19),(envelopes['ACBriefing16']['ink_top'],envelopes['ACBriefing16']['ink_bottom']))
+        self.assertEqual((2,25),(envelopes['ACBriefing20']['ink_top'],envelopes['ACBriefing20']['ink_bottom']))
+        for name,text,width,height in [('ACBriefing16','Émile Černý',160,20),
+                ('ACBriefing16','ÂÊÎÔÛ ĂŮŴ',160,20),('ACBriefing16','Électronic systems',200,20),
+                ('ACBriefing20','ÉLECTRONIC SYSTEMS',300,32)]:
+            font=atlases[name];self.assertTrue(fits(text_ink(font,font.wrap(text,width)),width,height),(name,text))
+        # A source check must catch the tempting compact-baseline adapter: its
+        # declared line height can fit while accented ink is cut off at the top.
+        for name,delta in [('ACBriefing16',-3),('ACBriefing20',-4)]:
+            shifted=copy.copy(atlases[name]);shifted.rows=copy.deepcopy(shifted.rows)
+            for glyph in shifted.rows.values():glyph['yoffset']+=delta
+            self.assertLess(envelope(shifted)['ink_top'],0)
+            self.assertFalse(fits(text_ink(shifted,['ÂÉÎ']),300,32))
+        # Do not silently certify arbitrary runtime names: these authored fonts
+        # have known side bearings, whose clipping remains a native coverage item.
+        self.assertFalse(fits(text_ink(atlases['ACBriefing16'],['j']),160,20))
+        self.assertTrue(envelopes['ACBriefing16']['left_overhangs'])
 
     def test_alias_and_land_generators_reproduce_without_touching_captured_sources(self):
         for path,data in outputs().items():self.assertEqual(data,path.read_bytes())

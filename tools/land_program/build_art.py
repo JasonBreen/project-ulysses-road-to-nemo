@@ -12,7 +12,7 @@ from pathlib import Path
 import sys
 
 import PIL
-from PIL import Image,ImageDraw,ImageFont
+from PIL import Image,ImageDraw
 from land_content import FAMILIES,YEARS,MODULES,module_id,model_id,chassis_id
 
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246'
@@ -234,29 +234,31 @@ def generate():
 
 
 def gallery():
-    font=ImageFont.truetype(str(ROOT/'tools/frontend_typography/source/DINish-Regular.ttf'),16)
+    # Use the delivered raster glyphs: FreeType rasterization varies by OS.
+    from render_review import Atlas
+    font=Atlas('ACBriefing16')
     rows=[]
     for row in ASSETS:
         if row['role'] in ('original research composition','original designer module composition','original support counter selection strip'):rows.append(row)
     cols=4;w=310;h=116
     canvas=Image.new('RGBA',(cols*w,((len(rows)+cols-1)//cols)*h+55),NAVY);d=ImageDraw.Draw(canvas)
-    d.text((16,12),'OFFLINE ASSET REVIEW / ORIGINAL LAND ART',font=font,fill=WHITE)
+    font.draw(canvas,'OFFLINE ASSET REVIEW / ORIGINAL LAND ART',16,12,cols*w-32,24)
     for index,row in enumerate(rows):
         x=(index%cols)*w;y=(index//cols)*h+50;im=Image.open(io.BytesIO(OUTPUT[MOD/row['file']])).convert('RGBA')
         if 'counter' in row['role']:im=im.resize((im.width*2,im.height*2),Image.Resampling.NEAREST)
         canvas.alpha_composite(im,(x+8,y+5));label=Path(row['file']).stem
-        d.text((x+8,y+88),label,font=font,fill=WHITE)
+        font.draw(canvas,label,x+8,y+88,w-16,24)
     put('docs/evidence/land-program/asset-gallery.png',encode(canvas,'PNG'))
     equipment=[row for row in ASSETS if row['role']=='original equipment composition']
     large=Image.new('RGBA',(4*310,8*146+55),NAVY);draw=ImageDraw.Draw(large)
-    draw.text((16,12),'OFFLINE EQUIPMENT COMPOSITIONS / ORIGINAL LAND ART',font=font,fill=WHITE)
+    font.draw(large,'OFFLINE EQUIPMENT COMPOSITIONS / ORIGINAL LAND ART',16,12,large.width-32,24)
     for index,row in enumerate(equipment):
         x=(index%4)*310;y=(index//4)*146+50
         large.alpha_composite(Image.open(io.BytesIO(OUTPUT[MOD/row['file']])).convert('RGBA'),(x+8,y+5))
-        draw.text((x+8,y+112),Path(row['file']).stem,font=font,fill=WHITE)
+        font.draw(large,Path(row['file']).stem,x+8,y+112,294,24)
     put('docs/evidence/land-program/equipment-gallery.png',encode(large,'PNG'))
     body='<html><meta charset="utf-8"><title>Land artwork offline review</title><style>body{background:#081621;color:#daedf2;font:16px sans-serif}img{max-width:100%}</style><h1>Offline original-art review</h1><p>Technical artwork only. This is not a native research-screen screenshot or engine acceptance.</p><img src="asset-gallery.png" alt="All research, module and counter compositions"><ul>'
-    body+='<img src="equipment-gallery.png" alt="All32 complete-equipment compositions">'
+    body+=f'<img src="equipment-gallery.png" alt="All{len(equipment)} complete-equipment compositions">'
     for row in ASSETS:body+='<li>'+html.escape(row['file'])+f' — {row["width"]}×{row["height"]}, {row["frames"]}frame(s)</li>'
     put('docs/evidence/land-program/asset-gallery.html',body+'</ul></html>')
 
@@ -267,6 +269,11 @@ if __name__=='__main__':
     for path,data in outputs.items():
         if args.check:
             existing=path.read_bytes() if path.exists() else b''
+            # Review PNGs preserve exact pixels, not platform zlib encoding.
+            # Delivered DDS, SVG and binding/manifest bytes still compare below.
+            if path.suffix.lower()=='.png' and existing:
+                with Image.open(io.BytesIO(existing)) as old,Image.open(io.BytesIO(data)) as new:
+                    if old.size==new.size and old.convert('RGBA').tobytes()==new.convert('RGBA').tobytes():continue
             if path.suffix.lower() in ('.json','.svg','.html','.gfx'):existing=existing.replace(b'\r\n',b'\n')
             if existing!=data:raise SystemExit('Stale land art: '+str(path.relative_to(ROOT)))
         else:path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)

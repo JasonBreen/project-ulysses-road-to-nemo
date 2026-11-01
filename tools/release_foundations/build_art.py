@@ -1,11 +1,27 @@
 """Original release-maintenance emblems; existing flags keep national identity."""
-import argparse,hashlib,importlib.util,io,json
+import argparse,hashlib,importlib.util,io,json,re
 from pathlib import Path
 import PIL
 from PIL import Image,ImageDraw,ImageOps
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246';LIBRARY=ROOT/'tools/usea_expansion/build_art.py'
 spec=importlib.util.spec_from_file_location('release_original_symbols',LIBRARY);symbols=importlib.util.module_from_spec(spec);spec.loader.exec_module(symbols)
 SUBJECTS={'AWW':('command','tools'),'REC':('rebuild','scales'),'SBK':('civil','rail'),'REL':('assembly','tools'),'SER':('economy','document'),'SHI':('fishing','security'),'TER':('industry','bridge')}
+
+def sheet_label(image,text,x,y):
+    # Reuse shipped pixels, independent of the OS FreeType build.
+    source=(MOD/'gfx/fonts/ACBriefing16.fnt').read_text();metrics={};kern={}
+    for line in source.splitlines():
+        row={key:int(value) for key,value in re.findall(r'(\w+)=(-?\d+)',line)}
+        if line.startswith('char '):metrics[row['id']]=row
+        elif line.startswith('kerning '):kern[row['first'],row['second']]=row['amount']
+    atlas_name=re.search(r'page id=0 file="([^"]+)"',source)[1]
+    with Image.open(MOD/'gfx/fonts'/atlas_name) as original:atlas=original.convert('RGBA')
+    previous=None
+    for char in text:
+        ident=ord(char);row=metrics[ident];x+=kern.get((previous,ident),0)
+        glyph=atlas.crop((row['x'],row['y'],row['x']+row['width'],row['y']+row['height']))
+        image.alpha_composite(glyph,(x+row['xoffset'],y+row['yoffset']))
+        x+=row['xadvance'];previous=ident
 def outputs():
     if PIL.__version__!='11.3.0':raise ValueError('Use pinned Pillow11.3.0')
     out={};assets=[];sprites=[];sources={};sheet=Image.new('RGBA',(700,132),(8,22,33,255));d=ImageDraw.Draw(sheet)
@@ -24,7 +40,7 @@ def outputs():
             stream=io.BytesIO();rendered.save(stream,format='DDS');data=stream.getvalue();relative=f'gfx/AC_release_foundations/{family}/{tag}.dds';out[MOD/relative]=data
             name=prefix+token;sprites.append(f'spriteType = {{ name = "{name}" texturefile = "{relative}" }}')
             sprites.append(f'spriteType = {{ name = "GFX_{token}" texturefile = "{relative}" }}')
-            if family=='category':sheet.alpha_composite(rendered,(100*n,0));d.text((100*n+30,111),tag,fill=(218,237,242,255))
+            if family=='category':sheet.alpha_composite(rendered,(100*n,0));sheet_label(sheet,tag,100*n+30,111)
             assets.append(dict(file=relative,sprite=name,width=rendered.width,height=rendered.height,frames=1,frame_width=rendered.width,frame_height=rendered.height,alpha_min=rendered.getchannel('A').getextrema()[0],alpha_max=255,sha256=hashlib.sha256(data).hexdigest(),role='Original '+family+' maintenance composition',subjects=subjects,identity=flag.relative_to(MOD).as_posix()))
         if tag in ('AWW','REC','SHI'):
             office=Image.new('RGBA',(156,210),(8,22,33,255));frame=ImageDraw.Draw(office)
@@ -34,6 +50,10 @@ def outputs():
             out[MOD/relative]=data;sprites.append(f'spriteType = {{ name = "{name}" texturefile = "{relative}" }}')
             assets.append(dict(file=relative,sprite=name,width=156,height=210,frames=1,frame_width=156,frame_height=210,alpha_min=255,alpha_max=255,sha256=hashlib.sha256(data).hexdigest(),role='Existing national emblem in established original government-office frame',identity=flag.relative_to(MOD).as_posix()))
     for path in (Path(__file__),LIBRARY):sources[path.relative_to(ROOT).as_posix()]=hashlib.sha256(path.read_text().encode()).hexdigest()
+    metrics=MOD/'gfx/fonts/ACBriefing16.fnt'
+    atlas=MOD/'gfx/fonts'/re.search(r'page id=0 file="([^"]+)"',metrics.read_text())[1]
+    sources[metrics.relative_to(ROOT).as_posix()]=hashlib.sha256(metrics.read_text().encode()).hexdigest()
+    sources[atlas.relative_to(ROOT).as_posix()]=hashlib.sha256(atlas.read_bytes()).hexdigest()
     out[MOD/'interface/ac_release_foundations.gfx']=('spriteTypes = {\n'+'\n'.join(sprites)+'\n}\n').encode()
     out[HERE/'assets.json']=(json.dumps(dict(schema=1,renderer='Pillow11.3.0',classification='Original code-native subjects and existing national flag identity; no remote art or installed-game images read; no added watermark.',source_hashes=sources,assets=assets),indent=2)+'\n').encode()
     stream=io.BytesIO();sheet.save(stream,format='PNG');out[HERE/'contact-sheet.png']=stream.getvalue()
@@ -43,6 +63,9 @@ if __name__=='__main__':
     for path,data in outputs().items():
         if args.check:
             actual=path.read_bytes() if path.exists() else b''
+            if path.suffix=='.png' and actual:
+                with Image.open(io.BytesIO(actual)) as old,Image.open(io.BytesIO(data)) as new:
+                    if old.size==new.size and old.convert('RGBA').tobytes()==new.convert('RGBA').tobytes():continue
             if path.suffix in ('.json','.gfx'):actual=actual.replace(b'\r\n',b'\n');data=data.replace(b'\r\n',b'\n')
             if actual!=data:raise SystemExit('Release artwork differs: '+str(path))
         else:path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)

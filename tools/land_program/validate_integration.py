@@ -10,6 +10,8 @@ import sys
 import time
 
 ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'tools'))
+from source_snapshot import capture,verify
 
 
 def main():
@@ -47,7 +49,7 @@ def main():
         selected=set(args.only.split(','));known={name for name,_ in jobs}
         if selected-known:raise SystemExit('Unknown gates: '+', '.join(sorted(selected-known)))
         jobs=[pair for pair in jobs if pair[0]in selected]
-    head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+    source=capture(ROOT);head=source['head']
     def run(pair):
         name,cmd=pair;start=time.monotonic()
         p=subprocess.run(cmd,cwd=ROOT,capture_output=True,env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'})
@@ -59,11 +61,11 @@ def main():
         print(name+': '+('PASS' if p.returncode==0 else 'FAIL'),flush=True)
         return dict(name=name,command=shown,exit_code=p.returncode,seconds=round(time.monotonic()-start,3),log=name+'.txt')
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:rows=list(pool.map(run,jobs))
-    if subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()!=head:raise SystemExit('Source commit changed during verification')
+    verify(source,ROOT)
     payload=hashlib.sha256()
     for path in sorted((ROOT/'mod/2985041246').rglob('*'),key=lambda p:p.as_posix()):
         if path.is_file():payload.update(path.relative_to(ROOT).as_posix().encode()+b'\0'+path.read_bytes())
-    report=dict(source_head=head,payload_sha256=payload.hexdigest(),payload_hash_rule='Sorted repository-relative POSIX path,NUL,raw bytes for every delivered mod file.',checks=rows,passed=sum(r['exit_code']==0 for r in rows),failed=sum(r['exit_code']!=0 for r in rows),native_acceptance=False,research_inventory_scope='Source inventory only; no complete presentation/provenance gate was requested. Screen failures remain visible in research-dependencies.json.',full_conversion_acceptance=False)
+    report=dict(source_head=head,source_inputs=source,payload_sha256=payload.hexdigest(),payload_hash_rule='Sorted repository-relative POSIX path,NUL,raw bytes for every delivered mod file.',checks=rows,passed=sum(r['exit_code']==0 for r in rows),failed=sum(r['exit_code']!=0 for r in rows),native_acceptance=False,research_inventory_scope='Source inventory only; no complete presentation/provenance gate was requested. Screen failures remain visible in research-dependencies.json.',full_conversion_acceptance=False)
     (args.output/'results.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
     raise SystemExit(report['failed']!=0)
 

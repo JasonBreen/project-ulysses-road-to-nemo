@@ -28,26 +28,34 @@ def collect(root):
         scope='Only listed exact-source subprocess invocations. Historical formatting/folder reports are not accepted or relabelled.')
 
 
-def main():
-    parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output',type=Path,default=ROOT/'docs/evidence/fato-south-belka/current-source-receipts.json')
-    args=parser.parse_args();receipt=collect(ROOT)
-    args.output.parent.mkdir(parents=True,exist_ok=True)
+def export(root,output,receipt):
+    root=Path(root).resolve();output=Path(output)
+    output=(root/output).resolve()if not output.is_absolute()else output.resolve()
+    output.relative_to(root)
+    output.parent.mkdir(parents=True,exist_ok=True)
     # Deliver the immutable reports and every attempt's logs. Convenience
     # output folders may be reused without erasing a prior invocation.
     paths={r['archived_report']for r in receipt['latest_checks']+receipt['superseded_attempts']}
     paths|={str(Path(p).parent/'invocation.json')for p in paths}
     paths|={r['archived_log']for r in receipt['latest_checks']+receipt['superseded_attempts']if r['exit_code']is not None}
     for relative in sorted(paths):
-        source=ROOT/relative
+        source=root/relative
         if not source.exists():continue
-        suffix=source.relative_to(ROOT/'runtime-output/fato-south-belka/invocations')
-        destination=args.output.parent/'invocations'/suffix
+        suffix=source.relative_to(root/'runtime-output/fato-south-belka/invocations')
+        destination=output.parent/'invocations'/suffix
         destination.parent.mkdir(parents=True,exist_ok=True);destination.write_bytes(source.read_bytes())
     for row in receipt['latest_checks']+receipt['superseded_attempts']:
         for field in ('archived_report','archived_log'):
-            row[field]=str(args.output.parent.relative_to(ROOT)/'invocations'/Path(row[field]).relative_to('runtime-output/fato-south-belka/invocations')).replace('\\','/')
-    args.output.write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf-8',newline='\n')
+            row[field]=str(output.parent.relative_to(root)/'invocations'/Path(row[field]).relative_to('runtime-output/fato-south-belka/invocations')).replace('\\','/')
+    output.write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf-8',newline='\n')
+    return output
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output',type=Path,default=ROOT/'docs/evidence/fato-south-belka/current-source-receipts.json')
+    args=parser.parse_args();receipt=collect(ROOT)
+    export(ROOT,args.output,receipt)
     print(str(len(receipt['latest_checks']))+' exact-source current gates; earlier attempts retained; native paused')
 
 

@@ -9,7 +9,7 @@ import unittest
 
 HERE=Path(__file__).resolve().parent;sys.path.insert(0,str(HERE))
 from evidence_journal import begin,finish,read_current
-from record_evidence import collect,capture
+from record_evidence import collect,capture,export
 
 
 class EvidenceContracts(unittest.TestCase):
@@ -91,6 +91,17 @@ class EvidenceContracts(unittest.TestCase):
         with ThreadPoolExecutor(max_workers=2)as executor:sequences=list(executor.map(allocate,range(8)))
         self.assertEqual(list(range(1,9)),sorted(sequences))
         self.assertEqual(9,allocate(9))
+
+    def test_relative_delivery_path_exports_receipt_and_immutable_logs(self):
+        self.invoke('checks',3);self.invoke('checks')
+        receipt=collect(self.root)
+        output=export(self.root,Path('docs/evidence/review/receipt.json'),receipt)
+        delivered=json.loads(output.read_text(encoding='utf-8'))
+        self.assertEqual(self.root/'docs/evidence/review/receipt.json',output)
+        self.assertEqual(capture(self.root),delivered['source_inputs'])
+        for row in delivered['latest_checks']+delivered['superseded_attempts']:
+            self.assertTrue((self.root/row['archived_report']).is_file())
+            self.assertTrue((self.root/row['archived_log']).is_file())
 
 
 if __name__=='__main__':unittest.main()

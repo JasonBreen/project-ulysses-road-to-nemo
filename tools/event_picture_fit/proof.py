@@ -42,7 +42,12 @@ def preserved():
     c=json.loads((HERE/'contract.json').read_text())
     for name,expected in c['protected_sources'].items():
         if digest(ROOT/name)!=expected:raise ValueError('Protected original changed: '+name)
-    if digest(MOD/'interface/eventwindow.gui')!=c['protected_gui_sha256']:raise ValueError('Event GUI changed')
+    if digest(MOD/'interface/eventwindow.gui')!=c['protected_gui_sha256']:
+        # Separate reviewed owner: strict 23-field lexical AND whole-AST restoration.
+        # This does not refresh or exempt the historical fit capture.
+        from event_style.migration import assert_preserved,sha
+        restored=assert_preserved((MOD/'interface/eventwindow.gui').read_text(encoding='utf-8-sig'))
+        if sha(restored)!=c['protected_gui_sha256']:raise ValueError('Unregistered event GUI change')
     for name,expected in c['original_anea_focus_sha256'].items():
         if digest(MOD/name)!=expected:raise ValueError('Original Anea focus DDS changed: '+name)
     for name,row in c['military_captures'].items():

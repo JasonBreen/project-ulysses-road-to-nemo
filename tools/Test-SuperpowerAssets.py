@@ -60,6 +60,11 @@ class SuperpowerAssets(unittest.TestCase):
         contract=json.loads((ROOT/'tools/superpowers/tree_contracts.json').read_text())
         for tag,row in contract['countries'].items():
             source=parse((MOD/'common/national_focus'/f'{tag}.txt').read_text())
+            # The later national owner validates/removes only its registered
+            # exact imports. Unknown additions and all foreign AST remain visible.
+            if (ROOT/'tools/pacific_nations/build.py').is_file():
+                from pacific_nations.build import strip_imports
+                source=strip_imports(source,tag)
             for key,_,tree in source:
                 if key=='focus_tree':tree[:]=[r for r in tree if r[0]!='continuous_focus_position'and not(r[0]=='shared_focus'and isinstance(r[2],str)and'_snp_'in r[2])]
             digest=hashlib.sha256(json.dumps(source,separators=(',',':')).encode()).hexdigest()

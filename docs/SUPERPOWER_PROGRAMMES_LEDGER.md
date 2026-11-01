@@ -93,10 +93,19 @@ values or independently release reservations.
 | `<TAG>_snp_<branch>_service_completed` | At least one qualifying service in that branch |
 | `<TAG>_snp_<branch>_reply_civil` / `_reply_protected` | Persistent branch-response choice |
 | `<TAG>_snp_<branch>_last_domestic` | Latest qualifying branch completion used wartime domestic continuity |
+| `ac_snp_<tag>_<branch>_<scope>_last_completed_started` / `_last_completed_on` / `_last_completed_identity` | Additive dated receipt published only by an actual future successful service finish; no retroactive receipt for legacy completed flags |
+| `<scope>_start_serial` / `_last_completed_serial` | Recording-only sequence incremented after a paid start and published on a successful finish; distinguishes starts on the same calendar day |
 
 The owner maintains these through `ac_snp_reconcile` and the guarded service
 lifecycle. Its verified interruption hooks remain authoritative. Future consumers
 can use the recorded choices without redefining an existing war or project result.
+The dated receipt allows a later review to require its corresponding fresh work
+after requesting it. Cancellation, including at day90, cannot publish or advance
+that receipt. Consumers check its current country identity and never write it.
+The additive start/completion serial distinguishes a period already running on
+the request day from one paid for afterward. It changes no price, reservation,
+timer, cancellation or outcome rule. Legacy in-flight work without a serial may
+complete normally but publishes zero, which is not new-review evidence.
 
 ## Payment, capacity and lifecycle contracts
 

@@ -186,6 +186,24 @@ class SuperpowerProgrammes(unittest.TestCase):
             c.variables.pop(s.prefix+'_started');before=copy.deepcopy(c)
             self.assertFalse(w.event(s.event,c.tag));self.assertEqual(before,c)
 
+    def test_fresh_completion_receipt_is_published_only_by_the_actual_successful_period(self):
+        for s in SERVICES:
+            w,c=self.ready(s);key=s.prefix+'_last_completed_started'
+            self.assertNotIn(key,c.variables)
+            w.run(s.id+'_start',c.tag);first=c.variables[s.prefix+'_started'];w.advance(90)
+            w.event(s.event,c.tag)
+            self.assertEqual(first,c.variables[key]);self.assertEqual(w.today,c.variables[s.prefix+'_last_completed_on'])
+            self.assertEqual(w.number('THIS.id',c,{},c,None),c.variables[s.prefix+'_last_completed_identity'])
+            self.assertEqual(1,c.variables[s.prefix+'_start_serial']);self.assertEqual(1,c.variables[s.prefix+'_last_completed_serial'])
+            receipt={k:v for k,v in c.variables.items()if k.startswith(s.prefix+'_last_completed_')}
+            w.advance(90);w.run(s.id+'_start',c.tag);w.advance(90)
+            # A cancellation at the due boundary is not a successful completion,
+            # even when the historic completed flag and elapsed90 remain true.
+            w.run(s.id+'_cancel',c.tag);self.assertIn(s.id+'_completed',c.flags)
+            self.assertEqual(receipt,{k:v for k,v in c.variables.items()if k.startswith(s.prefix+'_last_completed_')})
+            w.run(s.id+'_start',c.tag);second=c.variables[s.prefix+'_started'];w.advance(90);w.event(s.event,c.tag)
+            self.assertEqual(second,c.variables[key]);self.assertGreater(second,first);self.assertEqual(3,c.variables[s.prefix+'_last_completed_serial'])
+
     def test_ose_support_controls_price_access_standing_and_bounded_paid_recovery(self):
         for n,lane in((0,'public'),(1,'security')):
             s=SERVICES[n]

@@ -28,7 +28,7 @@ def main():
         commands=[row for row in commands if row[0]in selected]
     rows=[]
     for name,command in commands:
-        started=time.monotonic();result=subprocess.run(command,cwd=ROOT,capture_output=True,env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'})
+        started=time.monotonic();result=subprocess.run(command,cwd=ROOT,capture_output=True,env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','PATH':str(Path(sys.executable).parent)+os.pathsep+os.environ.get('PATH','')})
         (a.output/(name+'.txt')).write_bytes(result.stdout+result.stderr)
         rows.append(dict(check=name,command=command,exit_code=result.returncode,seconds=round(time.monotonic()-started,3),log=name+'.txt'))
         print(name+(': PASS' if result.returncode==0 else ': FAIL'),flush=True)

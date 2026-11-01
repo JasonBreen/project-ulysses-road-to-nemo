@@ -1,12 +1,13 @@
 # Scoped event-window defaults
 
-This owner replaces exactly 17 sprite-reference fields and six font fields in
+This owner replaces exactly 17 sprite-reference fields, six font fields and two
+explicitly provisional horizontal description-inset fields in
 `interface/eventwindow.gui`. It contains no event content, leader definitions,
-agency definitions, government changes, gameplay effects or layout changes.
+agency definitions, government changes, gameplay effects or other layout changes.
 
 `SOURCE_eventwindow.gui` is a normalized copy of the original GUI. Its hash must
 match the **unchanged** historical `event_picture_fit/contract.json`. Generation
-substitutes only the 23 registered scalar values at explicit named-control paths.
+substitutes only the 25 registered scalar values at explicit named-control paths.
 Independent lexical and ordered-AST restoration require the entire original
 source and ordered tree to match. Reverted bindings, extra/missing controls,
 unknown values, changed actions/conditions/geometry and unrelated edits fail.
@@ -71,6 +72,15 @@ GUI bounds end at x478/y154, inside the 528px operative body and above the title
 at y170. Native slicing and animation behavior remain unaccepted.
 
 ## Evidence limits
+
+The only added padding properties are country/news `Description/borderSize.x`
+0→1. Installed nonzero borderSize examples establish native property existence,
+not its exact formula. The analysis therefore models both maxWidth-includes-two-
+borders and maxWidth-excludes-two-borders interpretations, recording origins,
+wrap widths, raw/shifted glyph ink and finite ancestor clearances. Both must pass
+without horizontal/top/unbreakable overflow or unknown parent bounds. This is
+explicitly provisional modeled inset coverage. Native border/clipping behavior
+is unaccepted, and the original16 raw findings remain in the pre-padding evidence.
 
 Review PNGs use actual delivered textures and shipped bitmap glyph/kerning/alpha
 metrics. Only PNG compression may differ: checks require equal dimensions and

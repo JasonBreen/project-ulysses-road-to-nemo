@@ -22,7 +22,7 @@ def main():
         ('static-reference',['pwsh','-NoProfile','-File','tools/Test-UlyssesStatic.ps1','-ModRoot',str(ROOT/'mod/2985041246'),'-ReferenceGameRoot',str(a.engine)])]
     rows=[]
     for name,command in commands:
-        started=time.monotonic();result=subprocess.run(command,cwd=ROOT,capture_output=True,env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'})
+        started=time.monotonic();result=subprocess.run(command,cwd=ROOT,capture_output=True,env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','PATH':str(Path(sys.executable).parent)+os.pathsep+os.environ.get('PATH','')})
         (a.output/(name+'.txt')).write_bytes(result.stdout+result.stderr)
         rows.append(dict(check=name,command=command,exit_code=result.returncode,seconds=round(time.monotonic()-started,3),log=name+'.txt'))
         print(name+(': PASS' if result.returncode==0 else ': FAIL (retained)'),flush=True)

@@ -16,18 +16,19 @@ class EventStyle(unittest.TestCase):
     def setUpClass(cls):
         cls.current=(MOD/'interface/eventwindow.gui').read_text(encoding='utf-8-sig')
         cls.manifest=json.loads((HERE/'assets.json').read_text());cls.measure=review.measurement()
-    def test_exact_17sprite_6font_changes_independently_diffed(self):
+    def test_exact_17sprite_6font_2inset_changes_independently_diffed(self):
         differences=[]
         def diff(a,b,path=()):
             self.assertEqual(len(a),len(b))
             names=[v.strip('"') for k,_,v in a if k=='name' and isinstance(v,str)];path+=tuple(names)
             for left,right in zip(a,b):
                 self.assertEqual(left[:2],right[:2]);key,_,value=left
-                if isinstance(value,list):self.assertIsInstance(right[2],list);diff(value,right[2],path)
+                if isinstance(value,list):self.assertIsInstance(right[2],list);diff(value,right[2],path+(('borderSize',) if key=='borderSize' else ()))
                 elif value!=right[2]:differences.append((path,key,value.strip('"'),right[2].strip('"')))
         diff(parse(m.source()),parse(self.current))
-        self.assertEqual(23,len(differences));self.assertCountEqual(m.REVIEWED,differences)
-        self.assertEqual(17,sum(k!='font' for _,k,_,_ in differences));self.assertEqual(6,sum(k=='font' for _,k,_,_ in differences))
+        self.assertEqual(25,len(differences));self.assertCountEqual(m.REVIEWED,differences)
+        self.assertEqual(17,sum(k in ('spriteType','quadTextureSprite') for _,k,_,_ in differences));self.assertEqual(6,sum(k=='font' for _,k,_,_ in differences))
+        self.assertEqual(2,sum(k=='x' for _,k,_,_ in differences))
     def test_original_fit_capture_unchanged_and_whole_source_restores(self):
         self.assertEqual(m.source(),m.assert_preserved(self.current));self.assertEqual(parse(m.source()),m.restore_ast(parse(self.current)))
         capture=json.loads((ROOT/'tools/event_picture_fit/contract.json').read_text())
@@ -36,11 +37,11 @@ class EventStyle(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             source=Path(folder)/'SOURCE_eventwindow.gui';source.write_text(m.source().replace('x = 215','x = 216',1),encoding='utf-8')
             with patch.object(m,'HERE',Path(folder)),self.assertRaisesRegex(ValueError,'immutable fit contract'):m.generated()
-    def test_all23_reverted_wrong_or_missing_fields_fail(self):
+    def test_all25_reverted_wrong_or_missing_fields_fail(self):
         fields=m.spans(self.current)
         for path,key,old,new in m.REVIEWED:
             token=fields[(path,key)]
-            for replacement in ('"'+old+'"','"GFX_unregistered"'):
+            for replacement in (m.literal(key,old),'"GFX_unregistered"'):
                 with self.subTest(path=path,key=key,replacement=replacement),self.assertRaises(ValueError):m.assert_preserved(self.current[:token.start()]+replacement+self.current[token.end():])
             with self.subTest(path=path,key=key),self.assertRaises(ValueError):m.assert_preserved(self.current[:token.start()]+'""'+self.current[token.end():])
     def test_lexical_escape_safety_and_unknown_layout_action_condition_fail(self):
@@ -114,6 +115,7 @@ class EventStyle(unittest.TestCase):
     def test_actual_localized_titles_and_descriptions_and_honest_stress(self):
         self.assertGreater(self.measure['measured_fields'],1600);self.assertFalse(self.measure['static_title_clips']);self.assertFalse(self.measure['unscrollable_static_body_clips'])
         self.assertFalse(self.measure['missing_glyph_fields']);self.assertGreater(self.measure['scrollable_overlength_bodies'],0)
+        self.assertFalse(self.measure['parent_clearance_findings'])
         for name in ('EventWindow_leader','EventWindow_Operative'):self.assertEqual(0,self.measure['template_text_counts'][name])
         self.assertEqual(4,len(self.measure['leader_template_stress']))
         self.assertTrue(any(row['clipped'] for row in self.measure['leader_template_stress']))
@@ -134,6 +136,25 @@ class EventStyle(unittest.TestCase):
             with patch.dict(font.rows,{ord('A'):{**old,key:value}}):
                 row=review.metrics('A word '*80,self.text_body())
                 self.assertTrue(row['overflow'][overflow]);self.assertTrue(row['overflow']['bottom']);self.assertFalse(row['accessible_by_scroll'])
+    def test_provisional_insets_keep_both_width_interpretations_and_finite_clearance(self):
+        country=next(row for row in self.measure['fields'] if row['path']==['EventWindow','midsection','Description'])
+        a,b=country['padding_models'];self.assertEqual((1,510,512),(a['interior_origin'][0],a['wrap_width'],a['outer_width']))
+        self.assertEqual((1,512,514),(b['interior_origin'][0],b['wrap_width'],b['outer_width']))
+        self.assertEqual((37,35),(a['parent_clearance']['right'],b['parent_clearance']['right']))
+        for row in self.measure['fields']:
+            for model in row['padding_models']:
+                self.assertFalse(model['native_formula_verified']);self.assertTrue(model['parent_clearance']['bounded'])
+                self.assertGreaterEqual(model['parent_clearance']['left'],0);self.assertGreaterEqual(model['parent_clearance']['right'],0)
+        bad=review.metrics('W'*800,self.text_body())
+        self.assertTrue(all(model['clipped'] and not model['accessible_by_scroll'] for model in bad['padding_models']))
+        controls=review.named(parse(self.current));path=('EventWindow','midsection','Description');parents=review.horizontal_parents(controls,path)
+        for ancestor in parents['parents']:ancestor['width']=543
+        row=review.metrics('Small text',controls[path],parents)
+        self.assertEqual(0,row['padding_models'][0]['parent_clearance']['right']);self.assertEqual(-2,row['padding_models'][1]['parent_clearance']['right'])
+        self.assertFalse(row['parent_clearance_ok'])
+        for ancestor in parents['parents']:ancestor['width']=10
+        row=review.metrics('Small text',controls[path],parents);self.assertFalse(row['parent_clearance_ok'])
+        self.assertTrue(all(model['parent_clearance']['right']<0 for model in row['padding_models']))
     def test_every_repeated_title_description_and_conditional_variant_is_measured(self):
         with tempfile.TemporaryDirectory() as folder:
             mod=Path(folder);(mod/'interface').mkdir();(mod/'events').mkdir();(mod/'localisation').mkdir()

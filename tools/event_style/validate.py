@@ -53,5 +53,5 @@ def validate_art(mod=MOD,gfx=None):
     return result
 def main():
     text=(MOD/'interface/eventwindow.gui').read_text(encoding='utf-8-sig');assert_preserved(text);controls()
-    result=validate_art();print('Event style actual consumers:',len(result),'sprite bindings; original metadata/23-field GUI restoration PASS')
+    result=validate_art();print('Event style actual consumers:',len(result),'sprite bindings; original metadata/25-field GUI restoration PASS; provisional native inset semantics unaccepted')
 if __name__=='__main__':main()

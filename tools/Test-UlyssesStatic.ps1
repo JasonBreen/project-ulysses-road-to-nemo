@@ -120,11 +120,11 @@ if ($BaselineRoot) {
     }
 }
 
-$pathPython = Get-Command python -CommandType Application -ErrorAction SilentlyContinue
+$pathPython = Get-Command python -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
 $pythonHost = if ($pathPython) {
     $pathPython.Source
 } elseif ($env:OS -eq 'Windows_NT' -and (Get-Command py -CommandType Application -ErrorAction SilentlyContinue)) {
-    (Get-Command py -CommandType Application).Source
+    (Get-Command py -CommandType Application | Select-Object -First 1).Source
 } else {
     throw 'Could not locate Python for aftermath contract checks.'
 }

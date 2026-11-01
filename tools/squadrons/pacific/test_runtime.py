@@ -5,6 +5,7 @@ from decimal import Decimal as D
 import importlib.util
 import json
 from pathlib import Path
+import re
 import sys
 import unittest
 from config import ROOT,HERE,campaigns
@@ -115,6 +116,32 @@ class PacificStories(unittest.TestCase):
                         archive=key(row,10000+number);before=countries_state(w)
                         self.assertTrue(w.deliver(archive,c.tag));self.assertEqual(expected,w.descriptions(archive,c.tag))
                         self.assertEqual(before,countries_state(w))
+
+    def test_yuktobanian_ground_and_flight_choices_reach_context_neutral_callbacks(self):
+        row=next((r for r in STORIES if r['tag']=='YUK'),None)
+        if row is None:self.skipTest('Yuktobanian component not admitted')
+        loc=dict(re.findall(r'^ ([^ :]+):0 "(.*)"$',(runtime.MOD/'localisation/english/ac_squadrons_pacific_l_english.yml').read_text(encoding='utf-8-sig'),re.M))
+        for number,followup,option in((2,4,0),(3,5,1)):
+            chapter=row['chapters'][number-1];later=row['chapters'][followup-1]
+            for flying in(False,True):
+                with self.subTest(chapter=number,flying=flying):
+                    w=self.world();c=w.countries['YUK']
+                    if flying:c.observables.update(num_deployed_planes=10,deployed_airforce_manpower_k=1)
+                    ident,c=w.open_scene(row,chapter)
+                    context=chapter['condition_variants'][0]['id']if flying else'base'
+                    self.assertEqual([ident+'.d_'+context],w.descriptions(ident,c.tag))
+                    # The actual delivered choice, not a fixture-set callback flag,
+                    # must carry through to the later chapter in both contexts.
+                    w.choose(ident,option,c.tag)
+                    self.assertIn(flag(row,later['callback']['flag']),c.flags)
+                    follow,c=w.open_scene(row,later)
+                    self.assertEqual([follow+'.d_base_callback'],w.descriptions(follow,c.tag))
+                    for text in[*(o['label']+' '+o['reply']for o in chapter['options']),loc[follow+'.d_base_callback'].split('\\n\\n')[-1]]:
+                        self.assertFalse(re.search(r'\b(rig|contact|hand|trick|workaround|familiar|connection)\b',text,re.I),text)
+                    saved=w.descriptions(follow,c.tag);w.choose(follow,0,c.tag)
+                    c.observables.clear();w.wars.add(frozenset(('YUK','OSE')))
+                    archive=key(row,10000+followup);self.assertTrue(w.deliver(archive,c.tag))
+                    self.assertEqual(saved,w.descriptions(archive,c.tag))
 
     def test_no_unpublished_conflict_library_is_required_for_an_actual_war_scene(self):
         for row in STORIES:

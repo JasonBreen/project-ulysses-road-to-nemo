@@ -1,0 +1,33 @@
+name: Naval systems source contracts
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  conventional-naval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install reproducible artwork and map-contract dependencies
+        run: python -m pip install Pillow==11.3.0 numpy==2.2.6
+      - name: Check actual naval definitions, default composition, fiscal owner and presentation
+        run: python -B tools/naval_program/test_naval.py
+      - name: Check all three composed research owners and fonts
+        run: |
+          python -B tools/land_program/test_land.py
+          python -B tools/air_program/test_air.py
+          python -B tools/research_fonts/test_fonts.py
+          python -B tools/research_fonts/measure.py --check
+      - name: Check captured naval capability and preserved starts
+        run: |
+          python -B tools/naval_program/audit.py --check
+          python -B tools/world_starts/coverage.py --check --require-integrated-owner
+      - name: Check unchanged fiscal force owner and authored assets
+        run: |
+          python -B tools/Test-ForceUpkeep.py
+          python -B tools/audit_visual_dependencies.py --strict-all
+          python -B tools/Test-SourceSnapshot.py

@@ -1,0 +1,19 @@
+name: Source receipt regressions
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  source-receipts:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check durable invocation order and exact tested-source delivery
+        run: python -B tools/fato_south_belka/test_evidence.py

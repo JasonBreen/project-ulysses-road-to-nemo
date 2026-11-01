@@ -3,6 +3,7 @@
 Reads the shipped scripts, preserves repeated keys, and rejects unknown commands.
 Decimal arithmetic verifies accounting; HOI4 precision/scheduling needs runtime QA.
 """
+from __future__ import annotations
 
 from dataclasses import dataclass, field
 from decimal import Decimal
@@ -100,6 +101,8 @@ class Country:
     capitulated: bool = False
     tech: bool = True
     day: int = 0
+    tag: str = 'BLK'
+    original_tag: str | None = None
 
     def value(self, key):
         return self.variables.get(key, Decimal(0))
@@ -153,6 +156,11 @@ class Harness:
                 answers.append(country.owns_state and self.trigger(value, country, temporary))
             elif key == "has_country_flag":
                 answers.append(value in country.flags and (country.flags[value] is None or country.flags[value] > country.day))
+            elif key == "has_variable":
+                answers.append(value in country.variables)
+            elif key in ("tag", "original_tag"):
+                observed = country.tag if key == "tag" else country.original_tag or country.tag
+                answers.append(observed == value)
             elif key == "has_dynamic_modifier":
                 answers.append(fields(value)["modifier"] in country.modifiers)
             elif key == "check_variable":
@@ -229,6 +237,8 @@ class Harness:
                     country.flags[options["flag"]] = country.day + int(options["days"])
                 else:
                     country.flags[value] = None
+            elif key == "clr_country_flag":
+                country.flags.pop(value, None)
             elif key == "add_dynamic_modifier":
                 country.modifiers.add(fields(value)["modifier"])
             elif key == "add_equipment_to_stockpile":
@@ -267,10 +277,11 @@ def validate_content(harness):
     """Check all branches, integration references, localization and workspace shape."""
     effect_native = {"if", "else_if", "else", "set_variable", "add_to_variable", "subtract_from_variable",
                      "multiply_variable", "set_temp_variable", "add_to_temp_variable", "multiply_temp_variable",
-                     "set_country_flag", "add_dynamic_modifier", "add_equipment_to_stockpile", "every_country"}
+                     "set_country_flag", "clr_country_flag", "add_dynamic_modifier", "add_equipment_to_stockpile", "every_country"}
     trigger_native = {"NOT", "OR", "AND", "always", "has_game_rule", "any_owned_state", "has_country_flag",
                       "has_dynamic_modifier", "check_variable", "has_war", "is_ai", "has_capitulated", "has_tech",
                       "num_of_military_factories"}
+    trigger_native.update({"tag", "original_tag", "has_variable"})
 
     assigned = set()
     used = set()
@@ -291,6 +302,10 @@ def validate_content(harness):
                     check(child[2] if child[0] == "limit" else [child], child[0] == "limit")
             elif key in ("NOT", "OR", "AND", "any_owned_state"):
                 check(value, True)
+            elif key == "has_variable":
+                if not isinstance(value,str) or not value.startswith(("ac_econ_","ac_macro_")):
+                    raise ValueError("Invalid economy variable existence check")
+                used.add(value)
             elif key == "check_variable":
                 if len(value) == 1 and value[0][0] not in {"var", "value", "compare"}:
                     variable, _, operand = value[0]

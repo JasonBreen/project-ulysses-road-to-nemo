@@ -1,0 +1,84 @@
+{
+  "source_inputs": {
+    "head": "ec2f7f325945c85bb3381cc9fabc116fe1dd8e09",
+    "files": 7234,
+    "sha256": "bf28a78ea2471fb6a678cd2c976e733aee0fd14eb314c7e6ab8363b0766de769",
+    "rule": "Sorted tracked repository-relative UTF8 path,NUL,raw working-tree bytes; docs/evidence excluded. Clean Git source required."
+  },
+  "checks": [
+    {
+      "gate": "macro",
+      "command": [
+        "tools/Test-EconomyV2.py"
+      ],
+      "exit_code": 0,
+      "seconds": 77.86
+    },
+    {
+      "gate": "ledger",
+      "command": [
+        "tools/Test-EconomyLedger.py"
+      ],
+      "exit_code": 0,
+      "seconds": 4.8
+    },
+    {
+      "gate": "forces",
+      "command": [
+        "tools/Test-ForceUpkeep.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.39
+    },
+    {
+      "gate": "shared",
+      "command": [
+        "tools/Test-SharedSystems.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.84
+    },
+    {
+      "gate": "legacy",
+      "command": [
+        "tools/test_economy.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.42
+    },
+    {
+      "gate": "decision-ui",
+      "command": [
+        "tools/Test-DecisionUI.py"
+      ],
+      "exit_code": 0,
+      "seconds": 20.88,
+      "initial_exit_code": 1,
+      "initial_log": "decision-ui-initial-stale-artifact.txt",
+      "recheck_reason": "Regenerated derived consumer bounds for the same unchanged source"
+    },
+    {
+      "gate": "campaign-contracts",
+      "command": [
+        "tools/Test-CampaignContractMutations.py"
+      ],
+      "exit_code": 0,
+      "seconds": 13.09
+    },
+    {
+      "gate": "full-static",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "G:\\Project-Ulysses-Release-Review-Fixes\\mod\\2985041246",
+        "-ReferenceGameRoot",
+        "G:/steamlbirary/steamapps/common/Hearts of Iron IV"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "status": "Source/offline only; native and unallocated-capacity semantics untested"
+}

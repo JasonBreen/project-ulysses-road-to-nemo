@@ -1,0 +1,3223 @@
+ac_fsb_fat_programmes = {
+	FAT_fsb_adopt_campaign = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT NOT = { has_focus_tree = fat_national_campaign }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_pol_previous_tree_idle = yes NOT = { has_focus_tree = fat_national_campaign }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_adopt_campaign_tt
+			hidden_effect = {
+				FAT_fsb_adopt_campaign_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	FAT_fsb_invoice_audit = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_invoice_rules_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_invoice_rules_done NOT = { has_country_flag = ac_fsb_fat_audit_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_invoice_audit_tt
+			hidden_effect = {
+				FAT_fsb_invoice_audit_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_maintenance_interval = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_labour_bench_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_labour_bench_done NOT = { has_country_flag = ac_fsb_fat_shift_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } NOT = { has_idea = ac_fsb_fat_extra_shift } NOT = { has_idea = ac_fsb_fat_rest_interval } NOT = { has_idea = ac_fsb_fat_line_continuity } NOT = { has_idea = ac_fsb_fat_skill_retention } NOT = { has_idea = ac_fsb_fat_maintenance_interval }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_maintenance_interval_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_maintenance_interval days = 120 }
+			}
+			hidden_effect = {
+				FAT_fsb_maintenance_interval_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_extra_shift = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_shopfloor_ballot_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_shopfloor_ballot_done NOT = { has_country_flag = ac_fsb_fat_shift_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } NOT = { has_idea = ac_fsb_fat_maintenance_interval } NOT = { has_idea = ac_fsb_fat_maintenance_interval } NOT = { has_idea = ac_fsb_fat_rest_interval } NOT = { has_idea = ac_fsb_fat_line_continuity } NOT = { has_idea = ac_fsb_fat_skill_retention } NOT = { has_idea = ac_fsb_fat_extra_shift }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_extra_shift_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_extra_shift days = 90 }
+			}
+			hidden_effect = {
+				FAT_fsb_extra_shift_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_loading_gauges = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_rolling_gauges_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_rolling_gauges_done NOT = { has_country_flag = ac_fsb_fat_transport_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } NOT = { has_idea = ac_fsb_fat_relief_freight } NOT = { has_idea = ac_fsb_fat_loading_gauges }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_loading_gauges_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_loading_gauges days = 90 }
+			}
+			hidden_effect = {
+				FAT_fsb_loading_gauges_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_domestic_training = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_domestic_dispatch_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_domestic_dispatch_done NOT = { has_country_flag = ac_fsb_fat_training_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } has_equipment = { infantry_equipment > 99 } NOT = { has_idea = ac_fsb_fat_domestic_training }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_domestic_training_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_domestic_training days = 120 }
+			}
+			hidden_effect = {
+				FAT_fsb_domestic_training_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_relief_freight = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_refugee_freight_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_refugee_freight_done NOT = { has_country_flag = ac_fsb_fat_transport_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } has_equipment = { motorized_equipment > 9 } NOT = { has_idea = ac_fsb_fat_loading_gauges } NOT = { has_idea = ac_fsb_fat_loading_gauges } NOT = { has_idea = ac_fsb_fat_relief_freight }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_relief_freight_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_relief_freight days = 120 }
+			}
+			hidden_effect = {
+				FAT_fsb_relief_freight_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_civil_reception = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_host_capacity_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_host_capacity_done NOT = { has_country_flag = ac_fsb_fat_reception_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } NOT = { has_idea = ac_fsb_fat_civil_reception }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_civil_reception_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_civil_reception days = 180 }
+			}
+			hidden_effect = {
+				FAT_fsb_civil_reception_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_rest_interval = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_exhausted_shifts_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_exhausted_shifts_done NOT = { has_country_flag = ac_fsb_fat_shift_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } NOT = { has_idea = ac_fsb_fat_maintenance_interval } NOT = { has_idea = ac_fsb_fat_extra_shift } NOT = { has_idea = ac_fsb_fat_maintenance_interval } NOT = { has_idea = ac_fsb_fat_extra_shift } NOT = { has_idea = ac_fsb_fat_line_continuity } NOT = { has_idea = ac_fsb_fat_skill_retention } NOT = { has_idea = ac_fsb_fat_rest_interval }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_rest_interval_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_rest_interval days = 120 }
+			}
+			hidden_effect = {
+				FAT_fsb_rest_interval_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_support_maintenance = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_inventory_recovery_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_inventory_recovery_done NOT = { has_country_flag = ac_fsb_fat_maintenance_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } has_equipment = { support_equipment > 14 } NOT = { has_idea = ac_fsb_fat_support_maintenance }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_support_maintenance_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_support_maintenance days = 120 }
+			}
+			hidden_effect = {
+				FAT_fsb_support_maintenance_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_supervised_liaison = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_occupation_liaison_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_occupation_liaison_done NOT = { has_country_flag = ac_fsb_fat_liaison_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } NOT = { has_idea = ac_fsb_fat_supervised_liaison }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_supervised_liaison_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_supervised_liaison days = 180 }
+			}
+			hidden_effect = {
+				FAT_fsb_supervised_liaison_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_line_continuity = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_unbroken_production_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_unbroken_production_done NOT = { has_country_flag = ac_fsb_fat_shift_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } NOT = { has_idea = ac_fsb_fat_maintenance_interval } NOT = { has_idea = ac_fsb_fat_extra_shift } NOT = { has_idea = ac_fsb_fat_rest_interval } NOT = { has_idea = ac_fsb_fat_maintenance_interval } NOT = { has_idea = ac_fsb_fat_extra_shift } NOT = { has_idea = ac_fsb_fat_rest_interval } NOT = { has_idea = ac_fsb_fat_skill_retention } NOT = { has_idea = ac_fsb_fat_line_continuity }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_line_continuity_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_line_continuity days = 120 }
+			}
+			hidden_effect = {
+				FAT_fsb_line_continuity_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_local_reconciliation = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_local_obligation_register_done NOT = { has_country_flag = ac_fsb_fat_local_reconciliation_used }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_local_obligation_register_done NOT = { has_country_flag = ac_fsb_fat_local_reconciliation_used } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_local_reconciliation_tt
+			hidden_effect = {
+				FAT_fsb_local_reconciliation_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_skill_retention = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_skilled_shift_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_skilled_shift_done NOT = { has_country_flag = ac_fsb_fat_shift_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } NOT = { has_idea = ac_fsb_fat_maintenance_interval } NOT = { has_idea = ac_fsb_fat_extra_shift } NOT = { has_idea = ac_fsb_fat_rest_interval } NOT = { has_idea = ac_fsb_fat_line_continuity } NOT = { has_idea = ac_fsb_fat_maintenance_interval } NOT = { has_idea = ac_fsb_fat_extra_shift } NOT = { has_idea = ac_fsb_fat_rest_interval } NOT = { has_idea = ac_fsb_fat_line_continuity } NOT = { has_idea = ac_fsb_fat_skill_retention }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_skill_retention_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_skill_retention days = 180 }
+			}
+			hidden_effect = {
+				FAT_fsb_skill_retention_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_suspend_warrants = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_domestic_veto_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_domestic_veto_done check_variable = { ac_fsb_warrants_open > 0 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_suspend_warrants_tt
+			hidden_effect = {
+				FAT_fsb_suspend_warrants_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_independent_audit = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_independent_audit_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_independent_audit_done NOT = { has_country_flag = ac_fsb_independent_audit_standing } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_independent_audit_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_fat_independent_audit
+			}
+			hidden_effect = {
+				FAT_fsb_independent_audit_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_sweep_warrants = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_winding_warrants_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_winding_warrants_done NOT = { has_country_flag = ac_fsb_fat_sweep_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_sweep_warrants_tt
+			hidden_effect = {
+				FAT_fsb_sweep_warrants_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_succession_review = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_no_automatic_successor_done NOT = { has_country_flag = ac_fsb_fat_succession_review_used }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_no_automatic_successor_done NOT = { has_country_flag = ac_fsb_fat_succession_review_used } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_succession_review_tt
+			hidden_effect = {
+				FAT_fsb_succession_review_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_commitment_review = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_public_commitment_limit_done
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_public_commitment_limit_done NOT = { has_country_flag = ac_fsb_fat_review_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } NOT = { has_idea = ac_fsb_fat_commitment_review }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_commitment_review_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_commitment_review days = 180 }
+			}
+			hidden_effect = {
+				FAT_fsb_commitment_review_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_final_mandate = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_bounded_cooperation_done NOT = { has_country_flag = ac_fsb_fat_final_mandate_used }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_bounded_cooperation_done NOT = { has_country_flag = ac_fsb_fat_final_mandate_used } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_final_mandate_tt
+			hidden_effect = {
+				FAT_fsb_final_mandate_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_review_independent_audit = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_independent_audit_done has_country_flag = ac_fsb_independent_audit_standing
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_independent_audit_done has_country_flag = ac_fsb_independent_audit_standing
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_review_independent_audit_tt
+			hidden_effect = {
+				FAT_fsb_review_independent_audit_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_restore_civilian_priority = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_civilian_priority_done NOT = { has_idea = ac_fsb_fat_civilian_priority } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = FAT_nat_essential_quota_done } NOT = { has_country_flag = FAT_nat_surge_quota_done } NOT = { has_country_flag = FAT_nat_civilian_retainer_done } NOT = { has_country_flag = FAT_nat_industrial_retainer_done }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_civilian_priority_done NOT = { has_idea = ac_fsb_fat_civilian_priority } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = FAT_nat_essential_quota_done } NOT = { has_country_flag = FAT_nat_surge_quota_done } NOT = { has_country_flag = FAT_nat_civilian_retainer_done } NOT = { has_country_flag = FAT_nat_industrial_retainer_done }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_restore_civilian_priority_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_fat_civilian_priority
+			}
+			hidden_effect = {
+				FAT_fsb_restore_civilian_priority_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_restore_plant_priority = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_plant_priority_done NOT = { has_idea = ac_fsb_fat_plant_priority } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = FAT_nat_essential_quota_done } NOT = { has_country_flag = FAT_nat_surge_quota_done } NOT = { has_country_flag = FAT_nat_civilian_retainer_done } NOT = { has_country_flag = FAT_nat_industrial_retainer_done }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_plant_priority_done NOT = { has_idea = ac_fsb_fat_plant_priority } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = FAT_nat_essential_quota_done } NOT = { has_country_flag = FAT_nat_surge_quota_done } NOT = { has_country_flag = FAT_nat_civilian_retainer_done } NOT = { has_country_flag = FAT_nat_industrial_retainer_done }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_restore_plant_priority_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_fat_plant_priority
+			}
+			hidden_effect = {
+				FAT_fsb_restore_plant_priority_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_restore_essential_quota = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_essential_quota_done NOT = { has_idea = ac_fsb_fat_essential_quota } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = FAT_nat_civilian_retainer_done } NOT = { has_country_flag = FAT_nat_industrial_retainer_done }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_essential_quota_done NOT = { has_idea = ac_fsb_fat_essential_quota } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = FAT_nat_civilian_retainer_done } NOT = { has_country_flag = FAT_nat_industrial_retainer_done }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_restore_essential_quota_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_fat_essential_quota
+			}
+			hidden_effect = {
+				FAT_fsb_restore_essential_quota_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_restore_surge_quota = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_surge_quota_done NOT = { has_idea = ac_fsb_fat_surge_quota } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = FAT_nat_civilian_retainer_done } NOT = { has_country_flag = FAT_nat_industrial_retainer_done }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_surge_quota_done NOT = { has_idea = ac_fsb_fat_surge_quota } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = FAT_nat_civilian_retainer_done } NOT = { has_country_flag = FAT_nat_industrial_retainer_done }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_restore_surge_quota_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_fat_surge_quota
+			}
+			hidden_effect = {
+				FAT_fsb_restore_surge_quota_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_restore_open_tenders = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_open_tenders_done NOT = { has_idea = ac_fsb_fat_open_tenders } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_open_tenders_done NOT = { has_idea = ac_fsb_fat_open_tenders } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_restore_open_tenders_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_fat_open_tenders
+			}
+			hidden_effect = {
+				FAT_fsb_restore_open_tenders_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_restore_directed_orders = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_directed_orders_done NOT = { has_idea = ac_fsb_fat_directed_orders } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_directed_orders_done NOT = { has_idea = ac_fsb_fat_directed_orders } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_restore_directed_orders_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_fat_directed_orders
+			}
+			hidden_effect = {
+				FAT_fsb_restore_directed_orders_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_restore_civilian_retainer = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_civilian_retainer_done NOT = { has_idea = ac_fsb_fat_civilian_retainer } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_civilian_retainer_done NOT = { has_idea = ac_fsb_fat_civilian_retainer } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_restore_civilian_retainer_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_fat_civilian_retainer
+			}
+			hidden_effect = {
+				FAT_fsb_restore_civilian_retainer_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_restore_industrial_retainer = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_industrial_retainer_done NOT = { has_idea = ac_fsb_fat_industrial_retainer } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = FAT_nat_industrial_retainer_done NOT = { has_idea = ac_fsb_fat_industrial_retainer } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_restore_industrial_retainer_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_fat_industrial_retainer
+			}
+			hidden_effect = {
+				FAT_fsb_restore_industrial_retainer_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_support_reserve = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_domestic_support
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_domestic_support ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } has_equipment = { support_equipment > 9 } NOT = { has_country_flag = ac_fsb_domestic_reserve_cooldown } NOT = { has_idea = ac_fsb_fat_support_reserve }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_support_reserve_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_support_reserve days = 120 }
+			}
+			hidden_effect = {
+				FAT_fsb_support_reserve_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_transport_reserve = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT OR = { has_country_flag = ac_fsb_routine_transport AND = { has_country_flag = ac_fsb_interrupted_transport has_country_flag = ac_fsb_external_closed } }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT OR = { has_country_flag = ac_fsb_routine_transport AND = { has_country_flag = ac_fsb_interrupted_transport has_country_flag = ac_fsb_external_closed } } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } has_equipment = { motorized_equipment > 9 } NOT = { has_country_flag = ac_fsb_domestic_reserve_cooldown } NOT = { has_idea = ac_fsb_fat_transport_reserve }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_transport_reserve_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_transport_reserve days = 120 }
+			}
+			hidden_effect = {
+				FAT_fsb_transport_reserve_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_refused_reserve = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_refused_domestic has_country_flag = ac_fsb_offer_refused
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_refused_domestic has_country_flag = ac_fsb_offer_refused ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } has_equipment = { infantry_equipment > 99 } NOT = { has_country_flag = ac_fsb_domestic_reserve_cooldown } NOT = { has_idea = ac_fsb_fat_refused_reserve }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_refused_reserve_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_refused_reserve days = 120 }
+			}
+			hidden_effect = {
+				FAT_fsb_refused_reserve_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_reception_liaison = {
+		icon = ac_fsb_fat_programme
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_pwi_liaison OR = { has_country_flag = ac_pwi_local_response AND = { NOT = { has_global_flag = ac_postwar_contract_started } has_war = no } }
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_pwi_liaison OR = { has_country_flag = ac_pwi_local_response AND = { NOT = { has_global_flag = ac_postwar_contract_started } has_war = no } } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }  NOT = { has_country_flag = ac_fsb_domestic_reserve_cooldown } NOT = { has_idea = ac_fsb_fat_reception_liaison }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_reception_liaison_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_fat_reception_liaison days = 120 }
+			}
+			hidden_effect = {
+				FAT_fsb_reception_liaison_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_request_geb_infantry = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_infantry_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_infantry_warrant ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_geb_infantry_open } NOT = { has_country_flag = ac_fsb_w_geb_infantry_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_geb_infantry_tt
+			hidden_effect = {
+				FAT_fsb_request_geb_infantry_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_geb_infantry = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_infantry_open has_country_flag = ac_fsb_w_geb_infantry_window has_country_flag = ac_fsb_w_geb_infantry_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_infantry_open has_country_flag = ac_fsb_w_geb_infantry_window has_country_flag = ac_fsb_w_geb_infantry_accepted has_equipment = { infantry_equipment > 599 } OR = { NOT = { has_country_flag = ac_fsb_reserve_floor } has_equipment = { infantry_equipment > 899 } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_geb_infantry_tt
+			hidden_effect = {
+				FAT_fsb_deliver_geb_infantry_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_geb_infantry = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_geb_infantry_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_geb_infantry_open OR = { NOT = { has_country_flag = ac_fsb_w_geb_infantry_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_geb_infantry_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_geb_infantry_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_request_geb_small = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_small_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_small_warrant has_country_flag = ac_fsb_reserve_floor ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_geb_small_open } NOT = { has_country_flag = ac_fsb_w_geb_small_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_geb_small_tt
+			hidden_effect = {
+				FAT_fsb_request_geb_small_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_geb_small = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_small_open has_country_flag = ac_fsb_w_geb_small_window has_country_flag = ac_fsb_w_geb_small_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_small_open has_country_flag = ac_fsb_w_geb_small_window has_country_flag = ac_fsb_w_geb_small_accepted has_equipment = { infantry_equipment > 449 } OR = { NOT = { has_country_flag = ac_fsb_reserve_floor } has_equipment = { infantry_equipment > 749 } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_geb_small_tt
+			hidden_effect = {
+				FAT_fsb_deliver_geb_small_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_geb_small = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_geb_small_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_geb_small_open OR = { NOT = { has_country_flag = ac_fsb_w_geb_small_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_geb_small_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_geb_small_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_request_geb_support = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_support_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_support_warrant ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_geb_support_open } NOT = { has_country_flag = ac_fsb_w_geb_support_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_geb_support_tt
+			hidden_effect = {
+				FAT_fsb_request_geb_support_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_geb_support = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_support_open has_country_flag = ac_fsb_w_geb_support_window has_country_flag = ac_fsb_w_geb_support_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_support_open has_country_flag = ac_fsb_w_geb_support_window has_country_flag = ac_fsb_w_geb_support_accepted has_equipment = { support_equipment > 39 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_geb_support_tt
+			hidden_effect = {
+				FAT_fsb_deliver_geb_support_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_geb_support = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_geb_support_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_geb_support_open OR = { NOT = { has_country_flag = ac_fsb_w_geb_support_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_geb_support_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_geb_support_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_request_geb_mobility = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_mobility_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_mobility_warrant ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_geb_mobility_open } NOT = { has_country_flag = ac_fsb_w_geb_mobility_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_geb_mobility_tt
+			hidden_effect = {
+				FAT_fsb_request_geb_mobility_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_geb_mobility = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_mobility_open has_country_flag = ac_fsb_w_geb_mobility_window has_country_flag = ac_fsb_w_geb_mobility_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_mobility_open has_country_flag = ac_fsb_w_geb_mobility_window has_country_flag = ac_fsb_w_geb_mobility_accepted has_equipment = { motorized_equipment > 29 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_geb_mobility_tt
+			hidden_effect = {
+				FAT_fsb_deliver_geb_mobility_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_geb_mobility = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_geb_mobility_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_geb_mobility_open OR = { NOT = { has_country_flag = ac_fsb_w_geb_mobility_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_geb_mobility_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_geb_mobility_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_request_rec_infantry = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_infantry_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_infantry_warrant ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_rec_infantry_open } NOT = { has_country_flag = ac_fsb_w_rec_infantry_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_rec_infantry_tt
+			hidden_effect = {
+				FAT_fsb_request_rec_infantry_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_rec_infantry = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_infantry_open has_country_flag = ac_fsb_w_rec_infantry_window has_country_flag = ac_fsb_w_rec_infantry_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_infantry_open has_country_flag = ac_fsb_w_rec_infantry_window has_country_flag = ac_fsb_w_rec_infantry_accepted has_equipment = { infantry_equipment > 599 } OR = { NOT = { has_country_flag = ac_fsb_reserve_floor } has_equipment = { infantry_equipment > 899 } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_rec_infantry_tt
+			hidden_effect = {
+				FAT_fsb_deliver_rec_infantry_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_rec_infantry = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_rec_infantry_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_rec_infantry_open OR = { NOT = { has_country_flag = ac_fsb_w_rec_infantry_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_rec_infantry_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_rec_infantry_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_request_rec_small = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_small_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_small_warrant has_country_flag = ac_fsb_reserve_floor ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_rec_small_open } NOT = { has_country_flag = ac_fsb_w_rec_small_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_rec_small_tt
+			hidden_effect = {
+				FAT_fsb_request_rec_small_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_rec_small = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_small_open has_country_flag = ac_fsb_w_rec_small_window has_country_flag = ac_fsb_w_rec_small_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_small_open has_country_flag = ac_fsb_w_rec_small_window has_country_flag = ac_fsb_w_rec_small_accepted has_equipment = { infantry_equipment > 449 } OR = { NOT = { has_country_flag = ac_fsb_reserve_floor } has_equipment = { infantry_equipment > 749 } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_rec_small_tt
+			hidden_effect = {
+				FAT_fsb_deliver_rec_small_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_rec_small = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_rec_small_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_rec_small_open OR = { NOT = { has_country_flag = ac_fsb_w_rec_small_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_rec_small_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_rec_small_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_request_rec_support = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_support_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_support_warrant ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_rec_support_open } NOT = { has_country_flag = ac_fsb_w_rec_support_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_rec_support_tt
+			hidden_effect = {
+				FAT_fsb_request_rec_support_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_rec_support = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_support_open has_country_flag = ac_fsb_w_rec_support_window has_country_flag = ac_fsb_w_rec_support_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_support_open has_country_flag = ac_fsb_w_rec_support_window has_country_flag = ac_fsb_w_rec_support_accepted has_equipment = { support_equipment > 39 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_rec_support_tt
+			hidden_effect = {
+				FAT_fsb_deliver_rec_support_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_rec_support = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_rec_support_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_rec_support_open OR = { NOT = { has_country_flag = ac_fsb_w_rec_support_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_rec_support_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_rec_support_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_request_rec_mobility = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_mobility_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_mobility_warrant ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_rec_mobility_open } NOT = { has_country_flag = ac_fsb_w_rec_mobility_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_rec_mobility_tt
+			hidden_effect = {
+				FAT_fsb_request_rec_mobility_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_rec_mobility = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_mobility_open has_country_flag = ac_fsb_w_rec_mobility_window has_country_flag = ac_fsb_w_rec_mobility_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_mobility_open has_country_flag = ac_fsb_w_rec_mobility_window has_country_flag = ac_fsb_w_rec_mobility_accepted has_equipment = { motorized_equipment > 29 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_rec_mobility_tt
+			hidden_effect = {
+				FAT_fsb_deliver_rec_mobility_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_rec_mobility = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_rec_mobility_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_rec_mobility_open OR = { NOT = { has_country_flag = ac_fsb_w_rec_mobility_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_rec_mobility_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_rec_mobility_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_request_ose_infantry = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_infantry_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_infantry_warrant ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_ose_infantry_open } NOT = { has_country_flag = ac_fsb_w_ose_infantry_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_ose_infantry_tt
+			hidden_effect = {
+				FAT_fsb_request_ose_infantry_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_ose_infantry = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_infantry_open has_country_flag = ac_fsb_w_ose_infantry_window has_country_flag = ac_fsb_w_ose_infantry_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_infantry_open has_country_flag = ac_fsb_w_ose_infantry_window has_country_flag = ac_fsb_w_ose_infantry_accepted has_equipment = { infantry_equipment > 599 } OR = { NOT = { has_country_flag = ac_fsb_reserve_floor } has_equipment = { infantry_equipment > 899 } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_ose_infantry_tt
+			hidden_effect = {
+				FAT_fsb_deliver_ose_infantry_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_ose_infantry = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_ose_infantry_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_ose_infantry_open OR = { NOT = { has_country_flag = ac_fsb_w_ose_infantry_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_ose_infantry_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_ose_infantry_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_request_ose_small = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_small_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_small_warrant has_country_flag = ac_fsb_reserve_floor ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_ose_small_open } NOT = { has_country_flag = ac_fsb_w_ose_small_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_ose_small_tt
+			hidden_effect = {
+				FAT_fsb_request_ose_small_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_ose_small = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_small_open has_country_flag = ac_fsb_w_ose_small_window has_country_flag = ac_fsb_w_ose_small_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_small_open has_country_flag = ac_fsb_w_ose_small_window has_country_flag = ac_fsb_w_ose_small_accepted has_equipment = { infantry_equipment > 449 } OR = { NOT = { has_country_flag = ac_fsb_reserve_floor } has_equipment = { infantry_equipment > 749 } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_ose_small_tt
+			hidden_effect = {
+				FAT_fsb_deliver_ose_small_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_ose_small = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_ose_small_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_ose_small_open OR = { NOT = { has_country_flag = ac_fsb_w_ose_small_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_ose_small_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_ose_small_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_request_ose_support = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_support_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_support_warrant ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_ose_support_open } NOT = { has_country_flag = ac_fsb_w_ose_support_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_ose_support_tt
+			hidden_effect = {
+				FAT_fsb_request_ose_support_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_ose_support = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_support_open has_country_flag = ac_fsb_w_ose_support_window has_country_flag = ac_fsb_w_ose_support_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_support_open has_country_flag = ac_fsb_w_ose_support_window has_country_flag = ac_fsb_w_ose_support_accepted has_equipment = { support_equipment > 39 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_ose_support_tt
+			hidden_effect = {
+				FAT_fsb_deliver_ose_support_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_ose_support = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_ose_support_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_ose_support_open OR = { NOT = { has_country_flag = ac_fsb_w_ose_support_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_ose_support_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_ose_support_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	FAT_fsb_request_ose_mobility = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_mobility_warrant
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_partner_register has_country_flag = ac_fsb_mobility_warrant ac_fsb_has_warrant_slot = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_w_ose_mobility_open } NOT = { has_country_flag = ac_fsb_w_ose_mobility_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_request_ose_mobility_tt
+			hidden_effect = {
+				FAT_fsb_request_ose_mobility_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	FAT_fsb_deliver_ose_mobility = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_mobility_open has_country_flag = ac_fsb_w_ose_mobility_window has_country_flag = ac_fsb_w_ose_mobility_accepted
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_mobility_open has_country_flag = ac_fsb_w_ose_mobility_window has_country_flag = ac_fsb_w_ose_mobility_accepted has_equipment = { motorized_equipment > 29 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_deliver_ose_mobility_tt
+			hidden_effect = {
+				FAT_fsb_deliver_ose_mobility_apply = yes
+			}
+		}
+		ai_will_do = { base = 4 }
+	}
+	FAT_fsb_withdraw_ose_mobility = {
+		icon = ac_fsb_fat_warrant
+		allowed = { tag = FAT original_tag = FAT }
+		visible = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_ose_mobility_open
+		}
+		available = {
+			ac_fsb_active = yes tag = FAT original_tag = FAT has_country_flag = ac_fsb_w_ose_mobility_open OR = { NOT = { has_country_flag = ac_fsb_w_ose_mobility_accepted } has_country_flag = ac_fsb_accepted_appeal } OR = { has_country_flag = ac_fsb_clean_withdrawal political_power >= 10 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = FAT_fsb_withdraw_ose_mobility_tt
+			hidden_effect = {
+				FAT_fsb_withdraw_ose_mobility_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+}
+ac_fsb_sbk_programmes = {
+	SBK_fsb_adopt_campaign = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK NOT = { has_focus_tree = sbk_civil_recovery_campaign }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK ac_pol_previous_tree_idle = yes NOT = { has_focus_tree = sbk_civil_recovery_campaign }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_adopt_campaign_tt
+			hidden_effect = {
+				SBK_fsb_adopt_campaign_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	SBK_fsb_verify_receipts = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_civil_receipts_done NOT = { has_country_flag = ac_fsb_sbk_verify_receipts_used }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_civil_receipts_done NOT = { has_country_flag = ac_fsb_sbk_verify_receipts_used } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_verify_receipts_tt
+			hidden_effect = {
+				SBK_fsb_verify_receipts_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_civil_charter = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_provisional_charter_done
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_provisional_charter_done NOT = { has_country_flag = ac_fsb_civil_charter_standing } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_civil_charter_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_sbk_civil_charter
+			}
+			hidden_effect = {
+				SBK_fsb_civil_charter_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_civil_instruction = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_measured_training_done
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_measured_training_done NOT = { has_country_flag = ac_fsb_sbk_instruction_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } has_equipment = { support_equipment > 9 } NOT = { has_idea = ac_fsb_sbk_civil_instruction }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_civil_instruction_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_sbk_civil_instruction days = 120 }
+			}
+			hidden_effect = {
+				SBK_fsb_civil_instruction_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_maintenance_account = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_maintenance_budget_done
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_maintenance_budget_done NOT = { has_country_flag = ac_fsb_maintenance_account_standing } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_maintenance_account_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_sbk_maintenance_account
+			}
+			hidden_effect = {
+				SBK_fsb_maintenance_account_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_interruption_review = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_civil_continuity_done
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_civil_continuity_done check_variable = { ac_fsb_cases_open > 0 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_interruption_review_tt
+			hidden_effect = {
+				SBK_fsb_interruption_review_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_service_account = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_accountable_services_done
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_accountable_services_done NOT = { has_country_flag = ac_fsb_service_account_standing } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_service_account_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_sbk_service_account
+			}
+			hidden_effect = {
+				SBK_fsb_service_account_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_relief_review = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_relief_appeal_done
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_relief_appeal_done NOT = { has_country_flag = ac_fsb_sbk_relief_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } NOT = { has_idea = ac_fsb_sbk_relief_review } OR = { has_country_flag = ac_pwi_local_response AND = { NOT = { has_global_flag = ac_postwar_contract_started } has_war = no } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_relief_review_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_sbk_relief_review days = 120 }
+			}
+			hidden_effect = {
+				SBK_fsb_relief_review_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_security_remit = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_narrow_security_remit_done
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_narrow_security_remit_done NOT = { has_country_flag = ac_fsb_security_remit_standing } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_security_remit_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_sbk_security_remit
+			}
+			hidden_effect = {
+				SBK_fsb_security_remit_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_workshop_round = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_municipal_workshops_done
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_municipal_workshops_done NOT = { has_country_flag = ac_fsb_sbk_workshop_cooldown } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } has_equipment = { support_equipment > 9 } NOT = { has_idea = ac_fsb_sbk_workshop_round }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_workshop_round_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_sbk_workshop_round days = 120 }
+			}
+			hidden_effect = {
+				SBK_fsb_workshop_round_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_archive_index = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_common_archive_done NOT = { has_country_flag = ac_fsb_sbk_archive_index_used }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_common_archive_done NOT = { has_country_flag = ac_fsb_sbk_archive_index_used } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_archive_index_tt
+			hidden_effect = {
+				SBK_fsb_archive_index_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_public_interest = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_public_interest_test_done
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_public_interest_test_done OR = { has_country_flag = ac_fsb_civil_charter_standing has_country_flag = ac_fsb_maintenance_account_standing has_country_flag = ac_fsb_service_account_standing has_country_flag = ac_fsb_security_remit_standing }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_public_interest_tt
+			hidden_effect = {
+				SBK_fsb_public_interest_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_final_arrangement = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_standing_civil_arrangement_done NOT = { has_country_flag = ac_fsb_sbk_final_arrangement_used }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_standing_civil_arrangement_done NOT = { has_country_flag = ac_fsb_sbk_final_arrangement_used } ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_final_arrangement_tt
+			hidden_effect = {
+				SBK_fsb_final_arrangement_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_restore_resident_casework = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_resident_casework_done NOT = { has_idea = ac_fsb_sbk_resident_casework } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = SBK_nat_published_orders_done } NOT = { has_country_flag = SBK_nat_delegated_command_done } NOT = { has_country_flag = SBK_nat_elected_hearing_done } NOT = { has_country_flag = SBK_nat_professional_bench_done }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_resident_casework_done NOT = { has_idea = ac_fsb_sbk_resident_casework } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = SBK_nat_published_orders_done } NOT = { has_country_flag = SBK_nat_delegated_command_done } NOT = { has_country_flag = SBK_nat_elected_hearing_done } NOT = { has_country_flag = SBK_nat_professional_bench_done }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_restore_resident_casework_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_sbk_resident_casework
+			}
+			hidden_effect = {
+				SBK_fsb_restore_resident_casework_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_restore_emergency_orders = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_emergency_orders_done NOT = { has_idea = ac_fsb_sbk_emergency_orders } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = SBK_nat_published_orders_done } NOT = { has_country_flag = SBK_nat_delegated_command_done } NOT = { has_country_flag = SBK_nat_elected_hearing_done } NOT = { has_country_flag = SBK_nat_professional_bench_done }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_emergency_orders_done NOT = { has_idea = ac_fsb_sbk_emergency_orders } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = SBK_nat_published_orders_done } NOT = { has_country_flag = SBK_nat_delegated_command_done } NOT = { has_country_flag = SBK_nat_elected_hearing_done } NOT = { has_country_flag = SBK_nat_professional_bench_done }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_restore_emergency_orders_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_sbk_emergency_orders
+			}
+			hidden_effect = {
+				SBK_fsb_restore_emergency_orders_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_restore_published_orders = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_published_orders_done NOT = { has_idea = ac_fsb_sbk_published_orders } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = SBK_nat_elected_hearing_done } NOT = { has_country_flag = SBK_nat_professional_bench_done }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_published_orders_done NOT = { has_idea = ac_fsb_sbk_published_orders } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = SBK_nat_elected_hearing_done } NOT = { has_country_flag = SBK_nat_professional_bench_done }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_restore_published_orders_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_sbk_published_orders
+			}
+			hidden_effect = {
+				SBK_fsb_restore_published_orders_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_restore_delegated_command = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_delegated_command_done NOT = { has_idea = ac_fsb_sbk_delegated_command } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = SBK_nat_elected_hearing_done } NOT = { has_country_flag = SBK_nat_professional_bench_done }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_delegated_command_done NOT = { has_idea = ac_fsb_sbk_delegated_command } political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = SBK_nat_elected_hearing_done } NOT = { has_country_flag = SBK_nat_professional_bench_done }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_restore_delegated_command_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_sbk_delegated_command
+			}
+			hidden_effect = {
+				SBK_fsb_restore_delegated_command_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_restore_elected_hearing = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_elected_hearing_done NOT = { has_idea = ac_fsb_sbk_elected_hearing } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_elected_hearing_done NOT = { has_idea = ac_fsb_sbk_elected_hearing } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_restore_elected_hearing_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_sbk_elected_hearing
+			}
+			hidden_effect = {
+				SBK_fsb_restore_elected_hearing_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_restore_professional_bench = {
+		icon = ac_fsb_sbk_programme
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_professional_bench_done NOT = { has_idea = ac_fsb_sbk_professional_bench } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = SBK_nat_professional_bench_done NOT = { has_idea = ac_fsb_sbk_professional_bench } political_power >= 15 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_restore_professional_bench_tt
+			effect_tooltip = {
+				add_ideas = ac_fsb_sbk_professional_bench
+			}
+			hidden_effect = {
+				SBK_fsb_restore_professional_bench_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_open_property = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_property NOT = { has_country_flag = ac_fsb_case_property_resolved }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_property ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_case_property_open } NOT = { has_country_flag = ac_fsb_case_property_resolved }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_open_property_tt
+			hidden_effect = {
+				SBK_fsb_open_property_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_property_protected = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_property_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_property_open has_country_flag = ac_fsb_case_property_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_property_protected_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_property_protected days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_property_protected_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_property_interim = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_property_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_property_open has_country_flag = ac_fsb_case_property_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_property_interim_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_property_interim days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_property_interim_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_appeal_property = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_property_resolved NOT = { has_country_flag = ac_fsb_case_property_appealed }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_property_resolved NOT = { has_country_flag = ac_fsb_case_property_appealed } ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_appeal_property_tt
+			hidden_effect = {
+				SBK_fsb_appeal_property_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_close_property = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_property_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_property_open
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_close_property_tt
+			hidden_effect = {
+				SBK_fsb_close_property_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_open_utilities = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_utilities NOT = { has_country_flag = ac_fsb_case_utilities_resolved }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_utilities ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_case_utilities_open } NOT = { has_country_flag = ac_fsb_case_utilities_resolved }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_open_utilities_tt
+			hidden_effect = {
+				SBK_fsb_open_utilities_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_utilities_repair = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_utilities_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_utilities_open has_country_flag = ac_fsb_case_utilities_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 } has_equipment = { support_equipment > 9 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_utilities_repair_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_utilities_repair days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_utilities_repair_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_utilities_ration = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_utilities_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_utilities_open has_country_flag = ac_fsb_case_utilities_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 }  OR = { has_country_flag = ac_fsb_resident_consent has_country_flag = ac_fsb_interim_service }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_utilities_ration_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_utilities_ration days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_utilities_ration_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_appeal_utilities = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_utilities_resolved NOT = { has_country_flag = ac_fsb_case_utilities_appealed }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_utilities_resolved NOT = { has_country_flag = ac_fsb_case_utilities_appealed } ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_appeal_utilities_tt
+			hidden_effect = {
+				SBK_fsb_appeal_utilities_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_close_utilities = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_utilities_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_utilities_open
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_close_utilities_tt
+			hidden_effect = {
+				SBK_fsb_close_utilities_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_open_stores = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_stores NOT = { has_country_flag = ac_fsb_case_stores_resolved }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_stores ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_case_stores_open } NOT = { has_country_flag = ac_fsb_case_stores_resolved }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_open_stores_tt
+			hidden_effect = {
+				SBK_fsb_open_stores_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_stores_maintain = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_stores_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_stores_open has_country_flag = ac_fsb_case_stores_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 } has_equipment = { support_equipment > 14 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_stores_maintain_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_stores_maintain days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_stores_maintain_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_stores_seal = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_stores_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_stores_open has_country_flag = ac_fsb_case_stores_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_stores_seal_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_stores_seal days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_stores_seal_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_appeal_stores = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_stores_resolved NOT = { has_country_flag = ac_fsb_case_stores_appealed }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_stores_resolved NOT = { has_country_flag = ac_fsb_case_stores_appealed } ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_appeal_stores_tt
+			hidden_effect = {
+				SBK_fsb_appeal_stores_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_close_stores = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_stores_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_stores_open
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_close_stores_tt
+			hidden_effect = {
+				SBK_fsb_close_stores_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_open_security = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_security NOT = { has_country_flag = ac_fsb_case_security_resolved }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_security ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_case_security_open } NOT = { has_country_flag = ac_fsb_case_security_resolved }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_open_security_tt
+			hidden_effect = {
+				SBK_fsb_open_security_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_security_public = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_security_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_security_open has_country_flag = ac_fsb_case_security_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_security_public_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_security_public days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_security_public_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_security_inspect = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_security_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_security_open has_country_flag = ac_fsb_case_security_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 } has_equipment = { support_equipment > 9 } has_country_flag = ac_fsb_security_review
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_security_inspect_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_security_inspect days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_security_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_appeal_security = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_security_resolved NOT = { has_country_flag = ac_fsb_case_security_appealed }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_security_resolved NOT = { has_country_flag = ac_fsb_case_security_appealed } ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_appeal_security_tt
+			hidden_effect = {
+				SBK_fsb_appeal_security_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_close_security = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_security_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_security_open
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_close_security_tt
+			hidden_effect = {
+				SBK_fsb_close_security_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_open_access = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_access NOT = { has_country_flag = ac_fsb_case_access_resolved }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_access ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_case_access_open } NOT = { has_country_flag = ac_fsb_case_access_resolved }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_open_access_tt
+			hidden_effect = {
+				SBK_fsb_open_access_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_access_civil = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_access_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_access_open has_country_flag = ac_fsb_case_access_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_access_civil_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_access_civil days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_access_civil_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_access_limited = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_access_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_access_open has_country_flag = ac_fsb_case_access_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 }  OR = { has_country_flag = ac_fsb_resident_consent has_country_flag = ac_fsb_interim_service }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_access_limited_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_access_limited days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_access_limited_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_appeal_access = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_access_resolved NOT = { has_country_flag = ac_fsb_case_access_appealed }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_access_resolved NOT = { has_country_flag = ac_fsb_case_access_appealed } ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_appeal_access_tt
+			hidden_effect = {
+				SBK_fsb_appeal_access_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_close_access = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_access_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_access_open
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_close_access_tt
+			hidden_effect = {
+				SBK_fsb_close_access_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_open_archive = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_archive NOT = { has_country_flag = ac_fsb_case_archive_resolved }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_archive ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_case_archive_open } NOT = { has_country_flag = ac_fsb_case_archive_resolved }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_open_archive_tt
+			hidden_effect = {
+				SBK_fsb_open_archive_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_archive_witness = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_archive_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_archive_open has_country_flag = ac_fsb_case_archive_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 }  has_country_flag = ac_fsb_local_witnesses
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_archive_witness_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_archive_witness days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_archive_witness_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_resolve_archive_protect = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_archive_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_archive_open has_country_flag = ac_fsb_case_archive_window ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_resolve_archive_protect_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_case_archive_protect days = 180 }
+			}
+			hidden_effect = {
+				SBK_fsb_resolve_archive_protect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_appeal_archive = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_archive_resolved NOT = { has_country_flag = ac_fsb_case_archive_appealed }
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_case_appeal has_country_flag = ac_fsb_case_archive_resolved NOT = { has_country_flag = ac_fsb_case_archive_appealed } ac_fsb_has_case_slot = yes ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_appeal_archive_tt
+			hidden_effect = {
+				SBK_fsb_appeal_archive_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_close_archive = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_archive_open
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_close_obsolete has_country_flag = ac_fsb_case_archive_open
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_close_archive_tt
+			hidden_effect = {
+				SBK_fsb_close_archive_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	SBK_fsb_request_adviser = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_adviser_request
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_adviser_request ac_fsb_adviser_valid = yes ac_fsb_can_fund = yes political_power >= 15 check_variable = { ac_pol_capacity >= 1 } NOT = { has_country_flag = ac_fsb_adviser_open } NOT = { has_country_flag = ac_fsb_adviser_request_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_request_adviser_tt
+			hidden_effect = {
+				SBK_fsb_request_adviser_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	SBK_fsb_domestic_inspection = {
+		icon = ac_fsb_sbk_docket
+		allowed = { tag = SBK original_tag = SBK }
+		visible = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_adviser_request
+		}
+		available = {
+			ac_fsb_active = yes tag = SBK original_tag = SBK has_country_flag = ac_fsb_adviser_request ac_fsb_can_fund = yes political_power >= 20 check_variable = { ac_pol_capacity >= 2 } has_equipment = { support_equipment > 9 } NOT = { has_country_flag = ac_fsb_domestic_inspection_cooldown }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = SBK_fsb_domestic_inspection_tt
+			effect_tooltip = {
+				add_timed_idea = { idea = ac_fsb_sbk_domestic_inspection days = 120 }
+			}
+			hidden_effect = {
+				SBK_fsb_domestic_inspection_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+}
+ac_fsb_geb_programmes = {
+	GEB_fsb_reply_geb_infantry_accept = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_infantry_open has_country_flag = ac_fsb_w_geb_infantry_window NOT = { has_country_flag = ac_fsb_w_geb_infantry_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_infantry_open has_country_flag = ac_fsb_w_geb_infantry_window NOT = { has_country_flag = ac_fsb_w_geb_infantry_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_infantry_accept_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_infantry_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	GEB_fsb_reply_geb_infantry_inspect = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_infantry_open has_country_flag = ac_fsb_w_geb_infantry_window NOT = { has_country_flag = ac_fsb_w_geb_infantry_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_infantry_open has_country_flag = ac_fsb_w_geb_infantry_window NOT = { has_country_flag = ac_fsb_w_geb_infantry_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_infantry_inspect_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_infantry_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	GEB_fsb_reply_geb_infantry_refuse = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_infantry_open has_country_flag = ac_fsb_w_geb_infantry_window NOT = { has_country_flag = ac_fsb_w_geb_infantry_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_infantry_open has_country_flag = ac_fsb_w_geb_infantry_window NOT = { has_country_flag = ac_fsb_w_geb_infantry_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_infantry_refuse_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_infantry_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	GEB_fsb_reply_geb_infantry_revoke = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB country_exists = FAT FAT = { ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_infantry_open has_country_flag = ac_fsb_w_geb_infantry_accepted has_country_flag = ac_fsb_w_geb_infantry_window }
+		}
+		available = {
+			tag = GEB original_tag = GEB country_exists = FAT FAT = { ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_infantry_open has_country_flag = ac_fsb_w_geb_infantry_accepted has_country_flag = ac_fsb_w_geb_infantry_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_infantry_revoke_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_infantry_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	GEB_fsb_reply_geb_small_accept = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_small_open has_country_flag = ac_fsb_w_geb_small_window NOT = { has_country_flag = ac_fsb_w_geb_small_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_small_open has_country_flag = ac_fsb_w_geb_small_window NOT = { has_country_flag = ac_fsb_w_geb_small_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_small_accept_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_small_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	GEB_fsb_reply_geb_small_inspect = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_small_open has_country_flag = ac_fsb_w_geb_small_window NOT = { has_country_flag = ac_fsb_w_geb_small_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_small_open has_country_flag = ac_fsb_w_geb_small_window NOT = { has_country_flag = ac_fsb_w_geb_small_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_small_inspect_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_small_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	GEB_fsb_reply_geb_small_refuse = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_small_open has_country_flag = ac_fsb_w_geb_small_window NOT = { has_country_flag = ac_fsb_w_geb_small_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_small_open has_country_flag = ac_fsb_w_geb_small_window NOT = { has_country_flag = ac_fsb_w_geb_small_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_small_refuse_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_small_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	GEB_fsb_reply_geb_small_revoke = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB country_exists = FAT FAT = { ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_small_open has_country_flag = ac_fsb_w_geb_small_accepted has_country_flag = ac_fsb_w_geb_small_window }
+		}
+		available = {
+			tag = GEB original_tag = GEB country_exists = FAT FAT = { ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_small_open has_country_flag = ac_fsb_w_geb_small_accepted has_country_flag = ac_fsb_w_geb_small_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_small_revoke_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_small_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	GEB_fsb_reply_geb_support_accept = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_support_open has_country_flag = ac_fsb_w_geb_support_window NOT = { has_country_flag = ac_fsb_w_geb_support_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_support_open has_country_flag = ac_fsb_w_geb_support_window NOT = { has_country_flag = ac_fsb_w_geb_support_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_support_accept_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_support_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	GEB_fsb_reply_geb_support_inspect = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_support_open has_country_flag = ac_fsb_w_geb_support_window NOT = { has_country_flag = ac_fsb_w_geb_support_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_support_open has_country_flag = ac_fsb_w_geb_support_window NOT = { has_country_flag = ac_fsb_w_geb_support_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_support_inspect_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_support_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	GEB_fsb_reply_geb_support_refuse = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_support_open has_country_flag = ac_fsb_w_geb_support_window NOT = { has_country_flag = ac_fsb_w_geb_support_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_support_open has_country_flag = ac_fsb_w_geb_support_window NOT = { has_country_flag = ac_fsb_w_geb_support_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_support_refuse_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_support_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	GEB_fsb_reply_geb_support_revoke = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB country_exists = FAT FAT = { ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_support_open has_country_flag = ac_fsb_w_geb_support_accepted has_country_flag = ac_fsb_w_geb_support_window }
+		}
+		available = {
+			tag = GEB original_tag = GEB country_exists = FAT FAT = { ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_support_open has_country_flag = ac_fsb_w_geb_support_accepted has_country_flag = ac_fsb_w_geb_support_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_support_revoke_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_support_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	GEB_fsb_reply_geb_mobility_accept = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_mobility_open has_country_flag = ac_fsb_w_geb_mobility_window NOT = { has_country_flag = ac_fsb_w_geb_mobility_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_mobility_open has_country_flag = ac_fsb_w_geb_mobility_window NOT = { has_country_flag = ac_fsb_w_geb_mobility_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_mobility_accept_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_mobility_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	GEB_fsb_reply_geb_mobility_inspect = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_mobility_open has_country_flag = ac_fsb_w_geb_mobility_window NOT = { has_country_flag = ac_fsb_w_geb_mobility_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_mobility_open has_country_flag = ac_fsb_w_geb_mobility_window NOT = { has_country_flag = ac_fsb_w_geb_mobility_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_mobility_inspect_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_mobility_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	GEB_fsb_reply_geb_mobility_refuse = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_mobility_open has_country_flag = ac_fsb_w_geb_mobility_window NOT = { has_country_flag = ac_fsb_w_geb_mobility_accepted } }
+		}
+		available = {
+			tag = GEB original_tag = GEB has_capitulated = no has_country_flag = ac_fsb_w_geb_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_mobility_open has_country_flag = ac_fsb_w_geb_mobility_window NOT = { has_country_flag = ac_fsb_w_geb_mobility_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_mobility_refuse_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_mobility_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	GEB_fsb_reply_geb_mobility_revoke = {
+		icon = ac_fsb_geb_warrant
+		allowed = { tag = GEB original_tag = GEB }
+		visible = {
+			tag = GEB original_tag = GEB country_exists = FAT FAT = { ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_mobility_open has_country_flag = ac_fsb_w_geb_mobility_accepted has_country_flag = ac_fsb_w_geb_mobility_window }
+		}
+		available = {
+			tag = GEB original_tag = GEB country_exists = FAT FAT = { ac_fsb_warrant_geb_valid = yes has_country_flag = ac_fsb_w_geb_mobility_open has_country_flag = ac_fsb_w_geb_mobility_accepted has_country_flag = ac_fsb_w_geb_mobility_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = GEB_fsb_reply_geb_mobility_revoke_tt
+			hidden_effect = {
+				GEB_fsb_reply_geb_mobility_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+}
+ac_fsb_rec_programmes = {
+	REC_fsb_reply_rec_infantry_accept = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_infantry_open has_country_flag = ac_fsb_w_rec_infantry_window NOT = { has_country_flag = ac_fsb_w_rec_infantry_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_infantry_open has_country_flag = ac_fsb_w_rec_infantry_window NOT = { has_country_flag = ac_fsb_w_rec_infantry_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_infantry_accept_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_infantry_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	REC_fsb_reply_rec_infantry_inspect = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_infantry_open has_country_flag = ac_fsb_w_rec_infantry_window NOT = { has_country_flag = ac_fsb_w_rec_infantry_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_infantry_open has_country_flag = ac_fsb_w_rec_infantry_window NOT = { has_country_flag = ac_fsb_w_rec_infantry_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_infantry_inspect_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_infantry_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	REC_fsb_reply_rec_infantry_refuse = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_infantry_open has_country_flag = ac_fsb_w_rec_infantry_window NOT = { has_country_flag = ac_fsb_w_rec_infantry_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_infantry_open has_country_flag = ac_fsb_w_rec_infantry_window NOT = { has_country_flag = ac_fsb_w_rec_infantry_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_infantry_refuse_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_infantry_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	REC_fsb_reply_rec_infantry_revoke = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC country_exists = FAT FAT = { ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_infantry_open has_country_flag = ac_fsb_w_rec_infantry_accepted has_country_flag = ac_fsb_w_rec_infantry_window }
+		}
+		available = {
+			tag = REC original_tag = REC country_exists = FAT FAT = { ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_infantry_open has_country_flag = ac_fsb_w_rec_infantry_accepted has_country_flag = ac_fsb_w_rec_infantry_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_infantry_revoke_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_infantry_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	REC_fsb_reply_rec_small_accept = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_small_open has_country_flag = ac_fsb_w_rec_small_window NOT = { has_country_flag = ac_fsb_w_rec_small_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_small_open has_country_flag = ac_fsb_w_rec_small_window NOT = { has_country_flag = ac_fsb_w_rec_small_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_small_accept_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_small_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	REC_fsb_reply_rec_small_inspect = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_small_open has_country_flag = ac_fsb_w_rec_small_window NOT = { has_country_flag = ac_fsb_w_rec_small_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_small_open has_country_flag = ac_fsb_w_rec_small_window NOT = { has_country_flag = ac_fsb_w_rec_small_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_small_inspect_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_small_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	REC_fsb_reply_rec_small_refuse = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_small_open has_country_flag = ac_fsb_w_rec_small_window NOT = { has_country_flag = ac_fsb_w_rec_small_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_small_open has_country_flag = ac_fsb_w_rec_small_window NOT = { has_country_flag = ac_fsb_w_rec_small_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_small_refuse_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_small_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	REC_fsb_reply_rec_small_revoke = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC country_exists = FAT FAT = { ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_small_open has_country_flag = ac_fsb_w_rec_small_accepted has_country_flag = ac_fsb_w_rec_small_window }
+		}
+		available = {
+			tag = REC original_tag = REC country_exists = FAT FAT = { ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_small_open has_country_flag = ac_fsb_w_rec_small_accepted has_country_flag = ac_fsb_w_rec_small_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_small_revoke_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_small_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	REC_fsb_reply_rec_support_accept = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_support_open has_country_flag = ac_fsb_w_rec_support_window NOT = { has_country_flag = ac_fsb_w_rec_support_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_support_open has_country_flag = ac_fsb_w_rec_support_window NOT = { has_country_flag = ac_fsb_w_rec_support_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_support_accept_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_support_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	REC_fsb_reply_rec_support_inspect = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_support_open has_country_flag = ac_fsb_w_rec_support_window NOT = { has_country_flag = ac_fsb_w_rec_support_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_support_open has_country_flag = ac_fsb_w_rec_support_window NOT = { has_country_flag = ac_fsb_w_rec_support_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_support_inspect_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_support_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	REC_fsb_reply_rec_support_refuse = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_support_open has_country_flag = ac_fsb_w_rec_support_window NOT = { has_country_flag = ac_fsb_w_rec_support_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_support_open has_country_flag = ac_fsb_w_rec_support_window NOT = { has_country_flag = ac_fsb_w_rec_support_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_support_refuse_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_support_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	REC_fsb_reply_rec_support_revoke = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC country_exists = FAT FAT = { ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_support_open has_country_flag = ac_fsb_w_rec_support_accepted has_country_flag = ac_fsb_w_rec_support_window }
+		}
+		available = {
+			tag = REC original_tag = REC country_exists = FAT FAT = { ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_support_open has_country_flag = ac_fsb_w_rec_support_accepted has_country_flag = ac_fsb_w_rec_support_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_support_revoke_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_support_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	REC_fsb_reply_rec_mobility_accept = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_mobility_open has_country_flag = ac_fsb_w_rec_mobility_window NOT = { has_country_flag = ac_fsb_w_rec_mobility_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_mobility_open has_country_flag = ac_fsb_w_rec_mobility_window NOT = { has_country_flag = ac_fsb_w_rec_mobility_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_mobility_accept_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_mobility_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	REC_fsb_reply_rec_mobility_inspect = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_mobility_open has_country_flag = ac_fsb_w_rec_mobility_window NOT = { has_country_flag = ac_fsb_w_rec_mobility_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_mobility_open has_country_flag = ac_fsb_w_rec_mobility_window NOT = { has_country_flag = ac_fsb_w_rec_mobility_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_mobility_inspect_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_mobility_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	REC_fsb_reply_rec_mobility_refuse = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_mobility_open has_country_flag = ac_fsb_w_rec_mobility_window NOT = { has_country_flag = ac_fsb_w_rec_mobility_accepted } }
+		}
+		available = {
+			tag = REC original_tag = REC has_capitulated = no has_country_flag = ac_fsb_w_rec_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_mobility_open has_country_flag = ac_fsb_w_rec_mobility_window NOT = { has_country_flag = ac_fsb_w_rec_mobility_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_mobility_refuse_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_mobility_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	REC_fsb_reply_rec_mobility_revoke = {
+		icon = ac_fsb_rec_warrant
+		allowed = { tag = REC original_tag = REC }
+		visible = {
+			tag = REC original_tag = REC country_exists = FAT FAT = { ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_mobility_open has_country_flag = ac_fsb_w_rec_mobility_accepted has_country_flag = ac_fsb_w_rec_mobility_window }
+		}
+		available = {
+			tag = REC original_tag = REC country_exists = FAT FAT = { ac_fsb_warrant_rec_valid = yes has_country_flag = ac_fsb_w_rec_mobility_open has_country_flag = ac_fsb_w_rec_mobility_accepted has_country_flag = ac_fsb_w_rec_mobility_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = REC_fsb_reply_rec_mobility_revoke_tt
+			hidden_effect = {
+				REC_fsb_reply_rec_mobility_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+}
+ac_fsb_ose_programmes = {
+	OSE_fsb_reply_ose_infantry_accept = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_infantry_open has_country_flag = ac_fsb_w_ose_infantry_window NOT = { has_country_flag = ac_fsb_w_ose_infantry_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_infantry_open has_country_flag = ac_fsb_w_ose_infantry_window NOT = { has_country_flag = ac_fsb_w_ose_infantry_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_infantry_accept_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_infantry_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	OSE_fsb_reply_ose_infantry_inspect = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_infantry_open has_country_flag = ac_fsb_w_ose_infantry_window NOT = { has_country_flag = ac_fsb_w_ose_infantry_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_infantry_open has_country_flag = ac_fsb_w_ose_infantry_window NOT = { has_country_flag = ac_fsb_w_ose_infantry_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_infantry_inspect_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_infantry_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	OSE_fsb_reply_ose_infantry_refuse = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_infantry_open has_country_flag = ac_fsb_w_ose_infantry_window NOT = { has_country_flag = ac_fsb_w_ose_infantry_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_infantry_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_infantry_open has_country_flag = ac_fsb_w_ose_infantry_window NOT = { has_country_flag = ac_fsb_w_ose_infantry_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_infantry_refuse_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_infantry_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	OSE_fsb_reply_ose_infantry_revoke = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE country_exists = FAT FAT = { ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_infantry_open has_country_flag = ac_fsb_w_ose_infantry_accepted has_country_flag = ac_fsb_w_ose_infantry_window }
+		}
+		available = {
+			tag = OSE original_tag = OSE country_exists = FAT FAT = { ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_infantry_open has_country_flag = ac_fsb_w_ose_infantry_accepted has_country_flag = ac_fsb_w_ose_infantry_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_infantry_revoke_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_infantry_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	OSE_fsb_reply_ose_small_accept = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_small_open has_country_flag = ac_fsb_w_ose_small_window NOT = { has_country_flag = ac_fsb_w_ose_small_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_small_open has_country_flag = ac_fsb_w_ose_small_window NOT = { has_country_flag = ac_fsb_w_ose_small_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_small_accept_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_small_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	OSE_fsb_reply_ose_small_inspect = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_small_open has_country_flag = ac_fsb_w_ose_small_window NOT = { has_country_flag = ac_fsb_w_ose_small_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_small_open has_country_flag = ac_fsb_w_ose_small_window NOT = { has_country_flag = ac_fsb_w_ose_small_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_small_inspect_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_small_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	OSE_fsb_reply_ose_small_refuse = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_small_open has_country_flag = ac_fsb_w_ose_small_window NOT = { has_country_flag = ac_fsb_w_ose_small_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_small_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_small_open has_country_flag = ac_fsb_w_ose_small_window NOT = { has_country_flag = ac_fsb_w_ose_small_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_small_refuse_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_small_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	OSE_fsb_reply_ose_small_revoke = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE country_exists = FAT FAT = { ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_small_open has_country_flag = ac_fsb_w_ose_small_accepted has_country_flag = ac_fsb_w_ose_small_window }
+		}
+		available = {
+			tag = OSE original_tag = OSE country_exists = FAT FAT = { ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_small_open has_country_flag = ac_fsb_w_ose_small_accepted has_country_flag = ac_fsb_w_ose_small_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_small_revoke_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_small_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	OSE_fsb_reply_ose_support_accept = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_support_open has_country_flag = ac_fsb_w_ose_support_window NOT = { has_country_flag = ac_fsb_w_ose_support_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_support_open has_country_flag = ac_fsb_w_ose_support_window NOT = { has_country_flag = ac_fsb_w_ose_support_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_support_accept_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_support_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	OSE_fsb_reply_ose_support_inspect = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_support_open has_country_flag = ac_fsb_w_ose_support_window NOT = { has_country_flag = ac_fsb_w_ose_support_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_support_open has_country_flag = ac_fsb_w_ose_support_window NOT = { has_country_flag = ac_fsb_w_ose_support_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_support_inspect_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_support_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	OSE_fsb_reply_ose_support_refuse = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_support_open has_country_flag = ac_fsb_w_ose_support_window NOT = { has_country_flag = ac_fsb_w_ose_support_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_support_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_support_open has_country_flag = ac_fsb_w_ose_support_window NOT = { has_country_flag = ac_fsb_w_ose_support_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_support_refuse_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_support_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	OSE_fsb_reply_ose_support_revoke = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE country_exists = FAT FAT = { ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_support_open has_country_flag = ac_fsb_w_ose_support_accepted has_country_flag = ac_fsb_w_ose_support_window }
+		}
+		available = {
+			tag = OSE original_tag = OSE country_exists = FAT FAT = { ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_support_open has_country_flag = ac_fsb_w_ose_support_accepted has_country_flag = ac_fsb_w_ose_support_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_support_revoke_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_support_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	OSE_fsb_reply_ose_mobility_accept = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_mobility_open has_country_flag = ac_fsb_w_ose_mobility_window NOT = { has_country_flag = ac_fsb_w_ose_mobility_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_mobility_open has_country_flag = ac_fsb_w_ose_mobility_window NOT = { has_country_flag = ac_fsb_w_ose_mobility_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_mobility_accept_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_mobility_accept_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+	OSE_fsb_reply_ose_mobility_inspect = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_mobility_open has_country_flag = ac_fsb_w_ose_mobility_window NOT = { has_country_flag = ac_fsb_w_ose_mobility_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_mobility_open has_country_flag = ac_fsb_w_ose_mobility_window NOT = { has_country_flag = ac_fsb_w_ose_mobility_accepted } } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 2 } FAT = { has_country_flag = ac_fsb_joint_inspection has_country_flag = ac_fsb_invoice_verified }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_mobility_inspect_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_mobility_inspect_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	OSE_fsb_reply_ose_mobility_refuse = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_mobility_open has_country_flag = ac_fsb_w_ose_mobility_window NOT = { has_country_flag = ac_fsb_w_ose_mobility_accepted } }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_capitulated = no has_country_flag = ac_fsb_w_ose_mobility_notice country_exists = FAT FAT = { ac_fsb_active = yes ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_mobility_open has_country_flag = ac_fsb_w_ose_mobility_window NOT = { has_country_flag = ac_fsb_w_ose_mobility_accepted } }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_mobility_refuse_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_mobility_refuse_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	OSE_fsb_reply_ose_mobility_revoke = {
+		icon = ac_fsb_ose_warrant
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE country_exists = FAT FAT = { ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_mobility_open has_country_flag = ac_fsb_w_ose_mobility_accepted has_country_flag = ac_fsb_w_ose_mobility_window }
+		}
+		available = {
+			tag = OSE original_tag = OSE country_exists = FAT FAT = { ac_fsb_warrant_ose_valid = yes has_country_flag = ac_fsb_w_ose_mobility_open has_country_flag = ac_fsb_w_ose_mobility_accepted has_country_flag = ac_fsb_w_ose_mobility_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_reply_ose_mobility_revoke_tt
+			hidden_effect = {
+				OSE_fsb_reply_ose_mobility_revoke_apply = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+	OSE_fsb_accept_sbk_adviser = {
+		icon = ac_fsb_ose_docket
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_country_flag = ac_fsb_adviser_notice country_exists = SBK SBK = { ac_fsb_active = yes ac_fsb_adviser_valid = yes has_country_flag = ac_fsb_adviser_open has_country_flag = ac_fsb_adviser_window }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_country_flag = ac_fsb_adviser_notice country_exists = SBK SBK = { ac_fsb_active = yes ac_fsb_adviser_valid = yes has_country_flag = ac_fsb_adviser_open has_country_flag = ac_fsb_adviser_window } ac_pol_active = yes political_power >= 10 check_variable = { ac_pol_capacity >= 1 }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_accept_sbk_adviser_tt
+			hidden_effect = {
+				OSE_fsb_accept_sbk_adviser_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+	OSE_fsb_refuse_sbk_adviser = {
+		icon = ac_fsb_ose_docket
+		allowed = { tag = OSE original_tag = OSE }
+		visible = {
+			tag = OSE original_tag = OSE has_country_flag = ac_fsb_adviser_notice country_exists = SBK SBK = { ac_fsb_active = yes ac_fsb_adviser_valid = yes has_country_flag = ac_fsb_adviser_open has_country_flag = ac_fsb_adviser_window }
+		}
+		available = {
+			tag = OSE original_tag = OSE has_country_flag = ac_fsb_adviser_notice country_exists = SBK SBK = { ac_fsb_active = yes ac_fsb_adviser_valid = yes has_country_flag = ac_fsb_adviser_open has_country_flag = ac_fsb_adviser_window }
+		}
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = OSE_fsb_refuse_sbk_adviser_tt
+			hidden_effect = {
+				OSE_fsb_refuse_sbk_adviser_apply = yes
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+}

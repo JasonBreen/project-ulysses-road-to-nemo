@@ -28,6 +28,9 @@ WHITE = (218, 237, 242, 255)
 BLUE = (151, 183, 225, 255)
 
 sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(ROOT / 'tools'))
+from event_picture_fit.fit import contain as fit_event, same_review_png
+from event_picture_fit.bitmap import BitmapFont
 from content import FOCUSES, POLICIES
 
 # Reuse the project's editable code-native symbol vocabulary, not delivered art.
@@ -35,6 +38,9 @@ spec = importlib.util.spec_from_file_location('ulysses_art_symbols', ROOT / 'too
 symbols = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(symbols)
 glyph = symbols.glyph
+row_spec = importlib.util.spec_from_file_location('anea_decision_rows', ROOT / 'tools/decision_row_art/geometry.py')
+row_geometry = importlib.util.module_from_spec(row_spec)
+row_spec.loader.exec_module(row_geometry)
 
 OUTPUTS = {}
 ASSETS = []
@@ -187,21 +193,17 @@ def build_focuses():
     if len(records) != 108 or len({r['sha256'] for r in records}) != 108:
         raise ValueError('Every one of the 108 focus compositions must be distinct')
     put('tools/anea/focus_art.json', json.dumps(records, indent=2) + '\n')
-    sheet = Image.new('RGBA', (1080, 12 * 140), NAVY)
-    d = ImageDraw.Draw(sheet)
-    font = ImageFont.truetype(str(FONT), 10)
+    # Review labels use the shipped glyph atlas, never OS/FreeType rasterization.
+    # Larger review cells retain full titles at their actual bitmap advances.
+    sheet = Image.new('RGBA', (1800, 26 + 12 * 200), NAVY)
+    font = BitmapFont()
+    font.draw(sheet, 'OFFLINE artwork review; native focus rendering remains untested', (8, 3), 1784)
     for index, (row, image) in enumerate(previews):
-        x = (index % 9) * 120
-        y = (index // 9) * 140
-        sheet.alpha_composite(image, (x + 12, y + 3))
-        words = row.title.split()
-        lines = ['']
-        for word in words:
-            if len(lines[-1] + word) > 21:
-                lines.append('')
-            lines[-1] += word + ' '
-        for j, line in enumerate(lines[:3]):
-            d.text((x + 60, y + 103 + 11 * j), line.strip(), anchor='mt', font=font, fill=WHITE)
+        x = (index % 9) * 200
+        y = 26 + (index // 9) * 200
+        sheet.alpha_composite(image, (x + 52, y + 3))
+        if font.draw(sheet, row.title, (x + 8, y + 105), 184) > 84:
+            raise ValueError('Anea offline review title exceeds its measured cell: ' + row.id)
     put('docs/evidence/anea/focus-contact-sheet.png', encoded(sheet, 'PNG'))
 
 
@@ -237,7 +239,9 @@ def build_policies():
         texture(relative, emblem(*motifs, 'EMM', (100, 100)),
                 'original decision category artwork', 'GFX_ac_anea_category_' + suffix)
         alias('GFX_decision_category_ac_anea_' + suffix, relative)
-        alias('GFX_decision_ac_anea_' + suffix, relative)
+        texture(f'gfx/AC_anea/decisions/{suffix}.dds', row_geometry.row_icon(suffix),
+                'original compact decision row composition', 'GFX_decision_ac_anea_' + suffix,
+                source=ROOT / 'tools/decision_row_art/geometry.py', subject=suffix)
 
 
 def contained(source, size):
@@ -261,6 +265,12 @@ def build_media():
         else:
             texture(f'gfx/AC_anea/events/{row["id"]}.dds', contained(source, (200, 160)),
                     'original narrative illustration', 'GFX_ac_anea_event_' + row['id'], source)
+            if row['id'] == 'emm_4':
+                texture('gfx/AC_anea/news/emm_4.dds', fit_event(source, 'news_event'),
+                        'separate news illustration', 'GFX_ac_anea_news_emm_4', source,
+                        transform='Full-source Lanczos contain to397x153; opaque navy padding; original country art preserved',
+                        packaging_helper='tools/event_picture_fit/fit.py',
+                        packaging_helper_sha256=digest((ROOT/'tools/event_picture_fit/fit.py').read_bytes().replace(b'\r\n',b'\n')))
         row['source_sha256'] = digest(source.read_bytes())
         with Image.open(source) as image:
             row['width'], row['height'] = image.size
@@ -335,6 +345,8 @@ def main():
     for path, data in OUTPUTS.items():
         if args.check:
             current = path.read_bytes() if path.exists() else b''
+            if path.suffix == '.png' and current and same_review_png(current, data):
+                continue
             # Pillow/zlib releases can encode identical review PNG pixels with
             # different compression streams. Delivered DDS remains byte-exact.
             if path.suffix == '.png' and current:

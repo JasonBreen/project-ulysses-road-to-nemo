@@ -1,0 +1,150 @@
+{
+  "schema": 1,
+  "source_head": "26d9e553699bc7c0f2f1a07ea58e8cf5b343c15b",
+  "selection": [
+    "decisions",
+    "interface",
+    "retired-news",
+    "screenshot-repairs",
+    "authored-presentation",
+    "authored-assets",
+    "physical-coverage",
+    "registry",
+    "replacement-plans",
+    "core"
+  ],
+  "payload_sha256": "56887cacca7f3cbef34d1a6514acea53195a68be21cd3e8b7f0ceaaf172253ee",
+  "payload_hash_rule": "Sorted repository-relative POSIX path,NUL,raw bytes for each delivered mod file.",
+  "passed": 10,
+  "failed": 0,
+  "coverage": "Source, primary-reference metadata and offline execution; not native rendering, save/reload, AI pacing or balance acceptance.",
+  "native_status": "Paused; no native game, desktop control or installation synchronization.",
+  "full_conversion_acceptance": false,
+  "checks": [
+    {
+      "name": "replacement-plans",
+      "command": [
+        "python",
+        "-B",
+        "tools/replacements/test_replacements.py"
+      ],
+      "exit_code": 0,
+      "seconds": 5.437,
+      "log": "replacement-plans.txt"
+    },
+    {
+      "name": "registry",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_foundation/registry.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.11,
+      "log": "registry.txt"
+    },
+    {
+      "name": "physical-coverage",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_starts/coverage.py",
+        "--check",
+        "--require-integrated-owner"
+      ],
+      "exit_code": 0,
+      "seconds": 3.515,
+      "log": "physical-coverage.txt"
+    },
+    {
+      "name": "decisions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-DecisionUI.py"
+      ],
+      "exit_code": 0,
+      "seconds": 30.079,
+      "log": "decisions.txt"
+    },
+    {
+      "name": "interface",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-InterfaceRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.234,
+      "log": "interface.txt"
+    },
+    {
+      "name": "retired-news",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-RetiredWorldNews.py",
+        "--reference",
+        "<installed-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 0.969,
+      "log": "retired-news.txt"
+    },
+    {
+      "name": "screenshot-repairs",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-OverhaulRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.875,
+      "log": "screenshot-repairs.txt"
+    },
+    {
+      "name": "authored-presentation",
+      "command": [
+        "python",
+        "-B",
+        "tools/check_presentation_sources.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.625,
+      "log": "authored-presentation.txt"
+    },
+    {
+      "name": "authored-assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 1.047,
+      "log": "authored-assets.txt"
+    },
+    {
+      "name": "core",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-reference>",
+        "-BaselineRoot",
+        "<immutable-baseline>"
+      ],
+      "exit_code": 0,
+      "seconds": 60.187,
+      "log": "core.txt"
+    }
+  ]
+}

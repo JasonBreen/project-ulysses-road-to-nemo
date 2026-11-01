@@ -220,10 +220,11 @@ class WorldFoundationTests(unittest.TestCase):
                         wing_counts.update({kind: int(get(details, "amount")) for kind, _, details in wings})
                 results.append((divisions, planes, ships))
                 self.assertEqual(factories, {k: PROFILES[tag][k] for k in factories})
-                expected = {kind: amount for kind, amount in PROFILES[tag]["production"].items() if kind not in ("fighter", "cas")}
+                expected = {kind: amount for kind, amount in PROFILES[tag]["production"].items() if kind not in ("fighter", "cas") and amount}
                 fighter = "small_plane_airframe_1" if bba else "fighter_equipment_1"
                 cas = "small_plane_cas_airframe_1" if bba else "CAS_equipment_1"
-                expected[fighter] = PROFILES[tag]["production"]["fighter"]
+                if PROFILES[tag]["production"]["fighter"]:
+                    expected[fighter] = PROFILES[tag]["production"]["fighter"]
                 if PROFILES[tag]["production"].get("cas"):
                     expected[cas] = PROFILES[tag]["production"]["cas"]
                 naval_plan = PROFILES[tag].get("naval_production", {"convoy": PROFILES[tag]["dockyard"]})
@@ -364,14 +365,27 @@ class WorldFoundationTests(unittest.TestCase):
         self.assertEqual(sum(d["fighters"] for d in row["air_deployments"]), 96)
         self.assertEqual(sum(d["cas"] for d in row["air_deployments"]), 24)
 
-    def test_original_four_country_outputs_and_placements_remain_exact(self):
+    def test_original_four_fingerprints_preserved_outside_explicit_replacement_exceptions(self):
+        # Retain all original hashes. Reverse the narrow approved field changes
+        # before comparing; force/state protection and source tests separately
+        # validate the actual new payload. Do not recapture the old baseline.
+        sys.path.insert(0,str(ROOT/'tools/replacements'))
+        from preservation import original_profile,original_row,original_generated
+        import build as builder
         baseline = json.loads((HERE / "original_four.json").read_text())
+        old_profiles={tag:original_profile(tag,PROFILES[tag]) for tag in baseline['profiles_sha256']}
+        old_rows={tag:original_row(tag,MANIFEST['countries'][tag]) for tag in baseline['country_rows_sha256']}
         for tag, digest in baseline["profiles_sha256"].items():
-            self.assertEqual(hashlib.sha256(json.dumps(PROFILES[tag], sort_keys=True).encode()).hexdigest(), digest)
+            self.assertEqual(hashlib.sha256(json.dumps(old_profiles[tag], sort_keys=True).encode()).hexdigest(), digest)
         for tag, digest in baseline["country_rows_sha256"].items():
-            self.assertEqual(hashlib.sha256(json.dumps(MANIFEST["countries"][tag], sort_keys=True).encode()).hexdigest(), digest)
+            self.assertEqual(hashlib.sha256(json.dumps(old_rows[tag], sort_keys=True).encode()).hexdigest(), digest)
         for relative, digest in baseline["generated_files_sha256"].items():
-            self.assertEqual(hashlib.sha256((MOD / relative).read_text(encoding="utf-8").encode()).hexdigest(), digest, relative)
+            if relative.startswith('history/states/'):
+                tag=next(tag for tag,row in old_rows.items() if relative in [r['path'] for r in row['baseline'].values()])
+            else:tag=Path(relative).name[:3]
+            original=original_generated(relative,tag,old_rows[tag],old_profiles[tag],builder)
+            if original is None:original=(MOD / relative).read_text(encoding='utf-8')
+            self.assertEqual(hashlib.sha256(original.encode()).hexdigest(), digest, relative)
         for relative, digest in baseline["history_ast_sha256_except_declared_macro_eligibility"].items():
             tree = [n for n in read(relative) if n != ["set_country_flag", "=", "ac_macro_history_eligible"]]
             self.assertEqual(hashlib.sha256(json.dumps(tree, sort_keys=True).encode()).hexdigest(), digest, relative)
@@ -430,7 +444,8 @@ class WorldFoundationTests(unittest.TestCase):
             self.assertEqual(a[relative], w[relative])
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp); mod = root / "mod/2985041246"
-            for relative in ["tools/logistics_owners.json", "tools/anea/foundation.json", "tools/world_foundation/foundation.json"]:
+            owner_manifest = json.loads((ROOT / 'tools/logistics_owners.json').read_text())
+            for relative in ['tools/logistics_owners.json'] + [r['manifest'] for r in owner_manifest['owners']]:
                 target = root / relative; target.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(ROOT / relative, target)
             for path in (MOD / "history/states").glob("*.txt"):
                 target = mod / "history/states" / path.name; target.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(path, target)

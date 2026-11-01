@@ -1,0 +1,34 @@
+"""Pin and record every affected PR55 check, retaining failures without waivers."""
+import argparse,json,os,subprocess,sys,time
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools'))
+from source_snapshot import capture,verify
+def main():
+    p=argparse.ArgumentParser();p.add_argument('--engine',type=Path,required=True)
+    p.add_argument('--output',type=Path,default=ROOT/'docs/evidence/event-style/pr55-review/source-checks');a=p.parse_args()
+    before=capture(ROOT);a.output.mkdir(parents=True,exist_ok=True);py=[sys.executable,'-B']
+    commands=[
+        ('event-style',py+['tools/Test-EventStyle.py']),
+        ('text-review',py+['tools/event_style/review.py','--check']),
+        ('style-generated',py+['tools/event_style/build.py','--check']),
+        ('original-interfaces',py+['tools/Test-InterfaceRepairs.py']),
+        ('event-fit',py+['tools/Test-EventPictures.py']),
+        ('effective-negative-fixtures',py+['tools/Test-EffectiveDependencies.py']),
+        ('effective-base-only',py+['tools/overhaul/audit_consumers.py',str(a.engine),'--profile','docs/evidence/effective-dependencies/profiles/base-only.json','--gate-screen','eventwindow.gui','--gate-decisions','--summary-only','--output',str(a.output/'effective-base-only.json')]),
+        ('research-fonts',py+['tools/research_fonts/test_fonts.py']),
+        ('event-runner',py+['tools/Test-EventRunner.py']),
+        ('presentation-source',py+['tools/Test-PresentationSources.py']),
+        ('strict-authored-assets',py+['tools/audit_visual_dependencies.py','--strict-all']),
+        ('static-reference',['pwsh','-NoProfile','-File','tools/Test-UlyssesStatic.ps1','-ModRoot',str(ROOT/'mod/2985041246'),'-ReferenceGameRoot',str(a.engine)])]
+    rows=[]
+    for name,command in commands:
+        started=time.monotonic();result=subprocess.run(command,cwd=ROOT,capture_output=True,env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'})
+        (a.output/(name+'.txt')).write_bytes(result.stdout+result.stderr)
+        rows.append(dict(check=name,command=command,exit_code=result.returncode,seconds=round(time.monotonic()-started,3),log=name+'.txt'))
+        print(name+(': PASS' if result.returncode==0 else ': FAIL (retained)'),flush=True)
+    after=verify(before,ROOT);passed=all(row['exit_code']==0 for row in rows)
+    (a.output/'results.json').write_bytes((json.dumps(dict(schema=1,source_before=before,source_after=after,checks=rows,passed=passed,
+        evidence='All failures remain failures; no expected-failure exemptions, tolerance, native or global-presentation claims'),indent=2)+'\n').encode())
+    if not passed:raise SystemExit('Affected verification contains failures; inspect the pinned receipts')
+    print('All affected checks pass with identical source identity; native remains unaccepted.')
+if __name__=='__main__':main()

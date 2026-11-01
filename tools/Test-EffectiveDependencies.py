@@ -322,6 +322,52 @@ class EffectiveDependencies(unittest.TestCase):
         self.assertFalse(report["completed_presentation_gate"]["passed"])
         self.assertTrue(any("unbound" in failure for failure in report["completed_presentation_gate"]["failures"]))
 
+    def test_music_cannot_use_an_approved_image_or_program_as_audio(self):
+        local = self.window()
+        self.put(self.mod, "music/playlist.txt", 'music={song="track"}')
+        for path in ("gfx/fx/not_audio.shader", "gfx/not_audio.dds"):
+            with self.subTest(path=path):
+                payload = b"synthetic-non-audio"
+                self.put(self.mod, path, payload)
+                self.put(self.mod, "music/track.asset", 'music={name="track" file="' + path + '"}')
+                for classification in ("authored", "approved_sourced"):
+                    profile = self.profile(provenance=[local, self.record(path, payload, classification=classification)])
+                    audit = Audit(self.mod, self.engine, profile)
+                    track = audit.resolve("music", "track")
+                    self.assertEqual("unresolved", track["classification"])
+                    self.assertEqual("unsupported_resource_kind", track["resources"][0]["status"])
+                    self.assertFalse(audit.run(["countrydecisionview.gui"], True)["completed_presentation_gate"]["passed"])
+
+    def test_duplicate_archive_members_fail_before_approval_or_size_checks(self):
+        local = self.window()
+        first, last = b"x" * (8 * 1024 * 1024 + 1), b"last"
+        for names in (("gfx/shared.dds", "gfx/shared.dds"), ("gfx/SHARED.dds", "gfx/shared.dds"), ("gfx\\shared.dds", "gfx/shared.dds")):
+            with self.subTest(names=names):
+                pack = self.pack("duplicate_pack", {names[0]: first})
+                archive_path = self.engine / "dlc/duplicate_pack/duplicate_pack.zip"
+                import warnings
+                with zipfile.ZipFile(archive_path, "a") as archive, warnings.catch_warnings():
+                    warnings.simplefilter("ignore", UserWarning)
+                    archive.writestr(names[1], last)
+                profile = self.profile(pack, provenance=[local, self.record("gfx/shared.dds", last, "dlc:" + pack, "approved_sourced")])
+                audit = Audit(self.mod, self.engine, profile)
+                self.assertEqual("missing_asset", audit.vfs.resource("gfx/shared.dds")["status"])
+                provider = next(row for row in audit.vfs.providers.inventory if row["selected"])
+                self.assertEqual(["gfx/shared.dds"], provider["duplicate_members"])
+                self.assertEqual("unresolved_provider", provider["inspection"])
+                self.assertFalse(audit.run(["countrydecisionview.gui"], True)["completed_presentation_gate"]["passed"])
+
+    def test_scripted_gui_parse_errors_enter_the_completed_gate(self):
+        local = self.window()
+        for root in (self.mod, self.engine):
+            with self.subTest(provider=root.name):
+                path = self.put(root, "common/scripted_guis/broken.txt", "scripted_gui={ broken = {")
+                report = Audit(self.mod, self.engine, self.profile(provenance=[local])).run(["countrydecisionview.gui"], True)
+                self.assertTrue(any(row["source"] == "common/scripted_guis/broken.txt" for row in report["parse_failures"]))
+                self.assertIn("parse:common/scripted_guis/broken.txt", report["completed_presentation_gate"]["failures"])
+                self.assertFalse(report["completed_presentation_gate"]["passed"])
+                path.unlink()
+
     def test_completed_gate_requires_profile_and_exact_hash_provenance(self):
         local=self.window()
         self.assertFalse(Audit(self.mod,self.engine).run(["countrydecisionview.gui"],True)["completed_presentation_gate"]["passed"])

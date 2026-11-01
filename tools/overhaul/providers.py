@@ -8,6 +8,7 @@ per-path choice. No archive member is ever extracted or executed.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from collections import Counter
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
@@ -159,6 +160,13 @@ class Providers:
                     with zipfile.ZipFile(payload) as archive:
                         entries = archive.infolist()
                         row["member_count"] = sum(not item.is_dir() for item in entries)
+                        member_names = Counter(normal(item.filename) for item in entries if not item.is_dir())
+                        row["duplicate_members"] = sorted(name for name, count in member_names.items() if count > 1)
+                        if row["duplicate_members"]:
+                            # ZipFile's name lookup picks the last entry. Reject
+                            # the provider before mounting so candidate hashes,
+                            # bounds and bytes cannot refer to different entries.
+                            raise ValueError("Duplicate normalized archive member names are not mounted")
                         row["unsafe_members"] = [item.filename for item in entries if not safe_member(item.filename)
                                                  or stat.S_ISLNK(item.external_attr >> 16)]
                         if row["unsafe_members"]:

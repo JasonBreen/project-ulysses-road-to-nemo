@@ -209,7 +209,7 @@ class Audit:
                     if value and ("/" in value or "\\" in value or Path(value).suffix):
                         usage = {"meshfile": "mesh", "animationfile": "animation", "effectfile": "program"}.get(key)
                         if key == "file":
-                            usage = {"sound": "audio", "song": "audio", "audio": "audio", "sprite": "image", "mesh": "mesh", "animation": "animation", "font": "font"}.get(family)
+                            usage = {"sound": "audio", "song": "audio", "music": "audio", "audio": "audio", "sprite": "image", "mesh": "mesh", "animation": "animation", "font": "font"}.get(family)
                         resources.append(self.vfs.resource(value, definition["source"], usage=usage))
                 elif key == "path" and family == "font":
                     for extension in (".fnt", ".dds"):
@@ -536,6 +536,9 @@ class Audit:
         covered = {filename: self.screen(filename, filename.lower() == "countrydecisionview.gui") for filename in screens}
         self.runtime(complete)
         self.music_consumers()
+        # This traversal can add parse failures. Complete it before taking the
+        # gate's failure snapshot, and return these same inspected bindings.
+        bindings = self.scripted_bindings(complete)
         unique = {json.dumps(row, sort_keys=True): row for row in self.rows}
         rows = sorted(unique.values(), key=lambda r: (r.get("consumer_family", ""), r["consumer"], r["name"]))
         counts = Counter(row["status"] for row in rows)
@@ -561,7 +564,7 @@ class Audit:
             gate_failures += [row["consumer"]+":"+row["family"]+":"+row["name"]+":"+row["status"]
                               for row in rows if row.get("classification","unresolved") == "unresolved"]
             gate_failures += ["parse:"+row["source"] for row in self.parse_failures]
-            gate_failures += ["binding:"+row["source"]+":"+row["scripted_gui"] for row in self.scripted_bindings(True) if row["problems"]]
+            gate_failures += ["binding:"+row["source"]+":"+row["scripted_gui"] for row in bindings if row["problems"]]
         return dict(schema=2, coverage="Profile-scoped effective source dependency inventory; classifications require exact provenance and do not establish native reachability or copyright permission",
                     engine_version="read installed launcher-settings/version separately; no runtime version inferred",
                     dlc_archive_coverage=self.vfs.providers.report(),
@@ -572,7 +575,7 @@ class Audit:
                     replace_paths=self.vfs.replace_paths, gate_covered_screens=covered,
                     summary=dict(counts), by_consumer_family={k: dict(v) for k, v in sorted(by_family.items())},
                     parse_failures=self.parse_failures,
-                    scripted_gui_bindings=self.scripted_bindings(complete),
+                    scripted_gui_bindings=bindings,
                     statically_retired_consumers=self.retired_consumers,
                     coverage_limits=["Engine-generated entity/culture combinations are logged but not fully expanded.",
                                      "Literal portrait-pool choices are conservative roots; native eligibility and random selection are not certified.",

@@ -14,15 +14,15 @@ import os
 from pathlib import Path
 
 import PIL
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageDraw, ImageOps
 
 from schema import HERE, ROOT, MOD, campaigns
+from gallery_bitmap import GalleryFont
 
 NAVY = (8, 22, 33, 255)
 CYAN = (93, 208, 223, 255)
 WHITE = (218, 237, 242, 255)
 EDGE = (45, 85, 104, 255)
-FONT = ROOT / 'tools/frontend_typography/source/DINish-Regular.ttf'
 EVIDENCE = ROOT / 'docs/evidence/squadrons'
 OUTPUTS = {}
 ASSETS = []
@@ -208,8 +208,7 @@ def package(ready):
 
 
 def galleries(ready, missing):
-    font = ImageFont.truetype(str(FONT), 16)
-    small = ImageFont.truetype(str(FONT), 13)
+    font = GalleryFont()
     cast = {p['id']: p for r in campaigns(False) for p in r['cast']}
     actions = [row for row in ASSETS if '/decisions/' in row['file']]
     if actions:
@@ -220,8 +219,8 @@ def galleries(ready, missing):
             with Image.open(io.BytesIO(OUTPUTS[MOD / row['file']])) as icon:
                 sheet.alpha_composite(icon.resize((52, 58), Image.Resampling.NEAREST), (x + 15, y + 8))
                 sheet.alpha_composite(icon.convert('RGBA'), (x + 105, y + 24))
-            draw.text((x + 8, y + 79), row['tag'] + ' | ' + row['action'], font=small, fill=WHITE)
-            draw.text((x + 8, y + 98), '2x preview / actual26x29', font=small, fill=CYAN)
+            font.draw(sheet, row['tag'] + ' | ' + row['action'], (x + 8, y + 79), 144, size=13, color=WHITE)
+            font.draw(sheet, '2x preview / actual26x29', (x + 8, y + 98), 144, size=13, color=CYAN)
         put(EVIDENCE / 'decision-icons-contact-sheet.png', encoded(sheet, 'PNG'))
     for family, columns, cell in (('portraits', 6, (192, 270)), ('scenes', 4, (300, 211)), ('loading', 2, (576, 366))):
         rows = [r for r in ready if r['family'] == family]
@@ -235,8 +234,8 @@ def galleries(ready, missing):
             preview = contained(row['path'], box)
             sheet.alpha_composite(preview, (x + 8, y + 5))
             title = cast.get(row['id'], {}).get('name', row['id'].replace('_', ' '))
-            draw.text((x + 9, y + cell[1] - 38), title, font=font, fill=WHITE)
-            draw.text((x + 9, y + cell[1] - 18), row['tag'] + ' | original supporting fiction', font=small, fill=CYAN)
+            font.draw(sheet, title, (x + 9, y + cell[1] - 38), cell[0] - 18, color=WHITE)
+            font.draw(sheet, row['tag'] + ' | original fiction', (x + 9, y + cell[1] - 18), cell[0] - 18, size=13, color=CYAN)
         put(EVIDENCE / (family + '-contact-sheet.png'), encoded(sheet, 'PNG'))
     figures = []
     for row in ready:

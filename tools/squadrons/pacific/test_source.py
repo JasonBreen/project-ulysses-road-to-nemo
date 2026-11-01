@@ -143,7 +143,7 @@ class PacificSource(unittest.TestCase):
 
     def test_ose_component_bytes_and_owned_nodes_remain_exact_when_yuk_is_added(self):
         if not any(r['tag']=='YUK'for r in self.rows):self.skipTest('Independent YUK component is not admitted')
-        contract=json.loads((HERE/'ose_contract.json').read_text());self.assertEqual('fa0506ecf3d564e03baf51be1466798929fcf44d',contract['base'])
+        contract=json.loads((HERE/'ose_contract.json').read_text());self.assertEqual('7776f754418d7ecbaa5309bb9925fd1825aa7796',contract['base'])
         self.assertEqual(26,len(contract['files']))
         for relative,digest in contract['files'].items():self.assertEqual(digest,hashlib.sha256((ROOT/relative).read_bytes()).hexdigest(),relative)
         for relative,expected in contract['nodes'].items():

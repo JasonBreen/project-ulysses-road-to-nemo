@@ -90,13 +90,19 @@ per-file authored provenance profile does not exempt a family or presume DLC
 activation.
 
 In addition to the315 immutable initial files, `ose_contract.json` pins the
-first Osean component at `fa0506ecf3d564e03baf51be1466798929fcf44d`:26 exact
+independent Osean component at `7776f754418d7ecbaa5309bb9925fd1825aa7796`:26 exact
 source/delivery files, all existing Osean event/decision/category/trigger/sprite
 nodes and localization values. Shared initialization/tick/interruption retain
 their original Osean prefix nodes; only the explicitly admitted Yuktobanian
 nodes are appended. This regression prevents adding the second story from
 silently rewriting the first. Neither immutable contract is an automatic
 regeneration target.
+
+The earlier unpublished draft capture at `fa0506ec` is retained in
+`docs/evidence/pacific-stories/YUK-independent/draft-ose-contract.json`.
+`capture_ose.py` admits only the exact reviewed independent Osean parent above;
+it derives the 26 file hashes, original Osean nodes and all localization from
+that Git object. It never reads or recaptures the initial six-country contract.
 
 ## Evidence limits
 

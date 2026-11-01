@@ -115,6 +115,15 @@ The [current follow-up receipt](evidence/pacific-nations/OSE/final-source.json)
 pins that test and confirms the delivered mod payload is unchanged from the
 eight-gate passing run. No corrupted PNG was committed.
 
+The [fresh-work contract follow-up](evidence/pacific-nations/OSE/fresh-work-contract/results.json)
+supersedes the date-only eligibility boundary: all eight affected gates pass in
+an Osea-only checkout, including nine national actual-owner regressions and the
+eleven source/art cases. The separately recorded SNP suites retain fifteen
+runtime and fourteen source/art passing cases. Paid-start sequences distinguish
+same-day pre-existing work; legacy in-flight work, cancellation, failed starts,
+rapid annexation/return and old date-only requests cannot supply retroactive
+evidence. These source tests do not establish engine timing or save acceptance.
+
 The [effective dependency capture](evidence/pacific-nations/OSE/dependencies.json)
 uses an explicit base-only static profile and exact per-file provenance. New
 packet ownership passes with zero failures; requested decision/macro ownership

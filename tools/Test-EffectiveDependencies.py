@@ -447,6 +447,24 @@ class EffectiveDependencies(unittest.TestCase):
                 self.assertFalse(report["completed_presentation_gate"]["passed"])
                 path.unlink()
 
+    def test_structural_failures_cannot_pass_as_bare_or_malformed_tokens(self):
+        local = self.window()
+        cases = ('{', 'spriteTypes = {} unexpected = }', 'guiTypes = { containerWindowType = { name = "window } }')
+        for source in cases:
+            with self.subTest(source=source):
+                self.put(self.mod, "interface/invalid.gfx", source)
+                report = Audit(self.mod, self.engine, self.profile(provenance=[local])).run(["countrydecisionview.gui"], True)
+                self.assertFalse(report["completed_presentation_gate"]["passed"])
+                self.assertTrue(any(row["source"] == "interface/invalid.gfx" for row in report["parse_failures"]))
+
+    def test_structural_validation_preserves_comments_and_escaped_literal_braces(self):
+        local = self.window()
+        source = r'guiTypes = { containerWindowType = { name = "literal } and \"quoted\" # text" } } # { " ignored'
+        self.put(self.mod, "interface/literal.gui", source)
+        report = Audit(self.mod, self.engine, self.profile(provenance=[local])).run(["countrydecisionview.gui"], True)
+        self.assertEqual([], report["parse_failures"])
+        self.assertTrue(report["completed_presentation_gate"]["passed"])
+
     def test_completed_gate_requires_profile_and_exact_hash_provenance(self):
         local=self.window()
         self.assertFalse(Audit(self.mod,self.engine).run(["countrydecisionview.gui"],True)["completed_presentation_gate"]["passed"])

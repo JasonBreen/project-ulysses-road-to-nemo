@@ -1,11 +1,12 @@
 """Bounded release maintenance; no new combat roster or invented activation.
 
-All material/slot/capacity checks are live. Initial registration grants only a
+Funded building projects recheck current territory and slots. Recipe certification
+does not promise unallocated production capacity. Initial registration grants only a
 small transport reserve and templates to genuinely future releases. Future
 workshops/civilian capacity cost PP, public-owner money and90days, once each.
 No resource deposits, manpower, cores, financial stocks or borders are minted.
 """
-import argparse,json,sys,math
+import argparse,json,sys
 from pathlib import Path
 from itertools import product
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246'
@@ -53,11 +54,6 @@ def contract(reference=None):
         efficiency='Preserves installed history/OOB50 convention; standalone effect documentation shows0.1. Native interpretation remains pending.')
 
 def case_limit(bba,mtg):return ('has_dlc = "By Blood Alone"' if bba else 'NOT = { has_dlc = "By Blood Alone" }')+'\n'+('has_dlc = "Man the Guns"' if mtg else 'NOT = { has_dlc = "Man the Guns" }')
-def production(tag,role,row):
-    details='type = '+row['equipment']+'\ncreator = '+tag
-    if row['modules']:details+='\nversion_name = "'+tag+' Release '+role+'"'
-    return block('add_equipment_production',block('equipment',details)+'requested_factories = 1\nprogress = 0\nefficiency = 50')
-
 def decision_presentation(text):
     """Expose plain-language costs/requirements, not private receipt flags."""
     tree=parse(text)
@@ -76,13 +72,15 @@ def outputs(data=None):
     base='ac_release_exact_country = yes has_country_flag = ac_release_administration_registered has_capitulated = no ac_release_owned_capital = yes'
     triggers+=block('ac_release_maintenance_active',base+'\nhas_country_flag = ac_release_maintenance_registered')
     triggers+=block('ac_release_can_invest',base+'\npolitical_power >= 100 ac_econ_can_fund_release_project = yes NOT = { has_country_flag = ac_release_project_active } NOT = { has_country_flag = ac_release_project_cooldown }\ncapital_scope = { is_core_of = PREV is_fully_controlled_by = PREV free_building_slots = { building = industrial_complex size > 0 } }')
-    quote='set_temp_variable = { ac_release_free_mil = num_of_military_factories }\nsubtract_from_temp_variable = { ac_release_free_mil = ac_release_reserved_mil }\nset_temp_variable = { ac_release_free_yards = num_of_naval_factories }\nsubtract_from_temp_variable = { ac_release_free_yards = ac_release_reserved_yards }'
-    effects+=block('ac_release_quote_maintenance_capacity',quote)
+    # Retired compatibility API. Total factories minus historical purchases was
+    # never an observation of current Production allocation. Existing counters
+    # remain inert serialized history; do not reset or reuse them as reservations.
+    effects+=block('ac_release_quote_maintenance_capacity','custom_effect_tooltip = ac_release_manual_production_tt')
     for tag in TAGS:
         stem='ac_release_'+tag;country=intake['countries'][tag]
         prepare=block('if','limit = { '+exact(tag)+' has_capitulated = no any_owned_state = { NOT = { state = 171 } } ac_release_owned_capital = yes NOT = { has_global_flag = '+flag(tag,'maintenance_registered')+' } }\n'+
             block('set_technology','\n'.join(tech+' = 1' for tech in data['common_technologies']))+
-            f'load_oob = "{tag}_release_templates"\nset_variable = {{ ac_release_reserved_mil = 0 }}\nset_variable = {{ ac_release_reserved_yards = 0 }}\nset_global_flag = {flag(tag,"maintenance_registered")}')
+            f'load_oob = "{tag}_release_templates"\nset_global_flag = {flag(tag,"maintenance_registered")}')
         prepare+=block('if','limit = { '+exact(tag)+' has_global_flag = '+flag(tag,'maintenance_registered')+' }\nset_country_flag = ac_release_maintenance_registered')
         effects+=block(stem+'_prepare_maintenance',prepare)
         kit='limit = { '+exact(tag)+' has_capitulated = no has_global_flag = '+flag(tag,'was_absent')+' ac_release_owned_capital = yes any_owned_state = { NOT = { state = 171 } } NOT = { has_global_flag = '+flag(tag,'transport_delivered')+' } NOT = { has_global_flag = '+flag(tag,'adopted')+' } NOT = { has_global_flag = '+flag(tag,'annexed')+' } }\n'
@@ -119,31 +117,25 @@ def outputs(data=None):
         decision_rows+=block(stem+'_maintenance_access','icon = '+icon()+'\nallowed = { '+exact(tag)+' }\nvisible = { '+base+' NOT = { has_country_flag = ac_release_maintenance_registered } }\navailable = { political_power >= 25 }\ncost = 0\ncomplete_effect = { if = { limit = { '+base+' political_power >= 25 NOT = { has_country_flag = ac_release_maintenance_registered } } add_political_power = -25 '+stem+'_prepare_maintenance = yes } }\nai_will_do = { base = 1 }')
         loc.extend([(stem+'_maintenance_access','Register current maintenance'),(stem+'_maintenance_access_desc','Adopt maintenance templates and existing technical support. Costs 25 political power. Existing saves receive no transport reserve, army, aircraft, ship or historical reward from this action.')])
         for role,(_,label) in ROLES.items():
-            receipt=flag(tag,'queue_'+role);kind='yards' if role in NAVAL else 'mil';need='num_of_naval_factories > 0' if role in NAVAL else 'num_of_military_factories > 0'
-            trigger=base+' has_country_flag = ac_release_maintenance_registered NOT = { has_global_flag = '+receipt+' } political_power >= 15 '+need
-            if role in NAVAL:trigger+=' any_owned_state = { is_fully_controlled_by = ROOT dockyard > 0 }'
-            # Quote variables are temporary and recalculated inside completion;
-            # UI availability uses the exact current observable comparison.
-            trigger+=' check_variable = { ac_release_reserved_'+kind+' < '+('num_of_naval_factories' if role in NAVAL else 'num_of_military_factories')+' }'
-            alternatives=[];body='';licenses='';unlicensed=[]
+            licenses='';unlicensed=[]
             for bba,mtg in product((False,True),repeat=2):
-                row=data['cases'][f'bba{int(bba)}_mtg{int(mtg)}'][role];materials=' '.join('has_resources_in_country = { resource = '+r+' amount >= '+str(math.ceil(amount))+' }' for r,amount in row['stats']['resources'].items() if amount>0)
-                condition=case_limit(bba,mtg)+'\n'+materials;alternatives.append(block('AND',condition))
+                row=data['cases'][f'bba{int(bba)}_mtg{int(mtg)}'][role]
                 licensed=flag(tag,'licensed_'+role+f'_bba{int(bba)}_mtg{int(mtg)}')
                 licensing=case_limit(bba,mtg)+' NOT = { has_global_flag = '+licensed+' }';unlicensed.append(block('AND',licensing))
                 code=block('set_technology','\n'.join(t+' = 1' for t in row['technologies']))
                 if row['modules']:code+=block('create_equipment_variant',f'name = "{tag} Release {role}"\ntype = {row["equipment"]}\n'+block('modules','\n'.join(k+' = '+v for k,v in row['modules'].items())))
                 licenses+=block('if',block('limit',licensing)+code+'set_global_flag = '+licensed)
-                body+=block('if',block('limit',condition)+stem+'_license_'+role+' = yes\n'+production(tag,role,row)+'\nset_global_flag = '+receipt+'\nadd_to_variable = { ac_release_reserved_'+kind+' = 1 }\nadd_political_power = -15')
             effects+=block(stem+'_license_'+role,block('if','limit = { '+exact(tag)+' ac_release_maintenance_active = yes }\n'+licenses))
             triggers+=block(stem+'_can_certify_'+role,exact(tag)+' ac_release_maintenance_active = yes political_power >= 5\n'+block('OR',''.join(unlicensed)))
             effects+=block(stem+'_certify_'+role,block('if','limit = { '+stem+'_can_certify_'+role+' = yes }\n'+stem+'_license_'+role+' = yes\nadd_political_power = -5'))
             decision_rows+=block(stem+'_certify_'+role,'icon = '+icon()+'\nallowed = { '+exact(tag)+' }\nvisible = { ac_release_maintenance_active = yes '+block('OR',''.join(unlicensed))+' }\navailable = { '+stem+'_can_certify_'+role+' = yes }\ncost = 0\ncomplete_effect = { '+stem+'_certify_'+role+' = yes }\nai_will_do = { base = 0 }')
-            loc.extend([(stem+'_certify_'+role,'Certify '+label.lower()),(stem+'_certify_'+role+'_desc','Spend 5 political power to prepare the selected DLC technical recipe without opening a production line. No equipment or personnel is granted. This enables manual rotation in Production when all workshops or yards are already assigned. Capacity, material imports and fuel remain your responsibility; certification is once per selected technical configuration. Opening a line directly includes its certification.')])
-            triggers+=block(stem+'_can_queue_'+role,trigger+'\n'+block('OR',''.join(alternatives)))
-            effects+=block(stem+'_queue_'+role,block('if','limit = { '+stem+'_can_queue_'+role+' = yes }\n'+body))
-            decision_rows+=block(stem+'_queue_'+role,'icon = '+icon()+'\nallowed = { '+exact(tag)+' }\nvisible = { ac_release_maintenance_active = yes NOT = { has_global_flag = '+receipt+' } }\navailable = { '+stem+'_can_queue_'+role+' = yes }\ncost = 0\ncomplete_effect = { '+stem+'_queue_'+role+' = yes }\nai_will_do = { base = '+('2' if role=='rifles' else '0')+' }')
-            loc.extend([(stem+'_queue_'+role,label),(stem+'_queue_'+role+'_desc','Reserve one current '+('dockyard' if role in NAVAL else 'military factory')+' for this replacement line, once. Costs 15 political power. Requires enough uncommitted industry and current material balance for the selected technical recipe. No equipment, fuel or personnel is granted. Existing queues stay under your control; certify another recipe and rotate manually when capacity or imports are limited. Cancel or resize unnecessary queues in Production. Aircraft designs are general service models.')])
+            loc.extend([(stem+'_certify_'+role,'Certify '+label.lower()),(stem+'_certify_'+role+'_desc','Spend 5 political power to prepare the selected DLC technical recipe. Assign or rotate factories and dockyards in the Production screen afterward. Check materials, imports and fuel before manufacturing. Certification grants no production line, industry, resources, equipment or personnel and is once per selected technical configuration.')])
+            # Preserve stable IDs and historical receipts without consuming them.
+            # Even a stale/direct completion performs no purchase or mutation.
+            triggers+=block(stem+'_can_queue_'+role,'always = no')
+            effects+=block(stem+'_queue_'+role,'custom_effect_tooltip = ac_release_manual_production_tt')
+            decision_rows+=block(stem+'_queue_'+role,'icon = '+icon()+'\nallowed = { '+exact(tag)+' }\nvisible = { always = no }\navailable = { always = no }\ncost = 0\ncomplete_effect = { '+stem+'_queue_'+role+' = yes }\nai_will_do = { base = 0 }')
+            loc.extend([(stem+'_queue_'+role,label),(stem+'_queue_'+role+'_desc','Use recipe certification and assign factories or dockyards in the Production screen. This retired action changes no existing line and charges no political power.')])
         for index,(project,building,title) in enumerate((('civilian','industrial_complex','Develop a civilian workshop'),('military','arms_factory','Develop a maintenance arsenal'))):
             receipt=flag(tag,project+'_built');target=flag(tag,project+'_target');active=flag(tag,project+'_active');wait=flag(tag,project+'_waiting');event=f'ac_release.{100+TAGS.index(tag)*2+index}'
             can=exact(tag)+' ac_release_can_invest = yes NOT = { has_global_flag = '+receipt+' }'
@@ -168,7 +160,7 @@ def outputs(data=None):
     explanations={
         'maintenance':('Requires an active administration, owned capital and25 political power.','Spend25 political power to prepare current maintenance templates and technical support. No historical stock or army grant is replayed.'),
         'certify':('Requires an active maintenance administration and5 political power. This recipe must not already be certified for the current technical configuration.','Spend5 political power to certify this recipe for manual production rotation; no line, equipment or personnel is granted.'),
-        'queue':('Requires active maintenance,15 political power, uncommitted current industry and enough materials for the selected technical recipe.','Spend15 political power and reserve one current factory or yard for a replacement line, once. Certification is included; production still consumes real resources.'),
+        'queue':('Use recipe certification and the Production screen to assign or rotate factories and dockyards.','This retired action charges nothing and changes no production line, equipment, resources or historical receipt.'),
         'develop':('Requires100 political power, a controlled core capital with a free slot, no active project/cooldown and the current fiscal fee where enabled.','Pay100 political power and0.02b in full mode or20FU in legacy mode. Fund the selected90-day development project once; fiscal-disabled campaigns retain the political/time/territory costs.'),
         'network':('Requires50 political power, a documented controlled footprint with a missing connection, no active project/cooldown and the fiscal fee where enabled.','Pay50 political power and0.02b in full mode or20FU in legacy mode. Fund90-day owned domestic connections; existing rail levels and receiving ports are retained.'),
         'cancel':('Requires the selected project to be active.','Cancel without refunding spent costs. A30-day development cooldown applies.')}
@@ -177,6 +169,7 @@ def outputs(data=None):
         import re
         required=re.sub(r'(?<=[A-Za-z])(?=\d)',' ',required);effect=re.sub(r'(?<=[A-Za-z])(?=\d)',' ',effect)
         loc.extend([('ac_release_'+kind+'_requirements_tt',required),('ac_release_'+kind+'_effect_tt',effect)])
+    loc.append(('ac_release_manual_production_tt','Certify a recipe, then assign or rotate factories and dockyards in the Production screen. Check materials, imports and fuel before manufacturing. This action charges nothing and changes no existing line or historical receipt.'))
     out.update({'common/scripted_effects/ac_release_maintenance.txt':effects,'common/scripted_triggers/ac_release_maintenance.txt':triggers,'common/decisions/ac_release_maintenance.txt':decision_presentation(decisions),'common/ai_strategy/ac_release_maintenance.txt':ai,'events/ac_release_projects.txt':events,'common/decisions/categories/ac_release_maintenance.txt':''.join(block('ac_release_'+tag+'_maintenance','icon = ac_release_'+tag+'_maintenance\nallowed = { '+exact(tag)+' }\nvisible = { has_country_flag = ac_release_administration_registered }') for tag in TAGS),'localisation/english/ac_release_maintenance_l_english.yml':'l_english:\n'+'\n'.join(' '+key+':0 "'+value+'"' for key,value in loc)+'\n'})
     return out
 

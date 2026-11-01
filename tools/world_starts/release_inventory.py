@@ -93,7 +93,7 @@ def report():
             status='guarded_legitimate_release_owner_source_implemented_native_pending'
             gaps=['Native release/loading, transfer selection, DLC replacement operation, supply/AI pacing and save/reload remain untested.',
                   release[tag]['unknown_footprint_status'],
-                  'Replacement imports are conditional live material checks, not guaranteed authored trade contracts; existing mixed transferred roles may exceed domestic replacement capacity.']
+                  'Paid recipe certification grants no line or free industry. Production allocation, material imports and manual rotation remain player/native-AI responsibilities; no unassigned-capacity observation or guaranteed trade contract is claimed. Existing mixed transferred roles may exceed domestic replacement capacity.']
             if tag=='AWW':gaps+=['awwnb.1 still has no authored literal activation caller; no new war/activation was invented.',
                 'Preserved disarmed/no-core personnel and non-core industry liability; only the original optionA retains its existing weekly recruiting idea. Other inherited warfront OOB positions are not newly validated owned deployment sites.']
             elif tag in ('REL','SER','SHI','TER'):gaps+=['No authored forced activation route; the adapter waits for an actual legitimate engine release.']

@@ -40,6 +40,28 @@ class DecisionUI(unittest.TestCase):
                      "decision_item", "targeted_decision_item", "timed_decision_item", "on_map_decision_locator_item"):
             self.assertIsNotNone(named(self.tree, name))
 
+    def test_flight_cadence_clock_matches_planetfall_and_scopes_startup(self):
+        decisions = parse((MOD / "common/decisions/ac_flight_cadence.txt").read_text())
+        category = get(decisions, "ac_flight_cadence_cat")
+        clock = get(category, "ac_flight_ulysses_clock")
+        self.assertEqual("3110", scalar(get(clock, "days_mission_timeout")))
+
+        on_actions = parse((MOD / "common/on_actions/ac_flight_cadence_on_actions.txt").read_text())
+        startup = get(get(on_actions, "on_actions"), "on_startup")
+        countries = get(get(startup, "effect"), "every_country")
+        self.assertIsInstance(countries, list)
+        allowed = get(get(countries, "limit"), "OR")
+        self.assertEqual(
+            {"OSE", "YUK", "ERU"},
+            {scalar(value) for key, _, value in allowed if key == "original_tag"},
+        )
+        activations = {
+            scalar(get(node, "activate_mission"))
+            for _, node in walk(countries)
+            if get(node, "activate_mission")
+        }
+        self.assertEqual({"ac_flight_ulysses_clock"}, activations)
+
     def test_scroll_dynamic_geometry_and_flags_are_preserved(self):
         main = named(self.tree, "countrydecisionview")
         self.assertEqual("100%%", get(get(main, "size"), "height"))

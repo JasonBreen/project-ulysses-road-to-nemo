@@ -14,6 +14,18 @@ This ledger is a work queue, not a claim that the entries below are settled. Off
 | Technology/equipment names through 2065 | Mixed / pending | Current files are mostly inherited IDs with 1991–2005 dates; date syntax validator now covers 1900–2065 | Audit names, localization, provenance, and canon conflicts before adding later-era content. |
 | Skully Islands rebel base, 31 December 1995, and the Usean coup, 30 May 1997 | Official for the Chronicle sentences; provisional gameplay for the prolonged emergency and the modifier values | [ACES Chronicle](https://acecombat.jp/en/chronicle/details/), 1995 / 12.31 and 1997 / 05.30. IDs `ac_ur.1`–`.4`, `FCU_ur_*`, `ac_ur_coup_strain` | Implemented in script and static checks. Robert Tyler and Scarface are named only as the Chronicle names them. No rebel country list, no border change, no native test. |
 
+## Flight-cadence campaign
+
+The flight-cadence slice separates its one official chronology input from the
+authored national programs and their gameplay rewards.
+
+| Claim or contract | Source layer | Exact reference | Affected IDs | Implementation / validation status |
+| --- | --- | --- | --- | --- |
+| Ulysses reaches the Roche limit on 8 July 1999 | Official chronology only | [ACES Chronicle details](https://acecombat.jp/en/chronicle/details/), entry `1999 / 07.08`, checked 1 November 2026 | `ac_flight_ulysses_clock`, `ac_flight_planetfall_resolved`, `ac_flight_cadence.3` | Used as the campaign handoff date. It is not a claim that every local impact or national response happened at that instant. |
+| The 1991 bookmark and the existing Osea, Yuktobania and Erusea tags | Mod provenance for the inherited start and identities; provisional gameplay for selecting these three participants | April 2024 archive SHA-256 recorded above and the current 1991 bookmark; [PR #64 design contract](https://github.com/JasonBreen/project-ulysses-road-to-nemo/pull/64), 1 November 2026 | `ac_flight_cadence_cat`, `ac_flight_program_open`, `ac_flight_cadence_on_actions` | The three launch programs are authored for this slice, not official national history. Belka is deliberately excluded. |
+| Static fires, success loss, three-success cadence, pad construction and their political, stability, technology and research values | Provisional gameplay | [PR #64 summary and test plan](https://github.com/JasonBreen/project-ulysses-road-to-nemo/pull/64), implemented in `cd76d9d1` | `ac_flight_static_fire`, `ac_flight_static_fire_effect`, `ac_flight_success`, `ac_flight_claim_cadence`, `ac_flight_cadence`, `ac_flight_raise_a_pad`, `ac_flight_pad_raised`, `ac_flight_cadence.1`–`.2` | Authored mechanics with offline/static regression coverage. No launch cadence, failure rate, national institution, pad location or balance value is presented as sourced setting history. |
+| Stonehenge-complete response and Osea's Arkbird research head start | Existing mod contract for `ac_sp_stonehenge_complete`; provisional gameplay for the response and bonus | Existing special-project scripts at the PR base; [PR #64 design contract](https://github.com/JasonBreen/project-ulysses-road-to-nemo/pull/64), 1 November 2026 | `ac_flight_cadence.3`, `ac_flight_sky_held`, `ac_flight_we_flew`, `ac_flight_arkbird_head_start` | Reads the existing Stonehenge flag without changing Stonehenge, Megalith or Arkbird. The response, modifiers and bonus are authored. Native parser, UI, timing, save/load, AI and balance acceptance remain open. |
+
 ## The Peace We Inherit expansion
 
 The [expansion source and implementation ledger](PEACE_WE_INHERIT.md#sources-and-authored-branches)

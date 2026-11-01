@@ -177,11 +177,13 @@ def main() -> int:
 
     council = named_block(decisions, "ac_belkan_war_council")
     council_complete = named_block(council, "complete_effect")
+    council_available = named_block(council, "available")
     require("ac_commit_belkan_war_campaign = yes" in council_complete, "War Council bypasses the shared commitment effect")
     require("set_country_flag = ac_campaign_war_committed" not in council_complete, "War Council duplicates the shared commitment flags")
     require("country_event = { id = belka_dlp_war.1" not in council_complete, "War Council dispatches the start event directly")
     require("ai_will_do = { base = 0 }" in council, "historical AI can still take the early War Council decision")
     require(council.count("NOT = { has_country_flag = ac_campaign_war_committed }") >= 2, "War Council remains visible or available after commitment")
+    require("date" not in council_available, "War Council was calendar-locked for human players")
 
     commit = named_block(campaign_effects, "ac_commit_belkan_war_campaign")
     for token in (
@@ -200,6 +202,13 @@ def main() -> int:
         "country_event = { id = belka_dlp_war.1 days = 1 }",
     ):
         require(token in commit, f"shared Belkan commitment effect lost contract token: {token}")
+    for token in (
+        "set_country_flag = ac_campaign_war_committed",
+        "set_global_flag = ac_campaign_arc_started",
+        "set_variable = { ac_campaign_war_weeks = 0 }",
+        "country_event = { id = belka_dlp_war.1 days = 1 }",
+    ):
+        require(commit.count(token) == 1, f"shared Belkan commitment effect no longer applies exactly once: {token}")
     require("set_global_flag = belka_won_belkan_war" not in commit, "shared commitment effect scripts a war winner")
 
     legacy_start = event_block(world_events, "world_event.1")
@@ -211,6 +220,11 @@ def main() -> int:
         "UST = {  country_event = { id = ustio.17 days = 2 }}",
     ):
         require(token in legacy_start, f"historical start lost an inherited notification: {token}")
+    for outcome_flag in ("belka_won_belkan_war", "belka_lost_belkan_war", "belka_won_belkan_war_wacht_am_wal"):
+        require(
+            f"set_global_flag = {outcome_flag}" not in legacy_start,
+            f"historical start now scripts an AI winner: {outcome_flag}",
+        )
 
     require(
         "later preparation is not granted retroactively" in localization,

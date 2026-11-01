@@ -142,6 +142,18 @@ GUI traversal now finishes before the complete gate snapshots parse failures,
 and the same binding results are returned rather than re-parsing after the
 decision. Both authored and fallback malformed bindings fail the complete gate.
 
+A second bounded review raised the suite to 39 regressions. Every found
+root/source-relative resource probe now retains provider ambiguity, even when
+the explanatory alternative happens to match approved bytes. Scripted controls
+come from one unambiguous window definition; complementary controls in two
+conflicting windows cannot be combined into a passing binding. Missing animation
+labels retain their own identity without replacing the containing entity name.
+The eight-MiB definition limit also applies before collision/override hashing,
+so oversized compressed text is never expanded to compare providers. Large media
+resources retain their separate streaming hash behavior. Malformed/truncated
+descriptors become inventory failures; only explicitly selected invalid providers
+fail the complete gate rather than aborting the inventory for an unselected pack.
+
 ## Supported dependency edges and limits
 
 The audit inspects effective GUI sprites and literal texture fields, bitmap-font resources, scrollbar
@@ -209,8 +221,8 @@ Usean-partner and squadron-story payload, including all 162 story decision
 rows' owned icons. `macro-screen.json` separately records zero ownership
 failures for `countrydecisionview.gui` and `ac_macro_economy.gui`. That narrower
 check does not certify provenance, native rendering or the rest of the graph.
-The selected archive/music scenario retains 20,235 failed presentation entries;
-the explicitly mapped all-installed stress scenario retains 31,625. Those are
+The selected archive/music scenario retains 20,271 failed presentation entries;
+the explicitly mapped all-installed stress scenario retains 31,853. Those are
 dependency entries, including uncertain or unclassified resources, rather than
 counts of unique vanilla pictures. The source and profile hashes in
 `results.json` identify the exact audit which produced them.

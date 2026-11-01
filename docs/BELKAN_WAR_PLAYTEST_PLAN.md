@@ -75,13 +75,43 @@ live forces, stockpiles, readiness, economy and diplomatic situation.
    Start the copied executable with its explicit disposable `userdir`; track its
    process ID and close only that process. Capture `error.log` and `game.log` as
    deltas rather than deleting unrelated normal-profile logs.
-4. **Confirm the console commands.** Run `help` and check that each command in
+   Prepare the root from a clean candidate commit with:
+
+   ```text
+   py tools/belkan_balance/prepare_native.py prepare \
+     --target NATIVE_ROOT \
+     --game-root INSTALLED_GAME_ROOT \
+     --normal-profile NORMAL_PROFILE_ROOT \
+     --app-manifest STEAM_APP_MANIFEST
+   ```
+
+   The helper refuses an existing or overlapping target, physically copies the
+   engine, hashes the exact worktree payload, enables only the copied mod, and
+   writes `launch.json` without launching anything. It also writes before/after
+   hashes for the preparation operation and deliberately does not copy personal
+   launcher-profile data into the disposable profile.
+4. Before each copied-engine launch, create a uniquely labelled normal-profile
+   snapshot. After that process exits, verify the same label:
+
+   ```text
+   py tools/belkan_balance/prepare_native.py snapshot-normal \
+     --target NATIVE_ROOT --normal-profile NORMAL_PROFILE_ROOT --label RUN_LABEL
+   py tools/belkan_balance/prepare_native.py verify-normal \
+     --target NATIVE_ROOT --normal-profile NORMAL_PROFILE_ROOT --label RUN_LABEL
+   ```
+
+   A dirty comparison is evidence, not something to erase: retain the report,
+   identify unrelated activity where possible, and do not restore unknown
+   bytes merely to force a clean result.
+5. **Confirm the console commands.** Run `help` only in a separately labelled
+   forced-diagnostic launch and check that each command in
    the [cheat sheet](#console-cheat-sheet) exists in this build. Note any
    substitute before using it. The command names below are standard HOI4
-   commands but were not checked against 1.19.3 here.
-5. Start the 1991 Belka bookmark, pause on day one, check `error.log`, and
+   commands but were not checked against 1.19.4 here. Natural runs do not use
+   debug mode, the console, tag switching or resource/outcome intervention.
+6. Start the 1991 Belka bookmark, pause on day one, check `error.log`, and
    save as `pt0_start`.
-6. Pass: no parser errors from `ac_*` files, Belka focus tree shows both
+7. Pass: no parser errors from `ac_*` files, Belka focus tree shows both
    `BLK_the_crisis_continues` and the campaign opening, no missing icons or
    localisation keys on the campaign focuses.
 

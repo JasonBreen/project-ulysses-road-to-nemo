@@ -29,6 +29,8 @@ def main():
       ('original-pacific-masters',py+['tools/squadrons/pacific_art/test_art.py']),
       ('committed-art-bytes',py+['tools/squadrons/pacific_art/audit.py','--git-blobs']),
       ('national-runtime',py+['tools/pacific_nations/test_runtime.py']),
+      ('world-foundations',py+['tools/world_foundation/test_foundation.py','--reference',engine]),
+      ('release-inventory',py+['tools/world_starts/release_inventory.py','--check']),
       ('shared-real-owners',py+['tools/Test-SharedSystems.py']),
       ('macro',py+['tools/Test-EconomyV2.py']),('force-upkeep',py+['tools/Test-ForceUpkeep.py']),
       ('decisions',py+['tools/Test-DecisionUI.py']),('campaign',py+['tools/validate_campaign.py']),

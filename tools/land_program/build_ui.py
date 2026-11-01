@@ -2,6 +2,7 @@
 import argparse
 import copy
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import re
@@ -18,6 +19,16 @@ SOURCE=HERE/'source/research_base.gui'
 TARGET=MOD/'interface/countrytechtreeview.gui'
 TAB_X=992;GRID_X=260;GRID_Y=160;ROW_PITCH=140;SLOT_X=60;TIER_PITCH=240
 CARD_W=183;CARD_H=84;CONTENT_W=1260;CONTENT_H=1320
+
+
+def aviation_extension():
+    """One explicit optional authoring owner; no wildcard GUI exemptions."""
+    path=ROOT/'tools/air_program/air_ui.py'
+    if not path.exists():return None
+    spec=importlib.util.spec_from_file_location('ac_air_research_extension',path)
+    extension=importlib.util.module_from_spec(spec);spec.loader.exec_module(extension)
+    if extension.NAMES!={'ac_air_folder','ac_air_folder_tab'}:raise ValueError('Unreviewed aviation GUI registration')
+    return extension
 
 
 def block(name,text):return name+' = {\n'+'\n'.join('\t'+v for v in text.splitlines())+'\n}\n'
@@ -61,12 +72,13 @@ def item(small=False):
 
 def normalized(tree):
     tree=copy.deepcopy(tree)
+    extension=aviation_extension();registered={'ac_land_folder','ac_land_folder_tab'}|(extension.NAMES if extension else set())
     def clean(nodes):
         kept=[]
         for key,op,value in nodes:
             if isinstance(value,list):
                 name=get(value,'name','').strip('"') if isinstance(get(value,'name',''),str) else ''
-                if name in ('ac_land_folder','ac_land_folder_tab'):continue
+                if name in registered:continue
                 if name=='tech_info_description':value[:]=[n for n in value if n[0]!='scrollbarType']
                 clean(value)
             kept.append([key,op,value])
@@ -87,6 +99,8 @@ def generated():
     # or moving the engine-bound research/start/progress/reward controls.
     value,count=re.subn(r'(name\s*=\s*"tech_info_description"\s*\n)',r'\1\t\t\tscrollbarType = "ac_exp_standardtext_slider"\n',value)
     if count!=2:raise ValueError('Expected both inherited research detail descriptions')
+    extension=aviation_extension()
+    if extension:value=extension.extend(value)
     if normalized(parse(value))!=parse(base):raise ValueError('Land page changed an unrelated inherited GUI control')
     templates='guiTypes = {\n'+item()+item(True)+'}\n'
     contract=dict(base_sha256=hashlib.sha256(base.replace('\r\n','\n').encode()).hexdigest(),
@@ -95,6 +109,7 @@ def generated():
         content=[CONTENT_W,CONTENT_H],new_roots=[f'ac_land_{v.id}_2006_tree' for v in FAMILIES],
         intentional_existing_changes='Two description scrollbarType attributes and reviewed research font substitutions only; original geometry and all other controls unchanged.',
         reviewed_font_migration='tools/research_fonts/assets.json; strict restoration preserves the unchanged captured GUI fingerprint.',
+        registered_extensions=['tools/air_program/air_ui.py:ac_air_folder/ac_air_folder_tab'] if extension else [],
         search='No search/editbox/filter binding exists in the captured mod or installed1.19.4.1 research screen; no unbound search widget is added.',
         native='New tab/control discovery, native scrolling and state rendering remain untested.')
     return value,templates,json.dumps(contract,indent=2)+'\n'

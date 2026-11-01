@@ -1,0 +1,28 @@
+name: Aviation systems source contracts
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  conventional-aviation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install reproducible artwork dependency
+        run: python -m pip install Pillow==11.3.0
+      - name: Check actual aviation definitions, designer recipes and original presentation
+        run: python -B tools/air_program/test_air.py
+      - name: Check composed LAND research page and inherited font contracts
+        run: |
+          python -B tools/land_program/test_land.py
+          python -B tools/research_fonts/test_fonts.py
+      - name: Check aviation source capabilities and current start compatibility
+        run: |
+          python -B tools/air_program/audit.py --check
+          python -B tools/world_starts/coverage.py --check --require-integrated-owner
+      - name: Check actual equipment-observation owner
+        run: python -B tools/Test-ForceUpkeep.py

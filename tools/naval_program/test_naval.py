@@ -135,7 +135,11 @@ class Sources(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Multiple averaged'):self.p.stats(ident,selected)
     def test_preserved_sources_and_no_early_grants_or_new_war_project_owners(self):
         manifest=json.loads((HERE/'preserved_sources.json').read_text());self.assertEqual(1110,len(manifest['sources']))
-        for path,expected in manifest['sources'].items():self.assertEqual(expected,digest(ROOT/path),path)
+        updates=json.loads((ROOT/'tools/air_program/reviewed_owner_updates.json').read_text())['files']
+        for path,expected in manifest['sources'].items():
+            update=updates.get(path)
+            if update:self.assertEqual(expected,update['old_sha256'],path)
+            self.assertEqual(update['new_sha256']if update else expected,digest(ROOT/path),path)
         forbidden={'set_technology','load_oob','create_unit','add_equipment_to_stockpile','create_equipment_variant','transfer_state','set_country_flag','set_global_flag','declare_war_on','country_event','add_to_faction'}
         for path in [MOD/'common/technologies/ac_naval_program.txt',MOD/'common/ai_equipment/ac_naval_designs.txt',MOD/'common/ai_strategy/ac_naval_replacements.txt']:
             nodes=read(path);self.assertFalse(forbidden&{k for b in [nodes]+[v for _,v in walk(nodes)] for k,_,v in b})

@@ -4,7 +4,7 @@ The Osean component delivers 44 additional focus definitions, including mutually
 exclusive alternatives, bringing Osea to its approved 150 total. Yuktobania's
 remaining 42 definitions and the separate CPW/two-story packets are still pending
 their own coherent implementation and evidence. The country-addition ledger is
-434 delivered and 594 remaining; the regional 36 definitions and story chapters
+530 delivered and 498 remaining in the composed review candidate; the regional 36 definitions and story chapters
 are separate counts. Native acceptance remains pending.
 
 Osea's six lanes are guarantor limits 8, contact verification 8, replacement

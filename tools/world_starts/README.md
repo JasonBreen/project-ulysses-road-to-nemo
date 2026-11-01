@@ -118,3 +118,11 @@ literal entry events, callers, unit transfers, force loads and known setup-owner
 gaps. It grants nothing. See `docs/WORLD_RELEASE_FOUNDATIONS.md`; the 61 active
 owners and generic political/fiscal profiles do not establish release-time
 physical acceptance.
+
+The preserved Anea/partner owners now also include the reviewed replacement
+follow-up in `tools/replacements`. Their industry and fielded forces are
+unchanged. Funded CAS and large-fleet lines, explicit small-budget manual
+rotations, visible Production notes and minimal material corrections are tested
+in 48 actual DLC profiles and 96 opening/manual endpoints. These decisions do
+not automate AI rotation or grant stored replacement hulls. The combined source
+evidence is in `docs/evidence/world-starts/replacement-integrated`.

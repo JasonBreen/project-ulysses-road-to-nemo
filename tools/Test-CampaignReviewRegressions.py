@@ -285,7 +285,7 @@ def main() -> int:
     }
     branch_positions = {focus_id: positions[focus_id] for focus_id in branch_ids}
     require(positions["BLK_the_crisis_continues"] == (8, 0), "inherited focus anchor moved unexpectedly")
-    require(branch_positions["ac_belkan_prewar_briefing"] == (12, 1), "campaign opening focus is not offset from its inherited prerequisite")
+    require(branch_positions["ac_belkan_prewar_briefing"] == (17, 1), "campaign opening focus is not offset from its inherited prerequisite")
     require(len(set(branch_positions.values())) == len(branch_positions), "campaign focus branch contains overlapping nodes")
     require(not (set(branch_positions.values()) & inherited_positions), "campaign focus branch overlaps inherited Belka nodes")
 

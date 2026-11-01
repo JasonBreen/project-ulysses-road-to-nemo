@@ -311,7 +311,10 @@ def prepare(
     launch = {
         "schema_version": 1,
         "executable": (engine / "hoi4.exe").as_posix(),
-        "arguments": ["-gdpr-compliant", f"-userdir={profile.as_posix()}"],
+        # On this engine build, an explicit -userdir= override falls back to
+        # the normal Documents profile. Routing is instead established by the
+        # copied engine's exact userdir.txt and launcher gameDataPath.
+        "arguments": ["-gdpr-compliant"],
         "profile": profile.as_posix(),
         "descriptor": descriptor.as_posix(),
         "enabled_mod": "mod/project_ulysses_belkan_balance.mod",

@@ -122,7 +122,7 @@ save_as_binary=yes
         )
         self.assertTrue(json.loads((self.target / "evidence" / "normal-prepare-verification.json").read_text())["clean"])
         launch = json.loads((self.target / "launch.json").read_text(encoding="utf-8"))
-        self.assertNotIn("-debug_mode", launch["arguments"])
+        self.assertEqual(["-gdpr-compliant"], launch["arguments"])
         self.assertEqual("regular", provenance["session_policy"]["difficulty"])
         self.assertTrue(provenance["session_policy"]["historical_ai"])
 

@@ -72,9 +72,12 @@ live forces, stockpiles, readiness, economy and diplomatic situation.
    Regular difficulty, historical AI, text saves, local monthly autosaves and
    the full currently owned DLC set for natural runs.
 3. Snapshot the normal profile's settings/log/save manifests before launch.
-   Start the copied executable with its explicit disposable `userdir`; track its
-   process ID and close only that process. Capture `error.log` and `game.log` as
-   deltas rather than deleting unrelated normal-profile logs.
+   Start the copied executable using its exact `userdir.txt` marker and copied
+   launcher `gameDataPath`; track its process ID and close only that process.
+   Do not pass `-userdir=` on HOI4 1.19.4: the 2026-11-01 routing smoke showed
+   that override falling back to the normal Documents profile, while the
+   marker-only launch routed logs correctly. Capture `error.log` and `game.log`
+   as deltas rather than deleting unrelated normal-profile logs.
    Prepare the root from a clean candidate commit with:
 
    ```text

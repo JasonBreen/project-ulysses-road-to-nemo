@@ -20,6 +20,9 @@ MARKER = '# BEGIN ECONOMY V2 NEW CAMPAIGN\n# New histories only; old saves are n
 CATEGORIES = ('administration', 'services', 'education', 'development', 'defense')
 SHARES = dict(administration=.015, services=.05, education=.03, development=.02, defense=.03)
 PRESETS = dict(balanced=(1,1,1,1,1), development=(1,1,2,2,0), relief=(1,2,1,1,0), mobilization=(1,0,0,1,2), stabilization=(1,0,0,0,0))
+# These inherited histories own no country at the 1991 start. A later legitimate
+# release receives the existing state's output, not a second opening balance.
+RELEASE_HISTORY_TAGS = ('AWW','REC','REL','SBK','SER','SHI','TER')
 LEGACY_FILES = ('common/scripted_effects/ac_economy_effects.txt',
                 'common/scripted_effects/ac_economy_policy_effects.txt',
                 'common/scripted_triggers/ac_economy_triggers.txt',
@@ -76,11 +79,22 @@ def legacy_and_adapters():
     wrappers = '# Stable public API; full-mode calls dispatch to the monthly owner.\n'
     for name in sorted(effects):
         target = dispatch.get(name)
-        if target:
+        if name == 'ac_econ_initialize':
+            wrappers += block(name,block('if','limit = { ac_econ_release_history = yes }\nac_econ_adopt_release_account = yes')+
+                              block('else_if','limit = { ac_macro_mode = yes }\nac_macro_initialize = yes')+
+                              block('else',renamed[name]+' = yes'))
+        elif target:
             wrappers += block(name, block('if','limit = { ac_macro_mode = yes }\n'+target+' = yes')+
                               block('else',renamed[name]+' = yes'))
         else:
             wrappers += block(name,block('if','limit = { ac_macro_mode = no }\n'+renamed[name]+' = yes'))
+    wrappers += block('ac_econ_adopt_release_account',block('if','limit = { ac_econ_release_history = yes }\n'+
+        block('if','limit = { ac_macro_mode = yes }\nac_macro_initialize = yes')+
+        block('else_if','limit = { ac_econ_legacy_enabled = yes }\n'+
+            block('if','limit = { NOT = { has_country_flag = ac_econ_initialized } }\nset_country_flag = ac_econ_initialized\n'+
+                block('if','limit = { NOT = { has_variable = ac_econ_tax_level } }\nset_variable = { ac_econ_tax_level = 1 }')+
+                block('if','limit = { NOT = { has_variable = ac_econ_civilian_level } }\nset_variable = { ac_econ_civilian_level = 0 }'))+
+            'ac_econ_legacy_refresh_budget = yes')))
     wrappers += block('ac_econ_pay_programme',block('if','limit = { ac_macro_ready = yes }\nset_temp_variable = { ac_macro_transaction_amount = 0.002 }\nac_macro_try_spend = yes')+
                       block('else_if','limit = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 2 } }\nsubtract_from_variable = { ac_econ_treasury = 2 }'))
     out['common/scripted_effects/ac_economy_compat.txt'] = wrappers
@@ -89,13 +103,26 @@ def legacy_and_adapters():
     out['common/scripted_triggers/ac_economy_compat.txt'] = '\n'.join(block(name,'OR = { '+renamed[name]+' = yes '+mapping[name]+' = yes }') for name in sorted(triggers))
     out['common/scripted_triggers/ac_economy_compat.txt'] += block('ac_econ_can_pay_programme',
              'OR = { AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= 0.002 } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 2 } } }')
+    out['common/scripted_triggers/ac_economy_compat.txt'] += block('ac_econ_release_history',
+        block('OR','\n'.join('tag = '+tag+'\noriginal_tag = '+tag for tag in RELEASE_HISTORY_TAGS)))
+    # Public release-development transaction: the caller never writes money.
+    #20FU and0.02b are separate calibrated prices, not a currency conversion.
+    wrappers += block('ac_econ_try_fund_release_project',
+        'clr_country_flag = ac_econ_release_project_funded\n'+block('if','limit = { ac_econ_release_history = yes }\n'+
+            block('if','limit = { ac_macro_ready = yes }\nset_temp_variable = { ac_macro_transaction_amount = 0.02 }\nac_macro_try_spend = yes\n'+
+                block('if','limit = { has_country_flag = ac_macro_transaction_succeeded }\nset_country_flag = ac_econ_release_project_funded'))+
+            block('else_if','limit = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 20 } }\nsubtract_from_variable = { ac_econ_treasury = 20 }\nset_country_flag = ac_econ_release_project_funded')+
+            block('else_if','limit = { ac_econ_enabled = no }\nset_country_flag = ac_econ_release_project_funded')))
+    out['common/scripted_effects/ac_economy_compat.txt'] = wrappers
+    out['common/scripted_triggers/ac_economy_compat.txt'] += block('ac_econ_can_fund_release_project',
+        'ac_econ_release_history = yes\nOR = { ac_econ_enabled = no AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= 0.02 } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 20 } } }')
     return out
 
 
 def macro_triggers():
     return '''# Full mode is default for new histories. Saved legacy rule values remain valid.
 ac_macro_mode = { has_game_rule = { rule = ac_economy option = full } }
-ac_macro_ready = { ac_macro_mode = yes has_country_flag = ac_macro_initialized check_variable = { var = ac_macro_identity value = THIS.id compare = equals } any_owned_state = { always = yes } }
+ac_macro_ready = { ac_macro_mode = yes has_country_flag = ac_macro_initialized check_variable = { var = ac_macro_identity value = THIS.id compare = equals } any_owned_state = { always = yes } OR = { ac_econ_release_history = no AND = { check_variable = { ac_macro_schema = 2 } has_variable = ac_macro_cash has_variable = ac_macro_debt } } }
 ac_macro_can_borrow = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_credit_room >= ac_macro_loan_size } }
 ac_macro_can_repay = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash > 0 } check_variable = { ac_macro_debt > 0 } }
 ac_macro_can_produce = { ac_macro_ready = yes has_capitulated = no num_of_military_factories > 0 }
@@ -178,7 +205,7 @@ set_variable = { ac_macro_last_factories = num_of_controlled_factories }
     init += ledger.initialize() + money.initialize()
     init += '\n'.join('set_variable = { ac_macro_budget_'+c+' = 1 }' for c in CATEGORIES)+'\n'
     init += '''ac_macro_profile = yes
-if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 }
+if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 ac_econ_release_history = no }
  ac_macro_seed_states = yes
  set_global_flag = ac_macro_world_started
  ac_macro_quote = yes
@@ -189,7 +216,20 @@ if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 }
 }
 ac_macro_quote = yes
 '''
-    effect('ac_macro_initialize',block('if',init))
+    # A surviving released-country account may lose only its initialization flag
+    # during an adoption/migration. Reattach its matching identity without
+    # resetting cash, debt, contracts, carry or settled history. A mismatched
+    # identity is locked for review instead of spending copied stocks or wiping
+    # an archived obligation. Ordinary-country initialization stays unchanged.
+    release_adoption='''limit = { ac_macro_mode = yes ac_econ_release_history = yes any_owned_state = { always = yes } OR = { has_variable = ac_macro_identity has_variable = ac_macro_cash has_variable = ac_macro_debt } NOT = { ac_macro_ready = yes } }
+if = { limit = { has_variable = ac_macro_identity check_variable = { var = ac_macro_identity value = THIS.id compare = equals } check_variable = { ac_macro_schema = 2 } has_variable = ac_macro_cash has_variable = ac_macro_debt }
+ set_country_flag = ac_macro_initialized
+ clr_country_flag = ac_release_financial_identity_review
+ ac_macro_quote = yes
+}
+else = { clr_country_flag = ac_macro_initialized set_country_flag = ac_release_financial_identity_review }
+'''
+    effect('ac_macro_initialize',block('if',release_adoption)+block('else_if',init))
     quote = '''set_variable = { ac_macro_real_gdp = 0 }
 set_variable = { ac_macro_potential_gdp = 0 }
 set_variable = { ac_macro_tax_base = 0 }
@@ -556,7 +596,7 @@ def history_marker(text):
     # Other new-campaign authors may own a trailing setup section even when a
     # country already has a recruited leader. Keep eligibility before that
     # foreign section so its generator and this one do not move it each turn.
-    anchor = next((marker for marker in ('# BEGIN EXPANSION START LEADER', '# BEGIN WORLD FOUNDATION') if marker in text), None)
+    anchor = next((marker for marker in ('# BEGIN EXPANSION START LEADER', '# BEGIN WORLD FOUNDATION', '# BEGIN LEGACY WORLD START STOCKS') if marker in text), None)
     if anchor is not None:
         prefix, suffix = text.split(anchor, 1)
         return prefix.rstrip()+'\n\n'+MARKER+'\n'+anchor+suffix

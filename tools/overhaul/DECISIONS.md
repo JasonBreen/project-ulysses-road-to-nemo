@@ -88,9 +88,13 @@ adds an inventory; `--gate-screen <filename>` additionally gates that complete
 screen. Runtime image defaults and engine-generated culture/entity conventions
 that cannot be fully expanded are labeled uninspected.
 
-Installed DLC ZIP paths and sizes are inventoried, but their contents are
-**uninspected**. Installation does not prove ownership, activation or runtime
-reachability. A clean loose-file screen gate cannot certify full DLC closure.
+That original Package 0 inventory covered loose files only; its DLC ZIP contents
+were **uninspected**. The follow-up [effective dependency audit](../../docs/EFFECTIVE_DEPENDENCY_AUDIT.md)
+adds explicit directory/ZIP provider profiles, integrated-descriptor payload
+mapping, exact provenance records and a stricter completed-presentation gate.
+Installation still does not prove ownership, activation or native load order.
+A clean legacy screen ownership gate cannot certify full DLC presentation
+closure. The retained whole-presentation scenarios continue to fail honestly.
 
 `mod_resolved` means a dependency resolves to mod-local files. It does not prove
 that those files are original, licensed, visually appropriate or engine-tested.

@@ -33,8 +33,13 @@ def manifest_rows(manifest, relative):
         if relative.endswith("supply_nodes.txt"):
             rows.extend(f"1 {p}" for p in country["supply_hubs"])
         else:
-            rows.extend("2 " + str(len(route)) + " " + " ".join(map(str, route))
-                        for route in country["routes"])
+            if 'railway_rows' in country:
+                for line in country['railway_rows']:
+                    row_provinces(line, relative)
+                rows.extend(country['railway_rows'])
+            else:
+                rows.extend("2 " + str(len(route)) + " " + " ".join(map(str, route))
+                            for route in country["routes"])
     if len(set(rows)) != len(rows):
         raise ValueError("Duplicate declared logistics row: " + relative)
     return rows

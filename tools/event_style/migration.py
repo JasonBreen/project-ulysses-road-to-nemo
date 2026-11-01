@@ -1,4 +1,4 @@
-"""Exactly 23 path-specific scalar substitutions, independently reversible.
+"""Exactly 25 path-specific scalar substitutions, independently reversible.
 
 The historical Event-Fit capture remains authoritative. Both lexical restoration
 (including every original byte except CRLF) and ordered-AST restoration must pass.
@@ -41,7 +41,9 @@ FONTS=[row(path,'font',old,new) for path,old,new in [
  (P+'/midsection/Description','hoi4_typewriter16','ACEvent16'),
  (L+'/top_Window/Title','hoi4_typewriter22','ACEvent20'),
  (L+'/midsection/Description','hoi4_typewriter16','ACEvent16')]]
-REVIEWED=SPRITES+FONTS
+INSETS=[row(path+'/midsection/Description/borderSize','x','0','1') for path in ('EventWindow','EventWindow_News')]
+REVIEWED=SPRITES+FONTS+INSETS
+def literal(key,value):return value if key=='x' else '"'+value+'"'
 def normalized(text):return text.replace('\r\n','\n')
 def sha(text):return hashlib.sha256(normalized(text).encode()).hexdigest()
 def source():
@@ -75,8 +77,8 @@ def spans(text):
         if len(names)>1:raise ValueError('Duplicate GUI name')
         path=path+tuple(names)
         for key,value,_ in rows:
-            if isinstance(value,list):visit(value,path)
-            elif value is not None and key in ('spriteType','quadTextureSprite','font'):
+            if isinstance(value,list):visit(value,path+(('borderSize',) if key=='borderSize' else ()))
+            elif value is not None and (key in ('spriteType','quadTextureSprite','font') or key=='x' and path[-1:] == ('borderSize',)):
                 address=(path,key)
                 if address in result:raise ValueError('Duplicate GUI field '+str(address))
                 result[address]=value
@@ -87,8 +89,8 @@ def replace(text,reverse=False):
     for path,key,old,new in REVIEWED:
         expected,replacement=(new,old) if reverse else (old,new)
         token=fields.get((path,key))
-        if token is None or token[0].strip('"')!=expected:raise ValueError('Missing/reverted/unregistered event field '+str((path,key)))
-        edits.append((token.start(),token.end(),'"'+replacement+'"'))
+        if token is None or token[0]!=literal(key,expected):raise ValueError('Missing/reverted/unregistered event field '+str((path,key)))
+        edits.append((token.start(),token.end(),literal(key,replacement)))
     for start,end,value in sorted(edits,reverse=True):text=text[:start]+value+text[end:]
     return text
 
@@ -101,11 +103,11 @@ def restore_ast(tree):
         path+=tuple(names)
         for node in rows:
             key,_,value=node
-            if isinstance(value,list):visit(value,path)
+            if isinstance(value,list):visit(value,path+(('borderSize',) if key=='borderSize' else ()))
             elif (path,key) in expected:
                 address=(path,key);old,new=expected[address]
-                if address in seen or value.strip('"')!=new:raise ValueError('Reviewed event field reverted/duplicated '+str(address))
-                node[2]='"'+old+'"';seen.add(address)
+                if address in seen or value!=literal(key,new):raise ValueError('Reviewed event field reverted/duplicated '+str(address))
+                node[2]=literal(key,old);seen.add(address)
     visit(result)
     if seen!=set(expected):raise ValueError('Missing reviewed event fields')
     return result
@@ -132,4 +134,5 @@ def report(text):
     return dict(original_sha256=sha(source()),current_sha256=sha(text),restored_sha256=sha(restored),
         original_ast_sha256=ast_sha(parse(source())),restored_ast_sha256=ast_sha(restore_ast(parse(text))),
         substitutions=[dict(path=list(p),field=k,old=old,new=new) for p,k,old,new in REVIEWED],
-        sprite_fields=len(SPRITES),font_fields=len(FONTS),scope='Only these 23 scalar fields; no control, geometry, action, condition or identity change')
+        sprite_fields=len(SPRITES),font_fields=len(FONTS),inset_fields=len(INSETS),
+        scope='Only17 sprites,6 fonts and2 provisional horizontal text insets; original capture restored exactly; no other control/geometry/action/condition/identity change')

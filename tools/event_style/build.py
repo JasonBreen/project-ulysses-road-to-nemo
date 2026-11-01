@@ -15,5 +15,5 @@ def main():
             if actual!=data:
                 raise SystemExit('Generated output differs: '+relative)
         else:path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
-    print('Event style generated/check PASS; exactly17 sprite+6 font fields; all other source restored exactly.')
+    print('Event style generated/check PASS; exactly17 sprite+6 font+2 provisional inset fields; all other source restored exactly.')
 if __name__=='__main__':main()

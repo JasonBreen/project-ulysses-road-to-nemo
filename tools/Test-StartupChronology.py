@@ -174,6 +174,15 @@ class StartupChronology(unittest.TestCase):
             self.assertEqual({'mod_base'}, effective['equipment']['mod_1'])
             self.assertNotIn('aircraft_1', effective['equipment'])
 
+    def test_explicit_inherent_convoy_baseline_cannot_override_new_authored_lock(self):
+        history = parse('add_equipment_to_stockpile = { type = convoy_1 amount = 1 }')
+        result = owner.inspect_history('AAA', history, lambda _: [], unlocks(), {'convoy_1'}, set(), {'AAA': False}, {'AAA'})
+        self.assertEqual([], result['errors'])
+        locked = unlocks()
+        locked['equipment']['convoy_1'] = {'new_convoy_lock'}
+        result = owner.inspect_history('AAA', history, lambda _: [], locked, {'convoy_1'}, set(), {'AAA': False}, {'AAA'})
+        self.assertTrue(any('before required research' in row for row in result['errors']))
+
     def test_all_selected_dlc_ai_cases_are_reported_without_native_claims(self):
         with tempfile.TemporaryDirectory() as scratch:
             mod = Path(scratch)

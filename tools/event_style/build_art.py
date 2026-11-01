@@ -121,7 +121,9 @@ def outputs():
             provenance='Original authored geometric SVG/Pillow construction; no engine pixels or identity claims'))
     gfx='# Original scoped event defaults; inherited global identities remain unchanged.\nspriteTypes = {\n'
     gfx+='\n'.join(binding(name,key) for key,name in sorted(ALIASES.items()))+'\n}\n'
+    gfx+='bitmapfonts = {\n'
     for size in (16,20):gfx+=f'bitmapfont = {{ name = "ACEvent{size}" path = "gfx/fonts/ACBriefing{size}" color = 0xffdaedf2 textcolors = {{ G = {{ 86 172 91 }} R = {{ 220 84 84 }} Y = {{ 230 181 95 }} }} }}\n'
+    gfx+='}\n'
     files['mod/2985041246/interface/ac_event_style.gfx']=gfx.encode()
     sources={name:sha((HERE/name).read_bytes().replace(b'\r\n',b'\n')) for name in ('build_art.py','migration.py','SOURCE_eventwindow.gui')}
     font_files={str(p.relative_to(MOD)).replace('\\','/'):sha(p.read_bytes()) for size in (16,20) for p in (MOD/f'gfx/fonts/ACBriefing{size}.dds',MOD/f'gfx/fonts/ACBriefing{size}.fnt')}

@@ -3,6 +3,19 @@ import argparse,json,subprocess,sys,time,os
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools'))
 from source_snapshot import capture,verify
+from event_picture_fit.evidence import begin,run_json_audit,screen_failures,finish,write_json
+
+def complete(output,before,checks,error=None,metadata=None):
+    after=None
+    if before is not None:
+        try:after=verify(before,ROOT)
+        except Exception as problem:error=(str(error)+'; 'if error else'')+'Source verification failed: '+str(problem)
+    report=finish(output,before,after,checks,error)
+    for key in ('event_screen_contract','screen_contract_only'):
+        if metadata and key in metadata:report[key]=metadata[key]
+    write_json(Path(output)/'results.json',report)
+    if not report['passed']:raise SystemExit(error or 'Current source checks failed; inspect '+str(output))
+    return report
 
 SCREEN_CONTRACTS=('event-style','original-fit')
 ORIGINAL_FAILURES=['font:hoi4_typewriter16:engine_fallback','font:hoi4_typewriter22:engine_fallback']+[
@@ -26,11 +39,11 @@ def require_screen_source(contract):
 
 def screen_matches(report,returncode,contract):
     if contract not in SCREEN_CONTRACTS:raise ValueError('Unknown event screen contract')
-    screens=report.get('gate_covered_screens',{})
-    if any(name not in screens for name in ('eventwindow.gui','countrydecisionview.gui')):return False
-    event=screens['eventwindow.gui']['failures'];decisions=screens['countrydecisionview.gui']['failures']
+    event=screen_failures(report,'eventwindow.gui');decisions=screen_failures(report,'countrydecisionview.gui')
+    if event is None or decisions is None:return False
     if contract=='original-fit':return returncode==1 and set(event)==set(ORIGINAL_FAILURES) and len(event)==15 and not decisions
     provider=report.get('dlc_archive_coverage',{})
+    if not isinstance(provider,dict):return False
     return (returncode==0 and not event and not decisions and provider.get('status')=='explicit_profile_inspected'
             and provider.get('selected_descriptors')==[])
 
@@ -40,10 +53,17 @@ def main():
     p.add_argument('--screen-contract-only',action='store_true',help='Rerun only this dependency contract with independent source receipts')
     p.add_argument('--output',type=Path,default=ROOT/'docs/evidence/event-picture-fit/composed-source-checks');a=p.parse_args()
     if a.screen_contract_only and not a.engine:p.error('--screen-contract-only requires --engine')
-    require_screen_source(a.event_screen_contract)
-    before=capture(ROOT);a.output.mkdir(parents=True,exist_ok=True);py=[sys.executable,'-B']
+    metadata=dict(event_screen_contract=a.event_screen_contract,screen_contract_only=a.screen_contract_only)
+    begin(a.output)
+    try:
+        require_screen_source(a.event_screen_contract);before=capture(ROOT)
+    except Exception as problem:complete(a.output,None,[],str(problem),metadata)
+    py=[sys.executable,'-B']
+    environment={**os.environ,'PYTHONDONTWRITEBYTECODE':'1',
+        'PATH':str(Path(sys.executable).parent)+os.pathsep+os.environ.get('PATH','')}
     commands=[
       ('event-pictures',py+['tools/Test-EventPictures.py']),
+      ('event-evidence',py+['tools/Test-EventEvidence.py']),
       ('anea-art',py+['tools/Test-AneaArt.py']),
       ('reconstruction-art',py+['tools/Test-ReconstructionAssets.py']),
       ('superpower-art',py+['tools/Test-SuperpowerAssets.py']),
@@ -63,31 +83,28 @@ def main():
     if a.screen_contract_only:commands=[]
     results=[]
     for name,command in commands:
-        started=time.monotonic();result=subprocess.run(command,cwd=ROOT,capture_output=True,env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'})
+        started=time.monotonic();result=subprocess.run(command,cwd=ROOT,capture_output=True,env=environment)
         log=name+'.txt';(a.output/log).write_bytes(result.stdout+result.stderr)
         row=dict(check=name,command=command,exit_code=result.returncode,seconds=round(time.monotonic()-started,3),log=log,
                  coverage='Source/offline only; no native execution')
         results.append(row);print(name+(': PASS' if result.returncode==0 else ': FAIL'),flush=True)
         if result.returncode:
-            verify(before,ROOT);(a.output/'results.json').write_bytes((json.dumps(dict(source=before,checks=results),indent=2)+'\n').encode())
-            raise SystemExit(result.returncode)
+            complete(a.output,before,results,'Required check failed: '+name,metadata)
     if a.engine:
         name='eventwindow-ownership-'+a.event_screen_contract;output=a.output/'effective-eventwindow.json'
         command=py+['tools/overhaul/audit_consumers.py',str(a.engine),'--gate-screen','eventwindow.gui','--gate-decisions','--summary-only','--output',str(output)]
         if a.event_screen_contract=='event-style':command+=['--profile','docs/evidence/effective-dependencies/profiles/base-only.json']
-        result=subprocess.run(command,cwd=ROOT,capture_output=True,env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'});(a.output/(name+'.txt')).write_bytes(result.stdout+result.stderr)
-        report=json.loads(output.read_text());failures=report['gate_covered_screens']['eventwindow.gui']['failures']
-        matched=screen_matches(report,result.returncode,a.event_screen_contract)
+        result,report,report_error=run_json_audit(command,output,cwd=ROOT,capture_output=True,env=environment)
+        (a.output/(name+'.txt')).write_bytes(result.stdout+result.stderr)
+        failures=screen_failures(report,'eventwindow.gui');decisions=screen_failures(report,'countrydecisionview.gui')
+        matched=report_error is None and screen_matches(report,result.returncode,a.event_screen_contract)
         results.append(dict(check=name,command=command,exit_code=result.returncode,screen_contract=a.event_screen_contract,
-            expected_legacy_ownership_failure=a.event_screen_contract=='original-fit',exact_contract_matches=matched,
-            eventwindow_failures=failures,decision_failures=report['gate_covered_screens']['countrydecisionview.gui']['failures'],log=name+'.txt',
+            expected_legacy_ownership_failure=a.event_screen_contract=='original-fit',exact_contract_matches=matched,accepted_contract=matched,
+            eventwindow_failures=failures,decision_failures=decisions,report_error=report_error,log=name+'.txt',
             coverage='Only explicit eventwindow/decision ownership; wider pools/global/native acceptance remain open'))
         print(name+(': PASS (reviewed zero screen failures)' if matched and a.event_screen_contract=='event-style' else ': historical15-failure contract matched' if matched else ': UNEXPECTED RESULT'),flush=True)
-        if not matched:raise SystemExit('Explicit screen contract changed; inspect instead of updating the capture')
-    after=verify(before,ROOT)
-    (a.output/'results.json').write_bytes((json.dumps(dict(schema=1,source_before=before,source_after=after,checks=results,
-        event_screen_contract=a.event_screen_contract,screen_contract_only=a.screen_contract_only,
-        evidence='Explicit screen contract only; original historical15-backlog evidence/capture retained; wider presentation/native acceptance open'),indent=2)+'\n').encode())
+        if not matched:complete(a.output,before,results,report_error or 'Explicit screen contract changed; inspect instead of updating the capture',metadata)
+    complete(a.output,before,results,metadata=metadata)
     print('Exact source identity verified before/after; native rendering untested.',flush=True)
 
 if __name__=='__main__':main()

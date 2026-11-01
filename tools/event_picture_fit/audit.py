@@ -18,6 +18,10 @@ from event_picture_fit.fit import MOD,SIZES,assert_fits
 DEFAULT_EVENTS = ['events/'+name+'.txt' for name in (
     'ac_reconstruction','ac_superpower_programmes','ac_fato_south_belka',
     'ac_anea','ac_anea_narrative','ac_ucw','ac_squadrons')]
+PICTURE_CONTROLS={
+    ('EventWindow','bottom_Window','event_picture'):('country_event',(5,5),'options_grid',215),
+    ('EventWindow_News','top_Window','event_picture'):('news_event',(59,91),'Title',260),
+}
 
 def scalar(value):
     if not isinstance(value,str):raise ValueError('Dynamic event-picture syntax requires a separately reviewed consumer contract')
@@ -29,26 +33,35 @@ def controls(mod=MOD):
         for kind,_,body in nodes:
             if not isinstance(body,list):continue
             name=get(body,'name');path=parents+((scalar(name),) if name else ())
-            if name:named[path]=body
+            if name:
+                if path in named:raise ValueError('Duplicate required GUI control path: '+str(path))
+                named[path]=body
             if name and scalar(name)=='event_picture':found.append((path,body))
             walk(body,path)
     walk(parse((mod/'interface/eventwindow.gui').read_text(encoding='utf-8-sig')))
     result={}
     for path,body in found:
+        contract=PICTURE_CONTROLS.get(path)
+        if contract is None:raise ValueError('Unreviewed required event_picture control path: '+str(path))
+        kind,expected_position,sibling,expected_edge=contract
         position=get(body,'position');x=float(get(position,'x'));y=float(get(position,'y'))
-        kind='country_event' if (x,y)==(5,5) else 'news_event' if (x,y)==(59,91) else None
-        if kind is None:raise ValueError('Unreviewed event_picture control: '+str(path))
+        if (x,y)!=expected_position:raise ValueError('Reviewed event_picture position changed: '+str(path))
+        def upper_left(node):
+            values=[scalar(value)for key,_,value in node if key.casefold()=='orientation']
+            if len(values)>1 or (values and values!=['UPPER_LEFT']):
+                raise ValueError('Unsupported event control Orientation: '+str(path))
+        upper_left(body)
         if kind in result:raise ValueError('Ambiguous event_picture binding: '+kind)
         if get(body,'size') is not None:raise ValueError('Unexpected event-picture size override')
         scale=float(get(body,'scale','1'))
         if scale!=1:raise ValueError('Event-picture native scale contract changed')
         result[kind]=dict(path=list(path),position=[x,y],scale=scale,default_sprite=scalar(get(body,'spriteType')))
-        sibling='options_grid' if kind=='country_event' else 'Title'
         obstacle=named.get(path[:-1]+(sibling,))
         if obstacle is None:raise ValueError('Missing required event sibling control: '+sibling)
+        upper_left(obstacle)
         obstacle_position=get(obstacle,'position')
         edge=float(get(obstacle_position,'x' if kind=='country_event' else 'y'))
-        if edge!=(215 if kind=='country_event' else 260):raise ValueError('Reviewed event sibling bounds changed')
+        if edge!=expected_edge:raise ValueError('Reviewed event sibling bounds changed')
         result[kind]['right_obstacle' if kind=='country_event' else 'lower_obstacle']=edge
     if set(result)!=set(SIZES):raise ValueError('Missing required country/news event_picture control')
     return result

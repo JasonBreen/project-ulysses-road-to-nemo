@@ -81,6 +81,32 @@ class EventPictures(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'scale'):consumers.controls(mod)
             p.write_text(original.replace('x = 215','x = 214',1))
             with self.assertRaisesRegex(ValueError,'sibling bounds'):consumers.controls(mod)
+    def test_exact_required_root_and_picture_paths_cannot_be_renamed(self):
+        with tempfile.TemporaryDirectory()as folder:
+            mod=self.fixture(folder);path=mod/'interface/eventwindow.gui';original=path.read_text()
+            for before,after in (('name = "EventWindow"','name = "MissingCountryWindow"'),
+                    ('name = "EventWindow_News"','name = "MissingNewsWindow"'),
+                    ('name = "bottom_Window"','name = "RelocatedWindow"')):
+                with self.subTest(change=after):
+                    path.write_text(original.replace(before,after,1))
+                    with self.assertRaisesRegex(ValueError,'control path'):consumers.controls(mod)
+    def test_picture_and_sibling_anchors_must_be_upper_left(self):
+        def mutate(nodes,target,parents=()):
+            for _,_,body in nodes:
+                if not isinstance(body,list):continue
+                name=get(body,'name','').strip('"');path=parents+((name,)if name else ())
+                if path==target:
+                    body[:]=[row for row in body if row[0].casefold()!='orientation']
+                    body.append(['Orientation','=','LOWER_RIGHT']);return True
+                if mutate(body,target,path):return True
+            return False
+        with tempfile.TemporaryDirectory()as folder:
+            mod=self.fixture(folder);path=mod/'interface/eventwindow.gui';original=path.read_text()
+            for target in (('EventWindow','bottom_Window','event_picture'),('EventWindow','bottom_Window','options_grid'),
+                    ('EventWindow_News','top_Window','event_picture'),('EventWindow_News','top_Window','Title')):
+                with self.subTest(control=target):
+                    nodes=parse(original);self.assertTrue(mutate(nodes,target));path.write_text(render(nodes))
+                    with self.assertRaisesRegex(ValueError,'Orientation'):consumers.controls(mod)
     def test_only24_reviewed_news_bindings_changed_in_whole_event_ast(self):
         self.assertEqual(24,sum(len(reviewed(p)) for p in self.contract['original_event_sources']))
         for relative in self.contract['original_event_sources']:

@@ -1,4 +1,4 @@
-﻿add_namespace = belka
+add_namespace = belka
 add_namespace = belka_dlp
 add_namespace = belka_dlp_coup
 add_namespace = belka_dlp_war
@@ -1059,15 +1059,15 @@ country_event = {
 	title = belka_dlp_war.101.t
 	desc = belka_dlp_war.101.d
 	picture = GFX_report_event_treaty_2
-
 	is_triggered_only = yes
-	
 	option = {
 		name = belka_dlp_war.101.a
 		hidden_effect = {
 			if = {
 				limit = {
-					PBL = { has_war = yes }
+					PBL = {
+						has_war = yes
+					}
 				}
 				white_peace = SAP
 				white_peace = OSE
@@ -1086,11 +1086,15 @@ country_event = {
 				white_peace = REC
 				white_peace = SBK
 				if = {
-					limit = { FAT = { is_subject_of = BLK } }
+					limit = {
+						FAT = {
+							is_subject_of = BLK
+						}
+					}
 					end_puppet = FAT
 					FAT = {
 						set_politics = {
-							ruling_party = neutrality 
+							ruling_party = neutrality
 							elections_allowed = no
 						}
 						set_popularities = {
@@ -1104,11 +1108,15 @@ country_event = {
 					remove_resource_rights = 334
 				}
 				if = {
-					limit = { GEB = { is_subject_of = BLK } }
+					limit = {
+						GEB = {
+							is_subject_of = BLK
+						}
+					}
 					end_puppet = GEB
 					GEB = {
 						set_politics = {
-							ruling_party = democratic 
+							ruling_party = democratic
 							elections_allowed = no
 						}
 						set_popularities = {
@@ -1120,11 +1128,15 @@ country_event = {
 					}
 				}
 				if = {
-					limit = { REC = { is_subject_of = BLK } }
+					limit = {
+						REC = {
+							is_subject_of = BLK
+						}
+					}
 					end_puppet = REC
 					REC = {
 						set_politics = {
-							ruling_party = communism 
+							ruling_party = communism
 							elections_allowed = no
 						}
 						set_popularities = {
@@ -1161,10 +1173,17 @@ country_event = {
 				transfer_state = 220
 			}
 			clr_global_flag = belkan_war_is_happening
-			# Preserve the inherited defeat focus tree and its seven story events.
-			# The continuation popup is fired by belka_dlp_lost.7 after that tree.
 			set_global_flag = ac_postwar_wait_for_defeat_tree
 		}
+		REC = {
+			ac_release_observe_country = yes
+		}
+		SBK = {
+			ac_release_observe_country = yes
+		}
+	}
+	immediate = {
+		ac_release_snapshot_world = yes
 	}
 }
 
@@ -1217,9 +1236,7 @@ country_event = {
 	title = belka_dlp_war.103.t
 	desc = belka_dlp_war.103.d
 	picture = GFX_report_event_blk_army_attack
-
 	is_triggered_only = yes
-	
 	option = {
 		name = belka_dlp_war.103.a
 		BLK = {
@@ -1233,7 +1250,9 @@ country_event = {
 		}
 		if = {
 			limit = {
-				PBL = { has_war = yes }
+				PBL = {
+					has_war = yes
+				}
 			}
 			white_peace = SAP
 			white_peace = OSE
@@ -1262,6 +1281,15 @@ country_event = {
 		}
 		clr_global_flag = belkan_war_is_happening
 		set_global_flag = belka_lost_belkan_war
+		REC = {
+			ac_release_observe_country = yes
+		}
+		SBK = {
+			ac_release_observe_country = yes
+		}
+	}
+	immediate = {
+		ac_release_snapshot_world = yes
 	}
 }
 

@@ -8,11 +8,17 @@
     "common/decisions/BLK_decisions.txt": "8b6f8a136dc7151ffbb0d789f2faa48585b811345ba57e59ed48fdfc085f1a7f",
     "common/on_actions/ac_on_actions.txt": "b0b99198991cd789defd3973d51ad5dfc3cd80ff3fc82ea5107939516243dcd9",
     "common/on_actions/ac_on_weekly_on_action.txt": "3ec25a96a06bdf17f74a438d0f6e28b772ad2567ead29ebdd15ceab1113f5815",
-    "events/AWWNB.txt": "b7edb2b3c19bc10839afbc421dceffa334365ca34a4ea4da9156032023c01cb2",
-    "events/Belka.txt": "64f5002cad2ae3fcc140469a4c8befef636de1e8e025f587e4559a4257431268",
+    "common/on_actions/ac_release_foundations.txt": "636b3ea8fdc16b5c2192c2524cdb95d7ff2e884ef5a2eb1142a9e90d6be4cfb1",
+    "common/scripted_effects/ac_release_foundations.txt": "2b25c79185d2d4b492bb7ffc5d77857c8eb95b485976ad0a95f0dc1608ef7bf6",
+    "common/scripted_effects/ac_release_maintenance.txt": "b73a36358dbcd17f41719c127302afac16c3fdb056668e043bcdc2c284e1dce0",
+    "common/scripted_triggers/ac_release_foundations.txt": "afca3b75678251b802e236c412367ce3489a4d990673a14f34e929fd8873977f",
+    "common/scripted_triggers/ac_release_maintenance.txt": "02a7063ea790466fbda2c50d268ac7b4a3315ded6bff5ffb88c2763b84ea440c",
+    "events/ac_release_projects.txt": "630df88f59d685f305d4f6fdf65422630eb39671fdff1624eca56bc056db2007",
+    "events/AWWNB.txt": "4f4eae6a9d403527a5cbfdb6595a1a38784b6a3242352bd851267d8055f3c7f3",
+    "events/Belka.txt": "b41096b5b6a7733d1b69d1fb92eea5d772033110795a43fabef9c1d4e2321ee5",
     "events/Belka_meme.txt": "9bc18c7f9880af1aef9c25261d09f6efc3e8a1d7095609034bf217e28af20041",
-    "events/Recta.txt": "94ffeeca65fef1a2d0035fff292da52fa51f879ac37dfa242b8fe2e050e0a504",
-    "events/South_Belka.txt": "f30a0372cc515b8afbe278319c830d503f3169c2f02738740c43847e11ff256b",
+    "events/Recta.txt": "7cfbd1e838d729ba1f6443a163198e851c9688a522512fc9d4dfdd62d3a7f073",
+    "events/South_Belka.txt": "5abd4e94fb2f26ef8c1f26dec57b733bc60175c81803a650488ecb4d7e7bc5df",
     "history/countries/AWW - AWWNB.txt": "8b5ae459da74b29f23880132618299e58a8c05c9779c6c9155e48405e0a9acbf",
     "history/countries/REC - Recta.txt": "f9c4fbd7fd50900f927a2d307b41dd9c898c72b2e8a038a8ecf33840c6ee40b6",
     "history/countries/REL - Relentio.txt": "af0a9e630c479f2c7609f2f405941d16b65647283e380785d1b7a19ad39f6c4a",
@@ -21,7 +27,14 @@
     "history/countries/SHI - Shilage.txt": "206079cbd022f731eb1c307204d38c6591f27c93e72dbcedb0ec67d4d105effc",
     "history/countries/TER - Terentio.txt": "8f52254ef20a79e96aa63a845c6a1c960cd2692d6ee4dc5089ea27cfac45e8dd",
     "history/units/AWW_land.txt": "04ad5461d149bb2a26b448d9969e8fb4354e7263c1cb43b0ede94a8d568d57bf",
-    "history/units/REC_land.txt": "02d4f93ce839ad53fc5b743f3e46dec0a021e2a76242128f92e1689725c5fd30"
+    "history/units/AWW_release_templates.txt": "c6717fd21c0fe983e38f0c3bc9400e0db8ae183e02841f06b62e78eb23d63fc5",
+    "history/units/REC_land.txt": "02d4f93ce839ad53fc5b743f3e46dec0a021e2a76242128f92e1689725c5fd30",
+    "history/units/REC_release_templates.txt": "78453be5a17c554d96e2365a8204f31687695fb5b965f5eda7f8ffc9d000ac4a",
+    "history/units/REL_release_templates.txt": "df3639f1a9b2e1ed854375abb7be14051f52fe4de18a1ecdfd1757a240fb20c6",
+    "history/units/SBK_release_templates.txt": "deb9c95bd77b1572fc2263a012a938fdd378875c087ab42ba41d9ca1424b6845",
+    "history/units/SER_release_templates.txt": "7c1f02f4b6bf8c0490a0f2e2623047974831e1629fa0c519c563af23030f3def",
+    "history/units/SHI_release_templates.txt": "66fc7ff9eefc1978c3d780e7661936135d99e769a46a8164473cdd87c5209792",
+    "history/units/TER_release_templates.txt": "e06de326e2aa3f5e4b96253b8da5fc3821d130795c863aefb34cee7583727da7"
   },
   "countries": [
     {
@@ -45,7 +58,19 @@
           "received_unit_fractions": [
             0.25
           ],
-          "trigger": []
+          "trigger": [
+            [
+              "NOT",
+              "=",
+              [
+                [
+                  "has_global_flag",
+                  "=",
+                  "ac_release_AWW_entry_begun"
+                ]
+              ]
+            ]
+          ]
         },
         {
           "event": "awwnb.2",
@@ -60,7 +85,51 @@
             "AWW_land"
           ],
           "received_unit_fractions": [],
-          "trigger": []
+          "trigger": [
+            [
+              "country_exists",
+              "=",
+              "AWW"
+            ],
+            [
+              "NOT",
+              "=",
+              [
+                [
+                  "has_global_flag",
+                  "=",
+                  "ac_release_AWW_legacy_oob_done"
+                ]
+              ]
+            ],
+            [
+              "NOT",
+              "=",
+              [
+                [
+                  "has_global_flag",
+                  "=",
+                  "ac_release_AWW_annexed"
+                ]
+              ]
+            ],
+            [
+              "AWW",
+              "=",
+              [
+                [
+                  "has_country_flag",
+                  "=",
+                  "ac_release_awaiting_legacy_army"
+                ],
+                [
+                  "has_capitulated",
+                  "=",
+                  "no"
+                ]
+              ]
+            ]
+          ]
         }
       ],
       "other_observed_entry_scopes": [
@@ -90,13 +159,20 @@
           "source": "history/units/AWW_land.txt",
           "divisions": 9,
           "production_lines": 0
+        },
+        {
+          "source": "history/units/AWW_release_templates.txt",
+          "divisions": 0,
+          "production_lines": 0
         }
       ],
-      "status": "pending_legitimate_release_owner_review",
+      "status": "guarded_legitimate_release_owner_source_implemented_native_pending",
       "gaps": [
-        "No reviewed release-time physical foundation owner with current-state eligibility, shared once guard, DLC-aware replacements, transport/resource/fuel and interrupted/re-release acceptance.",
-        "awwnb.1 has no literal caller in the scanned authored event/focus/decision/on-action/effect source.",
-        "awwnb.2 loads nine additional formations after a 25% BLK unit transfer; no shared once-only setup flag is present in these event definitions."
+        "Native release/loading, transfer selection, DLC replacement operation, supply/AI pacing and save/reload remain untested.",
+        "Bounded owned-capital/local-maintenance fallback; no guessed network/army/deposit grant.",
+        "Replacement imports are conditional live material checks, not guaranteed authored trade contracts; existing mixed transferred roles may exceed domestic replacement capacity.",
+        "awwnb.1 still has no authored literal activation caller; no new war/activation was invented.",
+        "Preserved disarmed/no-core personnel and non-core industry liability; only the original optionA retains its existing weekly recruiting idea. Other inherited warfront OOB positions are not newly validated owned deployment sites."
       ]
     },
     {
@@ -125,7 +201,30 @@
             "REC_land"
           ],
           "received_unit_fractions": [],
-          "trigger": []
+          "trigger": [
+            [
+              "NOT",
+              "=",
+              [
+                [
+                  "has_global_flag",
+                  "=",
+                  "ac_release_REC_legacy_oob_done"
+                ]
+              ]
+            ],
+            [
+              "NOT",
+              "=",
+              [
+                [
+                  "has_global_flag",
+                  "=",
+                  "ac_release_REC_adopted"
+                ]
+              ]
+            ]
+          ]
         }
       ],
       "other_observed_entry_scopes": [
@@ -196,12 +295,18 @@
           "source": "history/units/REC_land.txt",
           "divisions": 10,
           "production_lines": 0
+        },
+        {
+          "source": "history/units/REC_release_templates.txt",
+          "divisions": 0,
+          "production_lines": 0
         }
       ],
-      "status": "pending_legitimate_release_owner_review",
+      "status": "guarded_legitimate_release_owner_source_implemented_native_pending",
       "gaps": [
-        "No reviewed release-time physical foundation owner with current-state eligibility, shared once guard, DLC-aware replacements, transport/resource/fuel and interrupted/re-release acceptance.",
-        "recta.1 loads ten formations without an explicit setup-once flag; later Belkan treaty state transfers can also recreate REC without calling recta.1."
+        "Native release/loading, transfer selection, DLC replacement operation, supply/AI pacing and save/reload remain untested.",
+        "Bounded owned-capital/local-maintenance fallback; no guessed network/army/deposit grant.",
+        "Replacement imports are conditional live material checks, not guaranteed authored trade contracts; existing mixed transferred roles may exceed domestic replacement capacity."
       ]
     },
     {
@@ -211,11 +316,19 @@
       "history_force_loads": [],
       "entry_events": [],
       "other_observed_entry_scopes": [],
-      "existing_tag_rosters": [],
-      "status": "pending_legitimate_release_owner_review",
+      "existing_tag_rosters": [
+        {
+          "source": "history/units/REL_release_templates.txt",
+          "divisions": 0,
+          "production_lines": 0
+        }
+      ],
+      "status": "guarded_legitimate_release_owner_source_implemented_native_pending",
       "gaps": [
-        "No reviewed release-time physical foundation owner with current-state eligibility, shared once guard, DLC-aware replacements, transport/resource/fuel and interrupted/re-release acceptance.",
-        "No authored release/setup event owner identified for this dormant tag; generic engine release behavior is not acceptance evidence."
+        "Native release/loading, transfer selection, DLC replacement operation, supply/AI pacing and save/reload remain untested.",
+        "Bounded owned-capital/local-maintenance fallback; no guessed network/army/deposit grant.",
+        "Replacement imports are conditional live material checks, not guaranteed authored trade contracts; existing mixed transferred roles may exceed domestic replacement capacity.",
+        "No authored forced activation route; the adapter waits for an actual legitimate engine release."
       ]
     },
     {
@@ -245,7 +358,30 @@
           "received_unit_fractions": [
             0.25
           ],
-          "trigger": []
+          "trigger": [
+            [
+              "NOT",
+              "=",
+              [
+                [
+                  "has_global_flag",
+                  "=",
+                  "ac_release_SBK_entry_begun"
+                ]
+              ]
+            ],
+            [
+              "NOT",
+              "=",
+              [
+                [
+                  "has_global_flag",
+                  "=",
+                  "ac_release_SBK_adopted"
+                ]
+              ]
+            ]
+          ]
         },
         {
           "event": "south_belka.3",
@@ -268,7 +404,30 @@
           "received_unit_fractions": [
             0.25
           ],
-          "trigger": []
+          "trigger": [
+            [
+              "NOT",
+              "=",
+              [
+                [
+                  "has_global_flag",
+                  "=",
+                  "ac_release_SBK_entry_begun"
+                ]
+              ]
+            ],
+            [
+              "NOT",
+              "=",
+              [
+                [
+                  "has_global_flag",
+                  "=",
+                  "ac_release_SBK_adopted"
+                ]
+              ]
+            ]
+          ]
         },
         {
           "event": "south_belka.4",
@@ -291,7 +450,30 @@
           "received_unit_fractions": [
             0.15
           ],
-          "trigger": []
+          "trigger": [
+            [
+              "NOT",
+              "=",
+              [
+                [
+                  "has_global_flag",
+                  "=",
+                  "ac_release_SBK_entry_begun"
+                ]
+              ]
+            ],
+            [
+              "NOT",
+              "=",
+              [
+                [
+                  "has_global_flag",
+                  "=",
+                  "ac_release_SBK_adopted"
+                ]
+              ]
+            ]
+          ]
         }
       ],
       "other_observed_entry_scopes": [
@@ -329,11 +511,18 @@
           ]
         }
       ],
-      "existing_tag_rosters": [],
-      "status": "pending_legitimate_release_owner_review",
+      "existing_tag_rosters": [
+        {
+          "source": "history/units/SBK_release_templates.txt",
+          "divisions": 0,
+          "production_lines": 0
+        }
+      ],
+      "status": "guarded_legitimate_release_owner_source_implemented_native_pending",
       "gaps": [
-        "No reviewed release-time physical foundation owner with current-state eligibility, shared once guard, DLC-aware replacements, transport/resource/fuel and interrupted/re-release acceptance.",
-        "Three individually fire-only-once events transfer a BLK army fraction; no shared group setup-once flag is established by those definitions. Belkan treaty creation is a separate path without the same transfer."
+        "Native release/loading, transfer selection, DLC replacement operation, supply/AI pacing and save/reload remain untested.",
+        "Bounded owned-capital/local-maintenance fallback; no guessed network/army/deposit grant.",
+        "Replacement imports are conditional live material checks, not guaranteed authored trade contracts; existing mixed transferred roles may exceed domestic replacement capacity."
       ]
     },
     {
@@ -343,11 +532,19 @@
       "history_force_loads": [],
       "entry_events": [],
       "other_observed_entry_scopes": [],
-      "existing_tag_rosters": [],
-      "status": "pending_legitimate_release_owner_review",
+      "existing_tag_rosters": [
+        {
+          "source": "history/units/SER_release_templates.txt",
+          "divisions": 0,
+          "production_lines": 0
+        }
+      ],
+      "status": "guarded_legitimate_release_owner_source_implemented_native_pending",
       "gaps": [
-        "No reviewed release-time physical foundation owner with current-state eligibility, shared once guard, DLC-aware replacements, transport/resource/fuel and interrupted/re-release acceptance.",
-        "No authored release/setup event owner identified for this dormant tag; generic engine release behavior is not acceptance evidence."
+        "Native release/loading, transfer selection, DLC replacement operation, supply/AI pacing and save/reload remain untested.",
+        "Bounded owned-capital/local-maintenance fallback; no guessed network/army/deposit grant.",
+        "Replacement imports are conditional live material checks, not guaranteed authored trade contracts; existing mixed transferred roles may exceed domestic replacement capacity.",
+        "No authored forced activation route; the adapter waits for an actual legitimate engine release."
       ]
     },
     {
@@ -357,11 +554,19 @@
       "history_force_loads": [],
       "entry_events": [],
       "other_observed_entry_scopes": [],
-      "existing_tag_rosters": [],
-      "status": "pending_legitimate_release_owner_review",
+      "existing_tag_rosters": [
+        {
+          "source": "history/units/SHI_release_templates.txt",
+          "divisions": 0,
+          "production_lines": 0
+        }
+      ],
+      "status": "guarded_legitimate_release_owner_source_implemented_native_pending",
       "gaps": [
-        "No reviewed release-time physical foundation owner with current-state eligibility, shared once guard, DLC-aware replacements, transport/resource/fuel and interrupted/re-release acceptance.",
-        "No authored release/setup event owner identified for this dormant tag; generic engine release behavior is not acceptance evidence."
+        "Native release/loading, transfer selection, DLC replacement operation, supply/AI pacing and save/reload remain untested.",
+        "Bounded owned-capital/local-maintenance fallback; no guessed network/army/deposit grant.",
+        "Replacement imports are conditional live material checks, not guaranteed authored trade contracts; existing mixed transferred roles may exceed domestic replacement capacity.",
+        "No authored forced activation route; the adapter waits for an actual legitimate engine release."
       ]
     },
     {
@@ -371,11 +576,19 @@
       "history_force_loads": [],
       "entry_events": [],
       "other_observed_entry_scopes": [],
-      "existing_tag_rosters": [],
-      "status": "pending_legitimate_release_owner_review",
+      "existing_tag_rosters": [
+        {
+          "source": "history/units/TER_release_templates.txt",
+          "divisions": 0,
+          "production_lines": 0
+        }
+      ],
+      "status": "guarded_legitimate_release_owner_source_implemented_native_pending",
       "gaps": [
-        "No reviewed release-time physical foundation owner with current-state eligibility, shared once guard, DLC-aware replacements, transport/resource/fuel and interrupted/re-release acceptance.",
-        "No authored release/setup event owner identified for this dormant tag; generic engine release behavior is not acceptance evidence."
+        "Native release/loading, transfer selection, DLC replacement operation, supply/AI pacing and save/reload remain untested.",
+        "Bounded owned-capital/local-maintenance fallback; no guessed network/army/deposit grant.",
+        "Replacement imports are conditional live material checks, not guaranteed authored trade contracts; existing mixed transferred roles may exceed domestic replacement capacity.",
+        "No authored forced activation route; the adapter waits for an actual legitimate engine release."
       ]
     }
   ]

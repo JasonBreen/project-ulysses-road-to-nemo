@@ -1,6 +1,15 @@
 # Original macroeconomic gameplay; amounts in billions of abstract units.
 ac_macro_initialize = {
 	if = {
+		limit = { ac_macro_mode = yes ac_econ_release_history = yes any_owned_state = { always = yes } OR = { has_variable = ac_macro_identity has_variable = ac_macro_cash has_variable = ac_macro_debt } NOT = { ac_macro_ready = yes } }
+		if = { limit = { has_variable = ac_macro_identity check_variable = { var = ac_macro_identity value = THIS.id compare = equals } check_variable = { ac_macro_schema = 2 } has_variable = ac_macro_cash has_variable = ac_macro_debt }
+		 set_country_flag = ac_macro_initialized
+		 clr_country_flag = ac_release_financial_identity_review
+		 ac_macro_quote = yes
+		}
+		else = { clr_country_flag = ac_macro_initialized set_country_flag = ac_release_financial_identity_review }
+	}
+	else_if = {
 		limit = { ac_macro_mode = yes any_owned_state = { always = yes } NOT = { ac_macro_ready = yes } OR = { AND = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 } has_global_flag = ac_macro_world_started } }
 		if = { limit = { has_variable = ac_macro_identity NOT = { check_variable = { var = ac_macro_identity value = THIS.id compare = equals } } }
 		 clr_country_flag = ac_macro_history_eligible
@@ -358,7 +367,7 @@ ac_macro_initialize = {
 		set_variable = { ac_macro_budget_development = 1 }
 		set_variable = { ac_macro_budget_defense = 1 }
 		ac_macro_profile = yes
-		if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 }
+		if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 ac_econ_release_history = no }
 		 ac_macro_seed_states = yes
 		 set_global_flag = ac_macro_world_started
 		 ac_macro_quote = yes

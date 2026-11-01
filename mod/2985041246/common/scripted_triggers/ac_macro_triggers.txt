@@ -1,6 +1,6 @@
 # Full mode is default for new histories. Saved legacy rule values remain valid.
 ac_macro_mode = { has_game_rule = { rule = ac_economy option = full } }
-ac_macro_ready = { ac_macro_mode = yes has_country_flag = ac_macro_initialized check_variable = { var = ac_macro_identity value = THIS.id compare = equals } any_owned_state = { always = yes } }
+ac_macro_ready = { ac_macro_mode = yes has_country_flag = ac_macro_initialized check_variable = { var = ac_macro_identity value = THIS.id compare = equals } any_owned_state = { always = yes } OR = { ac_econ_release_history = no AND = { check_variable = { ac_macro_schema = 2 } has_variable = ac_macro_cash has_variable = ac_macro_debt } } }
 ac_macro_can_borrow = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_credit_room >= ac_macro_loan_size } }
 ac_macro_can_repay = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash > 0 } check_variable = { ac_macro_debt > 0 } }
 ac_macro_can_produce = { ac_macro_ready = yes has_capitulated = no num_of_military_factories > 0 }

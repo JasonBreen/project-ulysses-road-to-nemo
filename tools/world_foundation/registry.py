@@ -45,6 +45,7 @@ def inspect():
     fiscal_profiles = support_profile('tools/economy_v2/profiles.json', 'profiles')
     political_profiles = support_profile('tools/institutions/profiles.json')
     capital_profiles = support_profile('tools/world_capitals/placements.json', 'object').get('countries', {})
+    release_profiles = support_profile('tools/release_foundations/worksheet.json', 'object').get('countries', {})
     for name, profiles in [('fiscal', fiscal_profiles), ('political', political_profiles)]:
         if profiles and len(profiles) != 69:
             raise ValueError('The integrated ' + name + ' registry must cover all69 histories')
@@ -52,6 +53,25 @@ def inspect():
     def read(path):
         inputs.add(path)
         return parse(path.read_text(encoding="utf-8-sig"))
+
+    release_owner_sources = []
+    if release_profiles:
+        if set(release_profiles) != {'AWW','REC','REL','SBK','SER','SHI','TER'}:
+            raise ValueError('Legitimate-release worksheet scope changed')
+        release_effects = {}
+        for relative in ('common/scripted_effects/ac_release_foundations.txt', 'common/scripted_effects/ac_release_maintenance.txt'):
+            path = MOD / relative
+            if not path.exists(): raise ValueError('Release worksheet lacks its actual source owner: ' + relative)
+            release_effects.update({key: body for key, _, body in read(path)})
+            release_owner_sources.append(relative)
+        for tag in release_profiles:
+            for suffix in ('physical_registration','prepare_maintenance','queue_rifles','start_civilian','start_network'):
+                if not release_effects.get('ac_release_' + tag + '_' + suffix):
+                    raise ValueError('Missing/empty actual release owner: ' + tag + ':' + suffix)
+        for relative in ('common/on_actions/ac_release_foundations.txt', 'common/scripted_triggers/ac_release_foundations.txt', 'common/scripted_triggers/ac_release_maintenance.txt'):
+            path = MOD / relative
+            if not path.exists() or not read(path): raise ValueError('Missing release hook/eligibility owner: ' + relative)
+            release_owner_sources.append(relative)
 
     states = {}
     province_state = {}
@@ -191,6 +211,9 @@ def inspect():
                 issues.append('legacy_NSB_source_release_gate')
         if tag == "PLH" or 171 in owned:
             status = "unresolved_placeholder_do_not_infer"
+        elif not owned and tag in release_profiles:
+            status = ('guarded_release_foundation_with_inherited_policy_debt_native_pending' if tag == 'AWW'
+                      else 'guarded_legitimate_release_foundation_native_pending')
         elif not owned:
             status = "dormant_or_emergent_entry_requires_review"
         elif tag in legacy_profiles and legacy_dependency_gaps:
@@ -234,6 +257,11 @@ def inspect():
             "missing_roster_files": missing, "roster_offline_parser_errors": parse_errors, "initial_production_assignments": dict(sorted(production.items())),
             "source_checks": checks, "source_gaps": issues, "role_not_required": dispositions,
             "inherited_personnel_gate": personnel_gate,
+            "legitimate_release_foundation": (dict(owner='tools/release_foundations',status=release_profiles[tag]['source_status'],actual_owner_sources=release_owner_sources,
+                cases=[dict(id=case['id'],capital_state=case['capital_state'],direct_roster_core_pool_margin=case['direct_roster_core_pool_margin'],source_liabilities=case['source_liabilities']) for case in release_profiles[tag]['cases']],
+                unknown_footprint=release_profiles[tag]['unknown_footprint_status'],universal_sustainable_release_acceptance=False,
+                finance='Public ac_econ_adopt_release_account preserves existing obligations; no opening cash/debt seed.',
+                physical='New absent-at-init releases only; existing and annexed/re-released governments receive no repeated transport/roster grant.') if tag in release_profiles else None),
             "external_force_owner": ('tools/world_legacy' if tag in legacy_profiles else None),
             "external_force_binding_gaps": (legacy_dependency_gaps if tag in legacy_profiles else []),
             "extra_DLC_release_gates": legacy_gates,

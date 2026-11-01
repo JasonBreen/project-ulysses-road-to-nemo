@@ -61,6 +61,43 @@ reference-parser failures, not image counts. Decision and macro ownership each
 have zero failures. Installed archive membership is not
 treated as enabled DLC. There is no full-mod ownership or native acceptance claim.
 
+## Second component: Yuktobania, The Names on the Board
+
+This independent delta adds Irina, Anton, Daria and Lev:20 additional core
+chapters,18 callbacks and three personal conclusions. Anton's training-headset
+hearing strain changes the questions around medical privacy, ground work,
+respect and a new teaching role; no later flight is assumed for him. Irina's
+flying perspectives require current national capability and leave Anton at the
+ground debrief. A separate loss outside the four, the instructor's spare pencil
+and the contested names on a working board shape their handover. All four
+principal people remain alive. The20 archives/four cast cards/three conclusions
+are separate from its20 core chapters.
+
+Combined, the two stories deliver40 core chapters, eight cast members, six
+personal endings,40 read-only archives and eight cast cards:94 country events
+and54 journal rows.47 DDS bind45 sprites using the26 approved original masters.
+The new [Yuktobanian packaged contact sheet](evidence/pacific-stories/yuk-packaged.png)
+was inspected offline alongside the Osean sheet. Full-height portraits,
+full-source event fits and separate ending compositions are preserved.
+
+The [second-component capture](evidence/pacific-stories/yuk-component/results.json)
+reruns the15 groups against both admitted stories. The exact new
+[dependency closure](evidence/pacific-stories/yuk-component/dependencies.json)
+contains151 runtime references and zero new-resource failures, with decision
+and macro ownership each at zero. The inherited full graph remains separately
+FAIL, with21,020 dependency entries and18 reference-parser issues. The exact
+per-file authored provenance profile does not exempt a family or presume DLC
+activation.
+
+In addition to the315 immutable initial files, `ose_contract.json` pins the
+first Osean component at `fa0506ecf3d564e03baf51be1466798929fcf44d`:26 exact
+source/delivery files, all existing Osean event/decision/category/trigger/sprite
+nodes and localization values. Shared initialization/tick/interruption retain
+their original Osean prefix nodes; only the explicitly admitted Yuktobanian
+nodes are appended. This regression prevents adding the second story from
+silently rewriting the first. Neither immutable contract is an automatic
+regeneration target.
+
 ## Evidence limits
 
 Decimal execution and deepcopy reloads are explicitly offline persistence

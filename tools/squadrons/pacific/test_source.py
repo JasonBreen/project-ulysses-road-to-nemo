@@ -141,5 +141,21 @@ class PacificSource(unittest.TestCase):
             if kind=='country_event':
                 with Image.open(MOD/sprites[get(node,'picture')])as image:self.assertTrue(fits(*image.size),get(node,'id'))
 
+    def test_ose_component_bytes_and_owned_nodes_remain_exact_when_yuk_is_added(self):
+        if not any(r['tag']=='YUK'for r in self.rows):self.skipTest('Independent YUK component is not admitted')
+        contract=json.loads((HERE/'ose_contract.json').read_text());self.assertEqual('fa0506ecf3d564e03baf51be1466798929fcf44d',contract['base'])
+        self.assertEqual(26,len(contract['files']))
+        for relative,digest in contract['files'].items():self.assertEqual(digest,hashlib.sha256((ROOT/relative).read_bytes()).hexdigest(),relative)
+        for relative,expected in contract['nodes'].items():
+            tree=parse((ROOT/relative).read_text());path=Path(relative)
+            if path.parent.name=='events':current={get(v,'id'):v for k,_,v in tree if k=='country_event'}
+            elif path.suffix=='.gfx':current={get(v,'name'):v for k,_,v in get(tree,'spriteTypes')}
+            else:current={k:v for k,_,v in tree}
+            for name,record in expected.items():
+                value=current[name]
+                if record['prefix_length']is not None:value=value[:record['prefix_length']]
+                self.assertEqual(record['sha256'],hashlib.sha256(json.dumps(value,separators=(',',':')).encode()).hexdigest(),(relative,name))
+        for name,digest in contract['localization'].items():self.assertEqual(digest,hashlib.sha256(self.loc[name].encode()).hexdigest(),name)
+
 
 if __name__=='__main__':unittest.main(verbosity=2)

@@ -1,0 +1,324 @@
+{
+  "coverage": "Integrated source/offline only; fixtures and copied state are not native acceptance.",
+  "base_commit": "a5ab0bfc92b6f3597c119b8758d5b03fc9fa2ebb",
+  "source_state": "Working-tree candidate, including recorded integration fixes.",
+  "source_sha256": {
+    "tools/usean_partners/build.py": "b77910feb37e7cf4856463915c02ad3cf9e573664a5d8da52fbc664615da3b2f",
+    "tools/usean_partners/build_art.py": "8d1bdd5043fb32fc1cdba97643a8aea1a71e8b45802d51be979f35a840565af4",
+    "tools/usean_partners/content.py": "26819585dada4ede4001cb460f993811919246049857ecf59cbf1992c891ea22",
+    "tools/usean_partners/narrative.py": "716619238e96205504bf4a77be619ad232fc4466f44e1457d90c01e0f8569b92",
+    "tools/usean_partners/programmes.py": "8c6fa6e1cd3b00584f0136bb302f6a15e039d9938573c63d3132ec4a335a6b1e",
+    "tools/usean_partners/run_checks.py": "4054a89acb56b35e2d9f2a0fe91d0c47d1ee4cd6ceaf5c7d2ccd46d416d8edd3",
+    "tools/usean_partners/scope_rules.py": "dfd633810756d07c1ba69a4bf5e23e6483ba933450cd2da44f72789ae8c19721",
+    "tools/usean_partners/scopes.py": "08d7f5388af85a776d5a50b2fa36b74abd88006f9f1e56e462d359eef2a30806",
+    "tools/usean_partners/test_content.py": "50fe61d23ca0cfe08a0e48a60659f1a0c6cb6950bdbdce2ff1db0597a590188a",
+    "tools/usean_partners/test_integration.py": "9ec737f2cbb60f9099f48874b581e166f294a9599e89a99547cf1c5b3f9241a9",
+    "tools/usean_partners/assets.json": "b01f813a294e9e8e3c3739aadb4fb044a6c335ce72b6a1ea376384caef5a4234",
+    "tools/usean_partners/engine_contracts.json": "29412fd0d17c8eff42a2b9458430d666dbfa12213234f80afdc51eccfbb173ea",
+    "tools/usean_partners/focus_art.json": "df9638d2f37e85a0f3cda8b973ecc4c97d85ab1bcc9360ff86f3ee509780dcc2",
+    "tools/usean_partners/purposes.json": "fd798ebc6f1bc40f7fa522efaf314cfc72c06111177f97f144067414e85ea3f6",
+    "tools/Test-SharedSystems.py": "b3b162aaf1d3536f6387b742b542c68cf65ff077804a61140f79d6e52f4dd781",
+    "tools/economy_v2/harness.py": "6ae105744ffb01db25afa9aa21a3dc5e6df0dcba07b0e6576d95610a1547a537",
+    "mod/2985041246/common/scripted_effects/ac_macro_effects.txt": "bb13f512a567e6bda43dd4371f5e58f2813aafee01d733119b4941b1df60e7b9",
+    "mod/2985041246/common/scripted_effects/ac_politics.txt": "34558beec30a8530118950d4332c5d316046b7bdcc0247c814bb22b5d3af7243",
+    "mod/2985041246/common/scripted_effects/ac_usean_partners.txt": "e88779f906de381aa6356051e0c76d96a8dcd615c319c7a2b409e169b8fddc57",
+    "mod/2985041246/common/scripted_triggers/ac_usean_partners.txt": "d5fec6b4841525de4e62b1114e91a058932f1dd71daaac41882973c77ee8b7c0",
+    "mod/2985041246/common/on_actions/ac_usean_partners.txt": "647d65aaee548bfbd2f23b225ecaf6f7cd3595abb632d8739be7b91c47753d2a",
+    "tools/world_foundation/country_registry.json": "b790813d9f1cf2e900f045520a0d68d2910ab7c66757f41d6cab012e8d1587d1"
+  },
+  "checks": [
+    {
+      "check": "partners",
+      "command": [
+        "python",
+        "-B",
+        "tools/usean_partners/test_content.py",
+        "--require-dependencies",
+        "--engine",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 84.55,
+      "log": "partners.txt"
+    },
+    {
+      "check": "real-owners",
+      "command": [
+        "python",
+        "-B",
+        "tools/usean_partners/test_integration.py"
+      ],
+      "exit_code": 0,
+      "seconds": 18.7,
+      "log": "real-owners.txt"
+    },
+    {
+      "check": "world",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_foundation/test_foundation.py",
+        "--reference",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 9.11,
+      "log": "world.txt"
+    },
+    {
+      "check": "macro",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-EconomyV2.py"
+      ],
+      "exit_code": 0,
+      "seconds": 120.94,
+      "log": "macro.txt"
+    },
+    {
+      "check": "shared",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-SharedSystems.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.23,
+      "log": "shared.txt"
+    },
+    {
+      "check": "ledger",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-EconomyLedger.py"
+      ],
+      "exit_code": 0,
+      "seconds": 6.75,
+      "log": "ledger.txt"
+    },
+    {
+      "check": "institutions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-Institutions.py"
+      ],
+      "exit_code": 0,
+      "seconds": 9.95,
+      "log": "institutions.txt"
+    },
+    {
+      "check": "forces",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-ForceUpkeep.py",
+        "--engine",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 3.16,
+      "log": "forces.txt"
+    },
+    {
+      "check": "partner-generation",
+      "command": [
+        "python",
+        "-B",
+        "tools/usean_partners/build.py",
+        "--check",
+        "--require-dependencies"
+      ],
+      "exit_code": 0,
+      "seconds": 0.31,
+      "log": "partner-generation.txt"
+    },
+    {
+      "check": "world-generation",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_foundation/build.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.38,
+      "log": "world-generation.txt"
+    },
+    {
+      "check": "anea-generation",
+      "command": [
+        "python",
+        "-B",
+        "tools/anea/foundation.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.44,
+      "log": "anea-generation.txt"
+    },
+    {
+      "check": "macro-generation",
+      "command": [
+        "python",
+        "-B",
+        "tools/economy_v2/build.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.41,
+      "log": "macro-generation.txt"
+    },
+    {
+      "check": "institution-generation",
+      "command": [
+        "python",
+        "-B",
+        "tools/institutions/build.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.27,
+      "log": "institution-generation.txt"
+    },
+    {
+      "check": "government-generation",
+      "command": [
+        "python",
+        "-B",
+        "tools/usea_expansion/build_leaders.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.53,
+      "log": "government-generation.txt"
+    },
+    {
+      "check": "registry",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_foundation/registry.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7,
+      "log": "registry.txt"
+    },
+    {
+      "check": "assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 1.25,
+      "log": "assets.txt"
+    },
+    {
+      "check": "eru-budget",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_foundation/budget.py",
+        "--reference",
+        "<installed-engine-reference>",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.42,
+      "log": "eru-budget.txt"
+    },
+    {
+      "check": "overview-generation",
+      "command": [
+        "python",
+        "-B",
+        "tools/overhaul/build_overview.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.22,
+      "log": "overview-generation.txt"
+    },
+    {
+      "check": "regional-label-generation",
+      "command": [
+        "python",
+        "-B",
+        "tools/overhaul/build_regional_labels.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3,
+      "log": "regional-label-generation.txt"
+    },
+    {
+      "check": "release-plan",
+      "command": [
+        "python",
+        "-B",
+        "tools/overhaul/check_release_plan.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.2,
+      "log": "release-plan.txt"
+    },
+    {
+      "check": "core",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-engine-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 367.36,
+      "log": "core.txt"
+    },
+    {
+      "check": "focus-screen",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-FocusScreenRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.98,
+      "log": "focus-screen.txt"
+    },
+    {
+      "check": "decisions-screen",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-DecisionUI.py"
+      ],
+      "exit_code": 0,
+      "seconds": 6.66,
+      "log": "decisions-screen.txt"
+    },
+    {
+      "check": "overhaul",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-OverhaulRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.5,
+      "log": "overhaul.txt"
+    }
+  ],
+  "native_status": "Paused; untested."
+}

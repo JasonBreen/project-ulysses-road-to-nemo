@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "date": "2026-10-31",
+  "implementation_commit": "fb08414",
+  "tested_source_head": "60c3d97038c98b49ddab536f5540eb00a37185c8",
+  "integrated_main": "3810d1a",
+  "working_tree_at_tests": "Registry refreshed after main merge; evidence files added. No further gameplay changes.",
+  "evidence_kind": "Static and actual-source offline checks only",
+  "checks": [
+    {
+      "id": "world-foundation",
+      "command": "python -B tools/world_foundation/test_foundation.py --reference 'G:/steamlbirary/steamapps/common/Hearts of Iron IV'",
+      "result": "passed",
+      "tests": 10
+    },
+    {
+      "id": "anea-foundation",
+      "command": "python -B tools/anea/test_foundation.py --reference 'G:/steamlbirary/steamapps/common/Hearts of Iron IV'",
+      "result": "passed",
+      "tests": 11
+    },
+    {
+      "id": "usea-expansion",
+      "command": "python -B tools/Test-UseaExpansion.py",
+      "result": "passed",
+      "tests": 17
+    },
+    {
+      "id": "interface-starting-governments",
+      "command": "python -B tools/Test-InterfaceRepairs.py",
+      "result": "passed",
+      "tests": 8
+    },
+    {
+      "id": "continental-war",
+      "command": "python -B tools/Test-ContinentalWar.py",
+      "result": "passed",
+      "tests": 29
+    },
+    {
+      "id": "supporting-countries",
+      "command": "python -B tools/Test-UseaActors.py",
+      "result": "passed",
+      "tests": 13
+    },
+    {
+      "id": "aftermath",
+      "command": "python -B tools/Test-PeaceWeInherit.py",
+      "result": "passed",
+      "tests": 24
+    },
+    {
+      "id": "usean-rebellion",
+      "command": "python -B tools/Test-UseanRebellion.py",
+      "result": "passed",
+      "tests": 3
+    },
+    {
+      "id": "pr-scanner-self-tests",
+      "command": "python -B tools/pr_scan.py --self-test",
+      "result": "passed",
+      "tests": 6
+    },
+    {
+      "id": "strict-authored-assets",
+      "command": "python -B tools/audit_visual_dependencies.py --strict-all",
+      "result": "passed",
+      "tests": null
+    },
+    {
+      "id": "usea-generated-content",
+      "command": "python -B tools/usea_expansion/build_content.py --check",
+      "result": "passed",
+      "tests": null
+    },
+    {
+      "id": "starting-government-generated-content",
+      "command": "python -B tools/usea_expansion/build_leaders.py --check",
+      "result": "passed",
+      "tests": null
+    },
+    {
+      "id": "full-static",
+      "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File tools/Test-UlyssesStatic.ps1 -ModRoot ./mod/2985041246 -ReferenceGameRoot 'G:/steamlbirary/steamapps/common/Hearts of Iron IV'",
+      "result": "passed",
+      "tests": null
+    },
+    {
+      "id": "pr-scan",
+      "command": "python -B tools/pr_scan.py --base origin/main --comment-out docs/evidence/world-foundation/pr-scan.md --annotations-out docs/evidence/world-foundation/pr-scan.json",
+      "result": "passed",
+      "tests": null
+    },
+    {
+      "id": "whitespace",
+      "command": "git diff --check",
+      "result": "passed",
+      "tests": null
+    }
+  ],
+  "metrics": {
+    "new_source_tests": 10,
+    "direct_dlc_country_combinations_checked": 16,
+    "map_errors": 0,
+    "map_existing_placeholder_warnings": 2,
+    "reference_existing_warnings": 2007,
+    "technology_existing_warnings": 1,
+    "authored_sprites": 5081,
+    "focus_bindings": 940,
+    "missing_authored_textures": 0,
+    "pr_scan_errors": 0,
+    "pr_scan_warnings": 0,
+    "pr_scan_changed_script_files": 57
+  },
+  "generator_orders": "Full Anea/world generators ran in both orders; all generated payload hashes unchanged. Stale/mutated foreign records tested and rejected.",
+  "native": {
+    "status": "paused",
+    "executed": false,
+    "final_candidate_accepted": false,
+    "untested": [
+      "Native parsing of new military setup",
+      "Real supply/fuel consumption and throughput",
+      "AI production/deployment and force growth",
+      "Balance/natural war progression",
+      "Save/load and old-save behavior in the game"
+    ]
+  },
+  "existing_gaps": [
+    "Registry is not universal native acceptance: 26 landowners lack industry, 28 lack infrastructure, 14 have a foreign capital",
+    "FAT_navy has an inherited offline parser error requiring separate investigation; no new native finding claimed"
+  ],
+  "protected_sources": "No differences in archive/baseline, province raster/definitions, state 171 or strategic regions",
+  "installation_sync": false,
+  "publication_or_merge": false,
+  "capital_follow_up": {
+    "source_commit": "96cb5ea48aa797c88b96e7dcca52a9847ad625c8",
+    "working_tree_at_tests": "Registry and its ownership regression updated for all fourteen repairs; documentation changes only otherwise.",
+    "payload_sha256": "157000f88f0a63d52236d528a01ef051ed9d806ad632b3d6bc6ebdd944eb56e3",
+    "world_foundation_tests": 10,
+    "capital_tests": 8,
+    "full_static_with_read_only_reference": "passed",
+    "foreign_capitals_remaining": 0,
+    "native_status": "not run; paused"
+  },
+  "registry_review_follow_up": {
+    "issue": "Platform-dependent Path ordering changed the registry digest on Linux",
+    "fix": "Explicit relative POSIX string ordering with casefold plus exact spelling tie-break",
+    "local_foundation_tests": 11,
+    "capital_tests": 8,
+    "ci_platforms": [
+      "windows-latest",
+      "ubuntu-latest"
+    ],
+    "native_status": "not run; paused"
+  },
+  "capital_portability_follow_up": {
+    "source_commit": "697b65d",
+    "capital_tests": 9,
+    "foundation_tests": 11,
+    "windows_ci": "passed",
+    "linux_ci": "passed",
+    "change": "Exact rational raster moments; selected capitals unchanged",
+    "native_status": "not run; paused"
+  }
+}

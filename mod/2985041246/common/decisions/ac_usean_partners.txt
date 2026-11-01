@@ -1,0 +1,931 @@
+# Authored gameplay; source: tools/usean_partners/content.py and build.py.
+ac_up_sns_programmes = {
+	SNS_up_network_programme = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = SNS_up_district_switchboards_done NOT = { has_country_flag = SNS_up_network_programme_active } NOT = { has_country_flag = ac_up_allocation_lock } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_network_programme_spirit
+			}
+			hidden_effect = {
+				SNS_up_network_programme_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_protection_programme = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = SNS_up_protection_inventory_done NOT = { has_country_flag = SNS_up_protection_programme_active } NOT = { has_country_flag = ac_up_allocation_lock } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_protection_programme_spirit
+			}
+			hidden_effect = {
+				SNS_up_protection_programme_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_adopt_programme = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS }
+		visible = { ac_up_active = yes NOT = { has_focus_tree = ac_up_sns_tree } }
+		available = { ac_up_active = yes ac_pol_previous_tree_idle = yes OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation } NOT = { has_focus_tree = ac_up_sns_tree } }
+		cost = 0
+		complete_effect = {
+			if = {
+				limit = { ac_up_active = yes ac_pol_previous_tree_idle = yes OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation } NOT = { has_focus_tree = ac_up_sns_tree } }
+				load_focus_tree = { tree = ac_up_sns_tree keep_completed = yes }
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+
+	SNS_up_review_burden = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes OR = { has_country_flag = SNS_up_project_burden_review_done has_country_flag = SNS_up_stonehenge_liaison_done has_country_flag = SNS_up_protection_accounts_done } NOT = { has_country_flag = ac_up_review_cooldown } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			hidden_effect = {
+				SNS_up_review_burden_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_offer_service = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes NOT = { has_country_flag = ac_up_offer_attempted } }
+		available = { ac_up_can_fund = yes has_country_flag = SNS_up_coalition_contact_done ac_up_sns_partner_valid = yes NOT = { has_country_flag = ac_up_offer_attempted } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			hidden_effect = {
+				SNS_up_send_offer = yes
+			}
+		}
+		ai_will_do = { base = 5 }
+	}
+
+	SNS_up_scope_dispatch_chain = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = SNS ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = SNS_up_dispatch_register_done has_country_flag = SNS_up_route_permissions_done has_country_flag = SNS_up_depot_receipts_done has_country_flag = SNS_up_allocation_board_done check_variable = { ac_up_sns_contact_records > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_scope_dispatch_chain_spirit
+			}
+			hidden_effect = {
+				SNS_up_scope_dispatch_chain_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_scope_relay_maintenance = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = SNS ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = SNS_up_service_crews_done has_country_flag = SNS_up_night_contacts_done has_country_flag = SNS_up_line_maintenance_done has_country_flag = SNS_up_local_relay_plans_done check_variable = { ac_up_sns_contact_records > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_scope_relay_maintenance_spirit
+			}
+			hidden_effect = {
+				SNS_up_scope_relay_maintenance_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_scope_safe_water = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = SNS ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = SNS_up_water_desks_done has_country_flag = SNS_up_water_reserve_checks_done has_country_flag = SNS_up_receiving_points_done has_country_flag = SNS_up_shelter_turnover_done check_variable = { ac_up_sns_protection_records > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_scope_safe_water_spirit
+			}
+			hidden_effect = {
+				SNS_up_scope_safe_water_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_scope_volunteer_replacements = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = SNS ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = SNS_up_volunteer_credentials_done has_country_flag = SNS_up_protected_rosters_done has_country_flag = SNS_up_protection_rotation_done has_country_flag = SNS_up_protection_training_done check_variable = { ac_up_sns_protection_records > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_scope_volunteer_replacements_spirit
+			}
+			hidden_effect = {
+				SNS_up_scope_volunteer_replacements_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_scope_family_custody = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = SNS ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = SNS_up_district_exercises_done has_country_flag = SNS_up_family_enquiries_done has_country_flag = SNS_up_evacuation_contacts_done has_country_flag = SNS_up_backup_registers_done check_variable = { ac_up_sns_contact_records > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_scope_family_custody_spirit
+			}
+			hidden_effect = {
+				SNS_up_scope_family_custody_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_scope_clinic_reserve = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = SNS ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = SNS_up_shelter_keys_done has_country_flag = SNS_up_medical_reserve_lists_done has_country_flag = SNS_up_shelter_inspections_done check_variable = { ac_up_sns_protection_records > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_scope_clinic_reserve_spirit
+			}
+			hidden_effect = {
+				SNS_up_scope_clinic_reserve_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_scope_warning_liaison = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = SNS ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = SNS_up_scientific_liaison_done has_country_flag = SNS_up_forecast_revisions_done has_country_flag = SNS_up_stonehenge_access_done check_variable = { ac_up_sns_contact_records > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_scope_warning_liaison_spirit
+			}
+			hidden_effect = {
+				SNS_up_scope_warning_liaison_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_scope_mobile_triage = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = SNS ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = SNS_up_after_the_crisis_done has_country_flag = SNS_up_repair_requests_done has_country_flag = SNS_up_mobile_desks_done has_country_flag = SNS_up_dispersed_custody_done has_country_flag = SNS_up_displaced_staff_done check_variable = { ac_up_sns_contact_records > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_scope_mobile_triage_spirit
+			}
+			hidden_effect = {
+				SNS_up_scope_mobile_triage_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_scope_settlement_routes = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = SNS ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = SNS_up_dispatch_fallback_done has_country_flag = SNS_up_settlement_instructions_done has_country_flag = SNS_up_restoration_order_done has_country_flag = SNS_up_coalition_accounts_done has_country_flag = SNS_up_postwar_contact_desks_done check_variable = { ac_up_sns_contact_records > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_scope_settlement_routes_spirit
+			}
+			hidden_effect = {
+				SNS_up_scope_settlement_routes_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	SNS_up_scope_lasting_custody = {
+		icon = ac_up_sns_programme
+		allowed = { tag = SNS original_tag = SNS }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = SNS ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = SNS_up_missing_files_done has_country_flag = SNS_up_local_repair_compacts_done has_country_flag = SNS_up_district_return_rota_done has_country_flag = SNS_up_archives_of_disruption_done has_country_flag = SNS_up_permanent_service_terms_done has_country_flag = SNS_up_protection_endowment_done check_variable = { ac_up_sns_protection_records > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = SNS_up_scope_lasting_custody_spirit
+			}
+			hidden_effect = {
+				SNS_up_scope_lasting_custody_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+}
+
+ac_up_amb_programmes = {
+	AMB_up_reserve_programme = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = AMB_up_service_inventory_done NOT = { has_country_flag = AMB_up_reserve_programme_active } NOT = { has_country_flag = ac_up_allocation_lock } check_variable = { ac_up_amber_slots < ac_up_amber_limit } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = AMB_up_reserve_programme_spirit
+			}
+			hidden_effect = {
+				AMB_up_reserve_programme_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	AMB_up_transport_programme = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = AMB_up_transport_returns_done NOT = { has_country_flag = AMB_up_transport_programme_active } NOT = { has_country_flag = ac_up_allocation_lock } check_variable = { ac_up_amber_slots > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = AMB_up_transport_programme_spirit
+			}
+			hidden_effect = {
+				AMB_up_transport_programme_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	AMB_up_adopt_programme = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB }
+		visible = { ac_up_active = yes NOT = { has_focus_tree = ac_up_amb_tree } }
+		available = { ac_up_active = yes ac_pol_previous_tree_idle = yes OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation } NOT = { has_focus_tree = ac_up_amb_tree } }
+		cost = 0
+		complete_effect = {
+			if = {
+				limit = { ac_up_active = yes ac_pol_previous_tree_idle = yes OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation } NOT = { has_focus_tree = ac_up_amb_tree } }
+				load_focus_tree = { tree = ac_up_amb_tree keep_completed = yes }
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+
+	AMB_up_reassign_slot = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = AMB_up_spare_capacity_done check_variable = { ac_up_amber_slots > 0 } NOT = { has_country_flag = ac_up_review_cooldown } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			hidden_effect = {
+				AMB_up_reassign_slot_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	AMB_up_offer_service = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes NOT = { has_country_flag = ac_up_offer_attempted } }
+		available = { ac_up_can_fund = yes has_country_flag = AMB_up_coalition_capacity_done ac_up_amb_partner_valid = yes NOT = { has_country_flag = ac_up_offer_attempted } check_variable = { ac_up_amber_slots > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			hidden_effect = {
+				AMB_up_send_offer = yes
+			}
+		}
+		ai_will_do = { base = 5 }
+	}
+
+	AMB_up_scope_supplier_links = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = AMB ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = AMB_up_development_register_done has_country_flag = AMB_up_common_timetable_done has_country_flag = AMB_up_workshop_routes_done has_country_flag = AMB_up_regional_bargains_done check_variable = { ac_up_amber_slots > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = AMB_up_scope_supplier_links_spirit
+			}
+			hidden_effect = {
+				AMB_up_scope_supplier_links_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	AMB_up_scope_receiving_windows = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = AMB ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = AMB_up_service_authorisations_done has_country_flag = AMB_up_transport_inspection_done has_country_flag = AMB_up_contingency_slots_done has_country_flag = AMB_up_receiving_windows_done check_variable = { ac_up_amber_slots > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = AMB_up_scope_receiving_windows_spirit
+			}
+			hidden_effect = {
+				AMB_up_scope_receiving_windows_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	AMB_up_scope_workshop_reserve = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = AMB ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = AMB_up_maintenance_bargains_done has_country_flag = AMB_up_contract_scenarios_done has_country_flag = AMB_up_supplier_reserves_done has_country_flag = AMB_up_capacity_exercises_done check_variable = { ac_up_amber_slots > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = AMB_up_scope_workshop_reserve_spirit
+			}
+			hidden_effect = {
+				AMB_up_scope_workshop_reserve_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	AMB_up_scope_forecast_dispatch = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = AMB ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = AMB_up_forecast_contacts_done has_country_flag = AMB_up_joint_planning_table_done has_country_flag = AMB_up_freight_contingencies_done has_country_flag = AMB_up_crisis_timetable_done check_variable = { ac_up_amber_slots > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = AMB_up_scope_forecast_dispatch_spirit
+			}
+			hidden_effect = {
+				AMB_up_scope_forecast_dispatch_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	AMB_up_scope_receiving_triage = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = AMB ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = AMB_up_supplier_continuity_done has_country_flag = AMB_up_service_triage_done has_country_flag = AMB_up_relief_receipts_done has_country_flag = AMB_up_contractor_failure_done check_variable = { ac_up_amber_slots > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = AMB_up_scope_receiving_triage_spirit
+			}
+			hidden_effect = {
+				AMB_up_scope_receiving_triage_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	AMB_up_scope_domestic_redeployment = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = AMB ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = AMB_up_domestic_reservations_done has_country_flag = AMB_up_workshop_recovery_done has_country_flag = AMB_up_service_replacement_done has_country_flag = AMB_up_transport_rotation_done check_variable = { ac_up_amber_slots > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = AMB_up_scope_domestic_redeployment_spirit
+			}
+			hidden_effect = {
+				AMB_up_scope_domestic_redeployment_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	AMB_up_scope_settlement_arbitration = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = AMB ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = AMB_up_release_service_slots_done has_country_flag = AMB_up_settlement_routes_done has_country_flag = AMB_up_reconstruction_timetable_done has_country_flag = AMB_up_supplier_arbitration_done check_variable = { ac_up_amber_slots > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = AMB_up_scope_settlement_arbitration_spirit
+			}
+			hidden_effect = {
+				AMB_up_scope_settlement_arbitration_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	AMB_up_scope_standing_terms = {
+		icon = ac_up_amb_programme
+		allowed = { tag = AMB original_tag = AMB }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = AMB ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = AMB_up_service_cost_review_done has_country_flag = AMB_up_coalition_reconciliation_done has_country_flag = AMB_up_maintain_local_bargains_done has_country_flag = AMB_up_domestic_service_terms_done has_country_flag = AMB_up_postwar_transport_done check_variable = { ac_up_amber_slots > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = AMB_up_scope_standing_terms_spirit
+			}
+			hidden_effect = {
+				AMB_up_scope_standing_terms_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+}
+
+ac_up_uge_programmes = {
+	UGE_up_dispersal_programme = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = UGE_up_depot_register_done NOT = { has_country_flag = UGE_up_dispersal_programme_active } NOT = { has_country_flag = ac_up_allocation_lock } check_variable = { ac_up_uge_used < ac_up_uge_limit } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = UGE_up_dispersal_programme_spirit
+			}
+			hidden_effect = {
+				UGE_up_dispersal_programme_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	UGE_up_mobility_programme = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = UGE_up_mobility_return_done NOT = { has_country_flag = UGE_up_mobility_programme_active } NOT = { has_country_flag = ac_up_allocation_lock } check_variable = { ac_up_uge_used < ac_up_uge_limit } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = UGE_up_mobility_programme_spirit
+			}
+			hidden_effect = {
+				UGE_up_mobility_programme_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	UGE_up_receiving_programme = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = UGE_up_receiving_contacts_done NOT = { has_country_flag = UGE_up_receiving_programme_active } NOT = { has_country_flag = ac_up_allocation_lock } check_variable = { ac_up_uge_used < ac_up_uge_limit } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = UGE_up_receiving_programme_spirit
+			}
+			hidden_effect = {
+				UGE_up_receiving_programme_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	UGE_up_reserve_programme = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = UGE_up_reserve_space_done NOT = { has_country_flag = UGE_up_reserve_programme_active } NOT = { has_country_flag = ac_up_allocation_lock } check_variable = { ac_up_uge_used < ac_up_uge_limit } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = UGE_up_reserve_programme_spirit
+			}
+			hidden_effect = {
+				UGE_up_reserve_programme_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	UGE_up_adopt_programme = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE }
+		visible = { ac_up_active = yes NOT = { has_focus_tree = ac_up_uge_tree } }
+		available = { ac_up_active = yes ac_pol_previous_tree_idle = yes OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation } NOT = { has_focus_tree = ac_up_uge_tree } }
+		cost = 0
+		complete_effect = {
+			if = {
+				limit = { ac_up_active = yes ac_pol_previous_tree_idle = yes OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation } NOT = { has_focus_tree = ac_up_uge_tree } }
+				load_focus_tree = { tree = ac_up_uge_tree keep_completed = yes }
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+
+	UGE_up_release_dispersal = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes has_country_flag = UGE_up_dispersal_programme_active }
+		cost = 0
+		complete_effect = {
+			hidden_effect = {
+				UGE_up_dispersal_programme_release = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+
+	UGE_up_release_mobility = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes has_country_flag = UGE_up_mobility_programme_active }
+		cost = 0
+		complete_effect = {
+			hidden_effect = {
+				UGE_up_mobility_programme_release = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+
+	UGE_up_release_receiving = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes has_country_flag = UGE_up_receiving_programme_active }
+		cost = 0
+		complete_effect = {
+			hidden_effect = {
+				UGE_up_receiving_programme_release = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+
+	UGE_up_release_reserve = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes has_country_flag = UGE_up_reserve_programme_active }
+		cost = 0
+		complete_effect = {
+			hidden_effect = {
+				UGE_up_reserve_programme_release = yes
+			}
+		}
+		ai_will_do = { base = 0 }
+	}
+
+	UGE_up_offer_service = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes NOT = { has_country_flag = ac_up_offer_attempted } }
+		available = { ac_up_can_fund = yes has_country_flag = UGE_up_coalition_mobility_done ac_up_uge_partner_valid = yes NOT = { has_country_flag = ac_up_offer_attempted } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			hidden_effect = {
+				UGE_up_send_offer = yes
+			}
+		}
+		ai_will_do = { base = 5 }
+	}
+
+	UGE_up_scope_depot_custody = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = UGE ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = UGE_up_reserve_rota_done has_country_flag = UGE_up_slot_authority_done has_country_flag = UGE_up_depot_contingencies_done has_country_flag = UGE_up_protected_storage_done check_variable = { ac_up_uge_used < ac_up_uge_limit } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = UGE_up_scope_depot_custody_spirit
+			}
+			hidden_effect = {
+				UGE_up_scope_depot_custody_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	UGE_up_scope_driver_relay = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = UGE ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = UGE_up_movement_exercises_done has_country_flag = UGE_up_forecast_dispatch_done has_country_flag = UGE_up_local_drivers_done has_country_flag = UGE_up_service_slot_review_done check_variable = { ac_up_uge_used < ac_up_uge_limit } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = UGE_up_scope_driver_relay_spirit
+			}
+			hidden_effect = {
+				UGE_up_scope_driver_relay_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	UGE_up_scope_receiving_chain = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = UGE ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = UGE_up_dispersed_accounts_done has_country_flag = UGE_up_emergency_movement_done has_country_flag = UGE_up_after_the_warning_done has_country_flag = UGE_up_receiving_repairs_done check_variable = { ac_up_uge_used < ac_up_uge_limit } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = UGE_up_scope_receiving_chain_spirit
+			}
+			hidden_effect = {
+				UGE_up_scope_receiving_chain_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	UGE_up_scope_reopening_rotation = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = UGE ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = UGE_up_depot_recovery_done has_country_flag = UGE_up_slot_rotation_done has_country_flag = UGE_up_mobility_recovery_done has_country_flag = UGE_up_settlement_inventory_done check_variable = { ac_up_uge_used < ac_up_uge_limit } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = UGE_up_scope_reopening_rotation_spirit
+			}
+			hidden_effect = {
+				UGE_up_scope_reopening_rotation_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	UGE_up_scope_trained_reserve = {
+		icon = ac_up_uge_programme
+		allowed = { tag = UGE original_tag = UGE }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = UGE ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = UGE_up_review_slot_costs_done has_country_flag = UGE_up_depot_terms_done has_country_flag = UGE_up_mobility_training_done has_country_flag = UGE_up_coalition_receipts_done check_variable = { ac_up_uge_used < ac_up_uge_limit } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = UGE_up_scope_trained_reserve_spirit
+			}
+			hidden_effect = {
+				UGE_up_scope_trained_reserve_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+}
+
+ac_up_del_programmes = {
+	DEL_up_inspection_programme = {
+		icon = ac_up_del_programme
+		allowed = { tag = DEL original_tag = DEL }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = DEL_up_inspection_office_done NOT = { has_country_flag = DEL_up_inspection_programme_active } NOT = { has_country_flag = ac_up_allocation_lock } check_variable = { ac_up_del_cases < 6 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = DEL_up_inspection_programme_spirit
+			}
+			hidden_effect = {
+				DEL_up_inspection_programme_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	DEL_up_command_programme = {
+		icon = ac_up_del_programme
+		allowed = { tag = DEL original_tag = DEL }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = DEL_up_requisition_register_done NOT = { has_country_flag = DEL_up_command_programme_active } NOT = { has_country_flag = ac_up_allocation_lock } check_variable = { ac_up_del_obligations < 3 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = DEL_up_command_programme_spirit
+			}
+			hidden_effect = {
+				DEL_up_command_programme_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	DEL_up_adopt_programme = {
+		icon = ac_up_del_programme
+		allowed = { tag = DEL }
+		visible = { ac_up_active = yes NOT = { has_focus_tree = ac_up_del_tree } }
+		available = { ac_up_active = yes ac_pol_previous_tree_idle = yes OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation } NOT = { has_focus_tree = ac_up_del_tree } }
+		cost = 0
+		complete_effect = {
+			if = {
+				limit = { ac_up_active = yes ac_pol_previous_tree_idle = yes OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation } NOT = { has_focus_tree = ac_up_del_tree } }
+				load_focus_tree = { tree = ac_up_del_tree keep_completed = yes }
+			}
+		}
+		ai_will_do = { base = 1 }
+	}
+
+	DEL_up_resolve_docket = {
+		icon = ac_up_del_programme
+		allowed = { tag = DEL original_tag = DEL }
+		visible = { ac_up_active = yes }
+		available = { ac_up_can_fund = yes has_country_flag = DEL_up_verification_rules_done check_variable = { ac_up_del_cases > 0 } check_variable = { ac_up_del_obligations > 0 } NOT = { has_country_flag = ac_up_review_cooldown } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			hidden_effect = {
+				DEL_up_resolve_docket_apply = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	DEL_up_offer_service = {
+		icon = ac_up_del_programme
+		allowed = { tag = DEL original_tag = DEL }
+		visible = { ac_up_active = yes NOT = { has_country_flag = ac_up_offer_attempted } }
+		available = { ac_up_can_fund = yes has_country_flag = DEL_up_coalition_commitment_done ac_up_del_partner_valid = yes NOT = { has_country_flag = ac_up_offer_attempted } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			hidden_effect = {
+				DEL_up_send_offer = yes
+			}
+		}
+		ai_will_do = { base = 5 }
+	}
+
+	DEL_up_scope_receiving_evidence = {
+		icon = ac_up_del_programme
+		allowed = { tag = DEL original_tag = DEL }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = DEL ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = DEL_up_record_returns_done has_country_flag = DEL_up_casework_rota_done has_country_flag = DEL_up_command_accounts_done has_country_flag = DEL_up_receiving_standards_done check_variable = { ac_up_del_cases > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = DEL_up_scope_receiving_evidence_spirit
+			}
+			hidden_effect = {
+				DEL_up_scope_receiving_evidence_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	DEL_up_scope_warning_review = {
+		icon = ac_up_del_programme
+		allowed = { tag = DEL original_tag = DEL }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = DEL ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = DEL_up_contingency_dockets_done has_country_flag = DEL_up_service_obligations_done has_country_flag = DEL_up_scientific_returns_done has_country_flag = DEL_up_inspection_exercises_done check_variable = { ac_up_del_cases > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = DEL_up_scope_warning_review_spirit
+			}
+			hidden_effect = {
+				DEL_up_scope_warning_review_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	DEL_up_scope_competing_demands = {
+		icon = ac_up_del_programme
+		allowed = { tag = DEL original_tag = DEL }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = DEL ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = DEL_up_reserve_commitments_done has_country_flag = DEL_up_records_duplicates_done has_country_flag = DEL_up_emergency_casework_done has_country_flag = DEL_up_command_requests_done check_variable = { ac_up_del_cases > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = DEL_up_scope_competing_demands_spirit
+			}
+			hidden_effect = {
+				DEL_up_scope_competing_demands_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	DEL_up_scope_mobile_audit = {
+		icon = ac_up_del_programme
+		allowed = { tag = DEL original_tag = DEL }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = DEL ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = DEL_up_crisis_accounts_done has_country_flag = DEL_up_records_in_motion_done has_country_flag = DEL_up_requisition_audits_done has_country_flag = DEL_up_receiving_backlog_done check_variable = { ac_up_del_cases > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = DEL_up_scope_mobile_audit_spirit
+			}
+			hidden_effect = {
+				DEL_up_scope_mobile_audit_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	DEL_up_scope_settlement_appeal = {
+		icon = ac_up_del_programme
+		allowed = { tag = DEL original_tag = DEL }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = DEL ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = DEL_up_obligation_settlement_done has_country_flag = DEL_up_actual_terms_done has_country_flag = DEL_up_casework_recovery_done check_variable = { ac_up_del_cases > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = DEL_up_scope_settlement_appeal_spirit
+			}
+			hidden_effect = {
+				DEL_up_scope_settlement_appeal_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+
+	DEL_up_scope_standing_accounts = {
+		icon = ac_up_del_programme
+		allowed = { tag = DEL original_tag = DEL }
+		visible = { ac_up_active = yes }
+		available = { ac_up_active = yes tag = DEL ac_up_can_fund = yes ac_up_scope_idle = yes NOT = { has_country_flag = ac_up_scope_window } has_country_flag = DEL_up_standing_inspection_done has_country_flag = DEL_up_command_service_terms_done has_country_flag = DEL_up_coalition_dockets_done check_variable = { ac_up_del_cases > 0 } }
+		cost = 0
+		complete_effect = {
+			custom_effect_tooltip = ac_up_cost_tt
+			effect_tooltip = {
+				add_ideas = DEL_up_scope_standing_accounts_spirit
+			}
+			hidden_effect = {
+				DEL_up_scope_standing_accounts_start = yes
+			}
+		}
+		ai_will_do = { base = 2 }
+	}
+}

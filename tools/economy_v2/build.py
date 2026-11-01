@@ -23,6 +23,9 @@ PRESETS = dict(balanced=(1,1,1,1,1), development=(1,1,2,2,0), relief=(1,2,1,1,0)
 # These inherited histories own no country at the 1991 start. A later legitimate
 # release receives the existing state's output, not a second opening balance.
 RELEASE_HISTORY_TAGS = ('AWW','REC','REL','SBK','SER','SHI','TER')
+RELEASE_ACCOUNT_REQUIRED = ('cash','debt','arrears','commitments_annual','replacement_escrow','replacement_target',
+                            'revenue_carry_milli','bill_carry_milli','last_settlement','settlements',
+                            'history_count','history_last_recorded')
 LEGACY_FILES = ('common/scripted_effects/ac_economy_effects.txt',
                 'common/scripted_effects/ac_economy_policy_effects.txt',
                 'common/scripted_triggers/ac_economy_triggers.txt',
@@ -119,10 +122,34 @@ def legacy_and_adapters():
     return out
 
 
-def macro_triggers():
-    return '''# Full mode is default for new histories. Saved legacy rule values remain valid.
+def release_account_presence(effects):
+    """Every persisted fresh-account field is evidence; UI selection is not.
+
+    Read the actual initializer, including expanded ledger/money fields. Adding
+    a future account receipt cannot silently reopen destructive fresh admission.
+    No historical intake/capture is repinned by this generated inventory.
+    """
+    initialization=get(get(parse(effects),'ac_macro_initialize'),'else_if')
+    variables={name for kind,body in walk(initialization) if kind=='set_variable' for name,_,_ in body if name.startswith('ac_macro_')}
+    variables.discard('ac_macro_ui_page')
+    flags=set(re.findall(r'\b(?:set|clr)_country_flag\s*=\s*(ac_macro_\w+)',render(initialization)))
+    flags.discard('ac_macro_history_eligible')
+    flags.add('ac_release_financial_identity_review')
+    return sorted(variables),sorted(flags)
+
+
+def macro_triggers(effects=None):
+    variables,flags=release_account_presence(effects or economic_effects())
+    presence=block('ac_macro_release_account_present',block('OR',
+        '\n'.join('has_variable = '+name for name in variables)+'\n'+
+        '\n'.join('has_country_flag = '+name for name in flags)))
+    complete=block('ac_macro_release_account_complete','''has_variable = ac_macro_identity
+check_variable = { var = ac_macro_identity value = THIS.id compare = equals }
+check_variable = { ac_macro_schema = 2 }
+'''+ '\n'.join('has_variable = ac_macro_'+field for field in RELEASE_ACCOUNT_REQUIRED))
+    return presence+complete+'''# Full mode is default for new histories. Saved legacy rule values remain valid.
 ac_macro_mode = { has_game_rule = { rule = ac_economy option = full } }
-ac_macro_ready = { ac_macro_mode = yes has_country_flag = ac_macro_initialized check_variable = { var = ac_macro_identity value = THIS.id compare = equals } any_owned_state = { always = yes } OR = { ac_econ_release_history = no AND = { check_variable = { ac_macro_schema = 2 } has_variable = ac_macro_cash has_variable = ac_macro_debt } } }
+ac_macro_ready = { ac_macro_mode = yes has_country_flag = ac_macro_initialized check_variable = { var = ac_macro_identity value = THIS.id compare = equals } any_owned_state = { always = yes } OR = { ac_econ_release_history = no AND = { ac_macro_release_account_complete = yes NOT = { has_country_flag = ac_release_financial_identity_review } } } }
 ac_macro_can_borrow = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_credit_room >= ac_macro_loan_size } }
 ac_macro_can_repay = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash > 0 } check_variable = { ac_macro_debt > 0 } }
 ac_macro_can_produce = { ac_macro_ready = yes has_capitulated = no num_of_military_factories > 0 }
@@ -221,13 +248,13 @@ ac_macro_quote = yes
     # resetting cash, debt, contracts, carry or settled history. A mismatched
     # identity is locked for review instead of spending copied stocks or wiping
     # an archived obligation. Ordinary-country initialization stays unchanged.
-    release_adoption='''limit = { ac_macro_mode = yes ac_econ_release_history = yes any_owned_state = { always = yes } OR = { has_variable = ac_macro_identity has_variable = ac_macro_cash has_variable = ac_macro_debt } NOT = { ac_macro_ready = yes } }
-if = { limit = { has_variable = ac_macro_identity check_variable = { var = ac_macro_identity value = THIS.id compare = equals } check_variable = { ac_macro_schema = 2 } has_variable = ac_macro_cash has_variable = ac_macro_debt }
+    release_adoption='''limit = { ac_macro_mode = yes ac_econ_release_history = yes any_owned_state = { always = yes } ac_macro_release_account_present = yes NOT = { ac_macro_ready = yes } }
+if = { limit = { ac_macro_release_account_complete = yes }
  set_country_flag = ac_macro_initialized
  clr_country_flag = ac_release_financial_identity_review
  ac_macro_quote = yes
 }
-else = { clr_country_flag = ac_macro_initialized set_country_flag = ac_release_financial_identity_review }
+else = { set_country_flag = ac_release_financial_identity_review }
 '''
     effect('ac_macro_initialize',block('if',release_adoption)+block('else_if',init))
     quote = '''set_variable = { ac_macro_real_gdp = 0 }
@@ -565,7 +592,7 @@ def build():
     out['common/scripted_effects/ac_macro_profiles.txt'] = profile_effects(data)
     out['common/scripted_effects/ac_macro_effects.txt'] = economic_effects()
     out['common/scripted_effects/ac_macro_ledger.txt'] = ledger.effects()
-    out['common/scripted_triggers/ac_macro_triggers.txt'] = macro_triggers()
+    out['common/scripted_triggers/ac_macro_triggers.txt'] = macro_triggers(out['common/scripted_effects/ac_macro_effects.txt'])
     out['common/game_rules/ac_economy_rules.txt'] = rules()
     out['common/on_actions/ac_macro_on_actions.txt'] = '''on_actions = {
  on_startup = { effect = { every_country = { limit = { ac_macro_mode = yes } ac_macro_initialize = yes } } }

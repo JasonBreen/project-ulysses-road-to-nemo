@@ -15,7 +15,9 @@ from record_evidence import collect,capture,export
 class EvidenceContracts(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
-        self.root=Path(self.temp.name)
+        # Windows runners may expose TEMP through an 8.3 path alias. Compare
+        # canonical filesystem paths, as the delivery API already does.
+        self.root=Path(self.temp.name).resolve()
         self.git('init','-q')
         (self.root/'.gitignore').write_text('runtime-output/\n',encoding='utf-8')
         (self.root/'content.py').write_text('value = 1\n',encoding='utf-8')

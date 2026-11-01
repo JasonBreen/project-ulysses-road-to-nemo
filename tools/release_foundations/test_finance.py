@@ -12,7 +12,7 @@ import unittest
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/economy_v2'))
 from harness import World
-from build import RELEASE_HISTORY_TAGS
+from build import RELEASE_HISTORY_TAGS,RELEASE_ACCOUNT_REQUIRED,release_account_presence,economic_effects
 sys.path.insert(0,str(ROOT/'tools'))
 from economy_script import Harness as LegacyWorld,Country as LegacyCountry
 
@@ -94,6 +94,55 @@ class ReleaseFinance(unittest.TestCase):
             w=World();w.action('on_startup');assign(w,'REC');c=w.countries['REC'];c.variables.update(fields);c.flags['ac_macro_initialized']=None;before=copy.deepcopy(c.variables)
             w.run('ac_econ_adopt_release_account','REC');self.assertEqual(before,c.variables)
             self.assertFalse(w.trigger([['ac_macro_ready','=','yes']],c));self.assertIn('ac_release_financial_identity_review',c.flags)
+
+    def test_arrears_commitment_and_escrow_only_accounts_are_locked_without_fresh_admission(self):
+        w=World();w.action('on_startup')
+        for tag in RELEASE_HISTORY_TAGS:
+            assign(w,tag);c=w.countries[tag]
+            for field in ('arrears','commitments_annual','replacement_escrow'):
+                for amount in (D(0),D('.125')):
+                    c.variables={'ac_macro_'+field:amount};c.flags={}
+                    before=copy.deepcopy(c.variables)
+                    for _ in range(3):w.run('ac_econ_adopt_release_account',tag);w.run('ac_macro_initialize',tag)
+                    self.assertEqual(before,c.variables,(tag,field,amount))
+                    self.assertIn('ac_release_financial_identity_review',c.flags)
+                    self.assertFalse(w.trigger([['ac_macro_ready','=','yes']],c))
+
+    def test_every_persisted_initializer_field_and_receipt_prevents_destructive_fresh_admission(self):
+        variables,flags=release_account_presence(economic_effects())
+        self.assertIn('ac_macro_history_11_cash',variables)
+        self.assertIn('ac_macro_revenue_carry_milli',variables)
+        self.assertIn('ac_macro_last_settlement',variables)
+        self.assertNotIn('ac_macro_ui_page',variables)
+        self.assertNotIn('ac_macro_history_eligible',flags)
+        w=World();w.action('on_startup');assign(w,'REC');c=w.countries['REC']
+        for name in variables:
+            for amount in (D(0),D('.125')):
+                c.variables={name:amount};c.flags={};before=copy.deepcopy(c.variables)
+                w.run('ac_macro_initialize','REC');w.run('ac_macro_initialize','REC')
+                self.assertEqual(before,c.variables,(name,amount));self.assertIn('ac_release_financial_identity_review',c.flags)
+        for name in flags:
+            c.variables={};c.flags={name:None};before=copy.deepcopy(c.flags)
+            for _ in range(3):w.run('ac_macro_initialize','REC')
+            self.assertEqual({},c.variables,name)
+            self.assertTrue(all(c.flags.get(k,'missing')==v for k,v in before.items()),name)
+            self.assertIn('ac_release_financial_identity_review',c.flags)
+
+    def test_matching_identity_with_any_missing_required_stock_or_receipt_is_not_ready(self):
+        w=World();w.action('on_startup');assign(w,'REC');w.run('ac_econ_initialize','REC');c=w.countries['REC']
+        complete=copy.deepcopy(c.variables);flags=copy.deepcopy(c.flags)
+        for field in RELEASE_ACCOUNT_REQUIRED:
+            c.variables=copy.deepcopy(complete);del c.variables['ac_macro_'+field];c.flags=copy.deepcopy(flags)
+            before=copy.deepcopy(c.variables)
+            self.assertFalse(w.trigger([['ac_macro_ready','=','yes']],c),field)
+            w.run('ac_econ_adopt_release_account','REC');self.assertEqual(before,c.variables,field)
+            self.assertIn('ac_release_financial_identity_review',c.flags)
+
+    def test_history_eligibility_and_ui_selection_alone_are_not_account_stock(self):
+        w=World();w.action('on_startup');assign(w,'REC');c=w.countries['REC']
+        c.variables={'ac_macro_ui_page':D(4)};c.flags={'ac_macro_history_eligible':None}
+        w.run('ac_econ_adopt_release_account','REC')
+        self.assertTrue(w.trigger([['ac_macro_ready','=','yes']],c));self.assertEqual(D(0),c.variables['ac_macro_cash']);self.assertEqual(D(0),c.variables['ac_macro_debt'])
 
     def test_legacy_release_initialization_does_not_use_the_opening_treasury_seed(self):
         for tag in RELEASE_HISTORY_TAGS:

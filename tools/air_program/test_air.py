@@ -362,7 +362,11 @@ class ResearchUI(unittest.TestCase):
         import air_ui
         from research_fonts.migration import migrate
         expected=parse(migrate((HERE/'source/research_land_base.gui').read_text()))
-        self.assertEqual(expected,air_ui.strip(self.gui))
+        stripped=air_ui.strip(self.gui);navy=self.land.naval_extension()
+        if navy:
+            self.assertEqual({'ac_naval_folder','ac_naval_folder_tab'},navy.NAMES)
+            stripped=navy.strip(stripped)
+        self.assertEqual(expected,stripped)
         with self.assertRaisesRegex(ValueError,'applied twice'):air_ui.extend((MOD/'interface/countrytechtreeview.gui').read_text())
 
     def test_actual_card_controls_fonts_icons_and_scroll_bindings(self):

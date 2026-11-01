@@ -17,7 +17,9 @@ land=importlib.util.module_from_spec(spec);spec.loader.exec_module(land)
 
 def outputs():
     value,_,_=land.generated();captured=(HERE/'source/research_land_base.gui').read_text(encoding='utf-8-sig')
-    if air_ui.strip(parse(value))!=parse(migrate(captured)):raise ValueError('AIR changed an unrelated LAND/inherited control')
+    stripped=air_ui.strip(parse(value));navy=land.naval_extension()
+    if navy:stripped=navy.strip(stripped)
+    if stripped!=parse(migrate(captured)):raise ValueError('AIR changed an unrelated LAND/inherited control')
     contract=dict(schema=1,base_commit='549cad986c630334d398beb2e11c8e23939f3990',
         canonical_owner='tools/land_program/build_ui.py generated(), with explicit pure AIR extension and reviewed font migration',
         captured_land_gui='tools/air_program/source/research_land_base.gui',captured_land_gui_sha256=hashlib.sha256(captured.replace('\r\n','\n').encode()).hexdigest(),

@@ -16,6 +16,7 @@ from research_fonts.build import SOURCE,inventory,outputs
 from research_fonts.policy import BINDINGS
 from research_fonts.migration import migrate,restore
 from research_fonts.metrics import envelope,text_ink,fits
+from overhaul.text_structure import validate_structure
 from render_review import Atlas
 spec=importlib.util.spec_from_file_location('research_font_land_ui',ROOT/'tools/land_program/build_ui.py')
 land=importlib.util.module_from_spec(spec);spec.loader.exec_module(land)
@@ -100,10 +101,13 @@ class ResearchFonts(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Unregistered research GUI structure'):land.normalized(changed)
 
     def test_comments_and_display_strings_are_not_font_assignments(self):
-        source='guiTypes={instantTextBoxType={name="sample" font="hoi_20b" text="font = hoi_20b"}} # font="hoi_20b"\n'
-        new=migrate(source)
-        self.assertIn('font="ACResearchAction"',new);self.assertIn('text="font = hoi_20b"',new)
-        self.assertTrue(new.endswith('# font="hoi_20b"\n'));self.assertEqual(parse(source),restore(parse(new),source))
+        for display in ('"font = hoi_20b"',r'"Hint: \"font = hoi_20b \"."',r'"Path \\ # \"buttonFont = hoi_20b\"."'):
+            with self.subTest(display=display):
+                source='guiTypes={instantTextBoxType={name="sample" font="hoi_20b" text='+display+'}} # font="hoi_20b"\n'
+                new=migrate(source)
+                self.assertEqual(source.replace('font="hoi_20b"','font="ACResearchAction"',1),new)
+                validate_structure(new)
+                self.assertEqual(parse(source),restore(parse(new),source))
 
     def test_actual_inline_state_colors_remain_and_navy_label_value_roles_are_distinct(self):
         self.assertEqual('1.19.4.1',self.primary['version'])

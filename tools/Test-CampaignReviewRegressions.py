@@ -185,6 +185,12 @@ def main() -> int:
     require(council.count("NOT = { has_country_flag = ac_campaign_war_committed }") >= 2, "War Council remains visible or available after commitment")
     require("date" not in council_available, "War Council was calendar-locked for human players")
 
+    campaign_category = named_block(categories, "ac_belkan_campaign")
+    require(
+        "has_country_flag = ac_campaign_war_committed" in named_block(campaign_category, "visible"),
+        "historical commitment does not expose the campaign decision category during the countdown",
+    )
+
     commit = named_block(campaign_effects, "ac_commit_belkan_war_campaign")
     for token in (
         "original_tag = BLK",

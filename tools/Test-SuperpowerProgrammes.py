@@ -126,6 +126,19 @@ class SuperpowerProgrammes(unittest.TestCase):
         for i in([0]if s.index==0 else[0,1,3]):w.complete(focus_id(s.branch,i),c.tag)
         return w,c
 
+    def test_enabled_unready_accounts_cannot_start_any_superpower_service(self):
+        for service in SERVICES:
+            for mode,fault in (('full','identity'),('full','initialized'),('full','wrong_identity'),('experimental','initialized')):
+                with self.subTest(service=service.id,mode=mode,fault=fault):
+                    w,c=self.ready(service,mode)
+                    if fault=='identity':c.variables.pop('ac_macro_identity')
+                    elif fault=='wrong_identity':c.variables['ac_macro_identity']=D(-1)
+                    else:c.flags.pop('ac_macro_initialized'if mode=='full'else'ac_econ_initialized')
+                    self.assertTrue(w.trigger([('ac_econ_enabled','=','yes')],c))
+                    self.assertFalse(w.trigger([('ac_econ_ready','=','yes')],c))
+                    before=copy.deepcopy(c);w.run(service.id+'_start',c.tag)
+                    self.assertEqual(before,c)
+
     def test_all_32_scopes_pay_real_owners_once_in_three_fiscal_modes(self):
         for s in SERVICES:
             for mode in self.baselines:

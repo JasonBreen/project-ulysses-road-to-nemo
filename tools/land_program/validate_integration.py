@@ -17,6 +17,7 @@ def main():
     parser.add_argument('--engine',type=Path,required=True)
     parser.add_argument('--baseline',type=Path,required=True)
     parser.add_argument('--output',type=Path,default=ROOT/'docs/evidence/land-program/integration/final')
+    parser.add_argument('--only',help='Comma-separated affected gates; retain earlier phases in their own output directories.')
     args=parser.parse_args()
     if not (args.baseline/'map').is_dir():raise SystemExit('Baseline must be the immutable mod payload containing map/')
     args.output.mkdir(parents=True,exist_ok=True)
@@ -34,8 +35,18 @@ def main():
         ('assets',py+['tools/audit_visual_dependencies.py','--strict-all']),
         ('presentation',py+['tools/check_presentation_sources.py']),
         ('research-inventory',py+['tools/overhaul/audit_consumers.py',engine,'--screen','countrytechtreeview.gui','--summary-only','--output',str(args.output/'research-dependencies.json')]),
+        ('fonts',py+['tools/research_fonts/test_fonts.py']),
+        ('font-generated',py+['tools/research_fonts/build.py','--check']),
+        ('font-measure',py+['tools/research_fonts/measure.py','--check']),
+        ('ownership',py+['tools/research_fonts/capture_reference.py','--engine',engine,'--output',str(args.output/'authored-research-dependencies.json')]),
+        ('labels',py+['tools/regional_labels/test_labels.py','--reference',engine]),
+        ('focus-captions',py+['tools/Test-FocusScreenRepairs.py']),
         ('static',['pwsh','-NoProfile','-File','tools/Test-UlyssesStatic.ps1','-ModRoot','mod/2985041246','-ReferenceGameRoot',engine,'-BaselineRoot',baseline]),
     ]
+    if args.only:
+        selected=set(args.only.split(','));known={name for name,_ in jobs}
+        if selected-known:raise SystemExit('Unknown gates: '+', '.join(sorted(selected-known)))
+        jobs=[pair for pair in jobs if pair[0]in selected]
     head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     def run(pair):
         name,cmd=pair;start=time.monotonic()

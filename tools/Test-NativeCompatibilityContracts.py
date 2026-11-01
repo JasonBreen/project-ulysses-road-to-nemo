@@ -271,6 +271,21 @@ def main() -> int:
     failures = sorted({(row["tag"], error) for row in chronology["cases"] for error in row["errors"]})
     require(not failures, f"selected startup consumer chronology failed: {failures[:12]} ({len(failures)} unique)")
 
+    # This existing event-loaded OOB used to end inside its units block. Keep
+    # the compatibility filename/caller and its one veteran formation intact;
+    # a texture or starting-roster check cannot catch this later event payload.
+    from usea_expansion.script import get, parse
+    brothers = parse(read(mod_root / "history/units/UST_band_of_broders_units.txt"))
+    template = get(brothers, "division_template")
+    formations = [body for kind, _, body in get(brothers, "units", []) if kind == "division"]
+    require(get(template, "name") == '"Band Of Brothers"', "Ustio veteran template identity changed")
+    require(len(get(template, "regiments", [])) == 7 and all(kind == "infantry" for kind, _, _ in get(template, "regiments", [])), "Ustio veteran regiment payload changed")
+    require(len(formations) == 1, "Ustio veteran event must retain its single authored formation")
+    require(get(formations[0], "location") == "2930" and get(formations[0], "start_equipment_factor") == "1" and get(formations[0], "start_experience_factor") == "1", "Ustio veteran placement or experience/equipment changed")
+    events = parse(read(mod_root / "events/Ustio.txt"))
+    event = next(body for kind, _, body in events if kind == "country_event" and get(body, "id") == "ustio_na.3")
+    require(any(get(body, "load_oob") == "UST_band_of_broders_units" for kind, _, body in event if kind == "option" and isinstance(body, list)), "Ustio veteran event lost its existing OOB binding")
+
     # Active technologies must not unlock modules (or categories) with no active definition.
     for path in (mod_root / "common" / "technologies").glob("*.txt"):
         code = re.sub(r"#[^\n]*", "", read(path))

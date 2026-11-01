@@ -5,6 +5,10 @@ with machine-readable budgets and honest package status. The implementation
 records below remain historical evidence; they do not supersede that roadmap
 or establish native acceptance for its pending packages.
 
+## Flight cadence
+
+Osea, Yuktobania, and Erusea can static-fire rockets from 1991, lose a flight, and lock in a cadence that raises one pad. The result is checked on 8 July 1999 and does not replace Stonehenge, Megalith, or Arkbird. Belka is unchanged. Native play is still unverified.
+
 ## Anea — The Burden of Recovery
 
 The Emmerian/Estovakian 1991–2005 foundation is authored on the merged PR#29

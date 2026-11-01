@@ -1,0 +1,19 @@
+# Flight-test cadence for Osea, Yuktobania, and Erusea.
+# Called from the static-fire decision. Does not start wars, move states,
+# or change the Stonehenge, Megalith, or Arkbird projects.
+ac_flight_static_fire_effect = {
+	random_list = {
+		70 = {
+			add_to_variable = { var = ac_flight_success value = 1 }
+			country_event = ac_flight_cadence.1
+		}
+		30 = {
+			if = {
+				limit = { check_variable = { ac_flight_success > 0 } }
+				add_to_variable = { var = ac_flight_success value = -1 }
+			}
+			add_stability = -0.02
+			country_event = ac_flight_cadence.2
+		}
+	}
+}

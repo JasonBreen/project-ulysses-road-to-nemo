@@ -64,6 +64,33 @@ class ReconstructionAssets(unittest.TestCase):
                 for key,value in costs.items():self.assertEqual(value,base[key]);self.assertEqual(value,settled[key])
                 for key,value in benefits.items():self.assertEqual(round(value*1.2,3),settled[key])
 
+    def test_every_narrative_support_spirit_has_a_separate_countervailing_cost(self):
+        ideas=get(get(parse((MOD/'common/ideas/ac_reconstruction.txt').read_text()),'ideas'),'country')
+        lookup={ident:node for ident,_,node in ideas}
+        events=parse((MOD/'events/ac_reconstruction.txt').read_text())
+        effects={key:node for key,_,node in parse((MOD/'common/scripted_effects/ac_reconstruction.txt').read_text())}
+        support=set();visited=set()
+        def collect(nodes):
+            for key,_,node in descend(nodes):
+                if key=='add_timed_idea':support.add(get(node,'idea'))
+                elif key in effects and node=='yes' and key not in visited:
+                    visited.add(key);collect(effects[key])
+        for key,_,node in descend(events):
+            if key=='option':collect(node)
+        self.assertEqual(36,len(support))
+        # For these named native modifiers, increases are unfavorable. Other
+        # captured narrative modifiers improve services/readiness when positive.
+        inverse={'consumer_goods_factor','supply_consumption_factor'}
+        for ident in support:
+            values={key:float(value) for key,_,value in get(lookup[ident],'modifier')}
+            beneficial={key for key,value in values.items() if key in inverse and value<0}
+            beneficial|={key for key,value in values.items() if key not in inverse and value>0}
+            costly={key for key,value in values.items() if key in inverse and value>0}
+            costly|={key for key,value in values.items() if key not in inverse and value<0}
+            self.assertTrue(beneficial,(ident,values))
+            self.assertTrue(costly,(ident,values))
+            self.assertFalse(beneficial&costly)
+
     def test_complete_art_binding_frames_alpha_apertures_and_original_masters(self):
         self.assertEqual(198,len(self.assets));self.assertEqual(Counter({'focus':60,'idea':96,'decision row':24,'category':4,'event illustration':14}),Counter(a['role']for a in self.assets))
         sprites={get(v,'name').strip('"'):v for k,_,v in get(parse((MOD/'interface/ac_reconstruction.gfx').read_text()),'spriteTypes')}

@@ -235,6 +235,20 @@ class ReconstructionRuntime(unittest.TestCase):
                 w.complete(focus_id(b,4),b.tag);w.complete(focus_id(b,5),b.tag)
                 self.assertIn(focus_id(b,5)+'_done',c.flags)
 
+    def test_sapin_gebet_uncompleted_legacy_fallback_requires_peace_in_every_fiscal_mode(self):
+        for mode, baseline in self.baselines.items():
+            for b in (b for b in BRANCHES if b.tag in ('SAP', 'GEB')):
+                with self.subTest(mode=mode, branch=b.key):
+                    w=copy.deepcopy(baseline);c=w.countries[b.tag]
+                    c.completed.discard(b.entry);w.globals.discard('ac_postwar_contract_started');c.war=True
+                    node=fields(w.focuses[focus_id(b,0)])
+                    self.assertFalse(w.trigger(node['available'],c))
+                    before=copy.deepcopy(c);w.run(focus_id(b,0)+'_apply',b.tag)
+                    self.assertEqual(before,c)
+                    c.war=False;self.assertTrue(w.trigger(node['available'],c))
+                    c.war=True;c.completed.add(b.entry)
+                    self.assertTrue(w.trigger(node['available'],c))
+
     def test_sapin_gebet_peace_fallback_never_bypasses_existing_postwar_contract(self):
         for b in [b for b in BRANCHES if b.tag in ('SAP','GEB')]:
             w=copy.deepcopy(self.baselines['full']);c=w.countries[b.tag];node=fields(w.focuses[focus_id(b,0)])

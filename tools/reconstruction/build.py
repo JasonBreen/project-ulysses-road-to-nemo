@@ -47,7 +47,7 @@ def ready_date():
 def entry_condition(branch):
     completed = "has_completed_focus = " + branch.entry
     if branch.tag in ("SAP", "GEB"):
-        return "OR = { " + completed + " AND = { NOT = { has_global_flag = ac_postwar_contract_started } " + ready_date() + " } }"
+        return "OR = { " + completed + " AND = { has_war = no NOT = { has_global_flag = ac_postwar_contract_started } " + ready_date() + " } }"
     return completed
 
 

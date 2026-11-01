@@ -1,0 +1,639 @@
+{
+  "schema": 1,
+  "evidence": "static primary-definition calibration worksheet; no native throughput or balance acceptance",
+  "country": "ERU",
+  "reference_version_target": "HOI4 1.19.4.1",
+  "source_files_sha256": {
+    "mod/common/defines/ac_defines.lua": "1629bf25b4c2ec15c17a0a96e5618cb3b199b441cefb10a91cfce9ee783301e7",
+    "mod/common/ideas/_economic.txt": "d4d65eb69c8e65b571d4e27e3b42f56ac6e14674de4aade66feb403aebd6df85",
+    "mod/common/technologies/industry.txt": "3861186c74642587d3adf81c1b875d6aba95e926e6fc59b61027e16765af1c3e",
+    "reference/common/buildings/00_buildings.txt": "e94ef4dd06480ae0d34ee52b4abba1bbfd163c4a85c6e6e275c85971c8ec1598",
+    "reference/common/defines/00_defines.lua": "727ac0522ac7e55313dd249c819f273a248c4a438c5e4ce21c867923f9dd0767",
+    "reference/common/units/artillery.txt": "10f299c45b79fe67562e2508fe79ef1db077c1ece995b2eeccff612e4a51e28c",
+    "reference/common/units/engineer.txt": "25d88a0e1e19dfd11248546027b19885bad2af87fb42554aeb6fbe89e7cedef0",
+    "reference/common/units/equipment/artillery.txt": "c2288032e61a461af7b3fdb6765f72d256a502f5050567f51e25798bb690cd54",
+    "reference/common/units/equipment/convoys.txt": "28d9aa495fd3e9054f7f7879939f2757a6f8349bb206089cc6ab028f9077c9dd",
+    "reference/common/units/equipment/infantry.txt": "0b2b15df8618b68ceb4892510c965f0d8618b365937fd8e12581a6d512e01cf1",
+    "reference/common/units/equipment/modules/00_plane_modules.txt": "b077c40bd386b53ea3b6af97acee44247c07056c9476a143de48e7130c74b692",
+    "reference/common/units/equipment/modules/00_ship_modules.txt": "3db6cf690a7033f6570852612e51f72f914a602aa57067a7f2b566b6cf64425f",
+    "reference/common/units/equipment/motorized.txt": "b25c3797280f471b89a43da5b02e135091cf205acdf37c09d547a88df52d5128",
+    "reference/common/units/equipment/plane_airframes.txt": "6bf753c2bd7ac5a79520b43b12331e0e84cd122d997378676d3facf78fa9b05a",
+    "reference/common/units/equipment/ship_hull_light.txt": "a544882655fbb70907dce347c023085db49e80defe3fbdd1edd0dad1686801da",
+    "reference/common/units/equipment/ship_hull_submarine.txt": "4be7fcdff830adb006d879aa9bd0ba565cd08bc50c7abdc535d525e0abf8e590",
+    "reference/common/units/equipment/support.txt": "fd41d5223c62cf955d650bbad0b1adecfae6be9e1cc43904fb0118fb5d3e5385",
+    "reference/common/units/equipment/trains.txt": "cebdda7ebe259c806c918d9bbd245ad9ee202672517a8dfd32f65c098dfa80cd",
+    "reference/common/units/equipment/x_plane_airframes.txt": "0747e1a834d4c44eeee593bc0d5cbd7f636be6f34be89be53b19f83afcd08f8a",
+    "reference/common/units/infantry.txt": "dfc319ec6ca807fdcffdd6f3555db0f8c2aa33897706630daf55339170225a60"
+  },
+  "reference_version_observed": {
+    "source": "launcher-settings.json:rawVersion",
+    "value": "1.19.4.1"
+  },
+  "profile_sha256": "4c8250a0a8fc328f861089f313e2d498f851d0de4c545f544c401ccc507b488d",
+  "placements_sha256": "c8ddec0afed76d62f87c59dbf4c8f12c7777f87f221c37815fadad22bfe1b513",
+  "assumptions": [
+    "Retain default civilian_economy and export_focus; no invented trade agreements or law change.",
+    "Infrastructure is undamaged; separately floor extraction and retained share as conservative bound; ignore positive resource technologies and supply-route resource bonuses.",
+    "Military replacement arithmetic uses50% efficiency and no factory/output bonus; dockyards use no efficiency multiplier.",
+    "Initial infantry has no fuel-using battalion/support company; reserve trucks are not an operating motorized army.",
+    "Air superiority/CAS and naval patrol multipliers are1 in installed definitions. Naval combat is a separate2x sensitivity.",
+    "Fuel worksheet excludes positive fuel_gain_factor_from_states, terrain, doctrine, mission scheduling, MIO, losses and damage.",
+    "Domestic surplus is not an infinite guarantee: loss of control, export-law changes, expanded forces or damaged infrastructure require trade, repairs or rationing."
+  ],
+  "defines": {
+    "NCountry.BASE_FUEL_GAIN_PER_OIL": 2.0,
+    "NCountry.BASE_FUEL_GAIN": 2.0,
+    "NCountry.BASE_FUEL_CAPACITY": 50000.0,
+    "NProduction.BASE_FACTORY_SPEED_MIL": 6.0,
+    "NProduction.BASE_FACTORY_SPEED_NAV": 2.5,
+    "NBuildings.INFRASTRUCTURE_RESOURCE_BONUS": 0.15,
+    "NBuildings.SUPPLY_PORT_LEVEL_THROUGHPUT": 3.0,
+    "NAir.FUEL_COST_MULT": 0.35,
+    "NNavy.FUEL_COST_MULT": 0.1,
+    "NNavy.IN_COMBAT_FUEL_COST": 2.0
+  },
+  "gross_base_resources": {
+    "aluminium": 40.0,
+    "chromium": 0.0,
+    "oil": 16.0,
+    "rubber": 14.0,
+    "steel": 64.0,
+    "tungsten": 4.0
+  },
+  "default_export_fraction": 0.5,
+  "conservatively_retained_resources": {
+    "aluminium": 30,
+    "chromium": 0,
+    "oil": 14,
+    "rubber": 12,
+    "steel": 53,
+    "tungsten": 3
+  },
+  "infantry_per_formation": {
+    "equipment": {
+      "infantry_equipment": 610,
+      "support_equipment": 30,
+      "artillery_equipment": 12
+    },
+    "manpower": 6600,
+    "daily_supply": 0.54
+  },
+  "initial_land_equipment_need": {
+    "infantry_equipment": 7320,
+    "support_equipment": 360,
+    "artillery_equipment": 144
+  },
+  "daily_fuel_gain_lower_worksheet": 540.0,
+  "starting_full_fuel_capacity_worksheet": 112500.0,
+  "worst_roster_patrol_zero_income_stock_days_worksheet": 255.59,
+  "branches": [
+    {
+      "bba": false,
+      "mtg": false,
+      "technical_stats": {
+        "infantry_equipment_1": {
+          "build_cost_ic": 0.5,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 2.0
+          },
+          "equipment": "infantry_equipment_1",
+          "modules": []
+        },
+        "support_equipment_1": {
+          "build_cost_ic": 4.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "aluminium": 1.0,
+            "steel": 2.0
+          },
+          "equipment": "support_equipment_1",
+          "modules": []
+        },
+        "artillery_equipment_1": {
+          "build_cost_ic": 3.5,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "tungsten": 1.0,
+            "steel": 2.0
+          },
+          "equipment": "artillery_equipment_1",
+          "modules": []
+        },
+        "motorized_equipment_1": {
+          "build_cost_ic": 2.5,
+          "fuel_consumption": 1.2,
+          "resources_per_factory": {
+            "rubber": 1.0,
+            "steel": 1.0
+          },
+          "equipment": "motorized_equipment_1",
+          "modules": []
+        },
+        "train_equipment_1": {
+          "build_cost_ic": 70.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 1.0
+          },
+          "equipment": "train_equipment_1",
+          "modules": []
+        },
+        "fighter": {
+          "build_cost_ic": 24.0,
+          "fuel_consumption": 0.21,
+          "resources_per_factory": {
+            "aluminium": 3.0,
+            "rubber": 1.0
+          },
+          "equipment": "fighter_equipment_1",
+          "modules": []
+        },
+        "cas": {
+          "build_cost_ic": 22.0,
+          "fuel_consumption": 0.26,
+          "resources_per_factory": {
+            "aluminium": 2.0,
+            "rubber": 1.0
+          },
+          "equipment": "CAS_equipment_1",
+          "modules": []
+        },
+        "convoy": {
+          "build_cost_ic": 70.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 1.0
+          },
+          "equipment": "convoy_1",
+          "modules": []
+        },
+        "destroyer": {
+          "build_cost_ic": 500.0,
+          "fuel_consumption": 7.0,
+          "resources_per_factory": {
+            "steel": 3.0
+          },
+          "equipment": "destroyer_2",
+          "modules": []
+        },
+        "submarine": {
+          "build_cost_ic": 250.0,
+          "fuel_consumption": 1.0,
+          "resources_per_factory": {
+            "steel": 2.0
+          },
+          "equipment": "submarine_2",
+          "modules": []
+        }
+      },
+      "resource_inputs": {
+        "aluminium": 27.0,
+        "rubber": 11.0,
+        "steel": 50.0,
+        "tungsten": 3.0
+      },
+      "domestic_margin": {
+        "aluminium": 3.0,
+        "rubber": 1.0,
+        "steel": 3.0,
+        "tungsten": 0.0
+      },
+      "30_day_replacements_no_output_bonus_at_50_percent_mil_efficiency": {
+        "infantry_equipment_1": 1080.0,
+        "support_equipment_1": 45.0,
+        "artillery_equipment_1": 77.1429,
+        "motorized_equipment_1": 72.0,
+        "train_equipment_1": 1.2857,
+        "fighter": 26.25,
+        "cas": 8.1818,
+        "convoy": 3.2143,
+        "destroyer": 0.9,
+        "submarine": 0.6
+      },
+      "daily_air_superiority_and_CAS_reference_fuel": 221.76,
+      "daily_whole_navy_patrol_reference_fuel": 141.6,
+      "daily_combined_reference_fuel": 363.36,
+      "daily_with_whole_navy_in_combat_reference_fuel": 504.96
+    },
+    {
+      "bba": true,
+      "mtg": false,
+      "technical_stats": {
+        "infantry_equipment_1": {
+          "build_cost_ic": 0.5,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 2.0
+          },
+          "equipment": "infantry_equipment_1",
+          "modules": []
+        },
+        "support_equipment_1": {
+          "build_cost_ic": 4.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "aluminium": 1.0,
+            "steel": 2.0
+          },
+          "equipment": "support_equipment_1",
+          "modules": []
+        },
+        "artillery_equipment_1": {
+          "build_cost_ic": 3.5,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "tungsten": 1.0,
+            "steel": 2.0
+          },
+          "equipment": "artillery_equipment_1",
+          "modules": []
+        },
+        "motorized_equipment_1": {
+          "build_cost_ic": 2.5,
+          "fuel_consumption": 1.2,
+          "resources_per_factory": {
+            "rubber": 1.0,
+            "steel": 1.0
+          },
+          "equipment": "motorized_equipment_1",
+          "modules": []
+        },
+        "train_equipment_1": {
+          "build_cost_ic": 70.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 1.0
+          },
+          "equipment": "train_equipment_1",
+          "modules": []
+        },
+        "fighter": {
+          "build_cost_ic": 21.2,
+          "fuel_consumption": 0.21000000000000002,
+          "resources_per_factory": {
+            "aluminium": 3.0,
+            "rubber": 1.0
+          },
+          "equipment": "small_plane_airframe_1",
+          "modules": [
+            "light_mg_4x",
+            "engine_2_1x"
+          ]
+        },
+        "cas": {
+          "build_cost_ic": 20.0,
+          "fuel_consumption": 0.21000000000000002,
+          "resources_per_factory": {
+            "aluminium": 3.0,
+            "rubber": 1.0
+          },
+          "equipment": "small_plane_airframe_1",
+          "modules": [
+            "bomb_locks",
+            "engine_2_1x"
+          ]
+        },
+        "convoy": {
+          "build_cost_ic": 70.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 1.0
+          },
+          "equipment": "convoy_1",
+          "modules": []
+        },
+        "destroyer": {
+          "build_cost_ic": 500.0,
+          "fuel_consumption": 7.0,
+          "resources_per_factory": {
+            "steel": 3.0
+          },
+          "equipment": "destroyer_2",
+          "modules": []
+        },
+        "submarine": {
+          "build_cost_ic": 250.0,
+          "fuel_consumption": 1.0,
+          "resources_per_factory": {
+            "steel": 2.0
+          },
+          "equipment": "submarine_2",
+          "modules": []
+        }
+      },
+      "resource_inputs": {
+        "aluminium": 29.0,
+        "rubber": 11.0,
+        "steel": 50.0,
+        "tungsten": 3.0
+      },
+      "domestic_margin": {
+        "aluminium": 1.0,
+        "rubber": 1.0,
+        "steel": 3.0,
+        "tungsten": 0.0
+      },
+      "30_day_replacements_no_output_bonus_at_50_percent_mil_efficiency": {
+        "infantry_equipment_1": 1080.0,
+        "support_equipment_1": 45.0,
+        "artillery_equipment_1": 77.1429,
+        "motorized_equipment_1": 72.0,
+        "train_equipment_1": 1.2857,
+        "fighter": 29.717,
+        "cas": 9.0,
+        "convoy": 3.2143,
+        "destroyer": 0.9,
+        "submarine": 0.6
+      },
+      "daily_air_superiority_and_CAS_reference_fuel": 211.68,
+      "daily_whole_navy_patrol_reference_fuel": 141.6,
+      "daily_combined_reference_fuel": 353.28,
+      "daily_with_whole_navy_in_combat_reference_fuel": 494.88
+    },
+    {
+      "bba": false,
+      "mtg": true,
+      "technical_stats": {
+        "infantry_equipment_1": {
+          "build_cost_ic": 0.5,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 2.0
+          },
+          "equipment": "infantry_equipment_1",
+          "modules": []
+        },
+        "support_equipment_1": {
+          "build_cost_ic": 4.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "aluminium": 1.0,
+            "steel": 2.0
+          },
+          "equipment": "support_equipment_1",
+          "modules": []
+        },
+        "artillery_equipment_1": {
+          "build_cost_ic": 3.5,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "tungsten": 1.0,
+            "steel": 2.0
+          },
+          "equipment": "artillery_equipment_1",
+          "modules": []
+        },
+        "motorized_equipment_1": {
+          "build_cost_ic": 2.5,
+          "fuel_consumption": 1.2,
+          "resources_per_factory": {
+            "rubber": 1.0,
+            "steel": 1.0
+          },
+          "equipment": "motorized_equipment_1",
+          "modules": []
+        },
+        "train_equipment_1": {
+          "build_cost_ic": 70.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 1.0
+          },
+          "equipment": "train_equipment_1",
+          "modules": []
+        },
+        "fighter": {
+          "build_cost_ic": 24.0,
+          "fuel_consumption": 0.21,
+          "resources_per_factory": {
+            "aluminium": 3.0,
+            "rubber": 1.0
+          },
+          "equipment": "fighter_equipment_1",
+          "modules": []
+        },
+        "cas": {
+          "build_cost_ic": 22.0,
+          "fuel_consumption": 0.26,
+          "resources_per_factory": {
+            "aluminium": 2.0,
+            "rubber": 1.0
+          },
+          "equipment": "CAS_equipment_1",
+          "modules": []
+        },
+        "convoy": {
+          "build_cost_ic": 70.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 1.0
+          },
+          "equipment": "convoy_1",
+          "modules": []
+        },
+        "destroyer": {
+          "build_cost_ic": 1046.5,
+          "fuel_consumption": 8.0,
+          "resources_per_factory": {
+            "steel": 2.0
+          },
+          "equipment": "ship_hull_light_2",
+          "modules": [
+            "ship_light_battery_1",
+            "ship_anti_air_1",
+            "ship_fire_control_system_0",
+            "light_ship_engine_2",
+            "ship_torpedo_1",
+            "ship_depth_charge_1"
+          ]
+        },
+        "submarine": {
+          "build_cost_ic": 483.75,
+          "fuel_consumption": 9.0,
+          "resources_per_factory": {
+            "steel": 2.0
+          },
+          "equipment": "ship_hull_submarine_2",
+          "modules": [
+            "ship_torpedo_sub_1",
+            "sub_ship_engine_2"
+          ]
+        }
+      },
+      "resource_inputs": {
+        "aluminium": 27.0,
+        "rubber": 11.0,
+        "steel": 44.0,
+        "tungsten": 3.0
+      },
+      "domestic_margin": {
+        "aluminium": 3.0,
+        "rubber": 1.0,
+        "steel": 9.0,
+        "tungsten": 0.0
+      },
+      "30_day_replacements_no_output_bonus_at_50_percent_mil_efficiency": {
+        "infantry_equipment_1": 1080.0,
+        "support_equipment_1": 45.0,
+        "artillery_equipment_1": 77.1429,
+        "motorized_equipment_1": 72.0,
+        "train_equipment_1": 1.2857,
+        "fighter": 26.25,
+        "cas": 8.1818,
+        "convoy": 3.2143,
+        "destroyer": 0.43,
+        "submarine": 0.3101
+      },
+      "daily_air_superiority_and_CAS_reference_fuel": 221.76,
+      "daily_whole_navy_patrol_reference_fuel": 218.4,
+      "daily_combined_reference_fuel": 440.16,
+      "daily_with_whole_navy_in_combat_reference_fuel": 658.56
+    },
+    {
+      "bba": true,
+      "mtg": true,
+      "technical_stats": {
+        "infantry_equipment_1": {
+          "build_cost_ic": 0.5,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 2.0
+          },
+          "equipment": "infantry_equipment_1",
+          "modules": []
+        },
+        "support_equipment_1": {
+          "build_cost_ic": 4.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "aluminium": 1.0,
+            "steel": 2.0
+          },
+          "equipment": "support_equipment_1",
+          "modules": []
+        },
+        "artillery_equipment_1": {
+          "build_cost_ic": 3.5,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "tungsten": 1.0,
+            "steel": 2.0
+          },
+          "equipment": "artillery_equipment_1",
+          "modules": []
+        },
+        "motorized_equipment_1": {
+          "build_cost_ic": 2.5,
+          "fuel_consumption": 1.2,
+          "resources_per_factory": {
+            "rubber": 1.0,
+            "steel": 1.0
+          },
+          "equipment": "motorized_equipment_1",
+          "modules": []
+        },
+        "train_equipment_1": {
+          "build_cost_ic": 70.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 1.0
+          },
+          "equipment": "train_equipment_1",
+          "modules": []
+        },
+        "fighter": {
+          "build_cost_ic": 21.2,
+          "fuel_consumption": 0.21000000000000002,
+          "resources_per_factory": {
+            "aluminium": 3.0,
+            "rubber": 1.0
+          },
+          "equipment": "small_plane_airframe_1",
+          "modules": [
+            "light_mg_4x",
+            "engine_2_1x"
+          ]
+        },
+        "cas": {
+          "build_cost_ic": 20.0,
+          "fuel_consumption": 0.21000000000000002,
+          "resources_per_factory": {
+            "aluminium": 3.0,
+            "rubber": 1.0
+          },
+          "equipment": "small_plane_airframe_1",
+          "modules": [
+            "bomb_locks",
+            "engine_2_1x"
+          ]
+        },
+        "convoy": {
+          "build_cost_ic": 70.0,
+          "fuel_consumption": 0.0,
+          "resources_per_factory": {
+            "steel": 1.0
+          },
+          "equipment": "convoy_1",
+          "modules": []
+        },
+        "destroyer": {
+          "build_cost_ic": 1046.5,
+          "fuel_consumption": 8.0,
+          "resources_per_factory": {
+            "steel": 2.0
+          },
+          "equipment": "ship_hull_light_2",
+          "modules": [
+            "ship_light_battery_1",
+            "ship_anti_air_1",
+            "ship_fire_control_system_0",
+            "light_ship_engine_2",
+            "ship_torpedo_1",
+            "ship_depth_charge_1"
+          ]
+        },
+        "submarine": {
+          "build_cost_ic": 483.75,
+          "fuel_consumption": 9.0,
+          "resources_per_factory": {
+            "steel": 2.0
+          },
+          "equipment": "ship_hull_submarine_2",
+          "modules": [
+            "ship_torpedo_sub_1",
+            "sub_ship_engine_2"
+          ]
+        }
+      },
+      "resource_inputs": {
+        "aluminium": 29.0,
+        "rubber": 11.0,
+        "steel": 44.0,
+        "tungsten": 3.0
+      },
+      "domestic_margin": {
+        "aluminium": 1.0,
+        "rubber": 1.0,
+        "steel": 9.0,
+        "tungsten": 0.0
+      },
+      "30_day_replacements_no_output_bonus_at_50_percent_mil_efficiency": {
+        "infantry_equipment_1": 1080.0,
+        "support_equipment_1": 45.0,
+        "artillery_equipment_1": 77.1429,
+        "motorized_equipment_1": 72.0,
+        "train_equipment_1": 1.2857,
+        "fighter": 29.717,
+        "cas": 9.0,
+        "convoy": 3.2143,
+        "destroyer": 0.43,
+        "submarine": 0.3101
+      },
+      "daily_air_superiority_and_CAS_reference_fuel": 211.68,
+      "daily_whole_navy_patrol_reference_fuel": 218.4,
+      "daily_combined_reference_fuel": 430.08,
+      "daily_with_whole_navy_in_combat_reference_fuel": 648.48
+    }
+  ]
+}

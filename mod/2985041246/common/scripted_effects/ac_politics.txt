@@ -1,0 +1,2193 @@
+# Original institutional gameplay; owner: tools/institutions/build.py.
+ac_pol_refresh_form = {
+	clr_country_flag = ac_pol_form_civil_administration
+	clr_country_flag = ac_pol_form_executive_office
+	clr_country_flag = ac_pol_form_crown_office
+	clr_country_flag = ac_pol_form_party_secretariat
+	clr_country_flag = ac_pol_form_command_administration
+	clr_country_flag = ac_pol_form_council_office
+	if = {
+		limit = {
+			OR = { original_tag = AWW original_tag = RAT }
+		}
+		set_country_flag = ac_pol_form_council_office
+	}
+	else = {
+		if = {
+			limit = {
+				has_government = democratic
+			}
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		else_if = {
+			limit = {
+				has_government = monarchism
+			}
+			set_country_flag = ac_pol_form_crown_office
+		}
+		else_if = {
+			limit = {
+				has_government = communism
+			}
+			set_country_flag = ac_pol_form_party_secretariat
+		}
+		else_if = {
+			limit = {
+				has_government = fascism
+			}
+			set_country_flag = ac_pol_form_command_administration
+		}
+		else = {
+			set_country_flag = ac_pol_form_executive_office
+		}
+	}
+}
+
+ac_pol_initialize = {
+	if = {
+		limit = {
+			ac_pol_profiled = yes NOT = { has_country_flag = ac_pol_initialized } any_owned_state = { always = yes }
+		}
+		set_country_flag = ac_pol_initialized
+		set_variable = { ac_pol_schema = 1 }
+		set_variable = { ac_pol_capacity = 40 }
+		set_variable = { ac_pol_fiscal_applied = 0 }
+		set_variable = { ac_pol_fiscal_identity = THIS.id }
+		set_country_flag = ac_pol_fiscal_dirty
+		set_country_flag = ac_pol_audits_unlocked
+		if = {
+			limit = {
+				original_tag = AEM
+			}
+			set_country_flag = ac_pol_profile_AEM
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = ALR
+			}
+			set_country_flag = ac_pol_profile_ALR
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = AMB
+			}
+			set_country_flag = ac_pol_profile_AMB
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = AQU
+			}
+			set_country_flag = ac_pol_profile_AQU
+			set_country_flag = ac_pol_form_crown_office
+		}
+		if = {
+			limit = {
+				original_tag = ARK
+			}
+			set_country_flag = ac_pol_profile_ARK
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = AUR
+			}
+			set_country_flag = ac_pol_profile_AUR
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = AWW
+			}
+			set_country_flag = ac_pol_profile_AWW
+			set_country_flag = ac_pol_form_council_office
+		}
+		if = {
+			limit = {
+				original_tag = AZB
+			}
+			set_country_flag = ac_pol_profile_AZB
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = BAL
+			}
+			set_country_flag = ac_pol_profile_BAL
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = BLD
+			}
+			set_country_flag = ac_pol_profile_BLD
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = BLK
+			}
+			set_country_flag = ac_pol_profile_BLK
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = CAL
+			}
+			set_country_flag = ac_pol_profile_CAL
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = CHO
+			}
+			set_country_flag = ac_pol_profile_CHO
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = CRS
+			}
+			set_country_flag = ac_pol_profile_CRS
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = CSO
+			}
+			set_country_flag = ac_pol_profile_CSO
+			set_country_flag = ac_pol_form_crown_office
+		}
+		if = {
+			limit = {
+				original_tag = DAK
+			}
+			set_country_flag = ac_pol_profile_DAK
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = DEL
+			}
+			set_country_flag = ac_pol_profile_DEL
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = DOR
+			}
+			set_country_flag = ac_pol_profile_DOR
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = ECH
+			}
+			set_country_flag = ac_pol_profile_ECH
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = EHE
+			}
+			set_country_flag = ac_pol_profile_EHE
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = EMM
+			}
+			set_country_flag = ac_pol_profile_EMM
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = ERU
+			}
+			set_country_flag = ac_pol_profile_ERU
+			set_country_flag = ac_pol_form_crown_office
+		}
+		if = {
+			limit = {
+				original_tag = ESN
+			}
+			set_country_flag = ac_pol_profile_ESN
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = EVA
+			}
+			set_country_flag = ac_pol_profile_EVA
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = FAT
+			}
+			set_country_flag = ac_pol_profile_FAT
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = FCU
+			}
+			set_country_flag = ac_pol_profile_FCU
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = FRU
+			}
+			set_country_flag = ac_pol_profile_FRU
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = GEB
+			}
+			set_country_flag = ac_pol_profile_GEB
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = GIB
+			}
+			set_country_flag = ac_pol_profile_GIB
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = GLA
+			}
+			set_country_flag = ac_pol_profile_GLA
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = KLG
+			}
+			set_country_flag = ac_pol_profile_KLG
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = LEA
+			}
+			set_country_flag = ac_pol_profile_LEA
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = LUR
+			}
+			set_country_flag = ac_pol_profile_LUR
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = MAY
+			}
+			set_country_flag = ac_pol_profile_MAY
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = MST
+			}
+			set_country_flag = ac_pol_profile_MST
+			set_country_flag = ac_pol_form_command_administration
+		}
+		if = {
+			limit = {
+				original_tag = NEC
+			}
+			set_country_flag = ac_pol_profile_NEC
+			set_country_flag = ac_pol_form_crown_office
+		}
+		if = {
+			limit = {
+				original_tag = NIH
+			}
+			set_country_flag = ac_pol_profile_NIH
+			set_country_flag = ac_pol_form_crown_office
+		}
+		if = {
+			limit = {
+				original_tag = NPT
+			}
+			set_country_flag = ac_pol_profile_NPT
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = NRL
+			}
+			set_country_flag = ac_pol_profile_NRL
+			set_country_flag = ac_pol_form_crown_office
+		}
+		if = {
+			limit = {
+				original_tag = OSE
+			}
+			set_country_flag = ac_pol_profile_OSE
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = PBL
+			}
+			set_country_flag = ac_pol_profile_PBL
+			set_country_flag = ac_pol_form_crown_office
+		}
+		if = {
+			limit = {
+				original_tag = PLA
+			}
+			set_country_flag = ac_pol_profile_PLA
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = PLH
+			}
+			set_country_flag = ac_pol_profile_PLH
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = RAT
+			}
+			set_country_flag = ac_pol_profile_RAT
+			set_country_flag = ac_pol_form_council_office
+		}
+		if = {
+			limit = {
+				original_tag = REC
+			}
+			set_country_flag = ac_pol_profile_REC
+			set_country_flag = ac_pol_form_party_secretariat
+		}
+		if = {
+			limit = {
+				original_tag = REL
+			}
+			set_country_flag = ac_pol_profile_REL
+			set_country_flag = ac_pol_form_crown_office
+		}
+		if = {
+			limit = {
+				original_tag = RJR
+			}
+			set_country_flag = ac_pol_profile_RJR
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = RMN
+			}
+			set_country_flag = ac_pol_profile_RMN
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = ROH
+			}
+			set_country_flag = ac_pol_profile_ROH
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = SAP
+			}
+			set_country_flag = ac_pol_profile_SAP
+			set_country_flag = ac_pol_form_crown_office
+		}
+		if = {
+			limit = {
+				original_tag = SBK
+			}
+			set_country_flag = ac_pol_profile_SBK
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = SCA
+			}
+			set_country_flag = ac_pol_profile_SCA
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = SER
+			}
+			set_country_flag = ac_pol_profile_SER
+			set_country_flag = ac_pol_form_crown_office
+		}
+		if = {
+			limit = {
+				original_tag = SET
+			}
+			set_country_flag = ac_pol_profile_SET
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = SFA
+			}
+			set_country_flag = ac_pol_profile_SFA
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = SHI
+			}
+			set_country_flag = ac_pol_profile_SHI
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = SLA
+			}
+			set_country_flag = ac_pol_profile_SLA
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = SNS
+			}
+			set_country_flag = ac_pol_profile_SNS
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = SOA
+			}
+			set_country_flag = ac_pol_profile_SOA
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = SYC
+			}
+			set_country_flag = ac_pol_profile_SYC
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = TER
+			}
+			set_country_flag = ac_pol_profile_TER
+			set_country_flag = ac_pol_form_crown_office
+		}
+		if = {
+			limit = {
+				original_tag = UGE
+			}
+			set_country_flag = ac_pol_profile_UGE
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = UST
+			}
+			set_country_flag = ac_pol_profile_UST
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = VER
+			}
+			set_country_flag = ac_pol_profile_VER
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = VLK
+			}
+			set_country_flag = ac_pol_profile_VLK
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = VOS
+			}
+			set_country_flag = ac_pol_profile_VOS
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = WEL
+			}
+			set_country_flag = ac_pol_profile_WEL
+			set_country_flag = ac_pol_form_civil_administration
+		}
+		if = {
+			limit = {
+				original_tag = WIE
+			}
+			set_country_flag = ac_pol_profile_WIE
+			set_country_flag = ac_pol_form_executive_office
+		}
+		if = {
+			limit = {
+				original_tag = YUK
+			}
+			set_country_flag = ac_pol_profile_YUK
+			set_country_flag = ac_pol_form_party_secretariat
+		}
+		ac_pol_refresh_form = yes
+		if = {
+			limit = {
+				date > 1991.1.7
+			}
+			set_country_flag = ac_pol_late_initialization
+			custom_effect_tooltip = ac_pol_late_init_tt
+		}
+	}
+}
+
+ac_pol_bounds = {
+	clamp_variable = { var = ac_pol_capacity min = 0 max = 100 }
+}
+
+ac_pol_change_capacity = {
+	if = {
+		limit = {
+			ac_pol_active = yes
+		}
+		add_to_variable = { ac_pol_capacity = ac_pol_capacity_delta }
+		ac_pol_bounds = yes
+		if = {
+			limit = {
+				check_variable = { ac_pol_capacity < 1 }
+			}
+			ac_pol_suspend_policy = yes
+		}
+	}
+}
+
+ac_pol_sync_fiscal = {
+	if = {
+		limit = {
+			ac_macro_ready = yes
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = ac_pol_fiscal_identity }
+			}
+			set_variable = { ac_pol_fiscal_applied = 0 }
+			set_variable = { ac_pol_fiscal_identity = THIS.id }
+			set_country_flag = ac_pol_fiscal_dirty
+		}
+		if = {
+			limit = {
+				NOT = { check_variable = { var = ac_pol_fiscal_identity value = THIS.id compare = equals } }
+			}
+			set_variable = { ac_pol_fiscal_applied = 0 }
+			set_variable = { ac_pol_fiscal_identity = THIS.id }
+			set_country_flag = ac_pol_fiscal_dirty
+		}
+		if = {
+			limit = {
+				has_country_flag = ac_pol_fiscal_dirty
+			}
+			set_temp_variable = { ac_macro_commitment_delta = ac_pol_fiscal_applied }
+			multiply_temp_variable = { ac_macro_commitment_delta = -1 }
+			ac_macro_change_commitment = yes
+			set_variable = { ac_pol_fiscal_applied = 0 }
+			if = {
+				limit = {
+					has_country_flag = ac_pol_policy_civic
+				}
+				set_variable = { ac_pol_fiscal_applied = ac_macro_nominal_gdp }
+				divide_variable = { ac_pol_fiscal_applied = 2000 }
+			}
+			if = {
+				limit = {
+					has_country_flag = ac_pol_policy_military
+				}
+				set_variable = { ac_pol_fiscal_applied = ac_macro_nominal_gdp }
+				divide_variable = { ac_pol_fiscal_applied = 1000 }
+			}
+			if = {
+				limit = {
+					has_country_flag = ac_pol_policy_district
+				}
+				set_variable = { ac_pol_fiscal_applied = ac_macro_nominal_gdp }
+				multiply_variable = { ac_pol_fiscal_applied = 3 }
+				divide_variable = { ac_pol_fiscal_applied = 10000 }
+			}
+			set_temp_variable = { ac_macro_commitment_delta = ac_pol_fiscal_applied }
+			ac_macro_change_commitment = yes
+			clr_country_flag = ac_pol_fiscal_dirty
+		}
+	}
+}
+
+ac_pol_clear_policy = {
+	remove_ideas = ac_pol_civic
+	clr_country_flag = ac_pol_policy_civic
+	remove_ideas = ac_pol_military
+	clr_country_flag = ac_pol_policy_military
+	remove_ideas = ac_pol_district
+	clr_country_flag = ac_pol_policy_district
+	set_country_flag = ac_pol_fiscal_dirty
+}
+
+ac_pol_adopt_civic = {
+	if = {
+		limit = {
+			ac_pol_can_adopt = yes NOT = { has_country_flag = ac_pol_policy_civic }
+		}
+		add_political_power = -30
+		add_to_variable = { ac_pol_capacity = -10 }
+		ac_pol_clear_policy = yes
+		remove_ideas = ac_pol_strained
+		set_country_flag = ac_pol_policy_civic
+		add_ideas = ac_pol_civic
+		set_country_flag = { flag = ac_pol_policy_cooldown days = 180 }
+		ac_pol_sync_fiscal = yes
+		ac_pol_bounds = yes
+	}
+}
+
+ac_pol_adopt_military = {
+	if = {
+		limit = {
+			ac_pol_can_adopt = yes NOT = { has_country_flag = ac_pol_policy_military }
+		}
+		add_political_power = -30
+		add_to_variable = { ac_pol_capacity = -10 }
+		ac_pol_clear_policy = yes
+		remove_ideas = ac_pol_strained
+		set_country_flag = ac_pol_policy_military
+		add_ideas = ac_pol_military
+		set_country_flag = { flag = ac_pol_policy_cooldown days = 180 }
+		ac_pol_sync_fiscal = yes
+		ac_pol_bounds = yes
+	}
+}
+
+ac_pol_adopt_district = {
+	if = {
+		limit = {
+			ac_pol_can_adopt = yes NOT = { has_country_flag = ac_pol_policy_district }
+		}
+		add_political_power = -30
+		add_to_variable = { ac_pol_capacity = -10 }
+		ac_pol_clear_policy = yes
+		remove_ideas = ac_pol_strained
+		set_country_flag = ac_pol_policy_district
+		add_ideas = ac_pol_district
+		set_country_flag = { flag = ac_pol_policy_cooldown days = 180 }
+		ac_pol_sync_fiscal = yes
+		ac_pol_bounds = yes
+	}
+}
+
+ac_pol_suspend_policy = {
+	if = {
+		limit = {
+			ac_pol_active = yes OR = { has_country_flag = ac_pol_policy_civic has_country_flag = ac_pol_policy_military has_country_flag = ac_pol_policy_district }
+		}
+		ac_pol_clear_policy = yes
+		ac_pol_sync_fiscal = yes
+		add_ideas = ac_pol_strained
+		set_country_flag = ac_pol_suspended
+		custom_effect_tooltip = ac_pol_suspension_tt
+	}
+}
+
+ac_pol_work_audit = {
+	if = {
+		limit = {
+			ac_pol_can_work = yes
+		}
+		add_political_power = -25
+		add_to_variable = { ac_pol_capacity = 12 }
+
+		add_timed_idea = { idea = ac_pol_attention days = 90 }
+		set_country_flag = { flag = ac_pol_work_cooldown days = 90 }
+		ac_pol_bounds = yes
+	}
+}
+
+ac_pol_work_records = {
+	if = {
+		limit = {
+			ac_pol_can_work = yes has_country_flag = ac_pol_records_unlocked
+		}
+		add_political_power = -25
+		add_to_variable = { ac_pol_capacity = 8 }
+		add_stability = 0.01
+		add_timed_idea = { idea = ac_pol_attention days = 90 }
+		set_country_flag = { flag = ac_pol_work_cooldown days = 90 }
+		ac_pol_bounds = yes
+	}
+}
+
+ac_pol_work_maintenance = {
+	if = {
+		limit = {
+			ac_pol_can_work = yes has_country_flag = ac_pol_maintenance_unlocked
+		}
+		add_political_power = -25
+		add_to_variable = { ac_pol_capacity = 6 }
+		army_experience = 2
+		add_timed_idea = { idea = ac_pol_attention days = 90 }
+		set_country_flag = { flag = ac_pol_work_cooldown days = 90 }
+		ac_pol_bounds = yes
+	}
+}
+
+ac_pol_work_relief = {
+	if = {
+		limit = {
+			ac_pol_can_work = yes has_country_flag = ac_pol_relief_unlocked
+		}
+		add_political_power = -25
+		add_to_variable = { ac_pol_capacity = 8 }
+		add_stability = 0.01
+		add_timed_idea = { idea = ac_pol_attention days = 90 }
+		set_country_flag = { flag = ac_pol_work_cooldown days = 90 }
+		ac_pol_bounds = yes
+	}
+}
+
+ac_pol_work_training = {
+	if = {
+		limit = {
+			ac_pol_can_work = yes has_country_flag = ac_pol_training_unlocked
+		}
+		add_political_power = -25
+		add_to_variable = { ac_pol_capacity = 4 }
+		army_experience = 4
+		add_timed_idea = { idea = ac_pol_attention days = 90 }
+		set_country_flag = { flag = ac_pol_work_cooldown days = 90 }
+		ac_pol_bounds = yes
+	}
+}
+
+ac_pol_work_external = {
+	if = {
+		limit = {
+			ac_pol_can_work = yes has_country_flag = ac_pol_external_unlocked
+		}
+		add_political_power = -25
+		add_to_variable = { ac_pol_capacity = 6 }
+		air_experience = 2
+		add_timed_idea = { idea = ac_pol_attention days = 90 }
+		set_country_flag = { flag = ac_pol_work_cooldown days = 90 }
+		ac_pol_bounds = yes
+	}
+}
+
+ac_pol_emergency_review = {
+	if = {
+		limit = {
+			ac_pol_active = yes check_variable = { ac_pol_capacity < 15 } political_power >= 10 NOT = { has_country_flag = ac_pol_recovery_cooldown }
+		}
+		add_political_power = -10
+		add_to_variable = { ac_pol_capacity = 6 }
+		add_timed_idea = { idea = ac_pol_attention days = 90 }
+		set_country_flag = { flag = ac_pol_recovery_cooldown days = 90 }
+		ac_pol_bounds = yes
+	}
+}
+
+ac_pol_form_civil_administration_programme = {
+	if = {
+		limit = {
+			ac_pol_active = yes has_country_flag = ac_pol_form_civil_administration political_power >= 25 check_variable = { ac_pol_capacity >= 3 } NOT = { has_country_flag = ac_pol_form_cooldown }
+		}
+		add_political_power = -25
+		set_temp_variable = { ac_pol_capacity_delta = -3 }
+		ac_pol_change_capacity = yes
+		add_timed_idea = { idea = ac_pol_form_civil_administration days = 180 }
+		set_country_flag = { flag = ac_pol_form_cooldown days = 180 }
+	}
+}
+
+ac_pol_form_executive_office_programme = {
+	if = {
+		limit = {
+			ac_pol_active = yes has_country_flag = ac_pol_form_executive_office political_power >= 25 check_variable = { ac_pol_capacity >= 4 } NOT = { has_country_flag = ac_pol_form_cooldown }
+		}
+		add_political_power = -25
+		set_temp_variable = { ac_pol_capacity_delta = -4 }
+		ac_pol_change_capacity = yes
+		add_timed_idea = { idea = ac_pol_form_executive_office days = 180 }
+		set_country_flag = { flag = ac_pol_form_cooldown days = 180 }
+	}
+}
+
+ac_pol_form_crown_office_programme = {
+	if = {
+		limit = {
+			ac_pol_active = yes has_country_flag = ac_pol_form_crown_office political_power >= 25 check_variable = { ac_pol_capacity >= 3 } NOT = { has_country_flag = ac_pol_form_cooldown }
+		}
+		add_political_power = -25
+		set_temp_variable = { ac_pol_capacity_delta = -3 }
+		ac_pol_change_capacity = yes
+		add_timed_idea = { idea = ac_pol_form_crown_office days = 180 }
+		set_country_flag = { flag = ac_pol_form_cooldown days = 180 }
+	}
+}
+
+ac_pol_form_party_secretariat_programme = {
+	if = {
+		limit = {
+			ac_pol_active = yes has_country_flag = ac_pol_form_party_secretariat political_power >= 25 check_variable = { ac_pol_capacity >= 4 } NOT = { has_country_flag = ac_pol_form_cooldown }
+		}
+		add_political_power = -25
+		set_temp_variable = { ac_pol_capacity_delta = -4 }
+		ac_pol_change_capacity = yes
+		add_timed_idea = { idea = ac_pol_form_party_secretariat days = 180 }
+		set_country_flag = { flag = ac_pol_form_cooldown days = 180 }
+	}
+}
+
+ac_pol_form_command_administration_programme = {
+	if = {
+		limit = {
+			ac_pol_active = yes has_country_flag = ac_pol_form_command_administration political_power >= 25 check_variable = { ac_pol_capacity >= 5 } NOT = { has_country_flag = ac_pol_form_cooldown }
+		}
+		add_political_power = -25
+		set_temp_variable = { ac_pol_capacity_delta = -5 }
+		ac_pol_change_capacity = yes
+		add_timed_idea = { idea = ac_pol_form_command_administration days = 180 }
+		set_country_flag = { flag = ac_pol_form_cooldown days = 180 }
+	}
+}
+
+ac_pol_form_council_office_programme = {
+	if = {
+		limit = {
+			ac_pol_active = yes has_country_flag = ac_pol_form_council_office political_power >= 25 check_variable = { ac_pol_capacity >= 3 } NOT = { has_country_flag = ac_pol_form_cooldown }
+		}
+		add_political_power = -25
+		set_temp_variable = { ac_pol_capacity_delta = -3 }
+		ac_pol_change_capacity = yes
+		add_timed_idea = { idea = ac_pol_form_council_office days = 180 }
+		set_country_flag = { flag = ac_pol_form_cooldown days = 180 }
+	}
+}
+
+ac_pol_enter_regional = {
+	if = {
+		limit = {
+			ac_pol_active = yes ac_pol_uses_regional_tree = yes has_focus_tree = generic_focus ac_pol_legacy_idle = yes
+		}
+		load_focus_tree = { tree = ac_regional_foundation keep_completed = yes }
+		set_country_flag = ac_pol_regional_handoff
+	}
+}
+
+ac_pol_repair_reviews = {
+	if = {
+		limit = {
+			original_tag = SNS has_country_flag = SNS_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = SNS_pol_response_window } }
+		}
+		clr_country_flag = SNS_pol_pending
+		clr_country_flag = SNS_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = AMB has_country_flag = AMB_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = AMB_pol_response_window } }
+		}
+		clr_country_flag = AMB_pol_pending
+		clr_country_flag = AMB_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = UGE has_country_flag = UGE_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = UGE_pol_response_window } }
+		}
+		clr_country_flag = UGE_pol_pending
+		clr_country_flag = UGE_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = DEL has_country_flag = DEL_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = DEL_pol_response_window } }
+		}
+		clr_country_flag = DEL_pol_pending
+		clr_country_flag = DEL_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = OSE has_country_flag = OSE_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = OSE_pol_response_window } }
+		}
+		clr_country_flag = OSE_pol_pending
+		clr_country_flag = OSE_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = YUK has_country_flag = YUK_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = YUK_pol_response_window } }
+		}
+		clr_country_flag = YUK_pol_pending
+		clr_country_flag = YUK_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = ERU has_country_flag = ERU_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = ERU_pol_response_window } }
+		}
+		clr_country_flag = ERU_pol_pending
+		clr_country_flag = ERU_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = FCU has_country_flag = FCU_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = FCU_pol_response_window } }
+		}
+		clr_country_flag = FCU_pol_pending
+		clr_country_flag = FCU_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = EMM has_country_flag = EMM_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = EMM_pol_response_window } }
+		}
+		clr_country_flag = EMM_pol_pending
+		clr_country_flag = EMM_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = EVA has_country_flag = EVA_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = EVA_pol_response_window } }
+		}
+		clr_country_flag = EVA_pol_pending
+		clr_country_flag = EVA_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = NPT has_country_flag = NPT_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = NPT_pol_response_window } }
+		}
+		clr_country_flag = NPT_pol_pending
+		clr_country_flag = NPT_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = REC has_country_flag = REC_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = REC_pol_response_window } }
+		}
+		clr_country_flag = REC_pol_pending
+		clr_country_flag = REC_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = SAP has_country_flag = SAP_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = SAP_pol_response_window } }
+		}
+		clr_country_flag = SAP_pol_pending
+		clr_country_flag = SAP_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = GEB has_country_flag = GEB_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = GEB_pol_response_window } }
+		}
+		clr_country_flag = GEB_pol_pending
+		clr_country_flag = GEB_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = FAT has_country_flag = FAT_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = FAT_pol_response_window } }
+		}
+		clr_country_flag = FAT_pol_pending
+		clr_country_flag = FAT_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = SBK has_country_flag = SBK_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = SBK_pol_response_window } }
+		}
+		clr_country_flag = SBK_pol_pending
+		clr_country_flag = SBK_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = NEC has_country_flag = NEC_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = NEC_pol_response_window } }
+		}
+		clr_country_flag = NEC_pol_pending
+		clr_country_flag = NEC_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = AUR has_country_flag = AUR_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = AUR_pol_response_window } }
+		}
+		clr_country_flag = AUR_pol_pending
+		clr_country_flag = AUR_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = LEA has_country_flag = LEA_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = LEA_pol_response_window } }
+		}
+		clr_country_flag = LEA_pol_pending
+		clr_country_flag = LEA_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = BLK has_country_flag = BLK_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = BLK_pol_response_window } }
+		}
+		clr_country_flag = BLK_pol_pending
+		clr_country_flag = BLK_pol_response_window
+	}
+	if = {
+		limit = {
+			original_tag = UST has_country_flag = UST_pol_pending OR = { ac_pol_active = no NOT = { has_country_flag = UST_pol_response_window } }
+		}
+		clr_country_flag = UST_pol_pending
+		clr_country_flag = UST_pol_response_window
+	}
+}
+
+ac_pol_weekly = {
+	ac_pol_initialize = yes
+	ac_pol_repair_reviews = yes
+	if = {
+		limit = {
+			ac_pol_active = yes
+		}
+		ac_pol_refresh_form = yes
+		ac_pol_sync_fiscal = yes
+		if = {
+			limit = {
+				NOT = { has_country_flag = ac_pol_weekly_paid }
+			}
+			set_country_flag = { flag = ac_pol_weekly_paid days = 6 }
+			if = {
+				limit = {
+					has_country_flag = ac_pol_policy_civic
+				}
+				add_to_variable = { ac_pol_capacity = -1 }
+			}
+			if = {
+				limit = {
+					has_country_flag = ac_pol_policy_military
+				}
+				add_to_variable = { ac_pol_capacity = -2 }
+			}
+			if = {
+				limit = {
+					has_country_flag = ac_pol_policy_district
+				}
+				add_to_variable = { ac_pol_capacity = -1 }
+			}
+			ac_pol_bounds = yes
+			if = {
+				limit = {
+					check_variable = { ac_pol_capacity < 1 }
+				}
+				ac_pol_suspend_policy = yes
+			}
+		}
+	}
+}
+
+SNS_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = SNS ac_pol_active = yes NOT = { has_country_flag = SNS_pol_settled } NOT = { has_country_flag = SNS_pol_pending } NOT = { has_country_flag = SNS_pol_deferred }
+		}
+		set_country_flag = SNS_pol_pending
+		set_country_flag = { flag = SNS_pol_response_window days = 30 }
+		country_event = { id = ac_pol.1 days = 1 }
+	}
+}
+
+SNS_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = SNS ac_pol_active = yes NOT = { has_country_flag = SNS_pol_settled } has_country_flag = SNS_pol_pending has_country_flag = SNS_pol_response_window has_war = no
+		}
+		clr_country_flag = SNS_pol_pending
+		clr_country_flag = SNS_pol_response_window
+		set_country_flag = SNS_pol_settled
+		set_country_flag = SNS_pol_civil
+		add_ideas = SNS_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+SNS_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = SNS ac_pol_active = yes NOT = { has_country_flag = SNS_pol_settled } has_country_flag = SNS_pol_pending has_country_flag = SNS_pol_response_window always = yes
+		}
+		clr_country_flag = SNS_pol_pending
+		clr_country_flag = SNS_pol_response_window
+		set_country_flag = SNS_pol_settled
+		set_country_flag = SNS_pol_reserve
+		add_ideas = SNS_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+SNS_pol_defer = {
+	if = {
+		limit = {
+			original_tag = SNS has_country_flag = SNS_pol_pending
+		}
+		clr_country_flag = SNS_pol_pending
+		clr_country_flag = SNS_pol_response_window
+		set_country_flag = { flag = SNS_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+AMB_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = AMB ac_pol_active = yes NOT = { has_country_flag = AMB_pol_settled } NOT = { has_country_flag = AMB_pol_pending } NOT = { has_country_flag = AMB_pol_deferred }
+		}
+		set_country_flag = AMB_pol_pending
+		set_country_flag = { flag = AMB_pol_response_window days = 30 }
+		country_event = { id = ac_pol.2 days = 1 }
+	}
+}
+
+AMB_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = AMB ac_pol_active = yes NOT = { has_country_flag = AMB_pol_settled } has_country_flag = AMB_pol_pending has_country_flag = AMB_pol_response_window is_subject = no
+		}
+		clr_country_flag = AMB_pol_pending
+		clr_country_flag = AMB_pol_response_window
+		set_country_flag = AMB_pol_settled
+		set_country_flag = AMB_pol_civil
+		add_ideas = AMB_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+AMB_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = AMB ac_pol_active = yes NOT = { has_country_flag = AMB_pol_settled } has_country_flag = AMB_pol_pending has_country_flag = AMB_pol_response_window always = yes
+		}
+		clr_country_flag = AMB_pol_pending
+		clr_country_flag = AMB_pol_response_window
+		set_country_flag = AMB_pol_settled
+		set_country_flag = AMB_pol_reserve
+		add_ideas = AMB_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+AMB_pol_defer = {
+	if = {
+		limit = {
+			original_tag = AMB has_country_flag = AMB_pol_pending
+		}
+		clr_country_flag = AMB_pol_pending
+		clr_country_flag = AMB_pol_response_window
+		set_country_flag = { flag = AMB_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+UGE_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = UGE ac_pol_active = yes NOT = { has_country_flag = UGE_pol_settled } NOT = { has_country_flag = UGE_pol_pending } NOT = { has_country_flag = UGE_pol_deferred }
+		}
+		set_country_flag = UGE_pol_pending
+		set_country_flag = { flag = UGE_pol_response_window days = 30 }
+		country_event = { id = ac_pol.3 days = 1 }
+	}
+}
+
+UGE_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = UGE ac_pol_active = yes NOT = { has_country_flag = UGE_pol_settled } has_country_flag = UGE_pol_pending has_country_flag = UGE_pol_response_window has_war = no
+		}
+		clr_country_flag = UGE_pol_pending
+		clr_country_flag = UGE_pol_response_window
+		set_country_flag = UGE_pol_settled
+		set_country_flag = UGE_pol_civil
+		add_ideas = UGE_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+UGE_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = UGE ac_pol_active = yes NOT = { has_country_flag = UGE_pol_settled } has_country_flag = UGE_pol_pending has_country_flag = UGE_pol_response_window always = yes
+		}
+		clr_country_flag = UGE_pol_pending
+		clr_country_flag = UGE_pol_response_window
+		set_country_flag = UGE_pol_settled
+		set_country_flag = UGE_pol_reserve
+		add_ideas = UGE_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+UGE_pol_defer = {
+	if = {
+		limit = {
+			original_tag = UGE has_country_flag = UGE_pol_pending
+		}
+		clr_country_flag = UGE_pol_pending
+		clr_country_flag = UGE_pol_response_window
+		set_country_flag = { flag = UGE_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+DEL_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = DEL ac_pol_active = yes NOT = { has_country_flag = DEL_pol_settled } NOT = { has_country_flag = DEL_pol_pending } NOT = { has_country_flag = DEL_pol_deferred }
+		}
+		set_country_flag = DEL_pol_pending
+		set_country_flag = { flag = DEL_pol_response_window days = 30 }
+		country_event = { id = ac_pol.4 days = 1 }
+	}
+}
+
+DEL_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = DEL ac_pol_active = yes NOT = { has_country_flag = DEL_pol_settled } has_country_flag = DEL_pol_pending has_country_flag = DEL_pol_response_window is_subject = no
+		}
+		clr_country_flag = DEL_pol_pending
+		clr_country_flag = DEL_pol_response_window
+		set_country_flag = DEL_pol_settled
+		set_country_flag = DEL_pol_civil
+		add_ideas = DEL_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+DEL_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = DEL ac_pol_active = yes NOT = { has_country_flag = DEL_pol_settled } has_country_flag = DEL_pol_pending has_country_flag = DEL_pol_response_window always = yes
+		}
+		clr_country_flag = DEL_pol_pending
+		clr_country_flag = DEL_pol_response_window
+		set_country_flag = DEL_pol_settled
+		set_country_flag = DEL_pol_reserve
+		add_ideas = DEL_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+DEL_pol_defer = {
+	if = {
+		limit = {
+			original_tag = DEL has_country_flag = DEL_pol_pending
+		}
+		clr_country_flag = DEL_pol_pending
+		clr_country_flag = DEL_pol_response_window
+		set_country_flag = { flag = DEL_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+OSE_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = OSE ac_pol_active = yes NOT = { has_country_flag = OSE_pol_settled } NOT = { has_country_flag = OSE_pol_pending } NOT = { has_country_flag = OSE_pol_deferred }
+		}
+		set_country_flag = OSE_pol_pending
+		set_country_flag = { flag = OSE_pol_response_window days = 30 }
+		country_event = { id = ac_pol.5 days = 1 }
+	}
+}
+
+OSE_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = OSE ac_pol_active = yes NOT = { has_country_flag = OSE_pol_settled } has_country_flag = OSE_pol_pending has_country_flag = OSE_pol_response_window has_war = no
+		}
+		clr_country_flag = OSE_pol_pending
+		clr_country_flag = OSE_pol_response_window
+		set_country_flag = OSE_pol_settled
+		set_country_flag = OSE_pol_civil
+		add_ideas = OSE_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+OSE_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = OSE ac_pol_active = yes NOT = { has_country_flag = OSE_pol_settled } has_country_flag = OSE_pol_pending has_country_flag = OSE_pol_response_window always = yes
+		}
+		clr_country_flag = OSE_pol_pending
+		clr_country_flag = OSE_pol_response_window
+		set_country_flag = OSE_pol_settled
+		set_country_flag = OSE_pol_reserve
+		add_ideas = OSE_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+OSE_pol_defer = {
+	if = {
+		limit = {
+			original_tag = OSE has_country_flag = OSE_pol_pending
+		}
+		clr_country_flag = OSE_pol_pending
+		clr_country_flag = OSE_pol_response_window
+		set_country_flag = { flag = OSE_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+YUK_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = YUK ac_pol_active = yes NOT = { has_country_flag = YUK_pol_settled } NOT = { has_country_flag = YUK_pol_pending } NOT = { has_country_flag = YUK_pol_deferred }
+		}
+		set_country_flag = YUK_pol_pending
+		set_country_flag = { flag = YUK_pol_response_window days = 30 }
+		country_event = { id = ac_pol.6 days = 1 }
+	}
+}
+
+YUK_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = YUK ac_pol_active = yes NOT = { has_country_flag = YUK_pol_settled } has_country_flag = YUK_pol_pending has_country_flag = YUK_pol_response_window has_war = no
+		}
+		clr_country_flag = YUK_pol_pending
+		clr_country_flag = YUK_pol_response_window
+		set_country_flag = YUK_pol_settled
+		set_country_flag = YUK_pol_civil
+		add_ideas = YUK_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+YUK_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = YUK ac_pol_active = yes NOT = { has_country_flag = YUK_pol_settled } has_country_flag = YUK_pol_pending has_country_flag = YUK_pol_response_window always = yes
+		}
+		clr_country_flag = YUK_pol_pending
+		clr_country_flag = YUK_pol_response_window
+		set_country_flag = YUK_pol_settled
+		set_country_flag = YUK_pol_reserve
+		add_ideas = YUK_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+YUK_pol_defer = {
+	if = {
+		limit = {
+			original_tag = YUK has_country_flag = YUK_pol_pending
+		}
+		clr_country_flag = YUK_pol_pending
+		clr_country_flag = YUK_pol_response_window
+		set_country_flag = { flag = YUK_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+ERU_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = ERU ac_pol_active = yes NOT = { has_country_flag = ERU_pol_settled } NOT = { has_country_flag = ERU_pol_pending } NOT = { has_country_flag = ERU_pol_deferred }
+		}
+		set_country_flag = ERU_pol_pending
+		set_country_flag = { flag = ERU_pol_response_window days = 30 }
+		country_event = { id = ac_pol.7 days = 1 }
+	}
+}
+
+ERU_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = ERU ac_pol_active = yes NOT = { has_country_flag = ERU_pol_settled } has_country_flag = ERU_pol_pending has_country_flag = ERU_pol_response_window has_war = no
+		}
+		clr_country_flag = ERU_pol_pending
+		clr_country_flag = ERU_pol_response_window
+		set_country_flag = ERU_pol_settled
+		set_country_flag = ERU_pol_civil
+		add_ideas = ERU_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+ERU_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = ERU ac_pol_active = yes NOT = { has_country_flag = ERU_pol_settled } has_country_flag = ERU_pol_pending has_country_flag = ERU_pol_response_window always = yes
+		}
+		clr_country_flag = ERU_pol_pending
+		clr_country_flag = ERU_pol_response_window
+		set_country_flag = ERU_pol_settled
+		set_country_flag = ERU_pol_reserve
+		add_ideas = ERU_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+ERU_pol_defer = {
+	if = {
+		limit = {
+			original_tag = ERU has_country_flag = ERU_pol_pending
+		}
+		clr_country_flag = ERU_pol_pending
+		clr_country_flag = ERU_pol_response_window
+		set_country_flag = { flag = ERU_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+FCU_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = FCU ac_pol_active = yes NOT = { has_country_flag = FCU_pol_settled } NOT = { has_country_flag = FCU_pol_pending } NOT = { has_country_flag = FCU_pol_deferred }
+		}
+		set_country_flag = FCU_pol_pending
+		set_country_flag = { flag = FCU_pol_response_window days = 30 }
+		country_event = { id = ac_pol.8 days = 1 }
+	}
+}
+
+FCU_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = FCU ac_pol_active = yes NOT = { has_country_flag = FCU_pol_settled } has_country_flag = FCU_pol_pending has_country_flag = FCU_pol_response_window is_subject = no
+		}
+		clr_country_flag = FCU_pol_pending
+		clr_country_flag = FCU_pol_response_window
+		set_country_flag = FCU_pol_settled
+		set_country_flag = FCU_pol_civil
+		add_ideas = FCU_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+FCU_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = FCU ac_pol_active = yes NOT = { has_country_flag = FCU_pol_settled } has_country_flag = FCU_pol_pending has_country_flag = FCU_pol_response_window always = yes
+		}
+		clr_country_flag = FCU_pol_pending
+		clr_country_flag = FCU_pol_response_window
+		set_country_flag = FCU_pol_settled
+		set_country_flag = FCU_pol_reserve
+		add_ideas = FCU_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+FCU_pol_defer = {
+	if = {
+		limit = {
+			original_tag = FCU has_country_flag = FCU_pol_pending
+		}
+		clr_country_flag = FCU_pol_pending
+		clr_country_flag = FCU_pol_response_window
+		set_country_flag = { flag = FCU_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+EMM_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = EMM ac_pol_active = yes NOT = { has_country_flag = EMM_pol_settled } NOT = { has_country_flag = EMM_pol_pending } NOT = { has_country_flag = EMM_pol_deferred }
+		}
+		set_country_flag = EMM_pol_pending
+		set_country_flag = { flag = EMM_pol_response_window days = 30 }
+		country_event = { id = ac_pol.9 days = 1 }
+	}
+}
+
+EMM_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = EMM ac_pol_active = yes NOT = { has_country_flag = EMM_pol_settled } has_country_flag = EMM_pol_pending has_country_flag = EMM_pol_response_window has_war = no
+		}
+		clr_country_flag = EMM_pol_pending
+		clr_country_flag = EMM_pol_response_window
+		set_country_flag = EMM_pol_settled
+		set_country_flag = EMM_pol_civil
+		add_ideas = EMM_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+EMM_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = EMM ac_pol_active = yes NOT = { has_country_flag = EMM_pol_settled } has_country_flag = EMM_pol_pending has_country_flag = EMM_pol_response_window always = yes
+		}
+		clr_country_flag = EMM_pol_pending
+		clr_country_flag = EMM_pol_response_window
+		set_country_flag = EMM_pol_settled
+		set_country_flag = EMM_pol_reserve
+		add_ideas = EMM_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+EMM_pol_defer = {
+	if = {
+		limit = {
+			original_tag = EMM has_country_flag = EMM_pol_pending
+		}
+		clr_country_flag = EMM_pol_pending
+		clr_country_flag = EMM_pol_response_window
+		set_country_flag = { flag = EMM_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+EVA_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = EVA ac_pol_active = yes NOT = { has_country_flag = EVA_pol_settled } NOT = { has_country_flag = EVA_pol_pending } NOT = { has_country_flag = EVA_pol_deferred }
+		}
+		set_country_flag = EVA_pol_pending
+		set_country_flag = { flag = EVA_pol_response_window days = 30 }
+		country_event = { id = ac_pol.10 days = 1 }
+	}
+}
+
+EVA_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = EVA ac_pol_active = yes NOT = { has_country_flag = EVA_pol_settled } has_country_flag = EVA_pol_pending has_country_flag = EVA_pol_response_window has_war = no
+		}
+		clr_country_flag = EVA_pol_pending
+		clr_country_flag = EVA_pol_response_window
+		set_country_flag = EVA_pol_settled
+		set_country_flag = EVA_pol_civil
+		add_ideas = EVA_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+EVA_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = EVA ac_pol_active = yes NOT = { has_country_flag = EVA_pol_settled } has_country_flag = EVA_pol_pending has_country_flag = EVA_pol_response_window always = yes
+		}
+		clr_country_flag = EVA_pol_pending
+		clr_country_flag = EVA_pol_response_window
+		set_country_flag = EVA_pol_settled
+		set_country_flag = EVA_pol_reserve
+		add_ideas = EVA_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+EVA_pol_defer = {
+	if = {
+		limit = {
+			original_tag = EVA has_country_flag = EVA_pol_pending
+		}
+		clr_country_flag = EVA_pol_pending
+		clr_country_flag = EVA_pol_response_window
+		set_country_flag = { flag = EVA_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+NPT_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = NPT ac_pol_active = yes NOT = { has_country_flag = NPT_pol_settled } NOT = { has_country_flag = NPT_pol_pending } NOT = { has_country_flag = NPT_pol_deferred }
+		}
+		set_country_flag = NPT_pol_pending
+		set_country_flag = { flag = NPT_pol_response_window days = 30 }
+		country_event = { id = ac_pol.11 days = 1 }
+	}
+}
+
+NPT_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = NPT ac_pol_active = yes NOT = { has_country_flag = NPT_pol_settled } has_country_flag = NPT_pol_pending has_country_flag = NPT_pol_response_window has_war = no
+		}
+		clr_country_flag = NPT_pol_pending
+		clr_country_flag = NPT_pol_response_window
+		set_country_flag = NPT_pol_settled
+		set_country_flag = NPT_pol_civil
+		add_ideas = NPT_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+NPT_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = NPT ac_pol_active = yes NOT = { has_country_flag = NPT_pol_settled } has_country_flag = NPT_pol_pending has_country_flag = NPT_pol_response_window always = yes
+		}
+		clr_country_flag = NPT_pol_pending
+		clr_country_flag = NPT_pol_response_window
+		set_country_flag = NPT_pol_settled
+		set_country_flag = NPT_pol_reserve
+		add_ideas = NPT_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+NPT_pol_defer = {
+	if = {
+		limit = {
+			original_tag = NPT has_country_flag = NPT_pol_pending
+		}
+		clr_country_flag = NPT_pol_pending
+		clr_country_flag = NPT_pol_response_window
+		set_country_flag = { flag = NPT_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+REC_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = REC ac_pol_active = yes NOT = { has_country_flag = REC_pol_settled } NOT = { has_country_flag = REC_pol_pending } NOT = { has_country_flag = REC_pol_deferred }
+		}
+		set_country_flag = REC_pol_pending
+		set_country_flag = { flag = REC_pol_response_window days = 30 }
+		country_event = { id = ac_pol.12 days = 1 }
+	}
+}
+
+REC_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = REC ac_pol_active = yes NOT = { has_country_flag = REC_pol_settled } has_country_flag = REC_pol_pending has_country_flag = REC_pol_response_window has_war = no
+		}
+		clr_country_flag = REC_pol_pending
+		clr_country_flag = REC_pol_response_window
+		set_country_flag = REC_pol_settled
+		set_country_flag = REC_pol_civil
+		add_ideas = REC_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+REC_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = REC ac_pol_active = yes NOT = { has_country_flag = REC_pol_settled } has_country_flag = REC_pol_pending has_country_flag = REC_pol_response_window always = yes
+		}
+		clr_country_flag = REC_pol_pending
+		clr_country_flag = REC_pol_response_window
+		set_country_flag = REC_pol_settled
+		set_country_flag = REC_pol_reserve
+		add_ideas = REC_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+REC_pol_defer = {
+	if = {
+		limit = {
+			original_tag = REC has_country_flag = REC_pol_pending
+		}
+		clr_country_flag = REC_pol_pending
+		clr_country_flag = REC_pol_response_window
+		set_country_flag = { flag = REC_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+SAP_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = SAP ac_pol_active = yes NOT = { has_country_flag = SAP_pol_settled } NOT = { has_country_flag = SAP_pol_pending } NOT = { has_country_flag = SAP_pol_deferred }
+		}
+		set_country_flag = SAP_pol_pending
+		set_country_flag = { flag = SAP_pol_response_window days = 30 }
+		country_event = { id = ac_pol.13 days = 1 }
+	}
+}
+
+SAP_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = SAP ac_pol_active = yes NOT = { has_country_flag = SAP_pol_settled } has_country_flag = SAP_pol_pending has_country_flag = SAP_pol_response_window has_government = monarchism
+		}
+		clr_country_flag = SAP_pol_pending
+		clr_country_flag = SAP_pol_response_window
+		set_country_flag = SAP_pol_settled
+		set_country_flag = SAP_pol_civil
+		add_ideas = SAP_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+SAP_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = SAP ac_pol_active = yes NOT = { has_country_flag = SAP_pol_settled } has_country_flag = SAP_pol_pending has_country_flag = SAP_pol_response_window always = yes
+		}
+		clr_country_flag = SAP_pol_pending
+		clr_country_flag = SAP_pol_response_window
+		set_country_flag = SAP_pol_settled
+		set_country_flag = SAP_pol_reserve
+		add_ideas = SAP_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+SAP_pol_defer = {
+	if = {
+		limit = {
+			original_tag = SAP has_country_flag = SAP_pol_pending
+		}
+		clr_country_flag = SAP_pol_pending
+		clr_country_flag = SAP_pol_response_window
+		set_country_flag = { flag = SAP_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+GEB_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = GEB ac_pol_active = yes NOT = { has_country_flag = GEB_pol_settled } NOT = { has_country_flag = GEB_pol_pending } NOT = { has_country_flag = GEB_pol_deferred }
+		}
+		set_country_flag = GEB_pol_pending
+		set_country_flag = { flag = GEB_pol_response_window days = 30 }
+		country_event = { id = ac_pol.14 days = 1 }
+	}
+}
+
+GEB_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = GEB ac_pol_active = yes NOT = { has_country_flag = GEB_pol_settled } has_country_flag = GEB_pol_pending has_country_flag = GEB_pol_response_window has_war = no
+		}
+		clr_country_flag = GEB_pol_pending
+		clr_country_flag = GEB_pol_response_window
+		set_country_flag = GEB_pol_settled
+		set_country_flag = GEB_pol_civil
+		add_ideas = GEB_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+GEB_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = GEB ac_pol_active = yes NOT = { has_country_flag = GEB_pol_settled } has_country_flag = GEB_pol_pending has_country_flag = GEB_pol_response_window always = yes
+		}
+		clr_country_flag = GEB_pol_pending
+		clr_country_flag = GEB_pol_response_window
+		set_country_flag = GEB_pol_settled
+		set_country_flag = GEB_pol_reserve
+		add_ideas = GEB_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+GEB_pol_defer = {
+	if = {
+		limit = {
+			original_tag = GEB has_country_flag = GEB_pol_pending
+		}
+		clr_country_flag = GEB_pol_pending
+		clr_country_flag = GEB_pol_response_window
+		set_country_flag = { flag = GEB_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+FAT_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = FAT ac_pol_active = yes NOT = { has_country_flag = FAT_pol_settled } NOT = { has_country_flag = FAT_pol_pending } NOT = { has_country_flag = FAT_pol_deferred }
+		}
+		set_country_flag = FAT_pol_pending
+		set_country_flag = { flag = FAT_pol_response_window days = 30 }
+		country_event = { id = ac_pol.15 days = 1 }
+	}
+}
+
+FAT_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = FAT ac_pol_active = yes NOT = { has_country_flag = FAT_pol_settled } has_country_flag = FAT_pol_pending has_country_flag = FAT_pol_response_window is_subject = no
+		}
+		clr_country_flag = FAT_pol_pending
+		clr_country_flag = FAT_pol_response_window
+		set_country_flag = FAT_pol_settled
+		set_country_flag = FAT_pol_civil
+		add_ideas = FAT_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+FAT_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = FAT ac_pol_active = yes NOT = { has_country_flag = FAT_pol_settled } has_country_flag = FAT_pol_pending has_country_flag = FAT_pol_response_window always = yes
+		}
+		clr_country_flag = FAT_pol_pending
+		clr_country_flag = FAT_pol_response_window
+		set_country_flag = FAT_pol_settled
+		set_country_flag = FAT_pol_reserve
+		add_ideas = FAT_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+FAT_pol_defer = {
+	if = {
+		limit = {
+			original_tag = FAT has_country_flag = FAT_pol_pending
+		}
+		clr_country_flag = FAT_pol_pending
+		clr_country_flag = FAT_pol_response_window
+		set_country_flag = { flag = FAT_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+SBK_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = SBK ac_pol_active = yes NOT = { has_country_flag = SBK_pol_settled } NOT = { has_country_flag = SBK_pol_pending } NOT = { has_country_flag = SBK_pol_deferred }
+		}
+		set_country_flag = SBK_pol_pending
+		set_country_flag = { flag = SBK_pol_response_window days = 30 }
+		country_event = { id = ac_pol.16 days = 1 }
+	}
+}
+
+SBK_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = SBK ac_pol_active = yes NOT = { has_country_flag = SBK_pol_settled } has_country_flag = SBK_pol_pending has_country_flag = SBK_pol_response_window is_subject = no
+		}
+		clr_country_flag = SBK_pol_pending
+		clr_country_flag = SBK_pol_response_window
+		set_country_flag = SBK_pol_settled
+		set_country_flag = SBK_pol_civil
+		add_ideas = SBK_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+SBK_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = SBK ac_pol_active = yes NOT = { has_country_flag = SBK_pol_settled } has_country_flag = SBK_pol_pending has_country_flag = SBK_pol_response_window always = yes
+		}
+		clr_country_flag = SBK_pol_pending
+		clr_country_flag = SBK_pol_response_window
+		set_country_flag = SBK_pol_settled
+		set_country_flag = SBK_pol_reserve
+		add_ideas = SBK_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+SBK_pol_defer = {
+	if = {
+		limit = {
+			original_tag = SBK has_country_flag = SBK_pol_pending
+		}
+		clr_country_flag = SBK_pol_pending
+		clr_country_flag = SBK_pol_response_window
+		set_country_flag = { flag = SBK_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+NEC_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = NEC ac_pol_active = yes NOT = { has_country_flag = NEC_pol_settled } NOT = { has_country_flag = NEC_pol_pending } NOT = { has_country_flag = NEC_pol_deferred }
+		}
+		set_country_flag = NEC_pol_pending
+		set_country_flag = { flag = NEC_pol_response_window days = 30 }
+		country_event = { id = ac_pol.17 days = 1 }
+	}
+}
+
+NEC_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = NEC ac_pol_active = yes NOT = { has_country_flag = NEC_pol_settled } has_country_flag = NEC_pol_pending has_country_flag = NEC_pol_response_window is_subject = no has_war = no
+		}
+		clr_country_flag = NEC_pol_pending
+		clr_country_flag = NEC_pol_response_window
+		set_country_flag = NEC_pol_settled
+		set_country_flag = NEC_pol_civil
+		add_ideas = NEC_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+NEC_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = NEC ac_pol_active = yes NOT = { has_country_flag = NEC_pol_settled } has_country_flag = NEC_pol_pending has_country_flag = NEC_pol_response_window always = yes
+		}
+		clr_country_flag = NEC_pol_pending
+		clr_country_flag = NEC_pol_response_window
+		set_country_flag = NEC_pol_settled
+		set_country_flag = NEC_pol_reserve
+		add_ideas = NEC_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+NEC_pol_defer = {
+	if = {
+		limit = {
+			original_tag = NEC has_country_flag = NEC_pol_pending
+		}
+		clr_country_flag = NEC_pol_pending
+		clr_country_flag = NEC_pol_response_window
+		set_country_flag = { flag = NEC_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+AUR_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = AUR ac_pol_active = yes NOT = { has_country_flag = AUR_pol_settled } NOT = { has_country_flag = AUR_pol_pending } NOT = { has_country_flag = AUR_pol_deferred }
+		}
+		set_country_flag = AUR_pol_pending
+		set_country_flag = { flag = AUR_pol_response_window days = 30 }
+		country_event = { id = ac_pol.18 days = 1 }
+	}
+}
+
+AUR_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = AUR ac_pol_active = yes NOT = { has_country_flag = AUR_pol_settled } has_country_flag = AUR_pol_pending has_country_flag = AUR_pol_response_window has_war = no
+		}
+		clr_country_flag = AUR_pol_pending
+		clr_country_flag = AUR_pol_response_window
+		set_country_flag = AUR_pol_settled
+		set_country_flag = AUR_pol_civil
+		add_ideas = AUR_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+AUR_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = AUR ac_pol_active = yes NOT = { has_country_flag = AUR_pol_settled } has_country_flag = AUR_pol_pending has_country_flag = AUR_pol_response_window always = yes
+		}
+		clr_country_flag = AUR_pol_pending
+		clr_country_flag = AUR_pol_response_window
+		set_country_flag = AUR_pol_settled
+		set_country_flag = AUR_pol_reserve
+		add_ideas = AUR_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+AUR_pol_defer = {
+	if = {
+		limit = {
+			original_tag = AUR has_country_flag = AUR_pol_pending
+		}
+		clr_country_flag = AUR_pol_pending
+		clr_country_flag = AUR_pol_response_window
+		set_country_flag = { flag = AUR_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+LEA_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = LEA ac_pol_active = yes NOT = { has_country_flag = LEA_pol_settled } NOT = { has_country_flag = LEA_pol_pending } NOT = { has_country_flag = LEA_pol_deferred }
+		}
+		set_country_flag = LEA_pol_pending
+		set_country_flag = { flag = LEA_pol_response_window days = 30 }
+		country_event = { id = ac_pol.19 days = 1 }
+	}
+}
+
+LEA_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = LEA ac_pol_active = yes NOT = { has_country_flag = LEA_pol_settled } has_country_flag = LEA_pol_pending has_country_flag = LEA_pol_response_window has_war = no
+		}
+		clr_country_flag = LEA_pol_pending
+		clr_country_flag = LEA_pol_response_window
+		set_country_flag = LEA_pol_settled
+		set_country_flag = LEA_pol_civil
+		add_ideas = LEA_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+LEA_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = LEA ac_pol_active = yes NOT = { has_country_flag = LEA_pol_settled } has_country_flag = LEA_pol_pending has_country_flag = LEA_pol_response_window always = yes
+		}
+		clr_country_flag = LEA_pol_pending
+		clr_country_flag = LEA_pol_response_window
+		set_country_flag = LEA_pol_settled
+		set_country_flag = LEA_pol_reserve
+		add_ideas = LEA_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+LEA_pol_defer = {
+	if = {
+		limit = {
+			original_tag = LEA has_country_flag = LEA_pol_pending
+		}
+		clr_country_flag = LEA_pol_pending
+		clr_country_flag = LEA_pol_response_window
+		set_country_flag = { flag = LEA_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+BLK_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = BLK ac_pol_active = yes NOT = { has_country_flag = BLK_pol_settled } NOT = { has_country_flag = BLK_pol_pending } NOT = { has_country_flag = BLK_pol_deferred }
+		}
+		set_country_flag = BLK_pol_pending
+		set_country_flag = { flag = BLK_pol_response_window days = 30 }
+		country_event = { id = ac_pol.20 days = 1 }
+	}
+}
+
+BLK_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = BLK ac_pol_active = yes NOT = { has_country_flag = BLK_pol_settled } has_country_flag = BLK_pol_pending has_country_flag = BLK_pol_response_window is_subject = no has_war = no
+		}
+		clr_country_flag = BLK_pol_pending
+		clr_country_flag = BLK_pol_response_window
+		set_country_flag = BLK_pol_settled
+		set_country_flag = BLK_pol_civil
+		add_ideas = BLK_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+BLK_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = BLK ac_pol_active = yes NOT = { has_country_flag = BLK_pol_settled } has_country_flag = BLK_pol_pending has_country_flag = BLK_pol_response_window always = yes
+		}
+		clr_country_flag = BLK_pol_pending
+		clr_country_flag = BLK_pol_response_window
+		set_country_flag = BLK_pol_settled
+		set_country_flag = BLK_pol_reserve
+		add_ideas = BLK_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+BLK_pol_defer = {
+	if = {
+		limit = {
+			original_tag = BLK has_country_flag = BLK_pol_pending
+		}
+		clr_country_flag = BLK_pol_pending
+		clr_country_flag = BLK_pol_response_window
+		set_country_flag = { flag = BLK_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}
+
+UST_pol_open_review = {
+	if = {
+		limit = {
+			original_tag = UST ac_pol_active = yes NOT = { has_country_flag = UST_pol_settled } NOT = { has_country_flag = UST_pol_pending } NOT = { has_country_flag = UST_pol_deferred }
+		}
+		set_country_flag = UST_pol_pending
+		set_country_flag = { flag = UST_pol_response_window days = 30 }
+		country_event = { id = ac_pol.21 days = 1 }
+	}
+}
+
+UST_pol_choose_civil = {
+	if = {
+		limit = {
+			original_tag = UST ac_pol_active = yes NOT = { has_country_flag = UST_pol_settled } has_country_flag = UST_pol_pending has_country_flag = UST_pol_response_window is_subject = no
+		}
+		clr_country_flag = UST_pol_pending
+		clr_country_flag = UST_pol_response_window
+		set_country_flag = UST_pol_settled
+		set_country_flag = UST_pol_civil
+		add_ideas = UST_pol_civil
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+UST_pol_choose_reserve = {
+	if = {
+		limit = {
+			original_tag = UST ac_pol_active = yes NOT = { has_country_flag = UST_pol_settled } has_country_flag = UST_pol_pending has_country_flag = UST_pol_response_window always = yes
+		}
+		clr_country_flag = UST_pol_pending
+		clr_country_flag = UST_pol_response_window
+		set_country_flag = UST_pol_settled
+		set_country_flag = UST_pol_reserve
+		add_ideas = UST_pol_reserve
+		add_to_variable = { ac_pol_capacity = 5 }
+		ac_pol_bounds = yes
+	}
+}
+
+UST_pol_defer = {
+	if = {
+		limit = {
+			original_tag = UST has_country_flag = UST_pol_pending
+		}
+		clr_country_flag = UST_pol_pending
+		clr_country_flag = UST_pol_response_window
+		set_country_flag = { flag = UST_pol_deferred days = 90 }
+		custom_effect_tooltip = ac_pol_defer_tt
+	}
+}

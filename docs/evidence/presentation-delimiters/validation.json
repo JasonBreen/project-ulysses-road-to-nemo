@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "base_commit": "941aae4eb3290f1b4661e3df25afb936e5ef3745",
+  "payload_sha256": "1dc1998f0c3c0e5ea40c9613ce06e1ce9b3a1c3ddd70108e59d8db7528758dd0",
+  "payload_hash_rule": "Sorted repository-relative POSIX path,NUL,raw bytes for each delivered mod file.",
+  "commands": [
+    {
+      "command": "python -B tools/check_presentation_sources.py",
+      "exit_code": 0,
+      "result": "81files,561counterdefinitions,2namedcategorymembers,no authored parse failures"
+    },
+    {
+      "command": "python -B tools/audit_visual_dependencies.py --strict-all",
+      "exit_code": 0,
+      "result": "6552sprites,1204focusicons,zero missing authored-GFX references"
+    },
+    {
+      "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File tools/Test-UlyssesStatic.ps1 -ModRoot mod/2985041246 -ReferenceGameRoot <engine>",
+      "exit_code": 0,
+      "result": "Full static/reference suite passes; map2/reference2006/technology1 inherited warnings retained"
+    },
+    {
+      "command": "python -B tools/overhaul/audit_consumers.py <engine> --gate-decisions --gate-screen ac_macro_economy.gui --summary-only",
+      "exit_code": 0,
+      "result": "Both requested ownership screens zero failures;12engine-only parse-reader failures remain"
+    }
+  ],
+  "source_sha256": {
+    "tools\\check_presentation_sources.py": "17237b69c63f8c1d3c2efbb677363ea925126933c65f6796508cec92dd0c47b8",
+    "mod\\2985041246\\interface\\subuniticons.gfx": "43a4a8de10a7d04593340c95d80b369e8fe52a0cc4d472ea65af0bd7ddf75727",
+    "mod\\2985041246\\sound\\superevents_category.asset": "b8df85fbd2f957c3864aff6ccd2df9dc3bc66dc6a547afbf85dd004a1b32da95"
+  },
+  "native_acceptance": false,
+  "native_status": "Paused; no native execution or normal-install synchronization"
+}

@@ -18,7 +18,13 @@ OUT = ROOT / 'docs/evidence/anea'
 
 
 def main():
-    parser = argparse.ArgumentParser();parser.add_argument('--engine', type=Path);parser.add_argument('--baseline', type=Path);parser.add_argument('--only');args = parser.parse_args()
+    global OUT
+    parser = argparse.ArgumentParser();parser.add_argument('--engine', type=Path);parser.add_argument('--baseline', type=Path);parser.add_argument('--only')
+    parser.add_argument('--output', type=Path, default=OUT,
+                        help='Evidence directory; defaults to the original Anea record')
+    parser.add_argument('--base', default='cf8fec41abe5080b1af66eb86189b35c7af522f6')
+    args = parser.parse_args()
+    OUT = args.output
     py = [sys.executable, '-B']
     checks = {
         'anea-foundation': py + ['tools/anea/test_foundation.py'] + (['--reference', str(args.engine)] if args.engine else []),
@@ -66,7 +72,7 @@ def main():
     payload = []
     for path in sorted((ROOT / 'mod/2985041246').rglob('*')):
         if path.is_file(): payload.append(dict(file=path.relative_to(ROOT / 'mod/2985041246').as_posix(), sha256=hashlib.sha256(path.read_bytes()).hexdigest(), bytes=path.stat().st_size))
-    manifest = dict(base='cf8fec41abe5080b1af66eb86189b35c7af522f6', role='source candidate payload; not an installed/native-tested copy', files=payload)
+    manifest = dict(base=args.base, role='source candidate payload; not an installed/native-tested copy', files=payload)
     manifest['content_sha256'] = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
     (OUT / 'candidate-payload.json').write_text(json.dumps(manifest, indent=2) + '\n')
     raise SystemExit(any(r['exit_code'] for r in results))

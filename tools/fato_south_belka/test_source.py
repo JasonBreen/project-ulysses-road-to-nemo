@@ -13,7 +13,7 @@ sys.path.insert(0,str(HERE))
 from content import FOCUSES,COUNTRIES
 import build
 import build_art
-from source_contract import validate
+from source_contract import validate,validate_protected,REVIEWED_RELEASE_UPDATE
 sys.path.insert(0,str(ROOT/'tools'))
 from economy_script import parse
 
@@ -75,7 +75,7 @@ class SourceAndArt(unittest.TestCase):
             elif r.kind=='action':self.assertIn(r.tag+'_fsb_'+r.hook+'_apply',build.EFFECTS,r.id)
             elif r.kind=='scene':self.assertIn('ac_fsb_scene_'+r.hook+'_queue',build.EFFECTS,r.id)
 
-    def test_inherited_owners_territory_forces_and_leaders_are_untouched(self):
+    def test_inherited_owners_territory_forces_and_leaders_are_protected(self):
         self.assertEqual(15,len(validate()['protected_sha256']))
         forbidden={'transfer_state','add_state_core','add_manpower','set_capital','load_oob','set_oob','add_equipment_production','create_equipment_variant','declare_war_on','create_faction','add_to_faction','annex_country','set_politics','set_popularities','recruit_character','promote_character','add_country_leader_role','remove_ideas'}
         # Remove_ideas is allowed only for this owner's ideas, never inherited
@@ -88,6 +88,21 @@ class SourceAndArt(unittest.TestCase):
                 if key in ('set_global_flag','clr_global_flag'):self.fail('National owner wrote global outcome: '+str(value))
                 if key in ('set_variable','add_to_variable','subtract_from_variable','multiply_variable','divide_variable'):
                     for name,_,_ in value:self.assertTrue(name.startswith('ac_fsb_'),(path,key,name))
+
+    def test_only_exact_reviewed_release_owner_version_is_admitted(self):
+        update=REVIEWED_RELEASE_UPDATE
+        capture=json.loads((HERE/'engine_contract.json').read_text())
+        expected=capture['protected_sha256'][update['path']]
+        self.assertEqual(update['original_sha256'],expected)
+        actual=(MOD/update['path']).read_bytes()
+        self.assertEqual('reviewed-release-owner',validate_protected(update['path'],expected,actual))
+        for path,before,data in (
+                (update['path'],expected,actual+b'\n'),
+                (update['path'],'0'*64,actual),
+                ('common/scripted_effects/ac_release_foundations.txt',expected,actual),
+                (update['path'],expected,actual.replace(b'ac_release_manual_production_tt',b'ac_release_automatic_production_tt'))):
+            with self.subTest(path=path,before=before),self.assertRaises(ValueError):
+                validate_protected(path,before,data)
 
     def test_dedicated_tree_disposition_preserves_other_67_institution_profiles(self):
         profiles=json.loads((ROOT/'tools/institutions/profiles.json').read_text());self.assertEqual(69,len(profiles))
@@ -112,7 +127,7 @@ class SourceAndArt(unittest.TestCase):
                 self.assertEqual((r['width'],r['height']),im.size);self.assertEqual(1,r['frames']);self.assertEqual(im.width,r['frame_width']);self.assertEqual((r['alpha_min'],r['alpha_max']),im.getchannel('A').getextrema())
                 if r['role']=='compact decision-row artwork':self.assertEqual((26,29),im.size);self.assertEqual(0,im.getpixel((0,0))[3])
                 elif r['role']=='category artwork':self.assertEqual((100,100),im.size)
-                elif r['role']=='original narrative illustration':self.assertEqual((450,150),im.size);self.assertEqual((255,255),im.getchannel('A').getextrema())
+                elif r['role']=='original narrative illustration':self.assertEqual((210,176),im.size);self.assertEqual((255,255),im.getchannel('A').getextrema())
         for row in FOCUSES:
             self.assertIn('GFX_ac_fsb_focus_'+row.id,sprites);self.assertIn('GFX_ac_fsb_focus_'+row.id+'_shine',sprites)
         for tag,items in build.DECISIONS.items():

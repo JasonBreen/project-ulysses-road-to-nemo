@@ -109,6 +109,10 @@ def build_actions():
         if paid:body='ac_fsb_pay = yes\n'+guard('has_country_flag = ac_fsb_payment_succeeded',body)
         preview=block('effect_tooltip',('add_timed_idea = { idea = '+ident+' days = '+str(days)+' }') if days else 'add_ideas = '+ident) if mods else ''
         decision(tag,hook,row.title,desc,condition,body,visible,weight=1,preview=preview)
+    audit_review=active('FAT')+' '+done('FAT','independent_audit')+' has_country_flag = ac_fsb_independent_audit_standing'
+    decision('FAT','review_independent_audit','Review the Standing Audit',
+        'End the earned independent audit and remove its exact recorded annual commitment through the public reconciliation owner. This administrative closure grants no cash, capacity, stock or refund. A later reinstatement pays the ordinary audit authorisation again.',
+        audit_review,'ac_fsb_remove_standing = yes',audit_review,weight=0,icon='programme')
     # Annexation suspends only this owner's ideas. A surviving/released country
     # may pay to reinstate its latest earned policy in each family; completed
     # focuses are not rerun and superseded acts cannot stack their old rewards.

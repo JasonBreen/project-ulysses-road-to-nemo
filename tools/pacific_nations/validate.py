@@ -35,7 +35,8 @@ if __name__=='__main__':
       ('source-snapshot',py+['tools/Test-SourceSnapshot.py']),('registry',py+['tools/world_foundation/registry.py','--check']),
       ('generated-macro',py+['tools/economy_v2/build.py','--check']),('generated-national',py+['tools/pacific_nations/build.py','--check']),
       ('release-inventory',py+['tools/world_starts/release_inventory.py','--check']),('roadmap',py+['tools/overhaul/check_release_plan.py']),
-      ('fato-south-belka',py+['tools/fato_south_belka/test_campaign.py']),('reconstruction',py+['tools/Test-ReconstructionContinuations.py'])]
+      ('fato-south-belka',py+['tools/fato_south_belka/test_campaign.py']),('reconstruction',py+['tools/Test-ReconstructionContinuations.py']),
+      ('event-pictures',py+['tools/Test-EventPictures.py']),('event-style',py+['tools/Test-EventStyle.py'])]
     if a.only:
         requested=set(a.only);available={name for name,_ in jobs}
         if requested-available:raise SystemExit('Unknown check names: '+str(requested-available))

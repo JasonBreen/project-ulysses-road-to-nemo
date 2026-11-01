@@ -14,6 +14,7 @@ from pacific_nations.build import outputs as content_outputs
 from superpowers.build_art import frame,row_icon,event_image,encode,ACCENT,NAVY,LIGHT,GOLD,glyphs
 from reconstruction.build_art import BitmapFont
 from usea_expansion.script import parse,get
+from event_picture_fit.fit import contain
 
 LAYOUTS=[((26,23,115,112),(129,93,43,46),(52,135,42,34)),
  ((27,38,105,109),(129,26,43,45),(121,128,45,37)),
@@ -84,9 +85,9 @@ def outputs():
             if number>=20:
                 draw=ImageDraw.Draw(image);draw.line((240,216,400,216),fill=GOLD,width=3);glyphs.glyph(image,'scales',(289,111,61,65),ACCENT[tag])
             master=HERE/'source'/tag/'events'/(str(number)+'.png');result[master]=encode(image,'PNG')
-            texture('gfx/AC_pacific_nations/'+tag+'/events/'+str(number)+'.dds',image,get(node,'picture'),'event illustration',id=get(node,'id'),master=master.relative_to(ROOT).as_posix())
+            texture('gfx/AC_pacific_nations/'+tag+'/events/'+str(number)+'.dds',contain(image),get(node,'picture'),'event illustration',id=get(node,'id'),master=master.relative_to(ROOT).as_posix(),source_size=list(image.size),packaging='Full-source contain in native210x176 aperture; opaque navy padding, no crop')
         result[MOD/'interface'/(stem+'.gfx')]=('spriteTypes = {\n'+'\n'.join(sprites)+'\n}\n').encode()
-        dependencies=[HERE/'build_art.py',HERE/'model.py',HERE/'build.py',HERE/(tag.lower()+'.py'),ROOT/'tools/superpowers/build_art.py',ROOT/'tools/reconstruction/build_art.py',ROOT/'tools/usea_expansion/build_art.py',MOD/'gfx/fonts/ACBriefing16.fnt',MOD/'gfx/fonts/ACBriefing16.dds']
+        dependencies=[HERE/'build_art.py',HERE/'model.py',HERE/'build.py',HERE/(tag.lower()+'.py'),ROOT/'tools/superpowers/build_art.py',ROOT/'tools/reconstruction/build_art.py',ROOT/'tools/usea_expansion/build_art.py',ROOT/'tools/event_picture_fit/fit.py',MOD/'gfx/fonts/ACBriefing16.fnt',MOD/'gfx/fonts/ACBriefing16.dds']
         manifest=dict(schema=1,country=tag,pillow='11.3.0',assets=assets,source_layer='Original national briefing compositions, not official emblems',
             dependencies={path.relative_to(ROOT).as_posix():digest(path)for path in dependencies},hash_rule='Python/FNT source normalizes CRLF to LF; DDS and delivered textures use raw bytes.',native_acceptance=False)
         result[HERE/('assets_'+tag+'.json')]=(json.dumps(manifest,indent=2)+'\n').encode()

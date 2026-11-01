@@ -236,7 +236,8 @@ def build_events():
     def event(number, title, desc, options, trigger='', news=False):
         key = 'ac_anea.' + str(number)
         loc(key + '.t', title);loc(key + '.d', desc)
-        body = f'id = {key}\ntitle = {key}.t\ndesc = {key}.d\npicture = GFX_ac_anea_event_emm_4\nis_triggered_only = yes\n'
+        picture = 'GFX_ac_anea_news_emm_4' if news else 'GFX_ac_anea_event_emm_4'
+        body = f'id = {key}\ntitle = {key}.t\ndesc = {key}.d\npicture = {picture}\nis_triggered_only = yes\n'
         if trigger: body += block('trigger', trigger)
         for index, (label, condition, effect, weight) in enumerate(options):
             option = key + '.' + chr(97 + index);loc(option, label)

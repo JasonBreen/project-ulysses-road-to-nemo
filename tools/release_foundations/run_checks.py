@@ -2,8 +2,10 @@
 import argparse,json,os,subprocess,sys,time
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'tools'))
+from source_snapshot import capture,verify
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--reference',type=Path);parser.add_argument('--output',type=Path,default=ROOT/'runtime-output/release-foundations/checks.json');args=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--reference',type=Path);parser.add_argument('--output',type=Path,default=ROOT/'runtime-output/release-foundations/checks.json');parser.add_argument('--pin-source',action='store_true');args=parser.parse_args()
     ref=['--reference',str(args.reference)] if args.reference else []
     commands=[
         ('release-finance',['tools/release_foundations/test_finance.py']),
@@ -26,13 +28,16 @@ def main():
         ('authored-assets',['tools/audit_visual_dependencies.py','--strict-all']),
     ];results=[];env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'}
     args.output.parent.mkdir(parents=True,exist_ok=True)
+    source=capture(ROOT)if args.pin_source else None
     for name,command in commands:
         start=time.monotonic();run=subprocess.run([sys.executable,'-B']+command,cwd=ROOT,env=env,text=True,encoding='utf-8',errors='replace',capture_output=True)
         log=args.output.parent/(name+'.txt');log.write_text(run.stdout+run.stderr,encoding='utf-8',newline='\n')
         results.append(dict(gate=name,command=command,exit_code=run.returncode,seconds=round(time.monotonic()-start,3),log=log.name))
         print(name+': '+('PASS' if run.returncode==0 else 'FAIL'),flush=True)
-        args.output.write_text(json.dumps(dict(status='source/offline only; native paused',checks=results),indent=2)+'\n',encoding='utf-8')
+        args.output.write_text(json.dumps(dict(status='source/offline only; native paused',source_inputs=source,checks=results),indent=2)+'\n',encoding='utf-8')
         if run.returncode:
+            if source:verify(source,ROOT)
             print(run.stdout+run.stderr);raise SystemExit(run.returncode)
+    if source:verify(source,ROOT)
     print(str(len(results))+' release/source gates passed; native acceptance remains pending')
 if __name__=='__main__':main()

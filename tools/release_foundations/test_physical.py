@@ -28,27 +28,48 @@ class Physical(unittest.TestCase):
         w.states[316].owner=w.states[316].controller='BLK';w.states[316].owner=w.states[316].controller='REC'
         w.release_action('on_release_as_free','REC','BLK');self.assertEqual({'infantry_equipment_1':17},c.equipment)
 
-    def test_actual_dlc_recipes_research_and_create_before_each_typed_consumer(self):
+    def test_actual_dlc_certification_unlocks_recipes_without_capacity_or_resource_grants(self):
         contract=json.loads((HERE/'physical_contract.json').read_text())
         for bba,mtg in product((False,True),repeat=2):
             dlcs=(['By Blood Alone'] if bba else [])+(['Man the Guns'] if mtg else [])
-            w=World(dlcs=dlcs);c=release(w,'REL',(173,207,236,597));c.observables.update(num_of_military_factories=20,num_of_naval_factories=20)
-            w.resource_balances['REL'].update({k:100 for k in ('steel','aluminium','rubber','tungsten','chromium')});c.pp=D(1000)
+            w=World(dlcs=dlcs);c=release(w,'REL',(173,207,236,597));c.observables.update(num_of_military_factories=0,num_of_naval_factories=0);c.pp=D(1000)
+            physical=copy.deepcopy((w.buildings,w.resource_balances,c.equipment,w.armies,w.production))
             for role,row in contract['cases'][f'bba{int(bba)}_mtg{int(mtg)}'].items():
-                w.run('ac_release_REL_queue_'+role,'REL');self.assertIn('ac_release_REL_queue_'+role,w.globals)
-                production=w.production['REL'][-1];equipment=get(production,'equipment')
-                self.assertEqual(row['equipment'],get(equipment,'type'));self.assertEqual('REL',get(equipment,'creator'))
+                w.run('ac_release_REL_certify_'+role,'REL');self.assertIn('ac_release_REL_licensed_'+role+f'_bba{int(bba)}_mtg{int(mtg)}',w.globals)
                 self.assertTrue(set(row['technologies'])<=w.research['REL'])
-                if row['modules']:self.assertIn(get(equipment,'version_name').strip('"'),w.variants['REL'])
-                before=copy.deepcopy((w.production,c.pp));w.run('ac_release_REL_queue_'+role,'REL');self.assertEqual(before,(w.production,c.pp))
-            self.assertEqual(10,len(w.production['REL']))
+                if row['modules']:
+                    variant=w.variants['REL']['REL Release '+role];self.assertEqual(row['equipment'],get(variant,'type'));self.assertEqual(row['modules'],{k:v for k,_,v in get(variant,'modules')})
+                before=copy.deepcopy((w.variants,c.pp,w.research));w.run('ac_release_REL_certify_'+role,'REL');self.assertEqual(before,(w.variants,c.pp,w.research))
+            self.assertEqual(D(950),c.pp);self.assertEqual(physical,(w.buildings,w.resource_balances,c.equipment,w.armies,w.production))
 
-    def test_missing_inputs_and_live_capacity_block_a_queue_without_spending(self):
-        w=World();c=release(w);c.observables['num_of_military_factories']=1;c.pp=D(100)
-        before=c.pp;w.run('ac_release_REC_queue_rifles','REC');self.assertEqual([],w.production['REC']);self.assertEqual(before,c.pp)
-        w.resource_balances['REC']['steel']=100;w.run('ac_release_REC_queue_rifles','REC');self.assertEqual(1,len(w.production['REC']))
-        w.resource_balances['REC']['aluminium']=100;w.run('ac_release_REC_queue_support','REC');self.assertEqual(1,len(w.production['REC']))
-        c.observables['num_of_military_factories']=2;w.run('ac_release_REC_queue_support','REC');self.assertEqual(2,len(w.production['REC']))
+    def test_retired_queue_ids_are_inert_with_busy_deleted_and_historical_lines(self):
+        from physical import TAGS,ROLES
+        for old_receipts in (False,True):
+            w=World();c=release(w);c.observables.update(num_of_military_factories=1,num_of_naval_factories=1)
+            c.variables.update(ac_release_reserved_mil=D(99),ac_release_reserved_yards=D(99))
+            w.production['REC']=[parse('equipment = { type = infantry_equipment_1 creator = REC } requested_factories = 1')]
+            if old_receipts:
+                w.globals.update('ac_release_'+tag+'_queue_'+role for tag in TAGS for role in ROLES)
+                w.production['REC']=[]  # Manual deletion does not reset history.
+            before=copy.deepcopy((c,w.globals,w.production,w.buildings,w.resource_balances,w.research,w.variants,w.native_log))
+            for tag in TAGS:
+                for role in ROLES:w.run('ac_release_'+tag+'_queue_'+role,'REC')
+            w.run('ac_release_quote_maintenance_capacity','REC')
+            self.assertEqual(before,(c,w.globals,w.production,w.buildings,w.resource_balances,w.research,w.variants,w.native_log))
+            self.assertTrue(w.trigger([('ac_release_REC_can_certify_fighter','=','yes')],c))
+            category=get(parse((MOD/'common/decisions/ac_release_maintenance.txt').read_text()),'ac_release_REC_maintenance')
+            for role in ROLES:
+                decision=get(category,'ac_release_REC_queue_'+role)
+                self.assertFalse(w.trigger(get(decision,'visible'),c));self.assertFalse(w.trigger(get(decision,'available'),c))
+
+    def test_maintenance_registration_preserves_inert_historical_purchase_counters(self):
+        w=World(new=False);w.states[316].owner=w.states[316].controller='REC';w.release_action('on_startup');c=w.countries['REC']
+        c.variables.update(ac_release_reserved_mil=D(9),ac_release_reserved_yards=D(4));w.globals.add('ac_release_REC_queue_rifles')
+        w.run('ac_release_REC_prepare_maintenance','REC')
+        self.assertEqual(D(9),c.variables['ac_release_reserved_mil']);self.assertEqual(D(4),c.variables['ac_release_reserved_yards']);self.assertIn('ac_release_REC_queue_rifles',w.globals)
+        for folder in ('scripted_effects','scripted_triggers'):
+            text=(MOD/'common'/folder/'ac_release_maintenance.txt').read_text()
+            self.assertNotIn('ac_release_reserved_',text);self.assertNotIn('ac_release_free_',text);self.assertNotIn('add_equipment_production',text)
 
     def test_public_fee_rechecks_fractional_boundary_and_rejects_nonrelease(self):
         for mode,stock,amount in [('full','ac_macro_cash',D('.02')),('experimental','ac_econ_treasury',D(20))]:
@@ -145,7 +166,11 @@ class Physical(unittest.TestCase):
         self.assertIn('REC Release fighter',w.variants['REC']);count=len(w.variants['REC']);pp=c.pp
         w.run('ac_release_REC_certify_fighter','REC');self.assertEqual((count,pp),(len(w.variants['REC']),c.pp))
         c.observables['num_of_military_factories']=1;w.resource_balances['REC'].update(aluminium=100,rubber=100)
-        w.run('ac_release_REC_queue_fighter','REC');self.assertEqual(1,len(w.production['REC']));self.assertEqual(count,len(w.variants['REC']))
+        w.run('ac_release_REC_queue_fighter','REC');self.assertEqual([],w.production['REC']);self.assertEqual(count,len(w.variants['REC']))
+        # Explicit manual Production observation, outside the decision owner.
+        row=json.loads((HERE/'physical_contract.json').read_text())['cases']['bba1_mtg0']['fighter']
+        w.execute(parse('add_equipment_production = { equipment = { type = '+row['equipment']+' creator = REC version_name = "REC Release fighter" } requested_factories = 1 efficiency = 50 progress = 0 }'),c)
+        self.assertEqual(1,len(w.production['REC']))
 
     def test_moved_before_research_or_variant_consumer_is_rejected(self):
         w=World(dlcs=['By Blood Alone']);c=release(w);row=json.loads((HERE/'physical_contract.json').read_text())['cases']['bba1_mtg0']['fighter']
@@ -157,13 +182,15 @@ class Physical(unittest.TestCase):
     def test_actual_decision_bindings_execute_hidden_owners_and_localized_requirements(self):
         w=World(dlcs=['By Blood Alone']);c=release(w);c.variables['ac_macro_cash']=D('.04');c.observables['num_of_military_factories']=1;w.resource_balances['REC'].update(aluminium=100,rubber=100)
         category=get(parse((MOD/'common/decisions/ac_release_maintenance.txt').read_text()),'ac_release_REC_maintenance')
-        for ident in ('ac_release_REC_certify_fighter','ac_release_REC_queue_fighter','ac_release_REC_develop_civilian','ac_release_REC_cancel_civilian'):
+        for ident in ('ac_release_REC_certify_fighter','ac_release_REC_develop_civilian','ac_release_REC_cancel_civilian'):
             decision=get(category,ident)
             self.assertTrue(w.trigger(get(decision,'visible'),c),ident)
             self.assertTrue(w.trigger(get(decision,'available',[]),c),ident)
             self.assertTrue(any(k=='custom_effect_tooltip' for k,_,_ in get(decision,'complete_effect')))
             w.execute(get(decision,'complete_effect'),c)
-        self.assertEqual(1,len(w.production['REC']));self.assertNotIn('ac_release_project_active',c.flags);self.assertEqual(D('.02'),c.variables['ac_macro_cash'])
+        retired=get(category,'ac_release_REC_queue_fighter');self.assertFalse(w.trigger(get(retired,'visible'),c));self.assertFalse(w.trigger(get(retired,'available'),c))
+        before=copy.deepcopy((c.pp,w.globals,w.production));w.execute(get(retired,'complete_effect'),c);self.assertEqual(before,(c.pp,w.globals,w.production))
+        self.assertEqual([],w.production['REC']);self.assertNotIn('ac_release_project_active',c.flags);self.assertEqual(D('.02'),c.variables['ac_macro_cash'])
 
     def test_monthly_owner_recovers_a_paid_due_project_without_replaying_a_callback(self):
         w=World();c=release(w);c.variables['ac_macro_cash']=D('.04');before=w.buildings[316].get('arms_factory',0)

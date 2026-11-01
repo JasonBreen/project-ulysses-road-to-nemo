@@ -31,6 +31,8 @@ The installed reference was **1.19.4.1**. Captures contain declarations, identif
 
 For final receipts, commit the complete source and use `run_checks.py --exact-source --core --engine <reference>`. It uses the shared `tools/source_snapshot.py` owner to require clean source, pin the exact commit and all tracked raw input bytes outside `docs/evidence`, then verify the same inputs after every selected check finishes. Exact mode rejects `--only`: old retained results cannot be relabelled for a new source commit. The receipt identifies the tested code commit even if a later evidence-only commit records its outputs.
 
+For an explicitly bounded follow-up phase, use `--pin-source --only <comma-separated-checks> --output <new-phase-directory>`. It uses the same source fence and includes only that invocation's rows; no earlier results are retained or relabelled. This supplements the separately recorded complete run. Only the unpinned legacy convenience mode can retain older rows, and its report identifies that limitation.
+
 ## Research and manufacturing
 
 All six families have nodes in **2006, 2010, 2015 and 2020**. Each node has a paid research cost and hard date gate. Later role tiers require their preceding tier and same-year Naval Systems. The first role commitment checks the correct existing legacy or MTG foundation. Systems begins with radio, basic machine tools and electronic/mechanical engineering. No prerequisite, aircraft, hull, national variant, crew, dockyard or equipment stock is granted on initialization, research or late loading.

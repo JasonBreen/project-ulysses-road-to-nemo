@@ -151,6 +151,12 @@ if ($LASTEXITCODE -ne 0) {
     Write-Error 'Usean rebellion contract checks failed.'
     exit $LASTEXITCODE
 }
+& $pythonHost (Join-Path $PSScriptRoot 'Test-HistoryDataCleanup.py') --mod-root $ModRoot
+if ($LASTEXITCODE -ne 0) {
+    Write-Error 'History data cleanup checks failed.'
+    exit $LASTEXITCODE
+}
+
 & $pythonHost (Join-Path $PSScriptRoot 'pr_scan.py') --self-test
 if ($LASTEXITCODE -ne 0) {
     Write-Error 'Pull request scan self-test failed.'

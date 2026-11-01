@@ -27,6 +27,7 @@ def main():
       ('original-six-runtime',py+['tools/Test-SquadronStories.py']),
       ('original-art-partition',py+['tools/Test-SquadronArt.py']),
       ('original-pacific-masters',py+['tools/squadrons/pacific_art/test_art.py']),
+      ('art-authoring-tools',py+['tools/squadrons/pacific_art/test_tools.py']),
       ('committed-art-bytes',py+['tools/squadrons/pacific_art/audit.py','--git-blobs']),
       ('national-runtime',py+['tools/pacific_nations/test_runtime.py']),
       ('world-foundations',py+['tools/world_foundation/test_foundation.py','--reference',engine]),

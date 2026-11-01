@@ -272,8 +272,8 @@ if __name__=='__main__':
             # Review PNGs preserve exact pixels, not platform zlib encoding.
             # Delivered DDS, SVG and binding/manifest bytes still compare below.
             if path.suffix.lower()=='.png' and existing:
-                with Image.open(io.BytesIO(existing)) as old,Image.open(io.BytesIO(data)) as new:
-                    if old.size==new.size and old.convert('RGBA').tobytes()==new.convert('RGBA').tobytes():continue
+                from render_review import same_review_png
+                if same_review_png(existing,data):continue
             if path.suffix.lower() in ('.json','.svg','.html','.gfx'):existing=existing.replace(b'\r\n',b'\n')
             if existing!=data:raise SystemExit('Stale land art: '+str(path.relative_to(ROOT)))
         else:path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)

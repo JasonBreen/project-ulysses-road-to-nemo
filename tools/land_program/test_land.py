@@ -9,6 +9,7 @@ from decimal import Decimal as D
 import hashlib
 import importlib.util
 import itertools
+import io
 import json
 from pathlib import Path
 import re
@@ -22,7 +23,7 @@ from script import parse,get,walk
 from land_content import FAMILIES,YEARS,TECHS,AI_TARGET_TECHS,AI_TARGET_STOCKS,recipe,model_id,chassis_id,prerequisites
 import audit
 spec=importlib.util.spec_from_file_location('land_ui',HERE/'build_ui.py');build_ui=importlib.util.module_from_spec(spec);spec.loader.exec_module(build_ui)
-from render_review import Atlas,locs,render,named,pos
+from render_review import Atlas,locs,render,named,pos,same_review_png
 from PIL import Image
 from harness import World
 from forces import DATA,observable_names
@@ -315,6 +316,15 @@ class Land(unittest.TestCase):
         for script in ('build.py','build_ui.py','build_art.py','render_review.py'):
             result=subprocess.run([sys.executable,'-B',str(HERE/script),'--check'],cwd=ROOT,capture_output=True,text=True)
             self.assertEqual(0,result.returncode,result.stdout+result.stderr)
+
+    def test_review_png_compression_cannot_hide_changed_pixels_or_dimensions(self):
+        original=Image.new('RGBA',(8,8),(8,22,33,255));buffers=[]
+        for level in (0,9):
+            buffer=io.BytesIO();original.save(buffer,format='PNG',compress_level=level);buffers.append(buffer.getvalue())
+        self.assertNotEqual(*buffers);self.assertTrue(same_review_png(*buffers))
+        for altered in (original.copy(),original.resize((9,8))):
+            altered.putpixel((0,0),(93,208,223,255));buffer=io.BytesIO();altered.save(buffer,format='PNG')
+            self.assertFalse(same_review_png(buffers[0],buffer.getvalue()))
 
 
 if __name__=='__main__':

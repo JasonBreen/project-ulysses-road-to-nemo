@@ -50,6 +50,10 @@ def outputs():
             out[MOD/relative]=data;sprites.append(f'spriteType = {{ name = "{name}" texturefile = "{relative}" }}')
             assets.append(dict(file=relative,sprite=name,width=156,height=210,frames=1,frame_width=156,frame_height=210,alpha_min=255,alpha_max=255,sha256=hashlib.sha256(data).hexdigest(),role='Existing national emblem in established original government-office frame',identity=flag.relative_to(MOD).as_posix()))
     for path in (Path(__file__),LIBRARY):sources[path.relative_to(ROOT).as_posix()]=hashlib.sha256(path.read_text().encode()).hexdigest()
+    metrics=MOD/'gfx/fonts/ACBriefing16.fnt'
+    atlas=MOD/'gfx/fonts'/re.search(r'page id=0 file="([^"]+)"',metrics.read_text())[1]
+    sources[metrics.relative_to(ROOT).as_posix()]=hashlib.sha256(metrics.read_text().encode()).hexdigest()
+    sources[atlas.relative_to(ROOT).as_posix()]=hashlib.sha256(atlas.read_bytes()).hexdigest()
     out[MOD/'interface/ac_release_foundations.gfx']=('spriteTypes = {\n'+'\n'.join(sprites)+'\n}\n').encode()
     out[HERE/'assets.json']=(json.dumps(dict(schema=1,renderer='Pillow11.3.0',classification='Original code-native subjects and existing national flag identity; no remote art or installed-game images read; no added watermark.',source_hashes=sources,assets=assets),indent=2)+'\n').encode()
     stream=io.BytesIO();sheet.save(stream,format='PNG');out[HERE/'contact-sheet.png']=stream.getvalue()

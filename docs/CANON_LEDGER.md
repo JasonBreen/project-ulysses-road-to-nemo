@@ -65,3 +65,15 @@ and gameplay, individually mapped in `tools/fato_south_belka/purposes.json`.
 Eight original scene masters retain exact prompts and packaging provenance.
 No new government biography, border, core, force transfer or war is asserted.
 Implementation/source evidence is separate from paused native acceptance.
+
+## 2026-11-02 content waves A and D
+
+| Claim or content family | Source layer | Current evidence | Status / required action |
+| --- | --- | --- | --- |
+| Free Erusea insurrection, 26 September 2006 | Official, for the outbreak date and name only | ACES Chronicle anchor recorded in `tools/overhaul/release_plan.json` → `chronology` (checked 31 October 2026). IDs `ac_fe.1`, `ac_fe_owner_weekly`, `ac_fe_insurrection_started` | Implemented in source as a tagless pressure owner, offline-tested; native untested. Participants, aims, places, course and end are **not** sourced and are not asserted. The 2006–2009 Chronicle rows (Gate 0) must still be compiled; if they add facts, the owner is revised to match. |
+| Insurrection pressure model, containment, crisis review and partner assistance | Provisional gameplay | `tools/content_waves/free_erusea.py`; IDs `ac_fe_pressure`, `ac_fe.2`–`.4`, `ac_fe_pressure_*`, `ac_fe_emergency_administration`, `ac_fe_partner_assistance` | Implemented, offline-tested. Containment is state-based; `ac_fe.3` says explicitly that no end date is claimed. No country tag, civil war, border or core change. |
+| Erusean and Central Usean oversight-years branches, 2005–2009 (60 focuses) | Provisional gameplay, gated on existing `ac_ucw` outcome flags (mod provenance) | `common/national_focus/ac_free_erusea.txt`, `ERU_fe_*`, `FCU_fe_*` | Implemented, offline-tested. Each Continental War outcome opens a different lane; only the ISAF-victory route meets the sourced oversight context. |
+| Nordennavic national programme, 1991–2016 (42 focuses) | Mod provenance (country history, office, world start, institution profile, 2004 Anean bureau invitation) plus provisional gameplay | `common/national_focus/NEC.txt`, `ac_nordennavic.txt`, `NEC_nc_*`, `ac_nec_*` | Implemented, offline-tested. No Chronicle entry for Nordennavic is compiled, so no dated event, person, alliance, border or war role is asserted. The neutrality lane prepares for a neighbour's conflict without assuming one. |
+| Estovakian civil war mechanic (future Wave B) | Project decision | User decision recorded 2 November 2026 in `docs/CONTENT_PLAN_2006_2020.md` | Pending. A tagless internal-conflict owner comes first; a temporary civil-war tag needs a reviewed source, state mapping, lifecycle and save-continuity contract. |
+
+Details, affected files and validation are in [CONTENT_WAVES_A_D.md](CONTENT_WAVES_A_D.md).

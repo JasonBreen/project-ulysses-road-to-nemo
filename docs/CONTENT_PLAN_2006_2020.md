@@ -18,6 +18,13 @@ Planning base, 1 November 2026:
 Files named in `code` below without a link exist on the PR #59 head but not yet
 on `main`.
 
+**Update, 2 November 2026.** PRs #59–#62 are merged, so new waves build on
+`main`. The user chose Waves A and D first and a tagless owner for the
+Estovakian civil war. Waves A and D are implemented in source and pass offline
+checks ([CONTENT_WAVES_A_D.md](CONTENT_WAVES_A_D.md)). The ledger now records
+674 delivered and 354 remaining. The Free Erusea owner uses only the sourced
+outbreak date; Gate 0 is still needed for the rest of 2005–2009.
+
 ## 1. Where the overhaul stands
 
 Counts come from `release_plan.json` on the PR #59 head. They include mutually
@@ -123,8 +130,8 @@ extended, never replaced.
   (`EVA_an_chandelier*`), Emmerian aid posture (`EMM_an_broad_aid`,
   `EMM_an_conditional_aid`, `EMM_an_aid_restraint`), and the 2002 sanctions and
   2004 agency records.
-- **Mechanic decision (needed before scripting):**
-  - *Option 1, recommended first:* a tagless internal-conflict owner. Contested
+- **Mechanic decision (decided 2 November 2026: Option 1 first):**
+  - *Option 1, chosen:* a tagless internal-conflict owner. Contested
     authority is a bounded variable driven by decisions, stability, readiness
     and economy shocks. The map does not change and saves stay safe.
   - *Option 2:* a temporary HOI4 civil-war tag. The release plan permits this
@@ -276,11 +283,11 @@ Decisions the user needs to make:
 
 | # | Decision | Recommendation |
 | --- | --- | --- |
-| 1 | Network access for Gate 0 | Allow `acecombat.jp` for research sessions |
-| 2 | Base for new waves | Wait for #59–#61 to merge, or stack on the #61 head |
-| 3 | First wave | A + D, with the F2 foundation lanes in parallel |
-| 4 | Estovakian civil war mechanic | Tagless owner first; temporary tag only after a source and mapping review |
-| 5 | Anean squadron continuation size | Short eligible-cast epilogues, for example 4–6 chapters per story, outside the 20-chapter core |
+| 1 | Network access for Gate 0 | Allow `acecombat.jp` for research sessions (**still open**) |
+| 2 | Base for new waves | **Resolved:** #59–#61 merged into `main` |
+| 3 | First wave | **Decided: A + D** (delivered in source); F2 foundation lanes still available in parallel |
+| 4 | Estovakian civil war mechanic | **Decided: tagless owner first**; temporary tag only after a source and mapping review |
+| 5 | Anean squadron continuation size | Short eligible-cast epilogues, for example 4–6 chapters per story, outside the 20-chapter core (**still open**) |
 
 ## 7. Out of scope
 

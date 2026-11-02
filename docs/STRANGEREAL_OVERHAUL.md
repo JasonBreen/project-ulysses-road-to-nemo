@@ -24,7 +24,7 @@ provenance and provisional gameplay remain separately labeled.
 | 0 | Current candidate | Privacy cleanup; Steam screenshot/interface repairs; this roadmap and verification evidence | Source-ready; native pending |
 | 1 | 1991–2005 | World foundations, country institutions, monthly macroeconomics, regional framework and anti-vanilla audit | Shared owners and selected foundations source-ready; world conversion incomplete; native pending |
 | 2 | 1991–2005 | Four Usean partners and six independent global squadron stories | Partner programmes and six stories/artwork source-ready; native pending |
-| 3 | 2006–2013 | Reconstruction, internal fracture, Circum-Pacific routes and supporting-country campaigns | Selected national/reconstruction source packets ready; remaining scope and native acceptance pending |
+| 3 | 2006–2013 | Reconstruction, internal fracture, Circum-Pacific routes and supporting-country campaigns | Selected national/reconstruction source packets and content waves A/D ready; civil-war and CPW owners and native acceptance pending |
 | 4 | 2014–2016 | Anea's military crisis and consequences, preserving previous policies and aid outcomes | Pending |
 | 5 | 2017–2020 | Renewed Usea, Aurelia/Leasath and the remaining 2020 technology/campaign coverage | Pending |
 
@@ -68,7 +68,10 @@ rather than counting additions twice. The regional framework remains separate.
 Reviewed source packets now account for 486 delivered country additions and
 542 remaining, including the 96 FATO/South Belka definitions documented in
 [the national campaign ledger](FATO_SOUTH_BELKA.md). This is source/offline
-delivery accounting, not native acceptance or completion of Package 3. The six squadron
+delivery accounting, not native acceptance or completion of Package 3. The
+[content waves A and D](CONTENT_WAVES_A_D.md) then add 36 Erusean, 24 Central
+Usean and 42 Nordennavic definitions, bringing the machine-readable ledger to
+674 delivered and 354 remaining. The six squadron
 campaigns deliver 120 core chapters, 24 recurring cast members and 18 conclusions,
 with all 78 original image masters retained. Later unimplemented scope remains
 explicitly pending in the machine-readable ledger.

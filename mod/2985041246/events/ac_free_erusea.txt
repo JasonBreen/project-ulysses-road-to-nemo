@@ -1,0 +1,519 @@
+# Original provisional gameplay; source: tools/content_waves (The Oversight Years). Native acceptance pending.
+add_namespace = ac_fe
+news_event = {
+	id = ac_fe.1
+	title = ac_fe.1.t
+	desc = ac_fe.1.d
+	picture = GFX_ac_fe_news_insurrection
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_fe.1.a
+	}
+}
+
+country_event = {
+	id = ac_fe.2
+	title = ac_fe.2.t
+	desc = ac_fe.2.d
+	picture = GFX_ac_fe_event_eru_national
+	is_triggered_only = yes
+	trigger = { tag = ERU original_tag = ERU ac_fe_running = yes }
+	option = {
+		name = ac_fe.2.a
+		ai_chance = { factor = 60 }
+		set_country_flag = ac_fe_assistance_requested
+		if = {
+			limit = {
+				country_exists = FCU FCU = { NOT = { has_war_with = ERU } has_capitulated = no }
+			}
+			FCU = { country_event = { id = ac_fe.4 days = 1 } }
+		}
+	}
+	option = {
+		name = ac_fe.2.b
+		ai_chance = { factor = 40 }
+		add_timed_idea = { idea = ac_fe_emergency_administration days = 180 }
+		ac_fe_relief_service = yes
+	}
+}
+
+news_event = {
+	id = ac_fe.3
+	title = ac_fe.3.t
+	desc = ac_fe.3.d
+	picture = GFX_ac_fe_news_recedes
+	is_triggered_only = yes
+	major = yes
+	trigger = { always = yes }
+	option = {
+		name = ac_fe.3.a
+	}
+}
+
+country_event = {
+	id = ac_fe.4
+	title = ac_fe.4.t
+	desc = ac_fe.4.d
+	picture = GFX_ac_fe_event_fcu_national
+	is_triggered_only = yes
+	trigger = { tag = FCU original_tag = FCU country_exists = ERU ac_fe_running = yes NOT = { has_war_with = ERU } }
+	option = {
+		name = ac_fe.4.a
+		ai_chance = { factor = 70 }
+		if = {
+			limit = {
+				ac_fe_running = yes
+			}
+			add_political_power = -40
+			add_timed_idea = { idea = ac_fe_fcu_support_commitment days = 180 }
+			if = {
+				limit = {
+					country_exists = ERU
+				}
+				ERU = { set_country_flag = ac_fe_assistance_given add_timed_idea = { idea = ac_fe_partner_assistance days = 180 } ac_fe_relief_service = yes }
+			}
+		}
+	}
+	option = {
+		name = ac_fe.4.b
+		ai_chance = { factor = 30 }
+		if = {
+			limit = {
+				country_exists = ERU
+			}
+			ERU = { set_country_flag = ac_fe_assistance_declined }
+		}
+	}
+}
+
+country_event = {
+	id = ac_fe.10
+	title = ac_fe.10.t
+	desc = ac_fe.10.d
+	picture = GFX_ac_fe_event_eru_national
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_10_answerable = yes }
+	option = {
+		name = ac_fe.10.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_10_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.10.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_10_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.11
+	title = ac_fe.11.t
+	desc = ac_fe.11.d
+	picture = GFX_ac_fe_event_fcu_national
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_11_answerable = yes }
+	option = {
+		name = ac_fe.11.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_11_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.11.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_11_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.20
+	title = ac_fe.20.t
+	desc = ac_fe.20.d
+	picture = GFX_ac_fe_event_ERU_oversight
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_20_answerable = yes }
+	option = {
+		name = ac_fe.20.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_20_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.20.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_20_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.50
+	title = ac_fe.50.t
+	desc = ac_fe.50.d
+	picture = GFX_ac_fe_event_ERU_oversight
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_50_answerable = yes }
+	option = {
+		name = ac_fe.50.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_50_reply_0 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.21
+	title = ac_fe.21.t
+	desc = ac_fe.21.d
+	picture = GFX_ac_fe_event_ERU_insurrection
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_21_answerable = yes }
+	option = {
+		name = ac_fe.21.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_21_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.21.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_21_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.51
+	title = ac_fe.51.t
+	desc = ac_fe.51.d
+	picture = GFX_ac_fe_event_ERU_insurrection
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_51_answerable = yes }
+	option = {
+		name = ac_fe.51.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_51_reply_0 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.22
+	title = ac_fe.22.t
+	desc = ac_fe.22.d
+	picture = GFX_ac_fe_event_ERU_return
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_22_answerable = yes }
+	option = {
+		name = ac_fe.22.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_22_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.22.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_22_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.52
+	title = ac_fe.52.t
+	desc = ac_fe.52.d
+	picture = GFX_ac_fe_event_ERU_return
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_52_answerable = yes }
+	option = {
+		name = ac_fe.52.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_52_reply_0 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.23
+	title = ac_fe.23.t
+	desc = ac_fe.23.d
+	picture = GFX_ac_fe_event_ERU_victor
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_23_answerable = yes }
+	option = {
+		name = ac_fe.23.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_23_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.23.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_23_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.53
+	title = ac_fe.53.t
+	desc = ac_fe.53.d
+	picture = GFX_ac_fe_event_ERU_victor
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_53_answerable = yes }
+	option = {
+		name = ac_fe.53.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_53_reply_0 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.24
+	title = ac_fe.24.t
+	desc = ac_fe.24.d
+	picture = GFX_ac_fe_event_ERU_armistice
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_24_answerable = yes }
+	option = {
+		name = ac_fe.24.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_24_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.24.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_24_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.54
+	title = ac_fe.54.t
+	desc = ac_fe.54.d
+	picture = GFX_ac_fe_event_ERU_armistice
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_54_answerable = yes }
+	option = {
+		name = ac_fe.54.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_54_reply_0 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.25
+	title = ac_fe.25.t
+	desc = ac_fe.25.d
+	picture = GFX_ac_fe_event_ERU_ordinary
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_25_answerable = yes }
+	option = {
+		name = ac_fe.25.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_25_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.25.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_25_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.55
+	title = ac_fe.55.t
+	desc = ac_fe.55.d
+	picture = GFX_ac_fe_event_ERU_ordinary
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_55_answerable = yes }
+	option = {
+		name = ac_fe.55.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_55_reply_0 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.26
+	title = ac_fe.26.t
+	desc = ac_fe.26.d
+	picture = GFX_ac_fe_event_FCU_oversight
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_26_answerable = yes }
+	option = {
+		name = ac_fe.26.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_26_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.26.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_26_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.56
+	title = ac_fe.56.t
+	desc = ac_fe.56.d
+	picture = GFX_ac_fe_event_FCU_oversight
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_56_answerable = yes }
+	option = {
+		name = ac_fe.56.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_56_reply_0 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.27
+	title = ac_fe.27.t
+	desc = ac_fe.27.d
+	picture = GFX_ac_fe_event_FCU_security
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_27_answerable = yes }
+	option = {
+		name = ac_fe.27.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_27_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.27.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_27_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.57
+	title = ac_fe.57.t
+	desc = ac_fe.57.d
+	picture = GFX_ac_fe_event_FCU_security
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_57_answerable = yes }
+	option = {
+		name = ac_fe.57.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_57_reply_0 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.28
+	title = ac_fe.28.t
+	desc = ac_fe.28.d
+	picture = GFX_ac_fe_event_FCU_partners
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_28_answerable = yes }
+	option = {
+		name = ac_fe.28.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_28_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.28.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_28_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.58
+	title = ac_fe.58.t
+	desc = ac_fe.58.d
+	picture = GFX_ac_fe_event_FCU_partners
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_58_answerable = yes }
+	option = {
+		name = ac_fe.58.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_58_reply_0 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.29
+	title = ac_fe.29.t
+	desc = ac_fe.29.d
+	picture = GFX_ac_fe_event_FCU_drawdown
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_29_answerable = yes }
+	option = {
+		name = ac_fe.29.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_29_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.29.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_29_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.59
+	title = ac_fe.59.t
+	desc = ac_fe.59.d
+	picture = GFX_ac_fe_event_FCU_drawdown
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_59_answerable = yes }
+	option = {
+		name = ac_fe.59.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_59_reply_0 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.80
+	title = ac_fe.80.t
+	desc = ac_fe.80.d
+	picture = GFX_ac_fe_event_eru_national
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_80_answerable = yes }
+	option = {
+		name = ac_fe.80.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_80_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.80.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_80_reply_1 = yes
+	}
+}
+
+country_event = {
+	id = ac_fe.81
+	title = ac_fe.81.t
+	desc = ac_fe.81.d
+	picture = GFX_ac_fe_event_fcu_national
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { ac_fe_message_81_answerable = yes }
+	option = {
+		name = ac_fe.81.a
+		ai_chance = { factor = 55 }
+		ac_fe_message_81_reply_0 = yes
+	}
+	option = {
+		name = ac_fe.81.b
+		ai_chance = { factor = 45 }
+		ac_fe_message_81_reply_1 = yes
+	}
+}

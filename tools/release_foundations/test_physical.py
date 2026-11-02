@@ -147,11 +147,15 @@ class Physical(unittest.TestCase):
         w.today+=90;w.fire('ac_release.202','REL');self.assertEqual(4,w.railway_levels[edge]);self.assertNotIn(edge,{tuple(path) for _,_,path in w.railways})
 
     def test_only_existing_office_identity_adapts_to_puppet_government(self):
+        intake=json.loads((HERE/'intake.json').read_text())['countries']
+        leaders=json.loads((HERE/'leader_contract.json').read_text())['countries']
         for tag,states in [('REL',(173,207,236,597)),('REC',(316,)),('SHI',(426,447,607))]:
             w=World();w.countries[tag].government='fascism';release(w,tag,states)
             roles=[n for n in w.native_log if n[0]=='add_country_leader_role']
-            if tag=='REL':self.assertEqual('REL_ac_government_office',get(roles[0][2],'character'))
-            else:self.assertEqual(tag+'_ac_release_government_office',get(roles[0][2],'character'))
+            self.assertEqual(1,len(roles))
+            offices=[ident for ident in intake[tag]['identities'] if ident.endswith('_ac_government_office')]
+            expected=offices[0] if len(offices)==1 else leaders[tag]['fallback']
+            self.assertEqual(expected,get(roles[0][2],'character'))
 
     def test_interpreter_does_not_execute_inner_else_under_a_failed_outer_guard(self):
         w=World();c=w.countries['REC']

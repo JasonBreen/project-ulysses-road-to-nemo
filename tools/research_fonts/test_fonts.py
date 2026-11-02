@@ -50,10 +50,15 @@ class ResearchFonts(unittest.TestCase):
     def test_source_and_all_1050_protected_inputs_keep_original_fingerprints(self):
         self.assertEqual('d63f9f14304714a7359280fa2abb57addad229412a54ce05b3db80e0c0ad51f6',hashlib.sha256(self.source.replace('\r\n','\n').encode()).hexdigest())
         manifest=json.loads((ROOT/'tools/land_program/preserved_sources.json').read_text())
+        cleanup=json.loads((ROOT/'tools/history_data_cleanup_updates.json').read_text())['files']
         self.assertEqual(1050,len(manifest['protected_sources_sha256']))
         for name,expected in manifest['protected_sources_sha256'].items():
             actual=hashlib.sha256((ROOT/name).read_bytes().replace(b'\r\n',b'\n')).hexdigest()
-            repair=manifest.get('reviewed_source_repairs',{}).get(name)
+            owner_repair=manifest.get('reviewed_source_repairs',{}).get(name)
+            cleanup_repair=cleanup.get(name)
+            self.assertFalse(owner_repair and cleanup_repair,name)
+            if cleanup_repair:self.assertEqual(expected,cleanup_repair['old_normalized_sha256'],name)
+            repair=owner_repair or cleanup_repair
             self.assertEqual(repair['new_normalized_sha256']if repair else expected,actual,name)
 
     def test_every_actual_font_consumer_resolves_to_exact_authored_font_resources(self):

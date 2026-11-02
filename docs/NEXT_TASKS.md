@@ -16,14 +16,14 @@ Current continuation slice: the former demo handoff now consumes conventional vi
 4. **AI templates and doctrines**
    - Rewrite `common/ai_templates/generic.txt` in 1.19 syntax.
    - Retarget subdoctrine unit bonuses to the mod's modern unit types.
-5. **History cleanup**
-   - Ship name groups (Sapin, FATO).
-   - `xxx` equipment icons.
-   - P-3 Orion module layout.
-   - Nordennavic popularities.
-   - DEL/SHI character conflict.
-   - Duplicate unit id `48100001`.
-6. **Bookmarks.** Merge or differentiate the two identical Jan 1, 1991 bookmarks.
+5. **History cleanup** — partially done on `claude/fill-open-gaps` (static, `tools/Test-HistoryDataCleanup.py`):
+   - Ship name groups (Sapin, FATO). Done: `common/units/names/00_SAP_names.txt` and `00_FAT_names.txt` define the starting-fleet ship types with the fleet names already in the SAP/FAT navy histories (mod provenance).
+   - `xxx` equipment icons. Done: Belka Guinevere Mark II stray duplicate `icon = "xxx"` removed; ADB-00 now uses `GFX_BLK_iw_medium_plane_medium`; FATO Hugo Havel's `large="xxx"` portrait block removed (generic fallback, as with the other portraitless FATO leaders); Perbla/Spayca `division_names_group = xxx` replaced by defined `PBL_*`/`SYC_*` groups.
+   - P-3 Orion module layout. Still open: the variant's slots are statically consistent with the installed large-airframe archetype, so the exact invalid module needs a native error log to pin down.
+   - Nordennavic popularities. Done: 7+82+7+2 summed to 98; neutrality raised to 9 (ruling monarchism unchanged).
+   - DEL/SHI character conflict. Done: Shilage no longer recruits Delarus's `DEL_artur_clarkson`; it now recruits the generated `SHI_ac_government_office` (unnamed office, no invented person) via `tools/usea_expansion/build_leaders.py`.
+   - Duplicate unit id `48100001`. Still open: no duplicate legacy unit/ship id was found by static scan on this branch; needs the native log line to locate.
+6. **Bookmarks.** The two Jan 1, 1991 bookmarks are contract-locked: `tools/Test-AneaPresentation.py` requires both files to offer EMM/EVA. Left as-is; do not merge without updating that contract.
 7. **Belkan War branch graph and postwar continuity.** Static campaign arc is now implemented on the campaign branch: prewar preparation, war start, three war-stage decisions/AI fallbacks, existing outcome branches, postwar focus/decision continuity, and the repaired Ustio opening/postwar handoff. Native reachability and balance are still open.
 8. **Native playtest when approved.** Follow [NATIVE_PLAYTEST_CHECKLIST.md](NATIVE_PLAYTEST_CHECKLIST.md) and the per-branch routes in [BELKAN_WAR_PLAYTEST_PLAN.md](BELKAN_WAR_PLAYTEST_PLAN.md); do not treat this branch as playtested until the user approves an isolated HOI4 run.
 9. **Long-run test.** Run to 1995 with AI on: save and reload at each checkpoint, check other nations (Osea, Ustio, Sapin, Gebet), and log results in the testing checklist.

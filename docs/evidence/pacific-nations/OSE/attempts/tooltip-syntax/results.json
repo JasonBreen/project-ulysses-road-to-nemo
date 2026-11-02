@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "country": "OSE",
+  "checkout_parent": "0351538534132fc8863da287a8180f26d4572d66",
+  "source_normalized_sha256": {
+    "tools/pacific_nations/build.py": "f8b424c456ea736526e2e13faf46e40ba25fba29d28120f88171711cd049041b",
+    "tools/pacific_nations/build_art.py": "f986e3e5d9a2922ea1cdc9b3a2e8c14bdf20e00ddb50383781f1a0185625459a",
+    "tools/pacific_nations/capture_dependencies.py": "2d79541b147c2ab7ef112a23ab65ca071018da5b5db318524b4d623392e80c84",
+    "tools/pacific_nations/harness.py": "fa38d2e8c3c1f2e938a48301c29bad6f949c0fae60b1aabdb00cbbada2c6e1e4",
+    "tools/pacific_nations/model.py": "a862a4caefa0c599b13dd2e71a57bdcc96a85241311258ba302582441b162d1b",
+    "tools/pacific_nations/ose.py": "77da20d83b5fa3118781cacd430f67cec50bf827a99c044ad3fc7c65d9cde8aa",
+    "tools/pacific_nations/test_runtime.py": "3942d862e964add3b6a7d225c63dfcc390523ebd7b97a4a4f928bb1f918b4e26",
+    "tools/pacific_nations/test_source.py": "bb78f0fdd8839f37e917a70f98101d5ce78034a0a021349378ec08f5437e06d3",
+    "tools/pacific_nations/validate.py": "7715e7b77f3b2b4bb8e63c5a13d6c251cbecabc76bd6ec04dd124b692f9c2f89",
+    "tools/superpowers/build.py": "46a04a15c8a253fe175e32ced5597557ed6e58b1a34857bfa12c312eb3370d41"
+  },
+  "payload_sha256": "cb8459cd99e8222dc41eb1befa0cf275f322a542e552234ca6e9407cbbebb842",
+  "payload_hash_rule": "Sorted repository-relative POSIX path,NUL,raw bytes for every delivered mod file; pending worktree source is pinned by the source hashes.",
+  "passed": 6,
+  "failed": 2,
+  "checks": [
+    {
+      "name": "national-runtime",
+      "command": [
+        "python",
+        "-B",
+        "tools/pacific_nations/test_runtime.py"
+      ],
+      "exit_code": 1,
+      "seconds": 0.235,
+      "log": "national-runtime.txt"
+    },
+    {
+      "name": "national-source-art",
+      "command": [
+        "python",
+        "-B",
+        "tools/pacific_nations/test_source.py"
+      ],
+      "exit_code": 1,
+      "seconds": 0.219,
+      "log": "national-source-art.txt"
+    },
+    {
+      "name": "focus-layout",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-FocusScreenRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.344,
+      "log": "focus-layout.txt"
+    },
+    {
+      "name": "decisions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-DecisionUI.py"
+      ],
+      "exit_code": 0,
+      "seconds": 23.875,
+      "log": "decisions.txt"
+    },
+    {
+      "name": "campaign",
+      "command": [
+        "python",
+        "-B",
+        "tools/validate_campaign.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.109,
+      "log": "campaign.txt"
+    },
+    {
+      "name": "presentation",
+      "command": [
+        "python",
+        "-B",
+        "tools/check_presentation_sources.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.61,
+      "log": "presentation.txt"
+    },
+    {
+      "name": "assets-strict",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 1.015,
+      "log": "assets-strict.txt"
+    },
+    {
+      "name": "static-reference",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-reference>",
+        "-BaselineRoot",
+        "<immutable-baseline-payload>"
+      ],
+      "exit_code": 0,
+      "seconds": 51.235,
+      "log": "static-reference.txt"
+    }
+  ],
+  "native_acceptance": false
+}

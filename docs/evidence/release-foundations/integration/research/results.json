@@ -1,0 +1,62 @@
+{
+  "source_head": "48b6d20dfc1feef7e4db0c068c8dd74231545d69",
+  "payload_sha256": "3b8a3d26e57a1bc1aaaf2da546452e1b4c7f2020bef3d214f47c4487d5f80939",
+  "payload_hash_rule": "Sorted repository-relative POSIX path,NUL,raw bytes for every delivered mod file.",
+  "checks": [
+    {
+      "name": "land",
+      "command": [
+        "python",
+        "-B",
+        "tools/land_program/test_land.py",
+        "--engine",
+        "<installed-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 7.063,
+      "log": "land.txt"
+    },
+    {
+      "name": "presentation",
+      "command": [
+        "python",
+        "-B",
+        "tools/check_presentation_sources.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5,
+      "log": "presentation.txt"
+    },
+    {
+      "name": "fonts",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/test_fonts.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.125,
+      "log": "fonts.txt"
+    },
+    {
+      "name": "ownership",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/capture_reference.py",
+        "--engine",
+        "<installed-reference>",
+        "--output",
+        "docs\\evidence\\release-foundations\\integration\\research\\authored-research-dependencies.json"
+      ],
+      "exit_code": 0,
+      "seconds": 26.578,
+      "log": "ownership.txt"
+    }
+  ],
+  "passed": 4,
+  "failed": 0,
+  "native_acceptance": false,
+  "research_inventory_scope": "Source inventory only; no complete presentation/provenance gate was requested. Screen failures remain visible in research-dependencies.json.",
+  "full_conversion_acceptance": false
+}

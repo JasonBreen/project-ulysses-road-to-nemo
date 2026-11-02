@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "tested_source_commit": "6d2bb27611b64ccac25e8a00ee96d2daab5d20e2",
+  "interpreter": "Python3.12.3; Pillow11.3.0; pinned Overhaul .venv-ci",
+  "scope": "Original master/provenance/offline crop evidence; new runtime/DDS integration and native acceptance are separate gates",
+  "checks": [
+    {
+      "label": "selected sources and committed raw PNG blobs",
+      "command": "python -B tools/squadrons/pacific_art/audit.py --git-blobs",
+      "exit_code": 0,
+      "output": "Pacific original artwork:26/26 original masters individually reviewed/hash-verified;156 inherited source files preserved;31 committed raw PNG blobs checked. Source/crop evidence only; native rendering untested.\n"
+    },
+    {
+      "label": "eleven focused source/provenance/binary/crop regressions",
+      "command": "python -B tools/squadrons/pacific_art/test_art.py",
+      "exit_code": 0,
+      "output": "test_actual_original_bytes_and_metadata (__main__.PacificArtTests.test_actual_original_bytes_and_metadata) ... ok\ntest_all26_actual_originals_and_required_families (__main__.PacificArtTests.test_all26_actual_originals_and_required_families) ... ok\ntest_all_actual_png_paths_have_binary_git_attributes (__main__.PacificArtTests.test_all_actual_png_paths_have_binary_git_attributes) ... ok\ntest_changed_original_hash_fails (__main__.PacificArtTests.test_changed_original_hash_fails) ... ok\ntest_dimension_and_alpha_aperture_mutations_fail (__main__.PacificArtTests.test_dimension_and_alpha_aperture_mutations_fail) ... ok\ntest_five_edits_retain_exact_prior_originals (__main__.PacificArtTests.test_five_edits_retain_exact_prior_originals) ... ok\ntest_inherited78_sources_and_metadata_preserved (__main__.PacificArtTests.test_inherited78_sources_and_metadata_preserved) ... ok\ntest_offline_gallery_has_all_sources_and_exact_candidate_dimensions (__main__.PacificArtTests.test_offline_gallery_has_all_sources_and_exact_candidate_dimensions) ... ok\ntest_precise_chapter_and_personal_ending_slots (__main__.PacificArtTests.test_precise_chapter_and_personal_ending_slots) ... ok\ntest_review_png_compression_changes_pass_but_pixel_or_size_changes_fail (__main__.PacificArtTests.test_review_png_compression_changes_pass_but_pixel_or_size_changes_fail) ... ok\ntest_text_filter_damage_to_real_png_header_fails (__main__.PacificArtTests.test_text_filter_damage_to_real_png_header_fails) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 4.866s\n\nOK\n"
+    },
+    {
+      "label": "offline review reproducibility",
+      "command": "python -B tools/squadrons/pacific_art/review.py --check",
+      "exit_code": 0,
+      "output": "Pacific review:26 source masters;8 original/candidate-crop artifacts; no missing font glyphs;reproduced\n"
+    },
+    {
+      "label": "inherited squadron art packaging compatibility",
+      "command": "python -B tools/squadrons/build_art.py --check",
+      "exit_code": 0,
+      "output": "Squadron artwork: 78/78 masters; 139 packaged textures; verified\n"
+    }
+  ]
+}

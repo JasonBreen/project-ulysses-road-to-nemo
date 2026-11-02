@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "source_before": {
+    "head": "3580bb9651c2c9f9fdae2a57ddcc0341b303ec7b",
+    "files": 9177,
+    "sha256": "780aae75d5c85c149c46d1d33b9c00a79302f1a6b22f9f48b5573af34622ed53",
+    "rule": "Sorted tracked repository-relative UTF8 path,NUL,raw working-tree bytes; docs/evidence excluded. Clean Git source required."
+  },
+  "source_after": {
+    "head": "3580bb9651c2c9f9fdae2a57ddcc0341b303ec7b",
+    "files": 9177,
+    "sha256": "780aae75d5c85c149c46d1d33b9c00a79302f1a6b22f9f48b5573af34622ed53",
+    "rule": "Sorted tracked repository-relative UTF8 path,NUL,raw working-tree bytes; docs/evidence excluded. Clean Git source required."
+  },
+  "checks": [
+    {
+      "check": "event-style",
+      "command": [
+        "G:\\Project-Ulysses-Overhaul\\.venv-ci\\Scripts\\python.exe",
+        "-B",
+        "tools/Test-EventStyle.py"
+      ],
+      "exit_code": 0,
+      "seconds": 74.984,
+      "log": "event-style.txt"
+    },
+    {
+      "check": "original-interfaces",
+      "command": [
+        "G:\\Project-Ulysses-Overhaul\\.venv-ci\\Scripts\\python.exe",
+        "-B",
+        "tools/Test-InterfaceRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.656,
+      "log": "original-interfaces.txt"
+    },
+    {
+      "check": "event-fit",
+      "command": [
+        "G:\\Project-Ulysses-Overhaul\\.venv-ci\\Scripts\\python.exe",
+        "-B",
+        "tools/Test-EventPictures.py"
+      ],
+      "exit_code": 0,
+      "seconds": 3.375,
+      "log": "event-fit.txt"
+    },
+    {
+      "check": "effective-base-only",
+      "command": [
+        "G:\\Project-Ulysses-Overhaul\\.venv-ci\\Scripts\\python.exe",
+        "-B",
+        "tools/overhaul/audit_consumers.py",
+        "G:\\steamlbirary\\steamapps\\common\\Hearts of Iron IV",
+        "--profile",
+        "docs/evidence/effective-dependencies/profiles/base-only.json",
+        "--gate-screen",
+        "eventwindow.gui",
+        "--gate-decisions",
+        "--summary-only",
+        "--output",
+        "docs\\evidence\\pacific-nations\\YUK\\integration\\ci-parent\\effective-base-only.json"
+      ],
+      "exit_code": 0,
+      "seconds": 27.063,
+      "log": "effective-base-only.txt"
+    },
+    {
+      "check": "strict-authored-assets",
+      "command": [
+        "G:\\Project-Ulysses-Overhaul\\.venv-ci\\Scripts\\python.exe",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.969,
+      "log": "strict-authored-assets.txt"
+    },
+    {
+      "check": "static-reference",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "G:\\Project-Ulysses-Yuktobania-Review\\mod\\2985041246",
+        "-ReferenceGameRoot",
+        "G:\\steamlbirary\\steamapps\\common\\Hearts of Iron IV"
+      ],
+      "exit_code": 0,
+      "seconds": 39.672,
+      "log": "static-reference.txt"
+    }
+  ],
+  "evidence": "All bounded source/offline checks; native rendering, reflow, DLC activation and input remain unaccepted"
+}

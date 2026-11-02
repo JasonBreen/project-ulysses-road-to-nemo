@@ -21,6 +21,8 @@ MOD=ROOT/'mod/2985041246'
 spec=importlib.util.spec_from_file_location('institution_geometry',ROOT/'tools/usea_expansion/build_art.py')
 geometry=importlib.util.module_from_spec(spec);spec.loader.exec_module(geometry)
 NAVY=geometry.NAVY;CYAN=geometry.CYAN;WHITE=geometry.WHITE;GOLD=geometry.GOLD
+row_spec=importlib.util.spec_from_file_location('institution_decision_rows',ROOT/'tools/decision_row_art/geometry.py')
+row_geometry=importlib.util.module_from_spec(row_spec);row_spec.loader.exec_module(row_geometry)
 
 
 def composition(size,motifs,side='civil',flag=None):
@@ -47,13 +49,15 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
     if PILLOW_VERSION!='11.3.0':raise SystemExit('Institution art packaging requires Pillow==11.3.0 (CI pin); detected '+PILLOW_VERSION)
     outputs={};assets=[];bindings=[];focus_images=[]
-    def asset(ident,size,motifs,sprites,side='civil',flag=None,role='original code-native institutional composition'):
-        image=composition(size,motifs,side,flag)
+    def asset(ident,size,motifs,sprites,side='civil',flag=None,role='original code-native institutional composition',compact=False):
+        image=row_geometry.row_icon('institutions') if compact else composition(size,motifs,side,flag)
         stream=io.BytesIO();image.save(stream,format='DDS');raw=stream.getvalue()
         path='gfx/AC_politics/'+ident+'.dds';outputs[MOD/path]=raw
         source={'kind':'original authored geometry','source':'tools/institutions/build_art.py','motifs':list(motifs)}
+        if compact:source.update(source='tools/decision_row_art/geometry.py',source_sha256=hashlib.sha256((ROOT/'tools/decision_row_art/geometry.py').read_bytes().replace(b'\r\n',b'\n')).hexdigest())
         if flag:source.update(flag=flag.relative_to(MOD).as_posix(),flag_sha256=hashlib.sha256(flag.read_bytes()).hexdigest())
         assets.append(dict(file=path,width=size[0],height=size[1],frames=1,alpha='transparent outer aperture; opaque navy icon field',sha256=hashlib.sha256(raw).hexdigest(),sprite_bindings=sprites,provenance=source,role=role))
+        if compact:assets[-1].update(frame_width=size[0],alpha_min=image.getchannel('A').getextrema()[0],alpha_max=image.getchannel('A').getextrema()[1])
         for sprite in sprites:bindings.append('spriteType = { name = "'+sprite+'" texturefile = "'+path+'" noOfFrames = 1 }')
         return image
     for focus in FOCUSES:
@@ -64,7 +68,8 @@ def main():
         if not flag.exists():flag=None
         for side in ('civil','reserve'):
             asset('idea_'+tag+'_'+side,(64,64),motifs if side=='civil' else tuple(reversed(motifs)),['GFX_idea_'+tag+'_pol_'+side],side,flag)
-    asset('category_institutions',(100,100),('assembly','tools'),['GFX_decision_category_ac_pol_institutions','GFX_decision_ac_pol_institutions'])
+    asset('category_institutions',(100,100),('assembly','tools'),['GFX_decision_category_ac_pol_institutions'])
+    asset('decision_institutions',(26,29),('assembly',),['GFX_decision_ac_pol_institutions'],role='original compact decision row composition',compact=True)
     # A symbolic case-file illustration supports the21 national reviews. It is
     # a deliberate shared interface picture, not21 purported narrative scenes.
     event=Image.new('RGBA',(200,160),NAVY);draw=ImageDraw.Draw(event)

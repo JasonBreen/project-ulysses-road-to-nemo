@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import json
 import re
 from pathlib import Path
 
@@ -256,15 +257,34 @@ def main() -> int:
                 depth -= 1
             else:
                 require(depth > 0, f"{name}: create_equipment_variant outside its has_dlc wrapper")
-        # OOBs request designs by version_name, so every variant must precede the
-        # first air/naval OOB load in the same history.
-        oob = re.search(r"\bset_(?:air|naval)_oob\b", code)
-        variants_at = [m.start() for m in re.finditer(r"\bcreate_equipment_variant\s*=", code)]
-        if oob and variants_at:
-            require(max(variants_at) < oob.start(), f"{name}: equipment variants are created after set_air_oob/set_naval_oob")
         # Variant types are concrete equipment, never archetypes such as small_plane_cas_airframe.
         for archetype in ("medium_plane_scout_plane_airframe", "small_plane_cas_airframe", "small_plane_naval_bomber_airframe"):
             require(not re.search(rf"(?m)^\s*type\s*=\s*{archetype}\s*$", code), f"{name}: variant uses archetype {archetype} as its type")
+
+    # Aircraft and naval designer families may be initialized independently.
+    # Execute actual selected startup branches and OOB instant_effect blocks;
+    # require the consumed type/research/named design before its own air, naval,
+    # land-production or stockpile use, without gating unrelated declarations.
+    from compatibility.variant_order import inspect_mod
+    contract = json.loads((ROOT / "tools/compatibility/research_contract.json").read_text(encoding="utf-8"))
+    chronology = inspect_mod(mod_root, contract)
+    failures = sorted({(row["tag"], error) for row in chronology["cases"] for error in row["errors"]})
+    require(not failures, f"selected startup consumer chronology failed: {failures[:12]} ({len(failures)} unique)")
+
+    # This existing event-loaded OOB used to end inside its units block. Keep
+    # the compatibility filename/caller and its one veteran formation intact;
+    # a texture or starting-roster check cannot catch this later event payload.
+    from usea_expansion.script import get, parse
+    brothers = parse(read(mod_root / "history/units/UST_band_of_broders_units.txt"))
+    template = get(brothers, "division_template")
+    formations = [body for kind, _, body in get(brothers, "units", []) if kind == "division"]
+    require(get(template, "name") == '"Band Of Brothers"', "Ustio veteran template identity changed")
+    require(len(get(template, "regiments", [])) == 7 and all(kind == "infantry" for kind, _, _ in get(template, "regiments", [])), "Ustio veteran regiment payload changed")
+    require(len(formations) == 1, "Ustio veteran event must retain its single authored formation")
+    require(get(formations[0], "location") == "2930" and get(formations[0], "start_equipment_factor") == "1" and get(formations[0], "start_experience_factor") == "1", "Ustio veteran placement or experience/equipment changed")
+    events = parse(read(mod_root / "events/Ustio.txt"))
+    event = next(body for kind, _, body in events if kind == "country_event" and get(body, "id") == "ustio_na.3")
+    require(any(get(body, "load_oob") == "UST_band_of_broders_units" for kind, _, body in event if kind == "option" and isinstance(body, list)), "Ustio veteran event lost its existing OOB binding")
 
     # Active technologies must not unlock modules (or categories) with no active definition.
     for path in (mod_root / "common" / "technologies").glob("*.txt"):
@@ -290,7 +310,7 @@ def main() -> int:
     print(
         "Native compatibility contracts passed: mapper IDs, Osea division names, tech rows, Sapin bonus, "
         "MANPATS rewards, tech localization, regent guards, Sapin decision structure, infantry grants, "
-        "BLK/OSE name lists, and variant DLC wrappers."
+        f"BLK/OSE name lists, variant DLC wrappers, and {len(chronology['cases'])} selected startup consumer cases."
     )
     return 0
 

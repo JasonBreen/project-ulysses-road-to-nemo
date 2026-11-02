@@ -1,0 +1,386 @@
+capital = 415
+
+set_research_slots = 3
+set_convoys = 200
+starting_train_buffer = 1
+
+set_politics = {
+	ruling_party = monarchism
+	last_election = "1991.1.1"
+	election_frequency = 48
+	elections_allowed = no
+}
+
+set_popularities = {
+	democratic = 23
+	fascism = 7
+	communism = 20
+	neutrality = 5
+	monarchism = 45
+}
+
+set_stability = 0.5
+set_war_support = 0.4
+
+add_opinion_modifier = {
+	target = OSE
+	modifier = historical_friends
+}
+
+set_power_balance = {
+    id = SAP_power_balance
+}
+
+set_variable = { sap_mobilization_round_cost = 25 }
+
+add_dynamic_modifier = { modifier = SAP_army_modifier }
+
+add_ideas = {
+	disarmed_nation
+
+	sap_dysfunctional_coalition
+	sap_economic_crisis_3
+	sap_nobility_influence_high
+	sap_noble_high_command_5
+	sap_guardia_real
+
+	nuke_lvl_1 
+	generic_palace_guard_army_1
+}
+
+######################################
+## UNIQUE LEADERS ##
+recruit_character = SAP_na_leader # Candida Castro
+recruit_character = SAP_alphonso_espinal
+recruit_character = SAP_domingo_escalona
+recruit_character = SAP_ramira_arguijo
+recruit_character = SAP_raul_de_haro
+## GENERIC LEADERS ##
+recruit_character = SPA_advisor_1
+recruit_character = SPA_advisor_2
+recruit_character = SPA_advisor_3
+recruit_character = SPA_advisor_4
+recruit_character = SPA_advisor_5
+recruit_character = SPA_advisor_6
+## MILITARY LEADERS
+recruit_character = SAP_alejandro_ramirez
+recruit_character = SAP_bernardo_ramundo
+#recruit_character = SAP_maria_torres
+recruit_character = SAP_juan_rodriguez
+recruit_character = SAP_pedro_hernandez
+recruit_character = SAP_mateo_alvarez
+#recruit_character = SAP_sofia_lopez
+recruit_character = SAP_miguel_silva
+#recruit_character = SAP_gabriella_garcia
+recruit_character = SAP_alejandro_delgado
+recruit_character = SAP_gonzalo_castellon
+recruit_character = SAP_javier_ramirez
+recruit_character = SAP_army_3
+recruit_character = SAP_army_4
+recruit_character = SAP_diego_lopez
+recruit_character = SAP_mateo_gonzalez
+recruit_character = SAP_elena_sanchez
+recruit_character = SAP_rodrigo_martinez
+recruit_character = SAP_sofia_hernandez
+recruit_character = SAP_juan_carlos_mendoza
+recruit_character = SAP_chief_navy_1
+recruit_character = SAP_chief_navy_2
+recruit_character = SAP_theorist_1
+recruit_character = SAP_theorist_2
+
+##########################################
+
+set_technology = {
+	infantry_weapons = 1
+	infantry_weapons1 = 1
+	infantry_at = 1
+	infantry_manpats = 1
+	tech_recon = 1
+	tech_support = 1		
+	tech_engineers = 1
+	tech_mountaineers = 1
+	basic_train = 1
+	
+	gw_artillery  = 1
+	interwar_antiair = 1
+	basic_medium_art = 1
+	motorised_infantry = 1
+	armored_car1 = 1
+	imv1 = 1
+	mechanised_infantry = 1
+	basic_light_tank = 1
+	main_battle_tank = 1
+}
+
+
+if = {
+	limit = { has_dlc = "By Blood Alone" }
+		set_technology = {
+			aa_lmg = 1
+			aircraft_construction = 1
+			engines_1 = 1
+			engines_2 = 1
+			iw_small_airframe = 1
+			basic_small_airframe = 1
+		}
+	else = {
+		set_technology = {
+			early_fighter = 1
+		}
+	}
+}
+
+if = {
+	limit = { not = { has_dlc = "Man the Guns" } }
+	set_technology = {
+		early_submarine = 1
+		early_destroyer = 1
+		basic_destroyer = 1
+		early_light_cruiser = 1
+		early_heavy_cruiser = 1
+		basic_heavy_cruiser = 1
+		early_battleship = 1
+		transport = 1
+	}
+}
+if = {
+	limit = { has_dlc = "Man the Guns" }
+	set_technology = {
+		basic_naval_mines = 1
+		submarine_mine_laying = 1
+		early_ship_hull_light = 1
+		basic_ship_hull_light = 1
+		early_ship_hull_submarine = 1
+		basic_ship_hull_submarine = 1
+		early_ship_hull_cruiser = 1
+		basic_ship_hull_cruiser = 1
+		early_ship_hull_heavy = 1
+		basic_battery = 1
+		basic_medium_battery = 1
+		basic_torpedo = 1
+		basic_depth_charges = 1
+		mtg_transport = 1
+	}
+}
+
+###############################################
+
+#OOB
+set_oob = "SAP_land"
+
+if = {
+	limit = { has_dlc = "By Blood Alone" }
+	create_equipment_variant = {
+		name = "Sapin Fighter 1"
+		type = small_plane_airframe_1
+		modules = {
+			fixed_main_weapon_slot = light_mg_4x
+			engine_type_slot = engine_2_1x
+		}
+	}
+	create_equipment_variant = {
+		name = "Sapin Fighter 2"
+		type = small_plane_airframe_1
+		modules = {
+			fixed_main_weapon_slot = light_mg_2x
+			engine_type_slot = engine_1_1x
+		}
+	}
+}
+
+if = {
+	limit = { not = { has_dlc = "Man the Guns" } }
+	create_equipment_variant = {
+		name = "C Class"
+		type = submarine_1
+		upgrades = {
+			ship_reliability_upgrade = 1
+			sub_engine_upgrade = 1
+			sub_stealth_upgrade = 1
+			sub_torpedo_upgrade = 1
+		}
+	}
+	create_equipment_variant = {
+		name = "Príncipe Alfonso Class"
+		type = light_cruiser_1
+		upgrades = {
+			ship_reliability_upgrade = 1
+			ship_engine_upgrade = 1
+			ship_gun_upgrade = 1
+			ship_anti_air_upgrade = 1
+		}
+	}
+}
+
+if = {
+	limit = { has_dlc = "Man the Guns" }
+	create_equipment_variant = {
+		name = "B Class"
+		type = ship_hull_submarine_1
+		parent_version = 0
+		modules = {
+			fixed_ship_torpedo_slot = ship_torpedo_sub_1
+			fixed_ship_engine_slot = sub_ship_engine_1
+			rear_1_custom_slot = empty
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "C Class"
+		type = ship_hull_submarine_2
+		parent_version = 0
+		modules = {
+			fixed_ship_torpedo_slot = ship_torpedo_sub_1
+			fixed_ship_engine_slot = sub_ship_engine_2
+			rear_1_custom_slot = empty
+		}
+	}
+	create_equipment_variant = {
+		name = "Alsedo Class"
+		type = ship_hull_light_1
+		parent_version = 0
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = light_ship_engine_1
+			fixed_ship_torpedo_slot = ship_torpedo_1
+			mid_1_custom_slot = ship_mine_layer_1
+			rear_1_custom_slot = ship_depth_charge_1
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "Churucca Class"
+		type = ship_hull_light_2
+		parent_version = 0
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = light_ship_engine_2
+			fixed_ship_torpedo_slot = ship_torpedo_1
+			mid_1_custom_slot = empty
+			rear_1_custom_slot = ship_depth_charge_1
+		}
+	}
+	create_equipment_variant = {
+		name = "República Class"
+		type = ship_hull_cruiser_1
+		parent_version = 0
+		modules = {
+			fixed_ship_battery_slot = ship_light_medium_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_1
+			mid_1_custom_slot = ship_torpedo_1
+			mid_2_custom_slot = ship_light_medium_battery_1
+			rear_1_custom_slot = empty
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "Méndez Núñes Class"
+		type = ship_hull_cruiser_1
+		parent_version = 0
+		modules = {
+			fixed_ship_battery_slot = ship_light_medium_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_1
+			fixed_ship_armor_slot = ship_armor_cruiser_1
+			mid_1_custom_slot = ship_torpedo_1
+			mid_2_custom_slot = ship_torpedo_1
+			rear_1_custom_slot = empty
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "Príncipe Alfonso Class"
+		type = ship_hull_cruiser_2
+		parent_version = 0
+		modules = {
+			fixed_ship_battery_slot = ship_light_medium_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_2
+			fixed_ship_armor_slot = ship_armor_cruiser_1
+			front_1_custom_slot = empty
+			mid_1_custom_slot = ship_torpedo_1
+			mid_2_custom_slot = ship_torpedo_1
+			rear_1_custom_slot = ship_light_medium_battery_1
+		}
+	}
+	create_equipment_variant = {
+		name = "España Class"
+		type = ship_hull_heavy_1
+		parent_version = 0
+		modules = {
+			fixed_ship_battery_slot = ship_heavy_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_1
+			fixed_ship_secondaries_slot = ship_secondaries_1
+			fixed_ship_armor_slot = ship_armor_bb_1
+			front_1_custom_slot = ship_heavy_battery_1
+			mid_1_custom_slot = ship_secondaries_1
+			mid_2_custom_slot = ship_secondaries_1
+			rear_1_custom_slot = empty
+		}
+	}
+}
+
+if = {
+	limit = { has_dlc = "By Blood Alone" }
+		set_air_oob = "SAP_air_dlc"
+	else = {
+		set_air_oob = "SAP_air"
+	}
+}
+
+if = {
+	limit = { has_dlc = "Man the Guns" }
+		set_naval_oob = "SAP_navy_dlc"
+	else = {
+		set_naval_oob = "SAP_navy"
+	}
+}
+
+#########################
+
+
+### VARIANTS ###
+# 1936 Start #
+if = {
+	limit = { not = { has_dlc = "Man the Guns" } }
+	### Ship Variants ###
+}
+if = {
+	limit = { has_dlc = "Man the Guns" }
+	# Submarines #
+	# Destroyers #
+	# Light Cruisers #
+	# Heavy Cruisers #
+	# Battleships #
+}
+
+### STOCKPILE ###
+#add_equipment_to_stockpile = {
+#	type = motorized_equipment_1
+#	amount = 150
+#}
+#add_equipment_to_stockpile = {
+#	type = gw_armored_car_equipment
+#	amount = 150
+#}
+
+# BEGIN ECONOMY V2 NEW CAMPAIGN
+# New histories only; old saves are never reseeded.
+set_country_flag = ac_macro_history_eligible
+# END ECONOMY V2 NEW CAMPAIGN

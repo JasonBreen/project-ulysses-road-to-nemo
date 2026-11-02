@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "base_commit": "536a5d0475b165b2623cb17a897b7ca3fcbab958",
+  "source_state": "Exact clean committed source verified before/after all checks",
+  "source_snapshot": {
+    "head": "0e05feb765ea8a9de90e94eef9907cee74347cb5",
+    "files": 8700,
+    "sha256": "fb4a95d684fcbde9211c4f1eaaf49c2279c583472b13f252ae434b900713dcd7",
+    "rule": "Sorted tracked repository-relative UTF8 path,NUL,raw working-tree bytes; docs/evidence excluded. Clean Git source required."
+  },
+  "payload_sha256": "466c2010350a70999b6da969025a82c30fb55e7e15630ca4abff3e4ec5cf7e7b",
+  "payload_hash_rule": "Sorted repository-relative POSIX path,NUL,raw delivered mod bytes.",
+  "native_acceptance": false,
+  "native_status": "Paused; ship missions, research UI/designer/AI/construction/refit/save behavior remains untested",
+  "checks": [
+    {
+      "check": "assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.92,
+      "log": "assets.txt",
+      "coverage": "source/offline; no native game execution"
+    },
+    {
+      "check": "generated-macro",
+      "command": [
+        "python",
+        "-B",
+        "tools/economy_v2/build.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.26,
+      "log": "generated-macro.txt",
+      "coverage": "source/offline; no native game execution"
+    },
+    {
+      "check": "national-owners",
+      "command": [
+        "python",
+        "-B",
+        "tools/fato_south_belka/test_campaign.py"
+      ],
+      "exit_code": 0,
+      "seconds": 67.92,
+      "log": "national-owners.txt",
+      "coverage": "source/offline; no native game execution"
+    },
+    {
+      "check": "naval",
+      "command": [
+        "python",
+        "-B",
+        "tools/naval_program/test_naval.py",
+        "--engine",
+        "<installed-primary-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 63.59,
+      "log": "naval.txt",
+      "coverage": "source/offline; no native game execution"
+    },
+    {
+      "check": "receipt-contracts",
+      "command": [
+        "python",
+        "-B",
+        "tools/fato_south_belka/test_evidence.py"
+      ],
+      "exit_code": 0,
+      "seconds": 10.62,
+      "log": "receipt-contracts.txt",
+      "coverage": "source/offline; no native game execution"
+    },
+    {
+      "check": "static",
+      "command": [
+        "C:\\Users\\New\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.EXE",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-primary-reference>",
+        "-BaselineRoot",
+        "G:\\Project-Ulysses-Continuation\\source\\baseline\\2985041246"
+      ],
+      "exit_code": 0,
+      "seconds": 64.95,
+      "log": "static.txt",
+      "coverage": "source/offline; no native game execution"
+    }
+  ]
+}

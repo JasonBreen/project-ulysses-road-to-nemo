@@ -51,7 +51,16 @@ class Forces(unittest.TestCase):
         self.assertEqual(len(queries), len(set(queries)))
         self.assertEqual(set(queries), observable_names())
         self.assertTrue(DATA['limitations'])
-        self.assertTrue(all(row['path'].startswith('engine://') for row in DATA['sources']))
+        self.assertTrue(all(row['path'].startswith(('engine://', 'mod://')) for row in DATA['sources']))
+        self.assertEqual(['mod://common/units/equipment/zz_ac_land_equipment.txt'],
+                         [row['path'] for row in DATA['sources'] if row['path'].startswith('mod://')])
+        for row in DATA['sources']:
+            if not row['path'].startswith('mod://'): continue
+            path = MOD / row['path'].split('://', 1)[1]
+            self.assertEqual(row['sha256_normalized_lf'], hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest())
+            authored = {ident for ident, _, body in get(parse(path.read_text(encoding='utf-8-sig')), 'equipments')
+                        if get(body, 'is_archetype') == 'yes'}
+            self.assertEqual({'ac_land_sensor_equipment', 'ac_land_electronic_equipment'}, authored)
         source = (MOD / 'common/scripted_effects/ac_macro_effects.txt').read_text()
         self.assertNotIn('num_equipment@', source)
         self.assertNotIn('num_equipment_in_armies_k@light_tank_equipment', source)
@@ -159,8 +168,10 @@ class Forces(unittest.TestCase):
     def test_primary_installed_contract_snapshot_when_provided(self):
         if ENGINE is None: self.skipTest('Read-only installed reference not provided; captured contract remains testable offline')
         for row in DATA['sources']:
-            path = ENGINE / row['path'].removeprefix('engine://')
-            self.assertEqual(row['sha256'], hashlib.sha256(path.read_bytes()).hexdigest(), row['path'])
+            authored = row['path'].startswith('mod://')
+            path = (MOD if authored else ENGINE) / row['path'].split('://', 1)[1]
+            data = path.read_bytes().replace(b'\r\n', b'\n') if authored else path.read_bytes()
+            self.assertEqual(row['sha256_normalized_lf' if authored else 'sha256'], hashlib.sha256(data).hexdigest(), row['path'])
         document = (ENGINE / 'documentation/dynamic_variables_documentation.md').read_text()
         self.assertIn('### num_equipment_in_armies_k', document)
         self.assertIn('### num_deployed_planes_with_type', document)
@@ -168,8 +179,9 @@ class Forces(unittest.TestCase):
         self.assertIn('add_equipment_type = cas', modules)
         archetypes = set()
         for row in DATA['sources']:
-            if not row['path'].startswith('engine://common/units/equipment/') or not row['path'].endswith('.txt'): continue
-            tree = parse((ENGINE / row['path'].removeprefix('engine://')).read_text(encoding='utf-8-sig'))
+            if not row['path'].split('://', 1)[1].startswith('common/units/equipment/') or not row['path'].endswith('.txt'): continue
+            base = MOD if row['path'].startswith('mod://') else ENGINE
+            tree = parse((base / row['path'].split('://', 1)[1]).read_text(encoding='utf-8-sig'))
             archetypes.update(ident for ident, _, body in get(tree, 'equipments', []) if get(body, 'is_archetype') == 'yes')
             archetypes.update(ident for ident, _, _ in get(tree, 'duplicate_archetypes', []))
         for query in observable_names():

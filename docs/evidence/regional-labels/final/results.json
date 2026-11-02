@@ -1,0 +1,116 @@
+{
+  "source_head": "31c8756a3dcf4132d33d7fa081fa8cb10359d6f3",
+  "payload_sha256": "d1f92a00f5d65ce462dea8c223286d05d61b3b498b07ea0f99d9d59455de2d86",
+  "payload_hash_rule": "Sorted repository-relative POSIX path,NUL,raw bytes for every delivered mod file.",
+  "checks": [
+    {
+      "name": "labels",
+      "command": [
+        "python",
+        "-B",
+        "tools/regional_labels/test_labels.py",
+        "--reference",
+        "<installed-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 4.203,
+      "log": "labels.txt"
+    },
+    {
+      "name": "caption-audit",
+      "command": [
+        "python",
+        "-B",
+        "tools/regional_labels/audit.py",
+        "--reference",
+        "<installed-reference>",
+        "--gate-reviewed",
+        "--output",
+        "<repository>\\docs\\evidence\\regional-labels\\final\\caption-audit.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.438,
+      "log": "caption-audit.txt"
+    },
+    {
+      "name": "focus",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-FocusScreenRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.547,
+      "log": "focus.txt"
+    },
+    {
+      "name": "decisions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-DecisionUI.py"
+      ],
+      "exit_code": 0,
+      "seconds": 27.359,
+      "log": "decisions.txt"
+    },
+    {
+      "name": "privacy-screenshots",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-OverhaulRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.719,
+      "log": "privacy-screenshots.txt"
+    },
+    {
+      "name": "registry",
+      "command": [
+        "python",
+        "-B",
+        "tools/world_foundation/registry.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.797,
+      "log": "registry.txt"
+    },
+    {
+      "name": "assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.812,
+      "log": "assets.txt"
+    },
+    {
+      "name": "static",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-reference>",
+        "-BaselineRoot",
+        "<immutable-baseline-payload>"
+      ],
+      "exit_code": 0,
+      "seconds": 56.813,
+      "log": "static.txt"
+    }
+  ],
+  "passed": 8,
+  "failed": 0,
+  "source_scope": "206state/37locality/four school captions; existing geography, points and descriptions preserved.",
+  "native_acceptance": false,
+  "complete_map_label_acceptance": false
+}

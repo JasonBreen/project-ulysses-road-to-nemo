@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "source_head": "0fd33670a1a63c305e6f179b12b2d6edd0f4cbd8",
+  "checks": [
+    {
+      "name": "fonts",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/test_fonts.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.5,
+      "log": "fonts.txt"
+    },
+    {
+      "name": "font-generation",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/build.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.297,
+      "log": "font-generation.txt"
+    },
+    {
+      "name": "font-measurement",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/measure.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.828,
+      "log": "font-measurement.txt"
+    },
+    {
+      "name": "land",
+      "command": [
+        "python",
+        "-B",
+        "tools/land_program/test_land.py",
+        "--engine",
+        "<installed-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 7.734,
+      "log": "land.txt"
+    },
+    {
+      "name": "presentation",
+      "command": [
+        "python",
+        "-B",
+        "tools/check_presentation_sources.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.64,
+      "log": "presentation.txt"
+    },
+    {
+      "name": "presentation-negative",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-PresentationSources.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.391,
+      "log": "presentation-negative.txt"
+    },
+    {
+      "name": "strict-assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.875,
+      "log": "strict-assets.txt"
+    },
+    {
+      "name": "interface",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-InterfaceRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.766,
+      "log": "interface.txt"
+    },
+    {
+      "name": "static",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-reference>",
+        "-BaselineRoot",
+        "<immutable-baseline-payload>"
+      ],
+      "exit_code": 0,
+      "seconds": 53.171,
+      "log": "static.txt"
+    }
+  ],
+  "passed": 9,
+  "failed": 0,
+  "source_normalized_sha256": {
+    "mod/2985041246/interface/ac_research_fonts.gfx": "104b62abc4d9de3dee126c8266dcbf3c2c1f2f9ee67616487342f24536b13c45",
+    "mod/2985041246/interface/countrytechtreeview.gui": "97b14bda1f69f165d28609d4aa39ba3733d76b97fffb43cd9d1b745c065f30b1",
+    "tools/land_program/build_ui.py": "b5bdacbeafccf4caf509914f3d3a0f6ce9fb739a5105b9cec5c2d67a3349e333",
+    "tools/research_fonts/build.py": "47bb891720c51fec355bb43c7540d00435bb708519442eaac279e5f73451b963",
+    "tools/research_fonts/capture_reference.py": "d1711cbccb0adf924aa8dfbf8fe22eb10360da12aedfef60d3c90d40b1f993d6",
+    "tools/research_fonts/measure.py": "d7e42d1376553eb7846d3e44237a1472ad84e7ecd03fdeae8d82c9a1482e3e1a",
+    "tools/research_fonts/metrics.py": "8ca4264be6a9dabde48a77ee5db3c4bb0b1b3bd16d075a027d6b7f47bfa67d9e",
+    "tools/research_fonts/migration.py": "fedc233c597bd823a39bfc231416f75b5e436ba721b31d764190e1e467a1f396",
+    "tools/research_fonts/policy.py": "fb5d987f692f010578f86d4e515067b88726e5fd1c1513648fa354f8a10653ad",
+    "tools/research_fonts/test_fonts.py": "9f40ac10ac83de6baeb0f994556b456a2eddd8cfbf74156c257f8906eaa16a16"
+  },
+  "native_acceptance": false,
+  "coverage": "Affected authored-font, unchanged GUI contract, LAND, presentation parser, strict explicit texture/reference and static checks; installed-reference ownership capture recorded separately. No game launch or full presentation gate."
+}

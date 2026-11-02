@@ -24,3 +24,25 @@ ac_econ_ready = {
 ac_econ_can_pay_programme = {
 	OR = { AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= 0.002 } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 2 } } }
 }
+ac_econ_release_history = {
+	OR = {
+		tag = AWW
+		original_tag = AWW
+		tag = REC
+		original_tag = REC
+		tag = REL
+		original_tag = REL
+		tag = SBK
+		original_tag = SBK
+		tag = SER
+		original_tag = SER
+		tag = SHI
+		original_tag = SHI
+		tag = TER
+		original_tag = TER
+	}
+}
+ac_econ_can_fund_release_project = {
+	ac_econ_release_history = yes
+	OR = { ac_econ_enabled = no AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= 0.02 } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 20 } } }
+}

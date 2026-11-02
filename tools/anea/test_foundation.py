@@ -167,7 +167,8 @@ class FoundationTests(unittest.TestCase):
                         for k, body in walk(oob):
                             if k == 'add_equipment_production':
                                 equipment = get(get(body, 'equipment'), 'type')
-                                factories['dockyard' if equipment == 'convoy_1' else 'military'] += int(get(body, 'requested_factories'))
+                                naval = equipment == 'convoy_1' or equipment.startswith('ship_hull_') or equipment in ('destroyer_2','light_cruiser_2','submarine_2')
+                                factories['dockyard' if naval else 'military'] += int(get(body, 'requested_factories'))
                     self.assertEqual(factories['military'], 14 if tag == 'EMM' else 16)
                     self.assertEqual(factories['dockyard'], 6 if tag == 'EMM' else 4)
             self.assertEqual(len(set(totals)), 1)

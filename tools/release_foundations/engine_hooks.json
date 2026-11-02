@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "engine": "Installed HOI4 1.19.4.1",
+  "primary_sources_sha256": {
+    "documentation/effects_documentation.md": "2cdc93d26775990468eed167442f7a416b13059fb8fe07d139b54250b79209af",
+    "documentation/triggers_documentation.md": "7d27ed77dadaf3a213a4b3e2c624bf9c02dae495317abe8eee833b27c2d1de29",
+    "common/on_actions/_documentation.md": "a9d233a3ab17246919286b6aa47fa4147d06ba1ee2fa3696b0d55a8a70576fa6",
+    "common/on_actions/00_on_actions.txt": "54a82594cb4221033d0bb3a4395de7524fd09f4be4bfd77fcff7c07e290162fe",
+    "common/on_actions/12_wuw_on_actions.txt": "e21f5cafd0f342e00210ee0c65a2402e8c3b8eaaa62692d42861d7287683d3f8"
+  },
+  "hooks": {
+    "on_startup": {
+      "root": "global",
+      "dispatch": "snapshot then every exact release country"
+    },
+    "on_monthly": {
+      "root": "country",
+      "dispatch": "bounded current-country observation"
+    },
+    "on_release_as_free": {
+      "root": "released country",
+      "previous": "releaser"
+    },
+    "on_release_as_puppet": {
+      "root": "released country",
+      "previous": "overlord"
+    },
+    "on_annex": {
+      "root": "winner",
+      "previous": "annexed country"
+    },
+    "on_state_control_changed": {
+      "root": "new controller",
+      "previous": "old controller",
+      "state": "FROM.FROM"
+    },
+    "on_capitulation": {
+      "root": "capitulated country",
+      "previous": "winner"
+    }
+  },
+  "scoped_operations": {
+    "set_capital": "Country effect accepts a state and remember_old_capital; no province override is invented.",
+    "has_resources_in_country": "Country balance comparison includes current imports unless restricted.",
+    "free_building_slots": "State building-slot comparison; projects recheck at completion.",
+    "build_railway": "Explicit path option; authored plans use owned adjacent land edges only.",
+    "recruit_character": "Country scope attaches an existing defined character.",
+    "add_country_leader_role": "Country/character scope can add a specified ideology role and optionally promote it.",
+    "promote_character": "Country scope accepts character plus ideology; explicit ideology disambiguates multiple roles.",
+    "has_character": "Country scope checks the character association.",
+    "has_country_leader": "Country scope accepts an existing character and ruling_only criteria."
+  },
+  "evidence": "Primary source syntax/scope contract, not native parsing, event ordering, supply or save acceptance."
+}

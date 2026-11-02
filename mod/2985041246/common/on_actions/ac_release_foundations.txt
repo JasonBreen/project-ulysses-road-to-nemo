@@ -1,0 +1,9 @@
+on_actions = {
+ on_startup = { effect = { ac_release_snapshot_world = yes every_country = { limit = { ac_release_exact_country = yes } ac_release_observe_country = yes } } }
+ on_monthly = { effect = { if = { limit = { ac_release_exact_country = yes } ac_release_observe_country = yes ac_release_finish_due_projects = yes } } }
+ on_release_as_free = { effect = { ac_release_observe_country = yes } }
+ on_release_as_puppet = { effect = { ac_release_observe_country = yes } }
+ on_annex = { effect = { FROM = { ac_release_record_annexation = yes } } }
+ on_state_control_changed = { effect = { FROM = { if = { limit = { has_country_flag = ac_release_project_active } ac_release_interrupt_projects = yes } } } }
+ on_capitulation = { effect = { if = { limit = { has_country_flag = ac_release_project_active } ac_release_cancel_all_projects = yes } } }
+}

@@ -15,6 +15,7 @@ from script import parse, get, setv, render
 NOTE = '# Anea foundation: provisional gameplay; source/placements in tools/anea/foundation.json.\n'
 ARMY = [('infantry', 'Territorial Infantry', 8, 10), ('motorized', 'Mobile Infantry', 2, 2), ('mechanized', 'Mechanized Reserve', 2, 2)]
 COUNTRY = {'EMM': 'Emmeria', 'EVA': 'Estovakia'}
+REPLACEMENTS = json.loads((HERE / 'replacements.json').read_text())['countries']
 
 
 def block(k, text):
@@ -58,8 +59,8 @@ def template(tag, unit, title):
 
 
 def land_oob(tag, row):
-    divisions = []; equipment_factory = [('infantry_equipment_1', 5 if tag == 'EMM' else 6), ('motorized_equipment_1', 3), ('support_equipment_1', 2), ('artillery_equipment_1', 2), ('mechanized_equipment_1', 1)]
-    # Reserve one/two factories for the separate air branch. Total exactly MIL.
+    divisions = []; equipment_factory = REPLACEMENTS[tag]['land'].items()
+    # The separate fighter/CAS lines share the unchanged national MIL budget.
     deployment = row['supply_hubs']
     for unit, title, emm, eva in ARMY:
         for n in range(emm if tag == 'EMM' else eva):
@@ -80,11 +81,12 @@ def air_oob(tag, row, dlc):
         amount = fighter_total // 2 if n < 2 else 60
         variant = f'\nversion_name = "{tag} Service ' + ('Fighter' if n < 2 else 'Strike') + '"' if dlc else ''
         wings.append(block(str(state), block(equipment, f'owner = {tag}\ncreator = {tag}\namount = {amount}' + variant)))
-    # Land roster consumes thirteen/fourteen factories respectively.
-    factories = 1 if tag == 'EMM' else 2
-    variant = f'\nversion_name = "{tag} Service Fighter"' if dlc else ''
-    fighter = 'small_plane_airframe_1' if dlc else 'fighter_equipment_1'
-    production = block('add_equipment_production', block('equipment', f'type = {fighter}\ncreator = {tag}' + variant) + f'requested_factories = {factories}\nprogress = 0.25\nefficiency = 50')
+    production = ''
+    for role, modern, legacy, title in [('fighter','small_plane_airframe_1','fighter_equipment_1','Service Fighter'),('cas','small_plane_cas_airframe_1','CAS_equipment_1','Service Strike')]:
+        factories = REPLACEMENTS[tag]['air'][role]
+        version = f'\nversion_name = "{tag} {title}"' if dlc else ''
+        equipment = modern if dlc else legacy
+        production += block('add_equipment_production', block('equipment', f'type = {equipment}\ncreator = {tag}' + version) + f'requested_factories = {factories}\nprogress = 0.25\nefficiency = 50')
     return NOTE + block('air_wings', ''.join(wings)) + block('instant_effect', production)
 
 
@@ -101,8 +103,14 @@ def navy_oob(tag, row, dlc):
             ships.append(block('ship', f'name = "{tag} {title} {n + 1}"\ndefinition = {kind}\n' + block('equipment', eq)))
     taskforce = block('task_force', f'name = "{tag} Coastal Task Force"\nlocation = {port}\n' + ''.join(ships))
     fleet = block('fleet', f'name = "{tag} Home Fleet"\nnaval_base = {port}\n' + taskforce)
-    convoy = block('add_equipment_production', block('equipment', f'type = convoy_1\ncreator = {tag}') + f'requested_factories = {6 if tag == "EMM" else 4}\nprogress = 0.25\nefficiency = 50')
-    return NOTE + block('units', fleet) + block('instant_effect', convoy)
+    production = ''
+    recipes = {'convoy':('convoy_1','convoy_1',None), **classes}
+    for role, factories in REPLACEMENTS[tag]['navy'].items():
+        modern, legacy, title = recipes[role]
+        version = f'\nversion_name = "{tag} {title}"' if dlc and title else ''
+        equipment = modern if dlc else legacy
+        production += block('add_equipment_production',block('equipment',f'type = {equipment}\ncreator = {tag}'+version)+f'requested_factories = {factories}\nprogress = 0.25\nefficiency = 50')
+    return NOTE + block('units', fleet) + block('instant_effect', production)
 
 
 def variant(name, kind, modules):
@@ -159,7 +167,7 @@ def names_output(tag):
 def ai_output(tag, row):
     # These are additive to the inherited generic ratios, not replacement
     # absolute targets. Avoid adding another unrestricted large-army policy.
-    strategies = [('equipment_production_factor', 'infantry', 15), ('equipment_production_factor', 'support', 10), ('equipment_production_factor', 'motorized', 10), ('equipment_production_factor', 'fighter', 15), ('unit_ratio', 'convoy', 15), ('unit_ratio', 'submarine', -5), ('unit_ratio', 'capital_ship', -8)]
+    strategies = [('equipment_production_factor', 'infantry', 15), ('equipment_production_factor', 'support', 10), ('equipment_production_factor', 'motorized', 10), ('equipment_production_factor', 'fighter', 15), ('equipment_production_factor', 'cas', 10), ('unit_ratio', 'convoy', 15), ('unit_ratio', 'screen_ship', 10), ('unit_ratio', 'submarine', 0), ('unit_ratio', 'capital_ship', -8)]
     peace = f'allowed = {{ original_tag = {tag} }}\nenable = {{ has_war = no }}\nabort_when_not_enabled = yes\n'
     for typ, ident, value in strategies:
         peace += block('ai_strategy', f'type = {typ}\nid = {ident}\nvalue = {value}')
@@ -177,7 +185,7 @@ def ai_output(tag, row):
 
 def research_output(tag):
     body = f'name = {tag}_anea_research_name\ndesc = {tag}_anea_research_desc\nallowed = {{ original_tag = {tag} }}\nenable = {{ always = yes }}\nabort_when_not_enabled = yes\n'
-    body += block('research', 'industry = 15\ninfantry_tech = 12\nsupport_tech = 10\nlight_fighter = 10\nelectronics = 6\nmotorized_equipment = 6\ndd_tech = 3')
+    body += block('research', 'industry = 15\ninfantry_tech = 12\nsupport_tech = 10\nlight_fighter = 10\ncas_bomber = 4\nelectronics = 6\nmotorized_equipment = 6\ndd_tech = 3')
     body += block('weight', 'factor = 1.0')
     return NOTE + block(tag + '_anea_research', body)
 

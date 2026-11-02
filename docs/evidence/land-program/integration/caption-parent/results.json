@@ -1,0 +1,140 @@
+{
+  "source_head": "f07a105e9909fc87829e27cf7cdbc163882c623c",
+  "payload_sha256": "3ec6ea8e13f72410a4f2bb9027cfe1c2c7e3c3bfb7b1601f0949114976c36c33",
+  "payload_hash_rule": "Sorted repository-relative POSIX path,NUL,raw bytes for every delivered mod file.",
+  "checks": [
+    {
+      "name": "land",
+      "command": [
+        "python",
+        "-B",
+        "tools/land_program/test_land.py",
+        "--engine",
+        "<installed-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 7.875,
+      "log": "land.txt"
+    },
+    {
+      "name": "assets",
+      "command": [
+        "python",
+        "-B",
+        "tools/audit_visual_dependencies.py",
+        "--strict-all"
+      ],
+      "exit_code": 0,
+      "seconds": 1.579,
+      "log": "assets.txt"
+    },
+    {
+      "name": "presentation",
+      "command": [
+        "python",
+        "-B",
+        "tools/check_presentation_sources.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.64,
+      "log": "presentation.txt"
+    },
+    {
+      "name": "fonts",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/test_fonts.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.141,
+      "log": "fonts.txt"
+    },
+    {
+      "name": "font-generated",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/build.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.234,
+      "log": "font-generated.txt"
+    },
+    {
+      "name": "font-measure",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/measure.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.766,
+      "log": "font-measure.txt"
+    },
+    {
+      "name": "ownership",
+      "command": [
+        "python",
+        "-B",
+        "tools/research_fonts/capture_reference.py",
+        "--engine",
+        "<installed-reference>",
+        "--output",
+        "docs\\evidence\\land-program\\integration\\caption-parent\\authored-research-dependencies.json"
+      ],
+      "exit_code": 0,
+      "seconds": 33.547,
+      "log": "ownership.txt"
+    },
+    {
+      "name": "labels",
+      "command": [
+        "python",
+        "-B",
+        "tools/regional_labels/test_labels.py",
+        "--reference",
+        "<installed-reference>"
+      ],
+      "exit_code": 0,
+      "seconds": 3.797,
+      "log": "labels.txt"
+    },
+    {
+      "name": "focus-captions",
+      "command": [
+        "python",
+        "-B",
+        "tools/Test-FocusScreenRepairs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.469,
+      "log": "focus-captions.txt"
+    },
+    {
+      "name": "static",
+      "command": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "tools/Test-UlyssesStatic.ps1",
+        "-ModRoot",
+        "mod/2985041246",
+        "-ReferenceGameRoot",
+        "<installed-reference>",
+        "-BaselineRoot",
+        "<immutable-baseline-payload>"
+      ],
+      "exit_code": 0,
+      "seconds": 52.125,
+      "log": "static.txt"
+    }
+  ],
+  "passed": 10,
+  "failed": 0,
+  "native_acceptance": false,
+  "research_inventory_scope": "Source inventory only; no complete presentation/provenance gate was requested. Screen failures remain visible in research-dependencies.json.",
+  "full_conversion_acceptance": false
+}

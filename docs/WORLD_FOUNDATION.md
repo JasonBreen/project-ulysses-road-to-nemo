@@ -22,6 +22,13 @@ records the refreshed overview/registry, independent CI steps and shared regiona
 label ownership. World foundation labels take precedence by agreement between
 the two authored files, rather than by relying on localization load order.
 
+The subsequent [Erusean foundation](ERUSEA_FOUNDATION.md) preserves the four
+starts below and extends the same owner with an additive ERU roster and
+component-based logistics. It retains ERU's individual 28 CIV/23 MIL/11 dockyard
+placements and all 16 inherited ports. Its new forces, bounded resource
+additions and minimum island receiving facilities are documented gameplay
+calibration. The four-country budgets and placements below remain unchanged.
+
 ## What the registry establishes
 
 [country_registry.json](../tools/world_foundation/country_registry.json) is

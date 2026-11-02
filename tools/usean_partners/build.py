@@ -212,7 +212,7 @@ def build_core(triggers, effects):
     triggers["ac_up_participant"] = participant
     triggers["ac_up_active"] = "ac_up_participant = yes has_country_flag = ac_up_initialized has_capitulated = no"
     triggers["ac_up_settlement_ready"] = "ac_up_active = yes OR = { ac_ucw_war_over = yes has_global_flag = ac_ucw_war_averted AND = { date > 2005.12.30 has_war = no NOT = { has_global_flag = ac_ucw_war_started } } }"
-    triggers["ac_up_can_fund"] = "ac_up_active = yes political_power >= 25 ac_pol_active = yes OR = { AND = { has_country_flag = ac_up_efficient_authorisations check_variable = { ac_pol_capacity > 0 } } check_variable = { ac_pol_capacity > 1 } } OR = { ac_econ_ready = no ac_econ_can_pay_programme = yes }"
+    triggers["ac_up_can_fund"] = "ac_up_active = yes political_power >= 25 ac_pol_active = yes OR = { AND = { has_country_flag = ac_up_efficient_authorisations check_variable = { ac_pol_capacity > 0 } } check_variable = { ac_pol_capacity > 1 } } OR = { ac_econ_enabled = no ac_econ_can_pay_programme = yes }"
     effects["ac_up_pay_programme"] = guard("ac_up_can_fund = yes", "add_political_power = -25\nset_temp_variable = { ac_pol_capacity_delta = -2 }\n" + guard("has_country_flag = ac_up_efficient_authorisations", "set_temp_variable = { ac_pol_capacity_delta = -1 }") + "ac_pol_change_capacity = yes\n" + guard("ac_econ_ready = yes", "ac_econ_pay_programme = yes"))
     bound = "clamp_variable = { var = ac_up_preparedness min = 0 max = 20 }\n"
     initialize = "set_country_flag = ac_up_initialized\n" + guard("NOT = { has_variable = ac_up_preparedness }", "set_variable = { ac_up_preparedness = 0 }")

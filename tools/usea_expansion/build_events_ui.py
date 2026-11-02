@@ -4,12 +4,13 @@ Engine container/control names and dynamic option layout remain intact. Country
 and news chrome uses original ACES textures; operative/leader layouts retain
 their engine contract and are outside this repair's visual-acceptance claim.
 """
-import argparse,json
+import argparse,json,sys
 from pathlib import Path
-from script import render,get,setv,walk
 HERE=Path(__file__).resolve().parent;MOD=HERE.parents[1]/'mod/2985041246'
+sys.path.insert(0,str(HERE.parent))
+from usea_expansion.script import render,get,setv,walk
 
-def build():
+def build_base():
     tree=json.loads((HERE/'event_contract.json').read_text())
     for kind,_,root in tree[0][2]:
         if not isinstance(root,list):continue
@@ -27,6 +28,13 @@ def build():
                 if old and child not in ('event_picture',):
                     setv(node,field,'"GFX_ac_ui_'+old.strip('"').removeprefix('GFX_')+'"')
     return '# 1.19.4 event control contract; scrollable narratives and original ACES chrome.\n'+render(tree)+'\n'
+
+def build():
+    text=build_base()
+    if (HERE.parent/'event_style/migration.py').is_file():
+        from event_style.migration import generated_from
+        text=generated_from(text)
+    return text
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--check',action='store_true');a=p.parse_args()

@@ -27,7 +27,14 @@ def campaigns(require_chapters=True):
     return result
 
 
-def validate(row):
+def validate(row, *, horizon=None):
+    # The six initial campaigns retain the original 2005 contract. Later rows
+    # require an explicit approved identity; this is not a generic date bypass.
+    last_core_date = date(2005, 12, 31)
+    if horizon is not None:
+        if (row.get('tag'), row.get('id'), row.get('base')) not in {('OSE', 'second_frequency', 700), ('YUK', 'names_on_the_board', 800)} or row.get('extension_contract') != 'pacific_story_v1' or horizon != '2020.12.31':
+            raise ValueError('Unapproved story horizon extension')
+        last_core_date = day(horizon)
     chapters = row['chapters']
     if [c['id'] for c in chapters] != list(range(1, 21)):
         raise ValueError('Twenty ordered core chapters required: ' + row['tag'])
@@ -35,7 +42,7 @@ def validate(row):
     last = date(1991, 1, 1)
     for chapter in chapters:
         current = day(chapter['earliest'])
-        if current < last or current > date(2005, 12, 31):
+        if current < last or current > last_core_date:
             raise ValueError('Unordered or out-of-scope core chapter: ' + str(chapter['id']))
         last = current
         act_start, act_end = row['acts'][(chapter['id'] - 1) // 5]

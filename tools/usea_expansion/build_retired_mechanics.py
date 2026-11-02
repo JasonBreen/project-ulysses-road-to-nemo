@@ -1,4 +1,4 @@
-"""Quarantine generic ideology/crisis events; retain IDs for queued old saves."""
+"""Quarantine inherited Earth/WWII mechanics; retain IDs for queued old saves."""
 import argparse,json
 from pathlib import Path
 HERE=Path(__file__).resolve().parent;MOD=HERE.parents[1]/'mod/2985041246'
@@ -8,10 +8,13 @@ MISSIONS=['draft_dodging_mission','strikes_mission','mutiny_mission']
 def build():
     outputs={}
     for row in json.loads((HERE/'retired_event_contract.json').read_text()):
-        text='# Retired WWII/generic politics mechanic. IDs remain harmless for queued old saves.\n'
+        kind=row.get('event_kind','country_event')
+        if kind not in ('country_event','news_event'):
+            raise ValueError('Unsupported retired event kind: '+kind)
+        text=('# Retired inherited Earth/WWII news. IDs remain harmless for queued old saves.\n' if kind=='news_event' else '# Retired WWII/generic politics mechanic. IDs remain harmless for queued old saves.\n')
         text+='\n'.join('add_namespace = '+ns for ns in row['namespaces'])+'\n'
         for ident in row['events']:
-            text+='country_event = { id = '+ident+' hidden = yes is_triggered_only = yes immediate = { '+('ac_retire_vanilla_crises = yes' if ident.startswith('stability.') else '')+' } }\n'
+            text+=kind+' = { id = '+ident+' hidden = yes is_triggered_only = yes immediate = { '+('ac_retire_vanilla_crises = yes' if ident.startswith('stability.') else '')+' } }\n'
         outputs['events/'+row['file']]=text
     body='\n'.join('remove_ideas = '+idea for idea in IDEAS)
     body+='\n'+'\n'.join('if = { limit = { has_active_mission = '+m+' } remove_mission = '+m+' }' for m in MISSIONS)
@@ -30,5 +33,5 @@ if __name__=='__main__':
         target=MOD/name
         if a.check:
             if not target.exists() or target.read_text()!=text:raise SystemExit('Retired mechanic output differs: '+name)
-        else:target.write_text(text,encoding='utf-8')
+        else:target.write_text(text,encoding='utf-8',newline='\n')
     print('Retired generic ideology/crisis events; old-save crisis penalties have bounded cleanup.')

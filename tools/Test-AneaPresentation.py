@@ -23,7 +23,7 @@ class AneaPresentation(unittest.TestCase):
     def test_only_two_existing_offices_select_the_anea_presentations(self):
         manifest = json.loads((ROOT / 'tools/usea_expansion/leaders.json').read_text())
         self.assertEqual(69, len(manifest))
-        self.assertEqual(51, sum(row['missing'] for row in manifest))
+        self.assertEqual(52, sum(row['missing'] for row in manifest))
         selected = [row for row in manifest if row.get('presentation_source')]
         self.assertEqual({'EMM', 'EVA'}, {row['tag'] for row in selected})
         for row in selected:
@@ -47,7 +47,7 @@ class AneaPresentation(unittest.TestCase):
 
     def test_live_portrait_bytes_and_flag_provenance_match_the_authored_cards(self):
         assets = json.loads((ROOT / 'tools/usea_expansion/leader_assets.json').read_text())
-        self.assertEqual(51, len(assets))
+        self.assertEqual(52, len(assets))
         for tag in ('EMM', 'EVA'):
             path = 'gfx/leaders/AC_start_governments/' + tag + '.dds'
             row = next(row for row in assets if row['file'] == path)

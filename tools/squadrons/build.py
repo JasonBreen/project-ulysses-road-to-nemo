@@ -36,8 +36,9 @@ def flag(row, short):
     return 'ac_sq_' + row['tag'].lower() + '_' + short
 
 
-def scene_slot(chapter):
-    for slot, indices in json.loads((HERE / 'art_plan.json').read_text())['chapters_by_slot'].items():
+def scene_slot(chapter, mapping=None):
+    mapping = json.loads((HERE / 'art_plan.json').read_text())['chapters_by_slot'] if mapping is None else mapping
+    for slot, indices in mapping.items():
         if chapter in indices:
             return slot
     raise ValueError('No storyboard slot for chapter ' + str(chapter))
@@ -172,13 +173,13 @@ def events(row):
                                  'set_country_flag = ' + flag(row, 'callback_' + str(chapter['id'])) + '\n')
         immediate = owned_if(pending_valid(row, chapter) + ' NOT = { has_country_flag = ' + flag(row, 'delivered_' + str(chapter['id'])) + ' }', snapshot)
         result.append(block('country_event', 'id = ' + ident + '\ntitle = ' + ident + '.t\n' + desc +
-                            'picture = GFX_ac_sq_' + tag.lower() + '_scene_' + scene_slot(chapter['id']) + '\n'
+                            'picture = GFX_ac_sq_' + tag.lower() + '_scene_' + scene_slot(chapter['id'], row.get('chapters_by_slot')) + '\n'
                             'is_triggered_only = yes\n' + block('trigger', pending_valid(row, chapter)) +
                             block('immediate', immediate) + choices(row, chapter)))
         archive = 'ac_sq.' + str(row['base'] + 10000 + chapter['id'])
         result.append(block('country_event', 'id = ' + archive + '\ntitle = ' + ident + '.t\n' +
                             archive_desc +
-                            'picture = GFX_ac_sq_' + tag.lower() + '_scene_' + scene_slot(chapter['id']) + '\n'
+                            'picture = GFX_ac_sq_' + tag.lower() + '_scene_' + scene_slot(chapter['id'], row.get('chapters_by_slot')) + '\n'
                             'is_triggered_only = yes\n' + block('trigger', identity(tag) + ' has_country_flag = ' + flag(row, 'chapter_' + str(chapter['id']))) +
                             block('option', 'name = ac_sq_archive_close\n')))
     for index, person in enumerate(row['cast']):
@@ -202,13 +203,13 @@ def events(row):
             effect += owned_if('has_country_flag = ac_sq_has_read',
                                'add_timed_idea = { idea = ac_sq_professional_debrief days = 365 }\n')
         result.append(block('country_event', 'id = ' + ident + '\ntitle = ' + ident + '.t\ndesc = ' + ident + '.d\n'
-                            'picture = GFX_ac_sq_' + tag.lower() + '_scene_8\nis_triggered_only = yes\n' + block('trigger', valid) +
+                            'picture = GFX_ac_sq_' + tag.lower() + '_scene_' + str(row.get('ending_slots', {}).get(ending['id'], 8)) + '\nis_triggered_only = yes\n' + block('trigger', valid) +
                             block('option', 'name = ac_sq_end_close\n' + owned_if(valid, effect))))
     return '\n'.join(result)
 
 
-def build():
-    OUT.clear(); LOC.clear(); stories = campaigns()
+def build(stories=None, initialize_effect=None):
+    OUT.clear(); LOC.clear(); stories = campaigns() if stories is None else stories
     loc('ac_sq_archive_close', 'Return to the briefing.')
     loc('ac_sq_end_close', 'Keep their account.')
     loc('ac_sq_expired_close', 'File this dispatch without replaying its choices.')
@@ -238,6 +239,8 @@ def build():
                     'set_variable = { ac_sq_cohesion = 50 }\nset_variable = { ac_sq_credibility = 50 }\n' +
                     owned_if('date > 1991.1.31 NOT = { date > 2005.12.31 }', opening_expiry) +
                     owned_if('date > 2005.12.31', 'set_country_flag = ac_sq_closed\nset_country_flag = ac_sq_late_archive\n')))
+    if initialize_effect is not None:
+        effects = block('ac_sq_initialize', initialize_effect)
     tick = 'ac_sq_initialize = yes\n'
     categories = ''; decisions = ''; event_text = 'add_namespace = ac_sq\n'
     for row in stories:

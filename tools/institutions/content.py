@@ -90,7 +90,7 @@ CHOICES=[
  ('UST','Authority and contracted expertise','Ustio can review independent public contracts or concentrate on services within its surviving administration. Subject status blocks the independent mandate while leaving a useful domestic path. Existing Ratio and annexation outcomes remain authoritative.','Review independent public contracts','is_subject = no','Protect the surviving administration','always = yes',('training','gate')),
 ]
 
-BESPOKE=('AWW','BLK','EMM','ERU','EVA','FCU','GEB','NPT','OSE','REC','SAP','UST','YUK')
+BESPOKE=('AWW','BLK','EMM','ERU','EVA','FAT','FCU','GEB','NPT','OSE','REC','SAP','SBK','UST','YUK')
 
 IDEAS={
  'civic':('Public Administrative Mandate','Civilian construction and stability improve at a military opportunity cost. Costs one institutional capacity weekly; failure suspends the mandate.','production_speed_industrial_complex_factor = 0.04\nproduction_speed_arms_factory_factor = -0.04\npolitical_power_gain = -0.05',('assembly','scales')),

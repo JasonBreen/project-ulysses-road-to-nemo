@@ -160,15 +160,31 @@ and disabled fiscal modes:
 - the crisis review fires once and its options have bounded costs;
 - annexation closes the owner.
 
-These are source and actual-script offline checks, not native acceptance. The
-PowerShell static suite (`tools/Test-UlyssesStatic.ps1`) could not be run in the
-Linux cloud session because no PowerShell host is installed. Six existing CI
-checks (`usean_partners/test_content.py`, `Test-AneaPresentation.py`,
-`Test-InterfaceRepairs.py`, `Test-DecisionUI.py`, `Test-EventStyle.py` and
-`build_continental_war.py --check`, the last only for its PNG news masters) fail
-in that environment on untouched `main` as well. Their complete output is
-identical before and after this change; the Windows CI run is the authority for
-them.
+These are source and actual-script offline checks, not native acceptance.
+
+Three shared review records count every country, decision or event, so they were
+regenerated with this change: `tools/world_foundation/country_registry.json`
+(focus counts per country), `docs/evidence/decision-rows/consumer-bounds.json`
+(977 → 1,015 row variants) and `docs/evidence/event-style/measurements.json`
+(2,284 → 2,372 measured fields, with no title, body or parent-clearance clips).
+The event-style record was produced with Windows path ordering, because the
+generator sorts event files with platform path ordering. That ordering
+reproduces the committed `main` record byte-for-byte, and the change consists
+only of additions. PNG review sheets were left as committed; their pixels are
+unchanged.
+
+All 78 workflow Python steps were run in the Linux cloud session with the
+CI-pinned Pillow 11.3.0. Apart from the two pull-request-only scan steps, the
+following fail there on untouched `main` as well, with identical results:
+`usean_partners/test_content.py`, `Test-AneaPresentation.py`,
+`Test-InterfaceRepairs.py`, `Test-DecisionUI.py` (one PNG-sheet case),
+`Test-EventStyle.py`, `build_continental_war.py --check`,
+`Test-ReconstructionAssets.py`, `Test-SuperpowerAssets.py` and
+`fato_south_belka/run_checks.py`. Each comes from PNG compression or path
+ordering in that environment. The PR scan against `main` is clean. The
+PowerShell static suite could not run because no PowerShell host is installed;
+its Python checks were run directly and pass, except the Continental War check
+listed above. The Windows CI run is the authority.
 
 ## Open items
 

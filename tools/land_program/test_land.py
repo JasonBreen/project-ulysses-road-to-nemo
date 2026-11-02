@@ -200,8 +200,14 @@ class Land(unittest.TestCase):
     def test_existing_source_contract_and_61_start_coverage_stay_unchanged(self):
         baseline=json.loads((HERE/'preserved_sources.json').read_text())
         repairs=baseline.get('reviewed_source_repairs',{})
+        cleanup=json.loads((ROOT/'tools/history_data_cleanup_updates.json').read_text())['files']
         self.assertEqual({'mod/2985041246/history/units/UST_band_of_broders_units.txt'},set(repairs))
         for name,expected in baseline['protected_sources_sha256'].items():
+            if name in cleanup:
+                repair=cleanup[name]
+                self.assertEqual(expected,repair['old_normalized_sha256'],name)
+                self.assertEqual(repair['new_normalized_sha256'],sha(ROOT/name),name)
+                continue
             if name not in repairs:
                 self.assertEqual(expected,sha(ROOT/name),name)
                 continue

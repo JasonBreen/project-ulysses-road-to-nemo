@@ -80,12 +80,12 @@ Belka, 1 Jan 1991 bookmark: menu → scenario → country select → campaign st
 1. **Vanilla visuals still on screen.** Continuous focus icons, grand doctrine icons, 1.15+ building icons, special-project art, and the vanilla sprites appended to the `.gfx` files. Needs an art audit and Strangereal replacements or placeholders.
 2. **Vanilla-content noise.** ~3,300 errors from Earth-country focuses, events, decisions, scripted effects, special projects and MIOs that reference removed tags and equipment. Silence them with empty overrides, and replace special projects with Strangereal superweapon projects.
 3. **AI templates** (`common/ai_templates/generic.txt`) use deprecated syntax: `roles`, `target_width`, `allowed_types`, `production_prio`.
-4. **History data.**
-   - Invalid ship name groups (Sapin, FATO).
-   - Equipment variants with icon `xxx` (Belka ADB-N, Gebet Merlin).
-   - The P-3 Orion has an invalid module layout.
-   - Nordennavic popularities don't add to 100.
-   - DEL/SHI character conflict.
+4. **History data.** Mostly repaired on `claude/fill-open-gaps` (static checks in `tools/Test-HistoryDataCleanup.py`):
+   - Invalid ship name groups (Sapin, FATO). Fixed with `common/units/names/00_SAP_names.txt` / `00_FAT_names.txt` using the starting-fleet names.
+   - Equipment variants with icon `xxx` (Belka ADB-00; the Merlin Mark II variant already had a valid icon). Fixed; the FATO `large="xxx"` portrait and the Perbla/Spayca `division_names_group = xxx` references were fixed in the same pass.
+   - The P-3 Orion has an invalid module layout. Still open: statically consistent with the installed large-airframe archetype; needs a native error log to identify the exact module.
+   - Nordennavic popularities don't add to 100. Fixed (98 → 100 via neutrality 9).
+   - DEL/SHI character conflict. Fixed: Shilage recruits its own generated government office instead of Delarus's leader.
 5. **Subdoctrine bonuses** target vanilla unit types (`super_heavy_artillery`, `support_ship`, …). Mod units need their own subdoctrine tuning.
 6. **Two identical 1991 bookmarks** in `common/bookmarks`. Only one is shown by the original setup screen.
 7. Test-only `events/crowbuildingdebugevents.txt` references undefined `stonehenge`/`megalith` buildings.

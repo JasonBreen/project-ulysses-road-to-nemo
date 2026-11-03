@@ -87,6 +87,6 @@ Belka, 1 Jan 1991 bookmark: menu → scenario → country select → campaign st
    - Nordennavic popularities don't add to 100. Fixed (98 → 100 via neutrality 9).
    - DEL/SHI character conflict. Fixed: Shilage recruits its own generated government office instead of Delarus's leader.
 5. **Subdoctrine bonuses** target vanilla unit types (`super_heavy_artillery`, `support_ship`, …). Mod units need their own subdoctrine tuning.
-6. **Two identical 1991 bookmarks** in `common/bookmarks`. Only one is shown by the original setup screen.
+6. **Two January 1991 bookmark files, not identical.** `common/bookmarks/blitzkrieg.txt` and `common/bookmarks/the_gathering_storm.txt` both set `date = 1991.1.1.12` and `default = yes`. `blitzkrieg.txt` lists BLK (bookmark `ideology = fascism`), OSE, UST, SAP, GEB, EMM and EVA. `the_gathering_storm.txt` lists only EMM and EVA. The original setup screen shows one default bookmark. Belka's country history still has `ruling_party = neutrality`. That disagreement was flagged and not changed.
 7. Test-only `events/crowbuildingdebugevents.txt` references undefined `stonehenge`/`megalith` buildings.
 8. Remaining crash warnings: `id 48100001 50 already exists` (a duplicate unit or ship id in history) and a parse quirk on `gfx/loadingscreens/load_7.dds`. Neither crashed in testing.

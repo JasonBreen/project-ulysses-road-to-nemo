@@ -23,7 +23,7 @@ on `main`.
 Estovakian civil war. Waves A and D are implemented in source and pass offline
 checks ([CONTENT_WAVES_A_D.md](CONTENT_WAVES_A_D.md)). The ledger now records
 674 delivered and 354 remaining. The Free Erusea owner uses only the sourced
-outbreak date; Gate 0 is still needed for the rest of 2005–2009.
+outbreak date; Gate 0 is still needed for the rest of 2005–2009 (since compiled; see §2).
 
 ## 1. Where the overhaul stands
 
@@ -73,9 +73,12 @@ from October 2005 to December 2020 and every
 period. Each wave below lists the rows it needs. A wave may not script a
 participant, date, place, leader or weapon that has no row.
 
-**Blocker:** `acecombat.jp` is not reachable from the current cloud session's
-network policy. The ledger needs that host allowed, or page captures supplied by
-the user.
+**Status, 3 November 2026:** compiled from the official pages after the user
+allowed `acecombat.jp` in the environment's network settings. See
+[STRANGEREAL_2006_2020_SOURCES.md](STRANGEREAL_2006_2020_SOURCES.md). The ledger
+found that Free Erusea was defeated by Mobius 1 on 26 September 2006, so Wave A's
+open-ended insurrection is reconciled into a historical route with a labelled
+provisional alternative.
 
 ## 3. Proposed waves
 
@@ -283,7 +286,7 @@ Decisions the user needs to make:
 
 | # | Decision | Recommendation |
 | --- | --- | --- |
-| 1 | Network access for Gate 0 | Allow `acecombat.jp` for research sessions (**still open**) |
+| 1 | Network access for Gate 0 | **Resolved:** `acecombat.jp` allowed; ledger compiled |
 | 2 | Base for new waves | **Resolved:** #59–#61 merged into `main` |
 | 3 | First wave | **Decided: A + D** (delivered in source); F2 foundation lanes still available in parallel |
 | 4 | Estovakian civil war mechanic | **Decided: tagless owner first**; temporary tag only after a source and mapping review |

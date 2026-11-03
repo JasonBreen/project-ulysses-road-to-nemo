@@ -586,6 +586,13 @@ class Runtime(unittest.TestCase):
         self.assertIn("ac_ecw_late_start_skipped", late.globals)
         self.assertNotIn("ac_ecw_capital_seized", late.globals)
         self.assertNotIn("ac_ecw_luf_authority", lc.variables)
+        # A capitulated Estovakia that still owns land cannot start the civil war.
+        fallen, fc = self.ecw()
+        fc.capitulated = True
+        fallen.wave_action("estovakia", "on_weekly_EVA", "EVA")
+        self.assertNotIn("ac_ecw_capital_seized", fallen.globals)
+        self.assertNotIn("ac_ecw_luf_authority", fc.variables)
+        self.assertEqual([], self.news(fallen))
 
     def test_historical_chain_fires_each_anchor_once_and_ends_in_2013(self):
         w, c = self.ecw()

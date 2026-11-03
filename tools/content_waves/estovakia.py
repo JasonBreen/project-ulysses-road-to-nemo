@@ -242,7 +242,8 @@ def owner():
         verb = "add_to_variable" if amount > 0 else "subtract_from_variable"
         return f"{verb} = {{ {variable} = {abs(amount)} }}\nclamp_variable = {{ var = {variable} min = 0 max = 100 }}\n"
 
-    triggers["ac_ecw_owner_eligible"] = "tag = EVA original_tag = EVA any_owned_state = { always = yes }"
+    # A capitulated Estovakia that still owns land neither starts nor continues the civil war.
+    triggers["ac_ecw_owner_eligible"] = "tag = EVA original_tag = EVA any_owned_state = { always = yes } has_capitulated = no"
     triggers["ac_ecw_running"] = f"{STARTED} NOT = {{ has_global_flag = ac_ecw_ended }} NOT = {{ has_global_flag = ac_ecw_closed }}"
     triggers["ac_ecw_emm_can_answer"] = "country_exists = EMM EMM = { has_capitulated = no }"
     triggers["ac_ecw_settlement_earned"] = (
@@ -399,7 +400,7 @@ def owner():
         "EVA_ecw_outcome_historical": "The war ended as the historical record describes: General Lyes was killed on 29 October 2013.",
         "EVA_ecw_outcome_late": "The war ended late, when the LUF's hold collapsed, in a provisional alternative route.",
         "EVA_ecw_outcome_none": "The civil war's outcome has not yet been recorded.",
-        "ac_ecw_owner_eligible": "Estovakia is a landowning country",
+        "ac_ecw_owner_eligible": "Estovakia is a landowning country that has not capitulated",
         "ac_ecw_running": "The Estovakian civil war owner is active",
         "ac_ecw_emm_can_answer": "Emmeria exists and has not capitulated",
         "ac_ecw_settlement_earned": "A negotiated settlement has been earned",

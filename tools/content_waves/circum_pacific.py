@@ -74,7 +74,8 @@ STAGES = (
     ("harling", "2010.12.8", "", "OSE = { add_timed_idea = { idea = ac_cpw_ose_president_returns days = 90 } }", 30),
     ("arkbird_lost", "2010.12.18", "has_global_flag = ac_cpw_arkbird_committed",
      "set_global_flag = ac_cpw_arkbird_lost\nremove_ideas = ac_sp_arkbird_joint_operations\n"
-     "OSE = { remove_ideas = ac_sp_arkbird_debris_clearing remove_ideas = ac_sp_arkbird_joint_operations }", 31),
+     "OSE = { remove_ideas = ac_sp_arkbird_debris_clearing remove_ideas = ac_sp_arkbird_joint_operations "
+     "remove_ideas = ac_cpw_ose_arkbird_at_the_front remove_ideas = ac_cpw_ose_arkbird_grounded }", 31),
     ("nikanor", "2010.12.22", "", "add_timed_idea = { idea = ac_cpw_yuk_leadership_question days = 60 }", 32),
     ("ceres", "2010.12.28", "", "", 33),
     ("kestrel", "2010.12.29", "",
@@ -82,8 +83,9 @@ STAGES = (
     ("solg", "2010.12.30", "has_global_flag = ac_cpw_stage_kestrel", "", 35),
 )
 
+# Every idea the owner adds without a timer; all are removed when the war ends.
 WAR_IDEAS = ("ac_cpw_ose_war_footing", "ac_cpw_yuk_war_footing", "ac_cpw_yuk_submarine_carriers",
-             "ac_cpw_yuk_submarine_carrier", "ac_cpw_disarmament_appeal")
+             "ac_cpw_yuk_submarine_carrier", "ac_cpw_disarmament_appeal", "ac_cpw_ose_arkbird_at_the_front")
 
 
 def owner():
@@ -195,12 +197,14 @@ def owner():
         "set_global_flag = ac_cpw_arkbird_committed\nadd_ideas = ac_cpw_ose_arkbird_at_the_front\nnews_event = { id = ac_cpw.15 days = 1 }")
     effects["ac_cpw_hold_arkbird"] = guard("tag = OSE original_tag = OSE NOT = { has_global_flag = ac_cpw_arkbird_committed }",
         "set_global_flag = ac_cpw_arkbird_held_back")
+    # The decisions' political-power costs are charged by the engine through
+    # their `cost`; these effects must not charge them again.
     for tag in COUNTRIES:
         t = tag.lower()
         effects[f"ac_cpw_home_front_{t}"] = guard(f"tag = {tag} original_tag = {tag} ac_cpw_war_running = yes NOT = {{ has_country_flag = {tag}_cpw_home_front_done }}",
-            f"set_country_flag = {tag}_cpw_home_front_done\nadd_political_power = -50\nadd_timed_idea = {{ idea = ac_cpw_{t}_home_front days = 120 }}")
+            f"set_country_flag = {tag}_cpw_home_front_done\nadd_timed_idea = {{ idea = ac_cpw_{t}_home_front days = 120 }}")
         effects[f"ac_cpw_war_record_{t}"] = guard(f"tag = {tag} original_tag = {tag} {ENDED} NOT = {{ has_country_flag = {tag}_cpw_war_record_done }}",
-            f"set_country_flag = {tag}_cpw_war_record_done\nadd_political_power = -25\nadd_timed_idea = {{ idea = ac_cpw_{t}_war_record days = 180 }}")
+            f"set_country_flag = {tag}_cpw_war_record_done\nadd_timed_idea = {{ idea = ac_cpw_{t}_war_record days = 180 }}")
 
     # Ideas (provisional values) ---------------------------------------------------
     idea("ac_cpw_ose_war_footing", "Osea at War", "Yuktobania declared war on Osea on 27 September 2010 (Chronicle, 2010 / 09.27). The federation is on a war footing until the fighting actually ends; this campaign fixes no end date.",

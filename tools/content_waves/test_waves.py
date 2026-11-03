@@ -900,6 +900,7 @@ class Runtime(unittest.TestCase):
         self.tick(w, date(2010, 12, 19))
         self.assertIn("ac_cpw_arkbird_lost", w.globals)
         self.assertFalse({"ac_sp_arkbird_debris_clearing", "ac_sp_arkbird_joint_operations"} & (o.ideas | y.ideas))
+        self.assertFalse({"ac_cpw_ose_arkbird_at_the_front", "ac_cpw_ose_arkbird_grounded"} & o.ideas)
         self.assertIn("ac_sp_arkbird_complete", w.globals)
         self.tick(w, date(2010, 12, 23))
         self.assertIn("ac_cpw_yuk_leadership_question", y.ideas)
@@ -972,12 +973,17 @@ class Runtime(unittest.TestCase):
 
     def test_capitulation_and_annexation_record_the_actual_outcome(self):
         w, y, o = self.cpw()
+        w.globals.add("ac_sp_arkbird_complete")
         self.declare(w)
+        self.tick(w, date(2010, 9, 30))
+        w.option("ac_cpw.6", "a", "OSE")
+        self.assertIn("ac_cpw_ose_arkbird_at_the_front", o.ideas)
         y.capitulated = True
         w.wave_action("circum_pacific", "on_capitulation_immediate", "YUK")
         self.assertTrue({"ac_cpw_yuk_fallen", "ac_cpw_ended", "ac_cpw_outcome_osean_victory"} <= w.globals)
         self.assertIn("ac_cpw.11", [e for _, e, _ in w.events])
-        self.assertNotIn("ac_cpw_ose_war_footing", o.ideas)
+        # Every untimed owner idea leaves with the war, including the Arkbird deployment.
+        self.assertFalse({i for i in o.ideas | y.ideas if i.startswith("ac_cpw_") and i not in ("ac_cpw_ose_carrier_losses",)})
         w2, y2, o2 = self.cpw()
         self.declare(w2)
         w2.wave_action("circum_pacific", "on_annex", "YUK", "OSE")
@@ -1002,19 +1008,24 @@ class Runtime(unittest.TestCase):
                 self.declare(w)
                 self.assertTrue(w.trigger(fields(home)["available"], c))
                 self.assertFalse(w.trigger(fields(record)["available"], c))
+                # The engine charges `cost` once; the effects must not charge it again.
+                self.assertEqual(("50", "25"), (fields(home)["cost"], fields(record)["cost"]))
+                self.assertEqual(("yes", "yes"), (fields(home)["fire_only_once"], fields(record)["fire_only_once"]))
                 pp = c.pp
                 w.execute(fields(home)["complete_effect"], c)
-                self.assertEqual(pp - 50, c.pp)
+                self.assertEqual(pp, c.pp)
                 self.assertIn(f"ac_cpw_{tag.lower()}_home_front", c.ideas)
                 self.assertFalse(w.trigger(fields(home)["available"], c))
+                snapshot = copy.deepcopy(c)
                 w.execute(fields(home)["complete_effect"], c)
-                self.assertEqual(pp - 50, c.pp)
+                self.assertEqual(snapshot, c)
                 w.wars.clear()
                 self.tick(w, date(2010, 10, 4))
                 self.assertTrue(w.trigger(fields(record)["available"], c))
                 w.execute(fields(record)["complete_effect"], c)
-                self.assertEqual(pp - 75, c.pp)
+                self.assertEqual(pp, c.pp)
                 self.assertIn(f"ac_cpw_{tag.lower()}_war_record", c.ideas)
+        self.assertNotIn("add_political_power", text("common/scripted_effects/ac_circum_pacific.txt"))
 
     def owner(self, today=date(2006, 9, 26)):
         w = self.fresh()

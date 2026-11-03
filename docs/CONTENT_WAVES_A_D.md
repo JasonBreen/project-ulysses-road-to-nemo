@@ -20,16 +20,18 @@ single playthrough sees fewer of them. The ledger now records **674 delivered an
 | Claim or material | Layer and exact reference | Affected IDs and files | Status |
 | --- | --- | --- | --- |
 | Provisional autonomous Erusean government under ISAF oversight, 26 September 2005 | Official: ACES Chronicle 2005 / 09.26, already cited in [USEAN_CONTINENTAL_WAR.md](USEAN_CONTINENTAL_WAR.md) | Context for the ISAF-victory lanes `ERU_fe_oversight_*`, `FCU_fe_oversight_*` | Read-only use of existing `ac_ucw` outcome flags |
-| Free Erusea insurrection, 26 September 2006 | Official, outbreak date and name only: Chronicle anchor in `release_plan.json` → `chronology` (checked 31 October 2026) | `ac_fe.1`, `ac_fe_owner_weekly`, `ac_fe_begin`, global flag `ac_fe_insurrection_started` | Implemented. Nothing else about the insurrection is asserted. |
+| Free Erusea's armed insurrection and its defeat by Mobius 1, 26 September 2006 | Official: Chronicle, 2006 / 09.26, in [STRANGEREAL_2006_2020_SOURCES.md](STRANGEREAL_2006_2020_SOURCES.md) | `ac_fe.1`, `ac_fe.5`, `ac_fe.6`, `ac_fe_begin`, `ac_fe_defeat`, flags `ac_fe_insurrection_started` and `ac_fe_insurrection_defeated` | Implemented as the historical route. Mobius 1 is named only in text; nothing else about the insurrection is asserted. |
 | Continental War outcomes (ISAF victory, Erusean victory, stalemate, averted war) | Mod provenance plus provisional gameplay (`ac_ucw`) | Route gates on every Wave A register | Unchanged; read only |
 | Nordennavic's country history, office, world start, institution profile and 2004 Anean bureau invitation | Mod provenance | `NEC_nc_*` entry context; `NEC_nc_anean_record` reads `ac_anea_nec_participates` / `ac_anea_nec_closed` | Unchanged; read only |
-| All focuses, policies, services, dialogue, numbers, the insurrection pressure model, its crisis review and containment | Provisional gameplay | `tools/content_waves/free_erusea.py`, `nordennavic.py`, `framework.py` | Implemented; labelled in-game where it touches chronology |
+| All focuses, policies, services, dialogue and numbers, and the prolonged-insurrection alternative (pressure model, crisis review, containment) | Provisional gameplay | `tools/content_waves/free_erusea.py`, `nordennavic.py`, `framework.py` | Implemented; labelled in-game where it touches chronology |
 
-No named person, place, unit, battle, alliance, border, core, country tag, civil
-war or force grant is added. The 2006–2020 Chronicle ledger (Gate 0) is still
-blocked because `acecombat.jp` is not reachable from the cloud session; when it is
-compiled, any 2005–2009 entry that adds facts about the insurrection must be
-reconciled with the owner before native acceptance.
+No place, unit, battle, alliance, border, core, country tag, civil war or force
+grant is added, and Mobius 1 is the only named individual, mentioned in text as
+the Chronicle names them. The Gate 0 ledger
+([STRANGEREAL_2006_2020_SOURCES.md](STRANGEREAL_2006_2020_SOURCES.md), compiled
+3 November 2026) found that the insurrection was defeated on its outbreak date,
+so the owner was reconciled: the defeat is the historical route and the long
+insurrection is a labelled alternative.
 
 ## Branch shape and services
 
@@ -48,7 +50,7 @@ completion credit or refund. Each branch has a scene with two replies and a
 final assessment; each country has an opening and a national conclusion.
 Unanswered messages are recorded as unanswered rather than invented.
 
-Wave A: 28 events (24 narrative, 4 owner), 94 ideas, 22 decisions.
+Wave A: 30 events (24 narrative, 6 owner), 94 ideas, 22 decisions.
 Wave D: 16 events, 60 ideas, 16 decisions (including tree adoption).
 About 21,000 words of original English text.
 
@@ -76,9 +78,16 @@ tree ID, position or continuous-focus position changed.
 ### The Free Erusea owner (`ac_fe`), tagless
 
 - **Start:** the first Erusean weekly pulse on or after 26 September 2006 when
-  `ac_ucw_outcome_isaf_victory` is set and Erusea owns land. Pressure starts at 55
-  of 100 and `ac_fe.1` (major news) cites the Chronicle date and states that
-  course and end are not sourced.
+  `ac_ucw_outcome_isaf_victory` is set and Erusea owns land. `ac_fe.1` (major news)
+  reports the outbreak and cites the Chronicle's record of its defeat.
+- **Historical route:** Central Usea receives `ac_fe.5`. "Send Mobius 1" (AI
+  always) sets `ac_fe_insurrection_defeated`, removes the tiers and issues
+  `ac_fe.6`, which states the defeat as the Chronicle does. The pressure model
+  never runs.
+- **Provisional prolonged route:** "Leave the response to the provisional
+  government", a Central Usea that cannot answer (absent, capitulated or at war
+  with Erusea), or a 30-day window left unanswered sets `ac_fe_prolonged`.
+  Pressure then starts at 55 of 100 and the rules below apply.
 - **Late saves:** a first observation on or after 26 September 2007 closes the
   owner (`ac_fe_late_start_skipped`) without replaying the outbreak.
 - **Other routes:** after an Erusean victory, stalemate or averted war the owner
@@ -96,7 +105,7 @@ tree ID, position or continuous-focus position changed.
   power and a six-month commitment, or a refusal) or a six-month administrative
   emergency.
 - **Containment:** below 5 the owner records `ac_fe_insurrection_contained`,
-  removes the tiers and issues `ac_fe.3`, which says no end date is claimed.
+  removes the tiers and issues `ac_fe.3`, which names the official defeat date.
 - **Closure:** annexation, capitulation or subject annexation of Erusea closes
   the owner and removes the tiers.
 
@@ -118,10 +127,10 @@ assuming that the 2015–2016 war happens; Wave E owns that war.
 
 ## Artwork
 
-319 original DDS textures, generated in code from the existing Ulysses glyph
+320 original DDS textures, generated in code from the existing Ulysses glyph
 library (`tools/content_waves/build_art.py`): 102 focus icons (96×96), 154 idea
 icons (75×75), 38 decision rows (26×29), three categories (100×100), 20 country
-event pictures fitted to 210×176 and two news pictures fitted to 397×153 with the
+event pictures fitted to 210×176 and three news pictures fitted to 397×153 with the
 shared `event_picture_fit` helper. Hashes and roles are in
 `tools/content_waves/assets.json`; galleries are in `tools/content_waves/gallery/`.
 There are no engine, DLC or remote pixels, no portraits, flags or baked text, and
@@ -138,7 +147,7 @@ python -B tools/content_waves/test_waves.py
 python -B tools/overhaul/check_release_plan.py
 ```
 
-`test_waves.py` has 20 tests. The source half checks budgets, globally unique
+`test_waves.py` has 22 tests. The source half checks budgets, globally unique
 IDs, localization (with BOM) for every focus, idea, decision and event, every
 called scripted effect and trigger, sprite bindings, DDS dimensions, event-picture
 fit through the shared audit, the import block preserved by the Continental War
@@ -155,6 +164,8 @@ and disabled fiscal modes:
 - Erusean routes follow each Continental War outcome;
 - the Erusean and Central Usean openings describe the actual war outcome;
 - the insurrection starts only on or after the anchor after an ISAF victory;
+- Central Usea's answer records the historical defeat by Mobius 1, and the AI always gives it;
+- declining, being unable to answer or letting the window lapse gives the provisional prolonged route;
 - a late first observation never replays the outbreak;
 - policies and services reduce pressure, and containment freezes it;
 - the crisis review fires once and its options have bounded costs;
@@ -162,8 +173,8 @@ and disabled fiscal modes:
 
 These are source and actual-script offline checks, not native acceptance.
 
-Three shared review records count every country, decision or event, so they were
-regenerated with this change: `tools/world_foundation/country_registry.json`
+Three shared review records count every country, decision or event, so they are
+regenerated with every content change by `tools/content_waves/refresh_records.py`: `tools/world_foundation/country_registry.json`
 (focus counts per country), `docs/evidence/decision-rows/consumer-bounds.json`
 (977 → 1,015 row variants) and `docs/evidence/event-style/measurements.json`
 (2,284 → 2,372 measured fields, with no title, body or parent-clearance clips).

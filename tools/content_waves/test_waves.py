@@ -152,9 +152,9 @@ class Source(unittest.TestCase):
                 if row["role"] == "decision row":
                     self.assertEqual((26, 29), image.size)
         report = picture_audit.audit(["events/ac_free_erusea.txt", "events/ac_nordennavic.txt"])
-        # Wave A: 2 openings, 10 scenes, 10 finals, 2 national finals and owner events .2/.4.
-        # Wave D: 1 opening, 7 scenes, 7 finals and 1 national final. Two owner news events.
-        self.assertEqual({"country_event": 26 + 16, "news_event": 2}, report["counts"])
+        # Wave A: 2 openings, 10 scenes, 10 finals, 2 national finals and owner events .2/.4/.5.
+        # Wave D: 1 opening, 7 scenes, 7 finals and 1 national final. Three owner news events.
+        self.assertEqual({"country_event": 27 + 16, "news_event": 3}, report["counts"])
         for row in report["consumers"]:
             self.assertLessEqual(row["bounds"][2], 215 if row["event_type"] == "country_event" else 456)
             self.assertLessEqual(row["bounds"][3], 181 if row["event_type"] == "country_event" else 244)
@@ -170,8 +170,10 @@ class Source(unittest.TestCase):
         self.assertIn("date < 2007.9.26", effects)
         self.assertIn("ac_fe_late_start_skipped", effects)
         loc = (MOD / "localisation/english/ac_free_erusea_l_english.yml").read_text(encoding="utf-8-sig")
-        self.assertIn("ACES Chronicle (2006 / 09.26)", loc)
-        self.assertIn("no end date is claimed", loc)
+        self.assertIn("ACES Chronicle records that Mobius 1 defeated the insurrection on 26 September 2006 (2006 / 09.26)", loc)
+        self.assertIn("defeat by Mobius 1 on 26 September 2006 (2006 / 09.26)", loc)
+        self.assertIn("is provisional gameplay", loc)
+        self.assertNotIn("no end date is claimed", loc)
 
 
 class World(shared.World):
@@ -464,11 +466,63 @@ class Runtime(unittest.TestCase):
         self.assertEqual(D(55) + D("0.4"), c.variables["ac_fe_pressure"])
         self.assertIn("ac_fe_pressure_active", c.ideas)
         self.assertIn(("ERU", "ac_fe.1", w.today + 1), w.events)
+        self.assertIn(("FCU", "ac_fe.5", w.today + 1), w.events)
+        self.assertIn("ac_fe_response_window", c.flags)
+        self.assertNotIn("ac_fe_prolonged", w.globals)
         w2 = self.fresh()
         w2.today = date(2006, 10, 1).toordinal()
         w2.globals.add("ac_ucw_outcome_stalemate")
         w2.wave_action("free_erusea", "on_weekly_ERU", "ERU")
         self.assertNotIn("ac_fe_insurrection_started", w2.globals)
+
+    def test_historical_route_records_the_defeat_by_mobius_1(self):
+        w, c = self.owner()
+        w.wave_action("free_erusea", "on_weekly_ERU", "ERU")
+        option = {next(x for k, _, x in v if k == "name"): v for k, _, v in w.messages["ac_fe.5"] if k == "option"}
+        self.assertEqual("100", fields(fields(option["ac_fe.5.a"])["ai_chance"])["factor"])
+        self.assertEqual("0", fields(fields(option["ac_fe.5.b"])["ai_chance"])["factor"])
+        w.events.clear()
+        w.option("ac_fe.5", "a", "FCU")
+        self.assertIn("ac_fe_insurrection_defeated", w.globals)
+        self.assertNotIn("ac_fe_prolonged", w.globals)
+        self.assertEqual(["ac_fe.6"], [e for _, e, _ in w.events])
+        self.assertFalse(any(i.startswith("ac_fe_pressure_") for i in c.ideas))
+        frozen = c.variables["ac_fe_pressure"]
+        for _ in range(8):
+            w.advance(7)
+            w.wave_action("free_erusea", "on_weekly_ERU", "ERU")
+        w.run("ac_fe_relief_major", "ERU")
+        self.assertEqual(frozen, c.variables["ac_fe_pressure"])
+        self.assertEqual(["ac_fe.6"], [e for _, e, _ in w.events])
+        self.assertNotIn("ac_fe_prolonged", w.globals)
+        # The aftermath branches stay open after the historical defeat.
+        c.completed.add("ERU_ucw_exp_settlement_assessment")
+        self.assertTrue(w.available("ERU_fe_insurrection_register", "ERU"))
+
+    def test_prolonged_route_is_provisional_and_needs_no_central_usean_answer(self):
+        w, c = self.owner()
+        w.wave_action("free_erusea", "on_weekly_ERU", "ERU")
+        w.option("ac_fe.5", "b", "FCU")
+        self.assertIn("ac_fe_prolonged", w.globals)
+        before = c.variables["ac_fe_pressure"]
+        w.wave_action("free_erusea", "on_weekly_ERU", "ERU")
+        self.assertEqual(before + D("0.4"), c.variables["ac_fe_pressure"])
+        w.run("ac_fe_defeat", "FCU")
+        self.assertNotIn("ac_fe_insurrection_defeated", w.globals)
+        # Central Usea cannot answer: the prolonged route starts at once.
+        w2, c2 = self.owner()
+        for state in w2.states.values():
+            if state.owner == "FCU":
+                state.owner = state.controller = "ERU"
+        w2.wave_action("free_erusea", "on_weekly_ERU", "ERU")
+        self.assertIn("ac_fe_prolonged", w2.globals)
+        self.assertNotIn("ac_fe.5", [e for _, e, _ in w2.events])
+        # An unanswered response window falls back to the prolonged route.
+        w3, c3 = self.owner()
+        w3.wave_action("free_erusea", "on_weekly_ERU", "ERU")
+        w3.advance(31)
+        w3.wave_action("free_erusea", "on_weekly_ERU", "ERU")
+        self.assertIn("ac_fe_prolonged", w3.globals)
 
     def test_late_first_observation_never_replays_the_outbreak(self):
         w, c = self.owner(date(2008, 3, 1))

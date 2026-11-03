@@ -204,7 +204,8 @@ def outputs():
                     title=b.titles[0], master=f"tools/content_waves/source/events/{P}_{ident}.png",
                     transform="Full-source Lanczos contain to 210x176; opaque navy padding; no crop")
     for ident, subjects, title in (("insurrection", ("security", "document"), "The Free Erusea Insurrection"),
-                                   ("recedes", ("civil", "peace"), "The Insurrection Recedes")):
+                                   ("recedes", ("civil", "peace"), "The Insurrection Recedes"),
+                                   ("defeated", ("air", "peace"), "Free Erusea Is Defeated")):
         master = scene("ERU", subjects, news=True)
         result[HERE / "source/events" / f"ac_fe_news_{ident}.png"] = encoded(master, "PNG")
         texture(f"gfx/AC_content_waves/events/ac_fe_news_{ident}.dds", contain(master, "news_event"), f"GFX_ac_fe_news_{ident}", "news illustration", "ERU",

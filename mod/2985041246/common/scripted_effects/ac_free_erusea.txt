@@ -2732,6 +2732,41 @@ ac_fe_begin = {
 	set_variable = { ac_fe_pressure = 55 }
 	ac_fe_update_tier = yes
 	news_event = { id = ac_fe.1 days = 1 }
+	if = {
+		limit = {
+			ac_fe_fcu_can_respond = yes
+		}
+		set_country_flag = { flag = ac_fe_response_window days = 30 }
+		FCU = { country_event = { id = ac_fe.5 days = 1 } }
+	}
+	else = {
+		set_global_flag = ac_fe_prolonged
+	}
+}
+
+ac_fe_defeat = {
+	if = {
+		limit = {
+			ac_fe_running = yes NOT = { has_global_flag = ac_fe_prolonged }
+		}
+		set_global_flag = ac_fe_insurrection_defeated
+		if = {
+			limit = {
+				country_exists = ERU
+			}
+			ERU = { ac_fe_update_tier = yes }
+		}
+		news_event = { id = ac_fe.6 days = 1 }
+	}
+}
+
+ac_fe_choose_prolonged = {
+	if = {
+		limit = {
+			ac_fe_running = yes
+		}
+		set_global_flag = ac_fe_prolonged
+	}
 }
 
 ac_fe_drift = {
@@ -2812,7 +2847,7 @@ ac_fe_contain = {
 ac_fe_close = {
 	if = {
 		limit = {
-			has_global_flag = ac_fe_insurrection_started NOT = { has_global_flag = ac_fe_insurrection_contained } NOT = { has_global_flag = ac_fe_insurrection_closed }
+			has_global_flag = ac_fe_insurrection_started NOT = { has_global_flag = ac_fe_insurrection_contained } NOT = { has_global_flag = ac_fe_insurrection_closed } NOT = { has_global_flag = ac_fe_insurrection_defeated }
 		}
 		set_global_flag = ac_fe_insurrection_closed
 		if = {
@@ -2851,6 +2886,12 @@ ac_fe_owner_weekly = {
 			ac_fe_close = yes
 		}
 		else = {
+			if = {
+				limit = {
+					NOT = { has_global_flag = ac_fe_prolonged } NOT = { has_country_flag = ac_fe_response_window }
+				}
+				set_global_flag = ac_fe_prolonged
+			}
 			ac_fe_drift = yes
 			ac_fe_update_tier = yes
 			if = {

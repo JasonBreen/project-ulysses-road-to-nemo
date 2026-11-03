@@ -2,15 +2,17 @@
 
 Source layers
 -------------
-* Official reference anchors only: the provisional autonomous government under
-  ISAF oversight (Chronicle 2005 / 09.26, already implemented by ac_ucw) and the
-  Free Erusea insurrection (Chronicle 2006 / 09.26, recorded in
-  tools/overhaul/release_plan.json -> chronology).
-* Everything else -- the pressure model, its thresholds, policies, services,
-  dialogue, numbers and the containment outcome -- is provisional gameplay.
-  No insurgent leader, membership, place, attack, end date or territorial
-  change is asserted. The insurrection is tagless: no country tag, civil war,
-  transfer_state or core change is created.
+* Official: the provisional autonomous government under ISAF oversight
+  (Chronicle 2005 / 09.26, already implemented by ac_ucw), and the Free Erusea
+  armed insurrection and its defeat by Mobius 1 (Chronicle 2006 / 09.26; see
+  docs/STRANGEREAL_2006_2020_SOURCES.md).
+* The historical route records that defeat through Central Usea's response.
+  The prolonged insurrection -- pressure model, thresholds, crisis review and
+  containment -- is a labelled provisional alternative, as is every policy,
+  service, dialogue and number. No insurgent leader, membership, place,
+  attack or territorial change is asserted, and Mobius 1 is named only in
+  text. The insurrection is tagless: no country tag, civil war, transfer_state
+  or core change is created.
 """
 from content_waves.framework import Branch, Wave, block, guard
 
@@ -42,21 +44,21 @@ BRANCHES = (
         ("Fewer Signatures, the Same Accountability",
          "The final review is shorter than the first inventory. Several duties have moved to Erusean offices that sign, refuse and answer for their decisions; the oversight staff now inspect a sample instead of reading every page. Others remain where they were, and the record says why.\n\nThe cabinet secretary keeps the old roof-repair circular in the file. It is not evidence that oversight was wrong. It is evidence of what a procedure costs when nobody is responsible for ending it.")),
     Branch("ERU", "insurrection", (ERU_ASSESSMENT,), ISAF + " " + STARTED,
-        ("Answer the Insurrection", "Hearings in the Districts", "Security Cordons",
+        ("Answer Free Erusea", "Hearings in the Districts", "Security Cordons",
          "Separate Policing from Reprisal", "Review a Completed Response Period", "A Response the Districts Can Trust"),
-        ("An insurrection under the name Free Erusea has made the provisional government's authority a daily question. The cabinet will record where public services have stopped, which offices have been threatened and which complaints the insurrection is using, before choosing how to answer.",
-         "District hearings will give residents a lawful place to raise grievances about the settlement and the oversight. Listening does not concede the insurrection's demands. It does consume political attention and slows the security response the partners expect.",
-         "Security cordons will protect the public offices, depots and roads the government depends on. They reduce the insurrection's room to act, at a continuing civilian cost and with the risk that residents experience the state only as checkpoints.",
-         "Every arrest, search and closure will be recorded with the office responsible for it. A response that punishes neighbours for an act it cannot solve would feed the insurrection; written limits are part of the security policy, not a concession.",
+        ("Free Erusea's armed insurrection made the provisional government's authority a daily question, whether it was put down in days or is still being fought. The cabinet will record where public services stopped, which offices were threatened and which complaints the insurrection used, before choosing how to answer them.",
+         "District hearings will give residents a lawful place to raise grievances about the settlement and the oversight. Listening concedes nothing to the insurrection's methods. It does consume political attention and slows the security measures the partners expect.",
+         "Security cordons will protect the public offices, depots and roads the government depends on. They leave armed groups less room to act, at a continuing civilian cost and with the risk that residents meet the state only at checkpoints.",
+         "Every arrest, search and closure will be recorded with the office responsible for it. A response that punishes neighbours for an act it cannot solve would recruit for the next insurrection; written limits are part of the security policy, not a concession.",
          "The cabinet will examine one completed, funded response period rather than claim success from quiet weeks. The review asks whether services resumed, whether complaints were answered and whether the chosen policy reduced the pressure on ordinary administration.",
-         "The settlement keeps the chosen response as a standing policy with published limits. It does not declare the insurrection over. It gives the districts a predictable government and leaves a record that later administrations can test."),
+         "The settlement keeps the chosen response as a standing policy with published limits. It declares no victory of its own. It gives the districts a predictable government and leaves a record that later administrations can test."),
         (("security", "document"), ("assembly", "civil"), ("security", "gate"), ("scales", "security"), ("document", "scales"), ("civil", "peace")),
         (("District hearings", {"stability_factor": 0.03}, {"political_power_gain": -0.06}),
          ("Security cordons", {"army_org_factor": 0.03}, {"consumer_goods_factor": 0.01})),
         (("Fund a District Hearing Rota", "Keep hearing officers, clerks and a protected meeting place available in the affected districts.", "The provisional interior ministry", {"stability_factor": 0.03}),
          ("Protect the Public Offices", "Assign guards and inspection teams to the offices, depots and roads that keep services running.", "The provisional security directorate", {"army_org_factor": 0.03})),
         ("The Office That Stayed Open",
-         "A district registry reopened on Monday after a week of closure. By Wednesday its clerk had been warned twice to stay at home, and by Friday she had filed both warnings with the police along with the forty applications she processed in between. Her supervisor forwards the file to the cabinet with one question: what is the government prepared to do for the people who keep its offices open?\n\nThe interior ministry wants the file read aloud at the next district hearing, so that residents see who is threatened and who is not afraid. The security directorate wants it held back: names in a public record are names the insurrection can find.",
+         "A district registry reopened on Monday after a week of closure during the fighting. By Wednesday its clerk had been warned twice to stay at home, and by Friday she had filed both warnings with the police along with the forty applications she processed in between. Her supervisor forwards the file to the cabinet with one question: what is the government prepared to do for the people who keep its offices open?\n\nThe interior ministry wants the file read aloud at the next district hearing, so that residents see who is threatened and who is not afraid. The security directorate wants it held back: names in a public record are names the insurrection can find.",
          ("Read the file at the district hearing.", "Protect the file and the clerk's name.")),
         ("A Government That Is Still There",
          "The final review does not claim a victory. It counts the offices that are open, the hearings that were held, the searches that were recorded and the complaints that received an answer. Some districts are calmer; some are not. The review says which, and why the cabinet believes the difference matters.\n\nThe registry clerk's file is in the appendix. She is still at work.")),
@@ -156,9 +158,9 @@ BRANCHES = (
         ("A Mandate With a Calendar",
          "The final review is organised by date. Each oversight duty has a scheduled return to Erusean authority, an inspection that confirms it and a named Central Usean office that will stop doing it. Some dates have passed and the duties have moved. Some have been postponed, with the reason recorded.\n\nNobody in the federal cabinet calls the mandate a success. They call it finite, which is what the partners were promised.")),
     Branch("FCU", "security", (FCU_ASSESSMENT,), ISAF + " " + STARTED,
-        ("Support Against the Insurrection", "Civil Police Liaison", "Rapid Response Detachments",
+        ("Support the Provisional Government's Security", "Civil Police Liaison", "Rapid Response Detachments",
          "Keep Support Under Erusean Command", "Review a Support Period", "Support Without Occupation"),
-        ("The insurrection challenges the arrangement Central Usea promised to support. Before sending anyone, the federation will establish what the provisional government has asked for, what it can receive and who will command it.",
+        ("Free Erusea's insurrection tested the arrangement Central Usea promised to support. Before sending anyone further, the federation will establish what the provisional government has asked for, what it can receive and who will command it.",
          "Central Usean police advisers and investigators will work alongside Erusean officers. The liaison strengthens civil policing without a military footprint, and it is slower to show results than the partners would like.",
          "Small detachments will stand ready to protect key sites at the provisional government's request. They respond quickly and are expensive to maintain, and every deployment risks being seen as a return of occupying troops.",
          "Every Central Usean team will operate under an Erusean request and an Erusean supervising officer. The rule protects the provisional government's authority and keeps the federation out of a war of its own.",
@@ -294,7 +296,9 @@ def owner():
                            block("modifier", "\n".join(f"{k} = {v}" for k, v in values.items()))))
 
     triggers["ac_fe_owner_eligible"] = "tag = ERU original_tag = ERU any_owned_state = { always = yes } " + ISAF
-    triggers["ac_fe_running"] = f"{STARTED} NOT = {{ has_global_flag = ac_fe_insurrection_contained }} NOT = {{ has_global_flag = ac_fe_insurrection_closed }}"
+    triggers["ac_fe_running"] = (f"{STARTED} NOT = {{ has_global_flag = ac_fe_insurrection_contained }} NOT = {{ has_global_flag = ac_fe_insurrection_closed }} "
+                                 "NOT = { has_global_flag = ac_fe_insurrection_defeated }")
+    triggers["ac_fe_fcu_can_respond"] = "country_exists = FCU FCU = { has_capitulated = no NOT = { has_war_with = ERU } }"
     remove_tiers = "".join(f"remove_ideas = ac_fe_pressure_{name}\n" for name, _, _ in TIERS)
     effects["ac_fe_update_tier"] = (
         guard("ac_fe_running = yes check_variable = { ac_fe_pressure > 69.99 }",
@@ -305,7 +309,15 @@ def owner():
               guard("NOT = { has_idea = ac_fe_pressure_low }", remove_tiers + "add_ideas = ac_fe_pressure_low")) +
         block("else", remove_tiers.rstrip()))
     effects["ac_fe_begin"] = ("set_global_flag = ac_fe_insurrection_started\nset_variable = { ac_fe_pressure = 55 }\n"
-                              "ac_fe_update_tier = yes\nnews_event = { id = ac_fe.1 days = 1 }")
+                              "ac_fe_update_tier = yes\nnews_event = { id = ac_fe.1 days = 1 }\n" +
+                              guard("ac_fe_fcu_can_respond = yes",
+                                    "set_country_flag = { flag = ac_fe_response_window days = 30 }\nFCU = { country_event = { id = ac_fe.5 days = 1 } }") +
+                              block("else", "set_global_flag = ac_fe_prolonged"))
+    # Historical route: the Chronicle records the defeat by Mobius 1 (2006 / 09.26).
+    effects["ac_fe_defeat"] = guard("ac_fe_running = yes NOT = { has_global_flag = ac_fe_prolonged }",
+        "set_global_flag = ac_fe_insurrection_defeated\n" + guard("country_exists = ERU", "ERU = { ac_fe_update_tier = yes }") +
+        "news_event = { id = ac_fe.6 days = 1 }")
+    effects["ac_fe_choose_prolonged"] = guard("ac_fe_running = yes", "set_global_flag = ac_fe_prolonged")
     drift = "set_temp_variable = { ac_fe_delta = 0.4 }\n"
     for policy, amount in POLICY_DRIFT:
         drift += guard(f"OR = {{ has_idea = {policy} has_idea = {policy}_settled }}", f"subtract_from_temp_variable = {{ ac_fe_delta = {amount} }}")
@@ -319,7 +331,8 @@ def owner():
             f"subtract_from_variable = {{ ac_fe_pressure = {amount} }}\nclamp_variable = {{ var = ac_fe_pressure min = 0 max = 100 }}\nac_fe_update_tier = yes")
     effects["ac_fe_contain"] = ("set_global_flag = ac_fe_insurrection_contained\nac_fe_update_tier = yes\n"
                                 "news_event = { id = ac_fe.3 days = 1 }")
-    effects["ac_fe_close"] = guard(f"{STARTED} NOT = {{ has_global_flag = ac_fe_insurrection_contained }} NOT = {{ has_global_flag = ac_fe_insurrection_closed }}",
+    effects["ac_fe_close"] = guard(f"{STARTED} NOT = {{ has_global_flag = ac_fe_insurrection_contained }} NOT = {{ has_global_flag = ac_fe_insurrection_closed }} "
+                                   "NOT = { has_global_flag = ac_fe_insurrection_defeated }",
         "set_global_flag = ac_fe_insurrection_closed\n" + guard("country_exists = ERU", "ERU = { " + remove_tiers.replace("\n", " ") + "}"))
     effects["ac_fe_owner_weekly"] = (
         guard(f"ac_fe_owner_eligible = yes NOT = {{ {STARTED} }} NOT = {{ has_global_flag = ac_fe_insurrection_closed }} date > {ANCHOR}",
@@ -328,17 +341,19 @@ def owner():
         guard("ac_fe_running = yes",
               guard("ac_fe_owner_eligible = no", "ac_fe_close = yes") +
               block("else",
+                    guard("NOT = { has_global_flag = ac_fe_prolonged } NOT = { has_country_flag = ac_fe_response_window }",
+                          "set_global_flag = ac_fe_prolonged") +
                     "ac_fe_drift = yes\nac_fe_update_tier = yes\n" +
                     guard("check_variable = { ac_fe_pressure < 5 }", "ac_fe_contain = yes") +
                     block("else_if", block("limit", "check_variable = { ac_fe_pressure > 84.99 } NOT = { has_country_flag = ac_fe_crisis_cooldown }") +
                           "set_country_flag = { flag = ac_fe_crisis_cooldown days = 365 }\ncountry_event = { id = ac_fe.2 days = 1 }"))))
 
     idea("ac_fe_pressure_severe", "Free Erusea: Severe Insurrection Pressure",
-         "The insurrection is stopping ordinary administration in several districts. Pressure: [?ac_fe_pressure|0]/100. Values and thresholds are provisional gameplay.", TIERS[0][2])
+         "Provisional prolonged route: the insurrection is stopping ordinary administration in several districts. Pressure: [?ac_fe_pressure|0]/100. Values and thresholds are provisional gameplay.", TIERS[0][2])
     idea("ac_fe_pressure_active", "Free Erusea: Active Insurrection",
-         "The insurrection disrupts services and threatens officials, but the government still functions. Pressure: [?ac_fe_pressure|0]/100. Values and thresholds are provisional gameplay.", TIERS[1][2])
+         "Free Erusea's armed insurrection disrupts services and threatens officials, but the government still functions. Pressure: [?ac_fe_pressure|0]/100. Values and thresholds are provisional gameplay.", TIERS[1][2])
     idea("ac_fe_pressure_low", "Free Erusea: Residual Insurrection",
-         "Incidents continue, but the government's offices are open and its services reach most districts. Pressure: [?ac_fe_pressure|0]/100. Values and thresholds are provisional gameplay.", TIERS[2][2])
+         "Provisional prolonged route: incidents continue, but the government's offices are open and its services reach most districts. Pressure: [?ac_fe_pressure|0]/100. Values and thresholds are provisional gameplay.", TIERS[2][2])
     idea("ac_fe_emergency_administration", "Administrative Emergency",
          "Emergency powers concentrate decisions in the cabinet for six months. Responses are faster; ordinary politics and consumer supply pay for it.",
          {"political_power_gain": -0.15, "consumer_goods_factor": 0.02, "army_org_factor": 0.02})
@@ -351,14 +366,21 @@ def owner():
 
     loc.update({
         "ac_fe.1.t": "The Free Erusea Insurrection",
-        "ac_fe.1.d": "An insurrection under the name Free Erusea has broken out in Erusea, challenging the provisional government established under ISAF oversight after the war.\n\nThe outbreak follows the ACES Chronicle (2006 / 09.26). Its course, its scale and its end are not taken from that source: in this campaign they depend on how the provisional government and its partners respond. The model is provisional gameplay and creates no new state, border or country.",
-        "ac_fe.1.a": "The provisional government must answer it.",
+        "ac_fe.1.d": "Free Erusea has begun an armed insurrection in Erusea, a year after the provisional government was established under ISAF oversight.\n\nThe ACES Chronicle records both the outbreak and the insurrection's defeat by Mobius 1 on 26 September 2006 (2006 / 09.26). In this campaign that defeat follows Central Usea's response. A prolonged insurrection, if the response is not sent, is provisional gameplay. Neither route creates a new state, border or country.",
+        "ac_fe.1.a": "The provisional government and its partners must answer it.",
+        "ac_fe.5.t": "Free Erusea Takes Up Arms",
+        "ac_fe.5.d": "Free Erusea has begun an armed insurrection in Erusea. The ISAF can answer at once: the ACES Chronicle records that Mobius 1 defeated the insurrection on 26 September 2006 (2006 / 09.26).\n\nThe federation may instead leave the response to Erusea's provisional government. This campaign treats that as a provisional alternative in which the insurrection lasts longer and the provisional government carries the burden.",
+        "ac_fe.5.a": "Send Mobius 1.",
+        "ac_fe.5.b": "Leave the response to the provisional government.",
+        "ac_fe.6.t": "Free Erusea Is Defeated",
+        "ac_fe.6.d": "Free Erusea's armed insurrection has been defeated by Mobius 1, as the ACES Chronicle records for 26 September 2006 (2006 / 09.26).\n\nThe provisional government and its partners now face the aftermath: the grievances the insurrection used, the offices it closed and the records it left behind.",
+        "ac_fe.6.a": "Turn to the aftermath.",
         "ac_fe.2.t": "The Insurrection Outpaces the Response",
         "ac_fe.2.d": "District reports describe offices closed for weeks, officials who no longer travel and services that have stopped reaching whole communities. The cabinet's current measures are not keeping pace. Ministers can ask the oversight partners for help under Erusean command, or take emergency powers for six months and answer alone.",
         "ac_fe.2.a": "Ask the partners for assistance under Erusean command.",
         "ac_fe.2.b": "Declare a six-month administrative emergency.",
         "ac_fe.3.t": "The Insurrection Recedes",
-        "ac_fe.3.d": "Erusea's provisional authorities report that the insurrection no longer prevents ordinary administration. Incidents may continue, but offices are open and services reach the districts again.\n\nThis record follows the government's own assessment in this campaign. It is not an official chronology, and no end date is claimed for the insurrection.",
+        "ac_fe.3.d": "Erusea's provisional authorities report that the insurrection no longer prevents ordinary administration. Incidents may continue, but offices are open and services reach the districts again.\n\nThis ends the provisional prolonged route on the government's own assessment. The official record (2006 / 09.26) places the insurrection's defeat at its outbreak, which is the historical route.",
         "ac_fe.3.a": "Keep the offices open.",
         "ac_fe.4.t": "A Request from the Provisional Government",
         "ac_fe.4.d": "Erusea's provisional government asks for investigators and liaison staff to support its offices against the insurrection, under Erusean command, for six months. Accepting will cost the federation political capital and staff. Declining leaves the provisional government to manage alone and the partners to draw their own conclusions.",
@@ -371,6 +393,10 @@ def owner():
         "ac_fe_insurrection_started": "The Free Erusea insurrection has begun",
         "ac_fe_insurrection_contained": "The Free Erusea insurrection has receded",
         "ac_fe_insurrection_closed": "The Free Erusea insurrection owner is closed",
+        "ac_fe_insurrection_defeated": "Free Erusea has been defeated (historical route)",
+        "ac_fe_prolonged": "Free Erusea fights on (provisional prolonged route)",
+        "ac_fe_response_window": "Free Erusea: Central Usea's response is pending",
+        "ac_fe_fcu_can_respond": "Central Usea exists, has not capitulated and is not at war with Erusea",
         "ac_fe_late_start_skipped": "The Free Erusea outbreak date had passed before this content first loaded",
         "ac_fe_owner_eligible": "Erusea governs under the post-war oversight arrangement",
         "ac_fe_running": "The Free Erusea insurrection is active",
@@ -389,12 +415,18 @@ def owner():
                         block("option", "name = ac_fe.2.b\nai_chance = { factor = 40 }\n" + emergency)))
     events.append(block("news_event", "id = ac_fe.3\ntitle = ac_fe.3.t\ndesc = ac_fe.3.d\npicture = GFX_ac_fe_news_recedes\nis_triggered_only = yes\nmajor = yes\ntrigger = { always = yes }\n" +
                         block("option", "name = ac_fe.3.a")))
+    events.append(block("country_event", "id = ac_fe.5\ntitle = ac_fe.5.t\ndesc = ac_fe.5.d\npicture = GFX_ac_fe_event_fcu_national\nis_triggered_only = yes\n"
+                        "trigger = { tag = FCU original_tag = FCU ac_fe_running = yes NOT = { has_global_flag = ac_fe_prolonged } }\n" +
+                        block("option", "name = ac_fe.5.a\nai_chance = { factor = 100 }\nac_fe_defeat = yes") +
+                        block("option", "name = ac_fe.5.b\nai_chance = { factor = 0 }\nac_fe_choose_prolonged = yes")))
+    events.append(block("news_event", "id = ac_fe.6\ntitle = ac_fe.6.t\ndesc = ac_fe.6.d\npicture = GFX_ac_fe_news_defeated\nis_triggered_only = yes\nmajor = yes\ntrigger = { always = yes }\n" +
+                        block("option", "name = ac_fe.6.a")))
     events.append(block("country_event", "id = ac_fe.4\ntitle = ac_fe.4.t\ndesc = ac_fe.4.d\npicture = GFX_ac_fe_event_fcu_national\nis_triggered_only = yes\n"
                         "trigger = { tag = FCU original_tag = FCU country_exists = ERU ac_fe_running = yes NOT = { has_war_with = ERU } }\n" +
                         block("option", "name = ac_fe.4.a\nai_chance = { factor = 70 }\n" + guard("ac_fe_running = yes", give)) +
                         block("option", "name = ac_fe.4.b\nai_chance = { factor = 30 }\n" + decline)))
-    status = ("Insurrection pressure: [?ac_fe_pressure|0]/100. Containment below 5; crisis review above 85. "
-              "The outbreak date is official (Chronicle 2006 / 09.26); every value is provisional gameplay.\n\n")
+    status = ("Free Erusea's outbreak and its defeat by Mobius 1 are official (Chronicle 2006 / 09.26). If the insurrection is not answered, "
+              "the provisional prolonged route tracks pressure: [?ac_fe_pressure|0]/100, containment below 5, crisis review above 85.\n\n")
     custom = ""
     for tag, rows in ROUTE_CONTEXT.items():
         entries = ""

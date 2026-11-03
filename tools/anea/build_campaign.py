@@ -5,6 +5,7 @@ The shared calendar and aid owner are built separately by build_system.py.
 """
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -68,8 +69,22 @@ def build_trees():
         loc(tree + '_desc', 'National capacity, civil protection and sustainable recovery, 1991–2005. The national policy branches are authored alternatives.')
         body = (f'id = {tree}\ncountry = {{ factor = 0 modifier = {{ add = 25 original_tag = {tag} }} }}\n'
                 'default = no\ncontinuous_focus_position = { x = 50 y = 2100 }\n')
-        body += '\n'.join(focus(r) for r in FOCUSES if r.tag == tag)
+        body += '\n'.join(focus(r) for r in FOCUSES if r.tag == tag) + preserved_imports(tag)
         OUT[f'common/national_focus/{tag}.txt'] = '# Authored Anea campaign; source: tools/anea/content.py and build_campaign.py.\n' + block('focus_tree', body)
+
+
+# Later reviewed packages (for example tools/content_waves) import their own
+# shared focuses into these trees through a marked block that they own and
+# validate. Keep each block byte-for-byte so both generators' --check agree.
+EXTENSION_IMPORTS = re.compile(r'(?m)^\t# BEGIN ([A-Z][A-Z ]*) IMPORTS\n(?:\tshared_focus = \w+\n)+\t# END \1 IMPORTS\n')
+
+
+def preserved_imports(tag):
+    path = MOD / f'common/national_focus/{tag}.txt'
+    if not path.exists():
+        return ''
+    source = path.read_text(encoding='utf-8-sig').replace('\r\n', '\n')
+    return ''.join(match.group(0).replace('\n\t', '\n')[1:] for match in EXTENSION_IMPORTS.finditer(source))
 
 
 def build_policies():

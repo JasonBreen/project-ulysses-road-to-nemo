@@ -31,6 +31,11 @@ Aurelia's 1991–2018 foundation are implemented in source
 ([CONTENT_WAVES_B_AUR.md](CONTENT_WAVES_B_AUR.md)). The ledger now records 776
 delivered and 252 remaining.
 
+**Update, 3 November 2026 (later).** Wave C, the Circum-Pacific War owner
+`ac_cpw`, is implemented in source ([CONTENT_WAVE_C.md](CONTENT_WAVE_C.md)). It
+adds no focus definitions, so the ledger stays at 776 delivered and 252
+remaining; every 2010 Chronicle row now has an implemented disposition.
+
 ## 1. Where the overhaul stands
 
 Counts come from `release_plan.json` on the PR #59 head. They include mutually
@@ -179,6 +184,11 @@ extended, never replaced.
 - **Gate 0 rows needed:** every 2010 entry, including any non-Osean or
   non-Yuktobanian actors the Chronicle names. Those actors appear only as the
   Chronicle states them.
+- **Status, 3 November 2026:** implemented as `tools/content_waves/circum_pacific.py`,
+  the first owner-only wave. The sourced route, the earned reciprocal exchange,
+  Yuktobania's earned withheld declaration and external observation are all
+  present; the end is observed, never scripted. See
+  [CONTENT_WAVE_C.md](CONTENT_WAVE_C.md).
 
 ### Wave D: Nordennavic (1991–2016, Packages 1/3/4)
 
@@ -284,8 +294,9 @@ change any total.
 2. **Wave A, Wave D, and the F2 foundation lanes in parallel.** Wave A extends
    the most developed owner (`ac_ucw`). D and the F2 foundations depend little
    on canon.
-3. **Wave C.** Its consumer API is already published in #59.
-4. **Wave B**, once the civil-war mechanic is chosen.
+3. **Wave C.** Its consumer API is already published in #59. **Delivered in
+   source, 3 November 2026.**
+4. **Wave B**, once the civil-war mechanic is chosen. **Delivered in source.**
 5. **Wave E**, then **F1**, then the **F2 crisis lanes and stories.**
 
 Decisions the user needs to make:
@@ -297,6 +308,7 @@ Decisions the user needs to make:
 | 3 | First wave | **Decided: A + D** (delivered in source); F2 foundation lanes still available in parallel |
 | 4 | Estovakian civil war mechanic | **Decided: tagless owner first**; temporary tag only after a source and mapping review |
 | 5 | Anean squadron continuation size | Short eligible-cast epilogues, for example 4–6 chapters per story, outside the 20-chapter core (**still open**) |
+| 6 | A peace route for the Circum-Pacific War | The published contract forbids a scripted white peace in the first owner, so Wave C ends the war only when the fighting actually stops. A reviewed, earned peace route (for example after the joint appeal to disarm) is a decision for a later package (**still open**) |
 
 ## 7. Out of scope
 

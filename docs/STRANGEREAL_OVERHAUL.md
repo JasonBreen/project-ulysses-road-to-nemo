@@ -24,7 +24,7 @@ provenance and provisional gameplay remain separately labeled.
 | 0 | Current candidate | Privacy cleanup; Steam screenshot/interface repairs; this roadmap and verification evidence | Source-ready; native pending |
 | 1 | 1991–2005 | World foundations, country institutions, monthly macroeconomics, regional framework and anti-vanilla audit | Shared owners and selected foundations source-ready; world conversion incomplete; native pending |
 | 2 | 1991–2005 | Four Usean partners and six independent global squadron stories | Partner programmes and six stories/artwork source-ready; native pending |
-| 3 | 2006–2013 | Reconstruction, internal fracture, Circum-Pacific routes and supporting-country campaigns | National/reconstruction packets and content waves A, B and D ready; CPW owner and native acceptance pending |
+| 3 | 2006–2013 | Reconstruction, internal fracture, Circum-Pacific routes and supporting-country campaigns | National/reconstruction packets, content waves A, B and D and the Circum-Pacific War owner (Wave C) ready; native acceptance pending |
 | 4 | 2014–2016 | Anea's military crisis and consequences, preserving previous policies and aid outcomes | Pending |
 | 5 | 2017–2020 | Renewed Usea, Aurelia/Leasath and the remaining 2020 technology/campaign coverage | Aurelia's 1991–2018 foundation ready; remaining scope pending |
 
@@ -73,7 +73,9 @@ delivery accounting, not native acceptance or completion of Package 3. The
 Usean and 42 Nordennavic definitions, and
 [Wave B and Aurelia's foundation](CONTENT_WAVES_B_AUR.md) add 30 Estovakian,
 18 Emmerian and 54 Aurelian definitions, bringing the machine-readable ledger to
-776 delivered and 252 remaining. The six squadron
+776 delivered and 252 remaining. [Wave C](CONTENT_WAVE_C.md) adds the
+Circum-Pacific War owner without focus definitions, since the Osean and
+Yuktobanian budgets are complete. The six squadron
 campaigns deliver 120 core chapters, 24 recurring cast members and 18 conclusions,
 with all 78 original image masters retained. Later unimplemented scope remains
 explicitly pending in the machine-readable ledger.

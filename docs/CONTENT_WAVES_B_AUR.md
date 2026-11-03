@@ -154,5 +154,5 @@ These are source and offline checks, not native acceptance.
 ## Open items
 
 - Native parsing, focus-screen rendering, AI pacing, balance and save/reload (#8).
-- Wave C (Circum-Pacific War) from the compiled 2010 rows; Wave E (Emmeria–Estovakia
-  War); Wave F1 (Lighthouse War); Wave F2 (Leasath and the 2019–2020 crisis lanes).
+- Wave E (Emmeria–Estovakia War); Wave F1 (Lighthouse War); Wave F2 (Leasath and the
+  2019–2020 crisis lanes). Wave C is delivered in [CONTENT_WAVE_C.md](CONTENT_WAVE_C.md).

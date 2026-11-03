@@ -30,20 +30,22 @@ spec.loader.exec_module(shared)
 parse, fields = shared.parse, shared.fields
 
 from content_waves.framework import focus_id, branch_id, service_id  # noqa: E402
-from content_waves import aurelia, estovakia, free_erusea, nordennavic  # noqa: E402
+from content_waves import aurelia, circum_pacific, estovakia, free_erusea, nordennavic  # noqa: E402
 from content_waves.registry import MODULES  # noqa: E402
 from event_picture_fit import audit as picture_audit  # noqa: E402
 
-FE, NC, EB, AU = free_erusea.WAVE, nordennavic.WAVE, estovakia.WAVE, aurelia.WAVE
+FE, NC, EB, AU, CP = free_erusea.WAVE, nordennavic.WAVE, estovakia.WAVE, aurelia.WAVE, circum_pacific.WAVE
 NAMES = {m.WAVE.prefix: m.NAME for m in MODULES}
 WAVES = tuple((m.WAVE, m.NAME) for m in MODULES)
 PREFIX_BY_KEY = {m.KEY: m.WAVE.prefix for m in MODULES}
-STEMS = tuple(f"{tag}_{m.WAVE.infix}" for m in MODULES for tag in m.WAVE.countries)
+STEMS = tuple(f"{tag}_{m.WAVE.infix}" for m in MODULES for tag in (*m.WAVE.countries, *m.WAVE.extra_tags))
 OWNED_RE = "|".join(sorted(NAMES) + sorted(STEMS))
 OWNED_FILES = [f"{folder}/ac_{name}.txt" for name in NAMES.values() for folder in (
-    "common/national_focus", "common/scripted_effects", "common/scripted_triggers", "common/ideas",
-    "common/decisions", "common/decisions/categories", "common/on_actions", "common/custom_localization", "events")]
+    "common/national_focus", "common/scripted_effects", "common/scripted_triggers", "common/ideas", "common/ai_strategy",
+    "common/decisions", "common/decisions/categories", "common/on_actions", "common/custom_localization", "events")
+    if (MOD / f"{folder}/ac_{name}.txt").exists()]
 EXPECTED = {"ERU": 36, "FCU": 24, "NEC": 42, "EVA": 30, "EMM": 18, "AUR": 54}
+STORY_FLAGS = ("ac_cpw_started", "ac_cpw_tainted", "ac_cpw_prevented", "ac_cpw_declaration_withheld")
 
 
 def text(relative):
@@ -118,6 +120,9 @@ class Source(unittest.TestCase):
 
     def test_exclusive_policies_are_symmetric(self):
         for wave, name in WAVES:
+            if not wave.branches:
+                self.assertFalse((MOD / f"common/national_focus/ac_{name}.txt").exists(), name)
+                continue
             focuses = {fields(v)["id"]: v for k, _, v in parse(text(f"common/national_focus/ac_{name}.txt")) if k == "shared_focus"}
             for b in wave.branches:
                 a, c = focus_id(wave, b, 1), focus_id(wave, b, 2)
@@ -170,8 +175,9 @@ class Source(unittest.TestCase):
                     self.assertEqual((26, 29), image.size)
         report = picture_audit.audit([f"events/ac_{name}.txt" for name in NAMES.values()])
         # A: 24 narrative + owner .2/.4/.5; D: 16 narrative; B: 20 narrative + Emmerian aid events .5/.6;
-        # Aurelia: 20 narrative. News: A .1/.3/.6 and B .1-.4, .7-.14.
-        self.assertEqual({"country_event": 27 + 16 + 22 + 20, "news_event": 3 + 12}, report["counts"])
+        # Aurelia: 20 narrative; C: the Yuktobanian declaration .5 and the Osean Arkbird decision .6.
+        # News: A .1/.3/.6; B .1-.4, .7-.14; C .1-.4, .7-.15 and the sixteen stages .20-.35.
+        self.assertEqual({"country_event": 27 + 16 + 22 + 20 + 2, "news_event": 3 + 12 + 29}, report["counts"])
         for row in report["consumers"]:
             self.assertLessEqual(row["bounds"][2], 215 if row["event_type"] == "country_event" else 456)
             self.assertLessEqual(row["bounds"][3], 181 if row["event_type"] == "country_event" else 244)
@@ -179,10 +185,14 @@ class Source(unittest.TestCase):
     def test_no_forbidden_world_changes_and_honest_chronology(self):
         combined = "\n".join(text(r) for r in OWNED_FILES)
         for forbidden in ("transfer_state", "add_state_core", "remove_state_core", "start_civil_war", "create_country", "annex_country",
-                          "set_cosmetic_tag", "add_to_faction", "create_faction", "declare_war_on", "white_peace", "create_wargoal",
+                          "set_cosmetic_tag", "add_to_faction", "create_faction", "white_peace", "create_wargoal", "add_wargoal",
                           "add_manpower", "create_unit", "add_equipment_to_stockpile", "set_politics", "create_country_leader",
-                          "recruit_character", "add_country_leader_role"):
+                          "recruit_character", "add_country_leader_role", "launch_nuke", "set_owner", "set_state_controller"):
             self.assertNotIn(forbidden, combined, forbidden)
+        # Only the Circum-Pacific War owner declares a war, and only the sourced one.
+        self.assertNotIn("declare_war_on", "\n".join(text(r) for r in OWNED_FILES if "circum_pacific" not in r))
+        self.assertEqual(["declare_war_on = { target = OSE type = topple_government }"],
+                         re.findall(r"declare_war_on = \{[^}]*\}", text("common/scripted_effects/ac_circum_pacific.txt")))
         effects = text("common/scripted_effects/ac_free_erusea.txt")
         self.assertIn("date > 2006.9.25", effects)
         self.assertIn("date < 2007.9.26", effects)
@@ -205,16 +215,57 @@ class Source(unittest.TestCase):
         for name in ("Navarro", "Gleipnir", "Gandr", "Aubrey", "Archelon", "Nevera", "Griswall", "Gryphus", "exploitation"):
             self.assertNotIn(name, aurelian, name)
 
+    def test_circum_pacific_owner_honours_the_published_consumer_contract(self):
+        effects = text("common/scripted_effects/ac_circum_pacific.txt")
+        triggers = text("common/scripted_triggers/ac_circum_pacific.txt")
+        loc = (MOD / "localisation/english/ac_circum_pacific_l_english.yml").read_text(encoding="utf-8-sig")
+        # The four flags the Pacific squadron stories already read are the only route observations.
+        for flag in STORY_FLAGS:
+            self.assertIn("set_global_flag = " + flag, effects, flag)
+        for relative in ("tools/squadrons/chapters/OSE.json", "tools/squadrons/chapters/YUK.json"):
+            story = (ROOT / relative).read_text(encoding="utf-8")
+            for flag in set(re.findall(r"has_global_flag = (ac_cpw_\w+)", story)):
+                self.assertIn(flag, STORY_FLAGS, relative + ": " + flag)
+        # Its own calendar: the opening, the anchor, the late-save limit and every sourced stage.
+        for anchor in ("date > 2010.9.21", "date > 2010.9.26", "date < 2011.9.27", "date > 2008.8.20", "date > 2010.9.22", "date > 2010.9.23",
+                       "date > 2010.9.29", "date > 2010.10.3", "date > 2010.10.21", "date > 2010.10.24", "date > 2010.10.31", "date > 2010.11.1",
+                       "date > 2010.11.3", "date > 2010.11.13", "date > 2010.11.28", "date > 2010.12.5", "date > 2010.12.8", "date > 2010.12.18",
+                       "date > 2010.12.22", "date > 2010.12.28", "date > 2010.12.29", "date > 2010.12.30", "ac_cpw_late_start_skipped"):
+            self.assertIn(anchor, effects, anchor)
+        for citation in ("2008 / 08.21", "2010 / 09.23", "2010 / 09.24", "2010 / 09.27", "2010 / 09.30", "2010 / 10.04", "2010 / 10.22", "2010 / 10.25",
+                         "2010 / 11.01", "2010 / 11.02", "2010 / 11.04", "2010 / 11.14", "2010 / 11.29", "2010 / 12.06", "2010 / 12.09", "2010 / 12.19",
+                         "2010 / 12.23", "2010 / 12.29", "2010 / 12.30", "2010 / 12.31", "Super Weapons, Scinfaxi & Hrimfaxi", "provisional gameplay"):
+            self.assertIn(citation, loc, citation)
+        # No scripted peace, no assumed end date, no faction veto, pre-existing wars inspected, third parties observed.
+        self.assertNotIn("white_peace", effects)
+        self.assertNotIn("date > 2010.12.31", effects)
+        self.assertNotIn("is_in_faction", effects + triggers)
+        self.assertNotIn("has_guaranteed", effects + triggers)
+        self.assertIn("ac_cpw_third_party_present", triggers)
+        self.assertIn("OR = { has_war = yes OSE = { has_war = yes } }", effects)
+        # Foreign owners are read, never written: the only project state touched is the sourced loss of the Arkbird.
+        self.assertNotRegex(effects, r"\b(?:set|clr)_(?:global|country)_flag = ac_(?:snc|snp|sp|anea|ucw|yuk)_")
+        self.assertNotRegex(effects, r"\b(?:set|add_to|subtract_from)_variable = \{ ac_(?:snc|snp|sp)_")
+        self.assertEqual({"ac_sp_arkbird_joint_operations", "ac_sp_arkbird_debris_clearing"}, set(re.findall(r"remove_ideas = (ac_sp_\w+)", effects)))
+        self.assertNotRegex(effects, r"add_ideas = ac_sp_")
+        self.assertNotIn("ac_sp_arkbird_complete_effect", effects)
+        # Named canon appears only in event text; nothing becomes a character, unit or leader.
+        self.assertNotRegex("\n".join(text(r) for r in OWNED_FILES if "circum_pacific" in r), r"Harling|Nikanor|Razgriz|Wardog|Snow|Genette|Beagle")
+        for name in ("Snow", "Genette", "Beagle", "Talisman"):
+            self.assertNotIn(name, loc, name)
+
 
 class World(shared.World):
-    # Owned variables plus the existing Anea recovery variable that Wave B reads.
-    PREFIXES = tuple(p + "_" for p in NAMES) + tuple(s + "_" for s in STEMS) + ("ac_anea_",)
+    # Owned variables, the existing Anea recovery variable that Wave B reads and the
+    # Pacific national-continuation records that the Circum-Pacific War owner reads.
+    PREFIXES = tuple(p + "_" for p in NAMES) + tuple(s + "_" for s in STEMS) + ("ac_anea_", "ac_snc_", "ac_snp_")
 
     def __init__(self, mode="full"):
         super().__init__(mode)
         self.wave_actions = {}
         self.focuses = {}
         self.messages = {}
+        self.wars = set()
         for name in NAMES.values():
             for folder, library in (("scripted_effects", self.effects), ("scripted_triggers", self.triggers)):
                 for key, _, value in parse(text(f"common/{folder}/ac_{name}.txt")):
@@ -222,13 +273,20 @@ class World(shared.World):
                         raise ValueError("Conflicting owner " + key)
                     library[key] = value
             self.wave_actions[name] = fields(parse(text(f"common/on_actions/ac_{name}.txt")))["on_actions"]
-            self.focuses.update({fields(v)["id"]: v for k, _, v in parse(text(f"common/national_focus/ac_{name}.txt")) if k == "shared_focus"})
+            if (MOD / f"common/national_focus/ac_{name}.txt").exists():
+                self.focuses.update({fields(v)["id"]: v for k, _, v in parse(text(f"common/national_focus/ac_{name}.txt")) if k == "shared_focus"})
             self.messages.update({next(x for key, _, x in v if key == "id"): v for k, _, v in parse(text(f"events/ac_{name}.txt")) if k in ("country_event", "news_event")})
+        # The real Osean and Yuktobanian continuation records; their programme owner is observed as active.
+        for name in ("ac_snc_ose", "ac_snc_yuk"):
+            for key, _, value in parse(text(f"common/scripted_triggers/{name}.txt")):
+                self.triggers.setdefault(key, value)
+        self.triggers.setdefault("ac_snp_active", [("always", "=", "yes")])
         for c in self.countries.values():
             c.completed = set()
             c.timed_ideas = {}
             c.stability = D("0.6")
             c.trees = set()
+            c.subject = False
 
     def number(self, value, context, temp, root, previous):
         if value.startswith(self.PREFIXES):
@@ -245,7 +303,18 @@ class World(shared.World):
             elif key == "has_stability":
                 answer = {"<": context.stability < D(value), ">": context.stability > D(value)}[op]
             elif key == "has_war_with":
-                answer = False
+                answer = frozenset((context.tag, value)) in self.wars
+            elif key == "has_war":
+                answer = (context.war or any(context.tag in pair for pair in self.wars)) == (value == "yes")
+            elif key == "is_subject":
+                answer = context.subject == (value == "yes")
+            elif key == "any_country":
+                answer = any(self.trigger(value, c, temp, root, context) for c in self.countries.values()
+                             if any(s.owner == c.tag for s in self.states.values()))
+            elif key == "any_controlled_state":
+                answer = any(self.trigger(value, s, temp, root, context) for s in self.states.values() if s.controller == context.tag)
+            elif key == "is_core_of":
+                answer = value in getattr(context, "cores", ()) or context.owner == value
             elif key == "has_focus_tree":
                 answer = value in context.trees
             elif key in self.countries:
@@ -291,6 +360,8 @@ class World(shared.World):
                 self.events.append((context.tag, data["id"], self.today + int(data.get("days", 0))))
             elif key == "load_focus_tree":
                 context.trees.add(fields(value)["tree"])
+            elif key == "declare_war_on":
+                self.wars.add(frozenset((context.tag, fields(value)["target"])))
             elif key in self.countries or key in ("FROM", "ROOT"):
                 target = previous if key == "FROM" else root if key == "ROOT" else self.countries[key]
                 self.execute(value, target, temp, root, context)
@@ -651,6 +722,299 @@ class Runtime(unittest.TestCase):
             opening = loc[f"ac_fe.{10 + list(FE.countries).index(tag)}.d"]
             self.assertIn(f"[{tag}_fe_route_context]", opening)
             self.assertNotIn("surrender", opening)
+
+    # Wave C: the Circum-Pacific War owner ------------------------------------------
+    def cpw(self, today=date(2010, 9, 22)):
+        w = self.fresh()
+        w.today = today.toordinal()
+        return w, w.countries["YUK"], w.countries["OSE"]
+
+    def tick(self, w, day, tag="YUK"):
+        w.today = day.toordinal()
+        w.wave_action("circum_pacific", f"on_weekly_{tag}", tag)
+
+    def cpw_news(self, w):
+        return [e for _, e, _ in w.events if e.startswith("ac_cpw.") and e not in ("ac_cpw.5", "ac_cpw.6")]
+
+    def earn(self, w, tag, record):
+        """Satisfy the real ac_snc_* trigger for one record, as the national package defines it."""
+        c = w.countries[tag]
+        c.flags[f"ac_snc_{tag.lower()}_initialized"] = None
+        c.variables[f"ac_snc_{tag.lower()}_identity"] = D(c.identity)
+        if (tag, record) == ("YUK", "verification"):
+            c.flags.update({"YUK_snc_field_answers_settlement_done": None, "YUK_snc_field_answers_civil_done": None, "ac_snc_yuk_message_10_public": None})
+            c.ideas.add("yuk_reformed_field_command")
+            c.completed.add("YUK_army_reform_complete")
+            c.variables["ac_snp_yuk_civil"] = D(60)
+        elif (tag, record) == ("YUK", "channel"):
+            c.flags["YUK_snc_scientific_custody_settlement_done"] = None
+        elif (tag, record) == ("OSE", "verification"):
+            c.flags.update({"OSE_snc_contact_verification_settlement_done": None, "OSE_snc_contact_verification_civil_done": None, "ac_snc_ose_message_11_public": None})
+        else:
+            c.flags["OSE_snc_pacific_channel_settlement_done"] = None
+
+    def declare(self, w):
+        self.tick(w, date(2010, 9, 27))
+        w.option("ac_cpw.5", "a", "YUK")
+        self.assertIn("ac_cpw_started", w.globals)
+        return w
+
+    def test_arkbird_summit_needs_the_completed_project_and_fires_once(self):
+        w, y, o = self.cpw(date(2008, 8, 21))
+        self.tick(w, date(2008, 8, 21))
+        self.assertEqual([], self.cpw_news(w))
+        self.assertFalse({"ac_cpw_summit_held", "ac_cpw_summit_skipped"} & w.globals)
+        w.globals.add("ac_sp_arkbird_complete")
+        self.tick(w, date(2008, 8, 28))
+        self.tick(w, date(2008, 9, 4))
+        self.assertEqual(["ac_cpw.14"], self.cpw_news(w))
+        self.assertIn("ac_cpw_summit_held", w.globals)
+        late, _, _ = self.cpw(date(2009, 9, 1))
+        late.globals.add("ac_sp_arkbird_complete")
+        self.tick(late, date(2009, 9, 1))
+        self.assertIn("ac_cpw_summit_skipped", late.globals)
+        self.assertEqual([], self.cpw_news(late))
+
+    def test_prelude_and_declaration_follow_the_anchor_and_late_saves_never_replay(self):
+        w, y, o = self.cpw()
+        self.tick(w, date(2010, 9, 22))
+        self.assertIn("ac_cpw_calendar_started", w.globals)
+        self.assertEqual([], self.cpw_news(w))
+        self.tick(w, date(2010, 9, 23))
+        self.tick(w, date(2010, 9, 24))
+        self.tick(w, date(2010, 9, 26))
+        self.assertEqual(["ac_cpw.1", "ac_cpw.2"], self.cpw_news(w))
+        self.assertNotIn("ac_cpw_started", w.globals)
+        self.tick(w, date(2010, 9, 27))
+        self.assertIn(("YUK", "ac_cpw.5", w.today + 1), w.events)
+        self.assertTrue({"ac_cpw_declaration_asked", "ac_cpw_declaration_pending", "ac_cpw_declaration_window"} <= set(y.flags))
+        self.assertEqual(set(), w.wars)
+        options = {next(x for k, _, x in v if k == "name"): v for k, _, v in w.messages["ac_cpw.5"] if k == "option"}
+        self.assertEqual("100", fields(fields(options["ac_cpw.5.a"])["ai_chance"])["factor"])
+        self.assertEqual("0", fields(fields(options["ac_cpw.5.b"])["ai_chance"])["factor"])
+        self.assertEqual("ac_cpw_mandate_earned = yes", " ".join(f"{k} = {v}" for k, _, v in fields(options["ac_cpw.5.b"])["trigger"]))
+        w.option("ac_cpw.5", "a", "YUK")
+        self.assertEqual({frozenset(("YUK", "OSE"))}, w.wars)
+        self.assertIn("ac_cpw_started", w.globals)
+        self.assertFalse({"ac_cpw_tainted", "ac_cpw_pre_existing_war"} & w.globals)
+        self.assertTrue({"ac_cpw_yuk_war_footing", "ac_cpw_yuk_submarine_carriers"} <= y.ideas)
+        self.assertIn("ac_cpw_ose_war_footing", o.ideas)
+        self.assertNotIn("ac_cpw_declaration_pending", y.flags)
+        self.assertEqual(["ac_cpw.1", "ac_cpw.2", "ac_cpw.3"], self.cpw_news(w))
+        # The tick never asks twice and never declares twice.
+        self.tick(w, date(2010, 9, 28))
+        self.assertEqual(["ac_cpw.1", "ac_cpw.2", "ac_cpw.3"], self.cpw_news(w))
+        late, _, _ = self.cpw(date(2011, 10, 1))
+        self.tick(late, date(2011, 10, 1))
+        self.assertTrue({"ac_cpw_closed", "ac_cpw_late_start_skipped"} <= late.globals)
+        self.assertNotIn("ac_cpw_calendar_started", late.globals)
+        self.assertEqual([], self.cpw_news(late))
+        gone, _, _ = self.cpw()
+        for state in gone.states.values():
+            if state.owner == "OSE":
+                state.owner = state.controller = "BLK"
+        self.tick(gone, date(2010, 9, 22))
+        self.assertTrue({"ac_cpw_closed", "ac_cpw_principal_missing"} <= gone.globals)
+
+    def test_declaration_window_falls_back_to_history_and_withholding_needs_the_mandate(self):
+        w, y, o = self.cpw()
+        self.tick(w, date(2010, 9, 27))
+        self.tick(w, date(2010, 10, 4))
+        self.assertNotIn("ac_cpw_started", w.globals)
+        self.tick(w, date(2010, 10, 12))
+        self.assertIn("ac_cpw_started", w.globals)
+        self.assertEqual({frozenset(("YUK", "OSE"))}, w.wars)
+        w2, y2, o2 = self.cpw()
+        self.tick(w2, date(2010, 9, 27))
+        w2.option("ac_cpw.5", "b", "YUK")
+        self.assertNotIn("ac_cpw_declaration_withheld", w2.globals)
+        self.assertIn("ac_cpw_declaration_pending", y2.flags)
+        self.earn(w2, "YUK", "verification")
+        w2.option("ac_cpw.5", "b", "YUK")
+        self.assertIn("ac_cpw_declaration_withheld", w2.globals)
+        self.assertIn("ac_cpw_yuk_mandate_kept", y2.ideas)
+        self.assertNotIn("ac_cpw_declaration_pending", y2.flags)
+        self.assertEqual(set(), w2.wars)
+        for day in (date(2010, 9, 30), date(2010, 10, 25), date(2010, 12, 31), date(2011, 3, 1)):
+            self.tick(w2, day)
+        self.assertEqual(["ac_cpw.5", "ac_cpw.7"], [e for _, e, _ in w2.events if e.startswith("ac_cpw.") and e not in ("ac_cpw.1", "ac_cpw.2")])
+        self.assertFalse({"ac_cpw_started", "ac_cpw_closed"} & w2.globals)
+
+    def test_reciprocal_exchange_prevents_the_declaration_and_is_earned(self):
+        w, y, o = self.cpw()
+        for tag, record in (("OSE", "verification"), ("OSE", "channel"), ("YUK", "verification"), ("YUK", "channel")):
+            self.earn(w, tag, record)
+        self.tick(w, date(2010, 9, 27))
+        self.assertIn("ac_cpw_prevented", w.globals)
+        self.assertNotIn("ac_cpw_started", w.globals)
+        self.assertNotIn(("YUK", "ac_cpw.5", w.today + 1), w.events)
+        self.assertEqual(set(), w.wars)
+        self.assertIn("ac_cpw_yuk_exchange_standing", y.ideas)
+        self.assertIn("ac_cpw_ose_exchange_standing", o.ideas)
+        self.assertEqual(["ac_cpw.4"], [e for _, e, _ in w.events if e.startswith("ac_cpw.") and e not in ("ac_cpw.1", "ac_cpw.2")])
+        partial, _, _ = self.cpw()
+        for tag, record in (("OSE", "verification"), ("OSE", "channel"), ("YUK", "channel")):
+            self.earn(partial, tag, record)
+        self.tick(partial, date(2010, 9, 27))
+        self.assertNotIn("ac_cpw_prevented", partial.globals)
+        self.assertIn(("YUK", "ac_cpw.5", partial.today + 1), partial.events)
+
+    def test_historical_course_fires_each_stage_once_and_ends_on_observed_cessation(self):
+        w, y, o = self.cpw()
+        w.globals.add("ac_sp_arkbird_complete")
+        o.ideas |= {"ac_sp_arkbird_debris_clearing", "ac_sp_arkbird_joint_operations"}
+        y.ideas.add("ac_sp_arkbird_joint_operations")
+        self.declare(w)
+        self.tick(w, date(2010, 9, 30))
+        self.assertIn("ac_cpw_stage_eaglin", w.globals)
+        self.assertIn("ac_cpw_ose_carrier_losses", o.ideas)
+        self.assertIn(("OSE", "ac_cpw.6", w.today + 1), w.events)
+        w.option("ac_cpw.6", "a", "OSE")
+        self.assertIn("ac_cpw_arkbird_committed", w.globals)
+        self.assertIn("ac_cpw_ose_arkbird_at_the_front", o.ideas)
+        self.tick(w, date(2010, 10, 4))
+        self.assertNotIn("ac_cpw_yuk_submarine_carriers", y.ideas)
+        self.assertIn("ac_cpw_yuk_submarine_carrier", y.ideas)
+        self.tick(w, date(2010, 10, 22))
+        self.tick(w, date(2010, 10, 25))
+        self.assertIn("ac_cpw_arkbird_sabotaged", w.globals)
+        self.assertIn("ac_cpw_ose_arkbird_grounded", o.ideas)
+        self.tick(w, date(2010, 11, 1))
+        self.assertNotIn("ac_cpw_stage_bastok", w.globals)
+        foothold = next(s for s in w.states.values() if s.owner == "YUK")
+        foothold.controller = "OSE"
+        self.tick(w, date(2010, 11, 1))
+        self.assertIn("ac_cpw_stage_bastok", w.globals)
+        self.assertIn("ac_cpw_ose_expeditionary_strain", o.ideas)
+        self.tick(w, date(2010, 11, 2))
+        self.assertIn("ac_cpw_ose_dresdene_inquiry", o.ideas)
+        self.tick(w, date(2010, 11, 4))
+        self.assertIn("ac_cpw_ose_home_front_alert", o.ideas)
+        self.tick(w, date(2010, 11, 14))
+        self.assertFalse({"ac_cpw_yuk_submarine_carriers", "ac_cpw_yuk_submarine_carrier"} & y.ideas)
+        self.tick(w, date(2010, 11, 29))
+        self.tick(w, date(2010, 12, 6))
+        self.assertIn("ac_cpw_yuk_stronghold_lost", y.ideas)
+        self.tick(w, date(2010, 12, 9))
+        self.assertIn("ac_cpw_ose_president_returns", o.ideas)
+        self.tick(w, date(2010, 12, 19))
+        self.assertIn("ac_cpw_arkbird_lost", w.globals)
+        self.assertFalse({"ac_sp_arkbird_debris_clearing", "ac_sp_arkbird_joint_operations"} & (o.ideas | y.ideas))
+        self.assertIn("ac_sp_arkbird_complete", w.globals)
+        self.tick(w, date(2010, 12, 23))
+        self.assertIn("ac_cpw_yuk_leadership_question", y.ideas)
+        self.tick(w, date(2010, 12, 29))
+        self.tick(w, date(2010, 12, 30))
+        self.assertIn("ac_cpw_disarmament_appeal", w.globals)
+        self.assertTrue("ac_cpw_disarmament_appeal" in y.ideas and "ac_cpw_disarmament_appeal" in o.ideas)
+        self.tick(w, date(2010, 12, 31))
+        self.assertNotIn("ac_cpw_ended", w.globals)
+        self.tick(w, date(2011, 1, 7))
+        self.assertNotIn("ac_cpw_ended", w.globals)
+        w.wars.clear()
+        self.tick(w, date(2011, 1, 14))
+        self.assertTrue({"ac_cpw_ended", "ac_cpw_outcome_cessation", "ac_cpw_historical_course"} <= w.globals)
+        self.assertFalse(any(i.startswith("ac_cpw_") and i.endswith(("_war_footing", "_carriers", "_carrier", "_appeal")) for i in y.ideas | o.ideas))
+        self.tick(w, date(2011, 1, 21))
+        self.assertEqual(["ac_cpw.1", "ac_cpw.2", "ac_cpw.3", "ac_cpw.20", "ac_cpw.15", "ac_cpw.21", "ac_cpw.22", "ac_cpw.23", "ac_cpw.24", "ac_cpw.25",
+                          "ac_cpw.26", "ac_cpw.27", "ac_cpw.28", "ac_cpw.29", "ac_cpw.30", "ac_cpw.31", "ac_cpw.32", "ac_cpw.33", "ac_cpw.34", "ac_cpw.35",
+                          "ac_cpw.10"], self.cpw_news(w))
+        self.assertFalse({g for g in w.globals if g.startswith(("ac_snc_", "ac_snp_"))})
+
+    def test_arkbird_stages_need_the_completed_project_and_the_commitment(self):
+        w, y, o = self.cpw()
+        self.declare(w)
+        for day in (date(2010, 9, 30), date(2010, 10, 25), date(2010, 12, 19)):
+            self.tick(w, day)
+        self.assertNotIn(("OSE", "ac_cpw.6"), [(t, e) for t, e, _ in w.events])
+        self.assertFalse({"ac_cpw_stage_arkbird_sabotage", "ac_cpw_stage_arkbird_lost"} & w.globals)
+        self.assertIn("ac_cpw_stage_eaglin", w.globals)
+        held, y2, o2 = self.cpw()
+        held.globals.add("ac_sp_arkbird_complete")
+        self.declare(held)
+        self.tick(held, date(2010, 9, 30))
+        held.option("ac_cpw.6", "b", "OSE")
+        self.assertIn("ac_cpw_arkbird_held_back", held.globals)
+        for day in (date(2010, 10, 7), date(2010, 10, 25), date(2010, 12, 19)):
+            self.tick(held, day)
+        self.assertEqual(1, [e for _, e, _ in held.events].count("ac_cpw.6"))
+        self.assertFalse({"ac_cpw_arkbird_committed", "ac_cpw_stage_arkbird_sabotage", "ac_cpw_stage_arkbird_lost"} & held.globals)
+
+    def test_pre_existing_or_third_party_wars_move_the_crisis_to_external_observation(self):
+        w, y, o = self.cpw()
+        w.wars.add(frozenset(("OSE", "BLK")))
+        self.declare(w)
+        self.assertTrue({"ac_cpw_tainted", "ac_cpw_pre_existing_war"} <= w.globals)
+        self.tick(w, date(2010, 9, 30))
+        self.assertNotIn("ac_cpw_stage_eaglin", w.globals)
+        w.wars.discard(frozenset(("YUK", "OSE")))
+        self.tick(w, date(2010, 10, 7))
+        self.assertTrue({"ac_cpw_ended", "ac_cpw_outcome_cessation"} <= w.globals)
+        self.assertNotIn("ac_cpw_historical_course", w.globals)
+        self.assertEqual(["ac_cpw.3", "ac_cpw.9", "ac_cpw.13"], [e for _, e, _ in w.events if e.startswith("ac_cpw.") and e not in ("ac_cpw.1", "ac_cpw.2", "ac_cpw.5")])
+        later, y2, o2 = self.cpw()
+        self.declare(later)
+        self.tick(later, date(2010, 9, 30))
+        self.assertIn("ac_cpw_stage_eaglin", later.globals)
+        later.wars.add(frozenset(("YUK", "BLK")))
+        self.tick(later, date(2010, 10, 4))
+        self.assertIn("ac_cpw_tainted", later.globals)
+        self.assertNotIn("ac_cpw_stage_sand_island", later.globals)
+        self.assertIn("ac_cpw.9", [e for _, e, _ in later.events])
+        self.assertIn("ac_cpw_yuk_war_footing", y2.ideas)
+        existing, y3, o3 = self.cpw()
+        existing.wars.add(frozenset(("OSE", "YUK")))
+        self.tick(existing, date(2010, 9, 27))
+        self.assertTrue({"ac_cpw_started", "ac_cpw_tainted", "ac_cpw_existing_war_observed"} <= existing.globals)
+        self.assertNotIn(("YUK", "ac_cpw.5", existing.today + 1), existing.events)
+        self.assertNotIn("ac_cpw_yuk_war_footing", y3.ideas)
+        self.assertIn("ac_cpw.8", [e for _, e, _ in existing.events])
+
+    def test_capitulation_and_annexation_record_the_actual_outcome(self):
+        w, y, o = self.cpw()
+        self.declare(w)
+        y.capitulated = True
+        w.wave_action("circum_pacific", "on_capitulation_immediate", "YUK")
+        self.assertTrue({"ac_cpw_yuk_fallen", "ac_cpw_ended", "ac_cpw_outcome_osean_victory"} <= w.globals)
+        self.assertIn("ac_cpw.11", [e for _, e, _ in w.events])
+        self.assertNotIn("ac_cpw_ose_war_footing", o.ideas)
+        w2, y2, o2 = self.cpw()
+        self.declare(w2)
+        w2.wave_action("circum_pacific", "on_annex", "YUK", "OSE")
+        self.assertTrue({"ac_cpw_ose_fallen", "ac_cpw_ended", "ac_cpw_outcome_yuktobanian_victory"} <= w2.globals)
+        self.assertIn("ac_cpw.12", [e for _, e, _ in w2.events])
+        w3, y3, o3 = self.cpw()
+        self.declare(w3)
+        for state in w3.states.values():
+            if state.owner == "YUK":
+                state.owner = state.controller = "OSE"
+        self.tick(w3, date(2010, 10, 4), "OSE")
+        self.assertTrue({"ac_cpw_ended", "ac_cpw_outcome_osean_victory"} <= w3.globals)
+
+    def test_crisis_decisions_cost_once_and_follow_the_phase(self):
+        rows = {k: v for category in parse(text("common/decisions/ac_circum_pacific.txt")) for k, _, v in category[2]}
+        for tag in ("OSE", "YUK"):
+            with self.subTest(tag=tag):
+                w, y, o = self.cpw()
+                c = w.countries[tag]
+                home, record = rows[f"{tag}_cpw_home_front"], rows[f"{tag}_cpw_war_record"]
+                self.assertFalse(w.trigger(fields(home)["available"], c))
+                self.declare(w)
+                self.assertTrue(w.trigger(fields(home)["available"], c))
+                self.assertFalse(w.trigger(fields(record)["available"], c))
+                pp = c.pp
+                w.execute(fields(home)["complete_effect"], c)
+                self.assertEqual(pp - 50, c.pp)
+                self.assertIn(f"ac_cpw_{tag.lower()}_home_front", c.ideas)
+                self.assertFalse(w.trigger(fields(home)["available"], c))
+                w.execute(fields(home)["complete_effect"], c)
+                self.assertEqual(pp - 50, c.pp)
+                w.wars.clear()
+                self.tick(w, date(2010, 10, 4))
+                self.assertTrue(w.trigger(fields(record)["available"], c))
+                w.execute(fields(record)["complete_effect"], c)
+                self.assertEqual(pp - 75, c.pp)
+                self.assertIn(f"ac_cpw_{tag.lower()}_war_record", c.ideas)
 
     def owner(self, today=date(2006, 9, 26)):
         w = self.fresh()

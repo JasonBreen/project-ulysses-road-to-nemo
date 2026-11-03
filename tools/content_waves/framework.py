@@ -57,6 +57,7 @@ class Wave:
     themes: dict          # tag -> (primary, secondary) glyphs for national art
     weekly_extra: dict = field(default_factory=dict)  # tag -> extra weekly effect
     event_base: int = 10         # first narrative event number; owners use the numbers below it
+    extra_tags: tuple = ()       # tags an owner-only wave writes flags for without any branch
 
 
 def branch_id(branch):
@@ -121,6 +122,20 @@ def positions(wave):
             dy = 0 if index == 0 else 1 if index in (1, 2) else index - 1
             result[focus_id(wave, branch, index)] = (x + dx, y + dy)
     return result
+
+
+def empty_wave(wave):
+    """Fragments for an owner-only wave: no branches, services, trees or narrative.
+
+    Conflict owners whose countries' focus budgets are already complete (the
+    Circum-Pacific War) supply every effect, trigger, event, idea, decision and
+    on_action hook themselves; the build merges them exactly as it merges an
+    owner into a branch wave.
+    """
+    validate(wave)
+    assert not wave.branches and not wave.countries, wave.label
+    return dict(loc={}, effects={}, triggers={}, ideas=[], focuses=[], categories=[], decisions=defaultdict(list),
+                custom=[], events=[], hooks="", services=[], positions={})
 
 
 def compile_wave(wave, event_base=None):
@@ -437,7 +452,8 @@ def readable_flags(wave, fragments, script_texts, parse, get):
         for key, _, value in nodes(parse(source)):
             if key in ("has_country_flag", "clr_country_flag", "set_country_flag", "has_global_flag", "set_global_flag", "clr_global_flag"):
                 names.add(get(value, "flag") if isinstance(value, list) else value)
-    owned = re.compile(r"^(?:" + re.escape(wave.prefix) + "_|(?:" + "|".join(wave.countries) + ")_" + wave.infix + "_)")
+    tags = tuple(wave.countries) + tuple(wave.extra_tags)
+    owned = re.compile(r"^(?:" + re.escape(wave.prefix) + "_" + (r"|(?:" + "|".join(tags) + ")_" + wave.infix + "_" if tags else "") + ")")
     for flag in sorted(n for n in names if n):
         if flag in loc or not owned.match(flag):
             continue

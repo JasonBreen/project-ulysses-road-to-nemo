@@ -45,7 +45,8 @@ EDGE = (43, 78, 99, 255)
 GOLD = (194, 165, 97, 255)
 GRID = (18, 40, 54, 255)
 ACCENT = {"ERU": (226, 132, 104, 255), "FCU": (104, 190, 226, 255), "NEC": (148, 214, 206, 255),
-          "EVA": (176, 140, 220, 255), "EMM": (126, 206, 150, 255), "AUR": (232, 186, 92, 255)}
+          "EVA": (176, 140, 220, 255), "EMM": (126, 206, 150, 255), "AUR": (232, 186, 92, 255),
+          "OSE": (130, 168, 232, 255), "YUK": (222, 118, 112, 255)}
 SHAPES = {
     "ERU": [(30, 14), (162, 14), (178, 34), (178, 150), (150, 178), (42, 178), (14, 150), (14, 34)],
     "FCU": [(96, 10), (176, 42), (176, 140), (148, 176), (44, 176), (16, 140), (16, 42)],
@@ -53,6 +54,8 @@ SHAPES = {
     "EVA": [(40, 12), (152, 12), (180, 52), (180, 140), (152, 180), (40, 180), (12, 140), (12, 52)],
     "EMM": [(18, 18), (174, 18), (174, 150), (96, 182), (18, 150)],
     "AUR": [(96, 8), (182, 70), (164, 176), (28, 176), (10, 70)],
+    "OSE": [(16, 16), (176, 16), (176, 126), (96, 182), (16, 126)],
+    "YUK": [(12, 40), (96, 12), (180, 40), (180, 152), (96, 180), (12, 152)],
 }
 ARRANGEMENTS = [((26, 25, 119, 111), (126, 112, 45, 46)), ((23, 40, 93, 109), (111, 58, 65, 75)),
                 ((55, 26, 110, 113), (26, 116, 46, 44)), ((45, 26, 104, 94), (65, 122, 66, 42)),
@@ -85,6 +88,11 @@ def frame(tag, settled=False):
     elif tag == "EMM":
         d.line((40, 160, 152, 160), fill=EDGE, width=2)
         d.line((56, 168, 136, 168), fill=EDGE, width=2)
+    elif tag == "OSE":
+        d.line((34, 148, 96, 164, 158, 148), fill=EDGE, width=2)
+    elif tag == "YUK":
+        d.line((40, 30, 96, 22, 152, 30), fill=EDGE, width=2)
+        d.line((40, 164, 152, 164), fill=EDGE, width=2)
     else:
         d.arc((40, 22, 152, 70), 180, 360, fill=EDGE, width=2)
     if settled:
@@ -164,7 +172,9 @@ def outputs():
                            source_layer="original procedural Ulysses glyph composition", **metadata))
         sprites.append(f'spriteType = {{ name = "{sprite}" texturefile = "{relative}" }}')
 
-    for wave, name in WAVES:
+    for module in MODULES:
+        wave, name = module.WAVE, module.NAME
+        countries = wave.countries or getattr(module, "COUNTRIES", {})
         P = wave.prefix
         used = Counter()
         for b in wave.branches:
@@ -187,7 +197,7 @@ def outputs():
             image = composition(tag, primary, secondary, layout, settled=ident.endswith("_settled"))
             texture(f"gfx/AC_content_waves/ideas/{ident}.dds", image.resize((75, 75), Image.Resampling.LANCZOS), "GFX_idea_" + ident, "idea", tag,
                     id=ident, primary=primary, secondary=secondary)
-        for tag, country in wave.countries.items():
+        for tag, country in countries.items():
             image = composition(tag, *wave.themes[tag], 3).resize((100, 100), Image.Resampling.LANCZOS)
             texture(f"gfx/AC_content_waves/categories/{P}_{tag.lower()}.dds", image, f"GFX_{P}_category_{tag.lower()}", "category", tag, title=country + ": " + wave.label)
         for category, _, entries in parse(content[f"common/decisions/ac_{name}.txt"]):
@@ -211,6 +221,12 @@ def outputs():
             texture(f"gfx/AC_content_waves/events/{P}_{ident}.dds", contain(master), f"GFX_{P}_event_{ident}", "event illustration", b.tag,
                     title=b.titles[0], master=f"tools/content_waves/source/events/{P}_{ident}.png",
                     transform="Full-source Lanczos contain to 210x176; opaque navy padding; no crop")
+        for ident, subjects, title, tag in getattr(module, "EVENT_ART", ()):
+            master = scene(tag, subjects)
+            result[HERE / "source/events" / f"{ident}.png"] = encoded(master, "PNG")
+            texture(f"gfx/AC_content_waves/events/{ident}.dds", contain(master), f"GFX_{ident}", "event illustration", tag,
+                    title=title, master=f"tools/content_waves/source/events/{ident}.png",
+                    transform="Full-source Lanczos contain to 210x176; opaque navy padding; no crop")
     for ident, subjects, title, tag in (row for m in MODULES for row in m.NEWS_ART):
         master = scene(tag, subjects, news=True)
         result[HERE / "source/events" / f"{ident}.png"] = encoded(master, "PNG")
@@ -230,6 +246,8 @@ def outputs():
     for wave, _ in WAVES:
         for tag, country in wave.countries.items():
             rows = [(b, i) for b in wave.branches if b.tag == tag for i in range(6)]
+            if not rows:
+                continue
             gallery = Image.new("RGBA", (1120, 70 + 220 * (len(rows) // 6)), NAVY)
             font.draw(gallery, country + ": " + wave.label, (24, 18), 1000)
             for n, (b, i) in enumerate(rows):

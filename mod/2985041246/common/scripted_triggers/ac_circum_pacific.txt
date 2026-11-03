@@ -1,0 +1,44 @@
+# Original provisional gameplay; source: tools/content_waves (The Circum-Pacific War). Native acceptance pending.
+ac_cpw_principals = {
+	country_exists = OSE country_exists = YUK
+}
+
+ac_cpw_war_running = {
+	has_global_flag = ac_cpw_started NOT = { has_global_flag = ac_cpw_ended }
+}
+
+ac_cpw_course_open = {
+	ac_cpw_war_running = yes NOT = { has_global_flag = ac_cpw_tainted } ac_cpw_principals = yes
+}
+
+ac_cpw_pair_at_war = {
+	ac_cpw_principals = yes YUK = { has_war_with = OSE }
+}
+
+ac_cpw_can_declare = {
+	tag = YUK original_tag = YUK has_capitulated = no is_subject = no country_exists = OSE OSE = { has_capitulated = no is_subject = no } NOT = { has_war_with = OSE } NOT = { has_global_flag = ac_cpw_started } NOT = { has_global_flag = ac_cpw_prevented } NOT = { has_global_flag = ac_cpw_declaration_withheld } NOT = { has_global_flag = ac_cpw_closed }
+}
+
+ac_cpw_exchange_earned = {
+	ac_cpw_principals = yes OSE = { ac_snc_ose_verification_earned = yes ac_snc_ose_channel_earned = yes } YUK = { ac_snc_yuk_verification_earned = yes ac_snc_yuk_channel_earned = yes }
+}
+
+ac_cpw_mandate_earned = {
+	tag = YUK original_tag = YUK ac_snc_yuk_verification_earned = yes
+}
+
+ac_cpw_third_party_present = {
+	any_country = { NOT = { tag = OSE } NOT = { tag = YUK } OR = { has_war_with = OSE has_war_with = YUK } }
+}
+
+ac_cpw_osean_foothold = {
+	country_exists = OSE OSE = { any_controlled_state = { is_core_of = YUK } }
+}
+
+ac_cpw_arkbird_available = {
+	has_global_flag = ac_sp_arkbird_complete NOT = { has_global_flag = ac_cpw_arkbird_lost }
+}
+
+ac_cpw_principal_fallen = {
+	OR = { NOT = { country_exists = OSE } NOT = { country_exists = YUK } has_global_flag = ac_cpw_ose_fallen has_global_flag = ac_cpw_yuk_fallen OSE = { has_capitulated = yes } YUK = { has_capitulated = yes } }
+}

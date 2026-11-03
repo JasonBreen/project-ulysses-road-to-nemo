@@ -19,7 +19,7 @@ ROOT = HERE.parents[1]
 MOD = ROOT / "mod/2985041246"
 sys.path[:0] = [str(ROOT / "tools"), str(ROOT / "tools/usea_expansion")]
 
-from content_waves.framework import block, compile_wave, focus_id, readable_flags  # noqa: E402
+from content_waves.framework import block, compile_wave, empty_wave, focus_id, readable_flags  # noqa: E402
 from content_waves.registry import MODULES  # noqa: E402
 from script import parse, get  # noqa: E402
 
@@ -50,10 +50,11 @@ def attach(source, tag, ids, name):
 
 def wave_files(module):
     wave, name, owner = module.WAVE, module.NAME, module.owner()
-    frag = compile_wave(wave)
+    frag = compile_wave(wave) if wave.branches else empty_wave(wave)
     note = f"# Original provisional gameplay; source: tools/content_waves ({wave.label}). Native acceptance pending.\n"
     effects, triggers, loc = frag["effects"], frag["triggers"], frag["loc"]
-    ideas, events, custom, hooks = list(frag["ideas"]), list(frag["events"]), list(frag["custom"]), frag["hooks"]
+    ideas, events, custom = list(frag["ideas"]), list(frag["events"]), list(frag["custom"])
+    hooks, categories = frag["hooks"] + owner.get("hooks", ""), frag["categories"] + owner.get("categories", [])
     decisions = frag["decisions"]
     for key, value in owner.get("effects", {}).items():
         assert key not in effects, key
@@ -73,18 +74,22 @@ def wave_files(module):
         custom.append(owner["custom"])
     for category, rows in owner.get("decisions", {}).items():
         decisions[category] = rows + decisions[category]
-    effects[f"{wave.prefix}_interrupt"] += owner.get("interrupt_extra", "")
+    if f"{wave.prefix}_interrupt" in effects:
+        effects[f"{wave.prefix}_interrupt"] += owner.get("interrupt_extra", "")
     out = {
-        f"common/national_focus/ac_{name}.txt": note + "\n".join(frag["focuses"]),
         f"common/scripted_effects/ac_{name}.txt": note + "\n".join(block(k, v) for k, v in effects.items()),
         f"common/scripted_triggers/ac_{name}.txt": note + "\n".join(block(k, v) for k, v in triggers.items()),
         f"common/ideas/ac_{name}.txt": note + block("ideas", block("country", "\n".join(ideas))),
-        f"common/decisions/categories/ac_{name}.txt": note + "\n".join(frag["categories"]),
+        f"common/decisions/categories/ac_{name}.txt": note + "\n".join(categories),
         f"common/decisions/ac_{name}.txt": note + "\n".join(block(k, "\n".join(v)) for k, v in decisions.items()),
         f"common/on_actions/ac_{name}.txt": note + block("on_actions", hooks),
         f"common/custom_localization/ac_{name}.txt": note + "\n".join(custom),
         f"events/ac_{name}.txt": note + f"add_namespace = {wave.prefix}\n" + "\n".join(events),
     }
+    if frag["focuses"]:
+        out[f"common/national_focus/ac_{name}.txt"] = note + "\n".join(frag["focuses"])
+    if owner.get("ai_strategy"):
+        out[f"common/ai_strategy/ac_{name}.txt"] = note + owner["ai_strategy"]
     readable_flags(wave, frag, [v for k, v in out.items()], parse, get)
     out[f"localisation/english/ac_{name}_l_english.yml"] = "\ufeffl_english:\n" + "".join(
         f' {k}:0 "' + v.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n") + '"\n' for k, v in loc.items())

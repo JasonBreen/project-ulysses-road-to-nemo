@@ -1,10 +1,11 @@
-"""Compile Wave A (the oversight years) and Wave D (the northern reserve).
+"""Compile every registered content wave.
 
 Run without arguments to regenerate the owned files; --check is read-only.
-Wave A adds 36 Erusean and 24 Central Usean shared focuses to the existing
-Continental War trees through a marked import block that
-tools/build_continental_war.py preserves. Wave D adds Nordennavic's 42-focus
-national tree. All content is provisional gameplay; see README.md.
+Each wave module in content_waves.registry declares where its focuses go:
+IMPORTS adds shared focuses to an existing tree through a marked block that
+the tree's own generator preserves; TREES creates a new national tree. All
+content is provisional gameplay unless a source ledger row says otherwise;
+see README.md and the per-wave ledgers in docs/.
 """
 from __future__ import annotations
 
@@ -18,37 +19,37 @@ ROOT = HERE.parents[1]
 MOD = ROOT / "mod/2985041246"
 sys.path[:0] = [str(ROOT / "tools"), str(ROOT / "tools/usea_expansion")]
 
-from content_waves.framework import SUFFIXES, block, branch_id, compile_wave, focus_id, readable_flags  # noqa: E402
-from content_waves import free_erusea, nordennavic  # noqa: E402
+from content_waves.framework import block, compile_wave, focus_id, readable_flags  # noqa: E402
+from content_waves.registry import MODULES  # noqa: E402
 from script import parse, get  # noqa: E402
 
-IMPORT_NAME = "OVERSIGHT YEARS"
-BEGIN, END = f"# BEGIN {IMPORT_NAME} IMPORTS", f"# END {IMPORT_NAME} IMPORTS"
 PURPOSES = ("Unlock the first funded service", "Exclusive enduring policy", "Exclusive enduring policy",
             "Unlock the second funded service", "Require a completed ninety-day service period",
             "Improve the chosen policy while retaining its cost")
 
 
-def attach(source, tag, ids):
+def attach(source, tag, ids, name):
     """Replace or append only the owned import block inside the single tree."""
-    if source.count(BEGIN) != source.count(END) or source.count(BEGIN) > 1:
-        raise ValueError("Unbalanced oversight-years imports: " + tag)
+    begin, end = f"# BEGIN {name} IMPORTS", f"# END {name} IMPORTS"
+    if source.count(begin) != source.count(end) or source.count(begin) > 1:
+        raise ValueError(f"Unbalanced {name} imports: {tag}")
     if source.count("focus_tree") != 1:
         raise ValueError("Expected one focus tree in " + tag)
-    lines = "\t" + BEGIN + "\n" + "".join("\tshared_focus = " + i + "\n" for i in ids) + "\t" + END + "\n"
-    if BEGIN in source:
-        start = source.index("\t" + BEGIN)
-        finish = source.index(END) + len(END) + 1
+    lines = "\t" + begin + "\n" + "".join("\tshared_focus = " + i + "\n" for i in ids) + "\t" + end + "\n"
+    if begin in source:
+        start = source.index("\t" + begin)
+        finish = source.index(end) + len(end) + 1
         owned = parse(source[start:finish])
         if any(k != "shared_focus" or v not in ids for k, _, v in owned):
-            raise ValueError("Foreign content inside oversight-years imports: " + tag)
+            raise ValueError(f"Foreign content inside {name} imports: {tag}")
         return source[:start] + lines + source[finish:]
     if not source.endswith("}\n"):
         raise ValueError("Unexpected tree ending: " + tag)
     return source[:-2] + lines + "}\n"
 
 
-def wave_files(wave, name, owner):
+def wave_files(module):
+    wave, name, owner = module.WAVE, module.NAME, module.owner()
     frag = compile_wave(wave)
     note = f"# Original provisional gameplay; source: tools/content_waves ({wave.label}). Native acceptance pending.\n"
     effects, triggers, loc = frag["effects"], frag["triggers"], frag["loc"]
@@ -90,39 +91,43 @@ def wave_files(wave, name, owner):
     return out, frag
 
 
-def nec_tree(frag):
-    wave = nordennavic.WAVE
-    ids = [focus_id(wave, b, i) for b in wave.branches for i in range(6)]
-    right = max(x for x, _ in frag["positions"].values())
-    body = (f"id = {nordennavic.TREE_ID}\ncountry = {{ factor = 0 modifier = {{ add = 45 tag = NEC original_tag = NEC }} }}\n"
+def new_tree(module, tag, tree_id, frag):
+    wave = module.WAVE
+    ids = [focus_id(wave, b, i) for b in wave.branches if b.tag == tag for i in range(6)]
+    right = max(frag["positions"][i][0] for i in ids)
+    body = (f"id = {tree_id}\ncountry = {{ factor = 0 modifier = {{ add = 45 tag = {tag} original_tag = {tag} }} }}\n"
             "default = no\nreset_on_civilwar = no\n"
             f"initial_show_position = {{ focus = {ids[0]} }}\ncontinuous_focus_position = {{ x = {(right + 4) * 96} y = 16 }}\n" +
             "".join("shared_focus = " + i + "\n" for i in ids))
-    return "# Original provisional gameplay; source: tools/content_waves (The Northern Reserve). Native acceptance pending.\n" + block("focus_tree", body)
+    return f"# Original provisional gameplay; source: tools/content_waves ({wave.label}). Native acceptance pending.\n" + block("focus_tree", body)
 
 
 def outputs():
-    out = {}
-    fe_files, fe = wave_files(free_erusea.WAVE, "free_erusea", free_erusea.owner())
-    nc_files, nc = wave_files(nordennavic.WAVE, "nordennavic", nordennavic.owner())
-    out.update(fe_files)
-    out.update(nc_files)
-    for tag in ("ERU", "FCU"):
-        relative = f"common/national_focus/{tag}.txt"
-        ids = [focus_id(free_erusea.WAVE, b, i) for b in free_erusea.WAVE.branches if b.tag == tag for i in range(6)]
-        out[relative] = attach((MOD / relative).read_text(encoding="utf-8"), tag, ids)
-    out["common/national_focus/NEC.txt"] = nec_tree(nc)
-    return out, {"A": fe, "D": nc}
+    out, frags = {}, {}
+    for module in MODULES:
+        files, frag = wave_files(module)
+        overlap = set(files) & set(out)
+        assert not overlap, overlap
+        out.update(files)
+        frags[module.KEY] = frag
+        for tag, name in getattr(module, "IMPORTS", {}).items():
+            relative = f"common/national_focus/{tag}.txt"
+            ids = [focus_id(module.WAVE, b, i) for b in module.WAVE.branches if b.tag == tag for i in range(6)]
+            out[relative] = attach((MOD / relative).read_text(encoding="utf-8"), tag, ids, name)
+        for tag, tree_id in getattr(module, "TREES", {}).items():
+            out[f"common/national_focus/{tag}.txt"] = new_tree(module, tag, tree_id, frag)
+    return out, frags
 
 
 def inventory(frags):
     rows = []
-    for key, wave in (("A", free_erusea.WAVE), ("D", nordennavic.WAVE)):
-        where = frags[key]["positions"]
+    for module in MODULES:
+        wave = module.WAVE
+        where = frags[module.KEY]["positions"]
         for b in wave.branches:
             for i in range(6):
                 ident = focus_id(wave, b, i)
-                rows.append(dict(id=ident, wave=key, tag=b.tag, branch=b.key, title=b.titles[i], x=where[ident][0], y=where[ident][1],
+                rows.append(dict(id=ident, wave=module.KEY, tag=b.tag, branch=b.key, title=b.titles[i], x=where[ident][0], y=where[ident][1],
                                  cost_days=70 if i in (1, 2, 5) else 35, purpose=PURPOSES[i],
                                  entry=list(b.entry) if i == 0 else [], gate=b.gate if i == 0 else "",
                                  exclusive_with=focus_id(wave, b, 2 if i == 1 else 1) if i in (1, 2) else None,
@@ -130,12 +135,10 @@ def inventory(frags):
     counts = {}
     for row in rows:
         counts[row["tag"]] = counts.get(row["tag"], 0) + 1
-    return dict(schema=1, title="Content waves A and D", counts=counts, total=len(rows),
-                source_layers={"official_anchors": ["Chronicle 2005 / 09.26 provisional government under ISAF oversight (ac_ucw)",
-                                                    "Chronicle 2006 / 09.26 Free Erusea insurrection (release_plan.json chronology)"],
-                               "provisional_gameplay": "Every focus, policy, service, dialogue, value, the insurrection pressure model and its containment"},
-                services=[dict(id=ident, tag=b.tag, branch=b.key, days=90, cooldown_days=90, political_power=35, capacity=4)
-                          for key in ("A", "D") for b, n, ident in frags[key]["services"]],
+    return dict(schema=2, title="Content waves", counts=counts, total=len(rows),
+                waves=[dict(key=m.KEY, name=m.NAME, label=m.WAVE.label, ledger=m.LEDGER, source_layers=m.SOURCES) for m in MODULES],
+                services=[dict(id=ident, wave=m.KEY, tag=b.tag, branch=b.key, days=90, cooldown_days=90, political_power=35, capacity=4)
+                          for m in MODULES for b, n, ident in frags[m.KEY]["services"]],
                 focuses=rows)
 
 
@@ -153,7 +156,8 @@ def main():
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(text, encoding="utf-8", newline="\n")
-    manifest = json.dumps(inventory(frags), indent=2, ensure_ascii=False) + "\n"
+    data = inventory(frags)
+    manifest = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
     path = HERE / "manifest.json"
     if args.check:
         if not path.exists() or path.read_text(encoding="utf-8") != manifest:
@@ -162,8 +166,8 @@ def main():
         path.write_text(manifest, encoding="utf-8", newline="\n")
     if failures:
         raise SystemExit("Content waves output differs: " + ", ".join(failures))
-    data = inventory(frags)
-    print(f"Content waves A and D: {data['total']} focus definitions {data['counts']}, {len(data['services'])} funded services; "
+    waves = "+".join(m.KEY for m in MODULES)
+    print(f"Content waves {waves}: {data['total']} focus definitions {data['counts']}, {len(data['services'])} funded services; "
           + ("consistent" if args.check else "generated"))
 
 

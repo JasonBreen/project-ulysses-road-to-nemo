@@ -42,19 +42,19 @@ The 2005 entries through 26 September are already cited in
 
 | Claim | Exact source | Wave | Disposition |
 | --- | --- | --- | --- |
-| The Lyes Faction, later the Lyes United Front (LUF), seizes the Estovakian capital | Chronicle, 2007 / 04.03 | B | Owner stage `ac_ecw`; no tag or government change |
-| The LUF suppresses cities that resist; other factions revolt and the civil war begins | Chronicle, 2007 / 06.30 | B | Owner stage; civil war is tagless |
-| Estovakia's Eastern Faction takes and restores northeastern oil platforms held by a public corporation | Chronicle, 2008 / 07.15 | B | Owner stage and the Estovakian oil lane; no state or resource transfer |
-| The Republic of Anea Initiative is put on hold because of internal strife in Estovakia | Chronicle, 2008 / 10.23 | B | New record flag only; the existing `ac_anea` bureau state is read, never written |
-| Emmeria ends aid for the LUF's reconstruction programme because the LUF suppresses all opposition | Chronicle, 2010 / 02.19 | B | Emmerian aid lane; the historical route ends the aid, an earned conditional alternative continues it |
-| Emmeria ends aid for Estovakia's reconstruction | Chronicle, 2011 / 05.09 | B | Emmerian aid lane |
-| The Eastern Faction and the LUF clash; the LUF loses 80% of its territory in one week to new weapons and elite aviation units | Chronicle, 2013 / 01.15 | B | Owner stage (authority falls); no territory changes hands on the map |
-| The LUF fights on but is defeated near the Emmerian border; General Lyes is killed and the civil war ends | Chronicle, 2013 / 10.29 | B | Historical outcome; earned negotiated settlement and provisional prolonged instability are alternatives |
-| Estovakian Foreign Minister Isaac Arensky, former air marshal of the Northern Highlands Faction, is attacked; fifteen former LUF soldiers are arrested a week later | Chronicle, 2013 / 11.25 | B | Aftermath news only |
-| Arensky dies; the death is withheld from the public | Chronicle, 2013 / 12.02 | B | Aftermath news only |
+| The Lyes Faction, later the Lyes United Front (LUF), seizes the Estovakian capital | Chronicle, 2007 / 04.03 | B | Implemented: `ac_ecw.1`; no tag or government change |
+| The LUF suppresses cities that resist; other factions revolt and the civil war begins | Chronicle, 2007 / 06.30 | B | Implemented: `ac_ecw.2`; the civil war is tagless |
+| Estovakia's Eastern Faction takes and restores northeastern oil platforms held by a public corporation | Chronicle, 2008 / 07.15 | B | Implemented: `ac_ecw.3` and the Estovakian oil lane; no state or resource transfer |
+| The Republic of Anea Initiative is put on hold because of internal strife in Estovakia | Chronicle, 2008 / 10.23 | B | Implemented: `ac_ecw.4` and flag `ac_ecw_anea_initiative_on_hold`; the existing `ac_anea` bureau state is read, never written |
+| Emmeria ends aid for the LUF's reconstruction programme because the LUF suppresses all opposition | Chronicle, 2010 / 02.19 | B | Implemented: `ac_ecw.5`; the historical option ends the aid, an earned conditional alternative continues it |
+| Emmeria ends aid for Estovakia's reconstruction | Chronicle, 2011 / 05.09 | B | Implemented: `ac_ecw.6` |
+| The Eastern Faction and the LUF clash; the LUF loses 80% of its territory in one week to new weapons and elite aviation units | Chronicle, 2013 / 01.15 | B | Implemented: `ac_ecw.7` (authority falls); no territory changes hands on the map |
+| The LUF fights on but is defeated near the Emmerian border; General Lyes is killed and the civil war ends | Chronicle, 2013 / 10.29 | B | Implemented: `ac_ecw.9`; earned negotiated settlement (`ac_ecw.14`) and provisional prolonged war (`ac_ecw.8`, `.13`) are alternatives |
+| Estovakian Foreign Minister Isaac Arensky, former air marshal of the Northern Highlands Faction, is attacked; fifteen former LUF soldiers are arrested a week later | Chronicle, 2013 / 11.25 | B | Implemented: aftermath news only |
+| Arensky dies; the death is withheld from the public | Chronicle, 2013 / 12.02 | B | Implemented: aftermath news only |
 | The pilot Talisman joins the Republic of Emmeria Air Force and defends Gracemeria | Chronicle, 2013 / 12.23 | Reference only | Named pilot; not scripted |
-| Arensky's death is announced; Antonina Koznick, a former Eastern Faction navy captain, succeeds him | Chronicle, 2014 / 02.03 | B | Aftermath news only; no character or leader is created |
-| Former LUF members attack a relief-supply storage facility in the western city of Vistoc | Chronicle, 2014 / 02.04 | B | Aftermath news only |
+| Arensky's death is announced; Antonina Koznick, a former Eastern Faction navy captain, succeeds him | Chronicle, 2014 / 02.03 | B | Implemented: aftermath news only; no character or leader is created |
+| Former LUF members attack a relief-supply storage facility in the western city of Vistoc | Chronicle, 2014 / 02.04 | B | Implemented: aftermath news only |
 
 ## 2008: the Arkbird Summit
 
@@ -124,7 +124,7 @@ The 2005 entries through 26 September are already cited in
 | General Édouard Labarthe is killed by Osean forces | Chronicle, 2019 / 10.10 | F1 | Pending; news only |
 | Osean and Erusean forces clash at the space elevator; the Arsenal Bird Justice is shot down | Chronicle, 2019 / 10.31 | F1 | Pending |
 | Osea and Erusea sign a ceasefire at the Expo City Conference | Chronicle, 2019 / 12.01 | F1 | Pending |
-| The Leasath civil war ends after ten years of fighting | Chronicle, 2019 / XX.XX | F2 | Day and month unknown. Derived: the war began about 2009. Aurelia's foundation refers to it from 2010 as context only |
+| The Leasath civil war ends after ten years of fighting | Chronicle, 2019 / XX.XX | F2 | Day and month unknown. Derived: the war began about 2009. Aurelia's foundation refers to it from 2010 as context only (`AUR_au_leasath_war_*`) |
 
 ## 2020: the Aurelia–Leasath war
 

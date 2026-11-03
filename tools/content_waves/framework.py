@@ -38,6 +38,7 @@ class Branch:
     final: tuple          # (title, prose)
     service_effect: str = ""     # extra guarded effect when a service period completes
     settlement_effect: str = ""  # extra effect applied once with the settlement
+    policy_effects: tuple = ("", "")  # extra effects applied once with policy A / policy B
 
 
 @dataclass(frozen=True)
@@ -55,6 +56,7 @@ class Wave:
     final_ready: dict     # tag -> trigger for the national conclusion
     themes: dict          # tag -> (primary, secondary) glyphs for national art
     weekly_extra: dict = field(default_factory=dict)  # tag -> extra weekly effect
+    event_base: int = 10         # first narrative event number; owners use the numbers below it
 
 
 def branch_id(branch):
@@ -121,13 +123,14 @@ def positions(wave):
     return result
 
 
-def compile_wave(wave, event_base=10):
+def compile_wave(wave, event_base=None):
     """Return script/localization fragments for one wave.
 
     The caller writes the fragments to files, so the build can merge an owner
     module (for example a conflict owner) into the same namespace.
     """
     validate(wave)
+    event_base = wave.event_base if event_base is None else event_base
     P = wave.prefix
     loc = {}
     effects = {}
@@ -237,7 +240,7 @@ def compile_wave(wave, event_base=10):
             if index == 0:
                 reward += f"{P}_narrative_tick = yes\n"
             elif index in (1, 2):
-                reward += f"add_ideas = {ident}_spirit\n{P}_narrative_tick = yes\n"
+                reward += f"add_ideas = {ident}_spirit\n" + branch.policy_effects[index - 1] + f"{P}_narrative_tick = yes\n"
             elif index == 5:
                 for p in (1, 2):
                     policy = focus_id(wave, branch, p)

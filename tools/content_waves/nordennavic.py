@@ -205,3 +205,14 @@ def owner():
         f"available = {{ ac_pol_previous_tree_idle = yes }}\ncost = 0\n" +
         block("complete_effect", f"load_focus_tree = {{ tree = {TREE_ID} keep_completed = yes }}") + "ai_will_do = { base = 10 }\n")
     return dict(loc=loc, custom=custom, decisions={"ac_nec_nec_services": [adopt]})
+
+
+# Registry declarations ------------------------------------------------------
+KEY = "D"
+NAME = "nordennavic"
+TREES = {"NEC": TREE_ID}
+LEDGER = "docs/CONTENT_WAVES_A_D.md"
+SOURCES = {"mod_provenance": ["Country history, office, world start, institution profile and the 2004 Anean bureau invitation"],
+           "provisional_gameplay": "Every focus, policy, service, dialogue and value; no Chronicle entry names Nordennavic"}
+NEWS_ART = ()
+OWNER_ART = {}

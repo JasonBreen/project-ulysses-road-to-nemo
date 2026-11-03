@@ -25,6 +25,12 @@ checks ([CONTENT_WAVES_A_D.md](CONTENT_WAVES_A_D.md)). The ledger now records
 674 delivered and 354 remaining. The Free Erusea owner uses only the sourced
 outbreak date; Gate 0 is still needed for the rest of 2005–2009 (since compiled; see §2).
 
+**Update, 3 November 2026.** Gate 0 is compiled, Wave A is reconciled with the
+official Free Erusea defeat, and Wave B (the tagless Estovakian civil war) and
+Aurelia's 1991–2018 foundation are implemented in source
+([CONTENT_WAVES_B_AUR.md](CONTENT_WAVES_B_AUR.md)). The ledger now records 776
+delivered and 252 remaining.
+
 ## 1. Where the overhaul stands
 
 Counts come from `release_plan.json` on the PR #59 head. They include mutually

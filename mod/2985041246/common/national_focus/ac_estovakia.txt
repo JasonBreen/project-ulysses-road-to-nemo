@@ -1,0 +1,992 @@
+# Original provisional gameplay; source: tools/content_waves (The Estovakian Civil War). Native acceptance pending.
+shared_focus = {
+	id = EVA_ecw_capital_register
+	icon = GFX_ac_ecw_focus_EVA_ecw_capital_register
+	x = 3
+	y = 31
+	cost = 5
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_global_flag = ac_ecw_capital_seized
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_capital_register_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_capital_policy_a
+	icon = GFX_ac_ecw_focus_EVA_ecw_capital_policy_a
+	x = 1
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_capital_register
+	}
+	mutually_exclusive = {
+		focus = EVA_ecw_capital_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_capital_register NOT = { has_country_flag = EVA_ecw_capital_policy_b_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_capital_policy_a_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_capital_policy_b
+	icon = GFX_ac_ecw_focus_EVA_ecw_capital_policy_b
+	x = 5
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_capital_register
+	}
+	mutually_exclusive = {
+		focus = EVA_ecw_capital_policy_a
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_capital_register NOT = { has_country_flag = EVA_ecw_capital_policy_a_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_capital_policy_b_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_capital_operations
+	icon = GFX_ac_ecw_focus_EVA_ecw_capital_operations
+	x = 3
+	y = 33
+	cost = 5
+	prerequisite = {
+		focus = EVA_ecw_capital_policy_a
+		focus = EVA_ecw_capital_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA OR = { has_completed_focus = EVA_ecw_capital_policy_a has_completed_focus = EVA_ecw_capital_policy_b }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_capital_operations_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_capital_review
+	icon = GFX_ac_ecw_focus_EVA_ecw_capital_review
+	x = 3
+	y = 34
+	cost = 5
+	prerequisite = {
+		focus = EVA_ecw_capital_operations
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_capital_operations has_country_flag = EVA_ecw_capital_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_capital_review_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_capital_settlement
+	icon = GFX_ac_ecw_focus_EVA_ecw_capital_settlement
+	x = 3
+	y = 35
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_capital_review
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_capital_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_capital_settlement_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_cities_register
+	icon = GFX_ac_ecw_focus_EVA_ecw_cities_register
+	x = 9
+	y = 31
+	cost = 5
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_global_flag = ac_ecw_war_running
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_cities_register_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_cities_policy_a
+	icon = GFX_ac_ecw_focus_EVA_ecw_cities_policy_a
+	x = 7
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_cities_register
+	}
+	mutually_exclusive = {
+		focus = EVA_ecw_cities_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_cities_register NOT = { has_country_flag = EVA_ecw_cities_policy_b_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_cities_policy_a_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_cities_policy_b
+	icon = GFX_ac_ecw_focus_EVA_ecw_cities_policy_b
+	x = 11
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_cities_register
+	}
+	mutually_exclusive = {
+		focus = EVA_ecw_cities_policy_a
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_cities_register NOT = { has_country_flag = EVA_ecw_cities_policy_a_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_cities_policy_b_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_cities_operations
+	icon = GFX_ac_ecw_focus_EVA_ecw_cities_operations
+	x = 9
+	y = 33
+	cost = 5
+	prerequisite = {
+		focus = EVA_ecw_cities_policy_a
+		focus = EVA_ecw_cities_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA OR = { has_completed_focus = EVA_ecw_cities_policy_a has_completed_focus = EVA_ecw_cities_policy_b }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_cities_operations_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_cities_review
+	icon = GFX_ac_ecw_focus_EVA_ecw_cities_review
+	x = 9
+	y = 34
+	cost = 5
+	prerequisite = {
+		focus = EVA_ecw_cities_operations
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_cities_operations has_country_flag = EVA_ecw_cities_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_cities_review_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_cities_settlement
+	icon = GFX_ac_ecw_focus_EVA_ecw_cities_settlement
+	x = 9
+	y = 35
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_cities_review
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_cities_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_cities_settlement_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_oil_register
+	icon = GFX_ac_ecw_focus_EVA_ecw_oil_register
+	x = 15
+	y = 31
+	cost = 5
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_global_flag = ac_ecw_capital_seized
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_oil_register_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_oil_policy_a
+	icon = GFX_ac_ecw_focus_EVA_ecw_oil_policy_a
+	x = 13
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_oil_register
+	}
+	mutually_exclusive = {
+		focus = EVA_ecw_oil_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_oil_register NOT = { has_country_flag = EVA_ecw_oil_policy_b_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_oil_policy_a_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_oil_policy_b
+	icon = GFX_ac_ecw_focus_EVA_ecw_oil_policy_b
+	x = 17
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_oil_register
+	}
+	mutually_exclusive = {
+		focus = EVA_ecw_oil_policy_a
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_oil_register NOT = { has_country_flag = EVA_ecw_oil_policy_a_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_oil_policy_b_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_oil_operations
+	icon = GFX_ac_ecw_focus_EVA_ecw_oil_operations
+	x = 15
+	y = 33
+	cost = 5
+	prerequisite = {
+		focus = EVA_ecw_oil_policy_a
+		focus = EVA_ecw_oil_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA OR = { has_completed_focus = EVA_ecw_oil_policy_a has_completed_focus = EVA_ecw_oil_policy_b }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_oil_operations_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_oil_review
+	icon = GFX_ac_ecw_focus_EVA_ecw_oil_review
+	x = 15
+	y = 34
+	cost = 5
+	prerequisite = {
+		focus = EVA_ecw_oil_operations
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_oil_operations has_country_flag = EVA_ecw_oil_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_oil_review_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_oil_settlement
+	icon = GFX_ac_ecw_focus_EVA_ecw_oil_settlement
+	x = 15
+	y = 35
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_oil_review
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_oil_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_oil_settlement_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_chandelier_register
+	icon = GFX_ac_ecw_focus_EVA_ecw_chandelier_register
+	x = 21
+	y = 31
+	cost = 5
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_global_flag = ac_ecw_capital_seized
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_chandelier_register_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_chandelier_policy_a
+	icon = GFX_ac_ecw_focus_EVA_ecw_chandelier_policy_a
+	x = 19
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_chandelier_register
+	}
+	mutually_exclusive = {
+		focus = EVA_ecw_chandelier_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_chandelier_register NOT = { has_country_flag = EVA_ecw_chandelier_policy_b_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_chandelier_policy_a_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_chandelier_policy_b
+	icon = GFX_ac_ecw_focus_EVA_ecw_chandelier_policy_b
+	x = 23
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_chandelier_register
+	}
+	mutually_exclusive = {
+		focus = EVA_ecw_chandelier_policy_a
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_chandelier_register NOT = { has_country_flag = EVA_ecw_chandelier_policy_a_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_chandelier_policy_b_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_chandelier_operations
+	icon = GFX_ac_ecw_focus_EVA_ecw_chandelier_operations
+	x = 21
+	y = 33
+	cost = 5
+	prerequisite = {
+		focus = EVA_ecw_chandelier_policy_a
+		focus = EVA_ecw_chandelier_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA OR = { has_completed_focus = EVA_ecw_chandelier_policy_a has_completed_focus = EVA_ecw_chandelier_policy_b }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_chandelier_operations_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_chandelier_review
+	icon = GFX_ac_ecw_focus_EVA_ecw_chandelier_review
+	x = 21
+	y = 34
+	cost = 5
+	prerequisite = {
+		focus = EVA_ecw_chandelier_operations
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_chandelier_operations has_country_flag = EVA_ecw_chandelier_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_chandelier_review_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_chandelier_settlement
+	icon = GFX_ac_ecw_focus_EVA_ecw_chandelier_settlement
+	x = 21
+	y = 35
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_chandelier_review
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_chandelier_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_chandelier_settlement_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_talks_register
+	icon = GFX_ac_ecw_focus_EVA_ecw_talks_register
+	x = 27
+	y = 31
+	cost = 5
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_global_flag = ac_ecw_war_running date > 2009.12.31
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_talks_register_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_talks_policy_a
+	icon = GFX_ac_ecw_focus_EVA_ecw_talks_policy_a
+	x = 25
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_talks_register
+	}
+	mutually_exclusive = {
+		focus = EVA_ecw_talks_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_talks_register NOT = { has_country_flag = EVA_ecw_talks_policy_b_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_talks_policy_a_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_talks_policy_b
+	icon = GFX_ac_ecw_focus_EVA_ecw_talks_policy_b
+	x = 29
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_talks_register
+	}
+	mutually_exclusive = {
+		focus = EVA_ecw_talks_policy_a
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_talks_register NOT = { has_country_flag = EVA_ecw_talks_policy_a_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_talks_policy_b_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_talks_operations
+	icon = GFX_ac_ecw_focus_EVA_ecw_talks_operations
+	x = 27
+	y = 33
+	cost = 5
+	prerequisite = {
+		focus = EVA_ecw_talks_policy_a
+		focus = EVA_ecw_talks_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA OR = { has_completed_focus = EVA_ecw_talks_policy_a has_completed_focus = EVA_ecw_talks_policy_b }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_talks_operations_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_talks_review
+	icon = GFX_ac_ecw_focus_EVA_ecw_talks_review
+	x = 27
+	y = 34
+	cost = 5
+	prerequisite = {
+		focus = EVA_ecw_talks_operations
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_talks_operations has_country_flag = EVA_ecw_talks_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_talks_review_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EVA_ecw_talks_settlement
+	icon = GFX_ac_ecw_focus_EVA_ecw_talks_settlement
+	x = 27
+	y = 35
+	cost = 10
+	prerequisite = {
+		focus = EVA_ecw_talks_review
+	}
+	available = {
+		ac_ecw_active = yes tag = EVA original_tag = EVA has_completed_focus = EVA_ecw_talks_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EVA_ecw_talks_settlement_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_aid_register
+	icon = GFX_ac_ecw_focus_EMM_ecw_aid_register
+	x = 6
+	y = 31
+	cost = 5
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_global_flag = ac_ecw_capital_seized
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_aid_register_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_aid_policy_a
+	icon = GFX_ac_ecw_focus_EMM_ecw_aid_policy_a
+	x = 4
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EMM_ecw_aid_register
+	}
+	mutually_exclusive = {
+		focus = EMM_ecw_aid_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_aid_register NOT = { has_country_flag = EMM_ecw_aid_policy_b_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_aid_policy_a_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_aid_policy_b
+	icon = GFX_ac_ecw_focus_EMM_ecw_aid_policy_b
+	x = 8
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EMM_ecw_aid_register
+	}
+	mutually_exclusive = {
+		focus = EMM_ecw_aid_policy_a
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_aid_register NOT = { has_country_flag = EMM_ecw_aid_policy_a_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_aid_policy_b_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_aid_operations
+	icon = GFX_ac_ecw_focus_EMM_ecw_aid_operations
+	x = 6
+	y = 33
+	cost = 5
+	prerequisite = {
+		focus = EMM_ecw_aid_policy_a
+		focus = EMM_ecw_aid_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM OR = { has_completed_focus = EMM_ecw_aid_policy_a has_completed_focus = EMM_ecw_aid_policy_b }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_aid_operations_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_aid_review
+	icon = GFX_ac_ecw_focus_EMM_ecw_aid_review
+	x = 6
+	y = 34
+	cost = 5
+	prerequisite = {
+		focus = EMM_ecw_aid_operations
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_aid_operations has_country_flag = EMM_ecw_aid_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_aid_review_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_aid_settlement
+	icon = GFX_ac_ecw_focus_EMM_ecw_aid_settlement
+	x = 6
+	y = 35
+	cost = 10
+	prerequisite = {
+		focus = EMM_ecw_aid_review
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_aid_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_aid_settlement_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_border_register
+	icon = GFX_ac_ecw_focus_EMM_ecw_border_register
+	x = 12
+	y = 31
+	cost = 5
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_global_flag = ac_ecw_war_running
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_border_register_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_border_policy_a
+	icon = GFX_ac_ecw_focus_EMM_ecw_border_policy_a
+	x = 10
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EMM_ecw_border_register
+	}
+	mutually_exclusive = {
+		focus = EMM_ecw_border_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_border_register NOT = { has_country_flag = EMM_ecw_border_policy_b_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_border_policy_a_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_border_policy_b
+	icon = GFX_ac_ecw_focus_EMM_ecw_border_policy_b
+	x = 14
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EMM_ecw_border_register
+	}
+	mutually_exclusive = {
+		focus = EMM_ecw_border_policy_a
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_border_register NOT = { has_country_flag = EMM_ecw_border_policy_a_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_border_policy_b_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_border_operations
+	icon = GFX_ac_ecw_focus_EMM_ecw_border_operations
+	x = 12
+	y = 33
+	cost = 5
+	prerequisite = {
+		focus = EMM_ecw_border_policy_a
+		focus = EMM_ecw_border_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM OR = { has_completed_focus = EMM_ecw_border_policy_a has_completed_focus = EMM_ecw_border_policy_b }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_border_operations_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_border_review
+	icon = GFX_ac_ecw_focus_EMM_ecw_border_review
+	x = 12
+	y = 34
+	cost = 5
+	prerequisite = {
+		focus = EMM_ecw_border_operations
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_border_operations has_country_flag = EMM_ecw_border_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_border_review_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_border_settlement
+	icon = GFX_ac_ecw_focus_EMM_ecw_border_settlement
+	x = 12
+	y = 35
+	cost = 10
+	prerequisite = {
+		focus = EMM_ecw_border_review
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_border_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_border_settlement_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_initiative_register
+	icon = GFX_ac_ecw_focus_EMM_ecw_initiative_register
+	x = 18
+	y = 31
+	cost = 5
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_global_flag = ac_ecw_anea_initiative_on_hold
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_initiative_register_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_initiative_policy_a
+	icon = GFX_ac_ecw_focus_EMM_ecw_initiative_policy_a
+	x = 16
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EMM_ecw_initiative_register
+	}
+	mutually_exclusive = {
+		focus = EMM_ecw_initiative_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_initiative_register NOT = { has_country_flag = EMM_ecw_initiative_policy_b_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_initiative_policy_a_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_initiative_policy_b
+	icon = GFX_ac_ecw_focus_EMM_ecw_initiative_policy_b
+	x = 20
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = EMM_ecw_initiative_register
+	}
+	mutually_exclusive = {
+		focus = EMM_ecw_initiative_policy_a
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_initiative_register NOT = { has_country_flag = EMM_ecw_initiative_policy_a_done }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_initiative_policy_b_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_initiative_operations
+	icon = GFX_ac_ecw_focus_EMM_ecw_initiative_operations
+	x = 18
+	y = 33
+	cost = 5
+	prerequisite = {
+		focus = EMM_ecw_initiative_policy_a
+		focus = EMM_ecw_initiative_policy_b
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM OR = { has_completed_focus = EMM_ecw_initiative_policy_a has_completed_focus = EMM_ecw_initiative_policy_b }
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_initiative_operations_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_initiative_review
+	icon = GFX_ac_ecw_focus_EMM_ecw_initiative_review
+	x = 18
+	y = 34
+	cost = 5
+	prerequisite = {
+		focus = EMM_ecw_initiative_operations
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_initiative_operations has_country_flag = EMM_ecw_initiative_service_completed
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_initiative_review_apply = yes
+	}
+}
+
+shared_focus = {
+	id = EMM_ecw_initiative_settlement
+	icon = GFX_ac_ecw_focus_EMM_ecw_initiative_settlement
+	x = 18
+	y = 35
+	cost = 10
+	prerequisite = {
+		focus = EMM_ecw_initiative_review
+	}
+	available = {
+		ac_ecw_active = yes tag = EMM original_tag = EMM has_completed_focus = EMM_ecw_initiative_review
+	}
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	ai_will_do = { factor = 12 }
+	completion_reward = {
+		EMM_ecw_initiative_settlement_apply = yes
+	}
+}

@@ -28,7 +28,7 @@ MOD = ROOT / "mod/2985041246"
 sys.path[:0] = [str(ROOT / "tools"), str(ROOT / "tools/usea_expansion")]
 
 from content_waves.framework import branch_id, focus_id  # noqa: E402
-from content_waves import free_erusea, nordennavic  # noqa: E402
+from content_waves.registry import MODULES  # noqa: E402
 from content_waves.build import outputs as content_outputs  # noqa: E402
 from event_picture_fit.fit import contain, same_review_png  # noqa: E402
 from event_picture_fit.bitmap import BitmapFont  # noqa: E402
@@ -44,19 +44,21 @@ LIGHT = (222, 238, 243, 255)
 EDGE = (43, 78, 99, 255)
 GOLD = (194, 165, 97, 255)
 GRID = (18, 40, 54, 255)
-ACCENT = {"ERU": (226, 132, 104, 255), "FCU": (104, 190, 226, 255), "NEC": (148, 214, 206, 255)}
+ACCENT = {"ERU": (226, 132, 104, 255), "FCU": (104, 190, 226, 255), "NEC": (148, 214, 206, 255),
+          "EVA": (176, 140, 220, 255), "EMM": (126, 206, 150, 255), "AUR": (232, 186, 92, 255)}
 SHAPES = {
     "ERU": [(30, 14), (162, 14), (178, 34), (178, 150), (150, 178), (42, 178), (14, 150), (14, 34)],
     "FCU": [(96, 10), (176, 42), (176, 140), (148, 176), (44, 176), (16, 140), (16, 42)],
     "NEC": [(22, 22), (96, 10), (170, 22), (180, 150), (158, 178), (34, 178), (12, 150)],
+    "EVA": [(40, 12), (152, 12), (180, 52), (180, 140), (152, 180), (40, 180), (12, 140), (12, 52)],
+    "EMM": [(18, 18), (174, 18), (174, 150), (96, 182), (18, 150)],
+    "AUR": [(96, 8), (182, 70), (164, 176), (28, 176), (10, 70)],
 }
 ARRANGEMENTS = [((26, 25, 119, 111), (126, 112, 45, 46)), ((23, 40, 93, 109), (111, 58, 65, 75)),
                 ((55, 26, 110, 113), (26, 116, 46, 44)), ((45, 26, 104, 94), (65, 122, 66, 42)),
                 ((26, 29, 109, 100), (110, 102, 61, 59)), ((41, 76, 111, 84), (73, 24, 47, 45))]
-WAVES = ((free_erusea.WAVE, "free_erusea"), (nordennavic.WAVE, "nordennavic"))
-OWNER_IDEAS = {"ac_fe_pressure_severe": ("security", "refugees"), "ac_fe_pressure_active": ("security", "communications"),
-               "ac_fe_pressure_low": ("security", "civil"), "ac_fe_emergency_administration": ("command", "document"),
-               "ac_fe_partner_assistance": ("diplomacy", "security"), "ac_fe_fcu_support_commitment": ("diplomacy", "command")}
+WAVES = tuple((m.WAVE, m.NAME) for m in MODULES)
+OWNER_ART = {ident: art for m in MODULES for ident, art in m.OWNER_ART.items()}
 
 
 def encoded(image, kind="DDS"):
@@ -76,8 +78,15 @@ def frame(tag, settled=False):
         d.line((40, 166, 152, 166), fill=EDGE, width=2)
     elif tag == "FCU":
         d.arc((44, 128, 148, 176), 0, 180, fill=EDGE, width=2)
-    else:
+    elif tag == "NEC":
         d.line((30, 160, 70, 168, 122, 168, 162, 160), fill=EDGE, width=2)
+    elif tag == "EVA":
+        d.line((36, 164, 84, 164, 96, 156, 108, 164, 156, 164), fill=EDGE, width=2)
+    elif tag == "EMM":
+        d.line((40, 160, 152, 160), fill=EDGE, width=2)
+        d.line((56, 168, 136, 168), fill=EDGE, width=2)
+    else:
+        d.arc((40, 22, 152, 70), 180, 360, fill=EDGE, width=2)
     if settled:
         d.line((52, 180, 140, 180), fill=GOLD, width=3)
         d.polygon([(87, 176), (96, 169), (105, 176), (96, 184)], fill=GOLD)
@@ -121,8 +130,8 @@ def scene(tag, subjects, news=False):
 
 
 def idea_subjects(wave, ident):
-    if ident in OWNER_IDEAS:
-        return OWNER_IDEAS[ident], 3
+    if ident in OWNER_ART:
+        return OWNER_ART[ident][:2], 3
     for b in wave.branches:
         stem = focus_id(wave, b, 0)[:-len("_register")]
         if not ident.startswith(stem + "_"):
@@ -174,9 +183,8 @@ def outputs():
         ideas_file = parse(content[f"common/ideas/ac_{name}.txt"])
         for ident, _, _ in ideas_file[0][2][0][2]:
             (primary, secondary), layout = idea_subjects(wave, ident)
-            image = composition(ident[:3] if ident[:3] in wave.countries else ("ERU" if ident != "ac_fe_fcu_support_commitment" else "FCU"),
-                                primary, secondary, layout, settled=ident.endswith("_settled"))
-            tag = ident[:3] if ident[:3] in wave.countries else ("FCU" if ident == "ac_fe_fcu_support_commitment" else "ERU")
+            tag = OWNER_ART[ident][2] if ident in OWNER_ART else ident[:3]
+            image = composition(tag, primary, secondary, layout, settled=ident.endswith("_settled"))
             texture(f"gfx/AC_content_waves/ideas/{ident}.dds", image.resize((75, 75), Image.Resampling.LANCZOS), "GFX_idea_" + ident, "idea", tag,
                     id=ident, primary=primary, secondary=secondary)
         for tag, country in wave.countries.items():
@@ -203,19 +211,17 @@ def outputs():
             texture(f"gfx/AC_content_waves/events/{P}_{ident}.dds", contain(master), f"GFX_{P}_event_{ident}", "event illustration", b.tag,
                     title=b.titles[0], master=f"tools/content_waves/source/events/{P}_{ident}.png",
                     transform="Full-source Lanczos contain to 210x176; opaque navy padding; no crop")
-    for ident, subjects, title in (("insurrection", ("security", "document"), "The Free Erusea Insurrection"),
-                                   ("recedes", ("civil", "peace"), "The Insurrection Recedes"),
-                                   ("defeated", ("air", "peace"), "Free Erusea Is Defeated")):
-        master = scene("ERU", subjects, news=True)
-        result[HERE / "source/events" / f"ac_fe_news_{ident}.png"] = encoded(master, "PNG")
-        texture(f"gfx/AC_content_waves/events/ac_fe_news_{ident}.dds", contain(master, "news_event"), f"GFX_ac_fe_news_{ident}", "news illustration", "ERU",
-                title=title, master=f"tools/content_waves/source/events/ac_fe_news_{ident}.png",
+    for ident, subjects, title, tag in (row for m in MODULES for row in m.NEWS_ART):
+        master = scene(tag, subjects, news=True)
+        result[HERE / "source/events" / f"{ident}.png"] = encoded(master, "PNG")
+        texture(f"gfx/AC_content_waves/events/{ident}.dds", contain(master, "news_event"), f"GFX_{ident}", "news illustration", tag,
+                title=title, master=f"tools/content_waves/source/events/{ident}.png",
                 transform="Full-source Lanczos contain to 397x153; opaque navy padding; no crop")
 
     result[MOD / "interface/ac_content_waves.gfx"] = ("spriteTypes = {\n" + "\n".join(sprites) + "\n}\n").encode()
     manifest = dict(schema=1, pillow="11.3.0", source_layer="original provisional artwork; no engine/DLC/remote pixels or baked text",
-                    vector_sources=["tools/content_waves/build_art.py", "tools/content_waves/free_erusea.py", "tools/content_waves/nordennavic.py",
-                                    "tools/usea_expansion/build_art.py", "tools/event_picture_fit/fit.py"],
+                    vector_sources=["tools/content_waves/build_art.py"] + [f"tools/content_waves/{m.NAME}.py" for m in MODULES] +
+                                   ["tools/usea_expansion/build_art.py", "tools/event_picture_fit/fit.py"],
                     glyph_library_sha256=hashlib.sha256(LIBRARY.read_bytes().replace(b"\r\n", b"\n")).hexdigest(),
                     native="Not rendered in HOI4; native viewport/input acceptance remains pending", assets=assets)
     result[HERE / "assets.json"] = (json.dumps(manifest, indent=2) + "\n").encode()
@@ -241,7 +247,7 @@ def outputs():
                      for wave, _ in WAVES for tag, country in wave.countries.items())
     page = ('<!doctype html><meta charset="utf-8"><title>Content waves original artwork</title><style>body{background:#081621;color:#daedf2;'
             'font:16px sans-serif;margin:28px}figure{margin:0 0 28px}img{max-width:100%}table{border-collapse:collapse}'
-            'td{border:1px solid #34596b;padding:4px 10px}</style><h1>Content waves A and D: original artwork</h1>'
+            'td{border:1px solid #34596b;padding:4px 10px}</style><h1>Content waves: original artwork</h1>'
             '<p>Offline source review only. Not rendered in HOI4. Hashes are in tools/content_waves/assets.json.</p>'
             '<table><tr><td>Country</td><td>Role</td><td>Textures</td></tr>' + rows + '</table>' + sheets + "\n")
     result[HERE / "gallery/index.html"] = page.encode()

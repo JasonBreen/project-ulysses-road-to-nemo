@@ -437,3 +437,19 @@ def owner():
         custom += block("defined_text", f"name = {tag}_fe_route_context\n" + entries)
     return dict(effects=effects, triggers=triggers, loc=loc, ideas=ideas, events=events, category_prefix={"ERU": status}, custom=custom,
                 interrupt_extra=guard("original_tag = ERU", "ac_fe_close = yes"))
+
+
+# Registry declarations ------------------------------------------------------
+KEY = "A"
+NAME = "free_erusea"
+IMPORTS = {"ERU": "OVERSIGHT YEARS", "FCU": "OVERSIGHT YEARS"}
+LEDGER = "docs/CONTENT_WAVES_A_D.md"
+SOURCES = {"official": ["Chronicle 2005 / 09.26: provisional government under ISAF oversight (ac_ucw)",
+                        "Chronicle 2006 / 09.26: Free Erusea's armed insurrection and its defeat by Mobius 1"],
+           "provisional_gameplay": "Every focus, policy, service, dialogue and value, and the prolonged-insurrection alternative"}
+NEWS_ART = (("ac_fe_news_insurrection", ("security", "document"), "The Free Erusea Insurrection", "ERU"),
+            ("ac_fe_news_recedes", ("civil", "peace"), "The Insurrection Recedes", "ERU"),
+            ("ac_fe_news_defeated", ("air", "peace"), "Free Erusea Is Defeated", "ERU"))
+OWNER_ART = {"ac_fe_pressure_severe": ("security", "refugees", "ERU"), "ac_fe_pressure_active": ("security", "communications", "ERU"),
+             "ac_fe_pressure_low": ("security", "civil", "ERU"), "ac_fe_emergency_administration": ("command", "document", "ERU"),
+             "ac_fe_partner_assistance": ("diplomacy", "security", "ERU"), "ac_fe_fcu_support_commitment": ("diplomacy", "command", "FCU")}

@@ -1,4 +1,4 @@
-"""Reproducible original artwork for content waves A and D.
+"""Reproducible original artwork for every registered content wave.
 
 Every texture is composed in code from the original Ulysses glyph library
 (tools/usea_expansion/build_art.py); no installed-game, DLC or remote pixels and

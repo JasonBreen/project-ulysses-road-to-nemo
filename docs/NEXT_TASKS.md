@@ -16,7 +16,17 @@ These were verified and left for the owner. No lore outcome was chosen, and no `
 4. **Belka start ideology.** `common/bookmarks/blitzkrieg.txt` gives BLK `ideology = fascism`. `history/countries/BLK - Belka.txt` has `ruling_party = neutrality`. Neither file was changed.
 5. **Canonical bookmark.** Both January 1991 bookmark files set `default = yes` and they list different countries. See item 6. Do not merge them without updating `tools/Test-AneaPresentation.py`.
 6. **Layer-tag remap.** `Mixed / pending`, `Project requirement / provisional engineering contract`, and the "User-approved ..." wording in the canon ledger were not rewritten onto the four source layers.
-7. **Legacy OOB move.** Order-of-battle files under `history/units` stay where they are until an owner decision says otherwise.
+7. **Legacy OOB move.** Still pending owner approval. No `history/units` file was moved. These 15 files are not used by any `set_oob`, `set_air_oob`, `set_naval_oob`, or `load_oob`. The live histories load the replacements below. They are candidates for `inventory/inherited-legacy/history/units/` (that directory does not exist yet). A move also has to update the receipts that still name the current paths: the air/land/naval preserved-source hashes, `tools/world_legacy/test_legacy.py` (it byte-compares `OSE_navy.txt` with the baseline), `tools/Test-HistoryDataCleanup.py` (`PBL_land.txt` and `SYC_land.txt`), and the comments in `00_SAP_names.txt`, `00_FAT_names.txt`, `PBL_names_divisions.txt`, and `SYC_names_divisions.txt`.
+   - `BLK_navy` is replaced by `BLK_navy_1991_legacy` and `BLK_navy_dlc`.
+   - `FAT_navy` is replaced by `FAT_navy_1991_legacy` and `FAT_navy_dlc`.
+   - `OSE_navy` is replaced by `OSE_navy_1991_legacy` and `OSE_navy_dlc`.
+   - `SAP_navy` is replaced by `SAP_navy_1991_legacy` and `SAP_navy_dlc`.
+   - `GEB_air` is replaced by `GEB_ws_air`. `GEB_air_dlc` is replaced by `GEB_ws_air_bba`. `GEB_land` is replaced by `GEB_ws_land`.
+   - `UST_air` is replaced by `UST_ws_air`. `UST_air_dlc` is replaced by `UST_ws_air_bba`. `UST_land` is replaced by `UST_ws_land`.
+   - `NRL_land` is replaced by `NRL_ws_land`. `PBL_land` is replaced by `PBL_ws_land`. `RAT_land` is replaced by `RAT_ws_land`. `SYC_land` is replaced by `SYC_ws_land`. `WIE_land` is replaced by `WIE_ws_land`.
+8. **Empty Ustio mercenary OOB.** `UST_buy_mercs` in `common/decisions/UST_decisions.txt` costs 150 political power and runs `load_oob = UST_mercs_1`. `history/units/UST_mercs_1.txt` is 0 bytes, so the decision pays for an empty order of battle. Not changed.
+9. **Missing militia OOB.** Focus `UST_moblise_militia` in `common/national_focus/UST_shared.txt` runs `load_oob = UST_moblise_militia_focus_oob`. No file of that name exists under `history/units`. Not changed.
+10. **Sapin ship names.** The loaded fleets `SAP_navy_1991_legacy` and `SAP_navy_dlc`, the unused `SAP_navy`, and `common/units/names/00_SAP_names.txt` still use the inherited ARE-prefixed Spanish names, including `ARE Jaime I`, `ARE España`, `ARE Almirante Cervera`, `ARE Alsedo`, and `ARE B1` through `ARE C6`. The name-group comment already calls them inherited starting-fleet names (mod provenance). Left for the art/canon pass. Not renamed.
 
 `events/ac_war_events.txt` `war_event.1` and `war_event.2` are unreferenced stubs (`picture = xxx`, `is_triggered_only = yes`, no caller elsewhere in the mod). `war_event.2` reuses the `war_event.1` title, description, and option keys, and the static reference audit warns that `war_event.1.t`, `war_event.1.desc`, and `war_event.1.a` have no localisation. They were not edited.
 

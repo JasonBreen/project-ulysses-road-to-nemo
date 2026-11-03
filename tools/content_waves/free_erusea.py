@@ -295,7 +295,8 @@ def owner():
         ideas.append(block(ident, "picture = " + ident + "\nallowed = { always = no }\nallowed_civil_war = { always = no }\nremoval_cost = -1\n" +
                            block("modifier", "\n".join(f"{k} = {v}" for k, v in values.items()))))
 
-    triggers["ac_fe_owner_eligible"] = "tag = ERU original_tag = ERU any_owned_state = { always = yes } " + ISAF
+    # A capitulated Erusea that still owns land neither starts nor continues the insurrection.
+    triggers["ac_fe_owner_eligible"] = "tag = ERU original_tag = ERU any_owned_state = { always = yes } has_capitulated = no " + ISAF
     triggers["ac_fe_running"] = (f"{STARTED} NOT = {{ has_global_flag = ac_fe_insurrection_contained }} NOT = {{ has_global_flag = ac_fe_insurrection_closed }} "
                                  "NOT = { has_global_flag = ac_fe_insurrection_defeated }")
     triggers["ac_fe_fcu_can_respond"] = "country_exists = FCU FCU = { has_capitulated = no NOT = { has_war_with = ERU } }"

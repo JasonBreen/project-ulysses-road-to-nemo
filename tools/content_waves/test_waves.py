@@ -1051,6 +1051,13 @@ class Runtime(unittest.TestCase):
         w2.globals.add("ac_ucw_outcome_stalemate")
         w2.wave_action("free_erusea", "on_weekly_ERU", "ERU")
         self.assertNotIn("ac_fe_insurrection_started", w2.globals)
+        # A capitulated Erusea that still owns land cannot start the insurrection.
+        w3, c3 = self.owner()
+        c3.capitulated = True
+        w3.wave_action("free_erusea", "on_weekly_ERU", "ERU")
+        self.assertNotIn("ac_fe_insurrection_started", w3.globals)
+        self.assertNotIn("ac_fe_pressure", c3.variables)
+        self.assertEqual([], [e for _, e, _ in w3.events if e.startswith("ac_fe.")])
 
     def test_historical_route_records_the_defeat_by_mobius_1(self):
         w, c = self.owner()

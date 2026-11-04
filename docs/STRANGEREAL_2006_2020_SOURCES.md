@@ -12,6 +12,8 @@ Primary sources, read 3 November 2026 and re-read for the 2010 and 2019 rows on 
 - [Official ACES Chronicle — Abstracts](https://acecombat.jp/en/chronicle/), one narrative per title, cited as *Abstracts, &lt;title&gt;*.
 - [Official ACES product pages](https://acecombat.jp/en/product/), cited as *Product, &lt;title&gt;* for the lore statements in the title blurbs.
 
+The [official lore record](research/STRANGEREAL_LORE_1991_2020.md) lists every statement on these pages with its coverage, conflicts and unknowns.
+
 
 Entries are paraphrased. `XX` marks a day or month the source does not give; it
 stays unknown in script. "Derived" marks a value computed from a source sentence
@@ -158,6 +160,19 @@ Every 2020 entry gives a month at most.
 | Nevera Jammer: originally an Aurelian weather observation radar in the Nevera mountains, converted by Leasath into a jamming station protecting Griswall and the Monte Breeze Industrial Area | Super Weapons, Nevera Jammer | F2 | The pre-war Aurelian weather radar may appear in Aurelia's foundation as a civil service; its construction date is unknown and is not scripted. The jammer belongs to the crisis lanes |
 | Meson Cannons: particle-beam point defence built into the Atmos Ring in Aurelia's capital | Super Weapons, Meson Cannons | F2 | Pending; no construction date is given |
 | Archelon Fortress: secret Leasathian manufacturing complex for the Fenrir on Sentry Island in the Danern Straits | Super Weapons, Archelon Fortress | F2 | Pending |
+
+## Statements only the abstracts and product pages carry
+
+| Claim | Exact source | Wave | Disposition |
+| --- | --- | --- | --- |
+| Osea and Yuktobania improved relations after the Belkan War, agreed to reduce their armies and weapons of mass destruction and worked together on international space development | Abstracts, ACE COMBAT 5 | C | Context; the Arkbird co-operation is already sourced (1999 / 10.08). Not scripted |
+| The Gray Men, renegade survivors of the Belkan War, secretly abducted Harling and Nikanor; Sea Goblin and Wardog rescued them; the two leaders exposed the conspiracy at a joint press conference and pro-peace factions joined Razgriz | Abstracts, ACE COMBAT 5 | C | Reference only. `ac_cpw.35` names the Gray Men as the Super Weapons row does; the abduction, rescue unit and factions are not scripted |
+| Wardog is the Osean Air Defense Force 108th Tactical Fighter Squadron; Sand Island lies in the Ceres Ocean between Osea and Yuktobania | Product, ACE COMBAT 5 | C | Text only; not mapped |
+| Estovakia's military regime collapsed in a coup and a ceasefire ended the Emmeria–Estovakia War | Abstracts, ACE COMBAT 6 | E | Pending with the 2016 / 04.01 row |
+| Garuda Team is the 28th Fighter Squadron of the Emmerian Air Force's 8th Air Division | Abstracts and Product, ACE COMBAT 6 | E | Text only |
+| Erusea proclaimed a "clean war"; Osean targeting blunders turned public opinion toward Erusea; a voluntary coalition of Osean forces and a traditionalist sect of the Erusean Army forced the surrender of the Erusean Army radicals; the ceasefire was signed in Expo City | Abstracts, ACE COMBAT 7 | F1 | Implemented in text: `ac_lhw.7`, `.22`, `.28`, the drones lane. No coalition, sect or faction is created |
+| Erusea accuses Osea of massive overreach in their joint international projects | Product, ACE COMBAT 7 | F1 | Implemented in text: `ac_lhw.1`, `ac_lhw.5` |
+| Leasath, just emerged from a civil war, cites "years of exploitation by Aurelia"; Aurelia lies on the southern tip of South Osea; the war ends in December 2020 with Navarro's downfall | Abstracts and Product, ACE COMBAT X | F2 | Pending. The cause is recorded as Leasath's stated claim, not fact |
 
 ## Open research gaps
 

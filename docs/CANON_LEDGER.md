@@ -107,3 +107,12 @@ Details are in [CONTENT_WAVE_C.md](CONTENT_WAVE_C.md).
 | Erusean and Central Usean Lighthouse-era branches (78 focuses), the withheld declaration, the early ceasefire, fighting on, every value | Provisional gameplay, gated on `ac_ucw`, `ac_fe` and `ac_lhw` state (mod provenance read only) | `common/national_focus/ac_lighthouse.txt`, `ERU_lw_*`, `FCU_lw_*`, `OSE_lw_*` | Implemented, offline-tested, labelled in-game. The Shilage release flags are read for text only; nothing is released, cored or moved. |
 
 Details are in [CONTENT_WAVE_F1.md](CONTENT_WAVE_F1.md).
+
+## 2026-11-04 The official lore record, 1991–2020
+
+| Claim or content family | Source layer | Current evidence | Status / required action |
+| --- | --- | --- | --- |
+| Every statement on the official ACES Chronicle (Details, Super Weapons, Abstracts) and product pages: 207 statements, 292 claims | Official | [STRANGEREAL_LORE_1991_2020.md](research/STRANGEREAL_LORE_1991_2020.md), [CHRONICLE_INDEX.md](research/CHRONICLE_INDEX.md), `tools/lore/chronicle.json` (hashes, never text); read 4 November 2026 | Compiled and independently checked against the official text. Listing is not implementation: 114 claims are implemented by sourced ledger rows, 24 are owned by inherited mod content, 47 are pending a wave, 43 are not covered, 10 are reference only and 54 are out of scope |
+| The 1991–1999 entries no earlier ledger cited (the Kestrel, the Great Lakes company, Cinigrad, the 1991 border redrawing, the Liberal Democratic Party, the 1995 war stages, Espada Team, Robert Tyler, Hresvelgr) | Official | [BELKAN_WAR_SOURCES.md](BELKAN_WAR_SOURCES.md) | Compiled; nothing scripted. Inherited Belkan War content stays mod provenance; its conflicts with the official text (the party's name, the order of the 1991 sales and redrawing, the open cities modelled as a country tag) are recorded, not resolved |
+| Official Bandai Namco pages outside the four ACES pages (the ACE COMBAT 7 site's world, elevator, character and column pages; the European press page) | Official, not yet cross-checked | Pointers in the report | Read the page before using it. Notably: the Kingdom of Erusea as the former Republic with a restored monarchy, and ISEV building the elevator from about 2011 in southern Usea |
+| Fan wikis (acecombat.wiki.gg, acecombat.fandom.com) | Secondary, unverified | Pointers in the report | Never promoted to official here |

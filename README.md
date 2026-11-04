@@ -45,7 +45,7 @@ open. The historical runtime statements elsewhere describe their earlier builds.
 
 ### Historical coordinates
 
-These are reference points from the [official ACES Chronicle](https://acecombat.jp/en/chronicle/details/), **not** a claim that every event is currently implemented or that an alternate-history playthrough must reproduce them.
+These are reference points from the [official ACES Chronicle](https://acecombat.jp/en/chronicle/details/) (every statement is compiled in the [official lore record](docs/research/STRANGEREAL_LORE_1991_2020.md)), **not** a claim that every event is currently implemented or that an alternate-history playthrough must reproduce them.
 
 | Year | The world outside the cockpit |
 |---|---|

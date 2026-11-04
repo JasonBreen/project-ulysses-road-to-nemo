@@ -33,6 +33,9 @@ python -B tools/content_waves/refresh_records.py --check
 python -B tools/content_waves/test_waves.py
 ```
 
+Dated content cites the [official lore record](../../docs/research/STRANGEREAL_LORE_1991_2020.md),
+regenerated with `python -B tools/lore/chronicle_index.py`.
+
 Edit a wave module, then regenerate script, artwork and the shared records and
 commit them together. Existing trees keep their own generators:
 `tools/build_continental_war.py` preserves the `OVERSIGHT YEARS` and

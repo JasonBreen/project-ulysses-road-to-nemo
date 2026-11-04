@@ -63,8 +63,9 @@ The remaining work falls into three kinds:
 
 [USEAN_CONTINENTAL_WAR.md](USEAN_CONTINENTAL_WAR.md) gated the 1999–2005 round:
 every scripted date had a cited Chronicle row before any script was written. The
-same gate is needed for 2006–2020. Today the repository has only the seven
-anchors in `release_plan.json` → `chronology`, checked 31 October 2026:
+same gate is needed for 2006–2020. At planning time the repository had only the
+seven anchors below in `release_plan.json` → `chronology`, checked 31 October
+2026 (the block now carries eighteen, with `source_checked` 3 November 2026):
 
 | Anchor | Date in source | Waves |
 | --- | --- | --- |
@@ -102,8 +103,9 @@ for major commitments. Historical AI follows the sourced route. Alternatives
 must be earned. Rewards are guarded against repetition, interruption and late
 saves.
 
-The six conflict namespaces below were checked against the PR #59 head and are
-unused: `ac_fe`, `ac_ecw`, `ac_cpw`, `ac_eew`, `ac_lhw`, `ac_alc`. Country focus
+The six conflict namespaces below were checked against the PR #59 head and were
+unused then: `ac_fe`, `ac_ecw`, `ac_cpw`, `ac_eew`, `ac_lhw`, `ac_alc`. Waves A,
+B and C now occupy the first three; `ac_eew`, `ac_lhw` and `ac_alc` remain free. Country focus
 IDs keep the tag-and-lane pattern (`ERU_fe_*`, `EVA_ecw_*` and so on); existing
 tree IDs (`ac_anea_emm_tree`, `ac_anea_eva_tree`, the ERU/FCU trees) are
 extended, never replaced.
@@ -172,8 +174,9 @@ extended, never replaced.
   - there is no scripted white peace;
   - end news follows actual cessation, not the 2010.12.31 anchor.
 - **Reads:** `ac_snc_ose_verification_earned`, `ac_snc_ose_channel_earned`,
-  `ac_snc_yuk_verification_earned`, `ac_snc_yuk_channel_earned`, the scientific
-  variants, and Arkbird state.
+  `ac_snc_yuk_verification_earned`, `ac_snc_yuk_channel_earned` and Arkbird
+  state. The scientific channel variants are deliberately unused by the first
+  owner.
 - **Routes:** the sourced war, earned de-escalation (both verification and
   channel records earned), and external observation.
 - **Arkbird:** the 1999 `ac_sp_arkbird` project is explicitly non-weapon. Any

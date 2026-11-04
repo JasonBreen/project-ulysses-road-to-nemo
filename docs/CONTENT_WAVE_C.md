@@ -181,7 +181,8 @@ records they require.
 **Source checks:** the only `declare_war_on` in the waves targets Osea with
 `topple_government`; no `white_peace`, faction or guarantee check, assumed end
 date, `ac_snc_`/`ac_snp_`/`ac_sp_` flag or variable write; named canon appears
-only in event text.
+only in event text and in the idea and flag tooltips derived from it, never in
+a script identifier.
 
 These are source and offline checks, not native acceptance.
 

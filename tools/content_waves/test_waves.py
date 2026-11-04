@@ -319,6 +319,8 @@ class World(shared.World):
             elif key == "any_controlled_state":
                 answer = any(self.trigger(value, s, temp, root, context) for s in self.states.values() if s.controller == context.tag)
             elif key == "is_core_of":
+                # The offline states carry no core list, so ownership stands in for a core.
+                # Tests that need a non-core distinction set `cores` on the state explicitly.
                 answer = value in getattr(context, "cores", ()) or context.owner == value
             elif key == "has_focus_tree":
                 answer = value in context.trees
@@ -366,7 +368,9 @@ class World(shared.World):
             elif key == "load_focus_tree":
                 context.trees.add(fields(value)["tree"])
             elif key == "declare_war_on":
-                self.wars.add(frozenset((context.tag, fields(value)["target"])))
+                # `refuse_war` models an engine that does not create the war (a truce, the same faction).
+                if not getattr(self, "refuse_war", False):
+                    self.wars.add(frozenset((context.tag, fields(value)["target"])))
             elif key in self.countries or key in ("FROM", "ROOT"):
                 target = previous if key == "FROM" else root if key == "ROOT" else self.countries[key]
                 self.execute(value, target, temp, root, context)
@@ -397,9 +401,17 @@ class World(shared.World):
         return self.trigger(fields(self.focuses[ident])["available"], self.countries[tag])
 
     def option(self, event, letter, tag):
+        """Choose an option as the engine would: the event's and the option's own triggers must hold for the acting country."""
         node = self.messages[event]
+        c = self.countries[tag]
+        gate = next((v for k, _, v in node if k == "trigger"), None)
+        if gate is not None and not self.trigger(gate, c):
+            raise AssertionError(f"{event} is not available to {tag}")
         option = next(v for k, _, v in node if k == "option" and next(x for key, _, x in v if key == "name") == f"{event}.{letter}")
-        self.execute([r for r in option if r[0] not in ("name", "ai_chance", "trigger")], self.countries[tag])
+        own = next((v for k, _, v in option if k == "trigger"), None)
+        if own is not None and not self.trigger(own, c):
+            raise AssertionError(f"{event}.{letter} is not available to {tag}")
+        self.execute([r for r in option if r[0] not in ("name", "ai_chance", "trigger")], c)
 
 
 def world(mode="full", today=date(2006, 10, 1)):
@@ -846,7 +858,11 @@ class Runtime(unittest.TestCase):
         self.assertEqual({frozenset(("YUK", "OSE"))}, w.wars)
         w2, y2, o2 = self.cpw()
         self.anchor(w2)
-        w2.option("ac_cpw.5", "b", "YUK")
+        # The withhold option is gated by its own trigger; without the mandate the engine never offers it,
+        # and the effect behind it is guarded in the same way.
+        with self.assertRaises(AssertionError):
+            w2.option("ac_cpw.5", "b", "YUK")
+        w2.run("ac_cpw_withhold", "YUK")
         self.assertNotIn("ac_cpw_declaration_withheld", w2.globals)
         self.assertIn("ac_cpw_declaration_pending", y2.flags)
         self.earn(w2, "YUK", "verification")
@@ -859,6 +875,32 @@ class Runtime(unittest.TestCase):
             self.tick(w2, day)
         self.assertEqual(["ac_cpw.5", "ac_cpw.7"], [e for _, e, _ in w2.events if e.startswith("ac_cpw.") and e not in ("ac_cpw.1", "ac_cpw.2")])
         self.assertFalse({"ac_cpw_started", "ac_cpw_closed"} & w2.globals)
+
+    def test_unable_principals_and_refused_declarations_close_the_owner(self):
+        for fault in ("yuk_capitulated", "yuk_subject", "ose_capitulated", "ose_subject"):
+            with self.subTest(fault=fault):
+                w, y, o = self.cpw()
+                target = y if fault.startswith("yuk") else o
+                setattr(target, "capitulated" if fault.endswith("capitulated") else "subject", True)
+                self.anchor(w)
+                self.assertTrue({"ac_cpw_closed", "ac_cpw_principal_unable"} <= w.globals)
+                self.assertFalse({"ac_cpw_started", "ac_cpw_prevented"} & w.globals)
+                self.assertNotIn(("YUK", "ac_cpw.5", w.today + 1), w.events)
+                self.assertEqual(set(), w.wars)
+                self.tick(w, date(2010, 9, 30))
+                self.assertNotIn("ac_cpw_stage_eaglin", w.globals)
+        # The engine may not create the war; the owner then writes no war state and closes.
+        refused, y, o = self.cpw()
+        refused.refuse_war = True
+        self.anchor(refused)
+        refused.option("ac_cpw.5", "a", "YUK")
+        self.assertTrue({"ac_cpw_closed", "ac_cpw_declaration_refused"} <= refused.globals)
+        self.assertFalse({"ac_cpw_started", "ac_cpw_pre_existing_war", "ac_cpw_ended"} & refused.globals)
+        self.assertFalse({"ac_cpw_yuk_war_footing", "ac_cpw_yuk_submarine_carriers"} & y.ideas)
+        self.assertNotIn("ac_cpw_ose_war_footing", o.ideas)
+        self.assertNotIn("ac_cpw_declaration_pending", y.flags)
+        self.tick(refused, date(2010, 9, 30))
+        self.assertEqual(["ac_cpw.1", "ac_cpw.2"], self.cpw_news(refused))
 
     def test_reciprocal_exchange_prevents_the_declaration_and_is_earned(self):
         w, y, o = self.cpw()

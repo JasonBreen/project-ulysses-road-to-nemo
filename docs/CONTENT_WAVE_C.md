@@ -151,11 +151,13 @@ python -B tools/world_foundation/test_foundation.py
 python -B tools/squadrons/pacific/test_runtime.py
 ```
 
-`test_waves.py` has 40 tests. The offline world now observes wars
+`test_waves.py` has 41 tests. The offline world now observes wars
 (`declare_war_on`, `has_war_with`, `has_war`, `any_country`,
-`any_controlled_state`, `is_subject`) and loads the real Osean and Yuktobanian
-continuation triggers, so the earned routes are tested against the actual
-records they require.
+`any_controlled_state`, `is_subject`, `is_subject_of`), honours event and option
+triggers when a test chooses an option, can model an engine that refuses a
+declaration, and loads the real Osean and Yuktobanian continuation triggers, so
+the earned routes are tested against the actual records they require. Its
+states carry no core list, so `is_core_of` treats ownership as a core.
 
 **Wave C runtime cases:**
 - the Arkbird Summit needs the completed project and fires once;
@@ -163,7 +165,10 @@ records they require.
   after the anchor (27 September 2010, 15 October 2010, 1 October 2011) closes
   the owner and replays nothing; a missing principal closes the owner;
 - the declaration window falls back to history; withholding needs the real
-  mandate;
+  mandate, and without it the option is not even offered;
+- a capitulated or subject principal closes the owner (`ac_cpw_principal_unable`),
+  and a declaration the engine does not turn into a war closes it without any
+  war state (`ac_cpw_declaration_refused`);
 - the reciprocal exchange prevents the declaration and is earned, not partial;
 - the historical course fires each stage once, needs the observed foothold for
   the territorial rows, loses the Arkbird only if it was committed, and ends

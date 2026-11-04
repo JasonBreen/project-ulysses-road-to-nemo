@@ -143,10 +143,11 @@ def owner():
     effects["ac_cpw_prelude_tick"] = prelude
     # A war the pair already fights is recorded as started but not as expanded: the
     # stories' "expanded" reading is reserved for third-party entry.
+    settle = "clr_country_flag = ac_cpw_declaration_pending\nclr_country_flag = ac_cpw_declaration_window\n"
     effects["ac_cpw_observe_existing_war"] = guard(f"ac_cpw_pair_at_war = yes {ROUTE_SETTLED}",
-        "set_global_flag = ac_cpw_started\nset_global_flag = ac_cpw_existing_war_observed\nnews_event = { id = ac_cpw.8 days = 1 }")
+        settle + "set_global_flag = ac_cpw_started\nset_global_flag = ac_cpw_existing_war_observed\nnews_event = { id = ac_cpw.8 days = 1 }")
     effects["ac_cpw_prevent"] = guard(f"ac_cpw_exchange_earned = yes {ROUTE_SETTLED}",
-        "set_global_flag = ac_cpw_prevented\nnews_event = { id = ac_cpw.4 days = 1 }\n"
+        settle + "set_global_flag = ac_cpw_prevented\nnews_event = { id = ac_cpw.4 days = 1 }\n"
         "add_timed_idea = { idea = ac_cpw_yuk_exchange_standing days = 365 }\n"
         "OSE = { add_timed_idea = { idea = ac_cpw_ose_exchange_standing days = 365 } }")
     effects["ac_cpw_taint"] = guard(f"ac_cpw_war_running = yes NOT = {{ {TAINTED} }}", "set_global_flag = ac_cpw_tainted")
@@ -172,21 +173,32 @@ def owner():
                     "set_country_flag = { flag = ac_cpw_declaration_window days = 14 }\ncountry_event = { id = ac_cpw.5 days = 1 }") +
               block("else_if", block("limit", "has_country_flag = ac_cpw_declaration_pending NOT = { has_country_flag = ac_cpw_declaration_window }") +
                     "ac_cpw_declare = yes")) +
-        block("else", "set_global_flag = ac_cpw_closed\nset_global_flag = ac_cpw_principal_unable"))
+        block("else", settle + "set_global_flag = ac_cpw_closed\nset_global_flag = ac_cpw_principal_unable"))
     remove_all = "".join(f"remove_ideas = {i}\n" for i in WAR_IDEAS)
-    # End news is scheduled from a surviving principal, so an annexed scope never owns it.
+    # End news is scheduled from a surviving principal, so a fallen or annexed scope never owns it.
     def end_news(number, survivor):
-        return (guard(f"country_exists = {survivor}", f"{survivor} = {{ news_event = {{ id = ac_cpw.{number} days = 1 }} }}") +
+        return (guard(f"country_exists = {survivor} NOT = {{ has_global_flag = ac_cpw_{survivor.lower()}_fallen }}",
+                      f"{survivor} = {{ news_event = {{ id = ac_cpw.{number} days = 1 }} }}") +
                 block("else", f"news_event = {{ id = ac_cpw.{number} days = 1 }}"))
+
+    def survivor_news(number):
+        return (guard("country_exists = OSE NOT = { has_global_flag = ac_cpw_ose_fallen }", f"OSE = {{ news_event = {{ id = ac_cpw.{number} days = 1 }} }}") +
+                block("else_if", block("limit", "country_exists = YUK NOT = { has_global_flag = ac_cpw_yuk_fallen }") +
+                      f"YUK = {{ news_event = {{ id = ac_cpw.{number} days = 1 }} }}") +
+                block("else", f"news_event = {{ id = ac_cpw.{number} days = 1 }}"))
+    # A victory is recorded only when a principal fell to the other principal in their own war;
+    # a fall to a third party, or outside the pair's war, is a cessation under observation.
+    not_external = "NOT = { has_global_flag = ac_cpw_external_fall }"
     effects["ac_cpw_record_end"] = guard("ac_cpw_war_running = yes",
         "set_global_flag = ac_cpw_ended\n" +
-        guard("OR = { NOT = { country_exists = YUK } has_global_flag = ac_cpw_yuk_fallen YUK = { has_capitulated = yes } }",
+        guard(f"{not_external} OR = {{ NOT = {{ country_exists = YUK }} has_global_flag = ac_cpw_yuk_fallen YUK = {{ has_capitulated = yes }} }}",
               "set_global_flag = ac_cpw_outcome_osean_victory\n" + end_news(11, "OSE")) +
-        block("else_if", block("limit", "OR = { NOT = { country_exists = OSE } has_global_flag = ac_cpw_ose_fallen OSE = { has_capitulated = yes } }") +
+        block("else_if", block("limit", f"{not_external} OR = {{ NOT = {{ country_exists = OSE }} has_global_flag = ac_cpw_ose_fallen OSE = {{ has_capitulated = yes }} }}") +
               "set_global_flag = ac_cpw_outcome_yuktobanian_victory\n" + end_news(12, "YUK")) +
         block("else_if", block("limit", f"NOT = {{ {TAINTED} }} NOT = {{ {EXISTING} }}") +
-              "set_global_flag = ac_cpw_outcome_cessation\nset_global_flag = ac_cpw_historical_course\nnews_event = { id = ac_cpw.10 days = 1 }") +
-        block("else", "set_global_flag = ac_cpw_outcome_cessation\nnews_event = { id = ac_cpw.13 days = 1 }") +
+              "set_global_flag = ac_cpw_outcome_cessation\n" +
+              guard("has_global_flag = ac_cpw_stage_solg", "set_global_flag = ac_cpw_historical_course") + survivor_news(10)) +
+        block("else", "set_global_flag = ac_cpw_outcome_cessation\n" + survivor_news(13)) +
         guard("country_exists = OSE", "OSE = { " + remove_all.replace("\n", " ") + "}") +
         guard("country_exists = YUK", "YUK = { " + remove_all.replace("\n", " ") + "}"))
     effects["ac_cpw_observation_tick"] = guard("ac_cpw_war_running = yes",
@@ -202,9 +214,16 @@ def owner():
         "ac_cpw_observation_tick = yes\nac_cpw_stage_tick = yes")
     effects["ac_cpw_owner_weekly_ose"] = guard("tag = OSE original_tag = OSE ac_cpw_war_running = yes NOT = { country_exists = YUK }", "ac_cpw_record_end = yes")
     # Only the principals themselves count as fallen; a breakaway with the same original tag does not.
-    effects["ac_cpw_interrupt"] = guard("OR = { AND = { tag = OSE original_tag = OSE } AND = { tag = YUK original_tag = YUK } } ac_cpw_war_running = yes",
-        guard("tag = OSE", "set_global_flag = ac_cpw_ose_fallen") + block("else", "set_global_flag = ac_cpw_yuk_fallen") +
+    # A principal that falls while the pair is not at war with each other, or to a third party
+    # (ac_cpw_interrupt_external, chosen by the on_annex hook from the annexer's tag), ends the
+    # war under observation rather than as the other principal's victory.
+    principal = "OR = { AND = { tag = OSE original_tag = OSE } AND = { tag = YUK original_tag = YUK } } ac_cpw_war_running = yes"
+    fallen = guard("tag = OSE", "set_global_flag = ac_cpw_ose_fallen") + block("else", "set_global_flag = ac_cpw_yuk_fallen")
+    external = "set_global_flag = ac_cpw_external_fall\nac_cpw_taint = yes\n"
+    effects["ac_cpw_interrupt"] = guard(principal,
+        fallen + guard("NOT = { OR = { AND = { tag = YUK has_war_with = OSE } AND = { tag = OSE has_war_with = YUK } } }", external) +
         "ac_cpw_record_end = yes")
+    effects["ac_cpw_interrupt_external"] = guard(principal, fallen + external + "ac_cpw_record_end = yes")
     # An answer after the sabotage row has passed holds the Arkbird back instead of replaying its fate.
     effects["ac_cpw_commit_arkbird"] = guard("tag = OSE original_tag = OSE ac_cpw_course_open = yes ac_cpw_arkbird_available = yes NOT = { has_global_flag = ac_cpw_arkbird_committed } NOT = { has_global_flag = ac_cpw_arkbird_held_back }",
         guard(f"date < {ARKBIRD_LIMIT}", "set_global_flag = ac_cpw_arkbird_committed\nadd_ideas = ac_cpw_ose_arkbird_at_the_front\nnews_event = { id = ac_cpw.15 days = 1 }") +
@@ -397,21 +416,23 @@ def owner():
         decisions[category] = rows
 
     # Defined texts and readable flags ---------------------------------------------------
+    # First matching entry wins, so the specific outcomes precede the general ones.
     status = (("has_global_flag = ac_cpw_outcome_osean_victory", "Ended: Yuktobania capitulated. The end the Chronicle records for 31 December 2010 did not occur."),
               ("has_global_flag = ac_cpw_outcome_yuktobanian_victory", "Ended: Osea capitulated. The end the Chronicle records for 31 December 2010 did not occur."),
-              ("has_global_flag = ac_cpw_historical_course", "Ended: the fighting stopped without capitulation while the owner followed the official course. The Chronicle's 31 December 2010 end is a reference anchor, not the day it stopped."),
-              ("has_global_flag = ac_cpw_ended", "Ended: the fighting stopped while the owner observed the war from outside."),
-              ("has_global_flag = ac_cpw_tainted", "Running under external observation: other fighting entered the war, and the official course is no longer asserted."),
-              ("has_global_flag = ac_cpw_existing_war_observed", "Running under external observation: Osea and Yuktobania were already at war when the Chronicle's declaration date came."),
-              ("has_global_flag = ac_cpw_started", "Running on the official course since the declaration the Chronicle records for 27 September 2010 (2010 / 09.27)."),
+              ("has_global_flag = ac_cpw_historical_course", "Ended: the fighting stopped without capitulation after the official course had run to the SOLG. The Chronicle's 31 December 2010 end is a reference anchor, not the day it stopped."),
+              (f"{ENDED} OR = {{ {TAINTED} {EXISTING} }}", "Ended: the fighting stopped while the owner observed the war from outside."),
+              (ENDED, "Ended: the fighting stopped without capitulation before the official course had run its length. The Chronicle's 31 December 2010 end is a reference anchor."),
+              (TAINTED, "Running under external observation: other fighting entered the war, and the official course is no longer asserted."),
+              (EXISTING, "Running under external observation: Osea and Yuktobania were already at war when the Chronicle's declaration date came."),
+              (STARTED, "Running on the official course since the declaration the Chronicle records for 27 September 2010 (2010 / 09.27)."),
               ("has_global_flag = ac_cpw_prevented", "Prevented: the reciprocal exchange closed the declaration route (earned alternative, provisional gameplay)."),
               ("has_global_flag = ac_cpw_declaration_withheld", "Withheld: Yuktobania kept its mandate and did not declare (earned alternative, provisional gameplay)."),
-              ("has_global_flag = ac_cpw_closed", "Closed: the principal pair could not fight the recorded war, or the record's dates had passed."),
+              (CLOSED, "Closed: the principal pair could not fight the recorded war, or the record's dates had passed."),
               (None, "Pending: the ACES Chronicle records Yuktobania's declaration of war on Osea for 27 September 2010."))
     entries = ""
-    for n, (flag, value) in enumerate(status):
+    for n, (condition, value) in enumerate(status):
         loc[f"ac_cpw_status_{n}"] = value
-        entries += block("text", (f"trigger = {{ has_global_flag = {flag.split(' = ')[1]} }}\n" if flag else "") + f"localization_key = ac_cpw_status_{n}")
+        entries += block("text", (f"trigger = {{ {condition} }}\n" if condition else "") + f"localization_key = ac_cpw_status_{n}")
     custom = block("defined_text", "name = ac_cpw_status_text\n" + entries)
     loc.update({
         "ac_cpw_started": "The Circum-Pacific War has begun",
@@ -443,6 +464,7 @@ def owner():
         "ac_cpw_declaration_window": "The declaration window is open",
         "ac_cpw_ose_fallen": "Osea has fallen during the Circum-Pacific War",
         "ac_cpw_yuk_fallen": "Yuktobania has fallen during the Circum-Pacific War",
+        "ac_cpw_external_fall": "A principal fell to a third party, or outside the pair's own war",
         "ac_cpw_principals": "Osea and Yuktobania both exist",
         "ac_cpw_war_running": "The Circum-Pacific War is running",
         "ac_cpw_course_open": "The Circum-Pacific War follows its official course",
@@ -463,7 +485,8 @@ def owner():
     hooks = (block("on_startup", block("effect", "if = { limit = { country_exists = YUK } YUK = { ac_cpw_restore = yes } }")) +
              block("on_weekly_YUK", block("effect", "ac_cpw_owner_weekly = yes")) +
              block("on_weekly_OSE", block("effect", "ac_cpw_owner_weekly_ose = yes")) +
-             block("on_annex", block("effect", "FROM = { ac_cpw_interrupt = yes }")) +
+             block("on_annex", block("effect", "if = { limit = { OR = { tag = OSE tag = YUK } } FROM = { ac_cpw_interrupt = yes } }\n"
+                                               "else = { FROM = { ac_cpw_interrupt_external = yes } }")) +
              block("on_capitulation_immediate", block("effect", "ac_cpw_interrupt = yes")) +
              block("on_subject_annexed", block("effect", "ac_cpw_interrupt = yes")))
     ai = "\n".join((

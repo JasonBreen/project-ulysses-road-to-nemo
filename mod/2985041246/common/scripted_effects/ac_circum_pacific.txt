@@ -87,6 +87,8 @@ ac_cpw_observe_existing_war = {
 		limit = {
 			ac_cpw_pair_at_war = yes NOT = { has_global_flag = ac_cpw_started } NOT = { has_global_flag = ac_cpw_prevented } NOT = { has_global_flag = ac_cpw_declaration_withheld } NOT = { has_global_flag = ac_cpw_closed }
 		}
+		clr_country_flag = ac_cpw_declaration_pending
+		clr_country_flag = ac_cpw_declaration_window
 		set_global_flag = ac_cpw_started
 		set_global_flag = ac_cpw_existing_war_observed
 		news_event = { id = ac_cpw.8 days = 1 }
@@ -98,6 +100,8 @@ ac_cpw_prevent = {
 		limit = {
 			ac_cpw_exchange_earned = yes NOT = { has_global_flag = ac_cpw_started } NOT = { has_global_flag = ac_cpw_prevented } NOT = { has_global_flag = ac_cpw_declaration_withheld } NOT = { has_global_flag = ac_cpw_closed }
 		}
+		clr_country_flag = ac_cpw_declaration_pending
+		clr_country_flag = ac_cpw_declaration_window
 		set_global_flag = ac_cpw_prevented
 		news_event = { id = ac_cpw.4 days = 1 }
 		add_timed_idea = { idea = ac_cpw_yuk_exchange_standing days = 365 }
@@ -204,6 +208,8 @@ ac_cpw_declaration_tick = {
 			}
 		}
 		else = {
+			clr_country_flag = ac_cpw_declaration_pending
+			clr_country_flag = ac_cpw_declaration_window
 			set_global_flag = ac_cpw_closed
 			set_global_flag = ac_cpw_principal_unable
 		}
@@ -218,12 +224,12 @@ ac_cpw_record_end = {
 		set_global_flag = ac_cpw_ended
 		if = {
 			limit = {
-				OR = { NOT = { country_exists = YUK } has_global_flag = ac_cpw_yuk_fallen YUK = { has_capitulated = yes } }
+				NOT = { has_global_flag = ac_cpw_external_fall } OR = { NOT = { country_exists = YUK } has_global_flag = ac_cpw_yuk_fallen YUK = { has_capitulated = yes } }
 			}
 			set_global_flag = ac_cpw_outcome_osean_victory
 			if = {
 				limit = {
-					country_exists = OSE
+					country_exists = OSE NOT = { has_global_flag = ac_cpw_ose_fallen }
 				}
 				OSE = { news_event = { id = ac_cpw.11 days = 1 } }
 			}
@@ -233,12 +239,12 @@ ac_cpw_record_end = {
 		}
 		else_if = {
 			limit = {
-				OR = { NOT = { country_exists = OSE } has_global_flag = ac_cpw_ose_fallen OSE = { has_capitulated = yes } }
+				NOT = { has_global_flag = ac_cpw_external_fall } OR = { NOT = { country_exists = OSE } has_global_flag = ac_cpw_ose_fallen OSE = { has_capitulated = yes } }
 			}
 			set_global_flag = ac_cpw_outcome_yuktobanian_victory
 			if = {
 				limit = {
-					country_exists = YUK
+					country_exists = YUK NOT = { has_global_flag = ac_cpw_yuk_fallen }
 				}
 				YUK = { news_event = { id = ac_cpw.12 days = 1 } }
 			}
@@ -251,12 +257,45 @@ ac_cpw_record_end = {
 				NOT = { has_global_flag = ac_cpw_tainted } NOT = { has_global_flag = ac_cpw_existing_war_observed }
 			}
 			set_global_flag = ac_cpw_outcome_cessation
-			set_global_flag = ac_cpw_historical_course
-			news_event = { id = ac_cpw.10 days = 1 }
+			if = {
+				limit = {
+					has_global_flag = ac_cpw_stage_solg
+				}
+				set_global_flag = ac_cpw_historical_course
+			}
+			if = {
+				limit = {
+					country_exists = OSE NOT = { has_global_flag = ac_cpw_ose_fallen }
+				}
+				OSE = { news_event = { id = ac_cpw.10 days = 1 } }
+			}
+			else_if = {
+				limit = {
+					country_exists = YUK NOT = { has_global_flag = ac_cpw_yuk_fallen }
+				}
+				YUK = { news_event = { id = ac_cpw.10 days = 1 } }
+			}
+			else = {
+				news_event = { id = ac_cpw.10 days = 1 }
+			}
 		}
 		else = {
 			set_global_flag = ac_cpw_outcome_cessation
-			news_event = { id = ac_cpw.13 days = 1 }
+			if = {
+				limit = {
+					country_exists = OSE NOT = { has_global_flag = ac_cpw_ose_fallen }
+				}
+				OSE = { news_event = { id = ac_cpw.13 days = 1 } }
+			}
+			else_if = {
+				limit = {
+					country_exists = YUK NOT = { has_global_flag = ac_cpw_yuk_fallen }
+				}
+				YUK = { news_event = { id = ac_cpw.13 days = 1 } }
+			}
+			else = {
+				news_event = { id = ac_cpw.13 days = 1 }
+			}
 		}
 		if = {
 			limit = {
@@ -473,6 +512,33 @@ ac_cpw_interrupt = {
 		else = {
 			set_global_flag = ac_cpw_yuk_fallen
 		}
+		if = {
+			limit = {
+				NOT = { OR = { AND = { tag = YUK has_war_with = OSE } AND = { tag = OSE has_war_with = YUK } } }
+			}
+			set_global_flag = ac_cpw_external_fall
+			ac_cpw_taint = yes
+		}
+		ac_cpw_record_end = yes
+	}
+}
+
+ac_cpw_interrupt_external = {
+	if = {
+		limit = {
+			OR = { AND = { tag = OSE original_tag = OSE } AND = { tag = YUK original_tag = YUK } } ac_cpw_war_running = yes
+		}
+		if = {
+			limit = {
+				tag = OSE
+			}
+			set_global_flag = ac_cpw_ose_fallen
+		}
+		else = {
+			set_global_flag = ac_cpw_yuk_fallen
+		}
+		set_global_flag = ac_cpw_external_fall
+		ac_cpw_taint = yes
 		ac_cpw_record_end = yes
 	}
 }

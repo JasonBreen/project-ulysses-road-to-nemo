@@ -105,12 +105,17 @@ was annexed (the `on_capitulation_immediate`, `on_annex` and
 the principal tags themselves count, never a breakaway sharing their original
 tag), the owner records `ac_cpw_ended` and exactly one outcome:
 `ac_cpw_outcome_osean_victory` (`ac_cpw.11`), `ac_cpw_outcome_yuktobanian_victory`
-(`ac_cpw.12`), or `ac_cpw_outcome_cessation` with `ac_cpw_historical_course`
-when the owner's own war ran untainted (`ac_cpw.10`) and without it when the
-war was observed from outside (`ac_cpw.13`). End news is scheduled by a
-surviving principal, so an annexed scope never owns it. All untimed war ideas
-are removed. An Osean weekly fallback records the end if Yuktobania no longer
-exists. There is no `white_peace`; see the open items.
+(`ac_cpw.12`), or `ac_cpw_outcome_cessation`: with `ac_cpw_historical_course`
+only when the owner's own war ran untainted all the way to the SOLG stage
+(`ac_cpw.10`, also used for an earlier untainted end without the flag), and
+`ac_cpw.13` when the war was observed from outside. A victory is recorded only
+when a principal fell to the other principal in their own war; a principal
+annexed by a third party, or capitulating after the pair had already made
+peace, is marked `ac_cpw_external_fall` and ends the war under observation.
+End news is scheduled by a surviving principal, so a fallen scope never owns
+it. All untimed war ideas are removed, and a declaration still pending when a
+route settles is cleared. An Osean weekly fallback records the end if
+Yuktobania no longer exists. There is no `white_peace`; see the open items.
 
 **Decisions.** Each principal has a crisis category with two once-only
 decisions: mobilise the home front during the war (50 political power, 120-day
@@ -151,13 +156,15 @@ python -B tools/world_foundation/test_foundation.py
 python -B tools/squadrons/pacific/test_runtime.py
 ```
 
-`test_waves.py` has 41 tests. The offline world now observes wars
+`test_waves.py` has 42 tests. The offline world now observes wars
 (`declare_war_on`, `has_war_with`, `has_war`, `any_country`,
 `any_controlled_state`, `is_subject`, `is_subject_of`), honours event and option
 triggers when a test chooses an option, can model an engine that refuses a
 declaration, and loads the real Osean and Yuktobanian continuation triggers, so
 the earned routes are tested against the actual records they require. Its
-states carry no core list, so `is_core_of` treats ownership as a core.
+states carry the cores from `history/states`, so the Osean foothold is tested
+against real cores: Yuktobanian-owned state 515, which has no Yuktobanian core,
+is the negative case and core state 125 the positive one.
 
 **Wave C runtime cases:**
 - the Arkbird Summit needs the completed project and fires once;
@@ -180,7 +187,11 @@ states carry no core list, so `is_core_of` treats ownership as a core.
   ideas; a principal's own subject is not a third party;
 - capitulation and annexation record the actual outcome, with the end news
   scheduled by the survivor; a breakaway with a principal's original tag does
-  not count as the principal falling;
+  not count as the principal falling; a principal annexed by a third party, or
+  capitulating after the pair made peace, ends the war under observation;
+- the status text follows each route, `ac_cpw_historical_course` needs the SOLG
+  stage, timed ideas expire, and the foreign Pacific records are byte-identical
+  before and after the whole course;
 - the crisis decisions are charged once by the engine and follow the phase.
 
 **Source checks:** the only `declare_war_on` in the waves targets Osea with

@@ -284,6 +284,15 @@ class World(shared.World):
             for key, _, value in parse(text(f"common/scripted_triggers/{name}.txt")):
                 self.triggers.setdefault(key, value)
         self.triggers.setdefault("ac_snp_active", [("always", "=", "yes")])
+        # Cores come from the real state history, so is_core_of is not approximated by ownership.
+        cores = {}
+        for path in (MOD / "history/states").glob("*.txt"):
+            source = path.read_text(encoding="utf-8-sig", errors="replace")
+            ident = re.search(r"^\s*id\s*=\s*(\d+)", source, re.M)
+            if ident:
+                cores[int(ident[1])] = frozenset(re.findall(r"\badd_core_of\s*=\s*(\w+)", source))
+        for ident, state in self.states.items():
+            state.cores = cores.get(ident, frozenset())
         for c in self.countries.values():
             c.completed = set()
             c.timed_ideas = {}
@@ -319,9 +328,7 @@ class World(shared.World):
             elif key == "any_controlled_state":
                 answer = any(self.trigger(value, s, temp, root, context) for s in self.states.values() if s.controller == context.tag)
             elif key == "is_core_of":
-                # The offline states carry no core list, so ownership stands in for a core.
-                # Tests that need a non-core distinction set `cores` on the state explicitly.
-                answer = value in getattr(context, "cores", ()) or context.owner == value
+                answer = value in context.cores
             elif key == "has_focus_tree":
                 answer = value in context.trees
             elif key in self.countries:
@@ -754,8 +761,36 @@ class Runtime(unittest.TestCase):
         return w, w.countries["YUK"], w.countries["OSE"]
 
     def tick(self, w, day, tag="YUK"):
-        w.today = day.toordinal()
+        days = day.toordinal() - w.today
+        if days > 0:
+            w.advance(days)      # timed ideas and flags expire as the calendar moves
+        else:
+            w.today = day.toordinal()
         w.wave_action("circum_pacific", f"on_weekly_{tag}", tag)
+
+    def status(self, w):
+        """Resolve ac_cpw_status_text as the engine would: the first entry whose trigger holds for Yuktobania."""
+        custom = parse(text("common/custom_localization/ac_circum_pacific.txt"))
+        entries = next(v for k, _, v in custom if k == "defined_text" and next(x for key, _, x in v if key == "name") == "ac_cpw_status_text")
+        for k, _, v in entries:
+            if k != "text":
+                continue
+            condition = next((x for key, _, x in v if key == "trigger"), None)
+            if condition is None or w.trigger(condition, w.countries["YUK"]):
+                return self.cpw_loc[next(x for key, _, x in v if key == "localization_key")]
+        raise AssertionError("no status text")
+
+    @property
+    def cpw_loc(self):
+        if not hasattr(self, "_cpw_loc"):
+            self._cpw_loc = dict(re.findall(r'^ ([^\s:#]+):\d* "(.*)"$', (MOD / "localisation/english/ac_circum_pacific_l_english.yml").read_text(encoding="utf-8-sig"), re.M))
+        return self._cpw_loc
+
+    def records(self, w):
+        """The foreign Pacific records the owner may read but never write."""
+        return {t: ({k: v for k, v in w.countries[t].flags.items() if k.startswith(("ac_snc_", "ac_snp_", "ac_sp_"))},
+                    {k: v for k, v in w.countries[t].variables.items() if k.startswith(("ac_snc_", "ac_snp_", "ac_sp_"))})
+                for t in ("OSE", "YUK")}
 
     def cpw_news(self, w):
         return [e for _, e, _ in w.events if e.startswith("ac_cpw.") and e not in ("ac_cpw.5", "ac_cpw.6")]
@@ -902,6 +937,51 @@ class Runtime(unittest.TestCase):
         self.tick(refused, date(2010, 9, 30))
         self.assertEqual(["ac_cpw.1", "ac_cpw.2"], self.cpw_news(refused))
 
+    def test_status_text_and_historical_course_follow_the_actual_route(self):
+        pending, _, _ = self.cpw()
+        self.tick(pending, date(2010, 9, 22))
+        self.assertTrue(self.status(pending).startswith("Pending"))
+        closed, _, _ = self.cpw(date(2010, 10, 15))
+        self.tick(closed, date(2010, 10, 15))
+        self.assertTrue(self.status(closed).startswith("Closed"))
+        prevented, _, _ = self.cpw()
+        for tag, record in (("OSE", "verification"), ("OSE", "channel"), ("YUK", "verification"), ("YUK", "channel")):
+            self.earn(prevented, tag, record)
+        self.anchor(prevented)
+        self.assertTrue(self.status(prevented).startswith("Prevented"))
+        withheld, _, _ = self.cpw()
+        self.anchor(withheld)
+        self.earn(withheld, "YUK", "verification")
+        withheld.option("ac_cpw.5", "b", "YUK")
+        self.assertTrue(self.status(withheld).startswith("Withheld"))
+        running, _, _ = self.cpw()
+        self.declare(running)
+        self.assertTrue(self.status(running).startswith("Running on the official course"))
+        running.wars.add(frozenset(("YUK", "BLK")))
+        self.tick(running, date(2010, 9, 30))
+        self.assertTrue(self.status(running).startswith("Running under external observation: other fighting"))
+        running.wars.clear()
+        self.tick(running, date(2010, 10, 7))
+        self.assertTrue(self.status(running).startswith("Ended: the fighting stopped while the owner observed"))
+        existing, _, _ = self.cpw()
+        existing.wars.add(frozenset(("OSE", "YUK")))
+        self.anchor(existing)
+        self.assertTrue(self.status(existing).startswith("Running under external observation: Osea and Yuktobania were already at war"))
+        # An untainted cessation before the SOLG stage is an early end, not the official course.
+        early, _, _ = self.cpw()
+        self.declare(early)
+        early.wars.clear()
+        self.tick(early, date(2010, 10, 4))
+        self.assertTrue({"ac_cpw_ended", "ac_cpw_outcome_cessation"} <= early.globals)
+        self.assertNotIn("ac_cpw_historical_course", early.globals)
+        self.assertIn(("OSE", "ac_cpw.10", early.today + 1), early.events)
+        self.assertTrue(self.status(early).startswith("Ended: the fighting stopped without capitulation before the official course"))
+        victory, y, o = self.cpw()
+        self.declare(victory)
+        y.capitulated = True
+        victory.wave_action("circum_pacific", "on_capitulation_immediate", "YUK")
+        self.assertTrue(self.status(victory).startswith("Ended: Yuktobania capitulated"))
+
     def test_reciprocal_exchange_prevents_the_declaration_and_is_earned(self):
         w, y, o = self.cpw()
         for tag, record in (("OSE", "verification"), ("OSE", "channel"), ("YUK", "verification"), ("YUK", "channel")):
@@ -920,12 +1000,37 @@ class Runtime(unittest.TestCase):
         self.anchor(partial)
         self.assertNotIn("ac_cpw_prevented", partial.globals)
         self.assertIn(("YUK", "ac_cpw.5", partial.today + 1), partial.events)
+        # Routes settled while the declaration is still being asked clear the pending state.
+        for settled in ("prevented", "observed", "closed"):
+            with self.subTest(settled=settled):
+                asked, ya, oa = self.cpw()
+                self.anchor(asked)
+                self.assertTrue({"ac_cpw_declaration_asked", "ac_cpw_declaration_pending", "ac_cpw_declaration_window"} <= set(ya.flags))
+                if settled == "prevented":
+                    for tag, record in (("OSE", "verification"), ("OSE", "channel"), ("YUK", "verification"), ("YUK", "channel")):
+                        self.earn(asked, tag, record)
+                elif settled == "observed":
+                    asked.wars.add(frozenset(("OSE", "YUK")))
+                else:
+                    ya.subject = True
+                self.tick(asked, date(2010, 10, 4))
+                self.assertIn({"prevented": "ac_cpw_prevented", "observed": "ac_cpw_existing_war_observed", "closed": "ac_cpw_principal_unable"}[settled], asked.globals)
+                self.assertFalse({"ac_cpw_declaration_pending", "ac_cpw_declaration_window"} & set(ya.flags))
+                self.assertIn("ac_cpw_declaration_asked", ya.flags)
+                with self.assertRaises(AssertionError):
+                    asked.option("ac_cpw.5", "a", "YUK")
+                self.tick(asked, date(2011, 3, 1))
+                self.assertEqual(set() if settled != "observed" else {frozenset(("OSE", "YUK"))}, asked.wars)
+                self.assertNotIn("ac_cpw.3", [e for _, e, _ in asked.events])
+                self.assertFalse({"ac_cpw_yuk_war_footing"} & ya.ideas)
 
     def test_historical_course_fires_each_stage_once_and_ends_on_observed_cessation(self):
         w, y, o = self.cpw()
         w.globals.add("ac_sp_arkbird_complete")
         o.ideas |= {"ac_sp_arkbird_debris_clearing", "ac_sp_arkbird_joint_operations"}
         y.ideas.add("ac_sp_arkbird_joint_operations")
+        self.earn(w, "YUK", "channel")
+        records_before = self.records(w)
         self.declare(w)
         self.tick(w, date(2010, 9, 30))
         self.assertIn("ac_cpw_stage_eaglin", w.globals)
@@ -943,8 +1048,15 @@ class Runtime(unittest.TestCase):
         self.assertIn("ac_cpw_ose_arkbird_grounded", o.ideas)
         self.tick(w, date(2010, 11, 1))
         self.assertNotIn("ac_cpw_stage_bastok", w.globals)
-        foothold = next(s for s in w.states.values() if s.owner == "YUK")
-        foothold.controller = "OSE"
+        # State 515 is Yuktobanian-owned but not a Yuktobanian core; holding it is not the foothold.
+        self.assertEqual(("YUK", False), (w.states[515].owner, "YUK" in w.states[515].cores))
+        w.states[515].controller = "OSE"
+        self.tick(w, date(2010, 11, 1))
+        self.assertNotIn("ac_cpw_stage_bastok", w.globals)
+        w.states[515].controller = "YUK"
+        # State 125 is a Yuktobanian core; Osean control of it is the observed foothold.
+        self.assertIn("YUK", w.states[125].cores)
+        w.states[125].controller = "OSE"
         self.tick(w, date(2010, 11, 1))
         self.assertIn("ac_cpw_stage_bastok", w.globals)
         self.assertIn("ac_cpw_ose_expeditionary_strain", o.ideas)
@@ -967,6 +1079,8 @@ class Runtime(unittest.TestCase):
         self.tick(w, date(2010, 12, 23))
         self.assertIn("ac_cpw_yuk_leadership_question", y.ideas)
         self.tick(w, date(2010, 12, 29))
+        # The ninety-day carrier-losses spirit added on 30 September has expired by now.
+        self.assertNotIn("ac_cpw_ose_carrier_losses", o.ideas)
         self.tick(w, date(2010, 12, 30))
         self.assertIn("ac_cpw_appeal_made", w.globals)
         self.assertTrue("ac_cpw_disarmament_appeal" in y.ideas and "ac_cpw_disarmament_appeal" in o.ideas)
@@ -982,7 +1096,8 @@ class Runtime(unittest.TestCase):
         self.assertEqual(["ac_cpw.1", "ac_cpw.2", "ac_cpw.3", "ac_cpw.20", "ac_cpw.15", "ac_cpw.21", "ac_cpw.22", "ac_cpw.23", "ac_cpw.24", "ac_cpw.25",
                           "ac_cpw.26", "ac_cpw.27", "ac_cpw.28", "ac_cpw.29", "ac_cpw.30", "ac_cpw.31", "ac_cpw.32", "ac_cpw.33", "ac_cpw.34", "ac_cpw.35",
                           "ac_cpw.10"], self.cpw_news(w))
-        self.assertFalse({g for g in w.globals if g.startswith(("ac_snc_", "ac_snp_"))})
+        self.assertEqual(records_before, self.records(w))
+        self.assertTrue(self.status(w).startswith("Ended: the fighting stopped without capitulation after the official course"))
 
     def test_arkbird_stages_need_the_completed_project_and_the_commitment(self):
         w, y, o = self.cpw()
@@ -1096,6 +1211,33 @@ class Runtime(unittest.TestCase):
         split.countries["D01"] = breakaway
         split.wave_action("circum_pacific", "on_capitulation_immediate", "D01")
         self.assertFalse({"ac_cpw_ended", "ac_cpw_ose_fallen", "ac_cpw_yuk_fallen"} & split.globals)
+        # A principal annexed by a third party is not the other principal's victory, and the
+        # survivor's later observation never re-attributes it.
+        for fallen, annexer, victory, news in (("YUK", "BLK", "ac_cpw_outcome_osean_victory", "ac_cpw.11"), ("OSE", "BLK", "ac_cpw_outcome_yuktobanian_victory", "ac_cpw.12")):
+            with self.subTest(fallen=fallen):
+                third, y6, o6 = self.cpw()
+                self.declare(third)
+                third.wave_action("circum_pacific", "on_annex", annexer, fallen)
+                self.assertTrue({"ac_cpw_ended", "ac_cpw_outcome_cessation", "ac_cpw_tainted", "ac_cpw_external_fall", f"ac_cpw_{fallen.lower()}_fallen"} <= third.globals)
+                self.assertNotIn(victory, third.globals)
+                survivor = "OSE" if fallen == "YUK" else "YUK"
+                self.assertIn((survivor, "ac_cpw.13", third.today + 1), third.events)
+                self.assertNotIn(news, [e for _, e, _ in third.events])
+                for state in third.states.values():
+                    if state.owner == fallen:
+                        state.owner = state.controller = annexer
+                self.tick(third, date(2010, 10, 4), survivor)
+                self.assertNotIn(victory, third.globals)
+                self.assertTrue(self.status(third).startswith("Ended: the fighting stopped while the owner observed"))
+        # A capitulation after the pair has already made peace is not a victory either.
+        race, y7, o7 = self.cpw()
+        self.declare(race)
+        race.wars.clear()
+        y7.capitulated = True
+        race.wave_action("circum_pacific", "on_capitulation_immediate", "YUK")
+        self.assertTrue({"ac_cpw_ended", "ac_cpw_outcome_cessation", "ac_cpw_external_fall"} <= race.globals)
+        self.assertNotIn("ac_cpw_outcome_osean_victory", race.globals)
+        self.assertIn(("OSE", "ac_cpw.13", race.today + 1), race.events)
         w3, y3, o3 = self.cpw()
         self.declare(w3)
         for state in w3.states.values():

@@ -109,8 +109,10 @@ tag), the owner records `ac_cpw_ended` and exactly one outcome:
 only when the owner's own war ran untainted all the way to the SOLG stage
 (`ac_cpw.10`, also used for an earlier untainted end without the flag), and
 `ac_cpw.13` when the war was observed from outside. A victory is recorded only
-when a principal fell to the other principal in their own war; a principal
-annexed by a third party, or capitulating after the pair had already made
+when a principal fell to the other principal in their own war: every hook
+dispatches on the winner (`FROM` is the annexer, the capitulation winner or
+the overlord), so a principal annexed by, capitulating to, or absorbed as a
+subject by a third party, or capitulating after the pair had already made
 peace, is marked `ac_cpw_external_fall` and ends the war under observation.
 End news is scheduled by a surviving principal, so a fallen scope never owns
 it. All untimed war ideas are removed, and a declaration still pending when a

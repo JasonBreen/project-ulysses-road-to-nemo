@@ -322,6 +322,9 @@ class World(shared.World):
                 answer = context.subject == (value == "yes")
             elif key == "is_subject_of":
                 answer = getattr(context, "overlord", None) == value
+            elif key in ("FROM", "PREV", "ROOT"):
+                target = root if key == "ROOT" else previous
+                answer = target is not None and self.trigger(value, target, temp, root, context)
             elif key == "any_country":
                 answer = any(self.trigger(value, c, temp, root, context) for c in self.countries.values()
                              if any(s.owner == c.tag for s in self.states.values()))
@@ -979,7 +982,7 @@ class Runtime(unittest.TestCase):
         victory, y, o = self.cpw()
         self.declare(victory)
         y.capitulated = True
-        victory.wave_action("circum_pacific", "on_capitulation_immediate", "YUK")
+        victory.wave_action("circum_pacific", "on_capitulation_immediate", "YUK", "OSE")
         self.assertTrue(self.status(victory).startswith("Ended: Yuktobania capitulated"))
 
     def test_reciprocal_exchange_prevents_the_declaration_and_is_earned(self):
@@ -1191,7 +1194,7 @@ class Runtime(unittest.TestCase):
         w.option("ac_cpw.6", "a", "OSE")
         self.assertIn("ac_cpw_ose_arkbird_at_the_front", o.ideas)
         y.capitulated = True
-        w.wave_action("circum_pacific", "on_capitulation_immediate", "YUK")
+        w.wave_action("circum_pacific", "on_capitulation_immediate", "YUK", "OSE")
         self.assertTrue({"ac_cpw_yuk_fallen", "ac_cpw_ended", "ac_cpw_outcome_osean_victory"} <= w.globals)
         # The end news is scheduled by the surviving principal, never by the fallen scope.
         self.assertIn(("OSE", "ac_cpw.11", w.today + 1), w.events)
@@ -1209,7 +1212,7 @@ class Runtime(unittest.TestCase):
         breakaway.tag = "D01"
         breakaway.capitulated = True
         split.countries["D01"] = breakaway
-        split.wave_action("circum_pacific", "on_capitulation_immediate", "D01")
+        split.wave_action("circum_pacific", "on_capitulation_immediate", "D01", "OSE")
         self.assertFalse({"ac_cpw_ended", "ac_cpw_ose_fallen", "ac_cpw_yuk_fallen"} & split.globals)
         # A principal annexed by a third party is not the other principal's victory, and the
         # survivor's later observation never re-attributes it.
@@ -1234,10 +1237,26 @@ class Runtime(unittest.TestCase):
         self.declare(race)
         race.wars.clear()
         y7.capitulated = True
-        race.wave_action("circum_pacific", "on_capitulation_immediate", "YUK")
+        race.wave_action("circum_pacific", "on_capitulation_immediate", "YUK", "OSE")
         self.assertTrue({"ac_cpw_ended", "ac_cpw_outcome_cessation", "ac_cpw_external_fall"} <= race.globals)
         self.assertNotIn("ac_cpw_outcome_osean_victory", race.globals)
         self.assertIn(("OSE", "ac_cpw.13", race.today + 1), race.events)
+        # A capitulation to a third party, or a subject annexed by a third overlord, is not the
+        # other principal's victory either; the hooks dispatch on the winner in FROM.
+        for hook, fallen, winner, victory in (("on_capitulation_immediate", "YUK", "BLK", "ac_cpw_outcome_osean_victory"),
+                                              ("on_subject_annexed", "OSE", "BLK", "ac_cpw_outcome_yuktobanian_victory")):
+            with self.subTest(hook=hook):
+                w8, y8, o8 = self.cpw()
+                self.declare(w8)
+                (y8 if fallen == "YUK" else o8).capitulated = hook == "on_capitulation_immediate"
+                w8.wave_action("circum_pacific", hook, fallen, winner)
+                self.assertTrue({"ac_cpw_ended", "ac_cpw_outcome_cessation", "ac_cpw_external_fall", f"ac_cpw_{fallen.lower()}_fallen"} <= w8.globals)
+                self.assertNotIn(victory, w8.globals)
+        overlord, y9, o9 = self.cpw()
+        self.declare(overlord)
+        overlord.wave_action("circum_pacific", "on_subject_annexed", "YUK", "OSE")
+        self.assertTrue({"ac_cpw_ended", "ac_cpw_outcome_osean_victory"} <= overlord.globals)
+        self.assertNotIn("ac_cpw_external_fall", overlord.globals)
         w3, y3, o3 = self.cpw()
         self.declare(w3)
         for state in w3.states.values():
@@ -1331,6 +1350,26 @@ class Runtime(unittest.TestCase):
         # The aftermath branches stay open after the historical defeat.
         c.completed.add("ERU_ucw_exp_settlement_assessment")
         self.assertTrue(w.available("ERU_fe_insurrection_register", "ERU"))
+
+    def test_central_usea_must_still_be_able_to_respond_when_it_answers(self):
+        for fault in ("capitulated", "at_war_with_erusea"):
+            with self.subTest(fault=fault):
+                w, c = self.owner()
+                w.wave_action("free_erusea", "on_weekly_ERU", "ERU")
+                self.assertIn(("FCU", "ac_fe.5", w.today + 1), w.events)
+                if fault == "capitulated":
+                    w.countries["FCU"].capitulated = True
+                else:
+                    w.wars.add(frozenset(("FCU", "ERU")))
+                with self.assertRaises(AssertionError):
+                    w.option("ac_fe.5", "a", "FCU")
+                before = (copy.deepcopy(c.ideas), copy.deepcopy(c.variables), set(w.globals))
+                w.run("ac_fe_defeat", "FCU")
+                self.assertNotIn("ac_fe_insurrection_defeated", w.globals)
+                self.assertEqual(before, (c.ideas, c.variables, set(w.globals)))
+                w.advance(31)
+                w.wave_action("free_erusea", "on_weekly_ERU", "ERU")
+                self.assertIn("ac_fe_prolonged", w.globals)
 
     def test_prolonged_route_is_provisional_and_needs_no_central_usean_answer(self):
         w, c = self.owner()

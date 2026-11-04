@@ -315,7 +315,8 @@ def owner():
                                     "set_country_flag = { flag = ac_fe_response_window days = 30 }\nFCU = { country_event = { id = ac_fe.5 days = 1 } }") +
                               block("else", "set_global_flag = ac_fe_prolonged"))
     # Historical route: the Chronicle records the defeat by Mobius 1 (2006 / 09.26).
-    effects["ac_fe_defeat"] = guard("ac_fe_running = yes NOT = { has_global_flag = ac_fe_prolonged }",
+    # Central Usea must still be able to respond when it answers, not only when it was asked.
+    effects["ac_fe_defeat"] = guard("ac_fe_running = yes NOT = { has_global_flag = ac_fe_prolonged } ac_fe_fcu_can_respond = yes",
         "set_global_flag = ac_fe_insurrection_defeated\n" + guard("country_exists = ERU", "ERU = { ac_fe_update_tier = yes }") +
         "news_event = { id = ac_fe.6 days = 1 }")
     effects["ac_fe_choose_prolonged"] = guard("ac_fe_running = yes", "set_global_flag = ac_fe_prolonged")
@@ -417,7 +418,7 @@ def owner():
     events.append(block("news_event", "id = ac_fe.3\ntitle = ac_fe.3.t\ndesc = ac_fe.3.d\npicture = GFX_ac_fe_news_recedes\nis_triggered_only = yes\nmajor = yes\ntrigger = { always = yes }\n" +
                         block("option", "name = ac_fe.3.a")))
     events.append(block("country_event", "id = ac_fe.5\ntitle = ac_fe.5.t\ndesc = ac_fe.5.d\npicture = GFX_ac_fe_event_fcu_national\nis_triggered_only = yes\n"
-                        "trigger = { tag = FCU original_tag = FCU ac_fe_running = yes NOT = { has_global_flag = ac_fe_prolonged } }\n" +
+                        "trigger = { tag = FCU original_tag = FCU ac_fe_running = yes NOT = { has_global_flag = ac_fe_prolonged } ac_fe_fcu_can_respond = yes }\n" +
                         block("option", "name = ac_fe.5.a\nai_chance = { factor = 100 }\nac_fe_defeat = yes") +
                         block("option", "name = ac_fe.5.b\nai_chance = { factor = 0 }\nac_fe_choose_prolonged = yes")))
     events.append(block("news_event", "id = ac_fe.6\ntitle = ac_fe.6.t\ndesc = ac_fe.6.d\npicture = GFX_ac_fe_news_defeated\nis_triggered_only = yes\nmajor = yes\ntrigger = { always = yes }\n" +

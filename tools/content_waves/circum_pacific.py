@@ -487,8 +487,12 @@ def owner():
              block("on_weekly_OSE", block("effect", "ac_cpw_owner_weekly_ose = yes")) +
              block("on_annex", block("effect", "if = { limit = { OR = { tag = OSE tag = YUK } } FROM = { ac_cpw_interrupt = yes } }\n"
                                                "else = { FROM = { ac_cpw_interrupt_external = yes } }")) +
-             block("on_capitulation_immediate", block("effect", "ac_cpw_interrupt = yes")) +
-             block("on_subject_annexed", block("effect", "ac_cpw_interrupt = yes")))
+             # FROM is the winner (capitulation) or the overlord (subject annexation): only the
+             # other principal's win counts as a victory; anyone else's is an external fall.
+             block("on_capitulation_immediate", block("effect", "if = { limit = { FROM = { OR = { tag = OSE tag = YUK } } } ac_cpw_interrupt = yes }\n"
+                                                                "else = { ac_cpw_interrupt_external = yes }")) +
+             block("on_subject_annexed", block("effect", "if = { limit = { FROM = { OR = { tag = OSE tag = YUK } } } ac_cpw_interrupt = yes }\n"
+                                                         "else = { ac_cpw_interrupt_external = yes }")))
     ai = "\n".join((
         block("ac_cpw_yuk_tension", "allowed = { original_tag = YUK }\n" +
               block("enable", f"has_global_flag = ac_cpw_calendar_started {ROUTE_SETTLED}") +

@@ -86,7 +86,11 @@ tree ID, position or continuous-focus position changed.
   never runs.
 - **Provisional prolonged route:** "Leave the response to the provisional
   government", a Central Usea that cannot answer (absent, capitulated or at war
-  with Erusea), or a 30-day window left unanswered sets `ac_fe_prolonged`.
+  with Erusea), or a 30-day window left unanswered sets `ac_fe_prolonged`. The
+  answer re-checks that Central Usea can still respond: a Central Usea that
+  capitulated or went to war with Erusea after `ac_fe.5` was queued sees no
+  "Send Mobius 1" option and `ac_fe_defeat` stays inert, so the window lapses
+  into the prolonged route.
   Pressure then starts at 55 of 100 and the rules below apply.
 - **Late saves:** a first observation on or after 26 September 2007 closes the
   owner (`ac_fe_late_start_skipped`) without replaying the outbreak.

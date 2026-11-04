@@ -1,0 +1,142 @@
+# Original provisional gameplay; source: tools/content_waves (The Lighthouse War). Native acceptance pending.
+# Source: Super Weapons, Arsenal Birds; Chronicle 2019 / 05.15, 08.19, 10.31. The availability date is provisional gameplay.
+ac_sp_arsenal_birds = {
+	specialization = specialization_air
+	icon = GFX_ac_sp_arsenal_birds
+	blueprint_image = GFX_ac_sp_blueprint_air_defence
+	project_tags = {
+		ac_sp_tag_unmanned_aviation
+	}
+	allowed = {
+		original_tag = OSE
+	}
+	visible = {
+		always = yes
+	}
+	available = {
+		date > 2014.12.31
+		NOT = { has_global_flag = ac_sp_arsenal_birds_complete }
+		NOT = { has_global_flag = ac_lhw_arsenal_birds_lost }
+	}
+	complexity = sp_complexity.medium
+	prototype_time = sp_time.prototype.medium
+	ai_will_do = {
+		base = 10
+	}
+	project_output = {
+		country_effects = {
+			ac_sp_arsenal_birds_complete_effect = yes
+		}
+	}
+	generic_prototype_rewards = {
+		ac_sp_reward_breakthrough
+		ac_sp_reward_test_setback
+		ac_sp_reward_oversight_review
+		ac_sp_reward_field_trials_air_defence
+	}
+	unique_prototype_rewards = {
+		ac_sp_arsenal_birds_reward_elevator_trials = {
+			icon = GFX_ac_sp_arsenal_birds_reward_elevator_trials
+			fire_only_once = yes
+			threshold = {
+				min = 0
+				max = 80
+			}
+			weight = {
+				base = 20
+			}
+			option = {
+				token = ac_sp_arsenal_birds_reward_elevator_trials_two_airframes
+				default = yes
+				iteration_output = {
+					country_effects = {
+						add_political_power = -50
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.medium }
+					}
+				}
+			}
+			option = {
+				token = ac_sp_arsenal_birds_reward_elevator_trials_one_airframe
+				iteration_output = {
+					country_effects = {
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.low }
+						add_stability = 0.02
+					}
+				}
+			}
+		}
+	}
+}
+
+# Source: Super Weapons, Alicorn. Construction and custody only; the cruiser is never deployed by script. Gate and timing are provisional gameplay.
+ac_sp_alicorn = {
+	specialization = specialization_naval
+	icon = GFX_ac_sp_alicorn
+	blueprint_image = GFX_ac_sp_blueprint_naval
+	project_tags = {
+		ac_sp_tag_submarine_aviation
+	}
+	allowed = {
+		original_tag = ERU
+	}
+	visible = {
+		always = yes
+	}
+	available = {
+		date > 2012.12.31
+		FROM = { has_country_flag = ERU_lw_alicorn_operations_done }
+		NOT = { has_global_flag = ac_sp_alicorn_complete }
+	}
+	complexity = sp_complexity.large
+	prototype_time = sp_time.prototype.long
+	ai_will_do = {
+		base = 10
+	}
+	project_output = {
+		country_effects = {
+			ac_sp_alicorn_complete_effect = yes
+		}
+	}
+	generic_prototype_rewards = {
+		ac_sp_reward_breakthrough
+		ac_sp_reward_test_setback
+		ac_sp_reward_oversight_review
+		ac_sp_reward_field_trials_naval
+	}
+	unique_prototype_rewards = {
+		ac_sp_alicorn_reward_custody_crews = {
+			icon = GFX_ac_sp_alicorn_reward_custody_crews
+			fire_only_once = yes
+			threshold = {
+				min = 0
+				max = 80
+			}
+			weight = {
+				base = 20
+				modifier = {
+					add = 40
+					ERU = { has_country_flag = ERU_lw_alicorn_settlement_done }
+				}
+			}
+			option = {
+				token = ac_sp_alicorn_reward_custody_crews_written
+				default = yes
+				iteration_output = {
+					country_effects = {
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.low }
+						add_stability = 0.02
+					}
+				}
+			}
+			option = {
+				token = ac_sp_alicorn_reward_custody_crews_fleet
+				iteration_output = {
+					country_effects = {
+						add_political_power = -50
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.medium }
+					}
+				}
+			}
+		}
+	}
+}

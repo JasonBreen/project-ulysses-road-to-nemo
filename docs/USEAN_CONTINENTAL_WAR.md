@@ -114,6 +114,13 @@ provisional gameplay. Checked by `tools/Test-StrangerealProjects.py` (static).
 | `ac_sp_megalith` | ERU, after `ac_ucw_war_started` | Official (Super Weapons, Megalith); timing provisional | `ac_sp_megalith_complete` |
 | `ac_sp_rhongomyniad` | BLK, after `BLK_project_rhongomyniad` and `ac_sp_excalibur` | Provisional gameplay on mod provenance (`belka_dlp_won.9`) | `ac_sp_rhongomyniad_complete` |
 
+[Wave F1](CONTENT_WAVE_F1.md) later added two projects from the 2019 Super
+Weapons rows, `ac_sp_arsenal_birds` (OSE) and `ac_sp_alicorn` (ERU), in
+generator-owned files beside these (`projects/ac_lighthouse.txt`,
+`project_tags/ac_lighthouse.txt`, effects, ideas and fallbacks in the
+`ac_lighthouse` files), so the six files above stay hash-pinned and unchanged;
+the check reads every file in the replaced folders.
+
 This track sets only the six completion flags. It reads `ac_ucw_war_started`,
 `ac_ucw_stonehenge_seized`, `ac_ucw_stonehenge_destroyed`,
 `ac_ucw_megalith_destroyed` and `ac_yuk_arkbird_partner`, and every read is safe

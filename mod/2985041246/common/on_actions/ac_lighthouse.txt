@@ -1,0 +1,52 @@
+# Original provisional gameplay; source: tools/content_waves (The Lighthouse War). Native acceptance pending.
+on_actions = {
+	on_startup = {
+		effect = {
+			if = { limit = { country_exists = ERU } ERU = { ac_lhw_initialize = yes } }
+			if = { limit = { country_exists = FCU } FCU = { ac_lhw_initialize = yes } }
+			if = { limit = { country_exists = ERU } ERU = { ac_lhw_restore = yes } }
+		}
+	}
+	on_weekly_ERU = {
+		effect = {
+			ac_lhw_weekly_eru = yes
+		}
+	}
+	on_weekly_FCU = {
+		effect = {
+			ac_lhw_weekly_fcu = yes
+		}
+	}
+	on_annex = {
+		effect = {
+			FROM = { ac_lhw_interrupt = yes }
+			if = { limit = { OR = { tag = OSE tag = ERU } } FROM = { ac_lhw_interrupt_principal = yes } }
+			else = { FROM = { ac_lhw_interrupt_external = yes } }
+		}
+	}
+	on_capitulation_immediate = {
+		effect = {
+			ac_lhw_interrupt = yes
+			if = { limit = { FROM = { OR = { tag = OSE tag = ERU } } } ac_lhw_interrupt_principal = yes }
+			else = { ac_lhw_interrupt_external = yes }
+		}
+	}
+	on_subject_annexed = {
+		effect = {
+			ac_lhw_interrupt = yes
+			if = { limit = { FROM = { OR = { tag = OSE tag = ERU } } } ac_lhw_interrupt_principal = yes }
+			else = { ac_lhw_interrupt_external = yes }
+		}
+	}
+	on_war_relation_added = {
+		effect = {
+			ac_lhw_interrupt_service = yes
+			FROM = { ac_lhw_interrupt_service = yes }
+		}
+	}
+	on_weekly_OSE = {
+		effect = {
+			ac_lhw_owner_weekly_ose = yes
+		}
+	}
+}

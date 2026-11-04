@@ -30,11 +30,11 @@ spec.loader.exec_module(shared)
 parse, fields = shared.parse, shared.fields
 
 from content_waves.framework import focus_id, branch_id, service_id  # noqa: E402
-from content_waves import aurelia, circum_pacific, estovakia, free_erusea, nordennavic  # noqa: E402
+from content_waves import aurelia, circum_pacific, estovakia, free_erusea, lighthouse, nordennavic  # noqa: E402
 from content_waves.registry import MODULES  # noqa: E402
 from event_picture_fit import audit as picture_audit  # noqa: E402
 
-FE, NC, EB, AU, CP = free_erusea.WAVE, nordennavic.WAVE, estovakia.WAVE, aurelia.WAVE, circum_pacific.WAVE
+FE, NC, EB, AU, CP, LH = free_erusea.WAVE, nordennavic.WAVE, estovakia.WAVE, aurelia.WAVE, circum_pacific.WAVE, lighthouse.WAVE
 NAMES = {m.WAVE.prefix: m.NAME for m in MODULES}
 WAVES = tuple((m.WAVE, m.NAME) for m in MODULES)
 PREFIX_BY_KEY = {m.KEY: m.WAVE.prefix for m in MODULES}
@@ -46,9 +46,10 @@ OWNED_FILES = [f"{folder}/ac_{name}.txt" for name in NAMES.values() for folder i
     "common/special_projects/projects", "common/special_projects/project_tags")
     if (MOD / f"{folder}/ac_{name}.txt").exists()]
 # The only wars and peaces the content waves may script, each sourced and each in exactly one owner.
-DECLARATIONS = {"circum_pacific": ["declare_war_on = { target = OSE type = topple_government }"]}
-PEACES = {}
-EXPECTED = {"ERU": 36, "FCU": 24, "NEC": 42, "EVA": 30, "EMM": 18, "AUR": 54}
+DECLARATIONS = {"circum_pacific": ["declare_war_on = { target = OSE type = topple_government }"],
+                "lighthouse": ["declare_war_on = { target = OSE type = topple_government }"]}
+PEACES = {"lighthouse": ["white_peace = OSE"]}
+EXPECTED = {"ERU": 90, "FCU": 48, "NEC": 42, "EVA": 30, "EMM": 18, "AUR": 54}
 STORY_FLAGS = ("ac_cpw_started", "ac_cpw_tainted", "ac_cpw_prevented", "ac_cpw_declaration_withheld")
 
 
@@ -182,9 +183,11 @@ class Source(unittest.TestCase):
                     self.assertEqual((26, 29), image.size)
         report = picture_audit.audit([f"events/ac_{name}.txt" for name in NAMES.values()])
         # A: 24 narrative + owner .2/.4/.5; D: 16 narrative; B: 20 narrative + Emmerian aid events .5/.6;
-        # Aurelia: 20 narrative; C: the Yuktobanian declaration .5 and the Osean Arkbird decision .6.
-        # News: A .1/.3/.6; B .1-.4, .7-.14; C .1-.4, .7-.15 and the sixteen stages .20-.35.
-        self.assertEqual({"country_event": 27 + 16 + 22 + 20 + 2, "news_event": 3 + 12 + 29}, report["counts"])
+        # Aurelia: 20 narrative; C: the Yuktobanian declaration .5 and the Osean Arkbird decision .6;
+        # F1: 30 narrative + the Erusean declaration .5 and ceasefire .6.
+        # News: A .1/.3/.6; B .1-.4, .7-.14; C .1-.4, .7-.15 and the sixteen stages .20-.35;
+        # F1 .1-.4, .7-.13, the nine stages .20-.28 and .29.
+        self.assertEqual({"country_event": 27 + 16 + 22 + 20 + 2 + 32, "news_event": 3 + 12 + 29 + 21}, report["counts"])
         for row in report["consumers"]:
             self.assertLessEqual(row["bounds"][2], 215 if row["event_type"] == "country_event" else 456)
             self.assertLessEqual(row["bounds"][3], 181 if row["event_type"] == "country_event" else 244)
@@ -265,6 +268,56 @@ class Source(unittest.TestCase):
         self.assertNotRegex("\n".join(text(r) for r in OWNED_FILES if "circum_pacific" in r), r"Harling|Nikanor|Razgriz|Wardog|Snow|Genette|Beagle")
         for name in ("Snow", "Genette", "Beagle", "Talisman"):
             self.assertNotIn(name, loc, name)
+
+    def test_lighthouse_owner_honours_the_published_contract(self):
+        effects = text("common/scripted_effects/ac_lighthouse.txt")
+        triggers = text("common/scripted_triggers/ac_lighthouse.txt")
+        loc = (MOD / "localisation/english/ac_lighthouse_l_english.yml").read_text(encoding="utf-8-sig")
+        projects = text("common/special_projects/projects/ac_lighthouse.txt")
+        # Its own calendar: the opening, the anchor, the late-save limit, the Expo City date and every sourced stage.
+        for anchor in ("date > 2019.1.31", "date > 2019.5.14", "date < 2019.5.15", "date > 2019.11.30", "date > 2019.5.16", "date > 2019.5.29",
+                       "date > 2019.6.5", "date > 2019.8.18", "date > 2019.9.18", "date > 2019.9.30", "date > 2019.10.9", "date > 2019.10.30",
+                       "ac_lhw_late_start_skipped", "ac_lhw_route_unreachable", "ac_lhw_declaration_refused", "ac_lhw_ceasefire_not_made"):
+            self.assertIn(anchor, effects, anchor)
+        for citation in ("2019 / 05.15", "2019 / 05.17", "2019 / 05.30", "2019 / 06.06", "2019 / 08.10", "2019 / 08.19", "2019 / 09.19",
+                         "2019 / 10.01", "2019 / 10.10", "2019 / 10.31", "2019 / 12.01", "Super Weapons, Arsenal Birds", "Super Weapons, Alicorn",
+                         "Abstracts, ACE COMBAT 7", "provisional gameplay"):
+            self.assertIn(citation, loc, citation)
+        # No assumed end date, no faction veto, pre-existing wars inspected, third parties observed, subjects exempt.
+        self.assertNotIn("date > 2019.12.1", effects)
+        self.assertNotIn("is_in_faction", effects + triggers)
+        self.assertNotIn("has_guaranteed", effects + triggers)
+        self.assertIn("NOT = { is_subject_of = ERU } NOT = { is_subject_of = OSE }", triggers)
+        self.assertIn("OR = { has_war = yes OSE = { has_war = yes } }", effects)
+        self.assertIn("AND = { tag = ERU original_tag = ERU } AND = { tag = OSE original_tag = OSE }", effects)
+        # The only peace the content waves script, and the only place it lives.
+        self.assertEqual(1, effects.count("white_peace = OSE"))
+        self.assertIn("white_peace = OSE", fields(parse(effects))["ac_lhw_sign_ceasefire"] and effects)
+        # Foreign owners are read, never written: the only writes outside ac_lhw are the two projects' completion flags.
+        self.assertEqual({"ac_sp_arsenal_birds_complete", "ac_sp_alicorn_complete"},
+                         set(re.findall(r"\bset_global_flag = (ac_(?:ucw|sp|release|fe|snc|anea|cpw|ecw)_\w+)", effects)))
+        self.assertNotRegex(effects, r"\b(?:set|clr)_country_flag = ac_(?:ucw|sp|release|fe|snc)_")
+        self.assertNotRegex(effects, r"\b(?:set|add_to|subtract_from)_variable = \{ ac_(?:ucw|sp|release|fe|snc)_")
+        self.assertEqual({"ac_sp_arsenal_birds_elevator_screen"}, set(re.findall(r"remove_ideas = (ac_sp_\w+)", effects)))
+        self.assertEqual({"ac_sp_arsenal_birds_elevator_screen", "ac_sp_alicorn_cruiser"}, set(re.findall(r"add_ideas = (ac_sp_\w+)", effects)))
+        self.assertNotIn("SHI = {", effects)
+        self.assertNotIn("transfer_state", effects + projects)
+        # The projects live in generator-owned files; the hash-pinned Track C files are untouched.
+        pinned = json.loads((ROOT / "tools/air_program/preserved_sources.json").read_text(encoding="utf-8"))["sources"]
+        import hashlib
+        for relative, digest in pinned.items():
+            if "special_projects" in relative or relative.endswith("ac_special_projects.txt"):
+                self.assertEqual(digest, hashlib.sha256((ROOT / relative).read_bytes()).hexdigest(), relative)
+        for ident in ("ac_sp_arsenal_birds", "ac_sp_alicorn"):
+            self.assertIn(f"{ident}_complete_effect = yes", projects)
+            self.assertIn(f"NOT = {{ has_global_flag = {ident}_complete }}", projects)
+        self.assertIn("NOT = { has_global_flag = ac_lhw_arsenal_birds_lost }", projects)
+        # Named canon appears only in event and idea text; nothing becomes a character, unit, leader, state or tag.
+        scripts = "\n".join(text(r) for r in OWNED_FILES if "lighthouse" in r)
+        self.assertNotRegex(scripts, r"Harling|Labarthe|Torres|Trigger|Mihaly|Expo City|Chopinburg|Farbanti|Shilage")
+        for name in ("Torres", "Trigger", "Mihaly", "Strider", "Cyclops", "Rosa", "Cossette"):
+            self.assertNotIn(name, loc, name)
+
 
 
 class World(shared.World):
@@ -470,7 +523,7 @@ class Runtime(unittest.TestCase):
         return w
 
     def test_every_service_pays_real_owners_once_and_completes_after_ninety_days(self):
-        for wave in (FE, NC, EB, AU):
+        for wave in (FE, NC, EB, AU, LH):
             for b in wave.branches:
                 for n in range(2):
                     for mode in ("full", "experimental", "disabled"):
@@ -528,7 +581,7 @@ class Runtime(unittest.TestCase):
         return w
 
     def test_branch_policies_exclude_review_needs_service_and_settlement_improves(self):
-        for wave in (FE, NC, EB, AU):
+        for wave in (FE, NC, EB, AU, LH):
             for b in wave.branches:
                 for choice in (1, 2):
                     with self.subTest(branch=branch_id(b), choice=choice):
@@ -1313,6 +1366,482 @@ class Runtime(unittest.TestCase):
                 self.assertEqual(pp, c.pp)
                 self.assertIn(f"ac_cpw_{tag.lower()}_war_record", c.ideas)
         self.assertNotIn("add_political_power", text("common/scripted_effects/ac_circum_pacific.txt"))
+
+    # Wave F1: the Lighthouse War owner -------------------------------------------------
+    FOREIGN = ("ac_ucw_", "ac_sp_", "ac_release_", "ac_fe_", "ac_snc_")
+
+    def lhw(self, today=date(2019, 1, 25), history="ac_ucw_outcome_isaf_victory"):
+        w = self.fresh()
+        w.today = today.toordinal()
+        if history:
+            w.globals.add(history)
+        return w, w.countries["ERU"], w.countries["OSE"]
+
+    def ltick(self, w, day, tag="ERU"):
+        self.tick(w, day, tag, "lighthouse")
+
+    def lanchor(self, w):
+        self.ltick(w, date(2019, 2, 1))
+        self.ltick(w, date(2019, 5, 15))
+
+    def ldeclare(self, w):
+        self.lanchor(w)
+        w.option("ac_lhw.5", "a", "ERU")
+        self.assertIn("ac_lhw_started", w.globals)
+        return w
+
+    def lnews(self, w):
+        return [e for _, e, _ in w.events if e.startswith("ac_lhw.") and e not in ("ac_lhw.5", "ac_lhw.6")]
+
+    def lstatus(self, w):
+        return self.status(w, "lighthouse", "ERU")
+
+    def foreign(self, w):
+        return ({t: ({k: v for k, v in w.countries[t].flags.items() if k.startswith(self.FOREIGN)},
+                     {k: v for k, v in w.countries[t].variables.items() if k.startswith(self.FOREIGN)},
+                     {i for i in w.countries[t].ideas if i.startswith(self.FOREIGN)}) for t in ("ERU", "OSE", "FCU")},
+                {g for g in w.globals if g.startswith(self.FOREIGN)})
+
+    def test_lighthouse_calendar_needs_the_isaf_history_and_late_saves_never_replay(self):
+        w, e, o = self.lhw()
+        self.ltick(w, date(2019, 1, 31))
+        self.assertNotIn("ac_lhw_calendar_started", w.globals)
+        self.ltick(w, date(2019, 2, 1))
+        self.assertIn("ac_lhw_calendar_started", w.globals)
+        self.assertEqual([], self.lnews(w))
+        self.ltick(w, date(2019, 5, 14))
+        self.assertNotIn(("ERU", "ac_lhw.5", w.today + 1), w.events)
+        self.ltick(w, date(2019, 5, 15))
+        self.assertIn(("ERU", "ac_lhw.5", w.today + 1), w.events)
+        self.assertEqual(set(), w.wars)
+        for first in (date(2019, 5, 15), date(2019, 7, 1), date(2020, 3, 1)):
+            late, _, _ = self.lhw(first)
+            self.ltick(late, first)
+            self.assertTrue({"ac_lhw_closed", "ac_lhw_late_start_skipped"} <= late.globals, first)
+            self.ltick(late, date(2020, 6, 1))
+            self.assertEqual([], self.lnews(late))
+            self.assertEqual(set(), late.wars)
+        for history in ("ac_ucw_outcome_erusean_victory", "ac_ucw_outcome_stalemate", "ac_ucw_war_averted", None):
+            with self.subTest(history=history):
+                other, _, _ = self.lhw(history=history)
+                self.lanchor(other)
+                self.assertTrue({"ac_lhw_closed", "ac_lhw_route_unreachable"} <= other.globals)
+                self.assertNotIn("ac_lhw_calendar_started", other.globals)
+                self.ltick(other, date(2019, 12, 2))
+                self.assertEqual([], self.lnews(other))
+                self.assertEqual(set(), other.wars)
+                self.assertTrue(self.lstatus(other).startswith("Closed: the Continental War"))
+        gone, _, _ = self.lhw()
+        for state in gone.states.values():
+            if state.owner == "OSE":
+                state.owner = state.controller = "BLK"
+        self.ltick(gone, date(2019, 2, 1))
+        self.assertTrue({"ac_lhw_closed", "ac_lhw_principal_missing"} <= gone.globals)
+
+    def test_lighthouse_declaration_window_withholding_and_refusals(self):
+        w, e, o = self.lhw()
+        self.lanchor(w)
+        options = {next(x for k, _, x in v if k == "name"): v for k, _, v in w.messages["ac_lhw.5"] if k == "option"}
+        self.assertEqual("100", fields(fields(options["ac_lhw.5.a"])["ai_chance"])["factor"])
+        self.assertEqual("0", fields(fields(options["ac_lhw.5.b"])["ai_chance"])["factor"])
+        self.assertTrue({"ac_lhw_declaration_asked", "ac_lhw_declaration_pending", "ac_lhw_declaration_window"} <= set(e.flags))
+        with self.assertRaises(AssertionError):
+            w.option("ac_lhw.5", "b", "ERU")
+        w.run("ac_lhw_withhold", "ERU")
+        self.assertNotIn("ac_lhw_declaration_withheld", w.globals)
+        self.ltick(w, date(2019, 5, 22))
+        self.assertNotIn("ac_lhw_started", w.globals)
+        self.ltick(w, date(2019, 5, 30))
+        self.assertIn("ac_lhw_started", w.globals)
+        self.assertEqual({frozenset(("ERU", "OSE"))}, w.wars)
+        self.assertTrue({"ac_lhw_eru_war_footing", "ac_lhw_eru_elevator_held"} <= e.ideas)
+        self.assertTrue({"ac_lhw_ose_war_footing", "ac_lhw_ose_ports_struck"} <= o.ideas)
+        # The same weekly pulse that declared also delivers the stages whose dates have passed.
+        self.assertEqual(["ac_lhw.1", "ac_lhw.20", "ac_lhw.21"], self.lnews(w))
+        self.assertNotIn("ac_lhw_declaration_pending", e.flags)
+        self.assertTrue(self.lstatus(w).startswith("Running on the official course"))
+        # The withheld declaration is earned by the oversight file and the obligations kept as policy.
+        kept, e2, o2 = self.lhw()
+        e2.flags.update({"ERU_fe_oversight_settlement_done": None, "ERU_lw_sovereignty_policy_a_done": None})
+        self.lanchor(kept)
+        kept.option("ac_lhw.5", "b", "ERU")
+        self.assertIn("ac_lhw_declaration_withheld", kept.globals)
+        self.assertIn("ac_lhw_eru_restraint_kept", e2.ideas)
+        self.assertEqual(set(), kept.wars)
+        for day in (date(2019, 5, 30), date(2019, 8, 19), date(2019, 12, 2), date(2020, 3, 1)):
+            self.ltick(kept, day)
+        # The sovereignty policy flag also opens that branch's narrative scene (.60); the owner's own news is .2 alone.
+        self.assertEqual(["ac_lhw.2"], [n for n in self.lnews(kept) if int(n.split(".")[1]) < 50])
+        self.assertFalse({"ac_lhw_started", "ac_lhw_closed"} & kept.globals)
+        self.assertTrue(self.lstatus(kept).startswith("Withheld"))
+        for fault in ("eru_capitulated", "eru_subject", "ose_capitulated", "ose_subject"):
+            with self.subTest(fault=fault):
+                u, eu, ou = self.lhw()
+                setattr(eu if fault.startswith("eru") else ou, "capitulated" if fault.endswith("capitulated") else "subject", True)
+                self.lanchor(u)
+                self.assertTrue({"ac_lhw_closed", "ac_lhw_principal_unable"} <= u.globals)
+                self.assertNotIn(("ERU", "ac_lhw.5", u.today + 1), u.events)
+                self.assertEqual(set(), u.wars)
+        refused, er, orr = self.lhw()
+        refused.refuse_war = True
+        self.lanchor(refused)
+        refused.option("ac_lhw.5", "a", "ERU")
+        self.assertTrue({"ac_lhw_closed", "ac_lhw_declaration_refused"} <= refused.globals)
+        self.assertFalse({"ac_lhw_started", "ac_lhw_pre_existing_war"} & refused.globals)
+        self.assertFalse({"ac_lhw_eru_war_footing", "ac_lhw_eru_elevator_held"} & er.ideas)
+        self.assertNotIn("ac_lhw_ose_war_footing", orr.ideas)
+        self.ltick(refused, date(2019, 5, 30))
+        self.assertEqual([], self.lnews(refused))
+
+    def test_lighthouse_course_fires_each_stage_once_and_ends_at_expo_city(self):
+        w, e, o = self.lhw()
+        w.globals.add("ac_ucw_stonehenge_operational")
+        w.countries["FCU"].flags["ac_fe_response_window"] = None
+        before = self.foreign(w)
+        self.ldeclare(w)
+        self.ltick(w, date(2019, 5, 17))
+        self.assertIn("ac_lhw_stage_eastern_wind", w.globals)
+        self.assertIn("ac_lhw_ose_eastern_wind", o.ideas)
+        self.ltick(w, date(2019, 5, 30))
+        self.assertIn("ac_lhw_ose_kestrel_ii_lost", o.ideas)
+        self.ltick(w, date(2019, 6, 6))
+        self.assertIn("ac_lhw_stage_harling", w.globals)
+        self.ltick(w, date(2019, 8, 19))
+        self.assertTrue({"ac_lhw_stage_stonehenge", "ac_lhw_stonehenge_battery_reactivated"} <= w.globals)
+        self.assertIn("ac_lhw_ose_stonehenge_battery", o.ideas)
+        self.assertNotIn("ac_lhw_liberty_lost", w.globals)
+        # Farbanti waits for an observed Osean foothold on an Erusean core; an Erusean-owned non-core state is not one.
+        self.ltick(w, date(2019, 9, 19))
+        self.assertNotIn("ac_lhw_stage_farbanti", w.globals)
+        borrowed = next(i for i, s in w.states.items() if s.owner == "SNS")
+        w.states[borrowed].owner, w.states[borrowed].controller = "ERU", "OSE"
+        self.assertNotIn("ERU", w.states[borrowed].cores)
+        self.ltick(w, date(2019, 9, 19))
+        self.assertNotIn("ac_lhw_stage_farbanti", w.globals)
+        w.states[borrowed].owner = w.states[borrowed].controller = "SNS"
+        self.assertIn("ERU", w.states[240].cores)
+        w.states[240].controller = "OSE"
+        self.ltick(w, date(2019, 9, 19))
+        self.assertTrue({"ac_lhw_stage_farbanti", "ac_lhw_usea_blackout"} <= w.globals)
+        self.assertIn("ac_lhw_eru_capital_attacked", e.ideas)
+        dark = {t for t, c in w.countries.items() if "ac_lhw_usea_blackout" in c.ideas}
+        self.assertEqual({"ERU", "FCU", "SNS", "AMB", "UGE", "DEL", "NPT"}, dark)
+        self.ltick(w, date(2019, 10, 1))
+        self.assertIn("ac_lhw_eru_internal_conflict", e.ideas)
+        self.ltick(w, date(2019, 10, 10))
+        self.ltick(w, date(2019, 10, 31))
+        self.assertTrue({"ac_lhw_stage_elevator_clash", "ac_lhw_arsenal_birds_lost"} <= w.globals)
+        self.ltick(w, date(2019, 11, 30))
+        self.assertNotIn(("ERU", "ac_lhw.6"), [(t, n) for t, n, _ in w.events])
+        self.ltick(w, date(2019, 12, 1))
+        self.assertIn(("ERU", "ac_lhw.6", w.today + 1), w.events)
+        self.assertTrue({"ac_lhw_ceasefire_asked", "ac_lhw_ceasefire_pending", "ac_lhw_ceasefire_window"} <= set(e.flags))
+        options = {next(x for k, _, x in v if k == "name"): v for k, _, v in w.messages["ac_lhw.6"] if k == "option"}
+        self.assertEqual(("100", "0"), tuple(fields(fields(options[f"ac_lhw.6.{c}"])["ai_chance"])["factor"] for c in "ab"))
+        w.option("ac_lhw.6", "a", "ERU")
+        self.assertEqual(set(), w.wars)
+        self.assertTrue({"ac_lhw_ceasefire_signed", "ac_lhw_ended", "ac_lhw_outcome_ceasefire", "ac_lhw_historical_course"} <= w.globals)
+        self.assertIn(("ERU", "ac_lhw.7", w.today + 1), w.events)
+        self.assertFalse({i for i in e.ideas | o.ideas if i in lighthouse.WAR_IDEAS})
+        self.assertNotIn("ac_lhw_ceasefire_pending", e.flags)
+        self.ltick(w, date(2019, 12, 8))
+        self.assertEqual(["ac_lhw.1", "ac_lhw.20", "ac_lhw.21", "ac_lhw.22", "ac_lhw.24", "ac_lhw.25", "ac_lhw.26", "ac_lhw.27", "ac_lhw.28", "ac_lhw.7"], self.lnews(w))
+        self.assertEqual(before, self.foreign(w))
+        self.assertTrue(self.lstatus(w).startswith("Ended: the ceasefire was signed after the official course"))
+        # Without Stonehenge the reactivation never fires; the fourteen-day ceasefire window signs on its own.
+        plain, ep, op = self.lhw()
+        self.ldeclare(plain)
+        for day in (date(2019, 8, 19), date(2019, 9, 19), date(2019, 12, 1), date(2019, 12, 8)):
+            self.ltick(plain, day)
+        self.assertNotIn("ac_lhw_stage_stonehenge", plain.globals)
+        self.assertNotIn("ac_lhw_ended", plain.globals)
+        self.ltick(plain, date(2019, 12, 16))
+        self.assertTrue({"ac_lhw_ceasefire_signed", "ac_lhw_outcome_ceasefire", "ac_lhw_historical_course"} <= plain.globals)
+        self.assertEqual(set(), plain.wars)
+
+    def test_lighthouse_arsenal_birds_follow_the_osean_project(self):
+        w, e, o = self.lhw()
+        self.ldeclare(w)
+        self.assertNotIn("ac_lhw_birds_over_elevator", w.globals)
+        self.assertNotIn("ac_lhw.29", self.lnews(w))
+        self.assertEqual("In this campaign no Arsenal Bird project was completed. The Chronicle's Liberty is recorded as the source names it; no airframe is represented.",
+                         self.defined_text(w, "lighthouse", "ac_lhw_liberty_text", "ERU"))
+        built, eb, ob = self.lhw()
+        built.run("ac_sp_arsenal_birds_complete_effect", "OSE")
+        self.assertIn("ac_sp_arsenal_birds_complete", built.globals)
+        self.assertIn("ac_sp_arsenal_birds_elevator_screen", ob.ideas)
+        built.globals.add("ac_ucw_stonehenge_operational")
+        self.ldeclare(built)
+        self.assertIn("ac_lhw_birds_over_elevator", built.globals)
+        self.assertNotIn("ac_sp_arsenal_birds_elevator_screen", ob.ideas)
+        self.assertIn("ac_lhw_eru_arsenal_birds_two", eb.ideas)
+        self.assertIn("ac_lhw.29", self.lnews(built))
+        self.ltick(built, date(2019, 8, 19))
+        self.assertIn("ac_lhw_liberty_lost", built.globals)
+        self.assertNotIn("ac_lhw_eru_arsenal_birds_two", eb.ideas)
+        self.assertIn("ac_lhw_eru_arsenal_bird_one", eb.ideas)
+        self.assertTrue(self.defined_text(built, "lighthouse", "ac_lhw_liberty_text", "ERU").startswith("In this campaign the Arsenal Birds were completed"))
+        self.ltick(built, date(2019, 10, 31))
+        self.assertIn("ac_lhw_arsenal_birds_lost", built.globals)
+        self.assertFalse({"ac_lhw_eru_arsenal_birds_two", "ac_lhw_eru_arsenal_bird_one"} & eb.ideas)
+        # The project never completes after the sourced loss, and the owner never writes the completion flag itself.
+        again, ea, oa = self.lhw()
+        again.globals.add("ac_lhw_arsenal_birds_lost")
+        again.run("ac_sp_arsenal_birds_complete_effect", "OSE")
+        self.assertNotIn("ac_sp_arsenal_birds_complete", again.globals)
+        self.assertNotIn("ac_sp_arsenal_birds_elevator_screen", oa.ideas)
+        again.run("ac_sp_alicorn_complete_effect", "ERU")
+        self.assertIn("ac_sp_alicorn_complete", again.globals)
+        self.assertIn("ac_sp_alicorn_cruiser", ea.ideas)
+        snapshot = copy.deepcopy(ea)
+        again.run("ac_sp_alicorn_complete_effect", "ERU")
+        self.assertEqual(snapshot, ea)
+        # Without Stonehenge the Liberty is not lost at the August anchor and both birds fall at the clash.
+        two, e2, o2 = self.lhw()
+        two.run("ac_sp_arsenal_birds_complete_effect", "OSE")
+        self.ldeclare(two)
+        self.ltick(two, date(2019, 8, 19))
+        self.assertNotIn("ac_lhw_liberty_lost", two.globals)
+        self.assertIn("ac_lhw_eru_arsenal_birds_two", e2.ideas)
+        self.ltick(two, date(2019, 10, 31))
+        self.assertFalse({"ac_lhw_eru_arsenal_birds_two", "ac_lhw_eru_arsenal_bird_one"} & e2.ideas)
+
+    def test_lighthouse_ceasefire_alternatives_are_earned_or_observed(self):
+        refused, e, o = self.lhw()
+        self.ldeclare(refused)
+        refused.refuse_peace = True
+        self.ltick(refused, date(2019, 12, 1))
+        refused.option("ac_lhw.6", "a", "ERU")
+        self.assertEqual({frozenset(("ERU", "OSE"))}, refused.wars)
+        self.assertTrue({"ac_lhw_ceasefire_not_made", "ac_lhw_tainted"} <= refused.globals)
+        self.assertFalse({"ac_lhw_ceasefire_signed", "ac_lhw_ended"} & refused.globals)
+        self.assertTrue(self.lstatus(refused).startswith("Running under external observation: the ceasefire was signed but"))
+        self.ltick(refused, date(2019, 12, 8))
+        self.assertEqual(1, [n for _, n, _ in refused.events].count("ac_lhw.6"))
+        refused.wars.clear()
+        self.ltick(refused, date(2019, 12, 15))
+        self.assertTrue({"ac_lhw_ended", "ac_lhw_outcome_cessation"} <= refused.globals)
+        self.assertNotIn("ac_lhw_outcome_ceasefire", refused.globals)
+        self.assertIn("ac_lhw.12", self.lnews(refused))
+        fights, e2, o2 = self.lhw()
+        self.ldeclare(fights)
+        self.ltick(fights, date(2019, 12, 1))
+        fights.option("ac_lhw.6", "b", "ERU")
+        self.assertIn("ac_lhw_ceasefire_refused", fights.globals)
+        self.assertIn("ac_lhw_eru_fought_on", e2.ideas)
+        self.assertIn("ac_lhw.13", self.lnews(fights))
+        self.assertTrue(self.lstatus(fights).startswith("Running past the Expo City date"))
+        for day in (date(2019, 12, 8), date(2020, 2, 1)):
+            self.ltick(fights, day)
+        self.assertEqual(1, [n for _, n, _ in fights.events].count("ac_lhw.6"))
+        self.assertNotIn("ac_lhw_ended", fights.globals)
+        fights.wars.clear()
+        self.ltick(fights, date(2020, 2, 8))
+        self.assertTrue({"ac_lhw_ended", "ac_lhw_outcome_cessation"} <= fights.globals)
+        self.assertNotIn("ac_lhw_tainted", fights.globals)
+        self.assertIn("ac_lhw.11", self.lnews(fights))
+        self.assertTrue(self.lstatus(fights).startswith("Ended: the fighting stopped without a ceasefire"))
+        # The early ceasefire is a decision earned by the elevator kept running as policy.
+        rows = {k: v for category in parse(text("common/decisions/ac_lighthouse.txt")) for k, _, v in category[2]}
+        early, e3, o3 = self.lhw()
+        self.ldeclare(early)
+        self.ltick(early, date(2019, 8, 19))
+        decision = rows["ERU_lw_early_ceasefire"]
+        self.assertFalse(early.trigger(fields(decision)["available"], e3))
+        early.run("ac_lhw_early_ceasefire", "ERU")
+        self.assertNotIn("ac_lhw_ended", early.globals)
+        e3.flags["ERU_lw_lighthouse_policy_b_done"] = None
+        self.assertTrue(early.trigger(fields(decision)["available"], e3))
+        self.assertEqual("50", fields(decision)["cost"])
+        pp = e3.pp
+        early.execute(fields(decision)["complete_effect"], e3)
+        self.assertEqual(pp, e3.pp)
+        self.assertEqual(set(), early.wars)
+        self.assertTrue({"ac_lhw_ceasefire_early", "ac_lhw_ceasefire_signed", "ac_lhw_ended", "ac_lhw_outcome_ceasefire"} <= early.globals)
+        self.assertNotIn("ac_lhw_historical_course", early.globals)
+        self.assertIn(("ERU", "ac_lhw.8", early.today + 1), early.events)
+        self.assertTrue(self.lstatus(early).startswith("Ended: an early ceasefire"))
+        self.ltick(early, date(2019, 12, 1))
+        self.assertNotIn("ac_lhw.6", [n for _, n, _ in early.events])
+        self.assertFalse(early.trigger(fields(decision)["available"], e3))
+
+    def test_lighthouse_external_observation_and_falls(self):
+        w, e, o = self.lhw()
+        w.wars.add(frozenset(("OSE", "BLK")))
+        self.ldeclare(w)
+        self.assertTrue({"ac_lhw_tainted", "ac_lhw_pre_existing_war"} <= w.globals)
+        self.ltick(w, date(2019, 5, 17))
+        self.assertNotIn("ac_lhw_stage_eastern_wind", w.globals)
+        w.wars.discard(frozenset(("ERU", "OSE")))
+        self.ltick(w, date(2019, 5, 24))
+        self.assertTrue({"ac_lhw_ended", "ac_lhw_outcome_cessation"} <= w.globals)
+        self.assertEqual(["ac_lhw.1", "ac_lhw.4", "ac_lhw.12"], self.lnews(w))
+        later, e2, o2 = self.lhw()
+        self.ldeclare(later)
+        self.ltick(later, date(2019, 5, 17))
+        later.wars.add(frozenset(("ERU", "BLK")))
+        self.ltick(later, date(2019, 5, 30))
+        self.assertIn("ac_lhw_tainted", later.globals)
+        self.assertNotIn("ac_lhw_stage_kestrel_ii", later.globals)
+        self.assertIn("ac_lhw.4", self.lnews(later))
+        self.assertTrue(self.lstatus(later).startswith("Running under external observation: other fighting"))
+        vassal, e3, o3 = self.lhw()
+        self.ldeclare(vassal)
+        vassal.countries["BLK"].overlord = "OSE"
+        vassal.wars.add(frozenset(("BLK", "ERU")))
+        self.ltick(vassal, date(2019, 5, 17))
+        self.assertNotIn("ac_lhw_tainted", vassal.globals)
+        self.assertIn("ac_lhw_stage_eastern_wind", vassal.globals)
+        existing, e4, o4 = self.lhw()
+        existing.wars.add(frozenset(("OSE", "ERU")))
+        self.lanchor(existing)
+        self.assertTrue({"ac_lhw_started", "ac_lhw_existing_war_observed"} <= existing.globals)
+        self.assertNotIn("ac_lhw_tainted", existing.globals)
+        self.assertNotIn("ac_lhw_eru_war_footing", e4.ideas)
+        self.assertIn("ac_lhw.3", self.lnews(existing))
+        existing.wave_action("lighthouse", "on_startup")
+        self.assertFalse({"ac_lhw_eru_war_footing", "ac_lhw_ose_war_footing"} & (e4.ideas | o4.ideas))
+        self.ltick(existing, date(2019, 5, 17))
+        self.assertNotIn("ac_lhw_stage_eastern_wind", existing.globals)
+        self.assertTrue(self.lstatus(existing).startswith("Running under external observation: Osea and Erusea were already"))
+        # Falls: only a fall to the other principal in their own war is that principal's victory.
+        victory, e5, o5 = self.lhw()
+        self.ldeclare(victory)
+        e5.capitulated = True
+        victory.wave_action("lighthouse", "on_capitulation_immediate", "ERU", "OSE")
+        self.assertTrue({"ac_lhw_eru_fallen", "ac_lhw_ended", "ac_lhw_outcome_osean_victory"} <= victory.globals)
+        self.assertIn(("OSE", "ac_lhw.9", victory.today + 1), victory.events)
+        self.assertFalse({i for i in e5.ideas | o5.ideas if i in lighthouse.WAR_IDEAS})
+        self.assertTrue(self.lstatus(victory).startswith("Ended: Erusea capitulated"))
+        annexed, e6, o6 = self.lhw()
+        self.ldeclare(annexed)
+        annexed.wave_action("lighthouse", "on_annex", "ERU", "OSE")
+        self.assertTrue({"ac_lhw_ose_fallen", "ac_lhw_outcome_erusean_victory"} <= annexed.globals)
+        self.assertIn(("ERU", "ac_lhw.10", annexed.today + 1), annexed.events)
+        for hook, fallen, winner, victory_flag in (("on_annex", "BLK", "ERU", "ac_lhw_outcome_osean_victory"),
+                                                   ("on_capitulation_immediate", "OSE", "BLK", "ac_lhw_outcome_erusean_victory"),
+                                                   ("on_subject_annexed", "ERU", "BLK", "ac_lhw_outcome_osean_victory")):
+            with self.subTest(hook=hook, fallen=fallen):
+                third, e7, o7 = self.lhw()
+                self.ldeclare(third)
+                if hook == "on_annex":
+                    third.wave_action("lighthouse", hook, fallen, winner)   # ROOT annexer BLK, FROM annexed ERU
+                    lost = winner
+                else:
+                    (o7 if fallen == "OSE" else e7).capitulated = hook == "on_capitulation_immediate"
+                    third.wave_action("lighthouse", hook, fallen, winner)
+                    lost = fallen
+                self.assertTrue({"ac_lhw_ended", "ac_lhw_outcome_cessation", "ac_lhw_external_fall", f"ac_lhw_{lost.lower()}_fallen"} <= third.globals)
+                self.assertNotIn(victory_flag, third.globals)
+                self.assertIn("ac_lhw.12", [n for _, n, _ in third.events])
+        overlord, e8, o8 = self.lhw()
+        self.ldeclare(overlord)
+        overlord.wave_action("lighthouse", "on_subject_annexed", "ERU", "OSE")
+        self.assertTrue({"ac_lhw_ended", "ac_lhw_outcome_osean_victory"} <= overlord.globals)
+        split, e9, o9 = self.lhw()
+        self.ldeclare(split)
+        breakaway = copy.deepcopy(e9)
+        breakaway.tag, breakaway.capitulated = "D01", True
+        split.countries["D01"] = breakaway
+        split.wave_action("lighthouse", "on_capitulation_immediate", "D01", "OSE")
+        self.assertFalse({"ac_lhw_ended", "ac_lhw_eru_fallen"} & split.globals)
+        alone, e10, o10 = self.lhw()
+        self.ldeclare(alone)
+        for state in alone.states.values():
+            if state.owner == "ERU":
+                state.owner = state.controller = "OSE"
+        self.ltick(alone, date(2019, 5, 24), "OSE")
+        self.assertTrue({"ac_lhw_ended", "ac_lhw_outcome_osean_victory"} <= alone.globals)
+
+    def test_lighthouse_osean_decisions_shilage_text_and_branch_gates(self):
+        rows = {k: v for category in parse(text("common/decisions/ac_lighthouse.txt")) for k, _, v in category[2]}
+        w, e, o = self.lhw()
+        strike, ports, record = rows["OSE_lw_strike_group"], rows["OSE_lw_repair_ports"], rows["OSE_lw_war_record"]
+        self.assertEqual(("50", "25", "25"), tuple(fields(r)["cost"] for r in (strike, ports, record)))
+        self.assertFalse(w.trigger(fields(strike)["available"], o))
+        self.ldeclare(w)
+        self.assertTrue(w.trigger(fields(ports)["available"], o))
+        pp = o.pp
+        w.execute(fields(ports)["complete_effect"], o)
+        self.assertEqual(pp, o.pp)
+        self.assertNotIn("ac_lhw_ose_ports_struck", o.ideas)
+        self.assertFalse(w.trigger(fields(ports)["available"], o))
+        self.ltick(w, date(2019, 8, 9))
+        self.assertFalse(w.trigger(fields(strike)["available"], o))
+        self.ltick(w, date(2019, 8, 10))
+        self.assertTrue(w.trigger(fields(strike)["available"], o))
+        w.execute(fields(strike)["complete_effect"], o)
+        self.assertEqual(pp, o.pp)
+        self.assertTrue({"ac_lhw_ose_strike_group"} <= o.ideas)
+        self.assertIn("ac_lhw_lrssg_formed", w.globals)
+        self.assertIn("ac_lhw.23", self.lnews(w))
+        self.assertFalse(w.trigger(fields(strike)["available"], o))
+        snapshot = copy.deepcopy(o)
+        w.execute(fields(strike)["complete_effect"], o)
+        self.assertEqual(snapshot, o)
+        self.assertFalse(w.trigger(fields(record)["available"], o))
+        w.wars.clear()
+        self.ltick(w, date(2019, 8, 17))
+        self.assertNotIn("ac_lhw_ose_strike_group", o.ideas)
+        self.assertTrue(w.trigger(fields(record)["available"], o))
+        w.execute(fields(record)["complete_effect"], o)
+        self.assertIn("ac_lhw_ose_war_record", o.ideas)
+        # The engine charges the decisions' `cost`; the owner's effects never charge political power again.
+        owned = {k: v for k, _, v in parse(text("common/scripted_effects/ac_lighthouse.txt"))
+                 if k.startswith("ac_lhw_") and k not in ("ac_lhw_pay_programme",)}
+        self.assertFalse(any("add_political_power" in str(v) for v in owned.values()))
+        # Shilage is read for text only: nothing is released, annexed, cored or moved.
+        for flags, expected in ((set(), "Whether Shilage exists"), ({"ac_release_SHI_was_absent"}, "Shilage is not a country"),
+                                ({"ac_release_SHI_annexed"}, "Shilage was released and later annexed")):
+            with self.subTest(flags=flags):
+                s, es, os_ = self.lhw()
+                s.globals |= flags
+                self.assertTrue(self.defined_text(s, "lighthouse", "ac_lhw_shilage_text", "ERU").startswith(expected))
+        exists, ex, ox = self.lhw()
+        state = next(i for i, st in exists.states.items() if st.owner == "SNS")
+        exists.states[state].owner = exists.states[state].controller = "SHI"
+        self.assertTrue(self.defined_text(exists, "lighthouse", "ac_lhw_shilage_text", "ERU").startswith("Shilage exists as a country"))
+        # Branch gates follow the actual history and the owner's state.
+        isaf, ei, oi = self.lhw(date(2017, 6, 1))
+        isaf.run("ac_lhw_initialize", "ERU")
+        isaf.run("ac_lhw_initialize", "FCU")
+        ei.completed.add("ERU_ucw_exp_settlement_assessment")
+        opened = {b.key for b in LH.branches if b.tag == "ERU" and isaf.available(focus_id(LH, b, 0), "ERU")}
+        self.assertEqual({"sovereignty", "elevator", "alicorn", "drones"}, opened)
+        other, eo, oo = self.lhw(date(2017, 6, 1), "ac_ucw_outcome_stalemate")
+        other.run("ac_lhw_initialize", "ERU")
+        eo.completed.add("ERU_ucw_exp_settlement_assessment")
+        self.assertEqual({"standing", "elevator", "alicorn", "drones"}, {b.key for b in LH.branches if b.tag == "ERU" and other.available(focus_id(LH, b, 0), "ERU")})
+        ei.completed |= {"ERU_lw_elevator_settlement", "ERU_lw_sovereignty_settlement"}
+        self.assertFalse(any(isaf.available(focus_id(LH, b, 0), "ERU") for b in LH.branches if b.key in ("lighthouse", "capital", "ceasefire", "secession")))
+        isaf.globals.add("ac_lhw_started")
+        self.assertTrue(all(isaf.available(focus_id(LH, b, 0), "ERU") for b in LH.branches if b.key in ("lighthouse", "capital")))
+        self.assertFalse(any(isaf.available(focus_id(LH, b, 0), "ERU") for b in LH.branches if b.key in ("ceasefire", "secession")))
+        isaf.globals |= {"ac_lhw_ended", "ac_lhw_stage_secession"}
+        self.assertTrue(all(isaf.available(focus_id(LH, b, 0), "ERU") for b in LH.branches if b.key in ("ceasefire", "secession")))
+        f = isaf.countries["FCU"]
+        f.completed.add("FCU_ucw_exp_settlement_assessment")
+        isaf.globals -= {"ac_lhw_started", "ac_lhw_ended", "ac_lhw_stage_secession"}
+        self.assertEqual(set(), {b.key for b in LH.branches if b.tag == "FCU" and isaf.available(focus_id(LH, b, 0), "FCU")})
+        isaf.today = date(2019, 1, 2).toordinal()
+        self.assertEqual({"airspace"}, {b.key for b in LH.branches if b.tag == "FCU" and isaf.available(focus_id(LH, b, 0), "FCU")})
+        isaf.globals |= {"ac_lhw_started", "ac_lhw_stage_farbanti", "ac_lhw_ended"}
+        self.assertEqual({"airspace", "corridor", "blackout", "settlement"}, {b.key for b in LH.branches if b.tag == "FCU" and isaf.available(focus_id(LH, b, 0), "FCU")})
+        # The capital's second service and the federation's first clear the blackout idea when they complete.
+        numbers = [service_id(LH, b, n) for b in LH.branches for n in range(2)]
+        for tag, ident, clears in (("ERU", "ERU_lw_capital_service_1", False), ("ERU", "ERU_lw_capital_service_2", True),
+                                   ("FCU", "FCU_lw_blackout_service_2", False), ("FCU", "FCU_lw_blackout_service_1", True)):
+            with self.subTest(service=ident):
+                c = isaf.countries[tag]
+                c.ideas.add("ac_lhw_usea_blackout")
+                c.flags.update({"ac_lhw_service_active": None, ident + "_active": None})
+                c.flags.pop("ac_lhw_service_window", None)
+                c.variables["ac_lhw_current_service"] = D(numbers.index(ident) + 1)
+                isaf.run(ident + "_finish", tag)
+                self.assertIn(ident + "_completed", c.flags)
+                self.assertEqual(not clears, "ac_lhw_usea_blackout" in c.ideas)
+                c.ideas.discard("ac_lhw_usea_blackout")
+
 
     def owner(self, today=date(2006, 9, 26)):
         w = self.fresh()

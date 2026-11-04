@@ -174,7 +174,8 @@ def outputs():
 
     for module in MODULES:
         wave, name = module.WAVE, module.NAME
-        countries = wave.countries or getattr(module, "COUNTRIES", {})
+        # Category icons: the wave's countries plus any extra country an owner gives a category (Wave C's principals, F1's Osea).
+        countries = {**wave.countries, **getattr(module, "COUNTRIES", {})}
         P = wave.prefix
         used = Counter()
         for b in wave.branches:

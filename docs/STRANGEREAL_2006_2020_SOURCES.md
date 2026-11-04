@@ -5,10 +5,13 @@ participant, place, leader or weapon scripted for 2006–2020, as
 [USEAN_CONTINENTAL_WAR.md](USEAN_CONTINENTAL_WAR.md) gated 1994–2005. A row here
 does not mean the content is implemented; the disposition column says what is.
 
-Primary sources, read 3 November 2026 and re-read for the 2010 rows on 4 November 2026:
+Primary sources, read 3 November 2026 and re-read for the 2010 and 2019 rows on 4 November 2026:
 
 - [Official ACES Chronicle — Details](https://acecombat.jp/en/chronicle/details/), cited as *Chronicle, YYYY / MM.DD*.
 - [Official ACES Chronicle — Super Weapons](https://acecombat.jp/en/chronicle/weapons/), cited as *Super Weapons, &lt;name&gt;*.
+- [Official ACES Chronicle — Abstracts](https://acecombat.jp/en/chronicle/), one narrative per title, cited as *Abstracts, &lt;title&gt;*.
+- [Official ACES product pages](https://acecombat.jp/en/product/), cited as *Product, &lt;title&gt;* for the lore statements in the title blurbs.
+
 
 Entries are paraphrased. `XX` marks a day or month the source does not give; it
 stays unknown in script. "Derived" marks a value computed from a source sentence
@@ -113,17 +116,17 @@ The 2005 entries through 26 September are already cited in
 
 | Claim | Exact source | Wave | Disposition |
 | --- | --- | --- | --- |
-| Drone strikes hit four Osean naval ports; Erusea declares war on Osea and captures the International Space Elevator; the Lighthouse War begins | Chronicle, 2019 / 05.15 | F1 | Pending |
-| Osea and the IUN Peacekeeping Force begin Operation Eastern Wind | Chronicle, 2019 / 05.17 | F1 | Pending |
-| A two-pronged offensive on Chopinburg airspace and Farbanti fails; the carrier Kestrel II is sunk | Chronicle, 2019 / 05.30 | F1 | Pending |
-| Former president Vincent Harling dies in a rescue attempt at the space elevator | Chronicle, 2019 / 06.06 | F1 | Pending; news only |
-| Osea forms the Long Range Strategic Strike Group | Chronicle, 2019 / 08.10 | F1 | Pending |
-| Osea reactivates a Stonehenge battery and shoots down the Arsenal Bird Liberty | Chronicle, 2019 / 08.19 | F1 | Pending; interacts with `ac_sp_stonehenge` |
-| Osea attacks Farbanti; destroying military satellites cuts communications across Usea | Chronicle, 2019 / 09.19 | F1 | Pending |
-| Shilage and other small nations annexed by Erusea declare independence; Erusea refuses and internal conflict follows | Chronicle, 2019 / 10.01 | F1 | Pending; uses the existing Shilage release contracts only after review |
-| General Édouard Labarthe is killed by Osean forces | Chronicle, 2019 / 10.10 | F1 | Pending; news only |
-| Osean and Erusean forces clash at the space elevator; the Arsenal Bird Justice is shot down | Chronicle, 2019 / 10.31 | F1 | Pending |
-| Osea and Erusea sign a ceasefire at the Expo City Conference | Chronicle, 2019 / 12.01 | F1 | Pending |
+| Drone strikes hit four Osean naval ports; Erusea declares war on Osea and captures the International Space Elevator; the Lighthouse War begins | Chronicle, 2019 / 05.15; Abstracts, ACE COMBAT 7 (Erusea seizes control of the Arsenal Birds with the elevator; the war opens with terrorist drones); Product, ACE COMBAT 7 (Erusea accuses Osea of massive overreach in their joint international projects) | F1 | Implemented: the owner's declaration `ac_lhw_declare` (Erusean decision event `ac_lhw.5`, AI always), news `ac_lhw.1`; the seized birds (`ac_lhw.29`) only if `ac_sp_arsenal_birds` was completed. The stated grievance is quoted as the source states it; the earned alternative is the withheld declaration (`ac_lhw.2`). The route needs the ISAF victory |
+| Osea and the IUN Peacekeeping Force begin Operation Eastern Wind | Chronicle, 2019 / 05.17 | F1 | Implemented: `ac_lhw.20`; no force or faction is created |
+| A two-pronged offensive on Chopinburg airspace and Farbanti fails; the carrier Kestrel II is sunk | Chronicle, 2019 / 05.30 | F1 | Implemented: `ac_lhw.21`; no ship is represented |
+| Former president Vincent Harling dies in a rescue attempt at the space elevator | Chronicle, 2019 / 06.06; Abstracts, ACE COMBAT 7 ("a botched attempt") | F1 | Implemented: `ac_lhw.22`, news only |
+| Osea forms the Long Range Strategic Strike Group | Chronicle, 2019 / 08.10 | F1 | Implemented: Osean decision `OSE_lw_strike_group` and `ac_lhw.23`; no unit is created |
+| Osea reactivates a Stonehenge battery and shoots down the Arsenal Bird Liberty | Chronicle, 2019 / 08.19 | F1 | Implemented: `ac_lhw.24`, only if Stonehenge was ever built (`ac_ucw_stonehenge_operational`); the Liberty is lost only if the birds were seized |
+| Osea attacks Farbanti; destroying military satellites cuts communications across Usea | Chronicle, 2019 / 09.19 | F1 | Implemented: `ac_lhw.25`, only once Osean forces control an Erusean core; the blackout idea on the seven Continental War participants. Whose operation it was is not stated |
+| Shilage and other small nations annexed by Erusea declare independence; Erusea refuses and internal conflict follows | Chronicle, 2019 / 10.01 | F1 | Implemented: `ac_lhw.26` and the Erusean secession lane; the release flags are read for text only and nothing is released, cored or moved |
+| General Édouard Labarthe is killed by Osean forces | Chronicle, 2019 / 10.10 | F1 | Implemented: `ac_lhw.27`, news only |
+| Osean and Erusean forces clash at the space elevator; the Arsenal Bird Justice is shot down | Chronicle, 2019 / 10.31; Abstracts, ACE COMBAT 7 (a voluntary coalition of Osean forces and a traditionalist sect of the Erusean Army; the radicals surrender) | F1 | Implemented: `ac_lhw.28`; the coalition and the sect are named in text only |
+| Osea and Erusea sign a ceasefire at the Expo City Conference | Chronicle, 2019 / 12.01; Abstracts, ACE COMBAT 7 | F1 | Implemented as the only scripted peace (user decision 7): `ac_lhw.6` (AI always signs), `ac_lhw_sign_ceasefire`, `ac_lhw.7`; recorded only if the engine ended the war. Alternatives: the earned early ceasefire (`ac_lhw.8`) and fighting on (`ac_lhw.13`) |
 | The Leasath civil war ends after ten years of fighting | Chronicle, 2019 / XX.XX | F2 | Day and month unknown. Derived: the war began about 2009. Aurelia's foundation refers to it from 2010 as context only (`AUR_au_leasath_war_*`) |
 
 ## 2020: the Aurelia–Leasath war
@@ -149,8 +152,8 @@ Every 2020 entry gives a month at most.
 | SOLG: Osean Cold War orbital railgun, abandoned after the Belkan War, revived by the Gray Men with a V2 warhead | Super Weapons, SOLG | C | Named in `ac_cpw.35` text only, with the Gray Men as the source names them; no project or weapon is created |
 | Scinfaxi and Hrimfaxi: Yuktobanian nuclear-powered submarine carriers | Super Weapons, Scinfaxi & Hrimfaxi | C | Implemented as the Yuktobanian wartime ideas `ac_cpw_yuk_submarine_carriers` and `ac_cpw_yuk_submarine_carrier`, removed on the sourced sinkings; no ship is created |
 | Aigaion, Gyges, Kottos: Estovakian heavy command cruiser and support platforms of the Aerial Fleet Initiative (P/F-X), based on Belkan technology | Super Weapons, Aigaion; Gyges; Kottos | E | Pending; no construction date is given, so any timing is provisional |
-| Arsenal Birds Liberty and Justice: Osean unmanned aircraft defending the International Space Elevator | Super Weapons, Arsenal Birds | F1 | Pending |
-| Alicorn: Erusean Royal Navy submarine aviation cruiser | Super Weapons, Alicorn | F1 | Pending |
+| Arsenal Birds Liberty and Justice: Osean unmanned aircraft defending the International Space Elevator | Super Weapons, Arsenal Birds | F1 | Implemented as project `ac_sp_arsenal_birds` (user decision 8) in a generator-owned file; seized, lost and never rebuilt on the sourced dates |
+| Alicorn: Erusean Royal Navy submarine aviation cruiser | Super Weapons, Alicorn | F1 | Implemented as project `ac_sp_alicorn` (user decision 8), gated on the Erusean custody lane; built and held, never deployed |
 | Gleipnir and its prototype Gandr: Leasathian aerial fortress and prototype | Super Weapons, Gleipnir | F2 | Pending; not used in Aurelia's foundation |
 | Nevera Jammer: originally an Aurelian weather observation radar in the Nevera mountains, converted by Leasath into a jamming station protecting Griswall and the Monte Breeze Industrial Area | Super Weapons, Nevera Jammer | F2 | The pre-war Aurelian weather radar may appear in Aurelia's foundation as a civil service; its construction date is unknown and is not scripted. The jammer belongs to the crisis lanes |
 | Meson Cannons: particle-beam point defence built into the Atmos Ring in Aurelia's capital | Super Weapons, Meson Cannons | F2 | Pending; no construction date is given |

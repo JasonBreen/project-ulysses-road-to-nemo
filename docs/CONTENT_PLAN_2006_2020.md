@@ -229,6 +229,9 @@ extended, never replaced.
 
 ### Wave F1: the Lighthouse War (2017–2019, Package 5)
 
+**Delivered in source, 4 November 2026:** [CONTENT_WAVE_F1.md](CONTENT_WAVE_F1.md).
+Both budgets are complete.
+
 - **Budget:** ERU 54, FCU 24 (78).
 - **Owner:** `ac_lhw`, anchored 2019.5.15 to 2019.12.1. Participants, sequence
   and places come from Gate 0 rows, not from this plan.
@@ -300,7 +303,8 @@ change any total.
 3. **Wave C.** Its consumer API is already published in #59. **Delivered in
    source, 3 November 2026.**
 4. **Wave B**, once the civil-war mechanic is chosen. **Delivered in source.**
-5. **Wave E**, then **F1**, then the **F2 crisis lanes and stories.**
+5. **F1. Delivered in source, 4 November 2026.** Then **Wave E** and the
+   **F2 crisis lanes and stories.**
 
 Decisions the user needs to make:
 
@@ -312,6 +316,8 @@ Decisions the user needs to make:
 | 4 | Estovakian civil war mechanic | **Decided: tagless owner first**; temporary tag only after a source and mapping review |
 | 5 | Anean squadron continuation size | Short eligible-cast epilogues, for example 4–6 chapters per story, outside the 20-chapter core (**still open**) |
 | 6 | A peace route for the Circum-Pacific War | The published contract forbids a scripted white peace in the first owner, so Wave C ends the war only when the fighting actually stops. A reviewed, earned peace route (for example after the joint appeal to disarm) is a decision for a later package (**still open**) |
+| 7 | The Lighthouse War's end | **Decided 4 November 2026: scripted ceasefire** on the Expo City anchor (Chronicle 2019 / 12.01). `ac_lhw_sign_ceasefire` is the only `white_peace` in the waves and writes state only if the engine ended the war; an earned early ceasefire and fighting on are the alternatives |
+| 8 | The Lighthouse-era superweapons | **Decided 4 November 2026: projects.** The Arsenal Birds (OSE) and the Alicorn (ERU) are special projects from their Super Weapons rows, in generator-owned files beside the hash-pinned Track C files |
 
 ## 7. Out of scope
 

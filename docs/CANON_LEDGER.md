@@ -97,3 +97,13 @@ Details are in [CONTENT_WAVES_B_AUR.md](CONTENT_WAVES_B_AUR.md).
 | Earned reciprocal exchange, earned withheld declaration, external observation, no scripted peace, idea values and decisions | Provisional gameplay under the published consumer contract ([PACIFIC_NATIONAL_CONTINUATIONS.md](PACIFIC_NATIONAL_CONTINUATIONS.md)) | `ac_cpw_prevented`, `ac_cpw_declaration_withheld`, `ac_cpw_tainted` (third-party entry), `ac_cpw_existing_war_observed` (a war the pair already fought, observed without the expanded marker), `ac_cpw_record_end` | Implemented, labelled in-game. The war's end is recorded only on actual cessation or capitulation; a reviewed peace route is an open decision (content plan, decision 6). |
 
 Details are in [CONTENT_WAVE_C.md](CONTENT_WAVE_C.md).
+
+## 2026-11-04 Wave F1: the Lighthouse War
+
+| Claim or content family | Source layer | Current evidence | Status / required action |
+| --- | --- | --- | --- |
+| The 2019 chain from the declaration (05.15) to the Expo City ceasefire (12.01) | Official, as compiled in [STRANGEREAL_2006_2020_SOURCES.md](STRANGEREAL_2006_2020_SOURCES.md): Chronicle 2019 / 05.15, 05.17, 05.30, 06.06, 08.10, 08.19, 09.19, 10.01, 10.10, 10.31, 12.01; Abstracts and Product, ACE COMBAT 7 | `tools/content_waves/lighthouse.py`; IDs `ac_lhw.1`–`.13`, `.20`–`.29`, `ac_lhw_declare`, `ac_lhw_sign_ceasefire`, `ac_lhw_stage_*` | Implemented; offline-tested; native untested. Erusea's declaration is the waves' second scripted war (AI always) and the Expo City ceasefire the only scripted peace (user decision 7); both write state only if the engine acted. The route opens only after the ISAF victory. People, forces, places and weapons appear only in event and idea text as the sources name them. |
+| Arsenal Birds and Alicorn | Official: Super Weapons rows | projects `ac_sp_arsenal_birds` (OSE) and `ac_sp_alicorn` (ERU) in generator-owned files; ideas, tags, fallbacks, art | Implemented (user decision 8). The Track C files stay hash-pinned and unchanged. The seized birds, the Liberty and the Justice follow the owner's course; the Alicorn is built and held, never deployed. |
+| Erusean and Central Usean Lighthouse-era branches (78 focuses), the withheld declaration, the early ceasefire, fighting on, every value | Provisional gameplay, gated on `ac_ucw`, `ac_fe` and `ac_lhw` state (mod provenance read only) | `common/national_focus/ac_lighthouse.txt`, `ERU_lw_*`, `FCU_lw_*`, `OSE_lw_*` | Implemented, offline-tested, labelled in-game. The Shilage release flags are read for text only; nothing is released, cored or moved. |
+
+Details are in [CONTENT_WAVE_F1.md](CONTENT_WAVE_F1.md).

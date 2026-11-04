@@ -35,6 +35,7 @@ COMPLETION_GATES = {
     "ac_sp_stonehenge": ("has_global_flag = ac_ucw_stonehenge_seized", "has_global_flag = ac_ucw_stonehenge_destroyed"),
     "ac_sp_megalith": ("has_global_flag = ac_ucw_megalith_destroyed",),
     "ac_sp_rhongomyniad": ("has_global_flag = excalibur_destroyed",),
+    "ac_sp_arsenal_birds": ("has_global_flag = ac_lhw_arsenal_birds_lost",),
 }
 PROJECTS = (
     "ac_sp_excalibur",

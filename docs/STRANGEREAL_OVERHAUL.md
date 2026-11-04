@@ -75,7 +75,9 @@ Usean and 42 Nordennavic definitions, and
 18 Emmerian and 54 Aurelian definitions, bringing the machine-readable ledger to
 776 delivered and 252 remaining. [Wave C](CONTENT_WAVE_C.md) adds the
 Circum-Pacific War owner without focus definitions, since the Osean and
-Yuktobanian budgets are complete. The six squadron
+Yuktobanian budgets are complete, and [Wave F1](CONTENT_WAVE_F1.md) adds the
+Lighthouse War owner with 54 Erusean and 24 Central Usean definitions, which
+completes both budgets and brings the ledger to 854 delivered and 174 remaining. The six squadron
 campaigns deliver 120 core chapters, 24 recurring cast members and 18 conclusions,
 with all 78 original image masters retained. Later unimplemented scope remains
 explicitly pending in the machine-readable ledger.

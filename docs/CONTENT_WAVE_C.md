@@ -28,7 +28,7 @@ The ledger stays at **776 delivered and 252 remaining** (`tools/overhaul/release
 | Osea lands on the Bastok Peninsula; Cruik Fortress falls | Official: Chronicle, 2010 / 11.01, 12.06 | `ac_cpw.24`, `ac_cpw.29` | Reported only once Osean forces actually control Yuktobanian territory (`ac_cpw_osean_foothold`). No state is moved or mapped |
 | Dresdene; nerve gas in Bana and the attack on Apito International Airport; the attack on the peace ceremony in November City | Official: Chronicle, 2010 / 11.02, 11.04, 11.29 | `ac_cpw.25`, `ac_cpw.26`, `ac_cpw.28` | News with timed Osean ideas |
 | President Harling rescued from Stier Castle in Belka; Razgriz Squadron forms; former Prime Minister Nikanor rescued | Official: Chronicle, 2010 / 12.09, 12.23 | `ac_cpw.30`, `ac_cpw.32` | News only. Harling and Nikanor are named as the Chronicle names them; no character, leader, portrait or unit changes. Belka appears only as the place named |
-| The Kestrel sunk; Harling and Nikanor jointly ask their militaries to disarm; a mixed force inspects Gründer Industries in Sudentor, North Osea | Official: Chronicle, 2010 / 12.30 | `ac_cpw.34`, flag `ac_cpw_disarmament_appeal`, idea `ac_cpw_disarmament_appeal` | The appeal weighs on both countries' war support. It ends nothing by script |
+| The Osean carrier Kestrel sunk; Harling and Nikanor make a televised address asking their militaries to disarm; a joint force inspects Gründer Industries in the Osean trust territory of Sudentor, North Osea | Official: Chronicle, 2010 / 12.30 | `ac_cpw.34`, flag `ac_cpw_appeal_made`, idea `ac_cpw_disarmament_appeal` | The appeal weighs on both countries' war support. It ends nothing by script |
 | The SOLG falls; Razgriz destroys the former Belkan Grabacr and Ofnir squadrons and the SOLG; the war ends, 31 December 2010 | Official: Chronicle, 2010 / 12.31; Super Weapons, SOLG | `ac_cpw.35` | The SOLG is reported as named, with the Gray Men as the Super Weapons row names them. The war's end is **not** scripted on this date |
 | The war's end | Official end date, 2010 / 12.31; actual end observed | `ac_cpw_record_end`, `ac_cpw.10`–`.13`, flags `ac_cpw_ended`, `ac_cpw_outcome_*`, `ac_cpw_historical_course` | Recorded when the fighting between Osea and Yuktobania actually stops or a principal falls, never on the anchor |
 | Peter N. Beagle, Albert Genette, Captain Marcus Snow (2010 / 12.07); Talisman (2013 / 12.23) | Official, reference only | none | Not used |
@@ -38,16 +38,19 @@ The ledger stays at **776 delivered and 252 remaining** (`tools/overhaul/release
 ## The owner (`ac_cpw`)
 
 **Calendar.** The Yuktobanian weekly pulse runs the owner. The calendar opens on
-22 September 2010 if both principals exist; a first observation on or after
-27 September 2011 closes the owner without replaying anything
-(`ac_cpw_late_start_skipped`). The prelude news (23 and 24 September) fires
-once each while the two are at peace.
+1 September 2010 if both principals exist; a save whose first observation falls
+on or after 27 September 2010 closes the owner without replaying any expired
+date (`ac_cpw_late_start_skipped`), so no prelude, declaration or stage is ever
+delivered in bulk. The prelude news (23 and 24 September) fires once each while
+the two are at peace.
 
 **The declaration, 27 September 2010.** In order:
 
 1. If Osea and Yuktobania are already at war with each other, the owner records
-   the war it did not start (`ac_cpw_started`, `ac_cpw_tainted`,
-   `ac_cpw_existing_war_observed`, news `ac_cpw.8`) and observes it from outside.
+   the war it did not start (`ac_cpw_started`, `ac_cpw_existing_war_observed`,
+   news `ac_cpw.8`) and observes it from outside. It is not marked as expanded:
+   the stories read it as a real war between the two, and the dated course is
+   never asserted for it.
 2. If both governments have earned verified contact and open channels
    (`ac_snc_ose_verification_earned`, `ac_snc_ose_channel_earned`,
    `ac_snc_yuk_verification_earned`, `ac_snc_yuk_channel_earned`), the reciprocal
@@ -62,13 +65,16 @@ once each while the two are at peace.
 4. Otherwise the owner closes (`ac_cpw_principal_unable`).
 
 `ac_cpw_declare` issues the only `declare_war_on` in the content waves
-(`target = OSE`, `topple_government`). If either principal was already at war
-with someone else, the crisis is observed externally from the start
+(`target = OSE`, `topple_government`) and writes the owner's state only if the
+engine actually created the war; otherwise it closes with
+`ac_cpw_declaration_refused`. If either principal was already at war with
+someone else, the crisis is observed externally from the start
 (`ac_cpw_pre_existing_war`, `ac_cpw_tainted`). Factions and guarantees are never
 consulted.
 
-**External observation.** Every week while the war runs, if any third country
-is at war with Osea or Yuktobania, `ac_cpw_tainted` is set once (news
+**External observation.** Every week while the war runs, if any country other
+than the two principals and their own subjects is at war with Osea or
+Yuktobania (faction members count), `ac_cpw_tainted` is set once (news
 `ac_cpw.9`) and the dated course stops. The war footing ideas remain until the
 end.
 
@@ -76,7 +82,7 @@ end.
 
 | Date | Stage | Effect |
 | --- | --- | --- |
-| 30 Sep | Eaglin Straits | Osea: carrier losses idea (90 days); the Arkbird decision `ac_cpw.6` if the project is complete |
+| 30 Sep | Eaglin Straits | Osea: carrier losses idea (90 days); the Arkbird decision `ac_cpw.6` if the project is complete. An answer left until 25 October holds the Arkbird back instead of replaying its fate |
 | 4 Oct | Sand Island | Yuktobania: two carriers → one |
 | 22 Oct | Akerson Hill | name only |
 | 25 Oct | Arkbird sabotage | Osea: grounded idea (56 days); only if committed |
@@ -95,13 +101,16 @@ end.
 
 **The end.** When the two are no longer at war, or a principal capitulated or
 was annexed (the `on_capitulation_immediate`, `on_annex` and
-`on_subject_annexed` hooks mark `ac_cpw_ose_fallen` / `ac_cpw_yuk_fallen`), the
-owner records `ac_cpw_ended` and exactly one outcome: `ac_cpw_outcome_osean_victory`
-(`ac_cpw.11`), `ac_cpw_outcome_yuktobanian_victory` (`ac_cpw.12`), or
-`ac_cpw_outcome_cessation` with `ac_cpw_historical_course` when the course was
-untainted (`ac_cpw.10`) and without it under observation (`ac_cpw.13`). All war
-ideas are removed. An Osean weekly fallback records the end if Yuktobania no
-longer exists. There is no `white_peace`; see the open items.
+`on_subject_annexed` hooks mark `ac_cpw_ose_fallen` / `ac_cpw_yuk_fallen`; only
+the principal tags themselves count, never a breakaway sharing their original
+tag), the owner records `ac_cpw_ended` and exactly one outcome:
+`ac_cpw_outcome_osean_victory` (`ac_cpw.11`), `ac_cpw_outcome_yuktobanian_victory`
+(`ac_cpw.12`), or `ac_cpw_outcome_cessation` with `ac_cpw_historical_course`
+when the owner's own war ran untainted (`ac_cpw.10`) and without it when the
+war was observed from outside (`ac_cpw.13`). End news is scheduled by a
+surviving principal, so an annexed scope never owns it. All untimed war ideas
+are removed. An Osean weekly fallback records the end if Yuktobania no longer
+exists. There is no `white_peace`; see the open items.
 
 **Decisions.** Each principal has a crisis category with two once-only
 decisions: mobilise the home front during the war (50 political power, 120-day
@@ -150,18 +159,24 @@ records they require.
 
 **Wave C runtime cases:**
 - the Arkbird Summit needs the completed project and fires once;
-- the prelude and the declaration follow the anchor; late saves never replay;
-  a missing principal closes the owner;
+- the prelude and the declaration follow the anchor; a first observation on or
+  after the anchor (27 September 2010, 15 October 2010, 1 October 2011) closes
+  the owner and replays nothing; a missing principal closes the owner;
 - the declaration window falls back to history; withholding needs the real
   mandate;
 - the reciprocal exchange prevents the declaration and is earned, not partial;
 - the historical course fires each stage once, needs the observed foothold for
   the territorial rows, loses the Arkbird only if it was committed, and ends
   on observed cessation with every `ac_snc_*`/`ac_snp_*` record untouched;
-- the Arkbird stages need the project and the commitment;
-- pre-existing or third-party wars move the crisis to external observation;
-- capitulation and annexation record the actual outcome;
-- the crisis decisions cost once and follow the phase.
+- the Arkbird stages need the project and the commitment; an answer after
+  25 October holds the Arkbird back;
+- pre-existing or third-party wars move the crisis to external observation; a
+  war the pair already fought is started but not expanded and a reload adds no
+  ideas; a principal's own subject is not a third party;
+- capitulation and annexation record the actual outcome, with the end news
+  scheduled by the survivor; a breakaway with a principal's original tag does
+  not count as the principal falling;
+- the crisis decisions are charged once by the engine and follow the phase.
 
 **Source checks:** the only `declare_war_on` in the waves targets Osea with
 `topple_government`; no `white_peace`, faction or guarantee check, assumed end

@@ -5,7 +5,7 @@ participant, place, leader or weapon scripted for 2006–2020, as
 [USEAN_CONTINENTAL_WAR.md](USEAN_CONTINENTAL_WAR.md) gated 1994–2005. A row here
 does not mean the content is implemented; the disposition column says what is.
 
-Primary sources, read 3 November 2026:
+Primary sources, read 3 November 2026 and re-read for the 2010 rows on 4 November 2026:
 
 - [Official ACES Chronicle — Details](https://acecombat.jp/en/chronicle/details/), cited as *Chronicle, YYYY / MM.DD*.
 - [Official ACES Chronicle — Super Weapons](https://acecombat.jp/en/chronicle/weapons/), cited as *Super Weapons, &lt;name&gt;*.
@@ -66,26 +66,26 @@ The 2005 entries through 26 September are already cited in
 
 | Claim | Exact source | Wave | Disposition |
 | --- | --- | --- | --- |
-| Unidentified aircraft appear at Cape Landers; Osea's Wardog Squadron engages and two aircraft survive | Chronicle, 2010 / 09.23 | C | Implemented: `ac_cpw.1` news; the aircraft are not identified |
+| Unidentified aircraft appear at Cape Landers, Osea; the Osean Air Defense Force's Wardog Squadron engages, but only two aircraft survive | Chronicle, 2010 / 09.23 | C | Implemented: `ac_cpw.1` news; the aircraft are not identified |
 | An unidentified SR-71 appears over Osea and is hit by a coastal surface-to-air missile | Chronicle, 2010 / 09.24 | C | Implemented: `ac_cpw.2` news; no owner is named |
 | Wardog Squadron engages unidentified aircraft; Yuktobania declares war on Osea and attacks Port Saint Hewlett; the war begins | Chronicle, 2010 / 09.27 | C | Implemented: the owner's declaration `ac_cpw_declare` (Yuktobanian decision event `ac_cpw.5`, AI always) and news `ac_cpw.3`. The Chronicle gives no reason and none is asserted. Earned alternatives: the reciprocal exchange (`ac_cpw.4`) and the withheld declaration (`ac_cpw.7`) |
-| The submarine Scinfaxi sees first use; the carriers Vulture and Buzzard are sunk at the Eaglin Straits; Osea sends the Arkbird to the front | Chronicle, 2010 / 09.30 | C | Implemented: `ac_cpw.20`; the Arkbird goes to the front only if `ac_sp_arkbird_complete` and Osea sends it (`ac_cpw.6`, `ac_cpw.15`) |
+| Scinfaxi, the first of Yuktobania's Scinfaxi-class submarines, sees its first use in war; the Osean Maritime Defense Force aircraft carriers Vulture and Buzzard are sunk at Eaglin Straits; Osea sends the Arkbird to the front line | Chronicle, 2010 / 09.30 | C | Implemented: `ac_cpw.20`; the Arkbird goes to the front only if `ac_sp_arkbird_complete` and Osea sends it (`ac_cpw.6`, `ac_cpw.15`) |
 | Scinfaxi is sunk at Sand Island | Chronicle, 2010 / 10.04 | C | Implemented: `ac_cpw.21`; one submarine-carrier idea remains |
 | The Akerson Hill Incident | Chronicle, 2010 / 10.22 | C | Implemented: `ac_cpw.22`, name only |
 | Smuggled explosives destroy the Arkbird's engines | Chronicle, 2010 / 10.25 | C | Implemented: `ac_cpw.23`, only if the Arkbird was committed; `ac_sp_arkbird` is read, never completed or revived |
 | Osea invades the southeastern Yuktobanian mainland on the Bastok Peninsula | Chronicle, 2010 / 11.01 | C | Implemented: `ac_cpw.24`, only once Osean forces actually control Yuktobanian territory; no state is moved and the peninsula is not mapped |
-| Osean aircraft fire on an engineering college in Dresdene, killing several people | Chronicle, 2010 / 11.02 | C | Implemented: `ac_cpw.25`, after the Bastok row |
-| Yuktobanian special forces use nerve gas in Bana and attack Apito International Airport | Chronicle, 2010 / 11.04 | C | Implemented: `ac_cpw.26` |
+| Osean aircraft fire on an engineering college in the Yuktobanian city of Dresdene, with multiple fatalities | Chronicle, 2010 / 11.02 | C | Implemented: `ac_cpw.25`, after the Bastok row |
+| Yuktobanian special forces use nerve gas in a terrorist attack in the Osean Federation's college city of Bana; Yuktobanian forces make a surprise attack on Apito International Airport in the Osean Federation | Chronicle, 2010 / 11.04 | C | Implemented: `ac_cpw.26` |
 | The submarine Hrimfaxi is sunk in the Razgriz Straits | Chronicle, 2010 / 11.14 | C | Implemented: `ac_cpw.27`; the last submarine-carrier idea is removed |
-| Yuktobanian aircraft attack a peace ceremony in November City | Chronicle, 2010 / 11.29 | C | Implemented: `ac_cpw.28` |
-| Osean forces bring down Cruik Fortress, Yuktobania's last defensive stronghold | Chronicle, 2010 / 12.06 | C | Implemented: `ac_cpw.29`, gated like the Bastok row; the fortress is not mapped |
+| Yuktobanian aircraft attack during a peace ceremony in the Osean Federation's November City | Chronicle, 2010 / 11.29 | C | Implemented: `ac_cpw.28` |
+| Osean forces bring down Cruik Fortress, Yuktobania's final defensive stronghold | Chronicle, 2010 / 12.06 | C | Implemented: `ac_cpw.29`, gated like the Bastok row; the fortress is not mapped |
 | Peter N. Beagle and Albert Genette help suspected Wardog members flee; all are shot down by Captain Marcus Snow | Chronicle, 2010 / 12.07 | Reference only | Named individuals; not scripted |
-| President Harling is rescued from Stier Castle in Belka; Razgriz Squadron forms under the president | Chronicle, 2010 / 12.09 | C | Implemented: `ac_cpw.30` news only; the president is named as the Chronicle names him and no character, leader or portrait changes |
-| The Arkbird, carrying a nuclear weapon, attempts an attack on Okchabursk and is shot down by Razgriz Squadron | Chronicle, 2010 / 12.19 | C | Implemented: `ac_cpw.31`, only if the Arkbird was committed. The Arkbird is recorded as lost (`ac_cpw_arkbird_lost`) and its two project ideas are removed; the project itself is never weaponized by script |
-| Former Prime Minister Seryozha Viktrovich Nikanor is rescued from imprisonment by the Yuktobanian military | Chronicle, 2010 / 12.23 | C | Implemented: `ac_cpw.32` news only |
+| President Harling is rescued from imprisonment at Stier Castle in the Principality of Belka; Razgriz Squadron forms and serves directly under the president | Chronicle, 2010 / 12.09 | C | Implemented: `ac_cpw.30` news only; the president is named as the Chronicle names him and no character, leader or portrait changes |
+| The Arkbird, carrying a nuclear weapon, uses atmospheric friction to manoeuvre towards an attack on the Yuktobanian city of Okchabursk and is shot down by Razgriz Squadron | Chronicle, 2010 / 12.19 | C | Implemented: `ac_cpw.31`, only if the Arkbird was committed. The Arkbird is recorded as lost (`ac_cpw_arkbird_lost`) and its two project ideas are removed; the project itself is never weaponized by script |
+| Former Prime Minister Seryozha Viktrovich Nikanor, who was imprisoned by the Yuktobanian military, is rescued; the rescuer is not named | Chronicle, 2010 / 12.23 | C | Implemented: `ac_cpw.32` news only |
 | The Battle of Ceres Ocean | Chronicle, 2010 / 12.29 | C | Implemented: `ac_cpw.33`, name only |
-| The carrier Kestrel is sunk; Harling and Nikanor jointly ask their militaries to disarm; a mixed force inspects Gründer Industries in Sudentor, North Osea | Chronicle, 2010 / 12.30 | C | Implemented: `ac_cpw.34`; the appeal weighs on both countries' war support but ends nothing by script |
-| The SOLG is seen falling; Razgriz Squadron destroys the former Belkan Grabacr and Ofnir squadrons and the SOLG; the war ends | Chronicle, 2010 / 12.31 | C | Implemented: `ac_cpw.35` reports the SOLG; the end (`ac_cpw.10`–`.13`) is recorded only when the fighting between Osea and Yuktobania actually stops, never on the anchor |
+| The Osean aircraft carrier Kestrel is sunk; President Harling and Prime Minister Nikanor make a televised address asking their militaries to disarm; a joint force inspects Gründer Industries facilities in the Osean trust territory of Sudentor, North Osea | Chronicle, 2010 / 12.30 | C | Implemented: `ac_cpw.34`; the appeal weighs on both countries' war support but ends nothing by script |
+| Astronomers spot the SOLG falling; Razgriz Squadron shoots down the Grabacr and Ofnir squadrons of the former Belkan Air Force and destroys the SOLG; the war ends | Chronicle, 2010 / 12.31 | C | Implemented: `ac_cpw.35` reports the SOLG; the end (`ac_cpw.10`–`.13`) is recorded only when the fighting between Osea and Yuktobania actually stops, never on the anchor |
 
 ## 2015–2016: the Emmeria–Estovakia War
 

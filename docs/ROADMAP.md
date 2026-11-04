@@ -5,6 +5,32 @@ with machine-readable budgets and honest package status. The implementation
 records below remain historical evidence; they do not supersede that roadmap
 or establish native acceptance for its pending packages.
 
+## Current playable state (agent handoff — 2026-11-04)
+
+**Stage:** Early continuation / initial flight test passed for the 1991 opening. Not a full campaign.
+
+**What is playable right now (HOI4 1.19.3, Oct 17 2026 smoke test):**
+- Main menu + original Project Ulysses presentation loads.
+- 1 Jan 1991 bookmark works; map loads (weather/rivers/building positions fixed).
+- Belka can be started and run at speed 5 with AI on through at least February 1992 without crash.
+- Tech tabs (incl. Experimental Facilities), national focuses + continuous focuses, government, and decisions render.
+- Crash-risk warnings reduced sharply (24 → 2 in the recorded test).
+
+**What is not yet playable / fully validated:**
+- Complete Belkan War (canon start ~March 1995), alternate outcomes, postwar continuity, other nations’ full paths, later conflicts, and anything approaching the 2065 engineering horizon.
+- Native reachability of branch outcomes (victory / Wacht am Wal / defeat), save/load checkpoints, long runs to 1995+, AI behavior, supply, and balance.
+- Some paths still risk hitting the old demo-ending event (`world_event.2`).
+- Vanilla WWII visuals still appear in some doctrine/continuous-focus/building/tech/special-project slots.
+- AI templates need 1.19 syntax rewrite; subdoctrine effects need retargeting to modern units.
+- History cleanup is only partial; placeholders and incomplete map regions (e.g. state 171) remain.
+- No packaged release — development build only.
+
+**Substantial groundwork already present (static/offline):**
+- Strong docs, static validation suite + CI, repo-local agents/skills.
+- Authored but native-unverified expansions: Anea (Emmeria/Estovakia), “The Peace We Inherit” postwar focuses, special-project replacements, default-off fiscal prototype.
+
+**Implication for agents:** Treat the 1991 opening as bootable and early-game playable. Do not assume the Belkan War or postwar is native-ready. Prefer static validation + isolated native playtests when expanding content. See `NEXT_TASKS.md`, `TESTING_CHECKLIST.md`, and `PHASED_PLAN.md` for prioritized remaining work.
+
 ## Anea — The Burden of Recovery
 
 The Emmerian/Estovakian 1991–2005 foundation is authored on the merged PR#29

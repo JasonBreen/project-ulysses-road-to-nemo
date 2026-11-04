@@ -482,17 +482,19 @@ def owner():
     for name in ("landers", "overflight"):
         loc[f"ac_cpw_prelude_{name}"] = "Circum-Pacific War prelude: " + loc[f"{P}.{1 if name == 'landers' else 2}.t"]
 
-    hooks = (block("on_startup", block("effect", "if = { limit = { country_exists = YUK } YUK = { ac_cpw_restore = yes } }")) +
-             block("on_weekly_YUK", block("effect", "ac_cpw_owner_weekly = yes")) +
-             block("on_weekly_OSE", block("effect", "ac_cpw_owner_weekly_ose = yes")) +
-             block("on_annex", block("effect", "if = { limit = { OR = { tag = OSE tag = YUK } } FROM = { ac_cpw_interrupt = yes } }\n"
-                                               "else = { FROM = { ac_cpw_interrupt_external = yes } }")) +
-             # FROM is the winner (capitulation) or the overlord (subject annexation): only the
-             # other principal's win counts as a victory; anyone else's is an external fall.
-             block("on_capitulation_immediate", block("effect", "if = { limit = { FROM = { OR = { tag = OSE tag = YUK } } } ac_cpw_interrupt = yes }\n"
-                                                                "else = { ac_cpw_interrupt_external = yes }")) +
-             block("on_subject_annexed", block("effect", "if = { limit = { FROM = { OR = { tag = OSE tag = YUK } } } ac_cpw_interrupt = yes }\n"
-                                                         "else = { ac_cpw_interrupt_external = yes }")))
+    # FROM is the annexer, the capitulation winner or the overlord: only the other principal's
+    # win counts as a victory; anyone else's is an external fall.
+    hooks = {
+        "on_startup": "if = { limit = { country_exists = YUK } YUK = { ac_cpw_restore = yes } }",
+        "on_weekly_YUK": "ac_cpw_owner_weekly = yes",
+        "on_weekly_OSE": "ac_cpw_owner_weekly_ose = yes",
+        "on_annex": ("if = { limit = { OR = { tag = OSE tag = YUK } } FROM = { ac_cpw_interrupt = yes } }\n"
+                     "else = { FROM = { ac_cpw_interrupt_external = yes } }"),
+        "on_capitulation_immediate": ("if = { limit = { FROM = { OR = { tag = OSE tag = YUK } } } ac_cpw_interrupt = yes }\n"
+                                      "else = { ac_cpw_interrupt_external = yes }"),
+        "on_subject_annexed": ("if = { limit = { FROM = { OR = { tag = OSE tag = YUK } } } ac_cpw_interrupt = yes }\n"
+                               "else = { ac_cpw_interrupt_external = yes }"),
+    }
     ai = "\n".join((
         block("ac_cpw_yuk_tension", "allowed = { original_tag = YUK }\n" +
               block("enable", f"has_global_flag = ac_cpw_calendar_started {ROUTE_SETTLED}") +

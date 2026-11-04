@@ -54,8 +54,12 @@ def wave_files(module):
     note = f"# Original provisional gameplay; source: tools/content_waves ({wave.label}). Native acceptance pending.\n"
     effects, triggers, loc = frag["effects"], frag["triggers"], frag["loc"]
     ideas, events, custom = list(frag["ideas"]), list(frag["events"]), list(frag["custom"])
-    hooks, categories = frag["hooks"] + owner.get("hooks", ""), frag["categories"] + owner.get("categories", [])
+    categories = frag["categories"] + owner.get("categories", [])
     decisions = frag["decisions"]
+    # One block per on_action: an owner's hook for an action the wave already uses runs after the wave's own.
+    hooks = dict(frag["hooks"])
+    for action, body in owner.get("hooks", {}).items():
+        hooks[action] = (hooks[action] + "\n" + body) if action in hooks else body
     for key, value in owner.get("effects", {}).items():
         assert key not in effects, key
         effects[key] = value
@@ -82,7 +86,7 @@ def wave_files(module):
         f"common/ideas/ac_{name}.txt": note + block("ideas", block("country", "\n".join(ideas))),
         f"common/decisions/categories/ac_{name}.txt": note + "\n".join(categories),
         f"common/decisions/ac_{name}.txt": note + "\n".join(block(k, "\n".join(v)) for k, v in decisions.items()),
-        f"common/on_actions/ac_{name}.txt": note + block("on_actions", hooks),
+        f"common/on_actions/ac_{name}.txt": note + block("on_actions", "".join(block(k, block("effect", v)) for k, v in hooks.items())),
         f"common/custom_localization/ac_{name}.txt": note + "\n".join(custom),
         f"events/ac_{name}.txt": note + f"add_namespace = {wave.prefix}\n" + "\n".join(events),
     }
@@ -90,6 +94,12 @@ def wave_files(module):
         out[f"common/national_focus/ac_{name}.txt"] = note + "\n".join(frag["focuses"])
     if owner.get("ai_strategy"):
         out[f"common/ai_strategy/ac_{name}.txt"] = note + owner["ai_strategy"]
+    # Special projects an owner adds (Götterdämmerung) live in their own replace_path folders,
+    # beside the Track C files, which stay byte-identical.
+    if owner.get("projects"):
+        out[f"common/special_projects/projects/ac_{name}.txt"] = note + owner["projects"]
+    if owner.get("project_tags"):
+        out[f"common/special_projects/project_tags/ac_{name}.txt"] = note + block("project_tags", "\n".join(owner["project_tags"]))
     readable_flags(wave, frag, [v for k, v in out.items()], parse, get)
     out[f"localisation/english/ac_{name}_l_english.yml"] = "\ufeffl_english:\n" + "".join(
         f' {k}:0 "' + v.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n") + '"\n' for k, v in loc.items())
@@ -118,7 +128,9 @@ def outputs():
         for tag, name in getattr(module, "IMPORTS", {}).items():
             relative = f"common/national_focus/{tag}.txt"
             ids = [focus_id(module.WAVE, b, i) for b in module.WAVE.branches if b.tag == tag for i in range(6)]
-            out[relative] = attach((MOD / relative).read_text(encoding="utf-8"), tag, ids, name)
+            # A later wave's block is attached to the tree as the earlier waves already rewrote it.
+            source = out[relative] if relative in out else (MOD / relative).read_text(encoding="utf-8")
+            out[relative] = attach(source, tag, ids, name)
         for tag, tree_id in getattr(module, "TREES", {}).items():
             out[f"common/national_focus/{tag}.txt"] = new_tree(module, tag, tree_id, frag)
     return out, frags

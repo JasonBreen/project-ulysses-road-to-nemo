@@ -135,7 +135,7 @@ def empty_wave(wave):
     validate(wave)
     assert not wave.branches and not wave.countries, wave.label
     return dict(loc={}, effects={}, triggers={}, ideas=[], focuses=[], categories=[], decisions=defaultdict(list),
-                custom=[], events=[], hooks="", services=[], positions={})
+                custom=[], events=[], hooks={}, services=[], positions={})
 
 
 def compile_wave(wave, event_base=None):
@@ -418,13 +418,14 @@ def compile_wave(wave, event_base=None):
             guard(f"{P}_active = yes", f"{P}_refresh_progress = yes\n" + finish + f"\n{P}_narrative_tick = yes") +
             wave.weekly_extra.get(tag, ""))
     effects[P + "_interrupt"] = f"{P}_interrupt_service = yes\n{P}_interrupt_narrative = yes\n"
-    hooks = block("on_startup", block("effect", "\n".join(f"if = {{ limit = {{ country_exists = {t} }} {t} = {{ {P}_initialize = yes }} }}" for t in wave.countries)))
+    # Hook bodies by on_action name; the build merges an owner's hooks into the same keys.
+    hooks = {"on_startup": "\n".join(f"if = {{ limit = {{ country_exists = {t} }} {t} = {{ {P}_initialize = yes }} }}" for t in wave.countries)}
     for tag in wave.countries:
-        hooks += block(f"on_weekly_{tag}", block("effect", f"{P}_weekly_{tag.lower()} = yes"))
-    hooks += block("on_annex", block("effect", f"FROM = {{ {P}_interrupt = yes }}"))
-    hooks += block("on_capitulation_immediate", block("effect", f"{P}_interrupt = yes"))
-    hooks += block("on_subject_annexed", block("effect", f"{P}_interrupt = yes"))
-    hooks += block("on_war_relation_added", block("effect", f"{P}_interrupt_service = yes\nFROM = {{ {P}_interrupt_service = yes }}"))
+        hooks[f"on_weekly_{tag}"] = f"{P}_weekly_{tag.lower()} = yes"
+    hooks["on_annex"] = f"FROM = {{ {P}_interrupt = yes }}"
+    hooks["on_capitulation_immediate"] = f"{P}_interrupt = yes"
+    hooks["on_subject_annexed"] = f"{P}_interrupt = yes"
+    hooks["on_war_relation_added"] = f"{P}_interrupt_service = yes\nFROM = {{ {P}_interrupt_service = yes }}"
 
     readable = {P + "_participant": "Established national administration",
                 P + "_eligible": "Eligible national continuation",

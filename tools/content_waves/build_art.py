@@ -201,12 +201,23 @@ def outputs():
             image = composition(tag, *wave.themes[tag], 3).resize((100, 100), Image.Resampling.LANCZOS)
             texture(f"gfx/AC_content_waves/categories/{P}_{tag.lower()}.dds", image, f"GFX_{P}_category_{tag.lower()}", "category", tag, title=country + ": " + wave.label)
         for category, _, entries in parse(content[f"common/decisions/ac_{name}.txt"]):
+            if not category.startswith(P + "_"):
+                continue    # rows added to a foreign category (the superweapon fallbacks) carry project art below
             tag = category.split("_")[-2].upper()
             for ident, _, _ in entries:
                 branch = next((b for b in wave.branches if ident.startswith(focus_id(wave, b, 0)[:-len("_register")] + "_")), None)
                 subject = branch.subjects[0 if ident.endswith("_1") else 3][0] if branch else wave.themes[tag][0]
                 texture(f"gfx/AC_content_waves/decisions/{P}_{ident}.dds", row_icon(tag, subject, cancel="cancel_service" in ident),
                         f"GFX_decision_{P}_{ident}", "decision row", tag, id=ident)
+        # Special projects: the 95x95 project icon, its 26x29 fallback-decision row and 60x60 unique reward icons.
+        for ident, (primary, secondary, tag, rewards) in getattr(module, "PROJECT_ART", {}).items():
+            texture(f"gfx/AC_content_waves/projects/{ident}.dds", composition(tag, primary, secondary, 2).resize((95, 95), Image.Resampling.LANCZOS),
+                    f"GFX_{ident}", "project icon", tag, id=ident, primary=primary, secondary=secondary)
+            texture(f"gfx/AC_content_waves/decisions/{ident}.dds", row_icon(tag, primary), f"GFX_decision_{ident}", "decision row", tag, id=ident)
+            for reward, subject in rewards.items():
+                texture(f"gfx/AC_content_waves/projects/{ident}_reward_{reward}.dds",
+                        composition(tag, subject, secondary, 4).resize((60, 60), Image.Resampling.LANCZOS),
+                        f"GFX_{ident}_reward_{reward}", "project reward icon", tag, id=f"{ident}_reward_{reward}", primary=subject, secondary=secondary)
         for tag, country in wave.countries.items():
             master = scene(tag, wave.themes[tag])
             ident = f"{tag.lower()}_national"
@@ -243,7 +254,8 @@ def outputs():
     result[HERE / "assets.json"] = (json.dumps(manifest, indent=2) + "\n").encode()
 
     font = BitmapFont()
-    for wave, _ in WAVES:
+    sheets = ""
+    for wave, name in WAVES:
         for tag, country in wave.countries.items():
             rows = [(b, i) for b in wave.branches if b.tag == tag for i in range(6)]
             if not rows:
@@ -256,13 +268,16 @@ def outputs():
                 icon = Image.open(io.BytesIO(result[MOD / f"gfx/AC_content_waves/focus/{focus_id(wave, b, i)}.dds"])).convert("RGBA")
                 gallery.alpha_composite(icon, (x + 25, y))
                 font.draw(gallery, b.titles[i], (x, y + 110), 153)
-            result[HERE / "gallery" / f"{tag.lower()}-focuses.png"] = encoded(gallery, "PNG")
+            # The first wave to extend a country keeps the plain sheet name; later waves prefix their module name.
+            sheet = f"{tag.lower()}-focuses.png"
+            if HERE / "gallery" / sheet in result:
+                sheet = f"{name}-{sheet}"
+            result[HERE / "gallery" / sheet] = encoded(gallery, "PNG")
+            sheets += f'<figure><img alt="{tag} focus icons" src="{sheet}"><figcaption>{html.escape(country)}: {html.escape(wave.label)}</figcaption></figure>'
     # Link the per-country sheets rather than embedding PNG bytes, so the page
     # is byte-identical on every platform. Counts come from the manifest.
     counts = Counter((row["tag"], row["role"]) for row in assets)
     rows = "".join(f"<tr><td>{html.escape(tag)}</td><td>{html.escape(role)}</td><td>{n}</td></tr>" for (tag, role), n in sorted(counts.items()))
-    sheets = "".join(f'<figure><img alt="{tag} focus icons" src="{tag.lower()}-focuses.png"><figcaption>{html.escape(country)}: {html.escape(wave.label)}</figcaption></figure>'
-                     for wave, _ in WAVES for tag, country in wave.countries.items())
     page = ('<!doctype html><meta charset="utf-8"><title>Content waves original artwork</title><style>body{background:#081621;color:#daedf2;'
             'font:16px sans-serif;margin:28px}figure{margin:0 0 28px}img{max-width:100%}table{border-collapse:collapse}'
             'td{border:1px solid #34596b;padding:4px 10px}</style><h1>Content waves: original artwork</h1>'

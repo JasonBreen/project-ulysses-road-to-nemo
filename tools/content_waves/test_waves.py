@@ -6,7 +6,7 @@ supplies dates, focus completion, scope switching and engine observations.
 Decimal execution and deepcopy reloads are offline evidence, not native saves.
 """
 import copy
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal as D
 import importlib.util
 import io
@@ -42,8 +42,12 @@ STEMS = tuple(f"{tag}_{m.WAVE.infix}" for m in MODULES for tag in (*m.WAVE.count
 OWNED_RE = "|".join(sorted(NAMES) + sorted(STEMS))
 OWNED_FILES = [f"{folder}/ac_{name}.txt" for name in NAMES.values() for folder in (
     "common/national_focus", "common/scripted_effects", "common/scripted_triggers", "common/ideas", "common/ai_strategy",
-    "common/decisions", "common/decisions/categories", "common/on_actions", "common/custom_localization", "events")
+    "common/decisions", "common/decisions/categories", "common/on_actions", "common/custom_localization", "events",
+    "common/special_projects/projects", "common/special_projects/project_tags")
     if (MOD / f"{folder}/ac_{name}.txt").exists()]
+# The only wars and peaces the content waves may script, each sourced and each in exactly one owner.
+DECLARATIONS = {"circum_pacific": ["declare_war_on = { target = OSE type = topple_government }"]}
+PEACES = {}
 EXPECTED = {"ERU": 36, "FCU": 24, "NEC": 42, "EVA": 30, "EMM": 18, "AUR": 54}
 STORY_FLAGS = ("ac_cpw_started", "ac_cpw_tainted", "ac_cpw_prevented", "ac_cpw_declaration_withheld")
 
@@ -82,12 +86,15 @@ class Source(unittest.TestCase):
         owners = {"ERU": load_module("cw_preserve", ROOT / "tools/build_continental_war.py"),
                   "EVA": load_module("anea_preserve", ROOT / "tools/anea/build_campaign.py")}
         owners["FCU"], owners["EMM"] = owners["ERU"], owners["EVA"]
+        # A tree extended by several waves preserves every block, in registry order.
+        expected = {}
         for module in MODULES:
             for tag, name in getattr(module, "IMPORTS", {}).items():
-                with self.subTest(tag=tag):
-                    ids = [focus_id(module.WAVE, b, i) for b in module.WAVE.branches if b.tag == tag for i in range(6)]
-                    expected = f"# BEGIN {name} IMPORTS\n" + "".join(f"shared_focus = {i}\n" for i in ids) + f"# END {name} IMPORTS\n"
-                    self.assertEqual(expected, owners[tag].preserved_imports(tag))
+                ids = [focus_id(module.WAVE, b, i) for b in module.WAVE.branches if b.tag == tag for i in range(6)]
+                expected[tag] = expected.get(tag, "") + f"# BEGIN {name} IMPORTS\n" + "".join(f"shared_focus = {i}\n" for i in ids) + f"# END {name} IMPORTS\n"
+        for tag, blocks in expected.items():
+            with self.subTest(tag=tag):
+                self.assertEqual(blocks, owners[tag].preserved_imports(tag))
 
     def test_approved_budgets_and_globally_unique_ids(self):
         self.assertEqual(EXPECTED, self.manifest["counts"])
@@ -185,14 +192,16 @@ class Source(unittest.TestCase):
     def test_no_forbidden_world_changes_and_honest_chronology(self):
         combined = "\n".join(text(r) for r in OWNED_FILES)
         for forbidden in ("transfer_state", "add_state_core", "remove_state_core", "start_civil_war", "create_country", "annex_country",
-                          "set_cosmetic_tag", "add_to_faction", "create_faction", "white_peace", "create_wargoal", "add_wargoal",
+                          "set_cosmetic_tag", "add_to_faction", "create_faction", "create_wargoal", "add_wargoal",
                           "add_manpower", "create_unit", "add_equipment_to_stockpile", "set_politics", "create_country_leader",
                           "recruit_character", "add_country_leader_role", "launch_nuke", "set_owner", "set_state_controller"):
             self.assertNotIn(forbidden, combined, forbidden)
-        # Only the Circum-Pacific War owner declares a war, and only the sourced one.
-        self.assertNotIn("declare_war_on", "\n".join(text(r) for r in OWNED_FILES if "circum_pacific" not in r))
-        self.assertEqual(["declare_war_on = { target = OSE type = topple_government }"],
-                         re.findall(r"declare_war_on = \{[^}]*\}", text("common/scripted_effects/ac_circum_pacific.txt")))
+        # Only a sourced conflict owner declares a war or signs a peace, each exactly as its source records it.
+        for keyword, allowed in (("declare_war_on", DECLARATIONS), ("white_peace", PEACES)):
+            for relative in OWNED_FILES:
+                owner = next((n for n in allowed if n in relative), None)
+                found = re.findall(keyword + r" = (?:\{[^}]*\}|\w+)", text(relative))
+                self.assertEqual(allowed[owner] if owner and relative.startswith("common/scripted_effects/") else [], found, relative)
         effects = text("common/scripted_effects/ac_free_erusea.txt")
         self.assertIn("date > 2006.9.25", effects)
         self.assertIn("date < 2007.9.26", effects)
@@ -381,6 +390,10 @@ class World(shared.World):
                 # `refuse_war` models an engine that does not create the war (a truce, the same faction).
                 if not getattr(self, "refuse_war", False):
                     self.wars.add(frozenset((context.tag, fields(value)["target"])))
+            elif key == "white_peace":
+                # `refuse_peace` models an engine that keeps the war (the other side is in a faction war with us).
+                if not getattr(self, "refuse_peace", False):
+                    self.wars.discard(frozenset((context.tag, value)))
             elif key in self.countries or key in ("FROM", "ROOT"):
                 target = previous if key == "FROM" else root if key == "ROOT" else self.countries[key]
                 self.execute(value, target, temp, root, context)
@@ -449,10 +462,11 @@ class Runtime(unittest.TestCase):
     def ready(self, wave=None, mode="full"):
         """A world in which the wave's countries are eligible and initialized."""
         w = self.fresh(mode)
-        if wave is EB:
-            w.today = date(2008, 1, 1).toordinal()
-            for tag in EB.countries:
-                w.run("ac_ecw_initialize", tag)
+        opens = re.search(r"date > (\d+)\.(\d+)\.(\d+)", wave.eligible if wave else "")
+        if opens and date(*map(int, opens.groups())) >= date.fromordinal(w.today):
+            w.today = (date(*map(int, opens.groups())) + timedelta(days=1)).toordinal()
+            for tag in wave.countries:
+                w.run(f"{wave.prefix}_initialize", tag)
         return w
 
     def test_every_service_pays_real_owners_once_and_completes_after_ninety_days(self):
@@ -505,14 +519,11 @@ class Runtime(unittest.TestCase):
             self.assertEqual(before, c, reason)
 
     def prepare(self, wave, b):
+        """A world in which the branch's register is available: its gate's flags set and its dates passed."""
         w = self.ready(wave)
         w.globals |= set(re.findall(r"(?<!NOT = \{ )has_global_flag = (\w+)", b.gate))
-        if b.gate.startswith("has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_fe_insurrection_started"):
-            w.globals.add("ac_fe_insurrection_started")
-        if "2013.12.31" in b.gate:
-            w.today = date(2014, 6, 1).toordinal()
-        elif "2009.12.31" in b.gate:
-            w.today = date(2010, 6, 1).toordinal()
+        for year, month, day in re.findall(r"date > (\d+)\.(\d+)\.(\d+)", b.gate):
+            w.today = max(w.today, (date(int(year), int(month), int(day)) + timedelta(days=153)).toordinal())
         w.countries[b.tag].completed |= set(b.entry)
         return w
 
@@ -763,31 +774,39 @@ class Runtime(unittest.TestCase):
         w.today = today.toordinal()
         return w, w.countries["YUK"], w.countries["OSE"]
 
-    def tick(self, w, day, tag="YUK"):
+    def tick(self, w, day, tag="YUK", module="circum_pacific"):
         days = day.toordinal() - w.today
         if days > 0:
             w.advance(days)      # timed ideas and flags expire as the calendar moves
         else:
             w.today = day.toordinal()
-        w.wave_action("circum_pacific", f"on_weekly_{tag}", tag)
+        w.wave_action(module, f"on_weekly_{tag}", tag)
 
-    def status(self, w):
-        """Resolve ac_cpw_status_text as the engine would: the first entry whose trigger holds for Yuktobania."""
-        custom = parse(text("common/custom_localization/ac_circum_pacific.txt"))
-        entries = next(v for k, _, v in custom if k == "defined_text" and next(x for key, _, x in v if key == "name") == "ac_cpw_status_text")
+    def defined_text(self, w, module, name, tag):
+        """Resolve a defined text as the engine would: the first entry whose trigger holds for the viewing country."""
+        custom = parse(text(f"common/custom_localization/ac_{module}.txt"))
+        entries = next(v for k, _, v in custom if k == "defined_text" and next(x for key, _, x in v if key == "name") == name)
         for k, _, v in entries:
             if k != "text":
                 continue
             condition = next((x for key, _, x in v if key == "trigger"), None)
-            if condition is None or w.trigger(condition, w.countries["YUK"]):
-                return self.cpw_loc[next(x for key, _, x in v if key == "localization_key")]
-        raise AssertionError("no status text")
+            if condition is None or w.trigger(condition, w.countries[tag]):
+                return self.loc_of(module)[next(x for key, _, x in v if key == "localization_key")]
+        raise AssertionError("no text for " + name)
+
+    def status(self, w, module="circum_pacific", tag="YUK"):
+        prefix = next(p for p, n in NAMES.items() if n == module)
+        return self.defined_text(w, module, f"{prefix}_status_text", tag)
+
+    def loc_of(self, module):
+        cache = self.__dict__.setdefault("_loc_cache", {})
+        if module not in cache:
+            cache[module] = dict(re.findall(r'^ ([^\s:#]+):\d* "(.*)"$', (MOD / f"localisation/english/ac_{module}_l_english.yml").read_text(encoding="utf-8-sig"), re.M))
+        return cache[module]
 
     @property
     def cpw_loc(self):
-        if not hasattr(self, "_cpw_loc"):
-            self._cpw_loc = dict(re.findall(r'^ ([^\s:#]+):\d* "(.*)"$', (MOD / "localisation/english/ac_circum_pacific_l_english.yml").read_text(encoding="utf-8-sig"), re.M))
-        return self._cpw_loc
+        return self.loc_of("circum_pacific")
 
     def records(self, w):
         """The foreign Pacific records the owner may read but never write."""

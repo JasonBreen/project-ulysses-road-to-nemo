@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""Offline contract checks for the Strangereal special projects (Track C).
+"""Offline contract checks for the Strangereal special projects (Track C and later owners).
 
 Checks that the vanilla WWII projects and scientist traits are replaced, every
 ac_sp_* project is localised and has mod-owned art, each project has a matching
 no-DLC fallback decision granting the same reward, and the shared flag contract
 with the Continental War (ac_ucw_*) and Yuktobania (ac_yuk_*) tracks holds.
-Static only: this does not prove the engine parses or reaches the content.
+Projects may live in any file under the replaced folders: the Track C files
+(hash-pinned by the air and naval programmes) and the content-wave owners'
+own files (tools/content_waves). Static only: this does not prove the engine
+parses or reaches the content.
 """
 
 from __future__ import annotations
@@ -41,6 +44,10 @@ PROJECTS = (
     "ac_sp_megalith",
     "ac_sp_rhongomyniad",
 )
+# Projects a content-wave owner adds; counted only once that owner's files exist.
+OWNER_PROJECTS = {
+    "lighthouse": ("ac_sp_arsenal_birds", "ac_sp_alicorn"),
+}
 ENGINE_SPECIALIZATIONS = (
     "specialization_nuclear",
     "specialization_air",
@@ -48,6 +55,7 @@ ENGINE_SPECIALIZATIONS = (
     "specialization_land",
 )
 FOREIGN_FLAGS = re.compile(r"\b(?:set|clr)_(?:global|country)_flag\s*=\s*(ac_ucw_\w+|ac_yuk_\w+)")
+# The Track C files (every one hash-pinned by tools/air_program and tools/naval_program).
 CONTENT_FILES = (
     "common/special_projects/projects/ac_strangereal_projects.txt",
     "common/special_projects/prototype_rewards/ac_generic_prototype_rewards.txt",
@@ -60,6 +68,15 @@ CONTENT_FILES = (
     "common/decisions/categories/ac_superweapons.txt",
     "portraits/998_scientist_portraits.txt",
 )
+# Owners that add projects of their own (completion effects, reward ideas and
+# fallback decisions in their own files, under the shared ac_superweapons category).
+OWNER_FILES = {
+    "lighthouse": (
+        "common/scripted_effects/ac_lighthouse.txt",
+        "common/ideas/ac_lighthouse.txt",
+        "common/decisions/ac_lighthouse.txt",
+    ),
+}
 
 
 def read(path: Path) -> str:
@@ -133,27 +150,37 @@ def check(mod: Path) -> list[str]:
             for replaced in REPLACE_PATHS:
                 require(f'replace_path="{replaced}"' in text, f"{descriptor.name} lacks replace_path {replaced}")
 
-    for relative in CONTENT_FILES:
+    owners = {name: files for name, files in OWNER_FILES.items() if any((mod / f).is_file() for f in files)}
+    owner_files = tuple(relative for files in owners.values() for relative in files)
+    expected_projects = PROJECTS + tuple(p for name in owners for p in OWNER_PROJECTS.get(name, ()))
+    for relative in CONTENT_FILES + owner_files:
         require((mod / relative).is_file(), f"missing {relative}")
     if errors:
         return errors
 
     # No vanilla sp_ project, reward, tag or trait can be defined or reached.
     defined: dict[str, dict[str, str]] = {}
+    projects: dict[str, str] = {}
+    tags: set[str] = set()
     for folder in REPLACE_PATHS:
-        for path in (mod / folder).glob("*.txt"):
+        for path in sorted((mod / folder).glob("*.txt")):
             text = strip_comments(read(path))
-            defined[path.relative_to(mod).as_posix()] = top_blocks(text)
+            relative = path.relative_to(mod).as_posix()
+            defined[relative] = top_blocks(text)
             require(not re.search(r"\bsp_(?!complexity|time|progress|scientist_xp_gain)\w+", text.replace("ac_sp_", "")),
-                    f"{path.relative_to(mod).as_posix()} references a vanilla sp_ token")
+                    f"{relative} references a vanilla sp_ token")
             require(not re.search(r"\bscientist_trait_\w+", text.replace("ac_scientist_trait_", "")),
-                    f"{path.relative_to(mod).as_posix()} references a vanilla scientist trait")
-    projects = defined["common/special_projects/projects/ac_strangereal_projects.txt"]
+                    f"{relative} references a vanilla scientist trait")
+            if folder == "common/special_projects/projects":
+                for name, body in defined[relative].items():
+                    require(name not in projects, f"{name} is defined twice")
+                    projects[name] = body
+            elif folder == "common/special_projects/project_tags":
+                tags |= set(re.findall(r"\bac_sp_tag_\w+", text))
     rewards = defined["common/special_projects/prototype_rewards/ac_generic_prototype_rewards.txt"]
     specializations = defined["common/special_projects/specialization/ac_specializations.txt"]
     traits = defined["common/scientist_traits/ac_scientist_traits.txt"]
-    tags = set(re.findall(r"\bac_sp_tag_\w+", read(mod / "common/special_projects/project_tags/ac_tags.txt")))
-    require(sorted(projects) == sorted(PROJECTS), f"project set differs: {sorted(projects)}")
+    require(sorted(projects) == sorted(expected_projects), f"project set differs: {sorted(projects)}")
     require(sorted(specializations) == sorted(ENGINE_SPECIALIZATIONS),
             "specializations must redefine exactly the four engine tokens bound to facility buildings")
     for name in traits:
@@ -171,10 +198,23 @@ def check(mod: Path) -> list[str]:
     generic = strip_comments(read(mod / "common/decisions/_generic_decisions.txt"))
     require(not re.search(r"(?m)^special_projects\s*=", generic), "vanilla special_projects decisions remain")
 
-    # Projects: specialization, tags, rewards, completion effect.
-    effects = top_blocks(strip_comments(read(mod / "common/scripted_effects/ac_special_projects.txt")))
-    decisions_text = strip_comments(read(mod / "common/decisions/ac_superweapons.txt"))
-    decisions = inner_blocks(top_blocks(decisions_text).get("ac_superweapons", ""), "\t")
+    # Projects: specialization, tags, rewards, completion effect. Completion
+    # effects, reward ideas and fallback decisions may come from any owner file.
+    effects: dict[str, str] = {}
+    decisions: dict[str, str] = {}
+    idea_texts: list[str] = []
+    for relative in CONTENT_FILES + owner_files:
+        text = strip_comments(read(mod / relative))
+        if relative.startswith("common/scripted_effects/"):
+            for name, body in top_blocks(text).items():
+                require(name not in effects, f"scripted effect {name} is defined twice")
+                effects[name] = body
+        elif relative.startswith("common/decisions/") and not relative.startswith("common/decisions/categories/"):
+            for name, body in inner_blocks(top_blocks(text).get("ac_superweapons", ""), "\t").items():
+                require(name not in decisions, f"fallback decision {name} is defined twice")
+                decisions[name] = body
+        elif relative.startswith("common/ideas/"):
+            idea_texts.append(text)
     keys = localisation_keys(mod)
     gfx = sprites(mod)
     referenced_gfx: set[str] = set()
@@ -225,12 +265,13 @@ def check(mod: Path) -> list[str]:
             require(option in keys, f"missing localisation {option}")
 
     # Ideas, traits, tags, specializations, categories and portraits.
-    idea_text = strip_comments(read(mod / "common/ideas/ac_special_projects.txt"))
-    for idea, picture in re.findall(r"(?m)^\t\t(ac_sp_\w+)\s*=\s*\{\s*picture\s*=\s*(\w+)", idea_text):
-        referenced_gfx.add(f"GFX_idea_{picture}")
-        for suffix in ("", "_desc"):
-            require(idea + suffix in keys, f"missing localisation {idea + suffix}")
-        require(f"add_ideas = {idea}" in "\n".join(effects.values()), f"idea {idea} is never granted")
+    completion_effects = "\n".join(body for name, body in effects.items() if name.endswith("_complete_effect"))
+    for idea_text in idea_texts:
+        for idea, picture in re.findall(r"(?m)^\t\t(ac_sp_\w+)\s*=\s*\{\s*picture\s*=\s*(\w+)", idea_text):
+            referenced_gfx.add(f"GFX_idea_{picture}")
+            for suffix in ("", "_desc"):
+                require(idea + suffix in keys, f"missing localisation {idea + suffix}")
+            require(f"add_ideas = {idea}" in completion_effects, f"idea {idea} is never granted by a completion effect")
     for trait, body in traits.items():
         require(trait in keys, f"missing localisation {trait}")
         referenced_gfx.update(re.findall(r"\bGFX_\w+", body))
@@ -261,12 +302,14 @@ def check(mod: Path) -> list[str]:
                  mod / "localisation/english/replace/ac_special_projects_replace_l_english.yml"):
         require(path.read_bytes().startswith(b"\xef\xbb\xbf"), f"{path.name} lacks a UTF-8 BOM")
 
-    # Shared flag contract: this track sets only its six completion flags.
-    for relative in CONTENT_FILES:
-        for flag in FOREIGN_FLAGS.findall(strip_comments(read(mod / relative))):
-            errors.append(f"{relative} writes {flag}, which another track owns")
-    set_flags = set(re.findall(r"\bset_global_flag\s*=\s*(\w+)", "\n".join(effects.values())))
-    require(set_flags == {f"{project}_complete" for project in PROJECTS},
+    # Shared flag contract: the Track C files set only their own completion flags,
+    # and no project file writes another track's flags.
+    for relative in CONTENT_FILES + owner_files:
+        if relative.startswith(("common/special_projects/", "common/scripted_effects/ac_special_projects")):
+            for flag in FOREIGN_FLAGS.findall(strip_comments(read(mod / relative))):
+                errors.append(f"{relative} writes {flag}, which another track owns")
+    set_flags = set(re.findall(r"\bset_global_flag\s*=\s*(\w+)", completion_effects))
+    require(set_flags == {f"{project}_complete" for project in expected_projects},
             f"completion effects set unexpected flags: {sorted(set_flags)}")
     return errors
 
@@ -281,7 +324,9 @@ def main() -> int:
         for error in errors:
             print(f"- {error}")
         return 1
-    print(f"Strangereal special projects: {len(PROJECTS)} projects with fallback decisions, art and localisation (static).")
+    owners = [name for name, files in OWNER_FILES.items() if any((args.mod_root / f).is_file() for f in files)]
+    count = len(PROJECTS) + sum(len(OWNER_PROJECTS.get(name, ())) for name in owners)
+    print(f"Strangereal special projects: {count} projects with fallback decisions, art and localisation (static).")
     return 0
 
 

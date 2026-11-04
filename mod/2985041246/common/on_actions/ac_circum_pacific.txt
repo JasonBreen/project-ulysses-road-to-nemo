@@ -1,0 +1,34 @@
+# Original provisional gameplay; source: tools/content_waves (The Circum-Pacific War). Native acceptance pending.
+on_actions = {
+	on_startup = {
+		effect = {
+			if = { limit = { country_exists = YUK } YUK = { ac_cpw_restore = yes } }
+		}
+	}
+	on_weekly_YUK = {
+		effect = {
+			ac_cpw_owner_weekly = yes
+		}
+	}
+	on_weekly_OSE = {
+		effect = {
+			ac_cpw_owner_weekly_ose = yes
+		}
+	}
+	on_annex = {
+		effect = {
+			if = { limit = { OR = { tag = OSE tag = YUK } } FROM = { ac_cpw_interrupt = yes } }
+			else = { FROM = { ac_cpw_interrupt_external = yes } }
+		}
+	}
+	on_capitulation_immediate = {
+		effect = {
+			ac_cpw_interrupt = yes
+		}
+	}
+	on_subject_annexed = {
+		effect = {
+			ac_cpw_interrupt = yes
+		}
+	}
+}

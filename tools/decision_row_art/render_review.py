@@ -19,6 +19,13 @@ HERE=Path(__file__).resolve().parent;OUT=ROOT/'docs/evidence/decision-rows'
 NAVY=(8,22,33,255);WHITE=(218,237,242,255);CYAN=(93,208,223,255);RED=(218,111,111,255)
 
 
+def review_png_equal(left,right):
+    try:
+        with Image.open(io.BytesIO(left)) as a,Image.open(io.BytesIO(right)) as b:
+            return a.size==b.size and a.convert('RGBA').tobytes()==b.convert('RGBA').tobytes()
+    except (OSError,ValueError):return False
+
+
 def encode(im):
     stream=io.BytesIO();im.save(stream,format='PNG');return stream.getvalue()
 
@@ -93,6 +100,8 @@ if __name__=='__main__':
         if args.check:
             old=path.read_bytes() if path.exists() else b''
             if path.suffix in ('.html','.json'):old=old.replace(b'\r\n',b'\n')
-            if old!=data:raise SystemExit('Stale decision-row review artifact: '+str(path.relative_to(ROOT)))
+            # Review PNGs compare by size and RGBA: zlib output differs between platforms.
+            same=review_png_equal(old,data) if path.suffix=='.png' else old==data
+            if not same:raise SystemExit('Stale decision-row review artifact: '+str(path.relative_to(ROOT)))
         else:path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
     print('Offline decision rows:',report['actual_row_variants'],'variants;',report['before_affected_active_variants'],'before;0after bounds failures')

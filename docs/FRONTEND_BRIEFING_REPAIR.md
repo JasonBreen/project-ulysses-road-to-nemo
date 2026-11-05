@@ -87,11 +87,48 @@ aftermath campaign acceptance matrix.
 
 **Remaining visual coverage:** other resolutions/UI scales, multiplayer, load/save
 dialogs and full in-game screens were not accepted in this pass. The lobby still
-has legacy top/bottom bars, difficulty controls, pie-chart decoration and Start
-ornamentation. A pre-existing raw `COUNTRY_SELECTION_CHARACTER_DESC_NAME` hover key
-also remains. Country-specific archive insignia are retained. This change is not
+had legacy top/bottom bars, difficulty controls, pie-chart decoration and Start
+ornamentation, and a raw `COUNTRY_SELECTION_CHARACTER_DESC_NAME` hover key (see the
+phase 1 section below for what has since changed). Country-specific archive insignia are retained. This change is not
 a claim of zero reachable vanilla imagery throughout the game; the broader issue
 #4/#8 visual/runtime work remains open.
+
+## Lobby restyle and hide, phase 1 (5 November 2026)
+
+User decision: restyle and hide. Of the 55 engine sprites still bound in
+`interface/frontendgamesetupview.gui` (89 references), 8 window and bar
+backgrounds are **restyled** with original navy/cyan corneredTileSpriteType tiles
+(drawn by `tools/frontend_briefing/build.py`, bound in `ac_frontend_briefing.gfx`,
+stretched by the engine to each control's own size), 4 purely decorative images
+are **hidden** behind one transparent pixel, and 43 stay on the engine. The full
+record with a reason per sprite is `tools/frontend_briefing/lobby_sprites.json`.
+
+| Disposition | Engine sprites |
+| --- | --- |
+| Restyle | `tiled_frontend_upper_bar`, `tiled_frontend_lower_bar` (lobby top and bottom bars); `tiled_window2_1b_border`, `tiled_window_1b_thin_border` (random-country, custom-settings, more-countries and dropdown windows); `tiled_header_1` (setting group headers); `tiled_generic_bg_1` (difficulty and game-rule rows); `no_frame_special_bg` (load and ironman save lists); `game_settings_bg` (multiplayer settings strip) |
+| Hide | `small_pol_piechart_frame`, `small_pol_piechart_overlay` (decoration over the engine-drawn pie chart); `load_save_top_screen`, `load_save_bottom_screen` (load and ironman-save dialog ornaments) |
+| Keep (phase 2 capture) | Buttons, checkboxes, sliders and scrollbars, whose state frames must match the engine; four fixed-size frames whose sizes need the installed game |
+| Keep (by design) | Flags and shields, runtime placeholders (idea, leader, bookmark picture), the engine-drawn pie chart, functional indicators (ironman, achievements, new content), and the already transparent window background |
+
+`style_gui.py` carries the remap used when `tools/port_1_19/restore_original_gui.py`
+rebuilds the GUI, and `--apply/--check` applies or checks it on the committed GUI.
+`validate.py` reads cornered tiles, fails if a restyled or hidden sprite is still
+bound to the engine or any engine sprite on the screen lacks a disposition, and
+keeps the layout fingerprint (`layout.sha256`) unchanged: only sprite bindings
+moved. [Lobby review](evidence/frontend-briefing/index.html) draws each tile at a
+real control size by the nine-slice rule (`render_review.py`, `--check`);
+`tools/Test-FrontendLobby.py` runs all of it in CI.
+
+The raw `COUNTRY_SELECTION_CHARACTER_DESC_NAME` hover key now lives in
+`localisation/english/replace/pu_core_l_english.yml`, defined exactly once, so it
+overrides the base game's key. **Fix applied, native confirmation pending.**
+
+Phase 2 (deferred, needs the installed game, read only):
+`python -B tools/frontend_briefing/build.py --capture-contract <game root>` writes
+`lobby_contract.json` with the engine definitions (kind, frames, size, border,
+texture size) of every kept sprite, from which buttons, checkboxes and sliders can
+be redrawn with matching frames. Everything above is offline evidence; the
+restyled lobby has not been seen in a native session (#8).
 
 ## Isolation and preservation
 

@@ -133,7 +133,94 @@ def build():
             d.line([(size*.7,size*.9),(size*.9,size*.9),(size*.9,size*.7)],fill=EDGE,width=2)
             glyph(im,kind,(size*.2,size*.2,size*.6,size*.6),GOLD if kind=='economy' else CYAN)
             save(prefix+'_'+kind,im)
+    lobby()
     (Path(__file__).parent/'assets.json').write_text(json.dumps(assets,indent=2)+'\n')
 
 
-if __name__=='__main__':build()
+# Lobby restyle (5 November 2026). Each tile replaces an engine window or bar
+# background (see lobby_sprites.json) and is bound as a corneredTileSpriteType,
+# so the engine stretches it to the control's own size; no geometry changes.
+LOBBY_TILES = {
+    # name: (width, height, border, accent)
+    'lobby_upper_bar': (128, 128, 16, 'bottom'),
+    'lobby_lower_bar': (128, 128, 16, 'top'),
+    'lobby_window': (128, 128, 16, 'corner'),
+    'lobby_thin_window': (64, 64, 8, 'none'),
+    'lobby_header': (128, 40, 8, 'bottom'),
+    'lobby_row': (128, 40, 6, 'none'),
+    'lobby_list': (64, 64, 6, 'none'),
+    'lobby_settings_bg': (128, 96, 12, 'corner'),
+}
+
+
+def lobby_tile(w, h, accent, border):
+    im = Image.new('RGBA', (w, h), NAVY if accent in ('top', 'bottom', 'corner') else PANEL)
+    d = ImageDraw.Draw(im)
+    d.rectangle((0, 0, w-1, h-1), outline=EDGE)
+    if accent == 'corner':
+        # Brackets stay inside the unstretched corner cells of the nine-slice.
+        k = border - 4
+        d.line((2, 2, k, 2), fill=CYAN, width=2); d.line((2, 2, 2, k), fill=CYAN, width=2)
+        d.line((w-1-k, h-3, w-3, h-3), fill=CYAN, width=2); d.line((w-3, h-1-k, w-3, h-3), fill=CYAN, width=2)
+    if accent == 'bottom':
+        d.line((0, h-2, w-1, h-2), fill=CYAN, width=2)
+    elif accent == 'top':
+        d.line((0, 1, w-1, 1), fill=CYAN, width=2)
+    return im
+
+
+def lobby():
+    for name, (w, h, border, accent) in LOBBY_TILES.items():
+        save(name, lobby_tile(w, h, accent, border))
+    # Hidden decorations bind to one fully transparent pixel.
+    save('lobby_hidden', Image.new('RGBA', (1, 1), (0, 0, 0, 0)))
+
+
+def capture_contract(engine, target=None):
+    """Phase 2 (needs the installed game, read only): record the engine definitions
+    of every kept lobby sprite so buttons, checkboxes and sliders can be redrawn
+    with matching frames and sizes. Writes lobby_contract.json; changes nothing else.
+    """
+    import re
+    engine = Path(engine)
+    kept = [r['sprite'] for r in json.loads((Path(__file__).parent/'lobby_sprites.json').read_text())['sprites'] if r['disposition'] == 'keep_engine']
+    found = {}
+    for gfx in sorted((engine/'interface').glob('*.gfx')):
+        text = gfx.read_text(encoding='utf-8-sig', errors='replace')
+        for match in re.finditer(r'\b(\w*[sS]priteType)\s*=\s*\{', text):
+            depth = 1; index = match.end()
+            while depth and index < len(text):
+                depth += {'{': 1, '}': -1}.get(text[index], 0); index += 1
+            body = text[match.end():index-1]
+            name = re.search(r'name\s*=\s*"?(\w+)"?', body)
+            if not name or name[1] not in kept or name[1] in found:
+                continue
+            def field(key):
+                hit = re.search(key+r'\s*=\s*"?([^"\s}]+)"?', body)
+                return hit[1] if hit else None
+            def pair(key):
+                hit = re.search(key+r'\s*=\s*\{\s*x\s*=\s*(\d+)\s*y\s*=\s*(\d+)', body)
+                return [int(hit[1]), int(hit[2])] if hit else None
+            row = dict(kind=match[1], file=gfx.relative_to(engine).as_posix(), texturefile=field('texturefile'),
+                       frames=int(field('noOfFrames') or 1), size=pair('size'), border=pair('borderSize'), effect=field('effectFile'))
+            texture = engine/(row['texturefile'] or '')
+            if row['texturefile'] and texture.is_file():
+                try:
+                    with Image.open(texture) as image:row['texture_size'] = list(image.size)
+                except OSError:
+                    row['texture_size'] = None
+            found[name[1]] = row
+    contract = dict(schema=1, engine=str(engine), sprites={name: found.get(name) for name in kept},
+                    missing=sorted(name for name in kept if name not in found))
+    target = Path(target) if target else Path(__file__).parent/'lobby_contract.json'
+    target.write_text(json.dumps(contract, indent=2)+'\n')
+    return contract
+
+
+if __name__=='__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--capture-contract', metavar='ENGINE', help='installed game root, read only (phase 2)')
+    arguments = parser.parse_args()
+    if arguments.capture_contract:capture_contract(arguments.capture_contract)
+    else:build()

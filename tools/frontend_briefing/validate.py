@@ -25,6 +25,53 @@ def layout(text):
     return hashlib.sha256(re.sub(r'\s+', '', text).encode()).hexdigest()
 
 
+def sprite_blocks(gfx):
+    """(kind, body) for every spriteType and corneredTileSpriteType, nested braces included."""
+    for match in re.finditer(r'\b(spriteType|corneredTileSpriteType)\s*=\s*\{', gfx):
+        depth = 1; index = match.end()
+        while depth:
+            depth += {'{': 1, '}': -1}.get(gfx[index], 0); index += 1
+        yield match[1], gfx[match.end():index-1]
+
+
+def mod_sprite_names():
+    names = set()
+    for path in (MOD/'interface').glob('*.gfx'):
+        names |= set(re.findall(r'name\s*=\s*"?(GFX_\w+)"?', path.read_text(encoding='utf-8-sig', errors='replace')))
+    return names
+
+
+def lobby(gui, sprites, tiles, specs, check):
+    """Every engine sprite left on the screen has a recorded disposition."""
+    record = json.loads((HERE/'lobby_sprites.json').read_text())['sprites']
+    rows = {row['sprite']: row for row in record}
+    check(len(rows) == len(record), 'Duplicate lobby sprite disposition')
+    bound = set(re.findall(r'(?:spriteType|quadTextureSprite)\s*=\s*"?(GFX_\w+)"?', gui))
+    engine = bound - mod_sprite_names()
+    for name in sorted(engine):
+        row = rows.get(name)
+        check(row is not None, 'Engine sprite without a disposition: '+name)
+        if row:check(row['disposition'] == 'keep_engine', 'Restyled or hidden sprite still bound to the engine: '+name)
+    for row in record:
+        check(row['disposition'] in ('restyle', 'hide', 'keep_engine') and len(row['reason']) > 20, 'Bad disposition '+row['sprite'])
+        if row['disposition'] == 'keep_engine':
+            check(row['sprite'] in engine, 'Kept engine sprite no longer on the screen: '+row['sprite'])
+            continue
+        check(row['sprite'] not in bound, 'Still bound: '+row['sprite'])
+        check(row['replacement'] in bound, 'Replacement not bound on the screen: '+row['replacement'])
+        if row['disposition'] == 'restyle':
+            check(row['replacement'] in tiles, 'Restyle is not a cornered tile: '+row['replacement'])
+        else:
+            check(row['replacement'] == 'GFX_ac_briefing_lobby_hidden', 'Hidden sprite not bound to the transparent sprite: '+row['sprite'])
+    for name, (tex, w, h, bx, by) in tiles.items():
+        spec = specs.get(tex)
+        check(bool(spec) and (spec['width'], spec['height']) == (w, h), 'Cornered tile size differs from its texture: '+name)
+        check(2*bx < w and 2*by < h, 'Cornered tile border leaves no centre: '+name)
+    hidden = MOD/sprites.get('GFX_ac_briefing_lobby_hidden', ('',))[0]
+    data = hidden.read_bytes() if hidden.is_file() else b''
+    check(len(data) == 132 and data[128:132] == b'\0\0\0\0', 'Hidden sprite is not one transparent pixel')
+
+
 def validate():
     errors = []
     def check(ok, message):
@@ -46,13 +93,18 @@ def validate():
     check('name = "ac_briefing_map_statistics"' not in gui, 'Unbound legacy statistics layer is still visible')
     check('name = "ac_overhaul_world_overview"' in gui, 'Independent campaign overview is missing')
     gfx = (MOD/'interface/ac_frontend_briefing.gfx').read_text()
-    sprites = {}
-    for raw in re.findall(r'spriteType\s*=\s*\{([^{}]+)\}', gfx):
+    sprites = {}; tiles = {}
+    for kind, raw in sprite_blocks(gfx):
         name = re.search(r'name\s*=\s*"([^"]+)"', raw)[1]
         check(name not in sprites, 'Duplicate sprite '+name)
         tex = re.search(r'texturefile\s*=\s*"([^"]+)"', raw)[1]
         frames = re.search(r'noOfFrames\s*=\s*(\d+)', raw)
         sprites[name] = (tex, int(frames[1]) if frames else 1)
+        if kind == 'corneredTileSpriteType':
+            size = re.search(r'size\s*=\s*\{\s*x\s*=\s*(\d+)\s*y\s*=\s*(\d+)\s*\}', raw)
+            border = re.search(r'borderSize\s*=\s*\{\s*x\s*=\s*(\d+)\s*y\s*=\s*(\d+)\s*\}', raw)
+            check(bool(size and border), 'Cornered tile without size and borderSize: '+name)
+            if size and border:tiles[name] = (tex, int(size[1]), int(size[2]), int(border[1]), int(border[2]))
     specs = {a['file']:a for a in json.loads((HERE/'assets.json').read_text())}
     for name, (tex,frames) in sprites.items():
         check(tex in specs, 'Unrecorded texture '+tex)
@@ -87,6 +139,7 @@ def validate():
         expected = record['sprite'].removeprefix('GFX_idea_') if record['kind']=='idea' else record['sprite']
         pattern = (r'\b'+record['id']+r'\s*=\s*\{\s*picture\s*=\s*'+expected+r'\b') if record['kind']=='idea' else (r'\bid\s*=\s*'+record['id']+r'\s+icon\s*=\s*'+expected+r'\b')
         check(re.search(pattern,text), 'Bookmark lost its artwork binding: '+record['id'])
+    lobby(gui, sprites, tiles, specs, check)
     for error in errors:print('FAIL:',error)
     if errors:return 1
     print(f'Briefing UI: {len(specs)} BGRA textures, {len(sprites)} sprites, 30 bookmark bindings; bounded scrolling country history; all other original geometry and controls preserved.')

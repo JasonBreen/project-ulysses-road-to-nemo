@@ -201,8 +201,13 @@ class Expansion(unittest.TestCase):
                 w.choose('ac_ucw.13',2,'ERU');self.assertNotIn('ac_ucw_mediation_pending',w.countries['ERU'].flags)
     def test_tooltip_substitutions(self):
         text=(MOD/'localisation/english/bookmarks_l_english.yml').read_text(encoding='utf-8-sig')
-        self.assertRegex(text,r'COUNTRY_SELECTION_CHARACTER_DESC_NAME:\d* "\$NAME\|Y\$"')
+        replace=(MOD/'localisation/english/replace/pu_core_l_english.yml').read_text(encoding='utf-8-sig')
+        self.assertRegex(replace,r'COUNTRY_SELECTION_CHARACTER_DESC_NAME:\d* "\$NAME\|Y\$"')
         self.assertIn('$TRAITS_DESC|$',text)
+        # Defined exactly once, in the replace folder, so it overrides the base game.
+        definitions=[path.name for path in (MOD/'localisation').rglob('*.yml')
+                     if re.search(r'(?m)^\s*COUNTRY_SELECTION_CHARACTER_DESC_NAME:',path.read_text(encoding='utf-8-sig',errors='replace'))]
+        self.assertEqual(['pu_core_l_english.yml'],definitions)
     def test_details_are_bounded_scrollable_and_controls_preserved(self):
         original=json.loads((ART/'focus_contract.json').read_text());current=load('interface/nationalfocusview.gui')
         for name in ('national_focus_detail_view','coninuous_focus_detail_view'):

@@ -3485,9 +3485,91 @@ shared_focus = {
     y = 1
 
     completion_reward = {
-		load_oob = UST_moblise_militia_focus_oob
-		add_stability = -0.1
-		add_war_support = -0.1
+		if = {
+			limit = {
+				NOT = { has_country_flag = UST_moblise_militia_oob_loaded }
+			}
+			# 4 Militia detachments x 2 infantry x 100 infantry_equipment.
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_1
+				amount = 800
+				producer = UST
+			}
+			if = {
+				limit = {
+					335 = { is_controlled_by = ROOT }
+					340 = { is_controlled_by = ROOT }
+				}
+				load_oob = UST_moblise_militia_focus_oob
+			}
+			else = {
+				if = {
+					limit = {
+						335 = { is_controlled_by = ROOT }
+					}
+					335 = {
+						create_unit = {
+							division = "name = \"Militia\" division_template = \"Militia\" start_experience_factor = 0 start_equipment_factor = 0"
+							owner = ROOT
+							allow_spawning_on_enemy_provs = no
+						}
+						create_unit = {
+							division = "name = \"Militia\" division_template = \"Militia\" start_experience_factor = 0 start_equipment_factor = 0"
+							owner = ROOT
+							allow_spawning_on_enemy_provs = no
+						}
+					}
+				}
+				else = {
+					capital_scope = {
+						create_unit = {
+							division = "name = \"Militia\" division_template = \"Militia\" start_experience_factor = 0 start_equipment_factor = 0"
+							owner = ROOT
+							allow_spawning_on_enemy_provs = yes
+						}
+						create_unit = {
+							division = "name = \"Militia\" division_template = \"Militia\" start_experience_factor = 0 start_equipment_factor = 0"
+							owner = ROOT
+							allow_spawning_on_enemy_provs = yes
+						}
+					}
+				}
+				if = {
+					limit = {
+						340 = { is_controlled_by = ROOT }
+					}
+					340 = {
+						create_unit = {
+							division = "name = \"Militia\" division_template = \"Militia\" start_experience_factor = 0 start_equipment_factor = 0"
+							owner = ROOT
+							allow_spawning_on_enemy_provs = no
+						}
+						create_unit = {
+							division = "name = \"Militia\" division_template = \"Militia\" start_experience_factor = 0 start_equipment_factor = 0"
+							owner = ROOT
+							allow_spawning_on_enemy_provs = no
+						}
+					}
+				}
+				else = {
+					capital_scope = {
+						create_unit = {
+							division = "name = \"Militia\" division_template = \"Militia\" start_experience_factor = 0 start_equipment_factor = 0"
+							owner = ROOT
+							allow_spawning_on_enemy_provs = yes
+						}
+						create_unit = {
+							division = "name = \"Militia\" division_template = \"Militia\" start_experience_factor = 0 start_equipment_factor = 0"
+							owner = ROOT
+							allow_spawning_on_enemy_provs = yes
+						}
+					}
+				}
+			}
+			set_country_flag = UST_moblise_militia_oob_loaded
+			add_stability = -0.1
+			add_war_support = -0.1
+		}
     }
     search_filters = { }
 }

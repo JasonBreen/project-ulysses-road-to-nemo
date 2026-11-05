@@ -94,3 +94,5 @@ These are not silent leftovers:
   frames. The current `frontendmainview.gui` does not reference them, so they
   were not rewired.
 - **Native rendering.** None of the rebinding was viewed in HOI4.
+
+The retained world-legacy history capture remains immutable. Its compiler now projects only the reviewed Belkan agency caption from `Bundesnachrichtendienst` to `Belkan intelligence office`; the agency icon and every other nonmilitary history field remain subject to the original comparisons. A focused regression rejects unexpected source/icon changes and verifies that the projection changes only that one name. This is a presentation repair, with no new historical claim or native acceptance.

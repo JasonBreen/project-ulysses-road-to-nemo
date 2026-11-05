@@ -46,7 +46,9 @@ GOLD = (194, 165, 97, 255)
 GRID = (18, 40, 54, 255)
 ACCENT = {"ERU": (226, 132, 104, 255), "FCU": (104, 190, 226, 255), "NEC": (148, 214, 206, 255),
           "EVA": (176, 140, 220, 255), "EMM": (126, 206, 150, 255), "AUR": (232, 186, 92, 255),
-          "OSE": (130, 168, 232, 255), "YUK": (222, 118, 112, 255)}
+          "OSE": (130, 168, 232, 255), "YUK": (222, 118, 112, 255),
+          # The Belkan War record's news scenes (accent only; no frame shapes).
+          "BLK": (190, 198, 210, 255), "UST": (120, 204, 176, 255), "GEB": (214, 176, 120, 255), "SAP": (226, 150, 160, 255)}
 SHAPES = {
     "ERU": [(30, 14), (162, 14), (178, 34), (178, 150), (150, 178), (42, 178), (14, 150), (14, 34)],
     "FCU": [(96, 10), (176, 42), (176, 140), (148, 176), (44, 176), (16, 140), (16, 42)],
@@ -191,7 +193,7 @@ def outputs():
                 relative = f"gfx/AC_content_waves/focus/{ident}.dds"
                 texture(relative, image, sprite, "focus", b.tag, id=ident, title=b.titles[i], primary=primary, secondary=secondary, arrangement=arrangement)
                 sprites.append(f'spriteType = {{ name = "{sprite}_shine" texturefile = "{relative}" }}')
-        ideas_file = parse(content[f"common/ideas/ac_{name}.txt"])
+        ideas_file = parse(content.get(f"common/ideas/ac_{name}.txt", "ideas = { country = { } }"))
         for ident, _, _ in ideas_file[0][2][0][2]:
             (primary, secondary), layout = idea_subjects(wave, ident)
             tag = OWNER_ART[ident][2] if ident in OWNER_ART else ident[:3]
@@ -201,7 +203,7 @@ def outputs():
         for tag, country in countries.items():
             image = composition(tag, *wave.themes[tag], 3).resize((100, 100), Image.Resampling.LANCZOS)
             texture(f"gfx/AC_content_waves/categories/{P}_{tag.lower()}.dds", image, f"GFX_{P}_category_{tag.lower()}", "category", tag, title=country + ": " + wave.label)
-        for category, _, entries in parse(content[f"common/decisions/ac_{name}.txt"]):
+        for category, _, entries in parse(content.get(f"common/decisions/ac_{name}.txt", "")):
             if not category.startswith(P + "_"):
                 continue    # rows added to a foreign category (the superweapon fallbacks) carry project art below
             tag = category.split("_")[-2].upper()

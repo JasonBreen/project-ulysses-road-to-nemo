@@ -90,6 +90,12 @@ def wave_files(module):
         f"common/custom_localization/ac_{name}.txt": note + "\n".join(custom),
         f"events/ac_{name}.txt": note + f"add_namespace = {wave.prefix}\n" + "\n".join(events),
     }
+    # An owner without ideas, decisions or defined texts (the Belkan War record) writes no empty files.
+    for relative, present in ((f"common/ideas/ac_{name}.txt", ideas), (f"common/decisions/categories/ac_{name}.txt", categories),
+                              (f"common/decisions/ac_{name}.txt", decisions), (f"common/custom_localization/ac_{name}.txt", custom),
+                              (f"common/scripted_triggers/ac_{name}.txt", triggers)):
+        if not present:
+            del out[relative]
     if frag["focuses"]:
         out[f"common/national_focus/ac_{name}.txt"] = note + "\n".join(frag["focuses"])
     if owner.get("ai_strategy"):

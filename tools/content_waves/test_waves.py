@@ -186,8 +186,8 @@ class Source(unittest.TestCase):
         # Aurelia: 20 narrative; C: the Yuktobanian declaration .5, the Osean Arkbird decision .6 and the peace offer .16;
         # F1: 30 narrative + the Erusean declaration .5 and ceasefire .6.
         # News: A .1/.3/.6; B .1-.4, .7-.14; C .1-.4, .7-.15, the peace .17 and the sixteen stages .20-.35;
-        # F1 .1-.4, .7-.13, the nine stages .20-.28 and .29.
-        self.assertEqual({"country_event": 27 + 16 + 22 + 20 + 3 + 32, "news_event": 3 + 12 + 30 + 21}, report["counts"])
+        # F1 .1-.4, .7-.13, the nine stages .20-.28 and .29; the Belkan War record's thirteen briefs .1-.13.
+        self.assertEqual({"country_event": 27 + 16 + 22 + 20 + 3 + 32, "news_event": 3 + 12 + 30 + 21 + 13}, report["counts"])
         for row in report["consumers"]:
             self.assertLessEqual(row["bounds"][2], 215 if row["event_type"] == "country_event" else 456)
             self.assertLessEqual(row["bounds"][3], 181 if row["event_type"] == "country_event" else 244)
@@ -334,8 +334,11 @@ class World(shared.World):
         self.focuses = {}
         self.messages = {}
         self.wars = set()
+        self.factions = {}     # tag -> faction leader, for is_in_faction_with
         for name in NAMES.values():
             for folder, library in (("scripted_effects", self.effects), ("scripted_triggers", self.triggers)):
+                if not (MOD / f"common/{folder}/ac_{name}.txt").exists():
+                    continue    # an owner without triggers (the Belkan War record) writes no file
                 for key, _, value in parse(text(f"common/{folder}/ac_{name}.txt")):
                     if key in library:
                         raise ValueError("Conflicting owner " + key)
@@ -393,6 +396,10 @@ class World(shared.World):
             elif key == "any_country":
                 answer = any(self.trigger(value, c, temp, root, context) for c in self.countries.values()
                              if any(s.owner == c.tag for s in self.states.values()))
+            elif key == "controls_state":
+                answer = self.states[int(value)].controller == context.tag
+            elif key == "is_in_faction_with":
+                answer = context.tag in self.factions and self.factions[context.tag] == self.factions.get(value)
             elif key == "any_controlled_state":
                 answer = any(self.trigger(value, s, temp, root, context) for s in self.states.values() if s.controller == context.tag)
             elif key == "is_core_of":
@@ -497,7 +504,8 @@ def world(mode="full", today=date(2006, 10, 1)):
     w = World(mode).initialize_both()
     w.today = today.toordinal()
     for name in NAMES.values():
-        w.wave_action(name, "on_startup")
+        if "on_startup" in fields(w.wave_actions[name]):
+            w.wave_action(name, "on_startup")
     for tag in EXPECTED:
         c = w.countries[tag]
         c.variables["ac_pol_capacity"] = D(40)
@@ -1443,6 +1451,112 @@ class Runtime(unittest.TestCase):
         self.tick(tainted, date(2010, 12, 30))
         self.assertNotIn("ac_cpw_appeal_made", tainted.globals)
         self.assertFalse(tainted.trigger(fields(rows["OSE_cpw_accept_appeal"])["visible"], o2))
+
+    # The Belkan War record: reference briefs on observed state ------------------------
+    def bwr_run(self, w, start, end, before_tick=None):
+        """Advance week by week from `start` to `end`, observing on Osea's weekly pulse."""
+        day = start
+        while day <= end:
+            if before_tick:
+                before_tick(w, day)
+            self.tick(w, day, "OSE", "belkan_record")
+            day += timedelta(days=7)
+        return [e for _, e, _ in w.events if e.startswith("ac_bwr.")]
+
+    def bwr_world(self, today):
+        w = self.fresh()
+        w.today = today.toordinal()
+        return w
+
+    def test_belkan_record_writes_only_its_own_flags_and_fires_each_brief_from_one_place(self):
+        effects = text("common/scripted_effects/ac_belkan_record.txt")
+        self.assertEqual(set(), {f for f in re.findall(r"set_global_flag = (\w+)", effects) if not f.startswith("ac_bwr_")})
+        self.assertNotRegex(effects, r"set_country_flag|set_variable|add_to_variable|add_ideas|add_timed_idea|clr_global_flag|transfer_state|declare_war_on")
+        for number in range(1, 14):
+            self.assertEqual(1, effects.count(f"news_event = {{ id = ac_bwr.{number} days = 1 }}"), number)
+        loc = self.loc_of("belkan_record")
+        for citation in ("1991 / 07.29", "1991 / 09.02", "1991 / 12.16", "1995 / 03.27", "1995 / 03.30", "1995 / 04.01", "1995 / 04.03",
+                         "1995 / 04.24", "1995 / 05.13", "1995 / 05.14", "1995 / 06.05", "1995 / 10.18", "1996 / 04.18", "1999 / 09.16"):
+            self.assertIn(citation, "\n".join(loc.values()), citation)
+        # Owners the archive keeps are cited in the ledger, never fired again here.
+        for date_text in ("1992 / 02.24", "1995 / 05.23", "1995 / 06.04", "1995 / 06.06"):
+            self.assertNotIn(date_text, "\n".join(loc.values()))
+        self.assertFalse((MOD / "common/scripted_triggers/ac_belkan_record.txt").exists())
+
+    def test_belkan_record_date_briefs_fire_once_inside_their_windows(self):
+        w = self.bwr_world(date(1991, 1, 4))
+        news = self.bwr_run(w, date(1991, 1, 4), date(1999, 12, 31))
+        # No war, no land sale: only the dated, state-free rows report.
+        self.assertEqual(["ac_bwr.1", "ac_bwr.2", "ac_bwr.11", "ac_bwr.12", "ac_bwr.13"], news)
+        for name in ("borders_redrawn", "model", "monte_rosa", "ustio_allies", "osean_army", "futuro_canal", "directus", "waldreich"):
+            self.assertIn(f"ac_bwr_{name}_skipped", w.globals, name)
+            self.assertNotIn(f"ac_bwr_{name}", w.globals, name)
+        self.assertNotIn("ac_bwr_directus_occupied", w.globals)
+
+    def test_belkan_record_land_sale_brief_waits_for_the_sale(self):
+        sold = self.bwr_world(date(1991, 12, 1))
+        def sell(w, day):
+            if day >= date(1992, 3, 1):
+                w.countries["BLK"].completed.add("BLK_sell_the_land")
+        news = self.bwr_run(sold, date(1991, 12, 1), date(1992, 4, 1), sell)
+        self.assertEqual(["ac_bwr.3"], news)
+        late = self.bwr_world(date(1991, 12, 1))
+        late.countries["BLK"].completed.add("BLK_sell_the_land")
+        self.bwr_run(late, date(1991, 12, 1), date(1991, 12, 14))
+        self.assertNotIn("ac_bwr_borders_redrawn", late.globals)     # never before the record's date
+        self.bwr_run(late, date(1991, 12, 21), date(1991, 12, 21))
+        self.assertIn("ac_bwr_borders_redrawn", late.globals)
+
+    def test_belkan_record_war_briefs_follow_the_observed_war(self):
+        w = self.bwr_world(date(1995, 3, 1))
+        directus = w.states[335]
+        def course(w, day):
+            if day >= date(1995, 3, 25):
+                w.globals.add("belkan_war_is_happening")
+                w.wars |= {frozenset(("BLK", "GEB")), frozenset(("BLK", "OSE"))}
+                w.factions.update(OSE="OSE", UST="OSE")
+            directus.controller = "BLK" if date(1995, 3, 28) <= day < date(1995, 5, 10) else "UST"
+            if day >= date(1995, 6, 20):
+                w.globals.discard("belkan_war_is_happening")
+                w.wars.clear()
+        news = self.bwr_run(w, date(1995, 3, 1), date(1995, 12, 31), course)
+        self.assertEqual(["ac_bwr.4", "ac_bwr.5", "ac_bwr.6", "ac_bwr.7", "ac_bwr.8", "ac_bwr.9", "ac_bwr.10", "ac_bwr.11"], news)
+        self.assertIn("ac_bwr_directus_occupied", w.globals)
+        # Nothing the briefs observe was changed by them.
+        self.assertEqual(("UST", "UST"), (directus.owner, directus.controller))
+
+    def test_belkan_record_needs_the_state_it_reports(self):
+        # Ustio never occupied and never capitulated: no occupation or liberation brief.
+        held = self.bwr_world(date(1995, 3, 1))
+        def war(w, day):
+            w.globals.add("belkan_war_is_happening")
+            w.wars.add(frozenset(("BLK", "OSE")))
+        news = self.bwr_run(held, date(1995, 3, 1), date(1996, 1, 10), war)
+        self.assertNotIn("ac_bwr.5", news)
+        self.assertNotIn("ac_bwr.9", news)
+        self.assertNotIn("ac_bwr.4", news)      # no war with Gebet
+        self.assertNotIn("ac_bwr.6", news)      # Ustio in no faction with Osea
+        self.assertTrue({"ac_bwr_monte_rosa_skipped", "ac_bwr_directus_skipped", "ac_bwr_model_skipped"} <= held.globals)
+        # A capitulated Ustio is reported as the occupation.
+        fallen = self.bwr_world(date(1995, 3, 1))
+        def capitulate(w, day):
+            war(w, day)
+            w.countries["UST"].capitulated = day >= date(1995, 4, 10)
+        self.assertIn("ac_bwr.5", self.bwr_run(fallen, date(1995, 3, 1), date(1995, 4, 30), capitulate))
+        # Without Belka the war rows never report, even with the flag set.
+        absent = self.bwr_world(date(1995, 3, 1))
+        for state in absent.states.values():
+            if state.owner == "BLK":
+                state.owner = state.controller = "OSE"
+        news = self.bwr_run(absent, date(1995, 3, 1), date(1995, 12, 31), lambda w, d: w.globals.add("belkan_war_is_happening"))
+        self.assertFalse({"ac_bwr.4", "ac_bwr.5", "ac_bwr.8", "ac_bwr.10"} & set(news))
+
+    def test_belkan_record_late_save_reports_nothing_already_past(self):
+        w = self.bwr_world(date(1996, 6, 1))
+        news = self.bwr_run(w, date(1996, 6, 1), date(1999, 12, 31))
+        self.assertEqual(["ac_bwr.13"], news)
+        for name in ("kestrel_ordered", "cinigrad", "borders_redrawn", "model", "waldreich", "espada", "tyler"):
+            self.assertIn(f"ac_bwr_{name}_skipped", w.globals, name)
 
     # Wave F1: the Lighthouse War owner -------------------------------------------------
     FOREIGN = ("ac_ucw_", "ac_sp_", "ac_release_", "ac_fe_", "ac_snc_")

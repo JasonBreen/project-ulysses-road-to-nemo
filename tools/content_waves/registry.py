@@ -6,6 +6,6 @@ or TREES (tag -> new tree ID). An owner-only module (no branches) instead
 declares COUNTRIES (tag -> name, for category art) and may add EVENT_ART for
 its own country events.
 """
-from content_waves import aurelia, circum_pacific, estovakia, free_erusea, lighthouse, nordennavic
+from content_waves import aurelia, belkan_record, circum_pacific, estovakia, free_erusea, lighthouse, nordennavic
 
-MODULES = (free_erusea, nordennavic, estovakia, aurelia, circum_pacific, lighthouse)
+MODULES = (free_erusea, nordennavic, estovakia, aurelia, circum_pacific, lighthouse, belkan_record)

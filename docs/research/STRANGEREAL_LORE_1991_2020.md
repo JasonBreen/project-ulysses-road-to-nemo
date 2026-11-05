@@ -36,11 +36,11 @@ squadrons, ships and aircraft stay text; places are never mapped to states.
 
 | Disposition | Claims | Meaning |
 | --- | ---: | --- |
-| implemented | 114 | a ledger row cites it and IDs implement it |
+| implemented | 125 | a ledger row cites it and IDs implement it |
 | inherited mod content | 24 | the inherited archive covers it without a sourced ledger row; mod provenance |
 | reference only | 10 | a ledger names it; nothing is scripted |
 | pending | 47 | a planned wave owns it (wave in brackets) |
-| not covered | 43 | no ledger row and no script; candidates for later work |
+| not covered | 32 | no ledger row and no script; candidates for later work |
 | out of scope | 54 | after 2020, or a non-Strangereal title |
 
 ## The official record by era
@@ -49,11 +49,11 @@ squadrons, ships and aircraft stay text; places are never mapped to states.
 
 | Source | Claim | Disposition |
 | --- | --- | --- |
-| *Chronicle, 1991 / 07.29* | On 29 July 1991 the Osean Maritime Defense Force orders the construction of the Kestrel, the seventh Hubert-class aircraft carrier. | not covered |
+| *Chronicle, 1991 / 07.29* | On 29 July 1991 the Osean Maritime Defense Force orders the construction of the Kestrel, the seventh Hubert-class aircraft carrier. | implemented |
 | *Chronicle, 1991 / 08.16* | On 16 August 1991 the Great Lakes Resource Development Company, jointly financed by Osea and Belka, is discovered to have been covering up that it has been operating at a loss. | inherited mod content |
 | *Chronicle, 1991 / 08.29* | On 29 August 1991 Belka cheaply sells territory in its north to FATO, sells its eastern territory to neighboring eastern nations, and cedes northern islands and the Great Lakes region to the Osean Federation. | inherited mod content |
-| *Chronicle, 1991 / 09.02* | On 2 September 1991 Scinfaxi-class submarines are announced to the world at a political convention in Cinigrad, Yuktobania; Minister of Foreign Affairs Howards of the Osean Federation belittles Yuktobania's announcement of a new class of submarine. | not covered |
-| *Chronicle, 1991 / 12.16* | On 16 December 1991 Belkan borders are redrawn. | not covered |
+| *Chronicle, 1991 / 09.02* | On 2 September 1991 Scinfaxi-class submarines are announced to the world at a political convention in Cinigrad, Yuktobania; Minister of Foreign Affairs Howards of the Osean Federation belittles Yuktobania's announcement of a new class of submarine. | implemented |
+| *Chronicle, 1991 / 12.16* | On 16 December 1991 Belkan borders are redrawn. | implemented |
 | *Chronicle, 1992 / 02.24* | On 24 February 1992 the Belkan Liberal Democratic Party wins a single-party majority. | inherited mod content |
 | *Chronicle, 1994 / 10.04* | On 4 October 1994 the asteroid 1994XF04 is discovered by researchers at Seals Bridge University. | reference only |
 | *Chronicle, 1994 / 12.10* | On 10 December 1994 the International Astronomical Union announces that the asteroid Ulysses will pass close to Earth in the near future, with a chance of impacting and causing great devastation. | implemented |
@@ -74,21 +74,21 @@ squadrons, ships and aircraft stay text; places are never mapped to states.
 | Source | Claim | Disposition |
 | --- | --- | --- |
 | *Chronicle, 1995 / 03.25* | The Belkan War breaks out on 25 March 1995. | inherited mod content |
-| *Chronicle, 1995 / 03.27* | On 27 March 1995, on Belka's eastern front, there is an assault on Model, a border city in Gebet. | not covered |
+| *Chronicle, 1995 / 03.27* | On 27 March 1995, on Belka's eastern front, there is an assault on Model, a border city in Gebet. | implemented |
 | *Chronicle, 1995 / 03.30* | On 30 March 1995 nearly all of the Republic of Ustio falls under Belkan control, and the Belkan Air Force clashes with the Ustio Air Force over Monte Rosa. | inherited mod content |
 | *Chronicle, 1995 / 04.01* | On 1 April 1995 Ustio enters an alliance with Osea and begins its resistance. | inherited mod content |
 | *Chronicle, 1995 / 04.03* | On 3 April 1995 the Osean Army begins its resistance. | inherited mod content |
-| *Chronicle, 1995 / 04.24* | On 24 April 1995 the Allied Forces enact Offensive Campaign No. 4101 to drive the Belkans from Futuro Canal and secure a marine supply line; the Osean aircraft carrier Kestrel undergoes a test voyage. | not covered |
-| *Chronicle, 1995 / 05.13* | On 13 May 1995 the Allied Forces liberate Ustio's capital Directus from Belka. | not covered |
-| *Chronicle, 1995 / 05.14* | On 14 May 1995 the independent country is restored to its prewar state. | not covered |
+| *Chronicle, 1995 / 04.24* | On 24 April 1995 the Allied Forces enact Offensive Campaign No. 4101 to drive the Belkans from Futuro Canal and secure a marine supply line; the Osean aircraft carrier Kestrel undergoes a test voyage. | implemented |
+| *Chronicle, 1995 / 05.13* | On 13 May 1995 the Allied Forces liberate Ustio's capital Directus from Belka. | implemented |
+| *Chronicle, 1995 / 05.14* | On 14 May 1995 the independent country is restored to its prewar state. | implemented |
 | *Chronicle, 1995 / 05.17* | On 17 May 1995 Belka's V2 development plans for a mass retaliation system are discovered and the Allied Forces decide to advance into Belka. | implemented |
 | *Chronicle, 1995 / 05.23* | On 23 May 1995 the Allied Forces destroy Excalibur. | inherited mod content |
 | *Chronicle, 1995 / 06.01* | On 1 June 1995 the Allied Forces bomb the Belkan industrial city of Hoffnung. | not covered |
 | *Chronicle, 1995 / 06.04* | On 4 June 1995 southern cities in Belka declare themselves demilitarized "open cities." | inherited mod content |
-| *Chronicle, 1995 / 06.05* | On 5 June 1995, under the heading The Battle of Waldreich, Wizard Squadron and Sorcerer Squadron of the Osean Air Defense Force leave the front line, and contact with them is lost. | not covered |
+| *Chronicle, 1995 / 06.05* | On 5 June 1995, under the heading The Battle of Waldreich, Wizard Squadron and Sorcerer Squadron of the Osean Air Defense Force leave the front line, and contact with them is lost. | implemented |
 | *Chronicle, 1995 / 06.06* | On 6 June 1995 the Belkan Army uses seven nuclear devices in the Waldreich Mountains, and Larry Foulke of the Ustio Air Force's Galm Team disappears. | inherited mod content |
 | *Chronicle, 1995 / 06.20* | On 20 June 1995 a treaty is signed in Lumen and the Belkan War ends. | reference only |
-| *Chronicle, 1995 / 10.18* | On 18 October 1995 Espada Team disappears from a base belonging to the Kingdom of Sapin. | not covered |
+| *Chronicle, 1995 / 10.18* | On 18 October 1995 Espada Team disappears from a base belonging to the Kingdom of Sapin. | implemented |
 | *Chronicle, 1995 / 12.25* | On 25 December 1995 A World With No Boundaries launches a coup. | inherited mod content |
 | *Chronicle, 1995 / 12.31* | On 31 December 1995 the Allied Forces attack V2 launch facilities at Avalon Dam Fortress and defeat the rebellion; Robert Tyler, commander of the FCU Army Southern District, eliminates a rebel base in the Skully Islands in southern Usea, and Unified Command defeats rebel forces in the Skully Islands thanks to the actions of Scarface Squadron. | implemented |
 
@@ -107,14 +107,14 @@ squadrons, ships and aircraft stay text; places are never mapped to states.
 | Source | Claim | Disposition |
 | --- | --- | --- |
 | *Chronicle, 1996 / 01.17* | Waldemarr Rald, head of the Rald Faction, is overthrown in Belka. Lieutenant General Blauvelt of the 6th Air Division leads a reformation of the Belkan Air Force. | implemented |
-| *Chronicle, 1996 / 04.18* | The FCU Army announces that Commander Robert Tyler (54) will replace the Riass Armed Forces Chief of Staff who suddenly passed away on March 20. | not covered |
+| *Chronicle, 1996 / 04.18* | The FCU Army announces that Commander Robert Tyler (54) will replace the Riass Armed Forces Chief of Staff who suddenly passed away on March 20. | implemented |
 | *Chronicle, 1996 / 04.20* | The President of the FCU announces globally that Ulysses will impact Earth and announces plans to counter it. Richard Payne, head of the FCU Department of Defense, orders all personnel under FCU command to temporarily return home. FCU Secretary of State Stateson explains to UTO headquarters how a National Missile Defense (NMD) system could be used to protect against the asteroid's impact and seeks the understanding of the allied nations. An assassination attempt is made on the President of Osea. | implemented |
 | *Chronicle, 1997 / 05.30* | Rebellion breaks out. A coup d'état is carried out all across Usea. Unified Command defeats rebel forces thanks to the efforts of Scarface 1. | implemented |
 | *Chronicle, 1998 / 06.19* | The FCU completes Stonehenge in a desert region of the neutral country San Salvacion. Former top pilots from the Belkan Air Force are hired by various countries and work as aggressor squadrons. The Erusean Air and Space Administration begins development of the X-02. | implemented |
 | *Chronicle, 1998 / 07.29* | The International Astronomical Union's (IAU) official monthly damage estimate for the impact of the asteroid Ulysses is revised to include the possibility of fragments falling on the eastern portion of the Anean continent. | implemented |
 | *Chronicle, 1998 / 09.20* | Construction of a Ulysses evacuation shelter begins in the castle in the capital of Emmeria. | implemented |
 | *Chronicle, 1999 / 07.08* | Ulysses passes through Earth's Roche limit. | implemented |
-| *Chronicle, 1999 / 09.16* | The Osean Maritime Defense Force aircraft carrier Kestrel goes into commission. | not covered |
+| *Chronicle, 1999 / 09.16* | The Osean Maritime Defense Force aircraft carrier Kestrel goes into commission. | implemented |
 | *Chronicle, 1999 / 10.08* | Osea and Yuktobania cooperate to convert the Arkbird into a platform for clearing debris from satellite orbits. | implemented |
 
 **Countries and organisations:** allied nations (Chronicle, 1996 / 04.20); Belkan Air Force (Chronicle, 1996 / 01.17, Chronicle, 1998 / 06.19); Emmeria (Chronicle, 1998 / 09.20); Erusean Air and Space Administration (Chronicle, 1998 / 06.19); FCU (Chronicle, 1996 / 04.20, Chronicle, 1998 / 06.19); FCU Army (Chronicle, 1996 / 04.18); FCU Department of Defense (Chronicle, 1996 / 04.20); International Astronomical Union (IAU) (Chronicle, 1998 / 07.29); Osea (Chronicle, 1996 / 04.20, Chronicle, 1999 / 10.08); Osean Maritime Defense Force (Chronicle, 1999 / 09.16); Rald Faction (Chronicle, 1996 / 01.17); Riass Armed Forces (Chronicle, 1996 / 04.18); San Salvacion (neutral country) (Chronicle, 1998 / 06.19); Unified Command (Chronicle, 1997 / 05.30); UTO (Chronicle, 1996 / 04.20); various countries (Chronicle, 1998 / 06.19); Yuktobania (Chronicle, 1999 / 10.08).

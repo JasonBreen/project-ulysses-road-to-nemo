@@ -200,7 +200,8 @@ class FocusScreen(unittest.TestCase):
         for tree in ('ac_exp_fcu_opening','ac_ucw_fcu_tree'):
             self.assertIn(tree,trees)
             self.assertFalse([pair for pair in actual if pair[0]==tree])
-        self.assertEqual((10.,2.),trees['belka_start']['ac_belkan_industrial_mobilization'])
+        self.assertEqual((15.,2.),trees['belka_start']['ac_belkan_industrial_mobilization'])
+        self.assertEqual((15.,2.),trees['belka_dlp_pre_war']['ac_belkan_industrial_mobilization'])
         for suffix,y in (('settlement',3.),('legacy',4.)):
             self.assertEqual((4.,y),trees['ac_belkan_postwar']['ac_postwar_unclassified_'+suffix])
         for suffix in ('brief','costs','demobilize','loyalty','commitments','legacy'):

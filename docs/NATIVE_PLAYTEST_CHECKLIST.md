@@ -32,7 +32,7 @@ Routes, conditions and console steps for each branch are in
 ## Outcome and postwar continuity
 
 - [ ] Exercise conventional victory, Wacht am Wal, and defeat outcomes using controlled saves.
-- [ ] Confirm `world_event.2` and `ac_continuation.1` hand off once and load `ac_belkan_postwar`.
+- [ ] Play Belka until one war outcome flag fires. Confirm `world_event.2` never fires, `ac_continuation.1` hands off once from that flag, and `ac_belkan_postwar` loads. Confirm `error.log` is clean of new handoff errors.
 - [ ] Complete reconstruction, recovery budget, and demobilization focuses.
 - [ ] Exercise victory and defeat settlement branches; confirm the unavailable branch remains gated.
 - [ ] Complete both legacy outcomes and verify ideas, flags, stability, and economy state persist after save/reload.

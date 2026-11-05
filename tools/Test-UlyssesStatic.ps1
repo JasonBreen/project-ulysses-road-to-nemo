@@ -35,10 +35,29 @@ foreach ($property in @(
 }
 
 $continuationEvent = Join-Path $ModRoot 'events\ac_world_events.txt'
+$outcomeEffect = Join-Path $ModRoot 'common\scripted_effects\ac_campaign_effects.txt'
+$belkaEvents = Join-Path $ModRoot 'events\Belka.txt'
+$wonFocus = Join-Path $ModRoot 'common\national_focus\BLK_war_won.txt'
 if (-not (Test-Path -LiteralPath $continuationEvent -PathType Leaf)) {
     [void]$failures.Add('events/ac_world_events.txt is missing')
-} elseif ((Get-Content -LiteralPath $continuationEvent -Raw) -notmatch '(?s)id\s*=\s*world_event\.2.*?set_global_flag\s*=\s*ac_continuation_active') {
-    [void]$failures.Add('world_event.2 does not set ac_continuation_active')
+} else {
+    $worldEventText = Get-Content -LiteralPath $continuationEvent -Raw
+    if ($worldEventText -match '(?s)id\s*=\s*world_event\.2.*?country_event\s*=\s*\{\s*id\s*=\s*ac_continuation\.1') {
+        [void]$failures.Add('world_event.2 still dispatches ac_continuation.1')
+    }
+    if ($worldEventText -notmatch '(?s)id\s*=\s*world_event\.2.*?hidden\s*=\s*yes') {
+        [void]$failures.Add('world_event.2 is not a hidden retired demo popup')
+    }
+}
+if (-not (Test-Path -LiteralPath $outcomeEffect -PathType Leaf)) {
+    [void]$failures.Add('ac_campaign_effects.txt is missing')
+} elseif ((Get-Content -LiteralPath $outcomeEffect -Raw) -notmatch '(?s)ac_dispatch_belkan_war_outcome\s*=\s*\{.*?set_global_flag\s*=\s*ac_continuation_active.*?id\s*=\s*ac_continuation\.1') {
+    [void]$failures.Add('ac_dispatch_belkan_war_outcome does not hand off through ac_continuation.1')
+}
+foreach ($scheduled in @($belkaEvents, $wonFocus)) {
+    if ((Test-Path -LiteralPath $scheduled -PathType Leaf) -and ((Get-Content -LiteralPath $scheduled -Raw) -match 'id\s*=\s*world_event\.2')) {
+        [void]$failures.Add("$(Split-Path -Leaf $scheduled) still schedules world_event.2")
+    }
 }
 
 $report.Summary.PSObject.Properties | ForEach-Object { '{0}={1}' -f $_.Name, $_.Value }

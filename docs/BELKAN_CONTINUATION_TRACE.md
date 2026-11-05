@@ -2,6 +2,10 @@
 
 This is a static control-flow trace from the preserved archive. It does not prove that the branch is reachable in-game.
 
+## Current contract
+
+The archive calls below are historical. Live Belkan outcome paths no longer schedule `world_event.2`. `belka_dlp_won.9`, `belka_wacht_am_wal.8`, and `belka_dlp_lost.7` call `ac_dispatch_belkan_war_outcome`, which fires `ac_continuation.1` only when `belka_won_belkan_war`, `belka_won_belkan_war_wacht_am_wal`, or `belka_lost_belkan_war` is already set. `belka_dlp_lost.7` sets the defeat flag only after `ac_postwar_wait_for_defeat_tree`. That glue is provisional gameplay. Native HOI4 reachability is untested.
+
 ## Established flow
 
 - `common/national_focus/BLK_war_won.txt` starts the Belkan victory branch with `BLK_war_won`, whose completion fires `belka_dlp_won.1`.

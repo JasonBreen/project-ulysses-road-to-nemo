@@ -11,3 +11,26 @@ ac_clear_belkan_campaign_ideas = {
 	clr_country_flag = ac_campaign_stage_two_pending
 	clr_country_flag = ac_campaign_stage_three_pending
 }
+
+# Provisional gameplay glue. Call from Belka after one existing war-outcome
+# flag is already set: belka_won_belkan_war, belka_won_belkan_war_wacht_am_wal,
+# or belka_lost_belkan_war. ac_continuation.1 consumes that flag. This effect
+# does not fire world_event.2, choose a border, or add postwar lore.
+ac_dispatch_belkan_war_outcome = {
+	if = {
+		limit = {
+			original_tag = BLK
+			NOT = { has_country_flag = ac_belkan_outcome_handoff_pending }
+			NOT = { has_global_flag = ac_postwar_contract_started }
+			OR = {
+				has_global_flag = belka_won_belkan_war
+				has_global_flag = belka_won_belkan_war_wacht_am_wal
+				has_global_flag = belka_lost_belkan_war
+			}
+		}
+		set_country_flag = ac_belkan_outcome_handoff_pending
+		set_global_flag = ac_continuation_active
+		clr_global_flag = ac_postwar_wait_for_defeat_tree
+		country_event = { id = ac_continuation.1 days = 1 }
+	}
+}

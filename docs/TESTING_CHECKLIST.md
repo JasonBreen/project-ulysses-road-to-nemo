@@ -9,6 +9,15 @@ this task. Its evidence is limited to offline static contract, path-reference,
 repository, economy, and no-vanilla checks. The checklist below is the required
 native handoff, not a claim that any item has passed on this branch.
 
+## Belkan War outcome reachability (native, not run)
+
+Static wiring only: victory (`belka_dlp_won.9`), Wacht am Wal (`belka_wacht_am_wal.8`), and the inherited defeat tree (`belka_dlp_lost.7`) call `ac_dispatch_belkan_war_outcome`. That effect requires one of `belka_won_belkan_war`, `belka_won_belkan_war_wacht_am_wal`, or `belka_lost_belkan_war`, then fires `ac_continuation.1`. `world_event.2` is not scheduled from those paths. These mechanics are provisional gameplay.
+
+- [ ] Play Belka from the 1 Jan 1991 bookmark until a war outcome flag fires (`belka_won_belkan_war`, `belka_won_belkan_war_wacht_am_wal`, or `belka_lost_belkan_war`).
+- [ ] Confirm `ac_continuation.1` loads `ac_belkan_postwar` for that flag, and confirm `world_event.2` never fires.
+- [ ] Confirm `error.log` has no new parser errors from the outcome handoff.
+- [ ] Do not record this item as passed from static checks. Native HOI4 was not launched for this change.
+
 ## Runtime results — 2026-10-17, HOI4 1.19.3 (Operation Postern), mod 0.3-dev, debug mode, mod enabled alone
 
 - [x] Main menu loads and stays stable (no GPU device-removed crash) — original Project Ulysses menu.

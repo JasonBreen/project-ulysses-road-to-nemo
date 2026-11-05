@@ -40,3 +40,11 @@ Current continuation slice: the former demo handoff now consumes conventional vi
 11. **Canon ledger and Joker 1 compilation.** Collect primary Project Aces citations for lore-sensitive claims ([CANON_POLICY.md](CANON_POLICY.md), [CANON_LEDGER.md](CANON_LEDGER.md)) and the supplied Joker 1 source material separately; do not invent missing dates or future events.
 12. **Economy/IDE integration.** Review the separate economy model and portable workspace work, then integrate only its documented IDs and validation assumptions.
 13. **Keep static validation green.** Run `tools/Test-UlyssesStatic.ps1` before every runtime test; CI runs it on every push.
+
+## Belkan outcome reachability (static, 2026-11-05)
+
+Conventional victory, Wacht am Wal, and the inherited defeat tree now hand off without scheduling `world_event.2`. `belka_dlp_won.9` runs after `belka_won_belkan_war`. `belka_wacht_am_wal.8` runs after `belka_won_belkan_war_wacht_am_wal`. `belka_dlp_lost.7` sets `belka_lost_belkan_war` only when `ac_postwar_wait_for_defeat_tree` is set, so the inherited lost tree still plays. Each calls `ac_dispatch_belkan_war_outcome`, which fires the existing `ac_continuation.1` handler. That handler loads `ac_belkan_postwar` and the Ustio handoff it already contained. This is provisional gameplay. No new postwar lore was added.
+
+Native check, not run: play Belka from 1 Jan 1991 until one of those outcome flags fires. Confirm `world_event.2` never fires and `error.log` has no new handoff errors. Static wiring is not a native pass.
+
+`belka_dlp_war.103` still has no natural caller. Its title says Wacht am Waldreich is beginning, while its effects are a defeat peace. It now calls the same handoff if it is fired, and it was not given a new caller. `belka_wacht_am_wal.4` and `.7` still have no scripted peace. Both need an owner decision before anyone writes an ending.

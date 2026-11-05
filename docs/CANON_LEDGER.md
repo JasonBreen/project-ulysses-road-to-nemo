@@ -88,6 +88,12 @@ Details, affected files and validation are in [CONTENT_WAVES_A_D.md](CONTENT_WAV
 
 Details are in [CONTENT_WAVES_B_AUR.md](CONTENT_WAVES_B_AUR.md).
 
+## Belkan War outcome handoff (static, 2026-11-05)
+
+| Claim or content family | Source layer | Current evidence | Status / required action |
+| --- | --- | --- | --- |
+| Conventional victory, Wacht am Wal, and the inherited defeat tree hand off without the demo popup | Provisional gameplay on mod-provenance flags. Not an official postwar settlement. | Flags `belka_won_belkan_war`, `belka_won_belkan_war_wacht_am_wal`, `belka_lost_belkan_war`. Effect `ac_dispatch_belkan_war_outcome`. Event `ac_continuation.1`. Trees `ac_belkan_postwar` and existing Ustio reload `ac_ustio.1`. | Statically wired. Belka, Ustio, focus, decision, on-action, and news paths no longer schedule `world_event.2`. The defeat flag is set at `belka_dlp_lost.7` only after `ac_postwar_wait_for_defeat_tree`. No new borders. Native HOI4 untested. `belka_dlp_war.103` still has no natural caller, and its title disagrees with its defeat effects. Wacht failure events `.4` and `.7` still have no scripted peace. |
+
 ## 2026-11-03 Wave C: the Circum-Pacific War
 
 | Claim or content family | Source layer | Current evidence | Status / required action |

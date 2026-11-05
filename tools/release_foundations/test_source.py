@@ -52,6 +52,26 @@ class Source(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'Protected ordered',msg=mutation):source_contract.validate_event_operations({relative:render(candidate)})
     def test_generated_lifecycle_and_maintenance_match_exact_text(self):
         for relative,text in (author.outputs()|physical.outputs()|leaders.outputs()).items():self.assertEqual(text,(MOD/relative).read_text(encoding='utf-8-sig'),relative)
+    def test_reviewed_outcome_handoffs_reject_missing_moved_extra_and_changed_effects(self):
+        from script import render
+        relative='events/Belka.txt'
+        original=parse((MOD/relative).read_text(encoding='utf-8-sig'))
+        def option(nodes,ident):
+            body=next(v for k,_,v in nodes if k=='country_event'and get(v,'id')==ident)
+            return next(v for k,_,v in body if k=='option')
+        for mutation in ('missing','moved','extra_reward','duplicate','defeat_guard'):
+            candidate=copy.deepcopy(original)
+            selected=option(candidate,'belka_dlp_war.103')
+            if mutation=='missing':selected.pop()
+            elif mutation=='moved':
+                handoff=selected.pop();next(v for k,_,v in selected if k=='SBK').append(handoff)
+            elif mutation=='extra_reward':selected[-1][2].append(['add_political_power','=','1'])
+            elif mutation=='duplicate':selected.append(copy.deepcopy(selected[-1]))
+            else:
+                selected=option(candidate,'belka_dlp_lost.7')
+                gate=get(get(selected[-1][2],'if'),'limit');gate.pop()
+            with self.assertRaisesRegex(ValueError,'Protected ordered',msg=mutation):
+                source_contract.validate_event_operations({relative:render(candidate)})
     def test_network_edges_are_existing_owned_land_geometry_and_never_replace_a_rail(self):
         defs,graph,_,_,_=topology();intake=json.loads((HERE/'intake.json').read_text());data=physical.contract()['networks'];old=set()
         for line in (MOD/'map/railways.txt').read_text().splitlines():

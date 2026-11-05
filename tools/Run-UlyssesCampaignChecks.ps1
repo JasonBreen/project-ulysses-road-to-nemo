@@ -51,6 +51,11 @@ Invoke-CheckedCommand 'Ustio continuity regressions' { & $pythonHost (Join-Path 
 Write-Host '== Project Ulysses native compatibility contracts ==' -ForegroundColor Cyan
 Invoke-CheckedCommand 'Native compatibility contracts' { & $pythonHost (Join-Path $PSScriptRoot 'Test-NativeCompatibilityContracts.py') --mod-root $ModRoot }
 
+Write-Host '== Project Ulysses Belkan native-evidence regressions ==' -ForegroundColor Cyan
+Invoke-CheckedCommand 'Belkan native-evidence regressions' {
+    & $pythonHost -B -m unittest discover -s (Join-Path $PSScriptRoot 'belkan_balance') -p 'test_*.py' -v
+}
+
 Write-Host '== Project Ulysses static validation ==' -ForegroundColor Cyan
 Invoke-CheckedCommand 'Static validation' { & $scriptHost -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'Test-UlyssesStatic.ps1') -ModRoot $ModRoot }
 

@@ -18,7 +18,9 @@ Routes, conditions and console steps for each branch are in
 
 - [ ] Complete `ac_belkan_prewar_briefing` and each of the three preparation branches.
 - [ ] Confirm the ultimatum and council focuses become reachable in the intended order.
-- [ ] Owner note, not yet run: let `belka.13` fire while `ac_belkan_prewar_briefing` is unfinished. `belka_dlp_pre_war` does not mount that focus or its children; `belka_start` does. Record whether the chain drops and whether the War Council is stranded. Do not treat the file reading as a native pass.
+- [ ] Repeat the natural `belka.13.a` election swap before selecting `ac_belkan_prewar_briefing`, while it is in progress, and after completion. This is the sole scripted load of `belka_dlp_pre_war` and uses `keep_completed = yes`; the war-outcome handoff instead loads `ac_belkan_postwar`.
+- [ ] Confirm the same briefing chain mounted on both prewar trees stays visible without duplicates or lost completion. Verify that `BLK_the_crisis_continues`, completed on the natural route but not remounted on the DLP tree, still satisfies the briefing prerequisite and that the inherited relative-position anchor renders correctly.
+- [ ] Save/reload around the election swap, complete the remaining preparation chain, and confirm `ac_campaign_prepared` and `ac_belkan_war_council` remain reachable. The earlier missing-mount note was superseded by merged PR #65; this [static audit](NEXT_TASKS.md#dlp-election-tree-swap-and-briefing-continuity) does not establish a native pass.
 - [ ] Confirm the War Council decision calls the existing `belka_dlp_war.1` chain exactly once.
 - [ ] Save/reload before the war-start decision and verify the flags and focus progress persist.
 

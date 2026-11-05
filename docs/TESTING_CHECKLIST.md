@@ -17,7 +17,9 @@ Static wiring only: victory (`belka_dlp_won.9`), Wacht am Wal (`belka_wacht_am_w
 - [ ] Confirm `ac_continuation.1` loads `ac_belkan_postwar` for that flag, and confirm `world_event.2` never fires.
 - [ ] Confirm `error.log` has no new parser errors from the outcome handoff.
 - [ ] Do not record this item as passed from static checks. Native HOI4 was not launched for this change.
-- [ ] Owner note, not yet run: `belka.13` loads `belka_dlp_pre_war`, which lists only `BLK_dlp_victory`. `ac_belkan_prewar_briefing` and its children are mounted on `belka_start`. After the swap, confirm whether an unfinished prewar chain disappears and whether `ac_belkan_war_council` can still be reached. Static reading is not a pass. No focus-tree edit was made for this note.
+- [ ] Test the DLP election separately from the outcome handoff: `belka.13.a` is the only scripted load of `belka_dlp_pre_war`, with `keep_completed = yes`; it follows `belka.12.a` after 35 days. Confirm this prewar swap does not substitute for the later `ac_belkan_postwar` handoff.
+- [ ] Repeat the natural election before selecting `ac_belkan_prewar_briefing`, while it is in progress, and after completion. Both `belka_start` and `belka_dlp_pre_war` now mount the same briefing ID following merged PR #65. Verify the chain remains visible without duplicates or lost completion, and that the completed `BLK_the_crisis_continues` prerequisite is retained even though the crisis branch is not remounted. Check the briefing's position relative to that inherited anchor.
+- [ ] Finish the briefing's children through `ac_belkan_council_mandate`, confirm `ac_campaign_prepared` and `ac_belkan_war_council` are reachable, and save/reload around the election swap. These items remain native-unrun; the [static load/mount audit](NEXT_TASKS.md#dlp-election-tree-swap-and-briefing-continuity) is not a pass.
 
 ## Runtime results — 2026-10-17, HOI4 1.19.3 (Operation Postern), mod 0.3-dev, debug mode, mod enabled alone
 

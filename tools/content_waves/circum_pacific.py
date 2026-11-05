@@ -26,8 +26,12 @@ Contract (docs/PACIFIC_NATIONAL_CONTINUATIONS.md): the owner has its own
 calendar and declarations; the principal pair and the immediate participant set
 are inspected for pre-existing wars; third-party entry permanently moves the
 crisis to external observation; factions or guarantees alone never veto the
-declaration; there is no scripted white peace; end news follows actual
-cessation, never the 31 December anchor or an assumed victory.
+declaration; end news follows actual cessation, never the 31 December anchor or
+an assumed victory. The first owner scripted no peace. Content-plan decision 6
+(5 November 2026) adds one earned route: after the joint appeal to disarm, a
+principal holding its own verification record may offer peace on the appeal's
+terms, the other principal decides, and the owner's only ``white_peace`` writes
+its state only if the engine actually ended the war.
 """
 from content_waves.framework import Wave, block, guard
 
@@ -118,6 +122,9 @@ def owner():
                                               "OR = { has_war_with = OSE has_war_with = YUK } }")
     triggers["ac_cpw_osean_foothold"] = "country_exists = OSE OSE = { any_controlled_state = { is_core_of = YUK } }"
     triggers["ac_cpw_arkbird_available"] = "has_global_flag = ac_sp_arkbird_complete NOT = { has_global_flag = ac_cpw_arkbird_lost }"
+    # Decision 6: the earned peace on the appeal's terms (provisional gameplay).
+    triggers["ac_cpw_peace_can_offer"] = ("ac_cpw_war_running = yes ac_cpw_pair_at_war = yes has_global_flag = ac_cpw_appeal_made "
+                                          "NOT = { has_global_flag = ac_cpw_peace_made } NOT = { has_global_flag = ac_cpw_peace_not_made }")
     triggers["ac_cpw_principal_fallen"] = ("OR = { NOT = { country_exists = OSE } NOT = { country_exists = YUK } has_global_flag = ac_cpw_ose_fallen "
                                            "has_global_flag = ac_cpw_yuk_fallen OSE = { has_capitulated = yes } YUK = { has_capitulated = yes } }")
 
@@ -195,6 +202,8 @@ def owner():
               "set_global_flag = ac_cpw_outcome_osean_victory\n" + end_news(11, "OSE")) +
         block("else_if", block("limit", f"{not_external} OR = {{ NOT = {{ country_exists = OSE }} has_global_flag = ac_cpw_ose_fallen OSE = {{ has_capitulated = yes }} }}") +
               "set_global_flag = ac_cpw_outcome_yuktobanian_victory\n" + end_news(12, "YUK")) +
+        block("else_if", block("limit", "has_global_flag = ac_cpw_peace_made") +
+              "set_global_flag = ac_cpw_outcome_peace\n" + survivor_news(17)) +
         block("else_if", block("limit", f"NOT = {{ {TAINTED} }} NOT = {{ {EXISTING} }}") +
               "set_global_flag = ac_cpw_outcome_cessation\n" +
               guard("has_global_flag = ac_cpw_stage_solg", "set_global_flag = ac_cpw_historical_course") + survivor_news(10)) +
@@ -228,6 +237,17 @@ def owner():
     effects["ac_cpw_commit_arkbird"] = guard("tag = OSE original_tag = OSE ac_cpw_course_open = yes ac_cpw_arkbird_available = yes NOT = { has_global_flag = ac_cpw_arkbird_committed } NOT = { has_global_flag = ac_cpw_arkbird_held_back }",
         guard(f"date < {ARKBIRD_LIMIT}", "set_global_flag = ac_cpw_arkbird_committed\nadd_ideas = ac_cpw_ose_arkbird_at_the_front\nnews_event = { id = ac_cpw.15 days = 1 }") +
         block("else", "set_global_flag = ac_cpw_arkbird_held_back"))
+    # Decision 6. The offer goes to the other principal (FROM is the offerer); the
+    # peace is written only if the engine actually ended the pair's war.
+    for tag, other in (("OSE", "YUK"), ("YUK", "OSE")):
+        t = tag.lower()
+        effects[f"ac_cpw_offer_peace_{t}"] = guard(f"tag = {tag} original_tag = {tag} ac_cpw_peace_can_offer = yes NOT = {{ has_country_flag = ac_cpw_peace_offered }}",
+            f"set_country_flag = {{ flag = ac_cpw_peace_offered days = 30 }}\n{other} = {{ country_event = {{ id = ac_cpw.16 days = 1 }} }}")
+    effects["ac_cpw_make_peace"] = guard("OR = { tag = OSE tag = YUK } ac_cpw_peace_can_offer = yes",
+        guard("tag = OSE", "white_peace = YUK") + block("else", "white_peace = OSE") +
+        guard("NOT = { ac_cpw_pair_at_war = yes }", "set_global_flag = ac_cpw_peace_made\nac_cpw_record_end = yes") +
+        block("else", "set_global_flag = ac_cpw_peace_not_made"))
+    effects["ac_cpw_refuse_peace"] = guard("ac_cpw_war_running = yes", "set_global_flag = ac_cpw_peace_refused")
     effects["ac_cpw_hold_arkbird"] = guard("tag = OSE original_tag = OSE NOT = { has_global_flag = ac_cpw_arkbird_committed }",
         "set_global_flag = ac_cpw_arkbird_held_back")
     # The decisions' political-power costs are charged by the engine through
@@ -324,6 +344,9 @@ def owner():
         15: ("The Arkbird Goes to the Front",
              "Osea has sent the Arkbird to the front, as the ACES Chronicle records for 30 September 2010 (2010 / 09.30). The spacecraft built to clear Ulysses fragments now flies in a war.\n\nIts later fate follows the Chronicle only while the war keeps its official course.",
              "The Arkbird flies.", "ac_cpw_news_arkbird"),
+        17: ("Osea and Yuktobania Make Peace",
+             "Osea and Yuktobania have ended the war on the terms of the joint appeal to disarm. Neither country capitulated, and the peace moved no territory.\n\nThe ACES Chronicle records the appeal (2010 / 12.30) and the war's end on 31 December 2010 (2010 / 12.31); it does not record a negotiated peace. This earned peace is provisional gameplay, recorded on the day it was actually made.",
+             "Record the peace.", "ac_cpw_news_end"),
         20: ("The Eaglin Straits",
              "Scinfaxi, the first of Yuktobania's Scinfaxi-class submarines, has seen its first use in war. At Eaglin Straits the Osean Maritime Defense Force aircraft carriers Vulture and Buzzard were sunk (2010 / 09.30).\n\nThe ACES Chronicle also records that Osea sent the Arkbird to the front on this day; in this campaign that depends on whether the Arkbird was ever completed and on the federation's decision.",
              "Count the losses.", "ac_cpw_news_eaglin"),
@@ -385,11 +408,19 @@ def owner():
         "ac_cpw.6.d": "The carriers Vulture and Buzzard are lost in the Eaglin Straits. The ACES Chronicle records that Osea sent the Arkbird to the front on this day (2010 / 09.30).\n\nThe federation can send the debris-clearing spacecraft to the front, as the record says, or hold it back on its civil task. Holding it back is a provisional alternative; the Chronicle's later entries about the Arkbird then do not apply.",
         "ac_cpw.6.a": "Send the Arkbird to the front.",
         "ac_cpw.6.b": "Keep the Arkbird on debris duty.",
+        "ac_cpw.16.t": "An Offer of Peace on the Appeal",
+        "ac_cpw.16.d": "[FROM.GetName] has offered to end the war on the terms of the joint appeal to disarm (2010 / 12.30): both governments stop fighting where they stand, with no capitulation and no transfer of territory.\n\nThe ACES Chronicle records the appeal and the war's end on 31 December 2010 (2010 / 12.31); it does not record a negotiated peace. The offer needed the offering government's own verification record. This earned route is provisional gameplay.",
+        "ac_cpw.16.a": "Accept the peace.",
+        "ac_cpw.16.b": "Fight on.",
     })
     events.append(block("country_event", "id = ac_cpw.5\ntitle = ac_cpw.5.t\ndesc = ac_cpw.5.d\npicture = GFX_ac_cpw_event_yuk_declaration\nis_triggered_only = yes\n"
                         "trigger = { tag = YUK original_tag = YUK ac_cpw_can_declare = yes }\n" +
                         block("option", "name = ac_cpw.5.a\nai_chance = { factor = 100 }\nac_cpw_declare = yes") +
                         block("option", "name = ac_cpw.5.b\ntrigger = { ac_cpw_mandate_earned = yes }\nai_chance = { factor = 0 }\nac_cpw_withhold = yes")))
+    events.append(block("country_event", "id = ac_cpw.16\ntitle = ac_cpw.16.t\ndesc = ac_cpw.16.d\npicture = GFX_ac_cpw_event_peace_offer\nis_triggered_only = yes\n"
+                        "trigger = { OR = { AND = { tag = OSE original_tag = OSE } AND = { tag = YUK original_tag = YUK } } ac_cpw_peace_can_offer = yes }\n" +
+                        block("option", "name = ac_cpw.16.a\nai_chance = { factor = 100 }\nac_cpw_make_peace = yes") +
+                        block("option", "name = ac_cpw.16.b\nai_chance = { factor = 0 }\nac_cpw_refuse_peace = yes")))
     events.append(block("country_event", "id = ac_cpw.6\ntitle = ac_cpw.6.t\ndesc = ac_cpw.6.d\npicture = GFX_ac_cpw_event_ose_arkbird\nis_triggered_only = yes\n"
                         "trigger = { tag = OSE original_tag = OSE ac_cpw_course_open = yes ac_cpw_arkbird_available = yes NOT = { has_global_flag = ac_cpw_arkbird_committed } }\n" +
                         block("option", "name = ac_cpw.6.a\nai_chance = { factor = 100 }\nac_cpw_commit_arkbird = yes") +
@@ -413,15 +444,28 @@ def owner():
             loc[ident], loc[ident + "_desc"] = title, description
             rows.append(block(ident, f"icon = ac_cpw_{ident}\nallowed = {{ tag = {tag} original_tag = {tag} }}\nvisible = {{ {visible} }}\navailable = {{ {available} }}\n"
                               f"cost = {cost}\nfire_only_once = yes\n" + block("complete_effect", f"ac_cpw_{key}_{t} = yes") + "ai_will_do = { base = 3 }\n"))
+        # Decision 6: offer peace on the appeal's terms, earned by the offerer's own verification record.
+        ident = f"{tag}_cpw_accept_appeal"
+        other = COUNTRIES["YUK" if tag == "OSE" else "OSE"]
+        loc[ident] = "Answer the Appeal: Offer Peace"
+        loc[ident + "_desc"] = (f"Offer {other} an end to the war on the terms of the joint appeal to disarm: no capitulation and no transfer of territory. "
+                                f"{other} decides; a refused offer can be renewed after thirty days. Needs this government's own verification record. "
+                                "Earned route; provisional gameplay.")
+        rows.append(block(ident, f"icon = ac_cpw_{ident}\nallowed = {{ tag = {tag} original_tag = {tag} }}\n"
+                          "visible = { has_global_flag = ac_cpw_appeal_made ac_cpw_war_running = yes }\n"
+                          f"available = {{ ac_cpw_peace_can_offer = yes ac_snc_{t}_verification_earned = yes NOT = {{ has_country_flag = ac_cpw_peace_offered }} }}\n"
+                          "cost = 50\n" + block("complete_effect", f"ac_cpw_offer_peace_{t} = yes") + "ai_will_do = { base = 1 }\n"))
         decisions[category] = rows
 
     # Defined texts and readable flags ---------------------------------------------------
     # First matching entry wins, so the specific outcomes precede the general ones.
     status = (("has_global_flag = ac_cpw_outcome_osean_victory", "Ended: Yuktobania capitulated. The end the Chronicle records for 31 December 2010 did not occur."),
               ("has_global_flag = ac_cpw_outcome_yuktobanian_victory", "Ended: Osea capitulated. The end the Chronicle records for 31 December 2010 did not occur."),
+              ("has_global_flag = ac_cpw_outcome_peace", "Ended: peace on the terms of the joint appeal to disarm, offered on the offering government's own verification record (earned route, provisional gameplay). The Chronicle's 31 December 2010 end is a reference anchor."),
               ("has_global_flag = ac_cpw_historical_course", "Ended: the fighting stopped without capitulation after the official course had run to the SOLG. The Chronicle's 31 December 2010 end is a reference anchor, not the day it stopped."),
               (f"{ENDED} OR = {{ {TAINTED} {EXISTING} }}", "Ended: the fighting stopped while the owner observed the war from outside."),
               (ENDED, "Ended: the fighting stopped without capitulation before the official course had run its length. The Chronicle's 31 December 2010 end is a reference anchor."),
+              ("has_global_flag = ac_cpw_peace_not_made", "Running: a peace on the appeal's terms was accepted, but the engine kept the war; the end will be recorded when the fighting stops."),
               (TAINTED, "Running under external observation: other fighting entered the war, and the official course is no longer asserted."),
               (EXISTING, "Running under external observation: Osea and Yuktobania were already at war when the Chronicle's declaration date came."),
               (STARTED, "Running on the official course since the declaration the Chronicle records for 27 September 2010 (2010 / 09.27)."),
@@ -453,6 +497,12 @@ def owner():
         "ac_cpw_principal_unable": "Osea or Yuktobania could not fight the recorded war",
         "ac_cpw_declaration_refused": "The engine did not create the declared war; the owner is closed",
         "ac_cpw_appeal_made": "Harling and Nikanor have asked their militaries to disarm",
+        "ac_cpw_peace_can_offer": "A peace on the joint appeal's terms can be offered",
+        "ac_cpw_peace_offered": "This government offered peace on the appeal's terms in the last thirty days",
+        "ac_cpw_peace_refused": "An offer of peace on the appeal's terms was refused",
+        "ac_cpw_peace_made": "Osea and Yuktobania made peace on the appeal's terms",
+        "ac_cpw_peace_not_made": "A peace on the appeal's terms was accepted but the engine kept the war",
+        "ac_cpw_outcome_peace": "The Circum-Pacific War ended in a peace on the appeal's terms",
         "ac_cpw_arkbird_committed": "The Arkbird was sent to the front",
         "ac_cpw_arkbird_held_back": "The Arkbird was kept on debris duty (provisional alternative)",
         "ac_cpw_arkbird_sabotaged": "The Arkbird's engines were destroyed",
@@ -516,7 +566,7 @@ SOURCES = {"official": ["Chronicle 2008 / 08.21: the Arkbird Summit",
                         "Chronicle 2010 / 09.23 to 12.31: the Circum-Pacific War",
                         "Super Weapons: Arkbird; SOLG; Scinfaxi & Hrimfaxi"],
            "mod_provenance": "ac_sp_arkbird state and the Osean/Yuktobanian national continuation records, read only",
-           "provisional_gameplay": "Every idea value, decision, the declaration window, the observation rules and the earned alternatives' texts"}
+           "provisional_gameplay": "Every idea value, decision, the declaration window, the observation rules, the earned alternatives' texts and the earned peace on the appeal's terms (decision 6)"}
 NEWS_ART = (("ac_cpw_news_landers", ("air", "radar"), "Unidentified Aircraft at Cape Landers", "OSE"),
             ("ac_cpw_news_overflight", ("radar", "missile"), "An SR-71 Over Osea", "OSE"),
             ("ac_cpw_news_declaration", ("command", "navy"), "Yuktobania Declares War on Osea", "YUK"),
@@ -542,6 +592,7 @@ NEWS_ART = (("ac_cpw_news_landers", ("air", "radar"), "Unidentified Aircraft at 
             ("ac_cpw_news_appeal", ("peace", "assembly"), "The Joint Appeal to Disarm", "OSE"),
             ("ac_cpw_news_solg", ("satellite", "meteor"), "The SOLG Falls", "OSE"))
 EVENT_ART = (("ac_cpw_event_yuk_declaration", ("command", "navy"), "The Declaration of 27 September 2010", "YUK"),
+             ("ac_cpw_event_peace_offer", ("peace", "diplomacy"), "An Offer of Peace on the Appeal", "OSE"),
              ("ac_cpw_event_ose_arkbird", ("satellite", "carrier"), "The Arkbird and the Front", "OSE"))
 OWNER_ART = {
     "ac_cpw_ose_war_footing": ("command", "navy", "OSE"), "ac_cpw_yuk_war_footing": ("command", "submarine", "YUK"),

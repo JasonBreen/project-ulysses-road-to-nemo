@@ -254,6 +254,27 @@ ac_cpw_record_end = {
 		}
 		else_if = {
 			limit = {
+				has_global_flag = ac_cpw_peace_made
+			}
+			set_global_flag = ac_cpw_outcome_peace
+			if = {
+				limit = {
+					country_exists = OSE NOT = { has_global_flag = ac_cpw_ose_fallen }
+				}
+				OSE = { news_event = { id = ac_cpw.17 days = 1 } }
+			}
+			else_if = {
+				limit = {
+					country_exists = YUK NOT = { has_global_flag = ac_cpw_yuk_fallen }
+				}
+				YUK = { news_event = { id = ac_cpw.17 days = 1 } }
+			}
+			else = {
+				news_event = { id = ac_cpw.17 days = 1 }
+			}
+		}
+		else_if = {
+			limit = {
 				NOT = { has_global_flag = ac_cpw_tainted } NOT = { has_global_flag = ac_cpw_existing_war_observed }
 			}
 			set_global_flag = ac_cpw_outcome_cessation
@@ -559,6 +580,62 @@ ac_cpw_commit_arkbird = {
 		else = {
 			set_global_flag = ac_cpw_arkbird_held_back
 		}
+	}
+}
+
+ac_cpw_offer_peace_ose = {
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE ac_cpw_peace_can_offer = yes NOT = { has_country_flag = ac_cpw_peace_offered }
+		}
+		set_country_flag = { flag = ac_cpw_peace_offered days = 30 }
+		YUK = { country_event = { id = ac_cpw.16 days = 1 } }
+	}
+}
+
+ac_cpw_offer_peace_yuk = {
+	if = {
+		limit = {
+			tag = YUK original_tag = YUK ac_cpw_peace_can_offer = yes NOT = { has_country_flag = ac_cpw_peace_offered }
+		}
+		set_country_flag = { flag = ac_cpw_peace_offered days = 30 }
+		OSE = { country_event = { id = ac_cpw.16 days = 1 } }
+	}
+}
+
+ac_cpw_make_peace = {
+	if = {
+		limit = {
+			OR = { tag = OSE tag = YUK } ac_cpw_peace_can_offer = yes
+		}
+		if = {
+			limit = {
+				tag = OSE
+			}
+			white_peace = YUK
+		}
+		else = {
+			white_peace = OSE
+		}
+		if = {
+			limit = {
+				NOT = { ac_cpw_pair_at_war = yes }
+			}
+			set_global_flag = ac_cpw_peace_made
+			ac_cpw_record_end = yes
+		}
+		else = {
+			set_global_flag = ac_cpw_peace_not_made
+		}
+	}
+}
+
+ac_cpw_refuse_peace = {
+	if = {
+		limit = {
+			ac_cpw_war_running = yes
+		}
+		set_global_flag = ac_cpw_peace_refused
 	}
 }
 

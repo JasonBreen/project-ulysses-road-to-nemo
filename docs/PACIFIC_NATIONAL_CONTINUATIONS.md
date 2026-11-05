@@ -90,7 +90,11 @@ calendar, declarations, expansion markers and outcome observations. Factions or
 guarantees alone must not veto a newly owned declaration. The actual principal
 pair and immediate potential participant set must be inspected for pre-existing
 wars; third-party entry permanently moves the new crisis to external observation.
-No scripted white peace is authorized in the first CPW owner. Actual end news
+No scripted white peace is authorized in the first CPW owner. The later earned
+route is content-plan decision 6 (decided 5 November 2026): after the joint
+appeal to disarm, a principal holding its own verification record may offer
+peace on the appeal's terms, and the owner's only `white_peace` writes its state
+only if the engine actually ended the war ([Wave C](CONTENT_WAVE_C.md)). Actual end news
 must follow actual cessation, not the historical December 31 anchor or an assumed
 victory. None of those war effects is implemented by this national component.
 

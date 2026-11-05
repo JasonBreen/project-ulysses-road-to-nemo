@@ -117,7 +117,24 @@ peace, is marked `ac_cpw_external_fall` and ends the war under observation.
 End news is scheduled by a surviving principal, so a fallen scope never owns
 it. All untimed war ideas are removed, and a declaration still pending when a
 route settles is cleared. An Osean weekly fallback records the end if
-Yuktobania no longer exists. There is no `white_peace`; see the open items.
+Yuktobania no longer exists. The only `white_peace` is the earned peace below.
+
+**The earned peace (content-plan decision 6, 5 November 2026).** After the
+joint appeal to disarm (the 2010 / 12.30 stage, which needs the untainted
+official course), each principal's crisis category shows *Answer the Appeal:
+Offer Peace* (`OSE_cpw_accept_appeal`, `YUK_cpw_accept_appeal`; 50 political
+power). It is available while the pair is at war and only to a government
+holding its own verification record (`ac_snc_<tag>_verification_earned`). The
+other principal receives `ac_cpw.16` (accept, AI 100; fight on, AI 0); a refused
+offer can be renewed after thirty days. Acceptance runs `ac_cpw_make_peace`, the
+owner's only `white_peace`: if the engine actually ended the war it sets
+`ac_cpw_peace_made` and `ac_cpw_record_end` records `ac_cpw_outcome_peace`
+(before the cessation outcomes, so `ac_cpw_historical_course` is never set by a
+peace) and the survivor publishes `ac_cpw.17`; if the engine kept the war it
+sets `ac_cpw_peace_not_made`, no further offer is possible and the end is
+recorded when the fighting stops. The four story route flags are unaffected. The
+route, its cost and the thirty-day renewal are provisional gameplay; the
+Chronicle records the appeal and the 31 December end, not a negotiated peace.
 
 **Decisions.** Each principal has a crisis category with two once-only
 decisions: mobilise the home front during the war (50 political power, 120-day
@@ -197,7 +214,7 @@ is the negative case and core state 125 the positive one.
 - the crisis decisions are charged once by the engine and follow the phase.
 
 **Source checks:** the only `declare_war_on` in the waves targets Osea with
-`topple_government`; no `white_peace`, faction or guarantee check, assumed end
+`topple_government`; its only `white_peace` pair lives in `ac_cpw_make_peace`; no faction or guarantee check, assumed end
 date, `ac_snc_`/`ac_snp_`/`ac_sp_` flag or variable write; named canon appears
 only in event text and in the idea and flag tooltips derived from it, never in
 a script identifier.
@@ -206,10 +223,9 @@ These are source and offline checks, not native acceptance.
 
 ## Open items
 
-- **A peace route.** The published contract forbids a scripted white peace in
-  the first owner, so a war between two AI countries ends only through
-  capitulation or the engine's own peace. A reviewed, earned route (for
-  example after the joint appeal to disarm) is decision 6 in the content plan.
+- **A peace route.** Decided 5 November 2026 (content-plan decision 6) and
+  implemented above: earned after the appeal. Static and offline only; the AI's
+  use of the offer and the engine's acceptance are unverified natively (#8).
 - Native parsing, AI pacing across the ocean, balance and save/reload (#8).
 - Bastok, Cruik, Dresdene, Bana, Okchabursk, Sudentor and the straits are not
   mapped to states; the territorial rows use the observed foothold instead.

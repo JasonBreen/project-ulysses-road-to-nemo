@@ -48,7 +48,7 @@ OWNED_FILES = [f"{folder}/ac_{name}.txt" for name in NAMES.values() for folder i
 # The only wars and peaces the content waves may script, each sourced and each in exactly one owner.
 DECLARATIONS = {"circum_pacific": ["declare_war_on = { target = OSE type = topple_government }"],
                 "lighthouse": ["declare_war_on = { target = OSE type = topple_government }"]}
-PEACES = {"lighthouse": ["white_peace = OSE"]}
+PEACES = {"lighthouse": ["white_peace = OSE"], "circum_pacific": ["white_peace = YUK", "white_peace = OSE"]}
 EXPECTED = {"ERU": 90, "FCU": 48, "NEC": 42, "EVA": 30, "EMM": 18, "AUR": 54}
 STORY_FLAGS = ("ac_cpw_started", "ac_cpw_tainted", "ac_cpw_prevented", "ac_cpw_declaration_withheld")
 
@@ -183,11 +183,11 @@ class Source(unittest.TestCase):
                     self.assertEqual((26, 29), image.size)
         report = picture_audit.audit([f"events/ac_{name}.txt" for name in NAMES.values()])
         # A: 24 narrative + owner .2/.4/.5; D: 16 narrative; B: 20 narrative + Emmerian aid events .5/.6;
-        # Aurelia: 20 narrative; C: the Yuktobanian declaration .5 and the Osean Arkbird decision .6;
+        # Aurelia: 20 narrative; C: the Yuktobanian declaration .5, the Osean Arkbird decision .6 and the peace offer .16;
         # F1: 30 narrative + the Erusean declaration .5 and ceasefire .6.
-        # News: A .1/.3/.6; B .1-.4, .7-.14; C .1-.4, .7-.15 and the sixteen stages .20-.35;
+        # News: A .1/.3/.6; B .1-.4, .7-.14; C .1-.4, .7-.15, the peace .17 and the sixteen stages .20-.35;
         # F1 .1-.4, .7-.13, the nine stages .20-.28 and .29.
-        self.assertEqual({"country_event": 27 + 16 + 22 + 20 + 2 + 32, "news_event": 3 + 12 + 29 + 21}, report["counts"])
+        self.assertEqual({"country_event": 27 + 16 + 22 + 20 + 3 + 32, "news_event": 3 + 12 + 30 + 21}, report["counts"])
         for row in report["consumers"]:
             self.assertLessEqual(row["bounds"][2], 215 if row["event_type"] == "country_event" else 456)
             self.assertLessEqual(row["bounds"][3], 181 if row["event_type"] == "country_event" else 244)
@@ -248,8 +248,11 @@ class Source(unittest.TestCase):
                          "2010 / 11.01", "2010 / 11.02", "2010 / 11.04", "2010 / 11.14", "2010 / 11.29", "2010 / 12.06", "2010 / 12.09", "2010 / 12.19",
                          "2010 / 12.23", "2010 / 12.29", "2010 / 12.30", "2010 / 12.31", "Super Weapons, Scinfaxi & Hrimfaxi", "provisional gameplay"):
             self.assertIn(citation, loc, citation)
-        # No scripted peace, no assumed end date, no faction veto, pre-existing wars inspected, third parties observed.
-        self.assertNotIn("white_peace", effects)
+        # The only peace is decision 6's earned route, inside its own effect; no assumed end date, no faction
+        # veto, pre-existing wars inspected, third parties observed.
+        self.assertEqual(2, effects.count("white_peace"))
+        make_peace = re.search(r"(?ms)^ac_cpw_make_peace = \{.*?^\}", effects)[0]
+        self.assertEqual(["white_peace = YUK", "white_peace = OSE"], re.findall(r"white_peace = \w+", make_peace))
         self.assertNotIn("date > 2010.12.31", effects)
         self.assertNotIn("is_in_faction", effects + triggers)
         self.assertNotIn("has_guaranteed", effects + triggers)
@@ -1366,6 +1369,80 @@ class Runtime(unittest.TestCase):
                 self.assertEqual(pp, c.pp)
                 self.assertIn(f"ac_cpw_{tag.lower()}_war_record", c.ideas)
         self.assertNotIn("add_political_power", text("common/scripted_effects/ac_circum_pacific.txt"))
+
+    def test_circum_pacific_peace_is_earned_after_the_appeal(self):
+        rows = {k: v for category in parse(text("common/decisions/ac_circum_pacific.txt")) for k, _, v in category[2]}
+        offer = {tag: rows[f"{tag}_cpw_accept_appeal"] for tag in ("OSE", "YUK")}
+        w, y, o = self.cpw()
+        self.declare(w)
+        self.earn(w, "OSE", "verification")
+        self.tick(w, date(2010, 12, 1))
+        # Before the appeal the offer is neither shown nor available, even with the record.
+        self.assertFalse(w.trigger(fields(offer["OSE"])["visible"], o))
+        self.assertFalse(w.trigger(fields(offer["OSE"])["available"], o))
+        self.tick(w, date(2010, 12, 30))
+        self.assertIn("ac_cpw_appeal_made", w.globals)
+        self.assertTrue(w.trigger(fields(offer["OSE"])["visible"], o))
+        self.assertTrue(w.trigger(fields(offer["OSE"])["available"], o))
+        # Yuktobania has not earned its own verification record.
+        self.assertTrue(w.trigger(fields(offer["YUK"])["visible"], y))
+        self.assertFalse(w.trigger(fields(offer["YUK"])["available"], y))
+        self.assertEqual("50", fields(offer["OSE"])["cost"])
+        pp = o.pp
+        w.execute(fields(offer["OSE"])["complete_effect"], o)
+        self.assertEqual(pp, o.pp)
+        self.assertIn(("YUK", "ac_cpw.16"), [(t, e) for t, e, _ in w.events])
+        self.assertFalse(w.trigger(fields(offer["OSE"])["available"], o))
+        # A refusal keeps the war; the offer can be renewed after thirty days.
+        w.option("ac_cpw.16", "b", "YUK")
+        self.assertIn("ac_cpw_peace_refused", w.globals)
+        self.assertEqual({frozenset(("OSE", "YUK"))}, w.wars)
+        self.tick(w, date(2011, 1, 7))
+        self.assertFalse(w.trigger(fields(offer["OSE"])["available"], o))
+        self.tick(w, date(2011, 1, 31))
+        self.assertTrue(w.trigger(fields(offer["OSE"])["available"], o))
+        w.execute(fields(offer["OSE"])["complete_effect"], o)
+        records_before = self.records(w)
+        w.option("ac_cpw.16", "a", "YUK")
+        self.assertEqual(set(), w.wars)
+        self.assertTrue({"ac_cpw_peace_made", "ac_cpw_ended", "ac_cpw_outcome_peace"} <= w.globals)
+        self.assertFalse({"ac_cpw_outcome_cessation", "ac_cpw_historical_course", "ac_cpw_outcome_osean_victory"} & w.globals)
+        self.assertEqual("ac_cpw.17", self.cpw_news(w)[-1])
+        self.assertEqual(records_before, self.records(w))
+        self.assertFalse(any(i.startswith("ac_cpw_") and i.endswith(("_war_footing", "_appeal")) for i in y.ideas | o.ideas))
+        self.assertTrue(self.status(w).startswith("Ended: peace on the terms of the joint appeal"))
+        self.assertFalse(w.trigger(fields(offer["OSE"])["visible"], o))
+        # The stories' four route flags are unchanged by the peace.
+        self.assertEqual({"ac_cpw_started"}, set(STORY_FLAGS) & w.globals)
+
+    def test_circum_pacific_peace_is_written_only_if_the_engine_ends_the_war(self):
+        rows = {k: v for category in parse(text("common/decisions/ac_circum_pacific.txt")) for k, _, v in category[2]}
+        w, y, o = self.cpw()
+        self.declare(w)
+        self.earn(w, "YUK", "verification")
+        self.tick(w, date(2010, 12, 30))
+        w.execute(fields(rows["YUK_cpw_accept_appeal"])["complete_effect"], y)
+        self.assertIn(("OSE", "ac_cpw.16"), [(t, e) for t, e, _ in w.events])
+        w.refuse_peace = True
+        w.option("ac_cpw.16", "a", "OSE")
+        self.assertEqual({frozenset(("OSE", "YUK"))}, w.wars)
+        self.assertIn("ac_cpw_peace_not_made", w.globals)
+        self.assertFalse({"ac_cpw_peace_made", "ac_cpw_ended", "ac_cpw_outcome_peace"} & w.globals)
+        self.assertTrue(self.status(w).startswith("Running: a peace on the appeal's terms was accepted, but the engine kept the war"))
+        # No further offer; the end is recorded when the fighting actually stops.
+        self.assertFalse(w.trigger(fields(rows["OSE_cpw_accept_appeal"])["available"], o))
+        w.wars.clear()
+        self.tick(w, date(2011, 1, 7))
+        self.assertTrue({"ac_cpw_ended", "ac_cpw_outcome_cessation"} <= w.globals)
+        self.assertNotIn("ac_cpw_outcome_peace", w.globals)
+        # The offer never reaches a tainted or observed war: the appeal stage needs the official course.
+        tainted, y2, o2 = self.cpw()
+        self.declare(tainted)
+        self.earn(tainted, "OSE", "verification")
+        tainted.globals.add("ac_cpw_tainted")
+        self.tick(tainted, date(2010, 12, 30))
+        self.assertNotIn("ac_cpw_appeal_made", tainted.globals)
+        self.assertFalse(tainted.trigger(fields(rows["OSE_cpw_accept_appeal"])["visible"], o2))
 
     # Wave F1: the Lighthouse War owner -------------------------------------------------
     FOREIGN = ("ac_ucw_", "ac_sp_", "ac_release_", "ac_fe_", "ac_snc_")

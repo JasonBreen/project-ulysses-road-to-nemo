@@ -55,13 +55,23 @@ REVIEWED_STARTING_GOVERNMENT_UPDATE=dict(
     tested_source='51622f4d72c6e1c497156ce1dd7fed881723e3f0',
 )
 
+# Grand-doctrine ids in the FATO history moved off pre-1.17 new_* technology
+# names. The captured owner hash stays the original; only this byte transition
+# is admitted. Provisional gameplay, not a lore edit.
+REVIEWED_FAT_DOCTRINE_UPDATE=dict(
+    path='history/countries/FAT - FATO.txt',
+    original_sha256='bf7b3af6547329c4d6c64e27279b24f4699eccc13f0f64cea5659c4006ad127f',
+    reviewed_sha256='91cfdccce93f611c5d8a546977db03b7179dccaa0fd5d553ea4b937727b80a88',
+)
+
 def validate_protected(path,expected,data):
     actual=digest(data)
     if actual==expected:return 'original'
     for disposition,update in (
             ('reviewed-release-owner',REVIEWED_RELEASE_UPDATE),
             ('reviewed-fat-character-owner',REVIEWED_FAT_CHARACTER_UPDATE),
-            ('reviewed-starting-government-owner',REVIEWED_STARTING_GOVERNMENT_UPDATE)):
+            ('reviewed-starting-government-owner',REVIEWED_STARTING_GOVERNMENT_UPDATE),
+            ('reviewed-fat-doctrine-ids',REVIEWED_FAT_DOCTRINE_UPDATE)):
         if (path==update['path'] and expected==update['original_sha256']
                 and actual==update['reviewed_sha256']):return disposition
     raise ValueError('Inherited owner changed: '+path)

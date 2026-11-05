@@ -1,6 +1,6 @@
 # AC04/AC5 source and offline validation
 
-`validation.json` records 38 successful independent commands, including the 36
+`validation.json` records 38 successful independent commands, including the 38
 new actual-script campaign regressions, the existing campaign/partner/story
 owners, original artwork and event-capture proofs, the complete PowerShell
 static suite and a comparison with the immutable starting revision. The aviation

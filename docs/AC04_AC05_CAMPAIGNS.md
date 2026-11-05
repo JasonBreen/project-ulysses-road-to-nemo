@@ -99,12 +99,18 @@ revived or reassigned by this module.
 Stonehenge has three guarded dispositions: destruction, disablement, or securing
 the intact engineering site. Intact capture requires actual SNS control of state
 310. All remove the enemy railgun effect; only destruction sets the existing
-destruction flag. Megalith's conclusion requires its completed operation.
+destruction flag. Megalith's conclusion requires its completed operation. That
+postwar operation opens after the observed ISAF victory and the crisis event,
+including a victory before the historical battery or September anchors. It does
+not require or manufacture an earlier battery result, and it still requires
+preparation, real payment, deployed aircraft and the seven-day assault interval.
 The second submarine can be recalled through Yuktobanian preparation, in which
 case the historical destruction news is suppressed. The opposing strike cannot
 claim a withdrawn carrier as a target. Recall likewise cannot claim a carrier
 after the successful strike. If both operations are pending, the first recorded
-success blocks the other's completion; its spent costs remain spent.
+success blocks the other's completion; its spent costs remain spent. A delayed
+first strike cannot restore the remaining-carrier modifier after the second
+carrier's disposition has already been recorded.
 
 Belka's investigation and network paths can expose witnesses, build a channel,
 influence procurement or contest strategic access. Foreign protected evidence

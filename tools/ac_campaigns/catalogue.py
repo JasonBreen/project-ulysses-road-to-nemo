@@ -72,7 +72,7 @@ OPERATIONS = (
     Operation('maintenance','ERU',1,'Keep the reserve aircraft grounded','2004.10.1','ucw','has_country_flag = ERU_camp_1_policy_a','Accept reduced immediate readiness to complete safety repairs.','tools',14,'occupation'),
     Operation('withdrawal','ERU',2,'A withdrawal with its people','2005.8.1','ucw','has_country_flag = ERU_camp_2_policy_a','Authorize withdrawal rather than consuming the surviving cadre in a last stand.','gate',14,'maintenance'),
     Operation('liberation','FCU',3,'The city after the front','2005.7.9','ucw','310 = { is_controlled_by = SNS }','Return to the clinic and resolve the occupation records after actual liberation.','medical',7,'battery'),
-    Operation('megalith','FCU',3,'The final launch complex','2005.9.25','ucw',AIR,'Prepare the final assault after the military surrender.','missile',7,'battery'),
+    Operation('megalith','FCU',3,'The final launch complex','2005.9.25','ucw',AIR,'Prepare the final assault after the observed military surrender, including an early victory without a battery assault.','missile',7),
     Operation('eru_account','ERU',3,'The orders we signed','2005.9.25','aftermath','ac_ucw_war_over = yes','Hear the occupation cases under the settlement that actually occurred.','scales',14,'occupation'),
     Operation('contact','OSE',0,'Keep the original messages','2006.1.1','peace','country_exists = YUK NOT = { has_war_with = YUK }','Preserve reciprocal messages and their authors instead of assuming consent.','communications'),
     Operation('yuk_contact','YUK',0,'The officer who asks again','2006.1.1','peace','country_exists = OSE NOT = { has_war_with = OSE }','Verify disputed orders and protect the right to ask for confirmation.','document'),

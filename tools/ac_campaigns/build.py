@@ -149,7 +149,10 @@ def compile_content():
     # Operations have a paid start, maturation, finite deadline and immutable result.
     for oi,o in enumerate(OPERATIONS):
         stem=f'{P}_{o.key}'; prepared=f'{o.tag}_camp_{o.lane}_prepared'
-        gate=f'{P}_eligible = yes tag = {o.tag} original_tag = {o.tag} has_country_flag = {prepared} date > {o.after} {campaign_gate(o)}'
+        # The post-surrender crisis follows an observed victory even when the
+        # front closed before the historical battery or September anchors.
+        timing='has_global_flag = ac_ucw_outcome_isaf_victory' if o.key=='megalith' else f'date > {o.after}'
+        gate=f'{P}_eligible = yes tag = {o.tag} original_tag = {o.tag} has_country_flag = {prepared} {timing} {campaign_gate(o)}'
         if o.previous:gate+=' '+flag(o.previous+'_success')
         if o.key in PARTNERS:gate+=f' country_exists = {PARTNERS[o.key]}'
         if o.key in PARTNERS:gate+=f' {PARTNERS[o.key]} = {{ has_capitulated = no is_subject = no NOT = {{ has_war_with = {o.tag} }} }}'
@@ -203,7 +206,7 @@ def compile_content():
             block('else_if',block('limit',f'NOT = {{ has_country_flag = {stem}_waiting }} {stem}_can_finish = yes')+stem+'_finish = yes')+
             (block('else_if',block('limit',f'NOT = {{ has_country_flag = {stem}_deadline }} has_global_flag = ac_camp_clinic_civil_permission NOT = {{ has_global_flag = ac_camp_clinic_military_permission }}')+cleanup+'set_global_flag = ac_camp_relief_limited') if o.key=='relief' else '')+
             block('else_if',block('limit',f'NOT = {{ has_country_flag = {stem}_deadline }}')+stem+'_fail = yes'))
-        visible=f'date > {o.after} has_country_flag = {prepared}'
+        visible=f'{timing} has_country_flag = {prepared}'
         payer='FCU sponsors this defined operation after its explicit consent. ' if o.key=='relief' else ''
         decision(o.tag,stem+'_start',o.title,o.objective+'\n\n'+payer+'Costs 25 political power, 2 institutional capacity and the shared programme fee when enabled. Preparation takes '+str(o.days)+' days; the deadline is '+str(o.days*3)+' days. Failure and cancellation forfeit paid costs.',visible,stem+'_can_start = yes',stem+'_start = yes',5)
         decision(o.tag,stem+'_cancel','Cancel: '+o.title,'Close the current operation. Paid costs remain spent.',f'has_country_flag = {stem}_active','always = yes',stem+'_cancel = yes')

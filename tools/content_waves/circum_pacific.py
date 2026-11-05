@@ -60,7 +60,9 @@ STAGES = (
      "OSE = { add_timed_idea = { idea = ac_cpw_ose_carrier_losses days = 90 } }\n" +
      guard("ac_cpw_arkbird_available = yes NOT = { has_global_flag = ac_cpw_arkbird_committed } NOT = { has_global_flag = ac_cpw_arkbird_held_back }",
            "OSE = { country_event = { id = ac_cpw.6 days = 1 } }"), 20),
-    ("sand_island", "2010.10.3", "", "remove_ideas = ac_cpw_yuk_submarine_carriers\nadd_ideas = ac_cpw_yuk_submarine_carrier", 21),
+    ("sand_island", "2010.10.3", "", "remove_ideas = ac_cpw_yuk_submarine_carriers\n" +
+     guard("NOT = { has_global_flag = ac_cpw_stage_razgriz_straits } NOT = { has_global_flag = ac_camp_naval_reserve_success } NOT = { has_global_flag = ac_camp_second_submarine_success }",
+           "add_ideas = ac_cpw_yuk_submarine_carrier"), 21),
     ("akerson_hill", "2010.10.21", "", "", 22),
     ("arkbird_sabotage", "2010.10.24", "has_global_flag = ac_cpw_arkbird_committed",
      "set_global_flag = ac_cpw_arkbird_sabotaged\nOSE = { add_timed_idea = { idea = ac_cpw_ose_arkbird_grounded days = 56 } }", 23),

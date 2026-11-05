@@ -36,7 +36,8 @@ class World(base.World):
                 for key,_,value in parse((MOD/f'common/{folder}/{name}.txt').read_text(encoding='utf-8-sig')):
                     if key in library:raise AssertionError('Duplicated owner '+key)
                     library[key]=value
-        self.messages.update({next(x for key,_,x in v if key=='id'):v for k,_,v in parse((MOD/'events/ac_campaigns.txt').read_text()) if k=='country_event'})
+        for name in ('ac_campaigns','ac_ucw'):
+            self.messages.update({next(x for key,_,x in v if key=='id'):v for k,_,v in parse((MOD/f'events/{name}.txt').read_text()) if k=='country_event'})
         self.focuses.update({fields(v)['id']:v for k,_,v in parse((MOD/'common/national_focus/ac_campaigns.txt').read_text())})
         self.decisions={k:v for _,_,rows in parse((MOD/'common/decisions/ac_campaigns.txt').read_text()) for k,_,v in rows}
         self.globals.add('ac_camp_enabled')
@@ -273,6 +274,58 @@ class Campaigns(unittest.TestCase):
             w.option('ac_camp.2400',option,'FCU');self.assertIn(expected,w.globals)
             self.assertEqual(option=='a','ac_ucw_stonehenge_destroyed' in w.globals)
             snapshot=set(w.globals);w.run('ac_ucw_campaign_battery_destroyed','FCU');self.assertEqual(snapshot,w.globals)
+
+    def test_delayed_first_submarine_strike_keeps_the_completed_recall(self):
+        w=world('disabled');w.today=date(2010,9,1).toordinal()
+        for tag,key in (('OSE','contact'),('YUK','yuk_contact')):
+            prepare(w,tag);w.decide('ac_camp_'+key+'_start',tag)
+        w.advance(14)
+        for tag,key in (('OSE','contact'),('YUK','yuk_contact')):w.run('ac_camp_'+key+'_tick',tag)
+        w.today=date(2010,9,27).toordinal();w.option('ac_cpw.5','a','YUK')
+        self.assertIn('ac_cpw_started',w.globals)
+        w.advance(3)
+        prepare(w,'YUK',1,'b');w.decide('ac_camp_denial_start','YUK')
+        w.advance(7);w.run('ac_camp_denial_tick','YUK')
+        w.today=date(2010,11,2).toordinal();w.decide('ac_camp_naval_reserve_start','YUK')
+        w.advance(7);w.run('ac_camp_naval_reserve_tick','YUK')
+        w.today=date(2010,11,14).toordinal();w.run('ac_cpw_stage_tick','YUK')
+        self.assertIn('ac_cpw_stage_razgriz_straits',w.globals)
+        self.assertNotIn('ac_cpw_stage_sand_island',w.globals)
+        for idea in ('ac_cpw_yuk_submarine_carriers','ac_cpw_yuk_submarine_carrier'):
+            self.assertNotIn(idea,w.countries['YUK'].ideas)
+        prepare(w,'OSE',1);w.decide('ac_camp_island_start','OSE')
+        w.advance(7);w.run('ac_camp_island_tick','OSE')
+        pp=w.countries['OSE'].pp;w.decide('ac_camp_submarine_start','OSE')
+        self.assertEqual(pp-25,w.countries['OSE'].pp)
+        w.advance(7);w.run('ac_camp_submarine_tick','OSE');w.run('ac_cpw_stage_tick','YUK')
+        self.assertIn('ac_cpw_stage_sand_island',w.globals)
+        self.assertIn('ac_camp_naval_reserve_success',w.globals)
+        for _ in range(2):
+            w.run('ac_cpw_stage_tick','YUK')
+            self.assertNotIn('ac_cpw_yuk_submarine_carrier',w.countries['YUK'].ideas)
+
+    def test_early_isaf_victory_can_fund_megalith_without_an_invented_battery_result(self):
+        for mode in ('full','experimental','disabled'):
+            with self.subTest(mode=mode):
+                w=world(mode);w.today=date(2004,1,2).toordinal();prepare(w,'FCU',3)
+                w.globals.add('ac_ucw_war_started');w.wars.add(frozenset(('ERU','FCU')))
+                w.countries['ERU'].capitulated=True;w.run('ac_ucw_outcome_tick','FCU')
+                self.assertIn('ac_ucw_outcome_isaf_victory',w.globals)
+                self.assertIn(('FCU','ac_ucw.60',w.today+7),w.events)
+                w.wars.discard(frozenset(('ERU','FCU')));w.advance(7);w.option('ac_ucw.60','a','FCU')
+                self.assertIn('ac_ucw_megalith_threat',w.countries['FCU'].ideas)
+                c=w.countries['FCU'];pp=c.pp;capacity=c.variables['ac_pol_capacity']
+                w.decide('ac_camp_megalith_start','FCU')
+                self.assertEqual(pp-25,c.pp);self.assertEqual(capacity-2,c.variables['ac_pol_capacity'])
+                w.run('ac_camp_megalith_finish','FCU');self.assertNotIn('ac_ucw_megalith_destroyed',w.globals)
+                w.advance(7);w.run('ac_camp_megalith_tick','FCU')
+                self.assertIn('ac_camp_megalith_success',w.globals)
+                self.assertIn('ac_ucw_megalith_destroyed',w.globals)
+                self.assertNotIn('ac_camp_battery_success',w.globals)
+                self.assertNotIn('ac_ucw_stonehenge_destroyed',w.globals)
+                self.assertNotIn('ac_ucw_megalith_threat',c.ideas)
+                w.advance(400);w.run('ac_camp_megalith_tick','FCU')
+                self.assertNotIn('ac_ucw_megalith_threat',c.ideas)
 
     def test_every_operation_has_a_real_paid_path_and_deadline(self):
         for o in OPERATIONS:

@@ -23,6 +23,9 @@ from harness import World
 ENGINE=None
 def digest(path):return hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
 def read(path):return parse(path.read_text(encoding='utf-8-sig'))
+sys.path.append(str(ROOT/'tools/air_program'))
+from reviewed_sources import reviewed_updates,validate_outcome
+
 
 class Sources(unittest.TestCase):
     @classmethod
@@ -135,7 +138,7 @@ class Sources(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Multiple averaged'):self.p.stats(ident,selected)
     def test_preserved_sources_and_no_early_grants_or_new_war_project_owners(self):
         manifest=json.loads((HERE/'preserved_sources.json').read_text());self.assertEqual(1110,len(manifest['sources']))
-        updates=json.loads((ROOT/'tools/air_program/reviewed_owner_updates.json').read_text())['files']
+        updates=reviewed_updates()
         cleanup=json.loads((ROOT/'tools/history_data_cleanup_updates.json').read_text())['files']
         for path,expected in manifest['sources'].items():
             update=updates.get(path)

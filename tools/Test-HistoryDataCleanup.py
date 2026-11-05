@@ -41,6 +41,7 @@ class HistoryDataCleanupTests(unittest.TestCase):
             "mod/2985041246/history/units/PBL_land.txt",
             "mod/2985041246/history/units/SYC_land.txt",
             "mod/2985041246/history/units/SYC_ws_land.txt",
+            "mod/2985041246/history/units/UST_mercs_1.txt",
         }
         self.assertEqual(expected, set(updates))
 
@@ -119,6 +120,71 @@ class HistoryDataCleanupTests(unittest.TestCase):
             self.assertNotEqual("xxx", icon)
             if icon.startswith("GFX_BLK_"):
                 self.assertIn(icon, sprites, icon)
+
+    def test_ustio_decision_and_focus_rosters_are_provisional_and_not_startup_grants(self):
+        history = text("history/countries/UST - Ustio.txt")
+        self.assertNotIn("UST_mercs_1", history)
+        self.assertNotIn("UST_moblise_militia_focus_oob", history)
+        self.assertIn('set_oob = "UST_ws_land"', history)
+
+        decisions = text("common/decisions/UST_decisions.txt")
+        mercs = re.search(r"(?ms)^\tUST_buy_mercs = \{.*?\n\t\}", decisions)
+        self.assertIsNotNone(mercs)
+        block = mercs.group(0)
+        self.assertIn("fire_only_once = yes", block)
+        self.assertIn("cost = 150", block)
+        self.assertIn("NOT = { has_country_flag = UST_mercs_1_loaded }", block)
+        self.assertIn("load_oob = UST_mercs_1", block)
+        self.assertIn("amount = 600", block)
+        self.assertIn("type = infantry_equipment_1", block)
+        self.assertIn("335 = { is_controlled_by = ROOT }", block)
+        self.assertIn("capital_scope = {", block)
+        self.assertEqual(2, block.count("create_unit = {"))
+        self.assertIn('division_template = \\"MP\\"', block)
+        self.assertIn("start_equipment_factor = 0", block)
+
+        focuses = text("common/national_focus/UST_shared.txt")
+        militia = re.search(r"(?ms)^shared_focus = \{\s*id = UST_moblise_militia\b.*?\n\}", focuses)
+        self.assertIsNotNone(militia)
+        reward = militia.group(0)
+        self.assertIn("id = UST_moblise_militia", reward)
+        self.assertNotIn("id = UST_mobilize_militia", reward)
+        self.assertIn("NOT = { has_country_flag = UST_moblise_militia_oob_loaded }", reward)
+        self.assertIn("load_oob = UST_moblise_militia_focus_oob", reward)
+        self.assertIn("amount = 800", reward)
+        self.assertIn("335 = { is_controlled_by = ROOT }", reward)
+        self.assertIn("340 = { is_controlled_by = ROOT }", reward)
+        self.assertEqual(2, reward.count("capital_scope = {"))
+        self.assertEqual(8, reward.count("create_unit = {"))
+        self.assertIn('division_template = \\"Militia\\"', reward)
+
+        states = {}
+        for path in (MOD / "history/states").glob("*.txt"):
+            body = path.read_text(encoding="utf-8-sig", errors="replace")
+            owner = re.search(r"(?m)^\t\towner = (\w+)", body)
+            ident = re.search(r"(?m)^\tid = (\d+)", body)
+            provinces = [int(p) for p in re.findall(r"(?m)^\t\t(\d+)$", body)]
+            if owner and ident:
+                states[int(ident.group(1))] = (owner.group(1), set(provinces))
+        self.assertEqual("UST", states[335][0])
+        self.assertEqual("UST", states[340][0])
+        allowed = {"infantry"}
+        for name, expected_locations, divisions_expected in (
+            ("UST_mercs_1", {2930: 335, 2140: 335}, 2),
+            ("UST_moblise_militia_focus_oob", {2930: 335, 2113: 340}, 4),
+        ):
+            roster = text(f"history/units/{name}.txt")
+            self.assertNotIn("instant_effect", roster)
+            self.assertNotIn("add_equipment_production", roster)
+            locations = [int(v) for v in re.findall(r"(?m)^\t\tlocation = (\d+)", roster)]
+            self.assertEqual(divisions_expected, len(locations))
+            self.assertEqual({0}, {int(float(v)) for v in re.findall(r"start_equipment_factor = ([0-9.]+)", roster)})
+            battalions = set(re.findall(r"(?m)^\t\t(\w+) = \{ x = ", roster))
+            self.assertEqual(allowed, battalions, name)
+            for province in locations:
+                state_id = expected_locations[province]
+                self.assertIn(province, states[state_id][1], f"{name}:{province}")
+                self.assertEqual("UST", states[state_id][0])
 
 
 if __name__ == "__main__":

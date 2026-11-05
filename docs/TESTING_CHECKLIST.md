@@ -52,6 +52,7 @@ Static checks are automated by `tools/Test-UlyssesStatic.ps1` (CI: `.github/work
 - [x] Confirm country selection, map render, focus tree render, basic diplomacy, and first-day tick.
 - [x] Advance 30 days and 180 days with AI on; inspect error logs and major country stability. (ran ~13 months; no crash)
 - [ ] Trigger a Belkan War opening and confirm focus/event/war/OOB continuity.
+- [ ] As Ustio, take decision `UST_buy_mercs` during `UST_ratio_war_timer` and complete focus `UST_moblise_militia` after `UST_civil_war` is force-completed. Confirm the hired infantry and militia divisions spawn, and `error.log` has no new entries for `UST_mercs_1` or `UST_moblise_militia_focus_oob`. This item is unchecked: native HOI4 was not launched for the roster fill.
 - [ ] Exercise Belka victory, Belka defeat, Rhongomyniad, Osea election, and Ustio/Sapin/Gebet branches where reachable.
 - [ ] Save and reload before and after each major branch.
 

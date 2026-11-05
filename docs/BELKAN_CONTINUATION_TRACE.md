@@ -22,3 +22,5 @@ The archive calls below are historical. Live Belkan outcome paths no longer sche
 ## Explicit gaps
 
 The archive does not establish the postwar countries, borders, diplomacy, or later-war content that should consume `ac_continuation_active`. Implementing those would require design direction rather than a mechanical repair. The next safe slice is to map existing victory flags and postwar focuses into a documented continuation contract, then add only transitions supported by existing content.
+
+CI source protection: `tools/air_program/reviewed_outcome_updates.json` records the additive outcome dispatcher against current main, separately from the earlier shared campaign-commit receipt. Aviation and naval checks validate the chained digest, every existing effect AST, and the sole approved dispatcher; original captured manifests remain unchanged. Mutation checks reject existing-effect edits and unregistered additions even when a file digest is refreshed. These are offline checks, with native acceptance still pending.

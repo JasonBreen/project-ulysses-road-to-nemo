@@ -1,3 +1,30 @@
+ac_commit_belkan_war_campaign = {
+	# Shared, idempotent entry point for both the player War Council and the
+	# historical 1995 world event. The effect runs in Belka's country scope.
+	if = {
+		limit = {
+			original_tag = BLK
+			NOT = { has_country_flag = ac_campaign_war_committed }
+			NOT = { has_country_flag = ac_postwar_ready }
+			NOT = { has_active_mission = BLK_war_start_timer_dec }
+			NOT = { has_global_flag = ac_campaign_arc_started }
+			NOT = { has_global_flag = belkan_war_is_happening }
+			NOT = { has_global_flag = belka_won_belkan_war }
+			NOT = { has_global_flag = belka_lost_belkan_war }
+			NOT = { has_global_flag = belka_won_belkan_war_wacht_am_wal }
+			NOT = { has_global_flag = ac_continuation_active }
+			NOT = { has_global_flag = ac_postwar_victory }
+			NOT = { has_global_flag = ac_postwar_wacht_am_wal }
+			NOT = { has_global_flag = ac_postwar_defeat }
+			NOT = { has_global_flag = ac_postwar_unclassified }
+		}
+		set_country_flag = ac_campaign_war_committed
+		set_global_flag = ac_campaign_arc_started
+		set_variable = { ac_campaign_war_weeks = 0 }
+		country_event = { id = belka_dlp_war.1 days = 1 }
+	}
+}
+
 ac_clear_belkan_campaign_ideas = {
 	remove_ideas = ac_prewar_cabinet
 	remove_ideas = ac_industrial_preparations

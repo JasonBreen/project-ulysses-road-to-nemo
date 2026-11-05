@@ -18,6 +18,7 @@ Routes, conditions and console steps for each branch are in
 
 - [ ] Complete `ac_belkan_prewar_briefing` and each of the three preparation branches.
 - [ ] Confirm the ultimatum and council focuses become reachable in the intended order.
+- [ ] Owner note, not yet run: let `belka.13` fire while `ac_belkan_prewar_briefing` is unfinished. `belka_dlp_pre_war` does not mount that focus or its children; `belka_start` does. Record whether the chain drops and whether the War Council is stranded. Do not treat the file reading as a native pass.
 - [ ] Confirm the War Council decision calls the existing `belka_dlp_war.1` chain exactly once.
 - [ ] Save/reload before the war-start decision and verify the flags and focus progress persist.
 

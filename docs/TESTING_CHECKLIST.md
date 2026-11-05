@@ -17,6 +17,7 @@ Static wiring only: victory (`belka_dlp_won.9`), Wacht am Wal (`belka_wacht_am_w
 - [ ] Confirm `ac_continuation.1` loads `ac_belkan_postwar` for that flag, and confirm `world_event.2` never fires.
 - [ ] Confirm `error.log` has no new parser errors from the outcome handoff.
 - [ ] Do not record this item as passed from static checks. Native HOI4 was not launched for this change.
+- [ ] Owner note, not yet run: `belka.13` loads `belka_dlp_pre_war`, which lists only `BLK_dlp_victory`. `ac_belkan_prewar_briefing` and its children are mounted on `belka_start`. After the swap, confirm whether an unfinished prewar chain disappears and whether `ac_belkan_war_council` can still be reached. Static reading is not a pass. No focus-tree edit was made for this note.
 
 ## Runtime results — 2026-10-17, HOI4 1.19.3 (Operation Postern), mod 0.3-dev, debug mode, mod enabled alone
 

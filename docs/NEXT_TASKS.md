@@ -8,7 +8,7 @@ Current continuation slice: the former demo handoff now consumes conventional vi
 
 ## Open owner decisions (static audit, 2026-11-03)
 
-These were verified and left for the owner. No lore outcome was chosen, and no `history/units` file was moved or deleted.
+These were verified and left for the owner. Items 8–9 are now marked done after PR #68; the remaining owner decisions stay open. No lore outcome was chosen, and no `history/units` file was moved or deleted.
 
 1. **`glrdc_good_flag` branch.** `BLK_wait_for_profit` still checks the flag. The only writer, `osea_glrdc.3.b` in `events/Osea.txt`, is commented out, so the flag is never set. The placeholder `country_event = { id = xxx }` is now commented, with a TODO. Decide whether to revive that option or delete the branch.
 2. **"Far-right" wording.** Left as written, including `ac_news_event.5.t` ("Far-Right Wins Belkan Elections") and `belka_dlp_war.97`. The Chronicle names the Belkan Liberal Democratic Party and does not use "far-right".
@@ -24,8 +24,8 @@ These were verified and left for the owner. No lore outcome was chosen, and no `
    - `GEB_air` is replaced by `GEB_ws_air`. `GEB_air_dlc` is replaced by `GEB_ws_air_bba`. `GEB_land` is replaced by `GEB_ws_land`.
    - `UST_air` is replaced by `UST_ws_air`. `UST_air_dlc` is replaced by `UST_ws_air_bba`. `UST_land` is replaced by `UST_ws_land`.
    - `NRL_land` is replaced by `NRL_ws_land`. `PBL_land` is replaced by `PBL_ws_land`. `RAT_land` is replaced by `RAT_ws_land`. `SYC_land` is replaced by `SYC_ws_land`. `WIE_land` is replaced by `WIE_ws_land`.
-8. **Empty Ustio mercenary OOB.** `UST_buy_mercs` in `common/decisions/UST_decisions.txt` costs 150 political power and runs `load_oob = UST_mercs_1`. `history/units/UST_mercs_1.txt` is 0 bytes, so the decision pays for an empty order of battle. Not changed.
-9. **Missing militia OOB.** Focus `UST_moblise_militia` in `common/national_focus/UST_shared.txt` runs `load_oob = UST_moblise_militia_focus_oob`. No file of that name exists under `history/units`. Not changed.
+8. **Ustio mercenary OOB: done, static only.** [PR #68](https://github.com/JasonBreen/project-ulysses-road-to-nemo/pull/68), merged 5 Nov 2026, filled `history/units/UST_mercs_1.txt` with two provisional MP-layout infantry detachments. `UST_buy_mercs` retains its id and 150 political-power cost; `UST_mercs_1_loaded` guards the reward. Country history does not grant the roster. Native spawn and balance remain untested.
+9. **Ustio militia OOB: done, static only.** Merged [PR #68](https://github.com/JasonBreen/project-ulysses-road-to-nemo/pull/68) added `history/units/UST_moblise_militia_focus_oob.txt` with four provisional Militia-layout detachments. Focus `UST_moblise_militia` retains its spelling; `UST_moblise_militia_oob_loaded` guards the reward. Native spawn and balance remain untested. These two resolved gaps do not authorize the legacy OOB move in item 7.
 10. **Sapin ship names.** The loaded fleets `SAP_navy_1991_legacy` and `SAP_navy_dlc`, the unused `SAP_navy`, and `common/units/names/00_SAP_names.txt` still use the inherited ARE-prefixed Spanish names, including `ARE Jaime I`, `ARE España`, `ARE Almirante Cervera`, `ARE Alsedo`, and `ARE B1` through `ARE C6`. The name-group comment already calls them inherited starting-fleet names (mod provenance). Left for the art/canon pass. Not renamed.
 
 `events/ac_war_events.txt` `war_event.1` and `war_event.2` are unreferenced stubs (`picture = xxx`, `is_triggered_only = yes`, no caller elsewhere in the mod). `war_event.2` reuses the `war_event.1` title, description, and option keys, and the static reference audit warns that `war_event.1.t`, `war_event.1.desc`, and `war_event.1.a` have no localisation. They were not edited.

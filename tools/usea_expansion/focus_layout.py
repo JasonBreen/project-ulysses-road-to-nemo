@@ -119,7 +119,7 @@ def clearance(positions, position, geometry=None):
 def tree_definitions(mod=MOD):
     """Each focus_tree's id, file and declared continuous_focus_position."""
     result = {}
-    for path in sorted((mod / 'common/national_focus').glob('*.txt')):
+    for path in sorted((mod / 'common/national_focus').glob('*.txt'), key=lambda p: p.as_posix()):
         for kind, _, node in parse(path.read_text(encoding='utf-8-sig')):
             if kind != 'focus_tree':
                 continue
@@ -137,7 +137,7 @@ def resolved_tree_positions(mod=MOD):
     currently available. Availability does not hide a focus caption.
     """
     shared = {}; trees = []; children = defaultdict(set)
-    for path in sorted((mod / 'common/national_focus').glob('*.txt')):
+    for path in sorted((mod / 'common/national_focus').glob('*.txt'), key=lambda p: p.as_posix()):
         for kind, _, node in parse(path.read_text(encoding='utf-8-sig')):
             if kind == 'shared_focus' and isinstance(node, list):
                 shared[get(node, 'id')] = node

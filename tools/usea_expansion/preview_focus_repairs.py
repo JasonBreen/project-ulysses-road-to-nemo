@@ -121,7 +121,7 @@ def layouts(check=False):
         target=OUT/name
         if check:
             old=target.read_bytes() if target.exists() else b''
-            if not (same_review_png(old,data) if name.endswith('.png') else old==data):stale.append(name)
+            if not (same_review_png(old,data) if name.endswith('.png') else old.replace(b'\r\n',b'\n')==data):stale.append(name)
         else:
             OUT.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
     if check and stale:raise SystemExit('Stale layout review: '+', '.join(stale))

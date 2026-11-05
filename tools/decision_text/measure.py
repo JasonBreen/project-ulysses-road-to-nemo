@@ -54,7 +54,7 @@ def control_width(mod=MOD):
 def defined_texts(mod=MOD):
     result = {}
     for folder in ('scripted_localisation', 'custom_localization'):
-        for path in sorted((mod / 'common' / folder).glob('*.txt')):
+        for path in sorted((mod / 'common' / folder).glob('*.txt'), key=lambda p: p.as_posix()):
             for kind, _, node in parse(path.read_text(encoding='utf-8-sig')):
                 if kind == 'defined_text':
                     result[get(node, 'name').strip('"')] = [get(body, 'localization_key').strip('"')
@@ -64,7 +64,7 @@ def defined_texts(mod=MOD):
 
 def icon_widths(mod=MOD):
     widths = {}
-    for path in sorted((mod / 'interface').glob('*.gfx')):
+    for path in sorted((mod / 'interface').glob('*.gfx'), key=lambda p: p.as_posix()):
         text = path.read_text(encoding='utf-8-sig', errors='replace')
         for name, texture, frames in re.findall(r'name\s*=\s*"?GFX_(\w+)"?\s*texturefile\s*=\s*"([^"]+)"(?:\s*noOfFrames\s*=\s*(\d+))?', text):
             file = mod / texture
@@ -140,7 +140,7 @@ class Resolver:
 
 def categories(mod=MOD):
     result = []
-    for path in sorted((mod / 'common/decisions/categories').glob('*.txt')):
+    for path in sorted((mod / 'common/decisions/categories').glob('*.txt'), key=lambda p: p.as_posix()):
         for kind, _, node in parse(path.read_text(encoding='utf-8-sig')):
             if isinstance(node, list):
                 result.append((kind, path.relative_to(mod).as_posix()))
@@ -183,7 +183,7 @@ def measurement(mod=MOD):
 
 def render(data):
     font = Atlas('ACBriefing16')
-    chosen = sorted(data['rows'], key=lambda r: -r['longest']['lines'])[:6]
+    chosen = sorted(data['rows'], key=lambda r: (-r['longest']['lines'], r['category']))[:6]
     width = data['control']['width']
     panels = []
     for row in chosen:

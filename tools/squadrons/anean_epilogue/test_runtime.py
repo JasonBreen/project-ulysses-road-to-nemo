@@ -33,6 +33,7 @@ SCENARIOS = {
     'gracemeria': dict(war=True, flags=WAR + ('ac_eew_stage_gracemeria',)),
     'liberation': dict(war=True, flags=WAR + ('ac_eew_stage_gracemeria', 'ac_eew_stage_liberation')),
     'coup': dict(war=True, flags=WAR + ('ac_eew_stage_gracemeria', 'ac_eew_stage_liberation', 'ac_eew_stage_coup')),
+    'fought_on': dict(war=True, flags=WAR + ('ac_eew_stage_gracemeria', 'ac_eew_stage_liberation', 'ac_eew_stage_coup', 'ac_eew_ceasefire_refused')),
     'ceasefire': dict(flags=WAR + ('ac_eew_stage_gracemeria', 'ac_eew_stage_liberation', 'ac_eew_stage_coup', 'ac_eew_ceasefire_signed',
                                    'ac_eew_outcome_ceasefire', 'ac_eew_ended')),
     'emmerian_victory': dict(flags=WAR + ('ac_eew_stage_gracemeria', 'ac_eew_stage_liberation', 'ac_eew_outcome_emmerian_victory', 'ac_eew_ended')),

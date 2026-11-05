@@ -572,7 +572,7 @@ country_event = {
 		name = ac_ucw.60.a
 		ai_chance = { factor = 100 }
 		set_global_flag = ac_ucw_megalith_active
-		add_timed_idea = { idea = ac_ucw_megalith_threat days = 14 }
+		if = { limit = { has_global_flag = ac_camp_enabled } add_ideas = ac_ucw_megalith_threat } else = { add_timed_idea = { idea = ac_ucw_megalith_threat days = 14 } }
 		country_event = { id = ac_ucw.61 days = 14 }
 	}
 }
@@ -583,7 +583,7 @@ country_event = {
 	desc = ac_ucw.61.d
 	picture = GFX_report_event_excalibur_1
 	is_triggered_only = yes
-	trigger = { always = yes }
+	trigger = { OR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_megalith_success } }
 	option = {
 		name = ac_ucw.61.a
 		ai_chance = { factor = 100 }

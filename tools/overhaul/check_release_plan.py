@@ -19,6 +19,11 @@ def check(plan):
     countries = plan["countries"]
     require(len(countries) == 19, "Expected 19 individually budgeted countries")
     require(len({row["tag"] for row in countries}) == len(countries), "Duplicate country budget")
+    expansion=plan.get('approved_expansions',{}).get('ac04_ac05')
+    if expansion:
+        require(expansion['original_1028_budget_unchanged'], 'Expansion must preserve the original approval baseline')
+        require(sum(expansion['country_counts'].values())==expansion['additional_focuses']==186,'AC04/AC5 expansion accounting mismatch')
+        require(len(expansion['country_counts'])==16,'AC04/AC5 expansion must cover sixteen countries')
     packages = {row["id"] for row in plan["packages"]}
     require(packages == set(range(6)), "Expected Packages 0 through 5")
     for row in countries:

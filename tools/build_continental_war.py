@@ -258,7 +258,7 @@ if = {
     if = { limit = { NOT = { has_global_flag = ac_ucw_stonehenge_seized } ac_ucw_stonehenge_held_by_erusea = yes } ac_ucw_seize_stonehenge = yes }
     # A playtest seizure leaves the map unchanged; only a real Erusean hold can later be lost.
     if = { limit = { has_global_flag = ac_ucw_stonehenge_simulated ac_ucw_stonehenge_held_by_erusea = yes } clr_global_flag = ac_ucw_stonehenge_simulated }
-    if = { limit = { has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_simulated } ac_ucw_stonehenge_held_by_erusea = no } ac_ucw_destroy_stonehenge = yes }
+    if = { limit = { has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_simulated } NOT = { has_global_flag = ac_camp_enabled } ac_ucw_stonehenge_held_by_erusea = no } ac_ucw_destroy_stonehenge = yes }
     if = {
         limit = { is_ai = yes has_global_flag = ac_ucw_stage_stonehenge NOT = { has_country_flag = ac_ucw_armistice_sought } country_exists = FCU FCU = { check_variable = { ac_ucw_stage_weeks > 40 } } }
         set_country_flag = ac_ucw_armistice_sought
@@ -295,8 +295,12 @@ if = {
     limit = { is_ai = yes ac_ucw_war_running = yes }
 """ + "\n".join("    if = { limit = { ac_ucw_stage_%s_ready = yes check_variable = { ac_ucw_stage_weeks > %d } } ac_ucw_stage_%s = yes }" % (s, ai - 1, s) for s, _, _, ai, *_ in STAGES) + "\n}")
     previous = "has_global_flag = ac_ucw_isaf_formed"
+    from ac_campaigns.catalogue import UCW_GATES
     for name, title, desc, ai, human, news, extra, picture in STAGES:
         ready = previous + "\nNOT = { has_global_flag = ac_ucw_stage_%s }\n%s" % (name, extra)
+        if name in UCW_GATES:
+            ready += '\nOR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_'+UCW_GATES[name]+'_success }'
+        if name=='stonehenge':ready+='\nOR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_battery_disposition }'
         trigger("ac_ucw_stage_%s_ready" % name, "original_tag = FCU\nac_ucw_war_running = yes\n" + ready.strip())
         # The Stonehenge stage reuses the destruction effect, which reports itself.
         report = "\nnews_event = { id = ac_ucw.%d days = 1 }" % news if news else ""
@@ -343,9 +347,9 @@ else_if = { limit = { has_global_flag = ac_ucw_isaf_formed ERU = { NOT = { has_w
     brief(51, "Erusea wins the Continental War", "Central Usea's command has collapsed and Erusea dominates the continent. In the official chronology ISAF wins the war; this outcome is a provisional gameplay branch.", picture="GFX_report_event_bad_news_2")
     brief(52, "An armistice in Usea", "The Usean Continental War has ended in an armistice along the front lines, with no decision on the battlefield. In the official chronology ISAF wins the war; this outcome is a provisional gameplay branch.", picture="GFX_report_event_treaty_2")
     event(60, "Megalith", "The official chronology records that young Erusean officers seized Megalith on 26 September 2005, a fortress built to bring down orbiting Ulysses fragments. ISAF must take the fortress before it can be used.", [
-        ("Send ISAF into Megalith.", "set_global_flag = ac_ucw_megalith_active\nadd_timed_idea = { idea = ac_ucw_megalith_threat days = 14 }\ncountry_event = { id = ac_ucw.61 days = 14 }", "", 100)], picture="GFX_report_event_excalibur_1")
-    effect("ac_ucw_destroy_megalith", gonce("ac_ucw_megalith_destroyed", "clr_global_flag = ac_ucw_megalith_active\nnews_event = { id = ac_ucw.62 days = 1 }\n" + scoped("ERU", "remove_ideas = ac_sp_megalith_fortress\nadd_ideas = ac_ucw_eru_provisional_government"), "has_global_flag = ac_ucw_megalith_active"))
-    event(61, "Megalith is destroyed", "ISAF has destroyed Megalith. Erusea's surrender stands.", [("Close the operation.", "ac_ucw_destroy_megalith = yes", "", 100)], picture="GFX_report_event_excalibur_1")
+        ("Send ISAF into Megalith.", "set_global_flag = ac_ucw_megalith_active\nif = { limit = { has_global_flag = ac_camp_enabled } add_ideas = ac_ucw_megalith_threat } else = { add_timed_idea = { idea = ac_ucw_megalith_threat days = 14 } }\ncountry_event = { id = ac_ucw.61 days = 14 }", "", 100)], picture="GFX_report_event_excalibur_1")
+    effect("ac_ucw_destroy_megalith", gonce("ac_ucw_megalith_destroyed", "clr_global_flag = ac_ucw_megalith_active\nremove_ideas = ac_ucw_megalith_threat\nnews_event = { id = ac_ucw.62 days = 1 }\n" + scoped("ERU", "remove_ideas = ac_sp_megalith_fortress\nadd_ideas = ac_ucw_eru_provisional_government"), "has_global_flag = ac_ucw_megalith_active OR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_megalith_success }"))
+    event(61, "Megalith is destroyed", "ISAF has destroyed Megalith. Erusea's surrender stands.", [("Close the operation.", "ac_ucw_destroy_megalith = yes", "", 100)], trigger_text='OR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_megalith_success }',picture="GFX_report_event_excalibur_1")
     brief(62, "Erusea's provisional government", "The official chronology records that after Megalith was destroyed, Erusea formed a provisional autonomous government under ISAF oversight. The government in office stays in place; the arrangement is shown as a national spirit, not a change of borders or ideology.", picture="GFX_report_event_treaty_1")
     effect("ac_ucw_assessment_tick", block("if", """limit = {
     has_country_flag = ac_ucw_started
@@ -610,6 +614,8 @@ ai_strategy = { type = antagonize id = ERU value = 100 }"""))
 
 
 def build_flag_localization():
+    for key,title in {'ac_camp_enabled':'Expanded AC04/AC5 campaign active','ac_camp_landing_success':'Prepared landing operation completed','ac_camp_battery_success':'Prepared battery operation completed','ac_camp_battery_disposition':'Battery disposition recorded','ac_camp_megalith_success':'Prepared Megalith operation completed'}.items():
+        if key not in LOC:loc(key,title)
     labels = {
         "ac_ucw_calendar_started": "The Usean calendar has begun",
         "ac_ucw_playtest_forced": "The Usean calendar was opened by a playtest shortcut",

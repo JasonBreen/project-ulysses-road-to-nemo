@@ -87,6 +87,11 @@ class Source(unittest.TestCase):
                 with self.subTest(tag=tag):
                     ids = [focus_id(module.WAVE, b, i) for b in module.WAVE.branches if b.tag == tag for i in range(6)]
                     expected = f"# BEGIN {name} IMPORTS\n" + "".join(f"shared_focus = {i}\n" for i in ids) + f"# END {name} IMPORTS\n"
+                    if tag in ('ERU','FCU'):
+                        expansion=json.loads((ROOT/'tools/ac_campaigns/manifest.json').read_text())
+                        additions=[r['id'] for r in expansion['focuses'] if r['tag']==tag]
+                        self.assertEqual(24,len(additions))
+                        expected += '# BEGIN AC CAMPAIGNS IMPORTS\n'+''.join('shared_focus = '+ident+'\n' for ident in additions)+'# END AC CAMPAIGNS IMPORTS\n'
                     self.assertEqual(expected, owners[tag].preserved_imports(tag))
 
     def test_approved_budgets_and_globally_unique_ids(self):

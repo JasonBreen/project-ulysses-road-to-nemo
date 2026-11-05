@@ -1,0 +1,612 @@
+# Original provisional gameplay; source: tools/content_waves (The Circum-Pacific War). Native acceptance pending.
+ac_cpw_restore = {
+	if = {
+		limit = {
+			ac_cpw_war_running = yes NOT = { has_global_flag = ac_cpw_existing_war_observed }
+		}
+		if = {
+			limit = {
+				tag = YUK NOT = { has_idea = ac_cpw_yuk_war_footing }
+			}
+			add_ideas = ac_cpw_yuk_war_footing
+		}
+		if = {
+			limit = {
+				country_exists = OSE OSE = { NOT = { has_idea = ac_cpw_ose_war_footing } }
+			}
+			OSE = { add_ideas = ac_cpw_ose_war_footing }
+		}
+	}
+}
+
+ac_cpw_summit_tick = {
+	if = {
+		limit = {
+			date > 2008.8.20 NOT = { has_global_flag = ac_cpw_summit_held } NOT = { has_global_flag = ac_cpw_summit_skipped }
+		}
+		if = {
+			limit = {
+				date < 2009.8.21 ac_cpw_principals = yes has_global_flag = ac_sp_arkbird_complete NOT = { has_war_with = OSE }
+			}
+			set_global_flag = ac_cpw_summit_held
+			news_event = { id = ac_cpw.14 days = 1 }
+		}
+		else_if = {
+			limit = {
+				date > 2009.8.21
+			}
+			set_global_flag = ac_cpw_summit_skipped
+		}
+	}
+}
+
+ac_cpw_calendar_tick = {
+	if = {
+		limit = {
+			date > 2010.8.31 NOT = { has_global_flag = ac_cpw_calendar_started } NOT = { has_global_flag = ac_cpw_closed }
+		}
+		if = {
+			limit = {
+				date < 2010.9.27 ac_cpw_principals = yes
+			}
+			set_global_flag = ac_cpw_calendar_started
+		}
+		else_if = {
+			limit = {
+				NOT = { date < 2010.9.27 }
+			}
+			set_global_flag = ac_cpw_closed
+			set_global_flag = ac_cpw_late_start_skipped
+		}
+		else = {
+			set_global_flag = ac_cpw_closed
+			set_global_flag = ac_cpw_principal_missing
+		}
+	}
+}
+
+ac_cpw_prelude_tick = {
+	if = {
+		limit = {
+			has_global_flag = ac_cpw_calendar_started date > 2010.9.22 NOT = { has_global_flag = ac_cpw_prelude_landers } NOT = { has_global_flag = ac_cpw_closed } ac_cpw_principals = yes NOT = { has_war_with = OSE }
+		}
+		set_global_flag = ac_cpw_prelude_landers
+		news_event = { id = ac_cpw.1 days = 1 }
+	}
+	if = {
+		limit = {
+			has_global_flag = ac_cpw_calendar_started date > 2010.9.23 NOT = { has_global_flag = ac_cpw_prelude_overflight } NOT = { has_global_flag = ac_cpw_closed } ac_cpw_principals = yes NOT = { has_war_with = OSE }
+		}
+		set_global_flag = ac_cpw_prelude_overflight
+		news_event = { id = ac_cpw.2 days = 1 }
+	}
+}
+
+ac_cpw_observe_existing_war = {
+	if = {
+		limit = {
+			ac_cpw_pair_at_war = yes NOT = { has_global_flag = ac_cpw_started } NOT = { has_global_flag = ac_cpw_prevented } NOT = { has_global_flag = ac_cpw_declaration_withheld } NOT = { has_global_flag = ac_cpw_closed }
+		}
+		clr_country_flag = ac_cpw_declaration_pending
+		clr_country_flag = ac_cpw_declaration_window
+		set_global_flag = ac_cpw_started
+		set_global_flag = ac_cpw_existing_war_observed
+		news_event = { id = ac_cpw.8 days = 1 }
+	}
+}
+
+ac_cpw_prevent = {
+	if = {
+		limit = {
+			ac_cpw_exchange_earned = yes NOT = { has_global_flag = ac_cpw_started } NOT = { has_global_flag = ac_cpw_prevented } NOT = { has_global_flag = ac_cpw_declaration_withheld } NOT = { has_global_flag = ac_cpw_closed }
+		}
+		clr_country_flag = ac_cpw_declaration_pending
+		clr_country_flag = ac_cpw_declaration_window
+		set_global_flag = ac_cpw_prevented
+		news_event = { id = ac_cpw.4 days = 1 }
+		add_timed_idea = { idea = ac_cpw_yuk_exchange_standing days = 365 }
+		OSE = { add_timed_idea = { idea = ac_cpw_ose_exchange_standing days = 365 } }
+	}
+}
+
+ac_cpw_taint = {
+	if = {
+		limit = {
+			ac_cpw_war_running = yes NOT = { has_global_flag = ac_cpw_tainted }
+		}
+		set_global_flag = ac_cpw_tainted
+	}
+}
+
+ac_cpw_declare = {
+	if = {
+		limit = {
+			ac_cpw_can_declare = yes
+		}
+		if = {
+			limit = {
+				OR = { has_war = yes OSE = { has_war = yes } }
+			}
+			set_global_flag = ac_cpw_pre_existing_war
+		}
+		declare_war_on = { target = OSE type = topple_government }
+		clr_country_flag = ac_cpw_declaration_pending
+		clr_country_flag = ac_cpw_declaration_window
+		if = {
+			limit = {
+				has_war_with = OSE
+			}
+			set_global_flag = ac_cpw_started
+			add_ideas = ac_cpw_yuk_war_footing
+			add_ideas = ac_cpw_yuk_submarine_carriers
+			OSE = { add_ideas = ac_cpw_ose_war_footing }
+			news_event = { id = ac_cpw.3 days = 1 }
+			if = {
+				limit = {
+					has_global_flag = ac_cpw_pre_existing_war
+				}
+				ac_cpw_taint = yes
+				news_event = { id = ac_cpw.9 days = 2 }
+			}
+		}
+		else = {
+			clr_global_flag = ac_cpw_pre_existing_war
+			set_global_flag = ac_cpw_closed
+			set_global_flag = ac_cpw_declaration_refused
+		}
+	}
+}
+
+ac_cpw_withhold = {
+	if = {
+		limit = {
+			ac_cpw_can_declare = yes ac_cpw_mandate_earned = yes
+		}
+		set_global_flag = ac_cpw_declaration_withheld
+		clr_country_flag = ac_cpw_declaration_pending
+		clr_country_flag = ac_cpw_declaration_window
+		add_timed_idea = { idea = ac_cpw_yuk_mandate_kept days = 365 }
+		news_event = { id = ac_cpw.7 days = 1 }
+	}
+}
+
+ac_cpw_declaration_tick = {
+	if = {
+		limit = {
+			has_global_flag = ac_cpw_calendar_started date > 2010.9.26 NOT = { has_global_flag = ac_cpw_started } NOT = { has_global_flag = ac_cpw_prevented } NOT = { has_global_flag = ac_cpw_declaration_withheld } NOT = { has_global_flag = ac_cpw_closed }
+		}
+		if = {
+			limit = {
+				ac_cpw_pair_at_war = yes
+			}
+			ac_cpw_observe_existing_war = yes
+		}
+		else_if = {
+			limit = {
+				ac_cpw_exchange_earned = yes
+			}
+			ac_cpw_prevent = yes
+		}
+		else_if = {
+			limit = {
+				ac_cpw_can_declare = yes
+			}
+			if = {
+				limit = {
+					NOT = { has_country_flag = ac_cpw_declaration_asked }
+				}
+				set_country_flag = ac_cpw_declaration_asked
+				set_country_flag = ac_cpw_declaration_pending
+				set_country_flag = { flag = ac_cpw_declaration_window days = 14 }
+				country_event = { id = ac_cpw.5 days = 1 }
+			}
+			else_if = {
+				limit = {
+					has_country_flag = ac_cpw_declaration_pending NOT = { has_country_flag = ac_cpw_declaration_window }
+				}
+				ac_cpw_declare = yes
+			}
+		}
+		else = {
+			clr_country_flag = ac_cpw_declaration_pending
+			clr_country_flag = ac_cpw_declaration_window
+			set_global_flag = ac_cpw_closed
+			set_global_flag = ac_cpw_principal_unable
+		}
+	}
+}
+
+ac_cpw_record_end = {
+	if = {
+		limit = {
+			ac_cpw_war_running = yes
+		}
+		set_global_flag = ac_cpw_ended
+		if = {
+			limit = {
+				NOT = { has_global_flag = ac_cpw_external_fall } OR = { NOT = { country_exists = YUK } has_global_flag = ac_cpw_yuk_fallen YUK = { has_capitulated = yes } }
+			}
+			set_global_flag = ac_cpw_outcome_osean_victory
+			if = {
+				limit = {
+					country_exists = OSE NOT = { has_global_flag = ac_cpw_ose_fallen }
+				}
+				OSE = { news_event = { id = ac_cpw.11 days = 1 } }
+			}
+			else = {
+				news_event = { id = ac_cpw.11 days = 1 }
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = { has_global_flag = ac_cpw_external_fall } OR = { NOT = { country_exists = OSE } has_global_flag = ac_cpw_ose_fallen OSE = { has_capitulated = yes } }
+			}
+			set_global_flag = ac_cpw_outcome_yuktobanian_victory
+			if = {
+				limit = {
+					country_exists = YUK NOT = { has_global_flag = ac_cpw_yuk_fallen }
+				}
+				YUK = { news_event = { id = ac_cpw.12 days = 1 } }
+			}
+			else = {
+				news_event = { id = ac_cpw.12 days = 1 }
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = { has_global_flag = ac_cpw_tainted } NOT = { has_global_flag = ac_cpw_existing_war_observed }
+			}
+			set_global_flag = ac_cpw_outcome_cessation
+			if = {
+				limit = {
+					has_global_flag = ac_cpw_stage_solg
+				}
+				set_global_flag = ac_cpw_historical_course
+			}
+			if = {
+				limit = {
+					country_exists = OSE NOT = { has_global_flag = ac_cpw_ose_fallen }
+				}
+				OSE = { news_event = { id = ac_cpw.10 days = 1 } }
+			}
+			else_if = {
+				limit = {
+					country_exists = YUK NOT = { has_global_flag = ac_cpw_yuk_fallen }
+				}
+				YUK = { news_event = { id = ac_cpw.10 days = 1 } }
+			}
+			else = {
+				news_event = { id = ac_cpw.10 days = 1 }
+			}
+		}
+		else = {
+			set_global_flag = ac_cpw_outcome_cessation
+			if = {
+				limit = {
+					country_exists = OSE NOT = { has_global_flag = ac_cpw_ose_fallen }
+				}
+				OSE = { news_event = { id = ac_cpw.13 days = 1 } }
+			}
+			else_if = {
+				limit = {
+					country_exists = YUK NOT = { has_global_flag = ac_cpw_yuk_fallen }
+				}
+				YUK = { news_event = { id = ac_cpw.13 days = 1 } }
+			}
+			else = {
+				news_event = { id = ac_cpw.13 days = 1 }
+			}
+		}
+		if = {
+			limit = {
+				country_exists = OSE
+			}
+			OSE = { remove_ideas = ac_cpw_ose_war_footing remove_ideas = ac_cpw_yuk_war_footing remove_ideas = ac_cpw_yuk_submarine_carriers remove_ideas = ac_cpw_yuk_submarine_carrier remove_ideas = ac_cpw_disarmament_appeal remove_ideas = ac_cpw_ose_arkbird_at_the_front }
+		}
+		if = {
+			limit = {
+				country_exists = YUK
+			}
+			YUK = { remove_ideas = ac_cpw_ose_war_footing remove_ideas = ac_cpw_yuk_war_footing remove_ideas = ac_cpw_yuk_submarine_carriers remove_ideas = ac_cpw_yuk_submarine_carrier remove_ideas = ac_cpw_disarmament_appeal remove_ideas = ac_cpw_ose_arkbird_at_the_front }
+		}
+	}
+}
+
+ac_cpw_observation_tick = {
+	if = {
+		limit = {
+			ac_cpw_war_running = yes
+		}
+		if = {
+			limit = {
+				NOT = { has_global_flag = ac_cpw_tainted } ac_cpw_third_party_present = yes
+			}
+			ac_cpw_taint = yes
+			news_event = { id = ac_cpw.9 days = 1 }
+		}
+		if = {
+			limit = {
+				OR = { ac_cpw_principal_fallen = yes NOT = { ac_cpw_pair_at_war = yes } }
+			}
+			ac_cpw_record_end = yes
+		}
+	}
+}
+
+ac_cpw_stage_tick = {
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.9.29 NOT = { has_global_flag = ac_cpw_stage_eaglin }
+		}
+		set_global_flag = ac_cpw_stage_eaglin
+		OSE = { add_timed_idea = { idea = ac_cpw_ose_carrier_losses days = 90 } }
+		if = {
+			limit = {
+				ac_cpw_arkbird_available = yes NOT = { has_global_flag = ac_cpw_arkbird_committed } NOT = { has_global_flag = ac_cpw_arkbird_held_back }
+			}
+			OSE = { country_event = { id = ac_cpw.6 days = 1 } }
+		}
+
+		news_event = { id = ac_cpw.20 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.10.3 NOT = { has_global_flag = ac_cpw_stage_sand_island }
+		}
+		set_global_flag = ac_cpw_stage_sand_island
+		remove_ideas = ac_cpw_yuk_submarine_carriers
+		add_ideas = ac_cpw_yuk_submarine_carrier
+		news_event = { id = ac_cpw.21 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.10.21 NOT = { has_global_flag = ac_cpw_stage_akerson_hill }
+		}
+		set_global_flag = ac_cpw_stage_akerson_hill
+		news_event = { id = ac_cpw.22 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.10.24 NOT = { has_global_flag = ac_cpw_stage_arkbird_sabotage } has_global_flag = ac_cpw_arkbird_committed
+		}
+		set_global_flag = ac_cpw_stage_arkbird_sabotage
+		set_global_flag = ac_cpw_arkbird_sabotaged
+		OSE = { add_timed_idea = { idea = ac_cpw_ose_arkbird_grounded days = 56 } }
+		news_event = { id = ac_cpw.23 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.10.31 NOT = { has_global_flag = ac_cpw_stage_bastok } ac_cpw_osean_foothold = yes
+		}
+		set_global_flag = ac_cpw_stage_bastok
+		OSE = { add_timed_idea = { idea = ac_cpw_ose_expeditionary_strain days = 90 } }
+		news_event = { id = ac_cpw.24 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.11.1 NOT = { has_global_flag = ac_cpw_stage_dresdene } has_global_flag = ac_cpw_stage_bastok
+		}
+		set_global_flag = ac_cpw_stage_dresdene
+		OSE = { add_timed_idea = { idea = ac_cpw_ose_dresdene_inquiry days = 60 } }
+		news_event = { id = ac_cpw.25 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.11.3 NOT = { has_global_flag = ac_cpw_stage_bana }
+		}
+		set_global_flag = ac_cpw_stage_bana
+		OSE = { add_timed_idea = { idea = ac_cpw_ose_home_front_alert days = 60 } }
+		news_event = { id = ac_cpw.26 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.11.13 NOT = { has_global_flag = ac_cpw_stage_razgriz_straits }
+		}
+		set_global_flag = ac_cpw_stage_razgriz_straits
+		remove_ideas = ac_cpw_yuk_submarine_carriers
+		remove_ideas = ac_cpw_yuk_submarine_carrier
+		news_event = { id = ac_cpw.27 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.11.28 NOT = { has_global_flag = ac_cpw_stage_november_city }
+		}
+		set_global_flag = ac_cpw_stage_november_city
+		OSE = { add_timed_idea = { idea = ac_cpw_ose_home_front_alert days = 60 } }
+		news_event = { id = ac_cpw.28 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.12.5 NOT = { has_global_flag = ac_cpw_stage_cruik } has_global_flag = ac_cpw_stage_bastok ac_cpw_osean_foothold = yes
+		}
+		set_global_flag = ac_cpw_stage_cruik
+		add_timed_idea = { idea = ac_cpw_yuk_stronghold_lost days = 90 }
+		news_event = { id = ac_cpw.29 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.12.8 NOT = { has_global_flag = ac_cpw_stage_harling }
+		}
+		set_global_flag = ac_cpw_stage_harling
+		OSE = { add_timed_idea = { idea = ac_cpw_ose_president_returns days = 90 } }
+		news_event = { id = ac_cpw.30 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.12.18 NOT = { has_global_flag = ac_cpw_stage_arkbird_lost } has_global_flag = ac_cpw_arkbird_committed
+		}
+		set_global_flag = ac_cpw_stage_arkbird_lost
+		set_global_flag = ac_cpw_arkbird_lost
+		remove_ideas = ac_sp_arkbird_joint_operations
+		OSE = { remove_ideas = ac_sp_arkbird_debris_clearing remove_ideas = ac_sp_arkbird_joint_operations remove_ideas = ac_cpw_ose_arkbird_at_the_front remove_ideas = ac_cpw_ose_arkbird_grounded }
+		news_event = { id = ac_cpw.31 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.12.22 NOT = { has_global_flag = ac_cpw_stage_nikanor }
+		}
+		set_global_flag = ac_cpw_stage_nikanor
+		add_timed_idea = { idea = ac_cpw_yuk_leadership_question days = 60 }
+		news_event = { id = ac_cpw.32 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.12.28 NOT = { has_global_flag = ac_cpw_stage_ceres }
+		}
+		set_global_flag = ac_cpw_stage_ceres
+		news_event = { id = ac_cpw.33 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.12.29 NOT = { has_global_flag = ac_cpw_stage_kestrel }
+		}
+		set_global_flag = ac_cpw_stage_kestrel
+		set_global_flag = ac_cpw_appeal_made
+		add_ideas = ac_cpw_disarmament_appeal
+		OSE = { add_ideas = ac_cpw_disarmament_appeal }
+		news_event = { id = ac_cpw.34 days = 1 }
+	}
+	if = {
+		limit = {
+			ac_cpw_course_open = yes date > 2010.12.30 NOT = { has_global_flag = ac_cpw_stage_solg } has_global_flag = ac_cpw_stage_kestrel
+		}
+		set_global_flag = ac_cpw_stage_solg
+		news_event = { id = ac_cpw.35 days = 1 }
+	}
+}
+
+ac_cpw_owner_weekly = {
+	if = {
+		limit = {
+			tag = YUK original_tag = YUK
+		}
+		ac_cpw_summit_tick = yes
+		ac_cpw_calendar_tick = yes
+		ac_cpw_prelude_tick = yes
+		ac_cpw_declaration_tick = yes
+		ac_cpw_observation_tick = yes
+		ac_cpw_stage_tick = yes
+	}
+}
+
+ac_cpw_owner_weekly_ose = {
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE ac_cpw_war_running = yes NOT = { country_exists = YUK }
+		}
+		ac_cpw_record_end = yes
+	}
+}
+
+ac_cpw_interrupt = {
+	if = {
+		limit = {
+			OR = { AND = { tag = OSE original_tag = OSE } AND = { tag = YUK original_tag = YUK } } ac_cpw_war_running = yes
+		}
+		if = {
+			limit = {
+				tag = OSE
+			}
+			set_global_flag = ac_cpw_ose_fallen
+		}
+		else = {
+			set_global_flag = ac_cpw_yuk_fallen
+		}
+		if = {
+			limit = {
+				NOT = { OR = { AND = { tag = YUK has_war_with = OSE } AND = { tag = OSE has_war_with = YUK } } }
+			}
+			set_global_flag = ac_cpw_external_fall
+			ac_cpw_taint = yes
+		}
+		ac_cpw_record_end = yes
+	}
+}
+
+ac_cpw_interrupt_external = {
+	if = {
+		limit = {
+			OR = { AND = { tag = OSE original_tag = OSE } AND = { tag = YUK original_tag = YUK } } ac_cpw_war_running = yes
+		}
+		if = {
+			limit = {
+				tag = OSE
+			}
+			set_global_flag = ac_cpw_ose_fallen
+		}
+		else = {
+			set_global_flag = ac_cpw_yuk_fallen
+		}
+		set_global_flag = ac_cpw_external_fall
+		ac_cpw_taint = yes
+		ac_cpw_record_end = yes
+	}
+}
+
+ac_cpw_commit_arkbird = {
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE ac_cpw_course_open = yes ac_cpw_arkbird_available = yes NOT = { has_global_flag = ac_cpw_arkbird_committed } NOT = { has_global_flag = ac_cpw_arkbird_held_back }
+		}
+		if = {
+			limit = {
+				date < 2010.10.25
+			}
+			set_global_flag = ac_cpw_arkbird_committed
+			add_ideas = ac_cpw_ose_arkbird_at_the_front
+			news_event = { id = ac_cpw.15 days = 1 }
+		}
+		else = {
+			set_global_flag = ac_cpw_arkbird_held_back
+		}
+	}
+}
+
+ac_cpw_hold_arkbird = {
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE NOT = { has_global_flag = ac_cpw_arkbird_committed }
+		}
+		set_global_flag = ac_cpw_arkbird_held_back
+	}
+}
+
+ac_cpw_home_front_ose = {
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE ac_cpw_war_running = yes NOT = { has_country_flag = OSE_cpw_home_front_done }
+		}
+		set_country_flag = OSE_cpw_home_front_done
+		add_timed_idea = { idea = ac_cpw_ose_home_front days = 120 }
+	}
+}
+
+ac_cpw_war_record_ose = {
+	if = {
+		limit = {
+			tag = OSE original_tag = OSE has_global_flag = ac_cpw_ended NOT = { has_country_flag = OSE_cpw_war_record_done }
+		}
+		set_country_flag = OSE_cpw_war_record_done
+		add_timed_idea = { idea = ac_cpw_ose_war_record days = 180 }
+	}
+}
+
+ac_cpw_home_front_yuk = {
+	if = {
+		limit = {
+			tag = YUK original_tag = YUK ac_cpw_war_running = yes NOT = { has_country_flag = YUK_cpw_home_front_done }
+		}
+		set_country_flag = YUK_cpw_home_front_done
+		add_timed_idea = { idea = ac_cpw_yuk_home_front days = 120 }
+	}
+}
+
+ac_cpw_war_record_yuk = {
+	if = {
+		limit = {
+			tag = YUK original_tag = YUK has_global_flag = ac_cpw_ended NOT = { has_country_flag = YUK_cpw_war_record_done }
+		}
+		set_country_flag = YUK_cpw_war_record_done
+		add_timed_idea = { idea = ac_cpw_yuk_war_record days = 180 }
+	}
+}

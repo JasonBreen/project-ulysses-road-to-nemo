@@ -21,6 +21,7 @@ from compile import state_output
 from shared_logistics import compose
 
 PROFILES = HERE/'legacy_profiles.json'; FOUNDATION = HERE/'legacy_foundation.json'; INPUTS = HERE/'legacy_inputs.json'
+REVIEWED_SOURCE_UPDATES = json.loads((ROOT/'tools/history_data_cleanup_updates.json').read_text())['files']
 SETTINGS = {
     'BLK': dict(oil_base=64, fuel_silos=2, supply_centres=12, planned_resource_imports={'rubber': 21},
         excluded_new_target_states=[309],
@@ -35,6 +36,13 @@ SETTINGS = {
 
 
 def digest(path): return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def source_receipt_matches(relative, expected, path):
+    if not path.exists(): return False
+    actual = digest(path); repair = REVIEWED_SOURCE_UPDATES.get(relative)
+    return actual == expected or bool(repair and expected == repair['old_normalized_sha256']
+                                      and actual == repair['new_normalized_sha256'])
 
 
 def intake(source):
@@ -162,7 +170,10 @@ def binding_gaps():
         if country['cases']!=[case for case in actual.get('cases',[]) if case['tag']==tag]:
             gaps.append('Legacy selected-case snapshot differs: '+tag)
         histories=[relative for relative in snapshot['component_inputs_sha256'] if relative.startswith('mod/2985041246/history/countries/'+tag+' - ')]
-        if len(histories)!=1 or not (ROOT/histories[0]).exists() or country['history_source']!=(ROOT/histories[0]).read_text(encoding='utf-8-sig'):
+        history = ROOT/histories[0] if len(histories)==1 else None
+        exact_history = history and history.exists() and country['history_source']==history.read_text(encoding='utf-8-sig')
+        reviewed_history = history and source_receipt_matches(histories[0],snapshot['component_inputs_sha256'][histories[0]],history)
+        if not (exact_history or reviewed_history):
             gaps.append('Legacy history snapshot differs: '+tag)
         for roster in country['rosters'].values():
             source=ROOT/roster['source']
@@ -170,7 +181,7 @@ def binding_gaps():
                 gaps.append('Legacy roster snapshot differs: '+roster['source'])
     for relative,expected in snapshot['component_inputs_sha256'].items():
         path=ROOT/relative
-        if not path.exists() or digest(path)!=expected:gaps.append('Legacy source receipt differs: '+relative)
+        if not source_receipt_matches(relative,expected,path):gaps.append('Legacy source receipt differs: '+relative)
     if FOUNDATION.exists():
         foundation=json.loads(FOUNDATION.read_text())
         unresolved={ident for row in foundation['countries'].values() for case in row['external_cases'] for ident in case['unresolved_component_technology']}

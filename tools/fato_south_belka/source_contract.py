@@ -25,17 +25,45 @@ def digest(data):return hashlib.sha256(data.replace(b'\r\n',b'\n')).hexdigest()
 REVIEWED_RELEASE_UPDATE=dict(
     path='common/scripted_effects/ac_release_maintenance.txt',
     original_sha256='b73a36358dbcd17f41719c127302afac16c3fdb056668e043bcdc2c284e1dce0',
-    reviewed_sha256='837d9946a1a72c93c67107f9243fe65ac1a6a2ea0ec1b133dbc7033fa867d67a',
-    reviewed_commit='45da6a51393edd6b909f5bb45930e09d0c1350e5',
-    tested_source='ec2f7f325945c85bb3381cc9fabc116fe1dd8e09',
+    reviewed_sha256='1bd93b4d785649d031620ac749b96c9f31d4aa96d5a56ed516dd5ade6b73d575',
+    reviewed_commit='882c53e85d1c8f5eb4b004404b55677bb3c0b29f',
+    tested_source='51622f4d72c6e1c497156ce1dd7fed881723e3f0',
+    previous_reviewed_sha256='837d9946a1a72c93c67107f9243fe65ac1a6a2ea0ec1b133dbc7033fa867d67a',
+    previous_reviewed_commit='45da6a51393edd6b909f5bb45930e09d0c1350e5',
+)
+
+# The 1991 history-data cleanup removes FAT Hugo Havel's literal ``xxx``
+# portrait reference without changing the character, leader role or owning
+# file. Keep the original owner capture above and admit only that exact
+# reviewed byte transition; arbitrary FAT character edits must still fail.
+REVIEWED_FAT_CHARACTER_UPDATE=dict(
+    path='common/characters/FAT.txt',
+    original_sha256='3e8d97162c988f77ba5ea6d6e1b385ec610d0993db33b59ab3d2a0c53022d030',
+    reviewed_sha256='cf22e1cd9c62e4a6b6b2e38ae89195f136e0033e683fe99910c0f065b074e221',
+    reviewed_commit='af0f15ebef470f9b5afe70dcf588977150ad2e82',
+    tested_source='51622f4d72c6e1c497156ce1dd7fed881723e3f0',
+)
+
+# The same cleanup replaces Shilage's borrowed Delarus identity with a local
+# generated office. The generated character owner remains protected; only the
+# exact added SHI office block from the reviewed cleanup is admitted.
+REVIEWED_STARTING_GOVERNMENT_UPDATE=dict(
+    path='common/characters/ac_starting_governments.txt',
+    original_sha256='d61bb67d26f902bf00383a83507ad132b63274b8d63db52e3b6b2fb0bb03bc5d',
+    reviewed_sha256='cb96a00b5b1b060bf3031fe282d277437be5ff2b9d8d812be50b17683360c895',
+    reviewed_commit='af0f15ebef470f9b5afe70dcf588977150ad2e82',
+    tested_source='51622f4d72c6e1c497156ce1dd7fed881723e3f0',
 )
 
 def validate_protected(path,expected,data):
     actual=digest(data)
     if actual==expected:return 'original'
-    update=REVIEWED_RELEASE_UPDATE
-    if (path==update['path'] and expected==update['original_sha256']
-            and actual==update['reviewed_sha256']):return 'reviewed-release-owner'
+    for disposition,update in (
+            ('reviewed-release-owner',REVIEWED_RELEASE_UPDATE),
+            ('reviewed-fat-character-owner',REVIEWED_FAT_CHARACTER_UPDATE),
+            ('reviewed-starting-government-owner',REVIEWED_STARTING_GOVERNMENT_UPDATE)):
+        if (path==update['path'] and expected==update['original_sha256']
+                and actual==update['reviewed_sha256']):return disposition
     raise ValueError('Inherited owner changed: '+path)
 
 def capture(reference):

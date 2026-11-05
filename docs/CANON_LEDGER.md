@@ -77,3 +77,35 @@ and gameplay, individually mapped in `tools/fato_south_belka/purposes.json`.
 Eight original scene masters retain exact prompts and packaging provenance.
 No new government biography, border, core, force transfer or war is asserted.
 Implementation/source evidence is separate from paused native acceptance.
+
+## 2026-11-02 content waves A and D
+
+| Claim or content family | Source layer | Current evidence | Status / required action |
+| --- | --- | --- | --- |
+| Free Erusea's armed insurrection and its defeat by Mobius 1, 26 September 2006 | Official | Chronicle, 2006 / 09.26, compiled in [STRANGEREAL_2006_2020_SOURCES.md](STRANGEREAL_2006_2020_SOURCES.md) (read 3 November 2026). IDs `ac_fe.1`, `ac_fe.5`, `ac_fe.6`, `ac_fe_defeat`, `ac_fe_insurrection_defeated` | Reconciled 3 November 2026. The historical route records the defeat when Central Usea answers (`ac_fe.5`, AI always). Mobius 1 is named only in text and is not a unit. Members, aims and places are not sourced and are not asserted. Offline-tested; native untested. |
+| Prolonged insurrection: pressure model, containment, crisis review and partner assistance | Provisional gameplay (alternative to the historical defeat) | `tools/content_waves/free_erusea.py`; IDs `ac_fe_prolonged`, `ac_fe_pressure`, `ac_fe.2`–`.4`, `ac_fe_pressure_*`, `ac_fe_emergency_administration`, `ac_fe_partner_assistance` | Implemented, offline-tested. Runs only when Central Usea leaves the response to the provisional government, cannot answer, or lets the 30-day window lapse. `ac_fe.3` names the official defeat date. No country tag, civil war, border or core change. |
+| Erusean and Central Usean oversight-years branches, 2005–2009 (60 focuses) | Provisional gameplay, gated on existing `ac_ucw` outcome flags (mod provenance) | `common/national_focus/ac_free_erusea.txt`, `ERU_fe_*`, `FCU_fe_*` | Implemented, offline-tested. Each Continental War outcome opens a different lane; only the ISAF-victory route meets the sourced oversight context. |
+| Nordennavic national programme, 1991–2016 (42 focuses) | Mod provenance (country history, office, world start, institution profile, 2004 Anean bureau invitation) plus provisional gameplay | `common/national_focus/NEC.txt`, `ac_nordennavic.txt`, `NEC_nc_*`, `ac_nec_*` | Implemented, offline-tested. No Chronicle entry for Nordennavic is compiled, so no dated event, person, alliance, border or war role is asserted. The neutrality lane prepares for a neighbour's conflict without assuming one. |
+| Estovakian civil war mechanic (future Wave B) | Project decision | User decision recorded 2 November 2026 in `docs/CONTENT_PLAN_2006_2020.md` | Pending. A tagless internal-conflict owner comes first; a temporary civil-war tag needs a reviewed source, state mapping, lifecycle and save-continuity contract. |
+
+Details, affected files and validation are in [CONTENT_WAVES_A_D.md](CONTENT_WAVES_A_D.md).
+
+## 2026-11-03 Wave B and Aurelia's foundation
+
+| Claim or content family | Source layer | Current evidence | Status / required action |
+| --- | --- | --- | --- |
+| Estovakian civil war chain, 3 April 2007 to 4 February 2014 | Official, as compiled in [STRANGEREAL_2006_2020_SOURCES.md](STRANGEREAL_2006_2020_SOURCES.md) | Chronicle, 2007 / 04.03, 06.30; 2008 / 07.15, 10.23; 2010 / 02.19; 2011 / 05.09; 2013 / 01.15, 10.29, 11.25, 12.02; 2014 / 02.03, 02.04. IDs `ac_ecw.1`–`.12`, `ac_ecw_owner_weekly` | Implemented as a tagless owner; offline-tested; native untested. Factions and people appear only in news text as the Chronicle names them. No tag, civil war, border, core, leader or ideology change. |
+| Negotiated settlement, prolonged war, authority and strength values, Estovakian and Emmerian branches (48 focuses) | Provisional gameplay | `tools/content_waves/estovakia.py`; `EVA_ecw_*`, `EMM_ecw_*`, `ac_ecw.13`–`.14` | Implemented, offline-tested, labelled where they diverge from the record. Existing `ac_anea_*` state is read, never written. |
+| Aurelia's national foundation, 1991–2018 (54 focuses) | Mod provenance plus provisional gameplay; Leasath's trade complaint is context from Chronicle, 2020 / 10.XX, recorded as Leasath's claim; the Leasath civil war's start is derived from Chronicle, 2019 / XX.XX | `common/national_focus/AUR.txt`, `ac_aurelia.txt`, `AUR_au_*`, `ac_aur_*` | Implemented, offline-tested. No 2020 place, person or weapon is used; the remaining 30 focuses belong to the 2019–2020 crisis lanes. |
+
+Details are in [CONTENT_WAVES_B_AUR.md](CONTENT_WAVES_B_AUR.md).
+
+## 2026-11-03 Wave C: the Circum-Pacific War
+
+| Claim or content family | Source layer | Current evidence | Status / required action |
+| --- | --- | --- | --- |
+| The Arkbird Summit (2008 / 08.21) and the 2010 chain from Cape Landers (09.23) to the SOLG (12.31) | Official, as compiled in [STRANGEREAL_2006_2020_SOURCES.md](STRANGEREAL_2006_2020_SOURCES.md) (2010 rows re-read 4 November 2026) | `tools/content_waves/circum_pacific.py`; IDs `ac_cpw.1`–`.15` and `ac_cpw.20`–`.35` (31 events), `ac_cpw_declare`, `ac_cpw_stage_*` | Implemented as an owner-only wave; offline-tested; native untested. Yuktobania's declaration is the only scripted war (AI always). Territorial rows wait for an observed Osean foothold; nothing is mapped. People, squadrons, ships, places and weapons appear only in event text, and in the idea and flag tooltips derived from it, as the Chronicle names them. |
+| Arkbird, SOLG, Scinfaxi and Hrimfaxi | Official: Super Weapons rows | `ac_cpw_arkbird_*` flags, `ac_cpw_yuk_submarine_carrier(s)`, `ac_cpw.35` text | The Arkbird stages need `ac_sp_arkbird_complete` and Osea's commitment; the project is never created, revived, weaponized or completed by script, and its two ideas are removed only on the sourced loss. No ship, railgun or project is created. |
+| Earned reciprocal exchange, earned withheld declaration, external observation, no scripted peace, idea values and decisions | Provisional gameplay under the published consumer contract ([PACIFIC_NATIONAL_CONTINUATIONS.md](PACIFIC_NATIONAL_CONTINUATIONS.md)) | `ac_cpw_prevented`, `ac_cpw_declaration_withheld`, `ac_cpw_tainted` (third-party entry), `ac_cpw_existing_war_observed` (a war the pair already fought, observed without the expanded marker), `ac_cpw_record_end` | Implemented, labelled in-game. The war's end is recorded only on actual cessation or capitulation; a reviewed peace route is an open decision (content plan, decision 6). |
+
+Details are in [CONTENT_WAVE_C.md](CONTENT_WAVE_C.md).

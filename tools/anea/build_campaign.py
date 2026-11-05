@@ -14,6 +14,8 @@ from content import FOCUSES, POLICIES, policy, prep, recover
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 MOD = ROOT / 'mod/2985041246'
+sys.path.insert(0, str(ROOT / 'tools/usea_expansion'))
+from focus_layout import panel_position  # noqa: E402
 OUT = {}
 LOC = {}
 
@@ -68,7 +70,8 @@ def build_trees():
         loc(tree, country + ': The Burden of Recovery')
         loc(tree + '_desc', 'National capacity, civil protection and sustainable recovery, 1991–2005. The national policy branches are authored alternatives.')
         body = (f'id = {tree}\ncountry = {{ factor = 0 modifier = {{ add = 25 original_tag = {tag} }} }}\n'
-                'default = no\ncontinuous_focus_position = { x = 50 y = 2100 }\n')
+                'default = no\ncontinuous_focus_position = { x = %d y = %d }\n' % panel_position(
+                    {r.id: (r.x, r.y) for r in FOCUSES if r.tag == tag}))
         body += '\n'.join(focus(r) for r in FOCUSES if r.tag == tag) + preserved_imports(tag)
         OUT[f'common/national_focus/{tag}.txt'] = '# Authored Anea campaign; source: tools/anea/content.py and build_campaign.py.\n' + block('focus_tree', body)
 

@@ -7,7 +7,6 @@ import re
 import subprocess
 import sys
 import unittest
-from collections import defaultdict
 from itertools import combinations
 from pathlib import Path
 
@@ -18,6 +17,8 @@ MOD=ROOT/'mod/2985041246'
 SRC=ROOT/'tools/usea_expansion'
 sys.path.insert(0,str(SRC))
 from script import parse,get,walk
+import focus_layout
+from focus_layout import resolved_tree_positions  # re-exported for other tests
 
 
 def read(relative):return parse((MOD/relative).read_text(encoding='utf-8-sig'))
@@ -58,50 +59,6 @@ def title_variants(text,localization,scripted):
         if key not in localization:raise AssertionError('Missing dynamic title localization: '+key)
         value=text[:match.start()]+localization[key]+text[match.end():]
         result.extend(title_variants(value,localization,scripted))
-    return result
-
-
-def resolved_tree_positions():
-    """Resolve explicit imports, their shared descendants and relative anchors.
-
-    Descendant closure is deliberately conservative: it also checks shared
-    children inherited from imported roots, even if a particular branch is not
-    currently available. Availability does not hide a focus caption.
-    """
-    shared={};trees=[];children=defaultdict(set)
-    for path in sorted((MOD/'common/national_focus').glob('*.txt')):
-        for kind,_,node in parse(path.read_text(encoding='utf-8-sig')):
-            if kind=='shared_focus' and isinstance(node,list):shared[get(node,'id')]=node
-            if kind=='focus_tree':trees.append(node)
-    for ident,node in shared.items():
-        for kind,_,child in node:
-            if kind=='prerequisite':
-                for key,_,value in child:
-                    if key=='focus':children[value].add(ident)
-    result={}
-    for tree in trees:
-        ident=get(tree,'id')
-        nodes={get(node,'id'):node for kind,_,node in tree if kind=='focus' and isinstance(node,list)}
-        pending=[node for kind,_,node in tree if kind=='shared_focus' and isinstance(node,str)]
-        while pending:
-            ref=pending.pop()
-            if ref in nodes:continue
-            if ref not in shared:raise AssertionError('Missing shared focus import: '+ident+':'+ref)
-            nodes[ref]=shared[ref]
-            pending.extend(children[ref])
-        positions={}
-        def resolve(ref,stack=()):
-            if ref in positions:return positions[ref]
-            if ref in stack:raise AssertionError('Cyclic relative focus position: '+str(stack+(ref,)))
-            node=nodes.get(ref,shared.get(ref))
-            if node is None:raise AssertionError('Missing relative focus anchor: '+ident+':'+ref)
-            x=float(get(node,'x','0'));y=float(get(node,'y','0'))
-            parent=get(node,'relative_position_id')
-            if parent:
-                px,py=resolve(parent,stack+(ref,));x+=px;y+=py
-            positions[ref]=(x,y)
-            return x,y
-        result[ident]={ref:resolve(ref) for ref in nodes}
     return result
 
 
@@ -266,27 +223,48 @@ class FocusScreen(unittest.TestCase):
         description=named([['window','=',window]],'continuous_focus_desc')
         self.assertLessEqual(point(description)[1]+int(get(description,'maxHeight')),point(entries)[1])
 
+    def test_every_tree_declares_a_panel_that_clears_every_node(self):
+        geometry=focus_layout.gui_geometry()
+        self.assertEqual((96,160),geometry['pitch']);self.assertEqual((770,456),geometry['panel'])
+        # Union of the centred icon, caption frame, glows, marker and flag frame.
+        self.assertEqual((-12,-56,177,104),geometry['footprint'])
+        trees=resolved_tree_positions();definitions=focus_layout.tree_definitions()
+        self.assertEqual(set(trees),set(definitions))
+        for tree,info in sorted(definitions.items()):
+            with self.subTest(tree=tree,file=info['file']):
+                self.assertIsNotNone(info['panel'],'continuous_focus_position is not declared')
+                self.assertEqual([],focus_layout.overlaps(trees[tree],info['panel'],geometry))
+                clear=focus_layout.clearance(trees[tree],info['panel'],geometry)
+                if clear is not None:self.assertGreaterEqual(clear,focus_layout.CLEARANCE)
+        # The four trees repaired on 5 November 2026 and the hand-maintained
+        # generic tree follow the placement rule exactly.
+        for tree in ('ac_ucw_eru_tree','ac_ucw_fcu_tree','ac_anea_emm_tree','ac_anea_eva_tree','generic_focus'):
+            with self.subTest(rule=tree):
+                self.assertEqual(focus_layout.panel_position(trees[tree],geometry),definitions[tree]['panel'])
+
     def test_opening_continuous_panels_clear_tree_and_fit_primary_view(self):
-        pitch_x,pitch_y=point(named(self.gui,'focus_spacing'))
-        window=named(self.gui,'continuous_focus_window')
-        panel_w=int(get(get(window,'size'),'width'));panel_h=int(get(get(window,'size'),'height'))
-        for tag in ('ERU','FCU'):
-            tree=get(read('common/national_focus/'+tag+'_opening.txt'),'focus_tree')
-            position=get(tree,'continuous_focus_position');px=int(get(position,'x'));py=int(get(position,'y'))
-            focuses=[node for kind,_,node in tree if kind=='focus']
-            imports=[value for kind,_,value in tree if kind=='shared_focus' and isinstance(value,str)]
-            for path in (MOD/'common/national_focus').glob('*.txt'):
-                focuses.extend(node for kind,_,node in parse(path.read_text(encoding='utf-8-sig'))
-                               if kind=='shared_focus' and get(node,'id') in imports)
-            right=max(int(get(node,'x'))*pitch_x+169 for node in focuses)
-            self.assertGreater(px,right+32)
-            self.assertLessEqual(50+px+panel_w,3440)
-            self.assertLessEqual(78+47+66+py+panel_h,1440)
-            self.assertLess(py,100)
+        geometry=focus_layout.gui_geometry();trees=resolved_tree_positions()
+        panel_w,panel_h=geometry['panel']
+        definitions=focus_layout.tree_definitions()
+        opening={'ERU':'ac_exp_eru_opening','FCU':'ac_exp_fcu_opening'}
+        for tag,tree in opening.items():
+            self.assertEqual('common/national_focus/'+tag+'_opening.txt',definitions[tree]['file'])
+        for tree in (*opening.values(),'ac_anea_emm_tree','ac_anea_eva_tree'):
+            with self.subTest(tree=tree):
+                px,py=definitions[tree]['panel']
+                right=max(focus_layout.node_rect(x,y,geometry)[2] for x,y in focus_layout.band_nodes(trees[tree],geometry,py).values())
+                self.assertGreater(px,right+focus_layout.CLEARANCE)
+                self.assertLessEqual(50+px+panel_w,3440)
+                self.assertLessEqual(78+47+66+py+panel_h,1440)
+                self.assertLess(py,100)
         canvas=named(self.gui,'tree')
         self.assertIn('horizontalScrollbar',[key for key,_,_ in canvas])
         self.assertIn('verticalScrollbar',[key for key,_,_ in canvas])
         self.assertEqual({'left','middle'},{key for key,_,_ in get(canvas,'drag_scroll')})
+
+    def test_layout_review_reproduces(self):
+        result=subprocess.run([sys.executable,'-B','tools/usea_expansion/preview_focus_repairs.py','--check'],cwd=ROOT,capture_output=True,text=True)
+        self.assertEqual(0,result.returncode,result.stdout+result.stderr)
 
     def test_sources_reproduce_without_rewriting_other_surfaces(self):
         for args in (['tools/usea_expansion/build_ui.py','--check'],

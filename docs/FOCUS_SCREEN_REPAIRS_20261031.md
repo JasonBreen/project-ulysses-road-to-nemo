@@ -42,6 +42,42 @@ deliberate 64px authored height; every joint/country variant uses that same heig
   preserved. All **25 trees / 950 resolved instances** now have zero intersecting
   caption rectangles, with no availability-based exceptions.
 
+## Continuous-focus panel on every tree (5 November 2026)
+
+A re-measurement after Wave F1 found the panel overlapping real nodes on four
+trees whose generators still used fixed positions, and one tree with no panel
+declared. `tools/usea_expansion/focus_layout.py` now owns the geometry: the panel
+is 770×456 (`continuous_focus_window`), the pitch 96×160 (`focus_spacing`) and the
+node footprint the union of the centred icon, caption frame, glows, historical
+marker and viewing-flag frame, **x −12 to 177, y −56 to 104** from the node origin.
+The placement rule puts the panel top-aligned at y 16 and
+`(rightmost x of the nodes whose footprint meets the band y 16–472 + 3) × 96`
+across, so rows appended later below never move it.
+
+| Tree | File | Before | Overlapping nodes before | After | Clearance |
+| --- | --- | --- | ---: | --- | ---: |
+| `ac_ucw_eru_tree` | `ERU.txt` | 1200, 1700 | 3 | 2592, 16 | 111 px |
+| `ac_ucw_fcu_tree` | `FCU.txt` | 1300, 1700 | 3 | 2592, 16 | 111 px |
+| `ac_anea_emm_tree` | `EMM.txt` | 50, 2100 | 6 | 2592, 16 | 111 px |
+| `ac_anea_eva_tree` | `EVA.txt` | 50, 2100 | 6 | 2592, 16 | 111 px |
+| `generic_focus` | `generic.txt` | none declared | — | 2400, 16 | 111 px |
+
+`tools/build_continental_war.py` and `tools/anea/build_campaign.py` call the rule;
+`generic.txt` (hand maintained) carries the position with a comment naming the
+rule. The other 29 trees already cleared every node and keep their generators'
+own rules. `test_every_tree_declares_a_panel_that_clears_every_node` checks all
+34 trees: a declared panel, no intersection with any resolved node footprint, at
+least 32 px from the nearest node in its band, and the five trees above equal to
+the rule. EMM and EVA, like the two opening trees, fit the 3440-px primary view
+(50 + 2592 + 770 = 3412).
+
+[Layout review](evidence/package0-focus/index.html) (`layout.json`, five
+quarter-scale images; nodes overlapped before in red, the old panel outlined in
+red, the new one in cyan) is written by
+`python -B tools/usea_expansion/preview_focus_repairs.py --layouts` and checked
+with `--check` (JSON and HTML byte for byte, PNGs by size and RGBA). Offline
+geometry only; native placement is still to be confirmed (#8).
+
 [Offline geometry/seam projection](evidence/package0-focus/focus-geometry-and-seams.png)
 uses delivered textures and the actual bitmap-font glyphs. It is a review aid,
 not an engine screenshot or evidence of runtime interaction.
@@ -54,6 +90,7 @@ python -B tools/usea_expansion/build_art.py --focus-ui-only
 python -B tools/usea_expansion/build_content.py
 python -B tools/build_peace_we_inherit.py
 python -B tools/usea_expansion/preview_focus_repairs.py
+python -B tools/usea_expansion/preview_focus_repairs.py --check
 python -B tools/Test-FocusScreenRepairs.py
 python -B tools/Test-UseaExpansion.py
 ```

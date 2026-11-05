@@ -10,6 +10,7 @@ import argparse
 from pathlib import Path
 import re
 from usea_expansion.content import FOCUSES, partner
+from usea_expansion.focus_layout import panel_position
 from event_picture_fit.ucw import news_picture, outputs as news_art_outputs
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,6 +22,7 @@ TRIGGERS = []
 EVENTS = ["add_namespace = ac_ucw"]
 DECISIONS = {"ac_ucw_fallout": [], "ac_ucw_war": [], "ac_playtest": []}
 TREES = {"ERU": [], "FCU": []}
+POSITIONS = {"ERU": {}, "FCU": {}}
 IDEAS = []
 TAGS = ("ERU", "FCU", "SNS", "AMB", "UGE", "DEL", "NPT")
 ENEMIES = ("FCU", "SNS", "AMB", "UGE", "DEL", "NPT")
@@ -97,6 +99,7 @@ def focus(tag, suffix, title, desc, x, y, icon, prerequisite=(), available="", r
     body += block("completion_reward", once(ident + "_done", reward, "ac_ucw_active = yes " + available))
     body += "search_filters = { }\n"
     TREES[tag].append(block("focus", body))
+    POSITIONS[tag][ident] = (x, y)
     return ident
 
 
@@ -490,7 +493,9 @@ def build_trees():
     loc("ac_ucw_eru_tree_desc", "Erusea's path through the Ulysses fallout and the Usean Continental War, 2000–2005.")
     loc("ac_ucw_fcu_tree", "Central Usea and ISAF")
     loc("ac_ucw_fcu_tree_desc", "Central Usea's path through the Ulysses fallout and the Usean Continental War, 2000–2005.")
-    for tag, tree, position in (("ERU", "ac_ucw_eru_tree", "x = 1200 y = 1700"), ("FCU", "ac_ucw_fcu_tree", "x = 1300 y = 1700")):
+    for tag, tree in (("ERU", "ac_ucw_eru_tree"), ("FCU", "ac_ucw_fcu_tree")):
+        # The continuous-focus panel sits beside the top rows (focus_layout.py).
+        position = "x = %d y = %d" % panel_position(POSITIONS[tag])
         OUTPUT["common/national_focus/%s.txt" % tag] = "# Authored gameplay; source: tools/build_continental_war.py.\n" + block(
             "focus_tree", "id = %s\ncountry = { factor = 0 }\ndefault = no\ncontinuous_focus_position = { %s }\n%s%s" % (
                 tree, position, "\n".join(TREES[tag]), preserved_imports(tag)))

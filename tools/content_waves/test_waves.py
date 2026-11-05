@@ -48,10 +48,12 @@ OWNED_FILES = [f"{folder}/ac_{name}.txt" for name in NAMES.values() for folder i
 # The only wars and peaces the content waves may script, each sourced and each in exactly one owner.
 DECLARATIONS = {"circum_pacific": ["declare_war_on = { target = OSE type = topple_government }"],
                 "lighthouse": ["declare_war_on = { target = OSE type = topple_government }"],
-                "anean_war": ["declare_war_on = { target = EMM type = topple_government }"]}
+                "anean_war": ["declare_war_on = { target = EMM type = topple_government }"],
+                "southern_theater": ["declare_war_on = { target = AUR type = topple_government }"]}
 PEACES = {"lighthouse": ["white_peace = OSE"], "circum_pacific": ["white_peace = YUK", "white_peace = OSE"],
-          "anean_war": ["white_peace = EMM", "white_peace = EVA"]}
-EXPECTED = {"ERU": 90, "FCU": 48, "NEC": 42, "EVA": 66, "EMM": 54, "AUR": 54}
+          "anean_war": ["white_peace = EMM", "white_peace = EVA"],
+          "southern_theater": ["white_peace = AUR", "white_peace = LEA"]}
+EXPECTED = {"ERU": 90, "FCU": 48, "NEC": 42, "EVA": 66, "EMM": 54, "AUR": 84, "LEA": 72}
 STORY_FLAGS = ("ac_cpw_started", "ac_cpw_tainted", "ac_cpw_prevented", "ac_cpw_declaration_withheld")
 
 
@@ -95,9 +97,15 @@ class Source(unittest.TestCase):
             for tag, name in getattr(module, "IMPORTS", {}).items():
                 ids = [focus_id(module.WAVE, b, i) for b in module.WAVE.branches if b.tag == tag for i in range(6)]
                 expected[tag] = expected.get(tag, "") + f"# BEGIN {name} IMPORTS\n" + "".join(f"shared_focus = {i}\n" for i in ids) + f"# END {name} IMPORTS\n"
+        own_trees = {tag for module in MODULES for tag in getattr(module, "TREES", {})}
         for tag, blocks in expected.items():
             with self.subTest(tag=tag):
-                self.assertEqual(blocks, owners[tag].preserved_imports(tag))
+                if tag in own_trees:
+                    # A tree the content waves generate themselves carries the later waves' blocks directly.
+                    source = text(f"common/national_focus/{tag}.txt").replace("\n\t", "\n")
+                    self.assertIn(blocks, source)
+                else:
+                    self.assertEqual(blocks, owners[tag].preserved_imports(tag))
 
     def test_approved_budgets_and_globally_unique_ids(self):
         self.assertEqual(EXPECTED, self.manifest["counts"])
@@ -107,7 +115,7 @@ class Source(unittest.TestCase):
             defined += re.findall(r"^\s*id\s*=\s*(\w+)", path.read_text(encoding="utf-8-sig"), re.M)
         for ident in {row["id"] for row in self.manifest["focuses"]}:
             self.assertEqual(1, defined.count(ident), ident)
-        for tag in ("NEC", "AUR"):
+        for tag in ("NEC", "AUR", "LEA"):
             tree = parse(text(f"common/national_focus/{tag}.txt"))
             imports = [v for k, _, v in fields(tree)["focus_tree"] if k == "shared_focus"]
             self.assertEqual(sorted(r["id"] for r in self.manifest["focuses"] if r["tag"] == tag), sorted(imports))
@@ -190,7 +198,8 @@ class Source(unittest.TestCase):
         # News: A .1/.3/.6; B .1-.4, .7-.14; C .1-.4, .7-.15, the peace .17 and the sixteen stages .20-.35;
         # F1 .1-.4, .7-.13, the nine stages .20-.28 and .29; the Belkan War record's thirteen briefs .1-.13;
         # E: 28 narrative + the invasion .5 and ceasefire .6; news .1-.4, .7-.14, .16 and the fifteen stages .20-.34.
-        self.assertEqual({"country_event": 27 + 16 + 22 + 20 + 3 + 32 + 30, "news_event": 3 + 12 + 30 + 21 + 13 + 28}, report["counts"])
+        # F2a: 16 narrative, news .1-.6; F2b: 24 narrative + the declaration .5 and ceasefire .6, news .1-.4, .7-.13, .15, .20-.27.
+        self.assertEqual({"country_event": 27 + 16 + 22 + 20 + 3 + 32 + 30 + 16 + 26, "news_event": 3 + 12 + 30 + 21 + 13 + 28 + 6 + 20}, report["counts"])
         for row in report["consumers"]:
             self.assertLessEqual(row["bounds"][2], 215 if row["event_type"] == "country_event" else 456)
             self.assertLessEqual(row["bounds"][3], 181 if row["event_type"] == "country_event" else 244)
@@ -1641,6 +1650,169 @@ class Runtime(unittest.TestCase):
         # A destroyed project never completes again.
         w.run("ac_sp_aerial_fleet_complete_effect", "EVA")
         self.assertNotIn("ac_sp_aerial_fleet_initiative", v.ideas)
+
+    # Wave F2a: Leasath's civil war ----------------------------------------------------------
+    def lcw_world(self, today=date(2009, 1, 2)):
+        w = self.fresh()
+        w.today = today.toordinal()
+        return w, w.countries["LEA"]
+
+    def lcw_tick(self, w, day):
+        self.tick(w, day, "LEA", "leasath")
+
+    def lcw_news(self, w):
+        return [e for _, e, _ in w.events if e.startswith("ac_lcw.") and int(e.split(".")[1]) < 50]
+
+    def test_leasath_civil_war_starts_in_2009_and_ends_in_2019_on_its_own_terms(self):
+        w, lea = self.lcw_world()
+        self.lcw_tick(w, date(2009, 1, 2))
+        self.assertIn("ac_lcw_started", w.globals)
+        self.assertIn("ac_lcw_civil_war", lea.ideas)
+        self.assertEqual(D(40), lea.variables["ac_lcw_authority"])
+        # Authority from the civil-war branches, never an end before 2019.
+        lea.variables["ac_lcw_authority"] = D(80)
+        self.lcw_tick(w, date(2018, 12, 28))
+        self.assertNotIn("ac_lcw_ended", w.globals)
+        self.lcw_tick(w, date(2019, 1, 4))
+        self.assertTrue({"ac_lcw_ended", "ac_lcw_historical_end"} <= w.globals)
+        self.assertNotIn("ac_lcw_civil_war", lea.ideas)
+        self.assertIn("ac_lcw_war_over", lea.ideas)
+        self.assertEqual(["ac_lcw.1", "ac_lcw.2"], self.lcw_news(w))
+        # A first observation after 2009 never starts the war.
+        late, lea2 = self.lcw_world(date(2010, 3, 1))
+        self.lcw_tick(late, date(2010, 3, 1))
+        self.assertTrue({"ac_lcw_late_start_skipped", "ac_lcw_closed"} <= late.globals)
+        self.lcw_tick(late, date(2019, 6, 1))
+        self.assertNotIn("ac_lcw_ended", late.globals)
+
+    def test_leasath_civil_war_prolonged_and_negotiated_alternatives(self):
+        w, lea = self.lcw_world()
+        self.lcw_tick(w, date(2009, 1, 2))
+        self.lcw_tick(w, date(2019, 6, 1))
+        self.assertNotIn("ac_lcw_ended", w.globals)
+        self.lcw_tick(w, date(2020, 1, 3))
+        self.assertIn("ac_lcw_prolonged", w.globals)
+        w.complete("LEA_le_government_register", "LEA")
+        w.complete("LEA_le_government_policy_b", "LEA")
+        self.assertEqual(D(55), lea.variables["ac_lcw_authority"])
+        self.lcw_tick(w, date(2020, 1, 10))
+        self.assertTrue({"ac_lcw_ended", "ac_lcw_late_end"} <= w.globals)
+        self.assertEqual(["ac_lcw.1", "ac_lcw.3", "ac_lcw.4"], self.lcw_news(w))
+        # The earned settlement ends the war on the talks' own terms.
+        rows = {k: v for category in parse(text("common/decisions/ac_leasath.txt")) for k, _, v in category[2]}
+        talks, lea3 = self.lcw_world()
+        self.lcw_tick(talks, date(2009, 1, 2))
+        decision = rows["LEA_le_negotiate_settlement"]
+        self.assertFalse(talks.trigger(fields(decision)["available"], lea3))
+        lea3.flags.update({"LEA_le_settlement_policy_a_done": None, "LEA_le_settlement_operations_done": None})
+        self.assertTrue(talks.trigger(fields(decision)["available"], lea3))
+        talks.execute(fields(decision)["complete_effect"], lea3)
+        self.assertTrue({"ac_lcw_ended", "ac_lcw_negotiated"} <= talks.globals)
+        self.assertEqual("ac_lcw.5", self.lcw_news(talks)[-1])
+        self.assertNotRegex(text("common/scripted_effects/ac_leasath.txt"), r"start_civil_war|set_politics|create_country|transfer_state")
+
+    # Wave F2b: the Aurelia-Leasath war ---------------------------------------------------------
+    def alc_world(self, history="ac_lcw_ended"):
+        w = self.fresh()
+        w.today = date(2020, 8, 28).toordinal()
+        if history:
+            w.globals.add(history)
+        return w, w.countries["AUR"], w.countries["LEA"]
+
+    def alc_tick(self, w, day, tag="LEA"):
+        self.tick(w, day, tag, "southern_theater")
+
+    def alc_declare(self, w):
+        self.alc_tick(w, date(2020, 9, 4))
+        self.alc_tick(w, date(2020, 10, 2))
+        w.option("ac_alc.5", "a", "LEA")
+        self.assertIn("ac_alc_started", w.globals)
+
+    def alc_news(self, w):
+        return [e for _, e, _ in w.events if e.startswith("ac_alc.") and e not in ("ac_alc.5", "ac_alc.6") and int(e.split(".")[1]) < 50]
+
+    def test_southern_war_route_needs_the_civil_war_over(self):
+        running, a, l = self.alc_world(history="ac_lcw_started")
+        self.alc_tick(running, date(2020, 9, 4))
+        self.assertTrue({"ac_alc_closed", "ac_alc_route_unreachable"} <= running.globals)
+        self.alc_tick(running, date(2020, 10, 2))
+        self.assertNotIn("ac_alc.5", [e for _, e, _ in running.events])
+        late, a2, l2 = self.alc_world()
+        late.today = date(2020, 11, 2).toordinal()
+        self.alc_tick(late, date(2020, 11, 2))
+        self.assertTrue({"ac_alc_closed", "ac_alc_late_start_skipped"} <= late.globals)
+        earned, a3, l3 = self.alc_world()
+        l3.flags["LEA_sw_restraint_policy_a_done"] = None
+        a3.flags.update({"AUR_au_relations_policy_a_done": None, "AUR_au_readiness_settlement_done": None})
+        self.alc_tick(earned, date(2020, 9, 4))
+        self.alc_tick(earned, date(2020, 10, 2))
+        earned.option("ac_alc.5", "b", "LEA")
+        self.assertIn("ac_alc_declaration_withheld", earned.globals)
+        self.assertEqual(set(), earned.wars)
+
+    def test_southern_war_follows_observed_state_and_month_windows(self):
+        w, a, l = self.alc_world()
+        self.alc_declare(w)
+        self.assertEqual("ac_alc.1", self.alc_news(w)[-1])
+        self.alc_tick(w, date(2020, 10, 9))
+        self.assertIn("ac_alc_stage_aubrey", w.globals)
+        self.assertNotIn("ac_alc_stage_overrun", w.globals)
+        w.states[120].controller = "LEA"
+        self.alc_tick(w, date(2020, 10, 16))
+        self.assertIn("ac_alc_aur_griswall_occupied", a.ideas)
+        self.alc_tick(w, date(2020, 11, 6))
+        self.assertIn("ac_alc_stage_port_patterson", w.globals)
+        self.assertNotIn("ac_alc_stage_gleipnir", w.globals)        # no Gleipnir was built
+        self.alc_tick(w, date(2020, 12, 4))
+        self.assertTrue({"ac_alc_stage_gleipnir_skipped", "ac_alc_stage_sachana", "ac_alc_stage_removal"} <= w.globals)
+        self.assertIn("ac_alc_lea_commander_removed", l.ideas)
+        self.assertNotIn("ac_alc_stage_griswall", w.globals)
+        w.states[120].controller = "AUR"
+        self.alc_tick(w, date(2020, 12, 11))
+        self.assertIn("ac_alc_stage_griswall", w.globals)
+        self.assertNotIn("ac_alc_aur_griswall_occupied", a.ideas)
+        w.option("ac_alc.6", "a", "LEA")
+        self.assertEqual(set(), w.wars)
+        self.assertTrue({"ac_alc_ceasefire_signed", "ac_alc_outcome_ceasefire", "ac_alc_historical_course"} <= w.globals)
+        self.assertEqual(["ac_alc.1", "ac_alc.21", "ac_alc.20", "ac_alc.22", "ac_alc.24", "ac_alc.26", "ac_alc.25", "ac_alc.7"], self.alc_news(w))
+
+    def test_southern_war_projects_ceasefire_alternatives_and_early_settlement(self):
+        built, a, l = self.alc_world()
+        built.run("ac_sp_gleipnir_complete_effect", "LEA")
+        built.run("ac_sp_archelon_complete_effect", "LEA")
+        self.alc_declare(built)
+        self.assertIn("ac_alc_lea_gleipnir_over_aurelia", l.ideas)
+        self.assertIn("ac_alc.15", self.alc_news(built))
+        built.states[120].controller = "LEA"
+        self.alc_tick(built, date(2020, 11, 6))
+        self.assertIn("ac_alc_gleipnir_lost", built.globals)
+        self.assertFalse({"ac_sp_gleipnir_fortress", "ac_alc_lea_gleipnir_over_aurelia"} & l.ideas)
+        self.alc_tick(built, date(2020, 12, 4))
+        self.assertIn("ac_alc_archelon_lost", built.globals)
+        built.run("ac_sp_gleipnir_complete_effect", "LEA")
+        self.assertNotIn("ac_sp_gleipnir_fortress", l.ideas)
+        refused, a2, l2 = self.alc_world()
+        self.alc_declare(refused)
+        self.alc_tick(refused, date(2020, 12, 4))
+        refused.refuse_peace = True
+        refused.option("ac_alc.6", "a", "LEA")
+        self.assertTrue({"ac_alc_ceasefire_not_made", "ac_alc_tainted"} <= refused.globals)
+        self.assertEqual({frozenset(("AUR", "LEA"))}, refused.wars)
+        rows = {k: v for category in parse(text("common/decisions/ac_southern_theater.txt")) for k, _, v in category[2]}
+        early = rows["AUR_sw_early_settlement"]
+        settled, a3, l3 = self.alc_world()
+        self.alc_declare(settled)
+        settled.states[120].controller = "LEA"
+        self.alc_tick(settled, date(2020, 10, 16))
+        settled.states[120].controller = "AUR"
+        self.alc_tick(settled, date(2020, 11, 6))
+        self.assertIn("ac_alc_stage_griswall", settled.globals)
+        self.assertFalse(settled.trigger(fields(early)["available"], a3))
+        a3.flags["AUR_sw_liberation_policy_a_done"] = None
+        settled.execute(fields(early)["complete_effect"], a3)
+        self.assertTrue({"ac_alc_ceasefire_early", "ac_alc_outcome_ceasefire"} <= settled.globals)
+        self.assertNotIn("ac_alc_historical_course", settled.globals)
+        self.assertEqual("ac_alc.8", self.alc_news(settled)[-1])
 
     # The Belkan War record: reference briefs on observed state ------------------------
     def bwr_run(self, w, start, end, before_tick=None):

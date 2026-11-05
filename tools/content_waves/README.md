@@ -13,6 +13,8 @@ from [docs/STRANGEREAL_2006_2020_SOURCES.md](../../docs/STRANGEREAL_2006_2020_SO
 | C, the Circum-Pacific War | `circum_pacific.py` | none: owner only (Osea and Yuktobania are complete) | [CONTENT_WAVE_C.md](../../docs/CONTENT_WAVE_C.md) |
 | F1, the Lighthouse War | `lighthouse.py` | Erusea 54, Central Usea 24, plus two special projects | [CONTENT_WAVE_F1.md](../../docs/CONTENT_WAVE_F1.md) |
 | E, the Emmeria–Estovakia War | `anean_war.py` | Emmeria 36, Estovakia 36, plus two special projects | [CONTENT_WAVE_E.md](../../docs/CONTENT_WAVE_E.md) |
+| F2a, Leasath's foundation and civil war | `leasath.py` | Leasath 42 (new national tree) | [CONTENT_WAVE_F2.md](../../docs/CONTENT_WAVE_F2.md) |
+| F2b, the Aurelia–Leasath war | `southern_theater.py` | Aurelia 30, Leasath 30, plus two special projects | [CONTENT_WAVE_F2.md](../../docs/CONTENT_WAVE_F2.md) |
 | The Belkan War record | `belkan_record.py` | none: thirteen observed reference briefs, 1991–1999 (`ac_bwr`) | [BELKAN_WAR_SOURCES.md](../../docs/BELKAN_WAR_SOURCES.md) |
 
 | File | Role |

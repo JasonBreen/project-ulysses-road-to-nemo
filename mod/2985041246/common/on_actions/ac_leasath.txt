@@ -1,0 +1,36 @@
+# Original provisional gameplay; source: tools/content_waves (Leasath's Foundation and Civil War). Native acceptance pending.
+on_actions = {
+	on_startup = {
+		effect = {
+			if = { limit = { country_exists = LEA } LEA = { ac_lcw_initialize = yes } }
+		}
+	}
+	on_weekly_LEA = {
+		effect = {
+			ac_lcw_weekly_lea = yes
+		}
+	}
+	on_annex = {
+		effect = {
+			FROM = { ac_lcw_interrupt = yes }
+			FROM = { if = { limit = { tag = LEA original_tag = LEA } ac_lcw_interrupt_war = yes } }
+		}
+	}
+	on_capitulation_immediate = {
+		effect = {
+			ac_lcw_interrupt = yes
+			if = { limit = { tag = LEA original_tag = LEA } ac_lcw_interrupt_war = yes }
+		}
+	}
+	on_subject_annexed = {
+		effect = {
+			ac_lcw_interrupt = yes
+		}
+	}
+	on_war_relation_added = {
+		effect = {
+			ac_lcw_interrupt_service = yes
+			FROM = { ac_lcw_interrupt_service = yes }
+		}
+	}
+}

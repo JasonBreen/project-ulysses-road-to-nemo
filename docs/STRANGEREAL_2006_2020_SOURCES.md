@@ -129,7 +129,7 @@ The 2005 entries through 26 September are already cited in
 | General Édouard Labarthe is killed by Osean forces | Chronicle, 2019 / 10.10 | F1 | Implemented: `ac_lhw.27`, news only |
 | Osean and Erusean forces clash at the space elevator; the Arsenal Bird Justice is shot down | Chronicle, 2019 / 10.31; Abstracts, ACE COMBAT 7 (a voluntary coalition of Osean forces and a traditionalist sect of the Erusean Army; the radicals surrender) | F1 | Implemented: `ac_lhw.28`; the coalition and the sect are named in text only |
 | Osea and Erusea sign a ceasefire at the Expo City Conference | Chronicle, 2019 / 12.01; Abstracts, ACE COMBAT 7 | F1 | Implemented as the only scripted peace (user decision 7): `ac_lhw.6` (AI always signs), `ac_lhw_sign_ceasefire`, `ac_lhw.7`; recorded only if the engine ended the war. Alternatives: the earned early ceasefire (`ac_lhw.8`) and fighting on (`ac_lhw.13`) |
-| The Leasath civil war ends after ten years of fighting | Chronicle, 2019 / XX.XX | F2 | Day and month unknown. Derived: the war began about 2009. Aurelia's foundation refers to it from 2010 as context only (`AUR_au_leasath_war_*`) |
+| The Leasath civil war ends after ten years of fighting | Chronicle, 2019 / XX.XX | F2 | Implemented (F2a): the tagless owner `ac_lcw` starts in 2009 (derived from "ten years") and ends within 2019 only on the government's own authority (`ac_lcw.2`); prolonged (`ac_lcw.3`, `.4`) and earned negotiated (`ac_lcw.5`) alternatives. No tag, border or winner |
 
 ## 2020: the Aurelia–Leasath war
 
@@ -137,13 +137,13 @@ Every 2020 entry gives a month at most.
 
 | Claim | Exact source | Wave | Disposition |
 | --- | --- | --- | --- |
-| Leasath declares war on the Federal Republic of Aurelia, citing years of exploitation; the Gleipnir helps it occupy all of Aurelia except Aubrey Base | Chronicle, 2020 / 10.XX | F2 | Pending crisis lanes. "Years of exploitation" is recorded as Leasath's stated cause, not as fact |
-| Aurelia's Gryphus Squadron repels an attack on Aubrey Base | Chronicle, 2020 / 10.XX | F2 | Pending |
-| Aurelia retakes Port Patterson | Chronicle, 2020 / 11.XX | F2 | Pending |
-| Aurelia disables Gleipnir's stealth and shoots it down; Santa Elva is liberated | Chronicle, 2020 / 11.XX | F2 | Pending |
-| Aurelia retakes Sachana Air Base in the Raven Woods | Chronicle, 2020 / 12.XX | F2 | Pending |
-| Aurelia retakes its capital, Griswall; Leasathian forces regroup at Archelon Fortress | Chronicle, 2020 / XX.XX | F2 | Pending. Griswall is named as the capital, so it may appear in Aurelian text |
-| Archelon Fortress is destroyed; Leasath's commander Diego Navarro is removed from office and the war ends | Chronicle, 2020 / 12.XX | F2 | Pending |
+| Leasath declares war on the Federal Republic of Aurelia, citing years of exploitation; the Gleipnir helps it occupy all of Aurelia except Aubrey Base | Chronicle, 2020 / 10.XX | F2 | Implemented (F2b): `ac_alc_declare` (Leasathian decision event `ac_alc.5` in October, AI always), `ac_alc.1`; the Gleipnir (`ac_alc.15`) only if built; the occupation (`ac_alc.20`) only when Leasath controls Griswall (state 120). The cause is quoted as Leasath's stated claim |
+| Aurelia's Gryphus Squadron repels an attack on Aubrey Base | Chronicle, 2020 / 10.XX | F2 | Implemented: `ac_alc.21` inside October 2020; the squadron and base are text only |
+| Aurelia retakes Port Patterson | Chronicle, 2020 / 11.XX | F2 | Implemented: `ac_alc.22` inside November 2020, after the observed occupation |
+| Aurelia disables Gleipnir's stealth and shoots it down; Santa Elva is liberated | Chronicle, 2020 / 11.XX | F2 | Implemented: `ac_alc.23` inside November 2020, only if `ac_sp_gleipnir` was built |
+| Aurelia retakes Sachana Air Base in the Raven Woods | Chronicle, 2020 / 12.XX | F2 | Implemented: `ac_alc.24` inside December 2020, after the observed occupation |
+| Aurelia retakes its capital, Griswall; Leasathian forces regroup at Archelon Fortress | Chronicle, 2020 / XX.XX | F2 | Implemented: `ac_alc.25` when Aurelia controls Griswall (state 120) again after the observed occupation; no month asserted |
+| Archelon Fortress is destroyed; Leasath's commander Diego Navarro is removed from office and the war ends | Chronicle, 2020 / 12.XX | F2 | Implemented: the removal `ac_alc.26` (timed idea; no politics changed) and Archelon `ac_alc.27` only if built, inside December 2020; the scripted ceasefire `ac_alc.6`/`ac_alc_sign_ceasefire`, written only if the engine ended the war. Navarro is named in text only |
 
 ## Super Weapons active in the period
 
@@ -156,10 +156,10 @@ Every 2020 entry gives a month at most.
 | Aigaion, Gyges, Kottos: Estovakian heavy command cruiser and support platforms of the Aerial Fleet Initiative (P/F-X), based on Belkan technology | Super Weapons, Aigaion; Gyges; Kottos | E | Pending; no construction date is given, so any timing is provisional |
 | Arsenal Birds Liberty and Justice: Osean unmanned aircraft defending the International Space Elevator | Super Weapons, Arsenal Birds | F1 | Implemented as project `ac_sp_arsenal_birds` (user decision 8) in a generator-owned file; seized, lost and never rebuilt on the sourced dates |
 | Alicorn: Erusean Royal Navy submarine aviation cruiser | Super Weapons, Alicorn | F1 | Implemented as project `ac_sp_alicorn` (user decision 8), gated on the Erusean custody lane; built and held, never deployed |
-| Gleipnir and its prototype Gandr: Leasathian aerial fortress and prototype | Super Weapons, Gleipnir | F2 | Pending; not used in Aurelia's foundation |
-| Nevera Jammer: originally an Aurelian weather observation radar in the Nevera mountains, converted by Leasath into a jamming station protecting Griswall and the Monte Breeze Industrial Area | Super Weapons, Nevera Jammer | F2 | The pre-war Aurelian weather radar may appear in Aurelia's foundation as a civil service; its construction date is unknown and is not scripted. The jammer belongs to the crisis lanes |
-| Meson Cannons: particle-beam point defence built into the Atmos Ring in Aurelia's capital | Super Weapons, Meson Cannons | F2 | Pending; no construction date is given |
-| Archelon Fortress: secret Leasathian manufacturing complex for the Fenrir on Sentry Island in the Danern Straits | Super Weapons, Archelon Fortress | F2 | Pending |
+| Gleipnir and its prototype Gandr: Leasathian aerial fortress and prototype | Super Weapons, Gleipnir | F2 | Implemented: project `ac_sp_gleipnir` (LEA); Gandr stays reference only; not used in Aurelia's foundation |
+| Nevera Jammer: originally an Aurelian weather observation radar in the Nevera mountains, converted by Leasath into a jamming station protecting Griswall and the Monte Breeze Industrial Area | Super Weapons, Nevera Jammer | F2 | Reference only: no conversion date and no mapped place; the crisis lanes do not script it |
+| Meson Cannons: particle-beam point defence built into the Atmos Ring in Aurelia's capital | Super Weapons, Meson Cannons | F2 | Reference only: no construction date and no mapped place |
+| Archelon Fortress: secret Leasathian manufacturing complex for the Fenrir on Sentry Island in the Danern Straits | Super Weapons, Archelon Fortress | F2 | Implemented: project `ac_sp_archelon` (LEA); Sentry Island unmapped; the Fenrir stays reference only |
 
 ## Statements only the abstracts and product pages carry
 
@@ -172,7 +172,7 @@ Every 2020 entry gives a month at most.
 | Garuda Team is the 28th Fighter Squadron of the Emmerian Air Force's 8th Air Division | Abstracts and Product, ACE COMBAT 6 | E | Text only |
 | Erusea proclaimed a "clean war"; Osean targeting blunders turned public opinion toward Erusea; a voluntary coalition of Osean forces and a traditionalist sect of the Erusean Army forced the surrender of the Erusean Army radicals; the ceasefire was signed in Expo City | Abstracts, ACE COMBAT 7 | F1 | Implemented in text: `ac_lhw.7`, `.22`, `.28`, the drones lane. No coalition, sect or faction is created |
 | Erusea accuses Osea of massive overreach in their joint international projects | Product, ACE COMBAT 7 | F1 | Implemented in text: `ac_lhw.1`, `ac_lhw.5` |
-| Leasath, just emerged from a civil war, cites "years of exploitation by Aurelia"; Aurelia lies on the southern tip of South Osea; the war ends in December 2020 with Navarro's downfall | Abstracts and Product, ACE COMBAT X | F2 | Pending. The cause is recorded as Leasath's stated claim, not fact |
+| Leasath, just emerged from a civil war, cites "years of exploitation by Aurelia"; Aurelia lies on the southern tip of South Osea; the war ends in December 2020 with Navarro's downfall | Abstracts and Product, ACE COMBAT X | F2 | Implemented across `ac_lcw` and `ac_alc`. The cause is recorded as Leasath's stated claim, not fact |
 
 ## Open research gaps
 

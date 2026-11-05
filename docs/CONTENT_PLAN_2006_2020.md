@@ -306,7 +306,7 @@ change any total.
    source, 3 November 2026.**
 4. **Wave B**, once the civil-war mechanic is chosen. **Delivered in source.**
 5. **F1. Delivered in source, 4 November 2026.** **Wave E delivered in source,
-   5 November 2026.** Then the **F2 crisis lanes and stories.**
+   5 November 2026.** **F2 delivered in source, 5 November 2026** ([CONTENT_WAVE_F2.md](CONTENT_WAVE_F2.md)): the country budgets are complete (1,028 of 1,028). The Aurelian and Leasathian stories remain.
 
 Decisions the user needs to make:
 

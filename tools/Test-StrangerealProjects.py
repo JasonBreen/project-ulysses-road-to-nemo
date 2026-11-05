@@ -38,6 +38,8 @@ COMPLETION_GATES = {
     "ac_sp_arsenal_birds": ("has_global_flag = ac_lhw_arsenal_birds_lost",),
     "ac_sp_aerial_fleet": ("has_global_flag = ac_eew_aerial_fleet_lost",),
     "ac_sp_chandelier": ("has_global_flag = ac_eew_chandelier_lost",),
+    "ac_sp_gleipnir": ("has_global_flag = ac_alc_gleipnir_lost",),
+    "ac_sp_archelon": ("has_global_flag = ac_alc_archelon_lost",),
 }
 PROJECTS = (
     "ac_sp_excalibur",
@@ -51,6 +53,7 @@ PROJECTS = (
 OWNER_PROJECTS = {
     "lighthouse": ("ac_sp_arsenal_birds", "ac_sp_alicorn"),
     "anean_war": ("ac_sp_aerial_fleet", "ac_sp_chandelier"),
+    "southern_theater": ("ac_sp_gleipnir", "ac_sp_archelon"),
 }
 ENGINE_SPECIALIZATIONS = (
     "specialization_nuclear",
@@ -84,6 +87,11 @@ OWNER_FILES = {
         "common/scripted_effects/ac_anean_war.txt",
         "common/ideas/ac_anean_war.txt",
         "common/decisions/ac_anean_war.txt",
+    ),
+    "southern_theater": (
+        "common/scripted_effects/ac_southern_theater.txt",
+        "common/ideas/ac_southern_theater.txt",
+        "common/decisions/ac_southern_theater.txt",
     ),
 }
 

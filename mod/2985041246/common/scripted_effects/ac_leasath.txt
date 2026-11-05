@@ -1,0 +1,1989 @@
+# Original provisional gameplay; source: tools/content_waves (Leasath's Foundation and Civil War). Native acceptance pending.
+ac_lcw_initialize = {
+	if = {
+		limit = {
+			ac_lcw_eligible = yes
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = ac_lcw_current_service }
+			}
+			set_variable = { ac_lcw_current_service = 0 }
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = ac_lcw_elapsed }
+			}
+			set_variable = { ac_lcw_elapsed = 0 }
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = ac_lcw_completed_services }
+			}
+			set_variable = { ac_lcw_completed_services = 0 }
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = ac_lcw_last_delivered_days }
+			}
+			set_variable = { ac_lcw_last_delivered_days = 0 }
+		}
+		set_country_flag = ac_lcw_initialized
+	}
+}
+
+ac_lcw_pay_programme = {
+	clr_country_flag = ac_lcw_payment_authorized
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes
+		}
+		if = {
+			limit = {
+				ac_econ_ready = yes
+			}
+			ac_econ_pay_programme = yes
+			if = {
+				limit = {
+					OR = { ac_macro_ready = no has_country_flag = ac_macro_transaction_succeeded }
+				}
+				set_country_flag = ac_lcw_payment_authorized
+			}
+		}
+		else = {
+			set_country_flag = ac_lcw_payment_authorized
+		}
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			add_political_power = -35
+			set_temp_variable = { ac_pol_capacity_delta = -4 }
+			ac_pol_change_capacity = yes
+		}
+	}
+}
+
+ac_lcw_refresh_progress = {
+	if = {
+		limit = {
+			has_country_flag = ac_lcw_service_active has_variable = ac_lcw_service_started
+		}
+		set_variable = { ac_lcw_elapsed = date }
+		subtract_from_variable = { ac_lcw_elapsed = ac_lcw_service_started }
+		clamp_variable = { var = ac_lcw_elapsed min = 0 max = 90 }
+	}
+}
+
+ac_lcw_interrupt_service = {
+	if = {
+		limit = {
+			ac_lcw_participant = yes has_country_flag = ac_lcw_service_active
+		}
+		ac_lcw_refresh_progress = yes
+		set_variable = { ac_lcw_last_delivered_days = ac_lcw_elapsed }
+		set_variable = { ac_lcw_last_interrupted_service = ac_lcw_current_service }
+		set_country_flag = ac_lcw_service_interrupted
+		if = {
+			limit = {
+				has_country_flag = LEA_le_mines_service_1_active
+			}
+			set_country_flag = LEA_le_mines_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_mines_service_2_active
+			}
+			set_country_flag = LEA_le_mines_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_provinces_service_1_active
+			}
+			set_country_flag = LEA_le_provinces_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_provinces_service_2_active
+			}
+			set_country_flag = LEA_le_provinces_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_army_service_1_active
+			}
+			set_country_flag = LEA_le_army_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_army_service_2_active
+			}
+			set_country_flag = LEA_le_army_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_labour_service_1_active
+			}
+			set_country_flag = LEA_le_labour_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_labour_service_2_active
+			}
+			set_country_flag = LEA_le_labour_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_government_service_1_active
+			}
+			set_country_flag = LEA_le_government_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_government_service_2_active
+			}
+			set_country_flag = LEA_le_government_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_front_service_1_active
+			}
+			set_country_flag = LEA_le_front_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_front_service_2_active
+			}
+			set_country_flag = LEA_le_front_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_settlement_service_1_active
+			}
+			set_country_flag = LEA_le_settlement_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_settlement_service_2_active
+			}
+			set_country_flag = LEA_le_settlement_service_2_interrupted
+		}
+		clr_country_flag = LEA_le_mines_service_1_active
+		remove_ideas = LEA_le_mines_service_1_spirit
+		clr_country_flag = LEA_le_mines_service_2_active
+		remove_ideas = LEA_le_mines_service_2_spirit
+		clr_country_flag = LEA_le_provinces_service_1_active
+		remove_ideas = LEA_le_provinces_service_1_spirit
+		clr_country_flag = LEA_le_provinces_service_2_active
+		remove_ideas = LEA_le_provinces_service_2_spirit
+		clr_country_flag = LEA_le_army_service_1_active
+		remove_ideas = LEA_le_army_service_1_spirit
+		clr_country_flag = LEA_le_army_service_2_active
+		remove_ideas = LEA_le_army_service_2_spirit
+		clr_country_flag = LEA_le_labour_service_1_active
+		remove_ideas = LEA_le_labour_service_1_spirit
+		clr_country_flag = LEA_le_labour_service_2_active
+		remove_ideas = LEA_le_labour_service_2_spirit
+		clr_country_flag = LEA_le_government_service_1_active
+		remove_ideas = LEA_le_government_service_1_spirit
+		clr_country_flag = LEA_le_government_service_2_active
+		remove_ideas = LEA_le_government_service_2_spirit
+		clr_country_flag = LEA_le_front_service_1_active
+		remove_ideas = LEA_le_front_service_1_spirit
+		clr_country_flag = LEA_le_front_service_2_active
+		remove_ideas = LEA_le_front_service_2_spirit
+		clr_country_flag = LEA_le_settlement_service_1_active
+		remove_ideas = LEA_le_settlement_service_1_spirit
+		clr_country_flag = LEA_le_settlement_service_2_active
+		remove_ideas = LEA_le_settlement_service_2_spirit
+		clr_country_flag = ac_lcw_service_active
+		clr_country_flag = ac_lcw_service_window
+		set_variable = { ac_lcw_current_service = 0 }
+	}
+}
+
+LEA_le_mines_service_1_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_mines_register
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_mines_service_1_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 1 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_mines_service_1_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_mines_service_1_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_mines_service_1_active check_variable = { ac_lcw_current_service = 1 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_mines_service_1_spirit
+		clr_country_flag = LEA_le_mines_service_1_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_mines_service_1_completed
+		set_country_flag = LEA_le_mines_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_mines_service_2_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_mines_operations
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_mines_service_2_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 2 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_mines_service_2_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_mines_service_2_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_mines_service_2_active check_variable = { ac_lcw_current_service = 2 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_mines_service_2_spirit
+		clr_country_flag = LEA_le_mines_service_2_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_mines_service_2_completed
+		set_country_flag = LEA_le_mines_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_provinces_service_1_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_provinces_register
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_provinces_service_1_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 3 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_provinces_service_1_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_provinces_service_1_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_provinces_service_1_active check_variable = { ac_lcw_current_service = 3 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_provinces_service_1_spirit
+		clr_country_flag = LEA_le_provinces_service_1_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_provinces_service_1_completed
+		set_country_flag = LEA_le_provinces_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_provinces_service_2_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_provinces_operations
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_provinces_service_2_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 4 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_provinces_service_2_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_provinces_service_2_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_provinces_service_2_active check_variable = { ac_lcw_current_service = 4 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_provinces_service_2_spirit
+		clr_country_flag = LEA_le_provinces_service_2_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_provinces_service_2_completed
+		set_country_flag = LEA_le_provinces_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_army_service_1_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_army_register
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_army_service_1_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 5 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_army_service_1_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_army_service_1_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_army_service_1_active check_variable = { ac_lcw_current_service = 5 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_army_service_1_spirit
+		clr_country_flag = LEA_le_army_service_1_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_army_service_1_completed
+		set_country_flag = LEA_le_army_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_army_service_2_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_army_operations
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_army_service_2_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 6 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_army_service_2_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_army_service_2_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_army_service_2_active check_variable = { ac_lcw_current_service = 6 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_army_service_2_spirit
+		clr_country_flag = LEA_le_army_service_2_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_army_service_2_completed
+		set_country_flag = LEA_le_army_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_labour_service_1_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_labour_register
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_labour_service_1_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 7 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_labour_service_1_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_labour_service_1_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_labour_service_1_active check_variable = { ac_lcw_current_service = 7 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_labour_service_1_spirit
+		clr_country_flag = LEA_le_labour_service_1_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_labour_service_1_completed
+		set_country_flag = LEA_le_labour_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_labour_service_2_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_labour_operations
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_labour_service_2_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 8 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_labour_service_2_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_labour_service_2_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_labour_service_2_active check_variable = { ac_lcw_current_service = 8 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_labour_service_2_spirit
+		clr_country_flag = LEA_le_labour_service_2_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_labour_service_2_completed
+		set_country_flag = LEA_le_labour_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_government_service_1_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_government_register
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_government_service_1_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 9 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_government_service_1_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_government_service_1_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_government_service_1_active check_variable = { ac_lcw_current_service = 9 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_government_service_1_spirit
+		clr_country_flag = LEA_le_government_service_1_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_government_service_1_completed
+		set_country_flag = LEA_le_government_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_government_service_2_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_government_operations
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_government_service_2_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 10 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_government_service_2_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_government_service_2_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_government_service_2_active check_variable = { ac_lcw_current_service = 10 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_government_service_2_spirit
+		clr_country_flag = LEA_le_government_service_2_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_government_service_2_completed
+		set_country_flag = LEA_le_government_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_front_service_1_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_front_register
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_front_service_1_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 11 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_front_service_1_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_front_service_1_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_front_service_1_active check_variable = { ac_lcw_current_service = 11 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_front_service_1_spirit
+		clr_country_flag = LEA_le_front_service_1_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_front_service_1_completed
+		set_country_flag = LEA_le_front_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_front_service_2_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_front_operations
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_front_service_2_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 12 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_front_service_2_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_front_service_2_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_front_service_2_active check_variable = { ac_lcw_current_service = 12 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_front_service_2_spirit
+		clr_country_flag = LEA_le_front_service_2_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_front_service_2_completed
+		set_country_flag = LEA_le_front_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_settlement_service_1_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_settlement_register
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_settlement_service_1_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 13 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_settlement_service_1_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_settlement_service_1_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_settlement_service_1_active check_variable = { ac_lcw_current_service = 13 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_settlement_service_1_spirit
+		clr_country_flag = LEA_le_settlement_service_1_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_settlement_service_1_completed
+		set_country_flag = LEA_le_settlement_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_settlement_service_2_start = {
+	if = {
+		limit = {
+			ac_lcw_can_fund = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_settlement_operations
+		}
+		ac_lcw_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_lcw_payment_authorized
+			}
+			clr_country_flag = ac_lcw_payment_authorized
+			set_country_flag = ac_lcw_service_active
+			set_country_flag = LEA_le_settlement_service_2_active
+			set_country_flag = { flag = ac_lcw_service_window days = 90 }
+			set_variable = { ac_lcw_current_service = 14 }
+			set_variable = { ac_lcw_service_started = date }
+			set_variable = { ac_lcw_elapsed = 0 }
+			add_timed_idea = { idea = LEA_le_settlement_service_2_spirit days = 90 }
+		}
+	}
+}
+
+LEA_le_settlement_service_2_finish = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_war = no has_country_flag = ac_lcw_service_active has_country_flag = LEA_le_settlement_service_2_active check_variable = { ac_lcw_current_service = 14 } NOT = { has_country_flag = ac_lcw_service_window }
+		}
+		remove_ideas = LEA_le_settlement_service_2_spirit
+		clr_country_flag = LEA_le_settlement_service_2_active
+		clr_country_flag = ac_lcw_service_active
+		set_country_flag = LEA_le_settlement_service_2_completed
+		set_country_flag = LEA_le_settlement_service_completed
+		add_to_variable = { ac_lcw_completed_services = 1 }
+		set_variable = { ac_lcw_elapsed = 90 }
+		set_variable = { ac_lcw_last_delivered_days = 90 }
+		set_variable = { ac_lcw_current_service = 0 }
+		set_country_flag = { flag = ac_lcw_service_cooldown days = 90 }
+	}
+}
+
+LEA_le_mines_register_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA NOT = { has_country_flag = LEA_le_mines_register_done }
+		}
+		set_country_flag = LEA_le_mines_register_done
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_mines_policy_a_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_mines_register NOT = { has_country_flag = LEA_le_mines_policy_b_done } NOT = { has_country_flag = LEA_le_mines_policy_a_done }
+		}
+		set_country_flag = LEA_le_mines_policy_a_done
+		add_ideas = LEA_le_mines_policy_a_spirit
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_mines_policy_b_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_mines_register NOT = { has_country_flag = LEA_le_mines_policy_a_done } NOT = { has_country_flag = LEA_le_mines_policy_b_done }
+		}
+		set_country_flag = LEA_le_mines_policy_b_done
+		add_ideas = LEA_le_mines_policy_b_spirit
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_mines_operations_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA OR = { has_completed_focus = LEA_le_mines_policy_a has_completed_focus = LEA_le_mines_policy_b } NOT = { has_country_flag = LEA_le_mines_operations_done }
+		}
+		set_country_flag = LEA_le_mines_operations_done
+	}
+}
+
+LEA_le_mines_review_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_mines_operations has_country_flag = LEA_le_mines_service_completed NOT = { has_country_flag = LEA_le_mines_review_done }
+		}
+		set_country_flag = LEA_le_mines_review_done
+	}
+}
+
+LEA_le_mines_settlement_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_mines_review NOT = { has_country_flag = LEA_le_mines_settlement_done }
+		}
+		set_country_flag = LEA_le_mines_settlement_done
+		if = {
+			limit = {
+				has_country_flag = LEA_le_mines_policy_a_done
+			}
+			remove_ideas = LEA_le_mines_policy_a_spirit
+			add_ideas = LEA_le_mines_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_mines_policy_b_done
+			}
+			remove_ideas = LEA_le_mines_policy_b_spirit
+			add_ideas = LEA_le_mines_policy_b_spirit_settled
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_provinces_register_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA NOT = { has_country_flag = LEA_le_provinces_register_done }
+		}
+		set_country_flag = LEA_le_provinces_register_done
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_provinces_policy_a_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_provinces_register NOT = { has_country_flag = LEA_le_provinces_policy_b_done } NOT = { has_country_flag = LEA_le_provinces_policy_a_done }
+		}
+		set_country_flag = LEA_le_provinces_policy_a_done
+		add_ideas = LEA_le_provinces_policy_a_spirit
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_provinces_policy_b_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_provinces_register NOT = { has_country_flag = LEA_le_provinces_policy_a_done } NOT = { has_country_flag = LEA_le_provinces_policy_b_done }
+		}
+		set_country_flag = LEA_le_provinces_policy_b_done
+		add_ideas = LEA_le_provinces_policy_b_spirit
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_provinces_operations_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA OR = { has_completed_focus = LEA_le_provinces_policy_a has_completed_focus = LEA_le_provinces_policy_b } NOT = { has_country_flag = LEA_le_provinces_operations_done }
+		}
+		set_country_flag = LEA_le_provinces_operations_done
+	}
+}
+
+LEA_le_provinces_review_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_provinces_operations has_country_flag = LEA_le_provinces_service_completed NOT = { has_country_flag = LEA_le_provinces_review_done }
+		}
+		set_country_flag = LEA_le_provinces_review_done
+	}
+}
+
+LEA_le_provinces_settlement_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_provinces_review NOT = { has_country_flag = LEA_le_provinces_settlement_done }
+		}
+		set_country_flag = LEA_le_provinces_settlement_done
+		if = {
+			limit = {
+				has_country_flag = LEA_le_provinces_policy_a_done
+			}
+			remove_ideas = LEA_le_provinces_policy_a_spirit
+			add_ideas = LEA_le_provinces_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_provinces_policy_b_done
+			}
+			remove_ideas = LEA_le_provinces_policy_b_spirit
+			add_ideas = LEA_le_provinces_policy_b_spirit_settled
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_army_register_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA date > 1999.12.31 NOT = { has_country_flag = LEA_le_army_register_done }
+		}
+		set_country_flag = LEA_le_army_register_done
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_army_policy_a_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_army_register NOT = { has_country_flag = LEA_le_army_policy_b_done } NOT = { has_country_flag = LEA_le_army_policy_a_done }
+		}
+		set_country_flag = LEA_le_army_policy_a_done
+		add_ideas = LEA_le_army_policy_a_spirit
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_army_policy_b_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_army_register NOT = { has_country_flag = LEA_le_army_policy_a_done } NOT = { has_country_flag = LEA_le_army_policy_b_done }
+		}
+		set_country_flag = LEA_le_army_policy_b_done
+		add_ideas = LEA_le_army_policy_b_spirit
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_army_operations_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA OR = { has_completed_focus = LEA_le_army_policy_a has_completed_focus = LEA_le_army_policy_b } NOT = { has_country_flag = LEA_le_army_operations_done }
+		}
+		set_country_flag = LEA_le_army_operations_done
+	}
+}
+
+LEA_le_army_review_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_army_operations has_country_flag = LEA_le_army_service_completed NOT = { has_country_flag = LEA_le_army_review_done }
+		}
+		set_country_flag = LEA_le_army_review_done
+	}
+}
+
+LEA_le_army_settlement_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_army_review NOT = { has_country_flag = LEA_le_army_settlement_done }
+		}
+		set_country_flag = LEA_le_army_settlement_done
+		if = {
+			limit = {
+				has_country_flag = LEA_le_army_policy_a_done
+			}
+			remove_ideas = LEA_le_army_policy_a_spirit
+			add_ideas = LEA_le_army_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_army_policy_b_done
+			}
+			remove_ideas = LEA_le_army_policy_b_spirit
+			add_ideas = LEA_le_army_policy_b_spirit_settled
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_labour_register_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA date > 2004.12.31 NOT = { has_country_flag = LEA_le_labour_register_done }
+		}
+		set_country_flag = LEA_le_labour_register_done
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_labour_policy_a_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_labour_register NOT = { has_country_flag = LEA_le_labour_policy_b_done } NOT = { has_country_flag = LEA_le_labour_policy_a_done }
+		}
+		set_country_flag = LEA_le_labour_policy_a_done
+		add_ideas = LEA_le_labour_policy_a_spirit
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_labour_policy_b_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_labour_register NOT = { has_country_flag = LEA_le_labour_policy_a_done } NOT = { has_country_flag = LEA_le_labour_policy_b_done }
+		}
+		set_country_flag = LEA_le_labour_policy_b_done
+		add_ideas = LEA_le_labour_policy_b_spirit
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_labour_operations_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA OR = { has_completed_focus = LEA_le_labour_policy_a has_completed_focus = LEA_le_labour_policy_b } NOT = { has_country_flag = LEA_le_labour_operations_done }
+		}
+		set_country_flag = LEA_le_labour_operations_done
+	}
+}
+
+LEA_le_labour_review_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_labour_operations has_country_flag = LEA_le_labour_service_completed NOT = { has_country_flag = LEA_le_labour_review_done }
+		}
+		set_country_flag = LEA_le_labour_review_done
+	}
+}
+
+LEA_le_labour_settlement_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_labour_review NOT = { has_country_flag = LEA_le_labour_settlement_done }
+		}
+		set_country_flag = LEA_le_labour_settlement_done
+		if = {
+			limit = {
+				has_country_flag = LEA_le_labour_policy_a_done
+			}
+			remove_ideas = LEA_le_labour_policy_a_spirit
+			add_ideas = LEA_le_labour_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_labour_policy_b_done
+			}
+			remove_ideas = LEA_le_labour_policy_b_spirit
+			add_ideas = LEA_le_labour_policy_b_spirit_settled
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_government_register_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_global_flag = ac_lcw_started NOT = { has_country_flag = LEA_le_government_register_done }
+		}
+		set_country_flag = LEA_le_government_register_done
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_government_policy_a_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_government_register NOT = { has_country_flag = LEA_le_government_policy_b_done } NOT = { has_country_flag = LEA_le_government_policy_a_done }
+		}
+		set_country_flag = LEA_le_government_policy_a_done
+		add_ideas = LEA_le_government_policy_a_spirit
+		if = {
+			limit = {
+				has_global_flag = ac_lcw_started NOT = { has_global_flag = ac_lcw_ended } NOT = { has_global_flag = ac_lcw_closed }
+			}
+			add_to_variable = { ac_lcw_authority = 10 }
+			clamp_variable = { var = ac_lcw_authority min = 0 max = 100 }
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_government_policy_b_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_government_register NOT = { has_country_flag = LEA_le_government_policy_a_done } NOT = { has_country_flag = LEA_le_government_policy_b_done }
+		}
+		set_country_flag = LEA_le_government_policy_b_done
+		add_ideas = LEA_le_government_policy_b_spirit
+		if = {
+			limit = {
+				has_global_flag = ac_lcw_started NOT = { has_global_flag = ac_lcw_ended } NOT = { has_global_flag = ac_lcw_closed }
+			}
+			add_to_variable = { ac_lcw_authority = 15 }
+			clamp_variable = { var = ac_lcw_authority min = 0 max = 100 }
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_government_operations_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA OR = { has_completed_focus = LEA_le_government_policy_a has_completed_focus = LEA_le_government_policy_b } NOT = { has_country_flag = LEA_le_government_operations_done }
+		}
+		set_country_flag = LEA_le_government_operations_done
+	}
+}
+
+LEA_le_government_review_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_government_operations has_country_flag = LEA_le_government_service_completed NOT = { has_country_flag = LEA_le_government_review_done }
+		}
+		set_country_flag = LEA_le_government_review_done
+	}
+}
+
+LEA_le_government_settlement_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_government_review NOT = { has_country_flag = LEA_le_government_settlement_done }
+		}
+		set_country_flag = LEA_le_government_settlement_done
+		if = {
+			limit = {
+				has_country_flag = LEA_le_government_policy_a_done
+			}
+			remove_ideas = LEA_le_government_policy_a_spirit
+			add_ideas = LEA_le_government_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_government_policy_b_done
+			}
+			remove_ideas = LEA_le_government_policy_b_spirit
+			add_ideas = LEA_le_government_policy_b_spirit_settled
+		}
+		if = {
+			limit = {
+				has_global_flag = ac_lcw_started NOT = { has_global_flag = ac_lcw_ended } NOT = { has_global_flag = ac_lcw_closed }
+			}
+			add_to_variable = { ac_lcw_authority = 10 }
+			clamp_variable = { var = ac_lcw_authority min = 0 max = 100 }
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_front_register_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_global_flag = ac_lcw_started NOT = { has_country_flag = LEA_le_front_register_done }
+		}
+		set_country_flag = LEA_le_front_register_done
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_front_policy_a_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_front_register NOT = { has_country_flag = LEA_le_front_policy_b_done } NOT = { has_country_flag = LEA_le_front_policy_a_done }
+		}
+		set_country_flag = LEA_le_front_policy_a_done
+		add_ideas = LEA_le_front_policy_a_spirit
+		if = {
+			limit = {
+				has_global_flag = ac_lcw_started NOT = { has_global_flag = ac_lcw_ended } NOT = { has_global_flag = ac_lcw_closed }
+			}
+			add_to_variable = { ac_lcw_authority = 15 }
+			clamp_variable = { var = ac_lcw_authority min = 0 max = 100 }
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_front_policy_b_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_front_register NOT = { has_country_flag = LEA_le_front_policy_a_done } NOT = { has_country_flag = LEA_le_front_policy_b_done }
+		}
+		set_country_flag = LEA_le_front_policy_b_done
+		add_ideas = LEA_le_front_policy_b_spirit
+		if = {
+			limit = {
+				has_global_flag = ac_lcw_started NOT = { has_global_flag = ac_lcw_ended } NOT = { has_global_flag = ac_lcw_closed }
+			}
+			add_to_variable = { ac_lcw_authority = 10 }
+			clamp_variable = { var = ac_lcw_authority min = 0 max = 100 }
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_front_operations_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA OR = { has_completed_focus = LEA_le_front_policy_a has_completed_focus = LEA_le_front_policy_b } NOT = { has_country_flag = LEA_le_front_operations_done }
+		}
+		set_country_flag = LEA_le_front_operations_done
+	}
+}
+
+LEA_le_front_review_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_front_operations has_country_flag = LEA_le_front_service_completed NOT = { has_country_flag = LEA_le_front_review_done }
+		}
+		set_country_flag = LEA_le_front_review_done
+	}
+}
+
+LEA_le_front_settlement_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_front_review NOT = { has_country_flag = LEA_le_front_settlement_done }
+		}
+		set_country_flag = LEA_le_front_settlement_done
+		if = {
+			limit = {
+				has_country_flag = LEA_le_front_policy_a_done
+			}
+			remove_ideas = LEA_le_front_policy_a_spirit
+			add_ideas = LEA_le_front_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_front_policy_b_done
+			}
+			remove_ideas = LEA_le_front_policy_b_spirit
+			add_ideas = LEA_le_front_policy_b_spirit_settled
+		}
+		if = {
+			limit = {
+				has_global_flag = ac_lcw_started NOT = { has_global_flag = ac_lcw_ended } NOT = { has_global_flag = ac_lcw_closed }
+			}
+			add_to_variable = { ac_lcw_authority = 10 }
+			clamp_variable = { var = ac_lcw_authority min = 0 max = 100 }
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_settlement_register_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_global_flag = ac_lcw_started NOT = { has_country_flag = LEA_le_settlement_register_done }
+		}
+		set_country_flag = LEA_le_settlement_register_done
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_settlement_policy_a_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_settlement_register NOT = { has_country_flag = LEA_le_settlement_policy_b_done } NOT = { has_country_flag = LEA_le_settlement_policy_a_done }
+		}
+		set_country_flag = LEA_le_settlement_policy_a_done
+		add_ideas = LEA_le_settlement_policy_a_spirit
+		if = {
+			limit = {
+				has_global_flag = ac_lcw_started NOT = { has_global_flag = ac_lcw_ended } NOT = { has_global_flag = ac_lcw_closed }
+			}
+			add_to_variable = { ac_lcw_authority = 5 }
+			clamp_variable = { var = ac_lcw_authority min = 0 max = 100 }
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_settlement_policy_b_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_settlement_register NOT = { has_country_flag = LEA_le_settlement_policy_a_done } NOT = { has_country_flag = LEA_le_settlement_policy_b_done }
+		}
+		set_country_flag = LEA_le_settlement_policy_b_done
+		add_ideas = LEA_le_settlement_policy_b_spirit
+		if = {
+			limit = {
+				has_global_flag = ac_lcw_started NOT = { has_global_flag = ac_lcw_ended } NOT = { has_global_flag = ac_lcw_closed }
+			}
+			add_to_variable = { ac_lcw_authority = 10 }
+			clamp_variable = { var = ac_lcw_authority min = 0 max = 100 }
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+LEA_le_settlement_operations_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA OR = { has_completed_focus = LEA_le_settlement_policy_a has_completed_focus = LEA_le_settlement_policy_b } NOT = { has_country_flag = LEA_le_settlement_operations_done }
+		}
+		set_country_flag = LEA_le_settlement_operations_done
+	}
+}
+
+LEA_le_settlement_review_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_settlement_operations has_country_flag = LEA_le_settlement_service_completed NOT = { has_country_flag = LEA_le_settlement_review_done }
+		}
+		set_country_flag = LEA_le_settlement_review_done
+	}
+}
+
+LEA_le_settlement_settlement_apply = {
+	if = {
+		limit = {
+			ac_lcw_active = yes tag = LEA original_tag = LEA has_completed_focus = LEA_le_settlement_review NOT = { has_country_flag = LEA_le_settlement_settlement_done }
+		}
+		set_country_flag = LEA_le_settlement_settlement_done
+		if = {
+			limit = {
+				has_country_flag = LEA_le_settlement_policy_a_done
+			}
+			remove_ideas = LEA_le_settlement_policy_a_spirit
+			add_ideas = LEA_le_settlement_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = LEA_le_settlement_policy_b_done
+			}
+			remove_ideas = LEA_le_settlement_policy_b_spirit
+			add_ideas = LEA_le_settlement_policy_b_spirit_settled
+		}
+		if = {
+			limit = {
+				has_global_flag = ac_lcw_started NOT = { has_global_flag = ac_lcw_ended } NOT = { has_global_flag = ac_lcw_closed }
+			}
+			add_to_variable = { ac_lcw_authority = 5 }
+			clamp_variable = { var = ac_lcw_authority min = 0 max = 100 }
+		}
+		ac_lcw_narrative_tick = yes
+	}
+}
+
+ac_lcw_message_50_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_50_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_50_answered
+		clr_country_flag = ac_lcw_message_50_pending
+		clr_country_flag = ac_lcw_message_50_window
+		set_country_flag = LEA_le_opening_public
+		add_timed_idea = { idea = LEA_le_opening_public_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_50_reply_1 = {
+	if = {
+		limit = {
+			ac_lcw_message_50_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_50_answered
+		clr_country_flag = ac_lcw_message_50_pending
+		clr_country_flag = ac_lcw_message_50_window
+		set_country_flag = LEA_le_opening_ministerial
+		add_timed_idea = { idea = LEA_le_opening_ministerial_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_60_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_60_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_60_answered
+		clr_country_flag = ac_lcw_message_60_pending
+		clr_country_flag = ac_lcw_message_60_window
+		set_country_flag = LEA_le_mines_reply_public
+		add_timed_idea = { idea = LEA_le_mines_reply_public_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_60_reply_1 = {
+	if = {
+		limit = {
+			ac_lcw_message_60_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_60_answered
+		clr_country_flag = ac_lcw_message_60_pending
+		clr_country_flag = ac_lcw_message_60_window
+		set_country_flag = LEA_le_mines_reply_protected
+		add_timed_idea = { idea = LEA_le_mines_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_90_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_90_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_90_answered
+		clr_country_flag = ac_lcw_message_90_pending
+		clr_country_flag = ac_lcw_message_90_window
+		set_country_flag = LEA_le_mines_assessment_recorded
+	}
+}
+
+ac_lcw_message_61_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_61_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_61_answered
+		clr_country_flag = ac_lcw_message_61_pending
+		clr_country_flag = ac_lcw_message_61_window
+		set_country_flag = LEA_le_provinces_reply_public
+		add_timed_idea = { idea = LEA_le_provinces_reply_public_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_61_reply_1 = {
+	if = {
+		limit = {
+			ac_lcw_message_61_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_61_answered
+		clr_country_flag = ac_lcw_message_61_pending
+		clr_country_flag = ac_lcw_message_61_window
+		set_country_flag = LEA_le_provinces_reply_protected
+		add_timed_idea = { idea = LEA_le_provinces_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_91_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_91_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_91_answered
+		clr_country_flag = ac_lcw_message_91_pending
+		clr_country_flag = ac_lcw_message_91_window
+		set_country_flag = LEA_le_provinces_assessment_recorded
+	}
+}
+
+ac_lcw_message_62_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_62_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_62_answered
+		clr_country_flag = ac_lcw_message_62_pending
+		clr_country_flag = ac_lcw_message_62_window
+		set_country_flag = LEA_le_army_reply_public
+		add_timed_idea = { idea = LEA_le_army_reply_public_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_62_reply_1 = {
+	if = {
+		limit = {
+			ac_lcw_message_62_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_62_answered
+		clr_country_flag = ac_lcw_message_62_pending
+		clr_country_flag = ac_lcw_message_62_window
+		set_country_flag = LEA_le_army_reply_protected
+		add_timed_idea = { idea = LEA_le_army_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_92_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_92_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_92_answered
+		clr_country_flag = ac_lcw_message_92_pending
+		clr_country_flag = ac_lcw_message_92_window
+		set_country_flag = LEA_le_army_assessment_recorded
+	}
+}
+
+ac_lcw_message_63_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_63_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_63_answered
+		clr_country_flag = ac_lcw_message_63_pending
+		clr_country_flag = ac_lcw_message_63_window
+		set_country_flag = LEA_le_labour_reply_public
+		add_timed_idea = { idea = LEA_le_labour_reply_public_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_63_reply_1 = {
+	if = {
+		limit = {
+			ac_lcw_message_63_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_63_answered
+		clr_country_flag = ac_lcw_message_63_pending
+		clr_country_flag = ac_lcw_message_63_window
+		set_country_flag = LEA_le_labour_reply_protected
+		add_timed_idea = { idea = LEA_le_labour_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_93_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_93_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_93_answered
+		clr_country_flag = ac_lcw_message_93_pending
+		clr_country_flag = ac_lcw_message_93_window
+		set_country_flag = LEA_le_labour_assessment_recorded
+	}
+}
+
+ac_lcw_message_64_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_64_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_64_answered
+		clr_country_flag = ac_lcw_message_64_pending
+		clr_country_flag = ac_lcw_message_64_window
+		set_country_flag = LEA_le_government_reply_public
+		add_timed_idea = { idea = LEA_le_government_reply_public_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_64_reply_1 = {
+	if = {
+		limit = {
+			ac_lcw_message_64_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_64_answered
+		clr_country_flag = ac_lcw_message_64_pending
+		clr_country_flag = ac_lcw_message_64_window
+		set_country_flag = LEA_le_government_reply_protected
+		add_timed_idea = { idea = LEA_le_government_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_94_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_94_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_94_answered
+		clr_country_flag = ac_lcw_message_94_pending
+		clr_country_flag = ac_lcw_message_94_window
+		set_country_flag = LEA_le_government_assessment_recorded
+	}
+}
+
+ac_lcw_message_65_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_65_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_65_answered
+		clr_country_flag = ac_lcw_message_65_pending
+		clr_country_flag = ac_lcw_message_65_window
+		set_country_flag = LEA_le_front_reply_public
+		add_timed_idea = { idea = LEA_le_front_reply_public_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_65_reply_1 = {
+	if = {
+		limit = {
+			ac_lcw_message_65_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_65_answered
+		clr_country_flag = ac_lcw_message_65_pending
+		clr_country_flag = ac_lcw_message_65_window
+		set_country_flag = LEA_le_front_reply_protected
+		add_timed_idea = { idea = LEA_le_front_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_95_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_95_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_95_answered
+		clr_country_flag = ac_lcw_message_95_pending
+		clr_country_flag = ac_lcw_message_95_window
+		set_country_flag = LEA_le_front_assessment_recorded
+	}
+}
+
+ac_lcw_message_66_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_66_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_66_answered
+		clr_country_flag = ac_lcw_message_66_pending
+		clr_country_flag = ac_lcw_message_66_window
+		set_country_flag = LEA_le_settlement_reply_public
+		add_timed_idea = { idea = LEA_le_settlement_reply_public_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_66_reply_1 = {
+	if = {
+		limit = {
+			ac_lcw_message_66_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_66_answered
+		clr_country_flag = ac_lcw_message_66_pending
+		clr_country_flag = ac_lcw_message_66_window
+		set_country_flag = LEA_le_settlement_reply_protected
+		add_timed_idea = { idea = LEA_le_settlement_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_96_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_96_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_96_answered
+		clr_country_flag = ac_lcw_message_96_pending
+		clr_country_flag = ac_lcw_message_96_window
+		set_country_flag = LEA_le_settlement_assessment_recorded
+	}
+}
+
+ac_lcw_message_120_reply_0 = {
+	if = {
+		limit = {
+			ac_lcw_message_120_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_120_answered
+		clr_country_flag = ac_lcw_message_120_pending
+		clr_country_flag = ac_lcw_message_120_window
+		set_country_flag = LEA_le_final_public
+		add_timed_idea = { idea = LEA_le_final_public_spirit days = 90 }
+	}
+}
+
+ac_lcw_message_120_reply_1 = {
+	if = {
+		limit = {
+			ac_lcw_message_120_answerable = yes
+		}
+		set_country_flag = ac_lcw_message_120_answered
+		clr_country_flag = ac_lcw_message_120_pending
+		clr_country_flag = ac_lcw_message_120_window
+		set_country_flag = LEA_le_final_readiness
+		add_timed_idea = { idea = LEA_le_final_readiness_spirit days = 90 }
+	}
+}
+
+ac_lcw_narrative_tick = {
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes OR = { has_country_flag = LEA_le_mines_register_done has_country_flag = LEA_le_provinces_register_done has_country_flag = LEA_le_army_register_done has_country_flag = LEA_le_labour_register_done has_country_flag = LEA_le_government_register_done has_country_flag = LEA_le_front_register_done has_country_flag = LEA_le_settlement_register_done } NOT = { has_country_flag = ac_lcw_message_50_sent }
+		}
+		set_country_flag = ac_lcw_message_50_sent
+		set_country_flag = ac_lcw_message_50_pending
+		set_country_flag = { flag = ac_lcw_message_50_window days = 60 }
+		country_event = { id = ac_lcw.50 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes OR = { has_country_flag = LEA_le_mines_policy_a_done has_country_flag = LEA_le_mines_policy_b_done } NOT = { has_country_flag = ac_lcw_message_60_sent }
+		}
+		set_country_flag = ac_lcw_message_60_sent
+		set_country_flag = ac_lcw_message_60_pending
+		set_country_flag = { flag = ac_lcw_message_60_window days = 60 }
+		country_event = { id = ac_lcw.60 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes has_country_flag = LEA_le_mines_settlement_done NOT = { has_country_flag = ac_lcw_message_90_sent }
+		}
+		set_country_flag = ac_lcw_message_90_sent
+		set_country_flag = ac_lcw_message_90_pending
+		set_country_flag = { flag = ac_lcw_message_90_window days = 60 }
+		country_event = { id = ac_lcw.90 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes OR = { has_country_flag = LEA_le_provinces_policy_a_done has_country_flag = LEA_le_provinces_policy_b_done } NOT = { has_country_flag = ac_lcw_message_61_sent }
+		}
+		set_country_flag = ac_lcw_message_61_sent
+		set_country_flag = ac_lcw_message_61_pending
+		set_country_flag = { flag = ac_lcw_message_61_window days = 60 }
+		country_event = { id = ac_lcw.61 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes has_country_flag = LEA_le_provinces_settlement_done NOT = { has_country_flag = ac_lcw_message_91_sent }
+		}
+		set_country_flag = ac_lcw_message_91_sent
+		set_country_flag = ac_lcw_message_91_pending
+		set_country_flag = { flag = ac_lcw_message_91_window days = 60 }
+		country_event = { id = ac_lcw.91 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes OR = { has_country_flag = LEA_le_army_policy_a_done has_country_flag = LEA_le_army_policy_b_done } NOT = { has_country_flag = ac_lcw_message_62_sent }
+		}
+		set_country_flag = ac_lcw_message_62_sent
+		set_country_flag = ac_lcw_message_62_pending
+		set_country_flag = { flag = ac_lcw_message_62_window days = 60 }
+		country_event = { id = ac_lcw.62 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes has_country_flag = LEA_le_army_settlement_done NOT = { has_country_flag = ac_lcw_message_92_sent }
+		}
+		set_country_flag = ac_lcw_message_92_sent
+		set_country_flag = ac_lcw_message_92_pending
+		set_country_flag = { flag = ac_lcw_message_92_window days = 60 }
+		country_event = { id = ac_lcw.92 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes OR = { has_country_flag = LEA_le_labour_policy_a_done has_country_flag = LEA_le_labour_policy_b_done } NOT = { has_country_flag = ac_lcw_message_63_sent }
+		}
+		set_country_flag = ac_lcw_message_63_sent
+		set_country_flag = ac_lcw_message_63_pending
+		set_country_flag = { flag = ac_lcw_message_63_window days = 60 }
+		country_event = { id = ac_lcw.63 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes has_country_flag = LEA_le_labour_settlement_done NOT = { has_country_flag = ac_lcw_message_93_sent }
+		}
+		set_country_flag = ac_lcw_message_93_sent
+		set_country_flag = ac_lcw_message_93_pending
+		set_country_flag = { flag = ac_lcw_message_93_window days = 60 }
+		country_event = { id = ac_lcw.93 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes OR = { has_country_flag = LEA_le_government_policy_a_done has_country_flag = LEA_le_government_policy_b_done } NOT = { has_country_flag = ac_lcw_message_64_sent }
+		}
+		set_country_flag = ac_lcw_message_64_sent
+		set_country_flag = ac_lcw_message_64_pending
+		set_country_flag = { flag = ac_lcw_message_64_window days = 60 }
+		country_event = { id = ac_lcw.64 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes has_country_flag = LEA_le_government_settlement_done NOT = { has_country_flag = ac_lcw_message_94_sent }
+		}
+		set_country_flag = ac_lcw_message_94_sent
+		set_country_flag = ac_lcw_message_94_pending
+		set_country_flag = { flag = ac_lcw_message_94_window days = 60 }
+		country_event = { id = ac_lcw.94 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes OR = { has_country_flag = LEA_le_front_policy_a_done has_country_flag = LEA_le_front_policy_b_done } NOT = { has_country_flag = ac_lcw_message_65_sent }
+		}
+		set_country_flag = ac_lcw_message_65_sent
+		set_country_flag = ac_lcw_message_65_pending
+		set_country_flag = { flag = ac_lcw_message_65_window days = 60 }
+		country_event = { id = ac_lcw.65 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes has_country_flag = LEA_le_front_settlement_done NOT = { has_country_flag = ac_lcw_message_95_sent }
+		}
+		set_country_flag = ac_lcw_message_95_sent
+		set_country_flag = ac_lcw_message_95_pending
+		set_country_flag = { flag = ac_lcw_message_95_window days = 60 }
+		country_event = { id = ac_lcw.95 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes OR = { has_country_flag = LEA_le_settlement_policy_a_done has_country_flag = LEA_le_settlement_policy_b_done } NOT = { has_country_flag = ac_lcw_message_66_sent }
+		}
+		set_country_flag = ac_lcw_message_66_sent
+		set_country_flag = ac_lcw_message_66_pending
+		set_country_flag = { flag = ac_lcw_message_66_window days = 60 }
+		country_event = { id = ac_lcw.66 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes has_country_flag = LEA_le_settlement_settlement_done NOT = { has_country_flag = ac_lcw_message_96_sent }
+		}
+		set_country_flag = ac_lcw_message_96_sent
+		set_country_flag = ac_lcw_message_96_pending
+		set_country_flag = { flag = ac_lcw_message_96_window days = 60 }
+		country_event = { id = ac_lcw.96 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = LEA ac_lcw_active = yes OR = { has_country_flag = LEA_le_settlement_settlement_done has_country_flag = LEA_le_mines_settlement_done has_country_flag = LEA_le_provinces_settlement_done has_country_flag = LEA_le_army_settlement_done has_country_flag = LEA_le_labour_settlement_done } NOT = { has_country_flag = ac_lcw_message_120_sent }
+		}
+		set_country_flag = ac_lcw_message_120_sent
+		set_country_flag = ac_lcw_message_120_pending
+		set_country_flag = { flag = ac_lcw_message_120_window days = 60 }
+		country_event = { id = ac_lcw.120 days = 1 }
+	}
+}
+
+ac_lcw_interrupt_narrative = {
+	if = {
+		limit = {
+			ac_lcw_participant = yes
+		}
+		clr_country_flag = ac_lcw_message_50_pending
+		clr_country_flag = ac_lcw_message_50_window
+		clr_country_flag = ac_lcw_message_60_pending
+		clr_country_flag = ac_lcw_message_60_window
+		clr_country_flag = ac_lcw_message_90_pending
+		clr_country_flag = ac_lcw_message_90_window
+		clr_country_flag = ac_lcw_message_61_pending
+		clr_country_flag = ac_lcw_message_61_window
+		clr_country_flag = ac_lcw_message_91_pending
+		clr_country_flag = ac_lcw_message_91_window
+		clr_country_flag = ac_lcw_message_62_pending
+		clr_country_flag = ac_lcw_message_62_window
+		clr_country_flag = ac_lcw_message_92_pending
+		clr_country_flag = ac_lcw_message_92_window
+		clr_country_flag = ac_lcw_message_63_pending
+		clr_country_flag = ac_lcw_message_63_window
+		clr_country_flag = ac_lcw_message_93_pending
+		clr_country_flag = ac_lcw_message_93_window
+		clr_country_flag = ac_lcw_message_64_pending
+		clr_country_flag = ac_lcw_message_64_window
+		clr_country_flag = ac_lcw_message_94_pending
+		clr_country_flag = ac_lcw_message_94_window
+		clr_country_flag = ac_lcw_message_65_pending
+		clr_country_flag = ac_lcw_message_65_window
+		clr_country_flag = ac_lcw_message_95_pending
+		clr_country_flag = ac_lcw_message_95_window
+		clr_country_flag = ac_lcw_message_66_pending
+		clr_country_flag = ac_lcw_message_66_window
+		clr_country_flag = ac_lcw_message_96_pending
+		clr_country_flag = ac_lcw_message_96_window
+		clr_country_flag = ac_lcw_message_120_pending
+		clr_country_flag = ac_lcw_message_120_window
+	}
+}
+
+ac_lcw_weekly_lea = {
+	if = {
+		limit = {
+			tag = LEA original_tag = LEA
+		}
+		ac_lcw_initialize = yes
+		if = {
+			limit = {
+				OR = { ac_lcw_active = no has_war = yes }
+			}
+			ac_lcw_interrupt_service = yes
+		}
+		if = {
+			limit = {
+				ac_lcw_active = yes
+			}
+			ac_lcw_refresh_progress = yes
+			LEA_le_mines_service_1_finish = yes
+			LEA_le_mines_service_2_finish = yes
+			LEA_le_provinces_service_1_finish = yes
+			LEA_le_provinces_service_2_finish = yes
+			LEA_le_army_service_1_finish = yes
+			LEA_le_army_service_2_finish = yes
+			LEA_le_labour_service_1_finish = yes
+			LEA_le_labour_service_2_finish = yes
+			LEA_le_government_service_1_finish = yes
+			LEA_le_government_service_2_finish = yes
+			LEA_le_front_service_1_finish = yes
+			LEA_le_front_service_2_finish = yes
+			LEA_le_settlement_service_1_finish = yes
+			LEA_le_settlement_service_2_finish = yes
+			ac_lcw_narrative_tick = yes
+		}
+		ac_lcw_owner_weekly = yes
+	}
+}
+
+ac_lcw_interrupt = {
+	ac_lcw_interrupt_service = yes
+	ac_lcw_interrupt_narrative = yes
+}
+
+ac_lcw_owner_weekly = {
+	if = {
+		limit = {
+			tag = LEA original_tag = LEA NOT = { has_global_flag = ac_lcw_closed }
+		}
+		if = {
+			limit = {
+				date > 2008.12.31 NOT = { has_global_flag = ac_lcw_started } NOT = { has_global_flag = ac_lcw_late_start_skipped }
+			}
+			if = {
+				limit = {
+					date < 2010.1.1 has_capitulated = no
+				}
+				set_global_flag = ac_lcw_started
+				set_variable = { ac_lcw_authority = 40 }
+				add_ideas = ac_lcw_civil_war
+				news_event = { id = ac_lcw.1 days = 1 }
+			}
+			else = {
+				set_global_flag = ac_lcw_late_start_skipped
+				set_global_flag = ac_lcw_closed
+			}
+		}
+		if = {
+			limit = {
+				ac_lcw_running = yes
+			}
+			if = {
+				limit = {
+					date > 2018.12.31 date < 2020.1.1 check_variable = { ac_lcw_authority > 49 }
+				}
+				set_global_flag = ac_lcw_ended
+				set_global_flag = ac_lcw_historical_end
+				remove_ideas = ac_lcw_civil_war
+				add_timed_idea = { idea = ac_lcw_war_over days = 365 }
+				news_event = { id = ac_lcw.2 days = 1 }
+			}
+			else_if = {
+				limit = {
+					NOT = { date < 2020.1.1 } NOT = { has_global_flag = ac_lcw_prolonged }
+				}
+				set_global_flag = ac_lcw_prolonged
+				news_event = { id = ac_lcw.3 days = 1 }
+			}
+			else_if = {
+				limit = {
+					has_global_flag = ac_lcw_prolonged check_variable = { ac_lcw_authority > 49 }
+				}
+				set_global_flag = ac_lcw_ended
+				set_global_flag = ac_lcw_late_end
+				remove_ideas = ac_lcw_civil_war
+				add_timed_idea = { idea = ac_lcw_war_over days = 365 }
+				news_event = { id = ac_lcw.4 days = 1 }
+			}
+		}
+	}
+}
+
+ac_lcw_negotiate = {
+	if = {
+		limit = {
+			ac_lcw_running = yes ac_lcw_settlement_earned = yes
+		}
+		set_global_flag = ac_lcw_ended
+		set_global_flag = ac_lcw_negotiated
+		remove_ideas = ac_lcw_civil_war
+		add_timed_idea = { idea = ac_lcw_war_over days = 365 }
+		news_event = { id = ac_lcw.5 days = 1 }
+	}
+}
+
+ac_lcw_interrupt_war = {
+	if = {
+		limit = {
+			tag = LEA original_tag = LEA ac_lcw_running = yes
+		}
+		set_global_flag = ac_lcw_closed
+		set_global_flag = ac_lcw_interrupted
+		remove_ideas = ac_lcw_civil_war
+		news_event = { id = ac_lcw.6 days = 1 }
+	}
+}

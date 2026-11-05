@@ -184,15 +184,20 @@ def outputs():
             body += block("available", condition) + "cancel_if_invalid = yes\ncontinue_if_invalid = no\nai_will_do = { factor = 12 }\n" + block("completion_reward", ident + "_apply = yes")
             focuses.append(block("shared_focus", body))
     text("ac_rc_funded_cost", "£pol_power 35 / 4 cap")
-    text("ac_rc_funded_cost_tt", "Authorization commits 35 political power and four institutional-capacity points, plus the applicable programme fee below. Spent resources are not refunded when a period is interrupted.")
+    # <custom_cost_text>_tooltip and _blocked are the engine's hover and
+    # unaffordable variants of a custom decision cost.
+    text("ac_rc_funded_cost_tooltip", "Authorization commits 35 political power and four institutional-capacity points, plus the programme fee shown in the category. Spent resources are not refunded when a period is interrupted.")
+    text("ac_rc_funded_cost_blocked", "£pol_power §R35§! / §R4§! cap")
     text("ac_rc_fee_macro", "Programme fee: 0.002 billion abstract fiscal units.")
     text("ac_rc_fee_legacy", "Programme fee: 2 provisional fiscal units.")
     text("ac_rc_fee_none", "No fiscal fee currently applies. Political and institutional costs remain.")
     for tag, name in COUNTRY_NAMES.items():
         category = "ac_rc_" + tag.lower() + "_services"
         text(category, name + ": Standing Services")
-        text(category + "_desc", "[ac_rc_current_service_text]\n[ac_rc_cooldown_text]\nLatest service return: [?ac_rc_elapsed|0]/90 days. Completed periods: [?ac_rc_completed_services|0]. Last interrupted or completed period delivered [?ac_rc_last_delivered_days|0] days.\n\n" +
-             "\n".join(b.titles[0] + ": [" + branch_id(b) + "_policy_text]" for b in BRANCHES if b.tag == tag) + "\n\n" + loc["ac_rc_funded_cost_tt"] + "\n[ac_rc_fee_text]")
+        # Status, one line per chosen standing policy, then the fee; the cost
+        # paragraph is the decisions' own cost tooltip (tools/decision_text).
+        text(category + "_desc", "[ac_rc_current_service_text]\n[ac_rc_cooldown_text]\nService [?ac_rc_elapsed|0]/90 days, [?ac_rc_completed_services|0] completed, last period [?ac_rc_last_delivered_days|0] days.\n\n" +
+             "".join("[" + branch_id(b) + "_policy_line]" for b in BRANCHES if b.tag == tag) + "[ac_rc_fee_text]")
         categories.append(block(category, f"icon = GFX_ac_rc_category_{tag.lower()}\nallowed = {{ tag = {tag} original_tag = {tag} }}\nvisible = {{ ac_rc_eligible = yes }}"))
         decision(tag + "_rc_cancel_service", tag, "End the Current Service Period",
             "Release the current rota immediately. Funding and institutional effort already spent are not refunded. Delivered time is retained in the record, but the interrupted period cannot unlock a completed-service review.",
@@ -212,14 +217,16 @@ def outputs():
         current += block("text", "trigger = { has_country_flag = " + ident + "_active }\nlocalization_key = " + ident)
     custom += block("defined_text", "name = ac_rc_current_service_text\n" + current + block("text", "localization_key = ac_rc_service_none"))
     custom += block("defined_text", "name = ac_rc_cooldown_text\n" + block("text", "trigger = { has_country_flag = ac_rc_service_cooldown }\nlocalization_key = ac_rc_cooldown_active") + block("text", "localization_key = ac_rc_cooldown_ready"))
+    text("ac_rc_policy_line_none", "")
     for branch in BRANCHES:
         choices = ""
         for index in (1, 2):
             ident = focus_id(branch, index)
-            choices += block("text", "trigger = { has_idea = " + ident + "_spirit_settled }\nlocalization_key = " + ident + "_spirit_settled")
-            choices += block("text", "trigger = { has_country_flag = " + ident + "_done }\nlocalization_key = " + ident)
-        none = branch_id(branch) + "_policy_none"; text(none, "A standing policy has not yet been selected.")
-        custom += block("defined_text", "name = " + branch_id(branch) + "_policy_text\n" + choices + block("text", "localization_key = " + none))
+            text(ident + "_spirit_settled_policy_line", "Standing policy: " + loc[ident] + " (settled)\n")
+            text(ident + "_policy_line", "Standing policy: " + loc[ident] + "\n")
+            choices += block("text", "trigger = { has_idea = " + ident + "_spirit_settled }\nlocalization_key = " + ident + "_spirit_settled_policy_line")
+            choices += block("text", "trigger = { has_country_flag = " + ident + "_done }\nlocalization_key = " + ident + "_policy_line")
+        custom += block("defined_text", "name = " + branch_id(branch) + "_policy_line\n" + choices + block("text", "localization_key = ac_rc_policy_line_none"))
     finish = "\n".join(ident + "_finish = yes" for _, _, ident in SERVICES)
     effects["ac_rc_weekly"] = guard("ac_rc_participant = yes", "ac_rc_initialize = yes\n" +
         guard("OR = { ac_rc_active = no has_war = yes }", "ac_rc_interrupt_service = yes") +

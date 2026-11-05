@@ -272,6 +272,17 @@ def output():
     custom.append(story_custom)
     text('ac_snp_cost_ose_civil','[ac_snp_ose_civil_price_text]')
     text('ac_snp_cost_ose_protected','[ac_snp_ose_protected_price_text]')
+    # <custom_cost_text>_tooltip is the engine's hover text for a custom cost;
+    # the register's standing rules live here, so the category shows state only.
+    shared=(' Authorization also commits four institutional-capacity points and the programme fee shown in the register.'
+            ' Every scope has a ninety-day completed-service cooldown, and wartime periods perform reduced domestic continuity work.')
+    ose_rules=('Civil periods reserve one of the three federal commitment units; protected periods reserve two.'
+               ' A lane needs thirty support to authorize work. At sixty-five, its service costs thirty rather than thirty-five political power'
+               ' and sustains its earned mandate with the shown continuing cost.'+shared)
+    text('ac_snp_cost_ose_civil_tooltip',ose_rules);text('ac_snp_cost_ose_protected_tooltip',ose_rules)
+    text('ac_snp_cost_yuk_tooltip','Each period reserves twenty-five points from its lane, with at most two national offices active.'
+         ' The civil and command shares always total one hundred; priority at sixty points sustains the corresponding standing policy'
+         ' and its continuing cost.'+shared)
     text('ac_snp_cost_35','£pol_power 35 / 4 cap');text('ac_snp_cost_30','£pol_power 30 / 4 cap')
     text('ac_snp_cost_consult','£pol_power 20 / 2 cap')
     text('ac_snp_cost_reallocate','[ac_snp_yuk_reallocation_price_text]')
@@ -287,19 +298,21 @@ def output():
     text('ac_snp_no_interruption','No interrupted service period is recorded.')
     interrupted_records=''
     for s in SERVICES:
-        key=s.id+'_interrupted_record';text(key,'Last interrupted period: '+s.title+', [?ac_snp_last_interrupted_days|0]/90 days delivered. Spent resources were retained.')
+        key=s.id+'_interrupted_record';text(key,'Last interrupted: '+s.title+', [?ac_snp_last_interrupted_days|0]/90 days delivered.')
         interrupted_records+=block('text','trigger = { '+host(s.branch.tag)+' check_variable = { ac_snp_last_interrupted = '+str(s.number+1)+' } }\nlocalization_key = '+key)
     custom.append(block('defined_text','name = ac_snp_interruption_text\n'+interrupted_records+block('text','localization_key = ac_snp_no_interruption')))
     categories=[]
     for tag,name in COUNTRIES.items():
         ident='ac_snp_'+tag.lower()+'_programmes';text(ident,name+': '+('Federal Commitment Register'if tag=='OSE'else'National Allocation Docket'))
-        desc=('Federal schedule: [?ac_snp_ose_used|0]/3 commitment units reserved. Civil periods use one; protected periods use two.\nCivil support: [?ac_snp_ose_public|0]/100. Readiness support: [?ac_snp_ose_security|0]/100. A lane needs thirty support to authorize work. At sixty-five, its service costs thirty rather than thirty-five political power and sustains its earned mandate with the shown continuing cost.'if tag=='OSE'else'Civil allocation: [?ac_snp_yuk_civil|0]/100, reserving [?ac_snp_yuk_civil_used|0]. Command allocation: [?ac_snp_yuk_command|0]/100, reserving [?ac_snp_yuk_command_used|0]. The shares always total one hundred. Each period reserves twenty-five points from its lane, with at most two national offices active. Priority at sixty points sustains the corresponding standing policy and its continuing cost.')
-        desc+='\n\n[ac_snp_fee_text]\nService authorization also commits four institutional-capacity points. Every scope has a ninety-day completed-service cooldown. Wartime periods perform reduced domestic continuity work. Completed periods: [?ac_snp_completed|0].\n[ac_snp_interruption_text]\n\n'
+        # State only: the standing rules are the services' cost tooltip
+        # (ac_snp_cost_*_tooltip); tools/decision_text measures the result.
+        desc=('Federal schedule: [?ac_snp_ose_used|0]/3 commitment units reserved.\nCivil support [?ac_snp_ose_public|0]/100; readiness support [?ac_snp_ose_security|0]/100.'if tag=='OSE'else'Civil allocation [?ac_snp_yuk_civil|0]/100, reserving [?ac_snp_yuk_civil_used|0].\nCommand allocation [?ac_snp_yuk_command|0]/100, reserving [?ac_snp_yuk_command_used|0].')
+        desc+='\nCompleted periods: [?ac_snp_completed|0].\n[ac_snp_fee_text]\n[ac_snp_interruption_text]\n\n'
         for s in SERVICES:
             if s.branch.tag!=tag:continue
-            key=s.id+'_status';text(key+'_active',s.title+': active, [?'+s.prefix+'_elapsed|0]/90 days.\n');text(key+'_idle','')
-            text(key+'_domestic',s.title+': domestic continuity, [?'+s.prefix+'_elapsed|0]/90 days.\n')
-            text(key+'_cooldown',s.title+': completed; the ninety-day recovery interval is active.\n')
+            key=s.id+'_status';text(key+'_active',s.title+': [?'+s.prefix+'_elapsed|0]/90 days\n');text(key+'_idle','')
+            text(key+'_domestic',s.title+': continuity, [?'+s.prefix+'_elapsed|0]/90 days\n')
+            text(key+'_cooldown',s.title+': recovering\n')
             custom.append(block('defined_text','name = '+key+'\n'+block('text','trigger = { has_country_flag = '+s.id+'_active has_country_flag = '+s.id+'_wartime }\nlocalization_key = '+key+'_domestic')+block('text','trigger = { has_country_flag = '+s.id+'_active }\nlocalization_key = '+key+'_active')+block('text','trigger = { has_country_flag = '+s.id+'_cooldown }\nlocalization_key = '+key+'_cooldown')+block('text','localization_key = '+key+'_idle')))
             desc+='['+key+']'
         text(ident+'_desc',desc)

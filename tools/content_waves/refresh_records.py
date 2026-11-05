@@ -5,7 +5,8 @@ packages go stale and fail CI:
 
 * tools/world_foundation/country_registry.json (per-country focus counts, input digest);
 * docs/evidence/decision-rows/consumer-bounds.json and index.html (every decision row);
-* docs/evidence/event-style/measurements.json and gallery.html (every event text field).
+* docs/evidence/event-style/measurements.json and gallery.html (every event text field);
+* docs/evidence/decision-text/measurements.json and index.html (every category description).
 
 Only their text outputs are written. Their PNG review sheets are left as committed,
 because PNG compression differs between platforms; the script reports whether
@@ -87,6 +88,14 @@ def event_style(check):
     return [line[6:] for line in result.stdout.splitlines() if line.startswith("STALE ")]
 
 
+def decision_text(check):
+    sys.path[:0] = [str(ROOT / "tools"), str(ROOT / "tools/decision_text")]
+    from event_picture_fit.fit import same_review_png
+    module = runpy.run_path(str(ROOT / "tools/decision_text/measure.py"), run_name="content_waves_decision_text")
+    _, files = module["outputs"]()
+    return write_text_outputs({module["OUT"] / name: data for name, data in files.items()}, check, same_review_png)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
@@ -95,7 +104,7 @@ def main():
     if args.event_style_child:
         event_style_child(args.check)
         return
-    stale = registry(args.check) + decision_rows(args.check) + event_style(args.check)
+    stale = registry(args.check) + decision_rows(args.check) + event_style(args.check) + decision_text(args.check)
     if args.check and stale:
         raise SystemExit("Stale shared records: " + ", ".join(stale))
     print(("Shared records consistent" if args.check else "Shared records refreshed") + (": " + ", ".join(stale) if stale else ""))

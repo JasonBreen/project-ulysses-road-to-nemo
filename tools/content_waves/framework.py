@@ -278,17 +278,22 @@ def compile_wave(wave, event_base=None):
             focuses.append(block("shared_focus", body))
 
     text(P + "_funded_cost", "£pol_power 35 / 4 cap")
-    text(P + "_funded_cost_tt", "Authorization commits 35 political power and four institutional-capacity points, plus the applicable programme fee below. Spent resources are not refunded when a period is interrupted.")
+    # <custom_cost_text>_tooltip and _blocked are the engine's hover and
+    # unaffordable variants of a custom decision cost.
+    text(P + "_funded_cost_tooltip", "Authorization commits 35 political power and four institutional-capacity points, plus the programme fee shown in the category. Spent resources are not refunded when a period is interrupted.")
+    text(P + "_funded_cost_blocked", "£pol_power §R35§! / §R4§! cap")
     text(P + "_fee_macro", "Programme fee: 0.002 billion abstract fiscal units.")
     text(P + "_fee_legacy", "Programme fee: 2 provisional fiscal units.")
     text(P + "_fee_none", "No fiscal fee currently applies. Political and institutional costs remain.")
     for tag, name in wave.countries.items():
         category = f"{P}_{tag.lower()}_services"
         text(category, name + ": " + wave.label)
-        text(category + "_desc", f"[{P}_current_service_text]\n[{P}_cooldown_text]\nLatest service return: [?{P}_elapsed|0]/90 days. Completed periods: [?{P}_completed_services|0]. "
-             f"Last interrupted or completed period delivered [?{P}_last_delivered_days|0] days.\n\n" +
-             "\n".join(b.titles[0] + ": [" + branch_id(b) + f"_{P}_policy_text]" for b in wave.branches if b.tag == tag) +
-             "\n\n" + loc[P + "_funded_cost_tt"] + f"\n[{P}_fee_text]")
+        # Status, then one line per chosen standing policy (unchosen branches
+        # print nothing), then the fee. The cost paragraph is the decisions'
+        # own cost tooltip (tools/decision_text measures the result).
+        text(category + "_desc", f"[{P}_current_service_text]\n[{P}_cooldown_text]\nService [?{P}_elapsed|0]/90 days, [?{P}_completed_services|0] completed, "
+             f"last period [?{P}_last_delivered_days|0] days.\n\n" +
+             "".join("[" + branch_id(b) + f"_{P}_policy_line]" for b in wave.branches if b.tag == tag) + f"[{P}_fee_text]")
         categories.append(block(category, f"icon = GFX_{P}_category_{tag.lower()}\nallowed = {{ tag = {tag} original_tag = {tag} }}\nvisible = {{ {P}_eligible = yes }}"))
         decision(f"{tag}_{wave.infix}_cancel_service", tag, "End the Current Service Period",
                  "Release the current rota immediately. Funding and institutional effort already spent are not refunded. Delivered time is retained in the record, but the interrupted period cannot unlock a completed-service review.",
@@ -400,15 +405,16 @@ def compile_wave(wave, event_base=None):
     custom.append(block("defined_text", f"name = {P}_cooldown_text\n" +
         block("text", f"trigger = {{ has_country_flag = {P}_service_cooldown }}\nlocalization_key = {P}_cooldown_active") +
         block("text", f"localization_key = {P}_cooldown_ready")))
+    text(P + "_policy_line_none", "")
     for branch in wave.branches:
         choices = ""
         for index in (1, 2):
             ident = focus_id(wave, branch, index)
-            choices += block("text", f"trigger = {{ has_idea = {ident}_spirit_settled }}\nlocalization_key = {ident}_spirit_settled")
-            choices += block("text", f"trigger = {{ has_country_flag = {ident}_done }}\nlocalization_key = {ident}")
-        none = f"{branch_id(branch)}_{P}_policy_none"
-        text(none, "A standing policy has not yet been selected.")
-        custom.append(block("defined_text", f"name = {branch_id(branch)}_{P}_policy_text\n" + choices + block("text", "localization_key = " + none)))
+            text(ident + "_spirit_settled_policy_line", "Standing policy: " + loc[ident] + " (settled)\n")
+            text(ident + "_policy_line", "Standing policy: " + loc[ident] + "\n")
+            choices += block("text", f"trigger = {{ has_idea = {ident}_spirit_settled }}\nlocalization_key = {ident}_spirit_settled_policy_line")
+            choices += block("text", f"trigger = {{ has_country_flag = {ident}_done }}\nlocalization_key = {ident}_policy_line")
+        custom.append(block("defined_text", f"name = {branch_id(branch)}_{P}_policy_line\n" + choices + block("text", f"localization_key = {P}_policy_line_none")))
 
     # Weekly owner and interruption hooks ---------------------------------
     finish = "\n".join(ident + "_finish = yes" for _, _, ident in services)

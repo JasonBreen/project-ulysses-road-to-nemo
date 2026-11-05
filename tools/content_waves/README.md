@@ -20,7 +20,7 @@ from [docs/STRANGEREAL_2006_2020_SOURCES.md](../../docs/STRANGEREAL_2006_2020_SO
 | wave modules | Branches, owner (dated events, flags, ideas, decisions, hooks by on_action, AI strategy, projects) and registry declarations: `KEY`, `NAME`, `IMPORTS` or `TREES` (`COUNTRIES` for extra category art), `LEDGER`, `SOURCES`, `NEWS_ART`, `EVENT_ART`, `OWNER_ART`, `PROJECT_ART` |
 | `build.py` | Writes script, localization, new trees and the import blocks in existing trees; writes `manifest.json` |
 | `build_art.py` | Writes DDS textures, `interface/ac_content_waves.gfx`, `assets.json`, event masters and galleries |
-| `refresh_records.py` | Regenerates the shared country registry, decision-row bounds and event-style measurements after content changes |
+| `refresh_records.py` | Regenerates the shared country registry, decision-row bounds, event-style measurements and decision-category text measurements after content changes |
 | `test_waves.py` | Source checks and actual-script offline runtime tests |
 
 ```text

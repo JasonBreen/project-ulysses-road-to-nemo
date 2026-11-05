@@ -492,7 +492,22 @@ def build_trees():
     loc("ac_ucw_fcu_tree_desc", "Central Usea's path through the Ulysses fallout and the Usean Continental War, 2000–2005.")
     for tag, tree, position in (("ERU", "ac_ucw_eru_tree", "x = 1200 y = 1700"), ("FCU", "ac_ucw_fcu_tree", "x = 1300 y = 1700")):
         OUTPUT["common/national_focus/%s.txt" % tag] = "# Authored gameplay; source: tools/build_continental_war.py.\n" + block(
-            "focus_tree", "id = %s\ncountry = { factor = 0 }\ndefault = no\ncontinuous_focus_position = { %s }\n%s" % (tree, position, "\n".join(TREES[tag])))
+            "focus_tree", "id = %s\ncountry = { factor = 0 }\ndefault = no\ncontinuous_focus_position = { %s }\n%s%s" % (
+                tree, position, "\n".join(TREES[tag]), preserved_imports(tag)))
+
+
+# Later reviewed packages (for example tools/content_waves) import their own
+# shared focuses into these trees through a marked block that they own and
+# validate. Keep each block byte-for-byte so both generators' --check agree.
+EXTENSION_IMPORTS = re.compile(r"(?m)^\t# BEGIN ([A-Z][A-Z ]*) IMPORTS\n(?:\tshared_focus = \w+\n)+\t# END \1 IMPORTS\n")
+
+
+def preserved_imports(tag):
+    path = MOD / ("common/national_focus/%s.txt" % tag)
+    if not path.exists():
+        return ""
+    source = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+    return "".join(match.group(0).replace("\n\t", "\n")[1:] for match in EXTENSION_IMPORTS.finditer(source))
 
 
 def build_weekly():

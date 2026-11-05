@@ -342,11 +342,42 @@ UST_ratio_negotiation = {
 		fire_only_once = yes
 		cost = 150
 		remove_effect = {
-			load_oob = UST_mercs_1
-			add_to_variable = { ratio_hate = 1 }
-			add_days_mission_timeout = {
-				mission = UST_ratio_war_timer
-				days = 30
+			if = {
+				limit = {
+					NOT = { has_country_flag = UST_mercs_1_loaded }
+				}
+				# 2 MP detachments x 3 infantry x 100 infantry_equipment.
+				add_equipment_to_stockpile = {
+					type = infantry_equipment_1
+					amount = 600
+					producer = UST
+				}
+				if = {
+					limit = {
+						335 = { is_controlled_by = ROOT }
+					}
+					load_oob = UST_mercs_1
+				}
+				else = {
+					capital_scope = {
+						create_unit = {
+							division = "name = \"Hired Infantry\" division_template = \"MP\" start_experience_factor = 0.2 start_equipment_factor = 0"
+							owner = ROOT
+							allow_spawning_on_enemy_provs = yes
+						}
+						create_unit = {
+							division = "name = \"Hired Infantry\" division_template = \"MP\" start_experience_factor = 0.2 start_equipment_factor = 0"
+							owner = ROOT
+							allow_spawning_on_enemy_provs = yes
+						}
+					}
+				}
+				set_country_flag = UST_mercs_1_loaded
+				add_to_variable = { ratio_hate = 1 }
+				add_days_mission_timeout = {
+					mission = UST_ratio_war_timer
+					days = 30
+				}
 			}
 		}
 	}

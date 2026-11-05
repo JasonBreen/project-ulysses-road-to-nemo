@@ -28,6 +28,18 @@ records isolated fixture coverage and remaining gaps without changing source lay
 No Joker 1 details, future wars, new borders,
 or unsourced local impact zones were inferred.
 
+## 1991 hull programs and name corrections
+
+Checked against the English [ACES Chronicle details](https://acecombat.jp/en/chronicle/details/), 5 November 2026.
+
+| Claim | Source layer | IDs | Status |
+| --- | --- | --- | --- |
+| 17 December 1987 Belkan Federation legal reforms; Republic of Gebet independent 8 February 1988; Republic of Ustio independent 12 May 1988 | Official Chronicle, 1987 / 12.17, 1988 / 02.08, 1988 / 05.12 | `GEB_democratic`, `GEB_neutrality`, `GEB_GATHERING_STORM_DESC`, `UST_GATHERING_STORM_DESC`, `UST_start_desc` | The 1991 democratic, non-aligned, and communist names now say Republic of Gebet. The select-screen text and Ustio's opening focus use the Chronicle dates. Fascism and monarchism names for Gebet stay provisional alternates. Older focus and event lines still say "Federal Law Review," which the Chronicle does not name. |
+| Democratic Republic of Leasath | Ace Combat X, Japanese レサス民主共和国. The Chronicle's 2020 rows say Leasath and give Federal Republic only to Aurelia. | `LEA_democratic`, `LEA_neutrality` | The 1991 democratic and non-aligned names no longer use Aurelia's federal title. Communism already used the democratic-republic name. |
+| Great Lakes Resource Development Company found covering up an operating loss, 16 August 1991 | Official Chronicle, 1991 / 08.16 | `ac_news_event.4` | The world news no longer says the firm was a weeks-old sabotage plot or that the territorial sales had already happened. Belka's own focus text is unchanged. |
+| Osea orders the Kestrel, seventh Hubert-class carrier, 29 July 1991; commissions her 16 September 1999 | Official Chronicle, 1991 / 07.29 and 1999 / 09.16 | `ac_yards.1`, `ac_yards.2`, `ac_yards_fund_berth`, `ac_yards_sea_trial` | The order and the commission fire on those days for Osea. Funding the berth and the trial odds are provisional gameplay. No ship is spawned. |
+| Scinfaxi class announced at Cinigrad, 2 September 1991; Osean Foreign Minister Howards belittles it | Official Chronicle, 1991 / 09.02 | `ac_yards.3`, `ac_yards.4`, `ac_yards_draft_class` | The announcement and Howards' answer fire on the calendar. The draft bonus is provisional gameplay. No submarine is spawned. |
+
 ## Citation rule
 
 The [Pacific personal-story ledger](PACIFIC_STORIES_LEDGER.md) separates the

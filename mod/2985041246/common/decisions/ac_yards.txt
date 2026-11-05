@@ -1,0 +1,74 @@
+ac_yards_cat = {
+	ac_yards_fund_berth = {
+		icon = GFX_decision_generic_naval
+		allowed = { tag = OSE }
+		visible = {
+			tag = OSE
+			date < 1991.7.29
+			NOT = { has_country_flag = ac_yards_berth_funded }
+		}
+		available = {
+			tag = OSE
+			has_political_power > 24
+		}
+		fire_only_once = yes
+		cost = 25
+		ai_will_do = { base = 20 }
+		complete_effect = {
+			set_country_flag = ac_yards_berth_funded
+		}
+	}
+
+	ac_yards_sea_trial = {
+		icon = GFX_decision_generic_naval
+		allowed = { tag = OSE }
+		visible = {
+			tag = OSE
+			has_country_flag = ac_yards_kestrel_announced
+			NOT = { has_country_flag = ac_yards_kestrel_commissioned }
+			date < 1999.9.16
+		}
+		available = {
+			tag = OSE
+			has_political_power > 14
+		}
+		cancel_trigger = {
+			has_country_flag = ac_yards_kestrel_commissioned
+		}
+		cost = 15
+		days_remove = 21
+		ai_will_do = {
+			base = 5
+			modifier = {
+				factor = 0
+				OR = {
+					check_variable = { ac_yards_trials > 2 }
+					check_variable = { ac_yards_trial_attempts > 5 }
+				}
+			}
+		}
+		remove_effect = {
+			ac_yards_sea_trial_effect = yes
+		}
+	}
+
+	ac_yards_draft_class = {
+		icon = GFX_decision_generic_naval
+		allowed = { tag = YUK }
+		visible = {
+			tag = YUK
+			date < 1991.9.2
+			NOT = { has_country_flag = ac_yards_class_drafted }
+		}
+		available = {
+			tag = YUK
+			has_political_power > 19
+		}
+		fire_only_once = yes
+		cost = 20
+		ai_will_do = { base = 20 }
+		complete_effect = {
+			set_country_flag = ac_yards_class_drafted
+		}
+	}
+}

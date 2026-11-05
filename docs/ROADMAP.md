@@ -5,6 +5,16 @@ with machine-readable budgets and honest package status. The implementation
 records below remain historical evidence; they do not supersede that roadmap
 or establish native acceptance for its pending packages.
 
+## Chronicle opening
+
+Osea can fund the Kestrel's berth before 29 July 1991 and run sea trials until
+the carrier commissions on 16 September 1999. Yuktobania can draft the Scinfaxi
+class before the 2 September 1991 announcement at Cinigrad. Those dates are the
+ACES Chronicle. The dockyard bonuses are provisional gameplay. The historical
+names in use at the 1991 start are the Republic of Gebet and the Democratic
+Republic of Leasath. Belka's focus, event, and decision scripts are unchanged.
+Native play is still unverified.
+
 ## Current playable state (agent handoff — 2026-11-04)
 
 **Stage:** Early continuation / initial flight test passed for the 1991 opening. Not a full campaign.

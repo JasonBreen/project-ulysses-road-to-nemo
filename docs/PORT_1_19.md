@@ -86,6 +86,7 @@ Belka, 1 Jan 1991 bookmark: menu → scenario → country select → campaign st
    - The P-3 Orion has an invalid module layout. Still open: statically consistent with the installed large-airframe archetype; needs a native error log to identify the exact module.
    - Nordennavic popularities don't add to 100. Fixed (98 → 100 via neutrality 9).
    - DEL/SHI character conflict. Fixed: Shilage recruits its own generated government office instead of Delarus's leader.
+   - Empty `UST_mercs_1` and missing `UST_moblise_militia_focus_oob`. Fixed in source as provisional gameplay: the decision and focus now load real infantry detachments from templates and equipment Ustio already has in 1991, with a capital fallback and a one-shot guard. Neither file is a country-history starting army. Native spawn is untested. The 15 unloaded legacy OOBs were not moved.
 5. **Subdoctrine bonuses** target vanilla unit types (`super_heavy_artillery`, `support_ship`, …). Mod units need their own subdoctrine tuning.
 6. **Two identical 1991 bookmarks** in `common/bookmarks`. Only one is shown by the original setup screen.
 7. Test-only `events/crowbuildingdebugevents.txt` references undefined `stonehenge`/`megalith` buildings.

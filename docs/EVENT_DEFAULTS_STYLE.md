@@ -55,7 +55,7 @@ untouched.
 
 ## Text, bounds and acceptance limits
 
-The corrected PR #55 audit measures **1,892** well-formed authored fields:
+At PR #55 the corrected audit measured **1,892** well-formed authored fields:
 **1,803 country and 89 news**, including every repeated title/description and its
 conditional variants. There are **zero static current title clips** and **zero
 missing glyphs**. Before padding, **16 description instances had one-pixel
@@ -64,8 +64,9 @@ pre-padding receipts and raw measurement copy. A vertical scrollbar only
 counts **properly wrapped bottom overflow** as accessible: it cannot repair left,
 right, top or unbreakable-word overflow. **256** long bodies satisfy that limited
 scroll-accessibility condition before padding. **130** dynamic fields and **90** inherited
-missing/malformed localization references remain separately listed; none is
-represented as accepted runtime text. No localization is rewritten here.
+missing/malformed localization references remained separately listed; none was
+represented as accepted runtime text. No localization was rewritten in that change.
+Current figures are under *Current measurement* below.
 
 The 16 findings are repeated variants in `ac_sq.217`/`ac_sq.10217`,
 `ac_sq.301`/`ac_sq.10301`, `ac_sq.316`/`ac_sq.10316`,
@@ -97,9 +98,9 @@ Every field is tested under both interpretations using actual unchanged bitmap
 glyph ink. Any unbreakable-word, horizontal or top overflow remains a failure;
 vertical scrolling only handles properly wrapped bottom overflow. Finite ancestor
 widths are checked separately, and either unbounded or negative clearance fails.
-Both modeled interpretations now have **zero static title overflow, zero
+At PR #55 both modeled interpretations had **zero static title overflow, zero
 unscrollable static body overflow and zero parent-clearance findings** across the
-1,892 measured fields. **269** long bodies are scroll-accessible under this modeled
+1,892 measured fields, with **269** long bodies scroll-accessible under this modeled
 contract. This is **modeled inset coverage**, not accepted native rendering or a
 waiver of the original16 findings.
 
@@ -125,3 +126,50 @@ The effective base-only dependency gate passes with **zero eventwindow failures*
 and **zero decision-screen failures**. The wider report still contains inherited
 portrait/agency/event-picture/MIO/model/audio/runtime gaps and12 reference parse
 failures. A bounded ownership pass is not whole-presentation or native acceptance.
+
+## Current measurement
+
+Regenerated with `python -B tools/content_waves/refresh_records.py` (which runs
+`tools/event_style/review.py` with the Windows CI path ordering) on 5 November
+2026. `test_documented_figures_match_measurements` compares this table with
+`docs/evidence/event-style/measurements.json`, so it cannot go stale silently.
+
+| Figure | Value |
+| --- | ---: |
+| Measured fields | 2,730 |
+| Country-event fields | 2,504 |
+| News-event fields | 226 |
+| Static title clips | 0 |
+| Unscrollable static body clips | 0 |
+| Scroll-accessible long bodies | 397 |
+| Dynamic fields | 258 |
+| Missing-glyph fields | 0 |
+| Parent-clearance findings | 0 |
+| Fields resolved only by the engine-tolerant pass | 59 |
+| Unresolved keys, unterminated | 0 |
+| Unresolved keys, missing on a reachable event | 0 |
+| Unresolved keys, missing on an unreachable event | 12 |
+
+The localisation reader has two passes. The strict pass reads well-formed
+values; an engine-tolerant pass, which runs to the last quote on the line, fills
+only keys the strict pass missed and tags their rows `tolerant_parse` (inherited
+strings with unescaped inner quotes such as `""Zero KIA, Zero Wounded.""`). Each
+remaining unresolved key is classified `unterminated`, `missing_reachable` or
+`missing_unreachable`, with the number of script references to its event;
+reachability follows event calls from decisions, focuses, on_actions, history and
+untriggered events.
+
+The 5 November repair closed `osea.81.d` (no closing quote), normalised the
+`ustio_main.6.t` and `ustio_grzegorz.4.t` separators, and wrote the missing text
+of every reachable event: `perbla_intervention.1` (three empty duplicate keys
+replaced), `ustio_f.1`–`.5`, `gebet_belkan_war.5` and `osea_oia.2`. That text is
+**mod provenance**, written from what each event script does and the archive's
+own comments, and is marked as such in the files; it is not archive text or
+official history. The 12 keys left unresolved belong to `belka_meme.1`/`.2`,
+`osea_politics.8`, `ustio.5` and `war_event.1`/`.2`, which no script fires; they
+are listed, not invented.
+
+The four leader/operative stress rows are classified `compatibility_layout`.
+`test_no_authored_leader_or_operative_events` fails as soon as an authored
+`unit_leader_event` or `operative_leader_event` appears, which is the trigger to
+review those two templates with real text. Native rendering remains untested (#8).

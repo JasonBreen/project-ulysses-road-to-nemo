@@ -195,7 +195,26 @@ def duplicate_ids(mod: Path, changed: set[str]) -> list[Finding]:
     return findings
 
 
-def scan_changed(mod: Path, repo: Path, changed: list[str]) -> list[Finding]:
+def base_focus_ids(repo: Path, base: str, changed: list[str]) -> dict[str, set[str]]:
+    """Focus IDs each changed focus file already defined at the base revision.
+
+    Inherited focuses (for example the vanilla generic tree, whose text lives
+    in base-game localisation) are not re-reported when a diff only edits the
+    file around them; a focus the diff introduces is always checked.
+    """
+    result: dict[str, set[str]] = {}
+    for relative in changed:
+        if "/national_focus/" not in relative or not relative.endswith(".txt"):
+            continue
+        shown = subprocess.run(["git", "show", f"{base}:{relative}"], cwd=repo, capture_output=True)
+        if shown.returncode == 0:
+            text = shown.stdout.decode("utf-8-sig", errors="replace")
+            result[relative] = {ident for _, ident in definition_ids(text, "focus")}
+    return result
+
+
+def scan_changed(mod: Path, repo: Path, changed: list[str], inherited: dict[str, set[str]] | None = None) -> list[Finding]:
+    inherited = inherited or {}
     findings = duplicate_ids(mod, set(changed))
     keys = loc_index(mod)
     for relative in changed:
@@ -222,7 +241,7 @@ def scan_changed(mod: Path, repo: Path, changed: list[str]) -> list[Finding]:
                     findings.append(Finding("error", relative, line_number, f"Missing localization key {match.group(1)}"))
         if "/national_focus/" in relative:
             for line_number, ident in definition_ids(text, "focus"):
-                if "." in ident:
+                if "." in ident or ident in inherited.get(relative, ()):
                     continue
                 for key in (ident, ident + "_desc"):
                     if key not in keys:
@@ -368,6 +387,19 @@ class ScanTests(unittest.TestCase):
             messages = [item.message for item in scan_changed(mod, repo, [relative])]
             self.assertFalse(any("SAP_power_balance" in message or "1835" in message for message in messages))
 
+    def test_inherited_focus_ids_are_not_re_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            repo = Path(folder)
+            mod = repo / "mod" / "2985041246"
+            focus_dir = mod / "common" / "national_focus"
+            focus_dir.mkdir(parents=True)
+            (mod / "localisation").mkdir(parents=True)
+            (focus_dir / "generic.txt").write_text("focus_tree = {\n\tid = t\n\tfocus = { id = OLD_FOCUS }\n\tfocus = { id = NEW_FOCUS }\n}\n", encoding="utf-8")
+            relative = "mod/2985041246/common/national_focus/generic.txt"
+            messages = [item.message for item in scan_changed(mod, repo, [relative], {relative: {"OLD_FOCUS"}})]
+            self.assertFalse(any("OLD_FOCUS" in message for message in messages))
+            self.assertTrue(any("NEW_FOCUS_desc" in message for message in messages))
+
     def test_duplicate_definition_is_still_reported(self) -> None:
         with tempfile.TemporaryDirectory() as folder:
             repo = Path(folder)
@@ -408,7 +440,7 @@ def main() -> int:
     repo = Path(__file__).resolve().parents[1]
     mod = repo / "mod" / "2985041246"
     changed = changed_files(repo, args.base) if args.base else []
-    findings = scan_changed(mod, repo, changed)
+    findings = scan_changed(mod, repo, changed, base_focus_ids(repo, args.base, changed) if args.base else None)
     write_outputs(findings, changed, args.comment_out, args.annotations_out)
     return 1 if any(item.severity == "error" for item in findings) else 0
 

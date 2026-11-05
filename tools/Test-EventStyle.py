@@ -119,6 +119,45 @@ class EventStyle(unittest.TestCase):
         for name in ('EventWindow_leader','EventWindow_Operative'):self.assertEqual(0,self.measure['template_text_counts'][name])
         self.assertEqual(4,len(self.measure['leader_template_stress']))
         self.assertTrue(any(row['clipped'] for row in self.measure['leader_template_stress']))
+    def test_no_authored_leader_or_operative_events(self):
+        # Trigger to revisit: these templates are reviewed only through stress text.
+        for file in sorted((MOD/'events').glob('*.txt')):
+            text=file.read_text(encoding='utf-8-sig',errors='replace')
+            self.assertNotRegex(text,r'(?m)^\s*(?:unit_leader_event|operative_leader_event)\s*=\s*\{',file.name)
+        self.assertEqual({'compatibility_layout'},{row['classification'] for row in self.measure['leader_template_stress']})
+    def test_unresolved_keys_are_classified_and_none_is_reachable(self):
+        statuses={row['status'] for row in self.measure['unresolved_localization']}
+        self.assertLessEqual(statuses,{'unterminated','missing_reachable','missing_unreachable'})
+        self.assertEqual(0,self.measure['unresolved_summary']['unterminated'])
+        self.assertEqual(0,self.measure['unresolved_summary']['missing_reachable'])
+        for row in self.measure['unresolved_localization']:self.assertEqual(0,row['references'],row['key'])
+        tolerant=[row for row in self.measure['fields'] if row.get('parse')=='tolerant_parse']
+        self.assertEqual(self.measure['tolerant_parse_fields'],len(tolerant));self.assertGreater(len(tolerant),0)
+        # The tolerant pass fills only keys the strict pass misses, and an
+        # unterminated value is still reported, never guessed.
+        with tempfile.TemporaryDirectory() as folder:
+            mod=Path(folder);(mod/'localisation').mkdir()
+            (mod/'localisation/x_l_english.yml').write_text('l_english:\n a: "plain"\n b: ""quoted" text"\n c: "open\n a: "later"\n',encoding='utf-8-sig')
+            strict,loose,open_keys=review.loc_parse(mod)
+            self.assertEqual({'a':'later'},strict);self.assertEqual({'b':'"quoted" text'},loose);self.assertEqual(['c'],list(open_keys))
+    def test_documented_figures_match_measurements(self):
+        text=(ROOT/'docs/EVENT_DEFAULTS_STYLE.md').read_text(encoding='utf-8').split('## Current measurement',1)[1]
+        table={label:int(value.replace(',','')) for label,value in __import__('re').findall(r'^\| ([^|]+?) \| ([\d,]+) \|$',text,8)}
+        m=json.loads((ROOT/'docs/evidence/event-style/measurements.json').read_text())
+        expected={'Measured fields':m['measured_fields'],'Country-event fields':m['template_text_counts']['EventWindow'],
+                  'News-event fields':m['template_text_counts']['EventWindow_News'],'Static title clips':len(m['static_title_clips']),
+                  'Unscrollable static body clips':len(m['unscrollable_static_body_clips']),'Scroll-accessible long bodies':m['scrollable_overlength_bodies'],
+                  'Dynamic fields':m['dynamic_text_fields'],'Missing-glyph fields':len(m['missing_glyph_fields']),
+                  'Parent-clearance findings':len(m['parent_clearance_findings']),'Fields resolved only by the engine-tolerant pass':m['tolerant_parse_fields'],
+                  'Unresolved keys, unterminated':m['unresolved_summary']['unterminated'],
+                  'Unresolved keys, missing on a reachable event':m['unresolved_summary']['missing_reachable'],
+                  'Unresolved keys, missing on an unreachable event':m['unresolved_summary']['missing_unreachable']}
+        self.assertEqual(expected,table)
+        self.assertEqual(m['measured_fields'],self.measure['measured_fields'])
+        addendum=(ROOT/'docs/USEA_INTERFACE_FCU_ADDENDUM.md').read_text(encoding='utf-8')
+        size=json.loads((ROOT/'tools/event_picture_fit/contract.json').read_text())['primary']['country_event']
+        self.assertNotIn('200×160',addendum)
+        self.assertIn('%d×%d'%(size['width'],size['height']),addendum)
     def text_body(self,width=120,height=18):
         body=copy.deepcopy(review.named(parse(self.current))[('EventWindow','midsection','Description')])
         for node in body:

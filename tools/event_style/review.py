@@ -26,12 +26,53 @@ def named(tree):
         for _,_,value in rows:
             if isinstance(value,list):visit(value,path)
     visit(tree);return result
+STRICT=r'^\s*([^\s:#]+):\d*\s+"((?:\\.|[^"\\\r\n])*)"\s*(?:#[^\r\n]*)?$'
+# Engine-tolerant reading: the value runs to the last quote on the line, so
+# unescaped inner quotes ("He said "no"") still resolve.
+TOLERANT=r'^\s*([^\s:#]+):\d*\s*"(.*)"[^"\r\n]*$'
+UNTERMINATED=r'^\s*([^\s:#]+):\d*\s*"[^"\r\n]*$'
+def loc_files(mod=MOD):return sorted((mod/'localisation').rglob('*english.yml'),key=lambda p:('replace' in p.parts,p.as_posix()))
+def loc_parse(mod=MOD):
+    """Strict values, keys only the tolerant pass resolves, and unterminated keys."""
+    strict={};tolerant={};unterminated={}
+    for file in loc_files(mod):
+        text=file.read_text(encoding='utf-8-sig')
+        for key,value in re.findall(STRICT,text,re.M):strict[key]=value.replace('\\n','\n').replace('\\"','"')
+        for key,value in re.findall(TOLERANT,text,re.M):tolerant.setdefault(key,value.replace('\\n','\n').replace('\\"','"'))
+        for number,line in enumerate(text.splitlines(),1):
+            match=re.match(UNTERMINATED,line)
+            if match:unterminated[match[1]]=file.relative_to(mod).as_posix()+':'+str(number)
+    tolerant={key:value for key,value in tolerant.items() if key not in strict}
+    return strict,tolerant,unterminated
 def locs(mod=MOD):
-    result={}
-    for file in sorted((mod/'localisation').rglob('*english.yml'),key=lambda p:('replace' in p.parts,p.as_posix())):
-        for key,value in re.findall(r'^\s*([^\s:#]+):\d*\s+"((?:\\.|[^"\\\r\n])*)"\s*(?:#[^\r\n]*)?$',file.read_text(encoding='utf-8-sig'),re.M):
-            result[key]=value.replace('\\n','\n').replace('\\"','"')
-    return result
+    strict,tolerant,_=loc_parse(mod)
+    return {**tolerant,**strict}
+def event_reachability(mod=MOD):
+    """Event IDs reachable from non-event script or untriggered events, with reference counts."""
+    references={};bodies={};roots=set();untriggered=set()
+    pattern=re.compile(r'(?<![\w.])([a-z_][\w]*\.\d+)(?![\w.])')
+    for file in sorted((mod/'events').glob('*.txt')):
+        try:events=load(file)
+        except ValueError:continue
+        for kind,_,body in events:
+            if not isinstance(body,list) or get(body,'id') is None:continue
+            ident=unquote(get(body,'id'))
+            bodies[ident]=[m for m in pattern.findall(repr([row for row in body if row[0]!='id'])) if m!=ident]
+            if get(body,'is_triggered_only')!='yes':untriggered.add(ident)
+    for folder in ('common','history'):
+        for file in sorted((mod/folder).rglob('*.txt')):
+            text=re.sub(r'#[^\n]*','',file.read_text(encoding='utf-8-sig',errors='replace'))
+            for ident in pattern.findall(text):
+                if ident in bodies:roots.add(ident);references[ident]=references.get(ident,0)+1
+    for ident,targets in bodies.items():
+        for target in targets:
+            if target in bodies:references[target]=references.get(target,0)+1
+    reachable=set();pending=list(roots|untriggered)
+    while pending:
+        ident=pending.pop()
+        if ident in reachable:continue
+        reachable.add(ident);pending.extend(t for t in bodies.get(ident,()) if t in bodies)
+    return reachable,references
 def visible(text):return re.sub(r'§.', '',text)
 def localization_options(value,path=()):
     if isinstance(value,str):yield unquote(value),path
@@ -106,7 +147,8 @@ def metrics(text,body,parent_bounds=None):
                 accessible_by_scroll=clipped and all(not m['clipped'] or m['accessible_by_scroll'] for m in models))
 
 def measurement(mod=MOD,include_stress=True):
-    tree=load(mod/'interface/eventwindow.gui');controls=named(tree);strings=locs(mod);rows=[];unresolved=[];ignored=[]
+    tree=load(mod/'interface/eventwindow.gui');controls=named(tree);strict,tolerant,unterminated=loc_parse(mod);strings={**tolerant,**strict};rows=[];unresolved=[];ignored=[]
+    reachable,references=event_reachability(mod)
     type_template={'country_event':'EventWindow','news_event':'EventWindow_News','unit_leader_event':'EventWindow_leader','operative_leader_event':'EventWindow_Operative'}
     for file in sorted((mod/'events').glob('*.txt')):
         try:events=load(file)
@@ -117,8 +159,12 @@ def measurement(mod=MOD,include_stress=True):
             template=type_template[kind];ident=unquote(get(body,'id'))
             for field,part,name in [('title','top_Window','Title'),('desc','midsection','Description')]:
                 for key,address in repeated_fields(body,field):
-                    if key not in strings:unresolved.append(dict(id=ident,event_type=kind,field=field,key=key,**address));continue
-                    path=(template,part,name);m=metrics(strings[key],controls[path],horizontal_parents(controls,path));rows.append(dict(id=ident,file=file.name,event_type=kind,field=field,key=key,path=list(path),**address,**m))
+                    if key not in strings:
+                        status='unterminated' if key in unterminated else 'missing_reachable' if ident in reachable else 'missing_unreachable'
+                        unresolved.append(dict(id=ident,event_type=kind,field=field,key=key,status=status,references=references.get(ident,0),
+                                               **({'location':unterminated[key]} if key in unterminated else {}),**address));continue
+                    path=(template,part,name);m=metrics(strings[key],controls[path],horizontal_parents(controls,path))
+                    rows.append(dict(id=ident,file=file.name,event_type=kind,field=field,key=key,path=list(path),**address,**({'parse':'tolerant_parse'} if key in tolerant else {}),**m))
     counts={template:sum(row['path'][0]==template for row in rows) for template in type_template.values()}
     proxies=[]
     # There are no authored leader/operative events in this payload. Stress their
@@ -129,7 +175,7 @@ def measurement(mod=MOD,include_stress=True):
         for field,part,name in [('title','top_Window','Title'),('desc','midsection','Description')]:
             candidates=[r for r in rows if r['field']==field and not r['dynamic'] and not r['missing_glyphs']]
             worst=max(candidates,key=lambda row:max((FONTS['ACBriefing20' if field=='title' else 'ACBriefing16'].measure(line) for line in row['text'].split('\n')),default=0) if field=='title' else len(row['text']))
-            proxies.append(dict(template=template,source_event=worst['id'],key=worst['key'],field=field,
+            proxies.append(dict(template=template,source_event=worst['id'],key=worst['key'],field=field,classification='compatibility_layout',
                 coverage='Actual English country/news text stress only; no current leader/operative consumer',**metrics(worst['text'],controls[(template,part,name)],horizontal_parents(controls,(template,part,name)))))
     static_title_clips=[r for r in rows if r['field']=='title' and not r['dynamic'] and r['clipped']]
     static_body_clips=[r for r in rows if r['field']=='desc' and not r['dynamic'] and r['clipped'] and not r['accessible_by_scroll']]
@@ -138,7 +184,8 @@ def measurement(mod=MOD,include_stress=True):
         template_text_counts=counts,measured_fields=len(rows),static_title_clips=static_title_clips,unscrollable_static_body_clips=static_body_clips,
         scrollable_overlength_bodies=sum(bool(r.get('accessible_by_scroll')) for r in rows),
         dynamic_text_fields=sum(r['dynamic'] for r in rows),missing_glyph_fields=[r for r in rows if r['missing_glyphs']],
-        unresolved_localization=unresolved,unparsed_inherited_event_files=ignored,parent_clearance_findings=clearance,leader_template_stress=proxies,fields=rows)
+        unresolved_localization=unresolved,unresolved_summary={status:sum(r['status']==status for r in unresolved) for status in ('unterminated','missing_reachable','missing_unreachable')},
+        tolerant_parse_fields=sum(r.get('parse')=='tolerant_parse' for r in rows),unparsed_inherited_event_files=ignored,parent_clearance_findings=clearance,leader_template_stress=proxies,fields=rows)
 
 def apertures(mod=MOD,sprites=None):
     if sprites is None:sprites=all_sprites(mod)

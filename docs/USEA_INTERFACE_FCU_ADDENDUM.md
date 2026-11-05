@@ -71,7 +71,7 @@ controls. Opening the window does not activate fiscal mechanics or move money.
 
 Country/news descriptions scroll within their own bounds. Engine control names,
 option grids and minimize actions are preserved. Country-event illustrations
-are 200×160; original wide masters remain available. Operative/leader event
+are fitted to the 210×176 `event_picture` control; original wide masters remain available. Operative/leader event
 layouts remain compatibility layouts outside this visual repair's claim.
 All nine authored scripted GUIs are checked for their window, click-target
 and dynamic-list template bindings. These source checks do not prove native

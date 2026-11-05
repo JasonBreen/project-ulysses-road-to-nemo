@@ -47,9 +47,11 @@ OWNED_FILES = [f"{folder}/ac_{name}.txt" for name in NAMES.values() for folder i
     if (MOD / f"{folder}/ac_{name}.txt").exists()]
 # The only wars and peaces the content waves may script, each sourced and each in exactly one owner.
 DECLARATIONS = {"circum_pacific": ["declare_war_on = { target = OSE type = topple_government }"],
-                "lighthouse": ["declare_war_on = { target = OSE type = topple_government }"]}
-PEACES = {"lighthouse": ["white_peace = OSE"], "circum_pacific": ["white_peace = YUK", "white_peace = OSE"]}
-EXPECTED = {"ERU": 90, "FCU": 48, "NEC": 42, "EVA": 30, "EMM": 18, "AUR": 54}
+                "lighthouse": ["declare_war_on = { target = OSE type = topple_government }"],
+                "anean_war": ["declare_war_on = { target = EMM type = topple_government }"]}
+PEACES = {"lighthouse": ["white_peace = OSE"], "circum_pacific": ["white_peace = YUK", "white_peace = OSE"],
+          "anean_war": ["white_peace = EMM", "white_peace = EVA"]}
+EXPECTED = {"ERU": 90, "FCU": 48, "NEC": 42, "EVA": 66, "EMM": 54, "AUR": 54}
 STORY_FLAGS = ("ac_cpw_started", "ac_cpw_tainted", "ac_cpw_prevented", "ac_cpw_declaration_withheld")
 
 
@@ -186,8 +188,9 @@ class Source(unittest.TestCase):
         # Aurelia: 20 narrative; C: the Yuktobanian declaration .5, the Osean Arkbird decision .6 and the peace offer .16;
         # F1: 30 narrative + the Erusean declaration .5 and ceasefire .6.
         # News: A .1/.3/.6; B .1-.4, .7-.14; C .1-.4, .7-.15, the peace .17 and the sixteen stages .20-.35;
-        # F1 .1-.4, .7-.13, the nine stages .20-.28 and .29; the Belkan War record's thirteen briefs .1-.13.
-        self.assertEqual({"country_event": 27 + 16 + 22 + 20 + 3 + 32, "news_event": 3 + 12 + 30 + 21 + 13}, report["counts"])
+        # F1 .1-.4, .7-.13, the nine stages .20-.28 and .29; the Belkan War record's thirteen briefs .1-.13;
+        # E: 28 narrative + the invasion .5 and ceasefire .6; news .1-.4, .7-.14, .16 and the fifteen stages .20-.34.
+        self.assertEqual({"country_event": 27 + 16 + 22 + 20 + 3 + 32 + 30, "news_event": 3 + 12 + 30 + 21 + 13 + 28}, report["counts"])
         for row in report["consumers"]:
             self.assertLessEqual(row["bounds"][2], 215 if row["event_type"] == "country_event" else 456)
             self.assertLessEqual(row["bounds"][3], 181 if row["event_type"] == "country_event" else 244)
@@ -1451,6 +1454,193 @@ class Runtime(unittest.TestCase):
         self.tick(tainted, date(2010, 12, 30))
         self.assertNotIn("ac_cpw_appeal_made", tainted.globals)
         self.assertFalse(tainted.trigger(fields(rows["OSE_cpw_accept_appeal"])["visible"], o2))
+
+    # Wave E: the Emmeria-Estovakia War owner --------------------------------------------
+    def eew(self, today=date(2015, 4, 13), history="ac_ecw_eastern_victory"):
+        w = self.fresh()
+        w.today = today.toordinal()
+        if history:
+            w.globals.add(history)
+        return w, w.countries["EMM"], w.countries["EVA"]
+
+    def etick(self, w, day, tag="EVA"):
+        self.tick(w, day, tag, "anean_war")
+
+    def edeclare(self, w):
+        self.etick(w, date(2015, 4, 20))
+        self.etick(w, date(2015, 8, 30))
+        w.option("ac_eew.5", "a", "EVA")
+        self.assertIn("ac_eew_started", w.globals)
+        return w
+
+    def enews(self, w):
+        return [e for _, e, _ in w.events if e.startswith("ac_eew.") and e not in ("ac_eew.5", "ac_eew.6") and int(e.split(".")[1]) < 50]
+
+    def estatus(self, w):
+        return self.status(w, "anean_war", "EVA")
+
+    def test_anean_war_routes_follow_the_civil_war_record(self):
+        w, m, v = self.eew()
+        self.etick(w, date(2015, 4, 13))
+        self.assertNotIn("ac_eew_calendar_started", w.globals)
+        self.etick(w, date(2015, 4, 20))
+        self.assertIn("ac_eew_calendar_started", w.globals)
+        self.etick(w, date(2015, 4, 27))
+        self.assertEqual(["ac_eew.16"], self.enews(w))
+        self.etick(w, date(2015, 8, 30))
+        self.assertIn(("EVA", "ac_eew.5", w.today + 1), w.events)
+        # A negotiated civil war closes the route without a war, and says so.
+        divergent, _, _ = self.eew(history="ac_ecw_negotiated")
+        self.etick(divergent, date(2015, 4, 20))
+        self.assertTrue({"ac_eew_closed", "ac_eew_route_divergent"} <= divergent.globals)
+        self.assertEqual(["ac_eew.14"], self.enews(divergent))
+        self.assertTrue(self.estatus(divergent).startswith("Closed: Estovakia's civil war ended in a negotiated settlement"))
+        # A civil war still running (or never recorded) makes the sourced route unreachable.
+        running, _, _ = self.eew(history="ac_ecw_capital_seized")
+        self.etick(running, date(2015, 4, 20))
+        self.assertTrue({"ac_eew_closed", "ac_eew_route_unreachable"} <= running.globals)
+        self.etick(running, date(2015, 8, 30))
+        self.assertNotIn("ac_eew.5", [e for _, e, _ in running.events])
+        # A first observation on or after the invasion date never replays it.
+        late, _, _ = self.eew(date(2015, 8, 30))
+        self.etick(late, date(2015, 8, 30))
+        self.assertTrue({"ac_eew_closed", "ac_eew_late_start_skipped"} <= late.globals)
+        self.etick(late, date(2016, 4, 2))
+        self.assertEqual([], self.enews(late))
+
+    def test_anean_war_snapshot_keeps_the_record_the_war_erases(self):
+        w, m, v = self.eew()
+        w.globals |= {"ac_anea_accord", "ac_anea_bureau"}
+        self.etick(w, date(2015, 4, 20))
+        self.assertTrue({"ac_eew_had_accord", "ac_eew_had_bureau"} <= w.globals)
+        self.assertNotIn("ac_eew_nec_consulted", w.globals)
+        # The Anea owner clears its own flags once the pair is at war; the snapshot stays.
+        w.globals -= {"ac_anea_accord", "ac_anea_bureau"}
+        self.assertTrue({"ac_eew_had_accord", "ac_eew_had_bureau"} <= w.globals)
+        effects = text("common/scripted_effects/ac_anean_war.txt")
+        self.assertNotRegex(effects, r"\b(?:set|clr)_global_flag = ac_(?:anea|ecw)_")
+
+    def test_anean_war_withholding_is_earned(self):
+        w, m, v = self.eew()
+        self.etick(w, date(2015, 4, 20))
+        self.etick(w, date(2015, 8, 30))
+        with self.assertRaises(AssertionError):
+            w.option("ac_eew.5", "b", "EVA")
+        earned, m2, v2 = self.eew()
+        earned.globals.add("ac_anea_nec_participates")
+        v2.flags["EVA_ecw_talks_policy_a_done"] = None
+        m2.flags["EMM_ecw_aid_policy_a_done"] = None
+        self.etick(earned, date(2015, 4, 20))
+        self.etick(earned, date(2015, 8, 30))
+        earned.option("ac_eew.5", "b", "EVA")
+        self.assertTrue({"ac_eew_declaration_withheld"} <= earned.globals)
+        self.assertEqual(set(), earned.wars)
+        self.assertIn("ac_eew_eva_restraint_kept", v2.ideas)
+        self.assertIn("ac_eew.2", self.enews(earned))
+        # The engine refusing the war closes the owner without writing a war.
+        refused, _, _ = self.eew()
+        refused.refuse_war = True
+        self.etick(refused, date(2015, 4, 20))
+        self.etick(refused, date(2015, 8, 30))
+        refused.option("ac_eew.5", "a", "EVA")
+        self.assertTrue({"ac_eew_closed", "ac_eew_declaration_refused"} <= refused.globals)
+        self.assertNotIn("ac_eew_started", refused.globals)
+
+    def test_anean_war_course_reports_observed_state_and_ends_in_the_ceasefire(self):
+        w, m, v = self.eew()
+        self.edeclare(w)
+        self.assertIn("ac_eew_eva_war_footing", v.ideas)
+        self.etick(w, date(2015, 9, 6))
+        self.assertNotIn("ac_eew_stage_gracemeria", w.globals)     # the capital is still Emmerian
+        w.states[154].controller = "EVA"
+        self.etick(w, date(2015, 9, 13))
+        self.assertIn("ac_eew_emm_capital_occupied", m.ideas)
+        self.etick(w, date(2015, 11, 7))
+        self.assertIn("ac_eew_stage_fireballs", w.globals)
+        for day in (date(2015, 11, 28), date(2015, 12, 28), date(2016, 1, 27), date(2016, 2, 16), date(2016, 2, 21), date(2016, 3, 7),
+                    date(2016, 3, 27)):
+            self.etick(w, day)
+        self.assertNotIn("ac_eew_stage_aerial_fleet", w.globals)   # no Aerial Fleet was built
+        self.assertIn("ac_eew_eva_moloch_retreat", v.ideas)
+        self.etick(w, date(2016, 3, 31))
+        self.assertNotIn("ac_eew_stage_liberation", w.globals)    # Gracemeria is still occupied
+        w.states[154].controller = "EMM"
+        self.etick(w, date(2016, 4, 1))
+        self.assertIn("ac_eew_stage_liberation", w.globals)
+        self.assertNotIn("ac_eew_emm_capital_occupied", m.ideas)
+        self.assertIn("ac_eew_stage_coup", w.globals)
+        self.assertIn("ac_eew_eva_coup", v.ideas)
+        self.assertIn(("EVA", "ac_eew.6", w.today + 1), w.events)
+        w.option("ac_eew.6", "a", "EVA")
+        self.assertEqual(set(), w.wars)
+        self.assertTrue({"ac_eew_ceasefire_signed", "ac_eew_ended", "ac_eew_outcome_ceasefire", "ac_eew_historical_course"} <= w.globals)
+        # The signature brief's window (to 20 May 2015) passed between these two ticks.
+        self.assertEqual(["ac_eew.1", "ac_eew.20", "ac_eew.21", "ac_eew.22", "ac_eew.23", "ac_eew.24", "ac_eew.25", "ac_eew.26",
+                          "ac_eew.27", "ac_eew.29", "ac_eew.30", "ac_eew.31", "ac_eew.32", "ac_eew.33", "ac_eew.7"], self.enews(w))
+        self.assertFalse({"ac_eew_eva_war_footing", "ac_eew_emm_war_footing"} & (v.ideas | m.ideas))
+        self.assertTrue(self.estatus(w).startswith("Ended: the ceasefire was signed after the coup"))
+
+    def test_anean_war_ceasefire_alternatives_are_earned_or_observed(self):
+        refused, m, v = self.eew()
+        self.edeclare(refused)
+        refused.refuse_peace = True
+        self.etick(refused, date(2016, 4, 1))
+        refused.option("ac_eew.6", "a", "EVA")
+        self.assertEqual({frozenset(("EMM", "EVA"))}, refused.wars)
+        self.assertTrue({"ac_eew_ceasefire_not_made", "ac_eew_tainted"} <= refused.globals)
+        self.assertNotIn("ac_eew_ended", refused.globals)
+        fights, m2, v2 = self.eew()
+        self.edeclare(fights)
+        self.etick(fights, date(2016, 4, 1))
+        fights.option("ac_eew.6", "b", "EVA")
+        self.assertIn("ac_eew_eva_fought_on", v2.ideas)
+        self.etick(fights, date(2016, 4, 22))
+        self.assertEqual(1, [n for _, n, _ in fights.events].count("ac_eew.6"))
+        self.assertEqual({frozenset(("EMM", "EVA"))}, fights.wars)
+        # The early settlement needs the liberation and the return with terms.
+        rows = {k: v for category in parse(text("common/decisions/ac_anean_war.txt")) for k, _, v in category[2]}
+        early = rows["EMM_ew_early_settlement"]
+        settled, m3, v3 = self.eew()
+        self.edeclare(settled)
+        settled.states[154].controller = "EVA"
+        self.etick(settled, date(2015, 9, 6))
+        settled.states[154].controller = "EMM"
+        self.etick(settled, date(2016, 3, 31))
+        self.assertIn("ac_eew_stage_liberation", settled.globals)
+        self.assertFalse(settled.trigger(fields(early)["available"], m3))
+        m3.flags["EMM_ew_liberation_policy_a_done"] = None
+        self.assertTrue(settled.trigger(fields(early)["available"], m3))
+        settled.execute(fields(early)["complete_effect"], m3)
+        self.assertTrue({"ac_eew_ceasefire_early", "ac_eew_outcome_ceasefire"} <= settled.globals)
+        self.assertNotIn("ac_eew_historical_course", settled.globals)
+        self.assertEqual("ac_eew.8", self.enews(settled)[-1])
+        # A third party at war with a principal moves the owner to observation.
+        tainted, m4, v4 = self.eew()
+        self.edeclare(tainted)
+        tainted.wars.add(frozenset(("EVA", "NEC")))
+        self.etick(tainted, date(2015, 9, 6))
+        self.assertIn("ac_eew_tainted", tainted.globals)
+        self.etick(tainted, date(2016, 4, 2))
+        self.assertNotIn("ac_eew_stage_coup", tainted.globals)
+
+    def test_anean_war_projects_are_destroyed_only_when_built(self):
+        w, m, v = self.eew()
+        w.run("ac_sp_aerial_fleet_complete_effect", "EVA")
+        w.run("ac_sp_chandelier_complete_effect", "EVA")
+        self.assertTrue({"ac_sp_aerial_fleet_initiative", "ac_sp_chandelier_railgun"} <= v.ideas)
+        self.edeclare(w)
+        self.etick(w, date(2016, 2, 21))
+        self.assertIn("ac_eew_aerial_fleet_lost", w.globals)
+        self.assertNotIn("ac_sp_aerial_fleet_initiative", v.ideas)
+        self.etick(w, date(2016, 4, 1))
+        self.assertIn("ac_eew_chandelier_lost", w.globals)
+        self.assertNotIn("ac_sp_chandelier_railgun", v.ideas)
+        news = self.enews(w)
+        self.assertIn("ac_eew.28", news)
+        self.assertIn("ac_eew.34", news)
+        # A destroyed project never completes again.
+        w.run("ac_sp_aerial_fleet_complete_effect", "EVA")
+        self.assertNotIn("ac_sp_aerial_fleet_initiative", v.ideas)
 
     # The Belkan War record: reference briefs on observed state ------------------------
     def bwr_run(self, w, start, end, before_tick=None):

@@ -1,0 +1,48 @@
+# Original provisional gameplay; source: tools/content_waves (The Emmeria-Estovakia War). Native acceptance pending.
+on_actions = {
+	on_startup = {
+		effect = {
+			if = { limit = { country_exists = EMM } EMM = { ac_eew_initialize = yes } }
+			if = { limit = { country_exists = EVA } EVA = { ac_eew_initialize = yes } }
+			if = { limit = { country_exists = EVA } EVA = { ac_eew_restore = yes } }
+		}
+	}
+	on_weekly_EMM = {
+		effect = {
+			ac_eew_weekly_emm = yes
+			ac_eew_owner_weekly_emm = yes
+		}
+	}
+	on_weekly_EVA = {
+		effect = {
+			ac_eew_weekly_eva = yes
+		}
+	}
+	on_annex = {
+		effect = {
+			FROM = { ac_eew_interrupt = yes }
+			if = { limit = { OR = { tag = EMM tag = EVA } } FROM = { ac_eew_interrupt_principal = yes } }
+			else = { FROM = { ac_eew_interrupt_external = yes } }
+		}
+	}
+	on_capitulation_immediate = {
+		effect = {
+			ac_eew_interrupt = yes
+			if = { limit = { FROM = { OR = { tag = EMM tag = EVA } } } ac_eew_interrupt_principal = yes }
+			else = { ac_eew_interrupt_external = yes }
+		}
+	}
+	on_subject_annexed = {
+		effect = {
+			ac_eew_interrupt = yes
+			if = { limit = { FROM = { OR = { tag = EMM tag = EVA } } } ac_eew_interrupt_principal = yes }
+			else = { ac_eew_interrupt_external = yes }
+		}
+	}
+	on_war_relation_added = {
+		effect = {
+			ac_eew_interrupt_service = yes
+			FROM = { ac_eew_interrupt_service = yes }
+		}
+	}
+}

@@ -1,0 +1,144 @@
+# Original provisional gameplay; source: tools/content_waves (The Emmeria-Estovakia War). Native acceptance pending.
+# Source: Super Weapons, Aigaion, Kottos and Gyges; Chronicle 2016 / 02.20. Gate and timing are provisional gameplay.
+ac_sp_aerial_fleet = {
+	specialization = specialization_air
+	icon = GFX_ac_sp_aerial_fleet
+	blueprint_image = GFX_ac_sp_blueprint_air_defence
+	project_tags = {
+		ac_sp_tag_aerial_fleet
+	}
+	allowed = {
+		original_tag = EVA
+	}
+	visible = {
+		always = yes
+	}
+	available = {
+		has_global_flag = ac_ecw_eastern_victory
+		FROM = { has_country_flag = EVA_ew_logistics_operations_done }
+		NOT = { has_global_flag = ac_sp_aerial_fleet_complete }
+		NOT = { has_global_flag = ac_eew_aerial_fleet_lost }
+	}
+	complexity = sp_complexity.large
+	prototype_time = sp_time.prototype.long
+	ai_will_do = {
+		base = 10
+	}
+	project_output = {
+		country_effects = {
+			ac_sp_aerial_fleet_complete_effect = yes
+		}
+	}
+	generic_prototype_rewards = {
+		ac_sp_reward_breakthrough
+		ac_sp_reward_test_setback
+		ac_sp_reward_oversight_review
+		ac_sp_reward_field_trials_air_defence
+	}
+	unique_prototype_rewards = {
+		ac_sp_aerial_fleet_reward_escort_doctrine = {
+			icon = GFX_ac_sp_aerial_fleet_reward_escort_doctrine
+			fire_only_once = yes
+			threshold = {
+				min = 0
+				max = 80
+			}
+			weight = {
+				base = 20
+			}
+			option = {
+				token = ac_sp_aerial_fleet_reward_escort_doctrine_electronic
+				default = yes
+				iteration_output = {
+					country_effects = {
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.low }
+						add_stability = 0.02
+					}
+				}
+			}
+			option = {
+				token = ac_sp_aerial_fleet_reward_escort_doctrine_fire_support
+				iteration_output = {
+					country_effects = {
+						add_political_power = -50
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.medium }
+					}
+				}
+			}
+		}
+	}
+}
+
+# Source: Super Weapons, Chandelier; Chronicle 2016 / 04.01. Completion only; the railgun is never fired by script. Gate and timing are provisional gameplay.
+ac_sp_chandelier = {
+	specialization = specialization_land
+	icon = GFX_ac_sp_chandelier
+	blueprint_image = GFX_ac_sp_blueprint_land
+	project_tags = {
+		ac_sp_tag_railgun
+	}
+	allowed = {
+		original_tag = EVA
+	}
+	visible = {
+		always = yes
+	}
+	available = {
+		date > 2014.12.31
+		FROM = { has_country_flag = EVA_ew_chandelier_operations_done }
+		NOT = { has_global_flag = ac_sp_chandelier_complete }
+		NOT = { has_global_flag = ac_eew_chandelier_lost }
+	}
+	complexity = sp_complexity.large
+	prototype_time = sp_time.prototype.long
+	ai_will_do = {
+		base = 10
+	}
+	project_output = {
+		country_effects = {
+			ac_sp_chandelier_complete_effect = yes
+		}
+	}
+	generic_prototype_rewards = {
+		ac_sp_reward_breakthrough
+		ac_sp_reward_test_setback
+		ac_sp_reward_oversight_review
+		ac_sp_reward_field_trials_orbital
+	}
+	unique_prototype_rewards = {
+		ac_sp_chandelier_reward_firing_rules = {
+			icon = GFX_ac_sp_chandelier_reward_firing_rules
+			fire_only_once = yes
+			threshold = {
+				min = 0
+				max = 80
+			}
+			weight = {
+				base = 20
+				modifier = {
+					add = 40
+					EVA = { has_country_flag = EVA_ew_chandelier_settlement_done }
+				}
+			}
+			option = {
+				token = ac_sp_chandelier_reward_firing_rules_written
+				default = yes
+				iteration_output = {
+					country_effects = {
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.low }
+						add_stability = 0.02
+					}
+				}
+			}
+			option = {
+				token = ac_sp_chandelier_reward_firing_rules_staff
+				iteration_output = {
+					country_effects = {
+						add_political_power = -50
+						FROM = { add_project_progress_ratio = constant:sp_progress.gain.medium }
+					}
+				}
+			}
+		}
+	}
+}

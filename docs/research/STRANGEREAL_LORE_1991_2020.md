@@ -36,10 +36,10 @@ squadrons, ships and aircraft stay text; places are never mapped to states.
 
 | Disposition | Claims | Meaning |
 | --- | ---: | --- |
-| implemented | 125 | a ledger row cites it and IDs implement it |
+| implemented | 148 | a ledger row cites it and IDs implement it |
 | inherited mod content | 24 | the inherited archive covers it without a sourced ledger row; mod provenance |
-| reference only | 10 | a ledger names it; nothing is scripted |
-| pending | 47 | a planned wave owns it (wave in brackets) |
+| reference only | 11 | a ledger names it; nothing is scripted |
+| pending | 23 | a planned wave owns it (wave in brackets) |
 | not covered | 32 | no ledger row and no script; candidates for later work |
 | out of scope | 54 | after 2020, or a non-Strangereal title |
 
@@ -218,23 +218,23 @@ squadrons, ships and aircraft stay text; places are never mapped to states.
 | --- | --- | --- |
 | *Chronicle, 2014 / 02.03* | The death of Estovakian Foreign Minister Arensky is made public. Antonina Koznick, a former captain in the Eastern Faction navy, is named as his successor. | implemented |
 | *Chronicle, 2014 / 02.04* | An armed force of former LUF members attacks a temporary storage facility for relief supplies in the western Estovakian city of Vistoc. | implemented |
-| *Chronicle, 2015 / 04.21* | Yuktobanian spy satellites spot a massive aircraft signature near the southeast coast of Estovakia. | pending (E) |
+| *Chronicle, 2015 / 04.21* | Yuktobanian spy satellites spot a massive aircraft signature near the southeast coast of Estovakia. | implemented |
 | *Chronicle, 2015 / 06.10* | Ed Alverez is assigned command of the Gavial tank battalion. Hostilities break out immediately after the assignment and the battalion is put in charge of a defensive line of cities amid the confusion. | reference only |
-| *Chronicle, 2015 / 08.30* | Estovakian forces begin an invasion of Gracemeria, the capital of the Republic of Emmeria. Base and carrier air squadrons cannot counter the heavy command cruiser Aigaion, and Estovakian forces seize Gracemeria. Emmerian forces decide to retreat to western Anea, and the Emmeria-Estovakia War breaks out. | pending (E) |
+| *Chronicle, 2015 / 08.30* | Estovakian forces begin an invasion of Gracemeria, the capital of the Republic of Emmeria. Base and carrier air squadrons cannot counter the heavy command cruiser Aigaion, and Estovakian forces seize Gracemeria. Emmerian forces decide to retreat to western Anea, and the Emmeria-Estovakia War breaks out. | implemented |
 | *Chronicle, 2015 / 09.12* | Freddie Durand, call sign Avalanche, becomes flight leader of the 2nd Strike Fighter Squadron. | reference only |
-| *Chronicle, 2015 / 11.24* | Estovakia sends a large formation of bombers toward the city of Vitoze on Khesed Island; the remaining Emmerian forces based at Campagna Airport succeed in intercepting them. | pending (E) |
-| *Chronicle, 2015 / 11.27* | Aiming to retake Khesed Island, Emmerian ground forces break through the Estovakian front line base at Sipli Field. | pending (E) |
-| *Chronicle, 2015 / 11.XX* | In November 2015, on a day the source does not give, witnesses see multiple giant fireballs attacking Emmerian forces as they retreat in multiple locations. | pending (E) |
-| *Chronicle, 2015 / 12.27* | Bartolomeo Fortress falls and Emmerian forces establish full control of Khesed Island. | pending (E) |
-| *Chronicle, 2016 / 01.26* | Emmerian land, air and sea forces make a successful landing offensive at Rargom Beach on the western edge of Anea and establish a bridgehead. | pending (E) |
-| *Chronicle, 2016 / 02.12* | Emmerian ground forces move east along the Selumna Peaks. | pending (E) |
-| *Chronicle, 2016 / 02.15* | Emmerian forces capture Cavallia Air Force Base, located in San Loma. | pending (E) |
-| *Chronicle, 2016 / 02.20* | The Emmerian Air Force attacks and destroys the Aerial Fleet, restoring air superiority to Emmerian forces. | pending (E) |
-| *Chronicle, 2016 / 03.06* | Emmerian forces make a decisive strike on Ragno Fortress in Grageo Canyon. | pending (E) |
-| *Chronicle, 2016 / 03.25* | A large-scale battle between Emmeria and Estovakia breaks out in the Moloch Desert, and Estovakian forces retreat. | pending (E) |
-| *Chronicle, 2016 / 03.26* | Emmerian forces assault the mining city of Fort Norton; Estovakia is prevented from transporting catalysts for weapons of mass destruction. | pending (E) |
-| *Chronicle, 2016 / 03.31* | Emmerian forces carry out an operation to liberate Gracemeria, which succeeds. That night a large number of cruise missiles are fired at the city but are shot down in midair by patrolling fighters. | pending (E) |
-| *Chronicle, 2016 / 04.01* | Emmerian forces destroy the Chandelier on Sonne Island. Gustav Dvornik, one of the main architects of the invasion of Emmeria, dies. An antigovernment coup in Estovakia leaves its forces unable to fight, which leads to a ceasefire agreement. | pending (E) |
+| *Chronicle, 2015 / 11.24* | Estovakia sends a large formation of bombers toward the city of Vitoze on Khesed Island; the remaining Emmerian forces based at Campagna Airport succeed in intercepting them. | implemented |
+| *Chronicle, 2015 / 11.27* | Aiming to retake Khesed Island, Emmerian ground forces break through the Estovakian front line base at Sipli Field. | implemented |
+| *Chronicle, 2015 / 11.XX* | In November 2015, on a day the source does not give, witnesses see multiple giant fireballs attacking Emmerian forces as they retreat in multiple locations. | implemented |
+| *Chronicle, 2015 / 12.27* | Bartolomeo Fortress falls and Emmerian forces establish full control of Khesed Island. | implemented |
+| *Chronicle, 2016 / 01.26* | Emmerian land, air and sea forces make a successful landing offensive at Rargom Beach on the western edge of Anea and establish a bridgehead. | implemented |
+| *Chronicle, 2016 / 02.12* | Emmerian ground forces move east along the Selumna Peaks. | implemented |
+| *Chronicle, 2016 / 02.15* | Emmerian forces capture Cavallia Air Force Base, located in San Loma. | implemented |
+| *Chronicle, 2016 / 02.20* | The Emmerian Air Force attacks and destroys the Aerial Fleet, restoring air superiority to Emmerian forces. | implemented |
+| *Chronicle, 2016 / 03.06* | Emmerian forces make a decisive strike on Ragno Fortress in Grageo Canyon. | implemented |
+| *Chronicle, 2016 / 03.25* | A large-scale battle between Emmeria and Estovakia breaks out in the Moloch Desert, and Estovakian forces retreat. | implemented |
+| *Chronicle, 2016 / 03.26* | Emmerian forces assault the mining city of Fort Norton; Estovakia is prevented from transporting catalysts for weapons of mass destruction. | implemented |
+| *Chronicle, 2016 / 03.31* | Emmerian forces carry out an operation to liberate Gracemeria, which succeeds. That night a large number of cruise missiles are fired at the city but are shot down in midair by patrolling fighters. | implemented |
+| *Chronicle, 2016 / 04.01* | Emmerian forces destroy the Chandelier on Sonne Island. Gustav Dvornik, one of the main architects of the invasion of Emmeria, dies. An antigovernment coup in Estovakia leaves its forces unable to fight, which leads to a ceasefire agreement. | implemented |
 
 **Countries and organisations:** Eastern Faction navy (Chronicle, 2014 / 02.03); Emmeria (Chronicle, 2015 / 11.24, Chronicle, 2015 / 11.27, Chronicle, 2015 / 11.XX, Chronicle, 2015 / 12.27, Chronicle, 2016 / 01.26, Chronicle, 2016 / 02.12, Chronicle, 2016 / 02.15, Chronicle, 2016 / 02.20, Chronicle, 2016 / 03.06, Chronicle, 2016 / 03.25, Chronicle, 2016 / 03.26, Chronicle, 2016 / 03.31, Chronicle, 2016 / 04.01); Emmerian Air Force (Chronicle, 2016 / 02.20); Estovakia (Chronicle, 2014 / 02.03, Chronicle, 2014 / 02.04, Chronicle, 2015 / 04.21, Chronicle, 2015 / 08.30, Chronicle, 2015 / 11.24, Chronicle, 2015 / 11.27, Chronicle, 2016 / 03.25, Chronicle, 2016 / 03.26, Chronicle, 2016 / 04.01); LUF (Chronicle, 2014 / 02.04); Republic of Emmeria (Chronicle, 2015 / 08.30); Yuktobania (Chronicle, 2015 / 04.21).
 
@@ -285,17 +285,17 @@ squadrons, ships and aircraft stay text; places are never mapped to states.
 
 | Source | Claim | Disposition |
 | --- | --- | --- |
-| *Super Weapons, Aigaion* | The Aigaion-class heavy command cruiser was designed by the Federal Republic of Estovakia, based on technology from the Principality of Belka provided by Belkan refugees who had fled to Estovakia following uprisings in their home country, as the centre of its Aerial Fleet Initiative (the P/F-X program). It could fire Nimbus cruise missiles, served as an airborne aircraft carrier, and flew with Su-33 fighters, P-1113 Kottos and P-1114 Gyges escorts. | pending (E) |
+| *Super Weapons, Aigaion* | The Aigaion-class heavy command cruiser was designed by the Federal Republic of Estovakia, based on technology from the Principality of Belka provided by Belkan refugees who had fled to Estovakia following uprisings in their home country, as the centre of its Aerial Fleet Initiative (the P/F-X program). It could fire Nimbus cruise missiles, served as an airborne aircraft carrier, and flew with Su-33 fighters, P-1113 Kottos and P-1114 Gyges escorts. | implemented |
 | *Super Weapons, Alicorn* | The Alicorn was a nuclear-powered submarine of the Erusean Royal Navy's Rán Fleet, 495 meters long and 116 meters wide, serving as both an aircraft carrier and a long-range railgun platform. It disappeared during a sea trial and was found 698 days later with 330 of its 356 crew alive; its captain, Matias Torres, was a celebrated Continental War hero who led a fiercely loyal crew. | implemented |
 | *Super Weapons, Archelon Fortress* | Archelon Fortress was a military fortification and the production facility for the Fenrir, built in secret on Sentry Island in the Danern Straits in Leasath territory, with a microwave energy station and a Shock Cannon similar to Gleipnir's. It was destroyed by Gryphus Squadron, leading to the downfall of Diego Gaspar Navarro, who had instigated the Aurelian war. | pending (F2) |
 | *Super Weapons, Arkbird* | The Arkbird is a low-orbit spacecraft developed as a joint project between the Osean Federation and the Union of Yuktobanian Republics to clear fragments of Ulysses, using missiles to break up larger rocks and a high-output laser to reduce them further. During the Circum-Pacific War Osea weaponized it against submarines and other targets; the Gray Men later took control of it, and it was shot down by the Razgriz Squadron. | implemented |
 | *Super Weapons, Arsenal Birds* | The 1.1-kilometer-long unmanned Arsenal Birds were developed by the Osean Federation to defend the International Space Elevator, powered by microwave energy sent from the elevator and resupplied by unmanned supply ships launched from the Tyler Island Mass Driver. The two Arsenal Birds, the prototype Liberty and the upgraded variant Justice, were deployed to maintain a 1,200-kilometer defensive radius around the Space Elevator. | implemented |
-| *Super Weapons, Chandelier* | The Chandelier railgun was developed by Estovakia to destroy fragments of Ulysses, was incomplete when the asteroid arrived, and was later weaponized in the Emmeria-Estovakia War and used to attack an Emmerian-controlled city. It was ultimately destroyed by the Garuda Team. | implemented (E) |
+| *Super Weapons, Chandelier* | The Chandelier railgun was developed by Estovakia to destroy fragments of Ulysses, was incomplete when the asteroid arrived, and was later weaponized in the Emmeria-Estovakia War and used to attack an Emmerian-controlled city. It was ultimately destroyed by the Garuda Team. | implemented |
 | *Super Weapons, Excalibur* | Excalibur, a laser superweapon in the hilly southern region of Tauberg in the Principality of Belka, consisted of a kilometer-high central tower, six laser towers, a power plant and jamming facilities; its laser had a 1.21-gigawatt output and a 1,200-kilometer effective range, extendable with satellite and spotting-aircraft support. It was originally conceived as part of the Ballistic Missile Defense program launched in 1981. | implemented |
 | *Super Weapons, Gleipnir* | The Gleipnir was a strategic airship developed by the Democratic Republic of Leasath, with optical camouflage, shockwave ballistic missiles (SWBMs) and the Shock Cannon, and was the basis for the Fenrir aircraft; its prototype Gandr destroyed an entire fleet early in the Aurelian War before being shot down. Gleipnir forced the capital of Griswall to surrender without resistance, failed in an attack on Aubrey Base, and after being damaged during an assault on Santa Elva crashed into the Lenal River. | pending (F2) |
-| *Super Weapons, Gyges* | The Gyges-class fire support platforms were created by the Republic of Estovakia as part of its Aerial Fleet Initiative centred on the Aigaion-class heavy command cruiser, carrying multi-barrel cannons and missiles to work with the Aigaion. | pending (E) |
+| *Super Weapons, Gyges* | The Gyges-class fire support platforms were created by the Republic of Estovakia as part of its Aerial Fleet Initiative centred on the Aigaion-class heavy command cruiser, carrying multi-barrel cannons and missiles to work with the Aigaion. | implemented |
 | *Super Weapons, Hresvelgr* | The heavy command cruiser Hresvelgr was secretly developed by the South Belka Munitions Factory during the Belkan War and served as a mobile operations base for the insurgent group A World With No Boundaries. The aerial carrier, with a 503-meter wingspan and capacity for over 50 combat aircraft, was shot down by mercenary pilot Cipher before it could be put to practical use in combat. | not covered |
-| *Super Weapons, Kottos* | The Kottos-class electronic support platforms were created by the Republic of Estovakia as part of its Aerial Fleet Initiative centred on the Aigaion-class heavy command cruiser, with wide-range electronic warfare equipment to jam enemy communications and radar and support allied aircraft. | pending (E) |
+| *Super Weapons, Kottos* | The Kottos-class electronic support platforms were created by the Republic of Estovakia as part of its Aerial Fleet Initiative centred on the Aigaion-class heavy command cruiser, with wide-range electronic warfare equipment to jam enemy communications and radar and support allied aircraft. | implemented |
 | *Super Weapons, Megafloat* | Neucom's seaborne mobile city Megafloat, completed in 2039, was an artificial island whose true purpose was to serve as a mobile base for Neucom's private navy, with research, development and weapons-manufacturing facilities; it played a major role in world affairs throughout the 2040s. | out of scope |
 | *Super Weapons, Megalith* | Megalith was built by the Federal Republic of Erusea to bring down fragments of Ulysses still in orbit, using laser-guided rockets launched at orbiting fragments to send them plummeting to land. It also stored large missiles in its central silo and medium-sized missiles in four launchers in the east and west, and had no anti-air emplacements but was built solidly enough to resist standard aerial weaponry. | implemented |
 | *Super Weapons, Meson Cannons* | The Meson Cannons were particle-beam weapons built into the Atmos Ring in Aurelia's capital, emitting streams of decaying muons. Their range was limited to a few kilometers, making them suited to defending fixed locations against ballistic missiles and long-range attacks. | pending (F2) |
@@ -351,13 +351,13 @@ squadrons, ships and aircraft stay text; places are never mapped to states.
 | *Abstracts, ACE COMBAT 5: THE UNSUNG WAR* (10) | The Belkan renegades' plot is thwarted, and the war begins to draw to a close. | implemented |
 | *Abstracts, ACE COMBAT 6: Fires of Liberation* (1) | Sixteen years after the impact of the asteroid Ulysses, the relatively undamaged Republic of Emmeria is on the road to recovery. | not covered |
 | *Abstracts, ACE COMBAT 6: Fires of Liberation* (2) | The Federation of Estovakia has gone through economic collapse and civil war. | implemented |
-| *Abstracts, ACE COMBAT 6: Fires of Liberation* (3) | A fleet of Estovakian military aircraft suddenly appears over Emmeria's thriving capital Gracemeria; Emmeria suffers a vicious air raid and is occupied by Estovakian forces. | pending (E) |
-| *Abstracts, ACE COMBAT 6: Fires of Liberation* (4) | The remnants of Emmeria's army are forced to abandon the capital and retreat west, toward Khesed Island. | pending (E) |
+| *Abstracts, ACE COMBAT 6: Fires of Liberation* (3) | A fleet of Estovakian military aircraft suddenly appears over Emmeria's thriving capital Gracemeria; Emmeria suffers a vicious air raid and is occupied by Estovakian forces. | implemented |
+| *Abstracts, ACE COMBAT 6: Fires of Liberation* (4) | The remnants of Emmeria's army are forced to abandon the capital and retreat west, toward Khesed Island. | implemented |
 | *Abstracts, ACE COMBAT 6: Fires of Liberation* (5) | Amid these setbacks, Garuda Team, the 28th Fighter Squadron of the Emmerian Air Force's 8th Air Division, achieves remarkable successes and helps establish a foothold for a counteroffensive to retake the mainland. | not covered |
-| *Abstracts, ACE COMBAT 6: Fires of Liberation* (6) | The Emmerian military strengthens itself by rescuing trapped forces and pushes toward Gracemeria. | pending (E) |
-| *Abstracts, ACE COMBAT 6: Fires of Liberation* (7) | The army liberates the capital, decisively turning the tide of the war. | pending (E) |
-| *Abstracts, ACE COMBAT 6: Fires of Liberation* (8) | Estovakia's military regime collapses in a coup. | pending (E) |
-| *Abstracts, ACE COMBAT 6: Fires of Liberation* (9) | A ceasefire agreement is signed, ending the conflict. | pending (E) |
+| *Abstracts, ACE COMBAT 6: Fires of Liberation* (6) | The Emmerian military strengthens itself by rescuing trapped forces and pushes toward Gracemeria. | reference only |
+| *Abstracts, ACE COMBAT 6: Fires of Liberation* (7) | The army liberates the capital, decisively turning the tide of the war. | implemented |
+| *Abstracts, ACE COMBAT 6: Fires of Liberation* (8) | Estovakia's military regime collapses in a coup. | implemented |
+| *Abstracts, ACE COMBAT 6: Fires of Liberation* (9) | A ceasefire agreement is signed, ending the conflict. | implemented |
 | *Abstracts, ACE COMBAT 7: SKIES UNKNOWN* (1) | On May 15, 2019, terrorist drones strike Osean territory. | implemented |
 | *Abstracts, ACE COMBAT 7: SKIES UNKNOWN* (2) | The same day Erusea captures the international space elevator, seizes control of the Arsenal Birds and declares war, beginning the Lighthouse War. | implemented |
 | *Abstracts, ACE COMBAT 7: SKIES UNKNOWN* (3) | Faced with Erusea's drones and the captured Arsenal Birds, Osean forces are pushed back to the eastern coast. | not covered |

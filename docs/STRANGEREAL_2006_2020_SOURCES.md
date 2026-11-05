@@ -96,23 +96,23 @@ The 2005 entries through 26 September are already cited in
 
 | Claim | Exact source | Wave | Disposition |
 | --- | --- | --- | --- |
-| Yuktobanian spy satellites see a massive aircraft signature off Estovakia's southeast coast | Chronicle, 2015 / 04.21 | E | Pending |
+| Yuktobanian spy satellites see a massive aircraft signature off Estovakia's southeast coast | Chronicle, 2015 / 04.21 | E | Implemented: `ac_eew.16`, news only inside its window; the signature is not attributed |
 | Ed Alverez takes command of the Gavial tank battalion; hostilities break out | Chronicle, 2015 / 06.10 | Reference only | Named individual; not scripted |
-| Estovakia invades and seizes Gracemeria; the Aigaion cannot be countered; Emmerian forces retreat west and the war begins | Chronicle, 2015 / 08.30 | E | Pending |
+| Estovakia invades and seizes Gracemeria; the Aigaion cannot be countered; Emmerian forces retreat west and the war begins | Chronicle, 2015 / 08.30 | E | Implemented: `ac_eew_declare` (Estovakian decision event `ac_eew.5`, AI always), news `ac_eew.1`; the capital's fall (`ac_eew.20`) only when Estovakia controls Emmeria's capital. Needs the Eastern Faction's civil-war victory; earned withholding, divergent and unreachable routes |
 | Freddie Durand (Avalanche) leads the 2nd Strike Fighter Squadron | Chronicle, 2015 / 09.12 | Reference only | Named pilot; not scripted |
-| Witnesses see giant fireballs attacking retreating Emmerian forces | Chronicle, 2015 / 11.XX | E | Pending; day unknown |
-| Emmerian forces at Campagna Airport intercept bombers sent toward Vitoze on Khesed Island | Chronicle, 2015 / 11.24 | E | Pending |
-| Emmerian ground forces break through at Sipli Field | Chronicle, 2015 / 11.27 | E | Pending |
-| Bartolomeo Fortress falls; Emmeria controls Khesed Island | Chronicle, 2015 / 12.27 | E | Pending |
-| Emmeria lands at Rargom Beach | Chronicle, 2016 / 01.26 | E | Pending |
-| Emmerian forces advance along the Selumna Peaks | Chronicle, 2016 / 02.12 | E | Pending |
-| Emmeria captures Cavallia Air Force Base in San Loma | Chronicle, 2016 / 02.15 | E | Pending |
-| The Emmerian Air Force destroys the Aerial Fleet | Chronicle, 2016 / 02.20 | E | Pending |
-| Emmeria strikes Ragno Fortress in Grageo Canyon | Chronicle, 2016 / 03.06 | E | Pending |
-| Battle in the Moloch Desert; Estovakia retreats | Chronicle, 2016 / 03.25 | E | Pending |
-| Emmeria assaults Fort Norton and stops transport of weapons catalysts | Chronicle, 2016 / 03.26 | E | Pending |
-| Gracemeria is liberated; cruise missiles fired at it that night are shot down | Chronicle, 2016 / 03.31 | E | Pending |
-| The Chandelier on Sonne Island is destroyed; Gustav Dvornik dies; an antigovernment coup in Estovakia leads to a ceasefire | Chronicle, 2016 / 04.01 | E | Pending |
+| Witnesses see giant fireballs attacking retreating Emmerian forces | Chronicle, 2015 / 11.XX | E | Implemented: `ac_eew.21` inside November 2015, skipped if the month passes; no cause is asserted |
+| Emmerian forces at Campagna Airport intercept bombers sent toward Vitoze on Khesed Island | Chronicle, 2015 / 11.24 | E | Implemented: `ac_eew.22`, news only |
+| Emmerian ground forces break through at Sipli Field | Chronicle, 2015 / 11.27 | E | Implemented: `ac_eew.23`, news only |
+| Bartolomeo Fortress falls; Emmeria controls Khesed Island | Chronicle, 2015 / 12.27 | E | Implemented: `ac_eew.24`, timed Emmerian idea; Khesed Island unmapped |
+| Emmeria lands at Rargom Beach | Chronicle, 2016 / 01.26 | E | Implemented: `ac_eew.25`, news only |
+| Emmerian forces advance along the Selumna Peaks | Chronicle, 2016 / 02.12 | E | Implemented: `ac_eew.26`, news only |
+| Emmeria captures Cavallia Air Force Base in San Loma | Chronicle, 2016 / 02.15 | E | Implemented: `ac_eew.27`, news only |
+| The Emmerian Air Force destroys the Aerial Fleet | Chronicle, 2016 / 02.20 | E | Implemented: `ac_eew.28` only if `ac_sp_aerial_fleet` was completed; its reward is removed |
+| Emmeria strikes Ragno Fortress in Grageo Canyon | Chronicle, 2016 / 03.06 | E | Implemented: `ac_eew.29`, news only |
+| Battle in the Moloch Desert; Estovakia retreats | Chronicle, 2016 / 03.25 | E | Implemented: `ac_eew.30`, timed Estovakian idea |
+| Emmeria assaults Fort Norton and stops transport of weapons catalysts | Chronicle, 2016 / 03.26 | E | Implemented: `ac_eew.31`, news only |
+| Gracemeria is liberated; cruise missiles fired at it that night are shot down | Chronicle, 2016 / 03.31 | E | Implemented: `ac_eew.32` only when Emmeria controls its capital again after the observed fall |
+| The Chandelier on Sonne Island is destroyed; Gustav Dvornik dies; an antigovernment coup in Estovakia leads to a ceasefire | Chronicle, 2016 / 04.01 | E | Implemented: the coup `ac_eew.33` (timed idea; no politics changed), the Chandelier's destruction `ac_eew.34` only if `ac_sp_chandelier` was completed, and the scripted ceasefire `ac_eew.6`/`ac_eew_sign_ceasefire`, written only if the engine ended the war. Dvornik is named in text only |
 
 ## 2019: the Lighthouse War and the Leasath civil war
 

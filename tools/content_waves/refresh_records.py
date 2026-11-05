@@ -6,7 +6,8 @@ packages go stale and fail CI:
 * tools/world_foundation/country_registry.json (per-country focus counts, input digest);
 * docs/evidence/decision-rows/consumer-bounds.json and index.html (every decision row);
 * docs/evidence/event-style/measurements.json and gallery.html (every event text field);
-* docs/evidence/decision-text/measurements.json and index.html (every category description).
+* docs/evidence/decision-text/measurements.json and index.html (every category description);
+* docs/evidence/package0-focus/layout.json, index.html and its five layout images (every focus tree).
 
 Only their text outputs are written. Their PNG review sheets are left as committed,
 because PNG compression differs between platforms; the script reports whether
@@ -96,6 +97,16 @@ def decision_text(check):
     return write_text_outputs({module["OUT"] / name: data for name, data in files.items()}, check, same_review_png)
 
 
+def focus_layout(check):
+    script = ROOT / "tools/usea_expansion/preview_focus_repairs.py"
+    if check:
+        result = subprocess.run([sys.executable, "-B", str(script), "--check"], cwd=ROOT, capture_output=True, text=True)
+        return ["docs/evidence/package0-focus"] if result.returncode else []
+    before = subprocess.run([sys.executable, "-B", str(script), "--check"], cwd=ROOT, capture_output=True, text=True).returncode
+    subprocess.run([sys.executable, "-B", str(script), "--layouts"], cwd=ROOT, check=True, capture_output=True)
+    return ["docs/evidence/package0-focus"] if before else []
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
@@ -104,7 +115,7 @@ def main():
     if args.event_style_child:
         event_style_child(args.check)
         return
-    stale = registry(args.check) + decision_rows(args.check) + event_style(args.check) + decision_text(args.check)
+    stale = registry(args.check) + decision_rows(args.check) + event_style(args.check) + decision_text(args.check) + focus_layout(args.check)
     if args.check and stale:
         raise SystemExit("Stale shared records: " + ", ".join(stale))
     print(("Shared records consistent" if args.check else "Shared records refreshed") + (": " + ", ".join(stale) if stale else ""))

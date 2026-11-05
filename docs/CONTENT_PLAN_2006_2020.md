@@ -209,6 +209,8 @@ extended, never replaced.
 
 ### Wave E: the Anean war (2014–2016, Package 4)
 
+**Delivered in source, 5 November 2026** ([CONTENT_WAVE_E.md](CONTENT_WAVE_E.md)): scripted ceasefire after the coup and the Aerial Fleet and Chandelier as projects (user decisions); offline validated, native pending.
+
 - **Budget:** EMM 36, EVA 36 (72).
 - **Owner:** `ac_eew`, anchored 2015.8.30 to 2016.4.1.
 - **Reads:** the Wave B outcome, the 1998–2004 Anean choices, NEC consultation,
@@ -303,8 +305,8 @@ change any total.
 3. **Wave C.** Its consumer API is already published in #59. **Delivered in
    source, 3 November 2026.**
 4. **Wave B**, once the civil-war mechanic is chosen. **Delivered in source.**
-5. **F1. Delivered in source, 4 November 2026.** Then **Wave E** and the
-   **F2 crisis lanes and stories.**
+5. **F1. Delivered in source, 4 November 2026.** **Wave E delivered in source,
+   5 November 2026.** Then the **F2 crisis lanes and stories.**
 
 Decisions the user needs to make:
 

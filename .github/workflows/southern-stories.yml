@@ -1,0 +1,26 @@
+name: Southern and Anean story previews
+on:
+  push:
+  pull_request:
+jobs:
+  story-previews:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate the Aurelian and Leasathian stories and their unadmitted preview
+        run: |
+          python -B tools/squadrons/southern/story_contract.py
+          python -B tools/squadrons/southern/build.py --check
+      - name: Validate the Anean continuations and their unadmitted preview
+        run: |
+          python -B tools/squadrons/anean_epilogue/epilogue_contract.py
+          python -B tools/squadrons/anean_epilogue/build.py --check
+      - name: Check the art plan (no placeholder, no admitted story without reviewed masters)
+        run: python -B tools/squadrons/southern_art/plan.py --check
+      - name: Execute the compiled southern stories offline
+        run: python -B tools/squadrons/southern/test_runtime.py
+      - name: Execute the compiled Anean continuations offline
+        run: python -B tools/squadrons/anean_epilogue/test_runtime.py

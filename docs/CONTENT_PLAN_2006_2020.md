@@ -46,7 +46,7 @@ exclusive alternatives and do not prove engine reachability.
 | Country focus additions (of 1,028) | 234 | 572 | **456** |
 | SNS, AMB, UGE, DEL, OSE, YUK, NPT, REC, SAP, GEB, FAT, SBK budgets | partial | complete in source | native acceptance |
 | ERU / FCU / EMM / EVA / NEC / AUR / LEA budgets | — | ERU 0, FCU 6, others 0 | 90 / 48 / 54 / 66 / 42 / 84 / 72 |
-| Independent squadron stories (20 chapters each) | 6 | 8 (OSE, YUK in #60/#61) | AUR, LEA |
+| Independent squadron stories (20 chapters each) | 6 | 8 (OSE, YUK in #60/#61) | AUR, LEA: text and script complete in source (`tools/squadrons/southern`), unadmitted until their art masters are generated and reviewed |
 | Dated war owners | 1991–2005 (`ac_belkan_*`, `ac_pwi`, `ac_ur`, `ac_ucw`) | same | **every conflict after 2005** |
 | Conventional land/air/naval research | — | through 2020, provisional (`ac_air_`, `ac_naval_`, land packet) | sourced projects and naming (#5) |
 
@@ -306,7 +306,7 @@ change any total.
    source, 3 November 2026.**
 4. **Wave B**, once the civil-war mechanic is chosen. **Delivered in source.**
 5. **F1. Delivered in source, 4 November 2026.** **Wave E delivered in source,
-   5 November 2026.** **F2 delivered in source, 5 November 2026** ([CONTENT_WAVE_F2.md](CONTENT_WAVE_F2.md)): the country budgets are complete (1,028 of 1,028). The Aurelian and Leasathian stories remain.
+   5 November 2026.** **F2 delivered in source, 5 November 2026** ([CONTENT_WAVE_F2.md](CONTENT_WAVE_F2.md)): the country budgets are complete (1,028 of 1,028). **G5, 5 November 2026:** the Aurelian and Leasathian stories (`tools/squadrons/southern`, `ac_sqs`) and the two Anean continuations (`tools/squadrons/anean_epilogue`, `ac_sqa`) are written, compiled and tested offline; their 32 art masters are planned (`tools/squadrons/southern_art/plan.json`) but not generated, so none is admitted to the mod yet.
 
 Decisions the user needs to make:
 
@@ -316,7 +316,7 @@ Decisions the user needs to make:
 | 2 | Base for new waves | **Resolved:** #59–#61 merged into `main` |
 | 3 | First wave | **Decided: A + D** (delivered in source); F2 foundation lanes still available in parallel |
 | 4 | Estovakian civil war mechanic | **Decided: tagless owner first**; temporary tag only after a source and mapping review |
-| 5 | Anean squadron continuation size | Short eligible-cast epilogues, for example 4–6 chapters per story, outside the 20-chapter core (**still open**) |
+| 5 | Anean squadron continuation size | **Decided 5 November 2026: six chapters per story**, 2015–2016, outside the 20-chapter core; admitted only from the original story's recorded conclusion (`ac_sq_<tag>_ending_<kind>`), with one scene per conclusion naming only the cast that conclusion keeps together (`tools/squadrons/anean_epilogue`) |
 | 6 | A peace route for the Circum-Pacific War | The published contract forbids a scripted white peace in the first owner, so Wave C ends the war only when the fighting actually stops. **Decided 5 November 2026: after the appeal, earned.** Once the joint appeal to disarm is made (2010 / 12.30, official course only), a principal holding its own verification record may offer peace on the appeal's terms (`OSE_cpw_accept_appeal`, `YUK_cpw_accept_appeal`); the other decides (`ac_cpw.16`), and `ac_cpw_make_peace` writes `ac_cpw_outcome_peace` only if the engine ended the war ([Wave C](CONTENT_WAVE_C.md)) |
 | 7 | The Lighthouse War's end | **Decided 4 November 2026: scripted ceasefire** on the Expo City anchor (Chronicle 2019 / 12.01). `ac_lhw_sign_ceasefire` is the only `white_peace` in the waves and writes state only if the engine ended the war; an earned early ceasefire and fighting on are the alternatives |
 | 8 | The Lighthouse-era superweapons | **Decided 4 November 2026: projects.** The Arsenal Birds (OSE) and the Alicorn (ERU) are special projects from their Super Weapons rows, in generator-owned files beside the hash-pinned Track C files |

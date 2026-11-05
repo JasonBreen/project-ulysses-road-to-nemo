@@ -57,4 +57,6 @@ python -B tools/content_waves/refresh_records.py --check
 
 Native parsing, AI pacing, balance and save/reload are untested (#8). The
 Aurelian and Leasathian stories (release plan `later_story_hosts`) are a
-separate component.
+separate component, [`tools/squadrons/southern`](../tools/squadrons/southern/README.md):
+text and script complete and tested offline, not admitted until their art
+masters are generated and reviewed.

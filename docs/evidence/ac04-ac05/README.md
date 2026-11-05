@@ -1,9 +1,13 @@
 # AC04/AC5 source and offline validation
 
-`validation.json` records 27 successful independent commands, including the 35
+`validation.json` records 38 successful independent commands, including the 36
 new actual-script campaign regressions, the existing campaign/partner/story
 owners, original artwork and event-capture proofs, the complete PowerShell
-static suite and a comparison with the immutable starting revision.
+static suite and a comparison with the immutable starting revision. The aviation
+and naval suites also verify the separately registered UCW owner extension while
+keeping their original 1,107-source and 1,110-source captures intact.
+The matrix also covers the global superpower import, startup chronology, asset
+dependency, briefing, typography and faction checks used by hosted validation.
 
 The source digest was unchanged before and after the complete pass. Each command
 has its own exit code and raw-log SHA-256. Raw logs remain in the ignored local

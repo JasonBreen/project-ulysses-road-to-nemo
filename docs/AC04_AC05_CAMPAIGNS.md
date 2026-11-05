@@ -102,7 +102,9 @@ the intact engineering site. Intact capture requires actual SNS control of state
 destruction flag. Megalith's conclusion requires its completed operation.
 The second submarine can be recalled through Yuktobanian preparation, in which
 case the historical destruction news is suppressed. The opposing strike cannot
-claim a withdrawn carrier as a target.
+claim a withdrawn carrier as a target. Recall likewise cannot claim a carrier
+after the successful strike. If both operations are pending, the first recorded
+success blocks the other's completion; its spent costs remain spent.
 
 Belka's investigation and network paths can expose witnesses, build a channel,
 influence procurement or contest strategic access. Foreign protected evidence
@@ -142,6 +144,9 @@ Focus imports use a marked additive block and are present in every inherited
 tree in a multi-tree country file, including the Belkan continuation tree.
 The partner and FAT/SBK generators preserve those blocks on regeneration.
 Existing war, national and personal-story owners remain separate.
+Older national-tree preservation checks validate and remove only the exact
+registered campaign imports before comparing the remaining tree to its unchanged
+capture. Missing, duplicate or unknown campaign IDs fail that restoration.
 
 Artwork is original diagram/control geometry composed from the existing Ulysses
 glyph library. `assets.json` records actual runtime consumers, DDS hashes,
@@ -154,6 +159,13 @@ two registered Megalith gameplay edits through
 AST against that historical capture. Added rewards, altered guards, missing
 nodes or unrelated event edits still fail. This records the separately approved
 gameplay work without recapturing the picture-only baseline.
+
+The aviation and naval preservation captures also remain unchanged. Their separate
+`tools/ac_campaigns/reviewed_owner_updates.json` receipt enumerates only
+`ac_ucw_eru_war_tick` and `ac_ucw_destroy_megalith` as changed functions, pins the
+other 25 UCW function bodies and requires canonical generator output. No new
+function is added to or removed from that protected owner, and the existing
+financial and history repair contracts retain their own separate scopes.
 
 ## Reproduction and acceptance
 

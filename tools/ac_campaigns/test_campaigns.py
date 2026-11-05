@@ -252,6 +252,18 @@ class Campaigns(unittest.TestCase):
             before=set(w.wars);w.run('ac_camp_character_tick','BLK');self.assertEqual(before,w.wars)
             self.assertIn('ac_camp_network_exposed_ending' if exposed else 'ac_camp_network_success_ending',w.globals)
 
+    def test_second_carrier_strike_and_recall_are_reciprocal_even_when_both_are_pending(self):
+        for winner,loser in (('naval_reserve','second_submarine'),('second_submarine','naval_reserve')):
+            w=world('disabled');w.today=date(2010,11,14).toordinal()
+            w.globals.update(('ac_cpw_started','ac_camp_submarine_success','ac_camp_denial_success'));w.wars.add(frozenset(('OSE','YUK')))
+            prepare(w,'OSE',2);prepare(w,'YUK',1,'b')
+            tags={'second_submarine':'OSE','naval_reserve':'YUK'}
+            for key in (winner,loser):w.decide('ac_camp_'+key+'_start',tags[key])
+            w.advance(7);w.run('ac_camp_'+winner+'_tick',tags[winner]);w.run('ac_camp_'+loser+'_tick',tags[loser])
+            self.assertIn('ac_camp_'+winner+'_success',w.globals);self.assertNotIn('ac_camp_'+loser+'_success',w.globals)
+            w.advance(15);w.run('ac_camp_'+loser+'_tick',tags[loser]);self.assertIn('ac_camp_'+loser+'_failed',w.globals)
+            self.assertRaises(AssertionError,w.decide,'ac_camp_'+loser+'_start',tags[loser])
+
     def test_battery_dispositions_have_distinct_guarded_results(self):
         for option,expected in (('a','ac_ucw_stonehenge_destroyed'),('b','ac_ucw_stonehenge_disabled'),('c','ac_ucw_stonehenge_recaptured')):
             w=world();w.globals.update(('ac_ucw_stonehenge_seized','ac_camp_battery_success'));w.countries['FCU'].flags['ac_camp_battery_choice_pending']=None

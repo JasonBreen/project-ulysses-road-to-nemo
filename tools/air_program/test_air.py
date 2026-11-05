@@ -191,7 +191,7 @@ class Definitions(Captured):
         for name,body in current.items():
             actual=hashlib.sha256(json.dumps(body,separators=(',',':')).encode()).hexdigest()
             self.assertEqual((row['reviewed_function_ast_sha256'] if name in changed else old)[name],actual,name)
-        result=subprocess.run([sys.executable,'-B','tools/build_continental_war.py','--check'],cwd=ROOT,capture_output=True,text=True)
+        result=subprocess.run([sys.executable,'-B','tools/build_continental_war.py','--check','--check-owner-effects'],cwd=ROOT,capture_output=True,text=True)
         self.assertEqual(0,result.returncode,result.stdout+result.stderr)
 
     def test_reviewed_release_owner_delta_matches_canonical_generator(self):

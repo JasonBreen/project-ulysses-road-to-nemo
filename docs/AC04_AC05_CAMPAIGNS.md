@@ -163,7 +163,10 @@ gameplay work without recapturing the picture-only baseline.
 The aviation and naval preservation captures also remain unchanged. Their separate
 `tools/ac_campaigns/reviewed_owner_updates.json` receipt enumerates only
 `ac_ucw_eru_war_tick` and `ac_ucw_destroy_megalith` as changed functions, pins the
-other 25 UCW function bodies and requires canonical generator output. No new
+other 25 UCW function bodies and requires canonical output of that protected
+scripted-effect file. The owner check uses `--check --check-owner-effects` so
+unrelated PNG serialization does not enter the aviation/naval contract. Complete
+UCW artwork validation remains in the separate full generation and picture checks. No new
 function is added to or removed from that protected owner, and the existing
 financial and history repair contracts retain their own separate scopes.
 

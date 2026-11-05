@@ -884,7 +884,11 @@ The official chronology records that ISAF breached the Whiskey Corridor on 15 Au
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--check-owner-effects", action="store_true",
+                        help="With --check, validate only the protected scripted-effect owner; artwork has separate checks.")
     args = parser.parse_args()
+    if args.check_owner_effects and not args.check:
+        parser.error("--check-owner-effects requires --check")
     build_core()
     build_fallout()
     build_war()
@@ -895,7 +899,11 @@ def main():
     build_playtest()
     build_ai()
     failures = []
-    for relative, text in render().items():
+    outputs = render()
+    if args.check_owner_effects:
+        relative = "common/scripted_effects/ac_ucw.txt"
+        outputs = {relative: outputs[relative]}
+    for relative, text in outputs.items():
         path = MOD / relative
         header = "# Authored gameplay; source: tools/build_continental_war.py.\n"
         payload = text if path.suffix == ".yml" or text.startswith(header) else header + text
@@ -907,7 +915,7 @@ def main():
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
-    for path, data in news_art_outputs().items():
+    for path, data in ({} if args.check_owner_effects else news_art_outputs()).items():
         if args.check:
             current = path.read_bytes() if path.exists() else b''
             if path.suffix in ('.json', '.gfx'):
@@ -919,6 +927,9 @@ def main():
             path.write_bytes(data)
     if failures:
         raise SystemExit("Generated content differs: " + ", ".join(failures))
+    if args.check_owner_effects:
+        print("Continental War: protected scripted-effect owner matches canonical output; artwork checked separately.")
+        return
     focuses = sum(len(rows) for rows in TREES.values())
     print("Continental War: %s files, %s focuses, %s events, %s localization keys%s." % (
         len(OUTPUT), focuses, sum(1 for e in EVENTS if e.startswith(("country_event", "news_event"))), len(LOC), " checked" if args.check else " generated"))

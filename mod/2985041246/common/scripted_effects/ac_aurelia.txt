@@ -1,0 +1,2310 @@
+# Original provisional gameplay; source: tools/content_waves (The Federal Foundations). Native acceptance pending.
+ac_aur_initialize = {
+	if = {
+		limit = {
+			ac_aur_eligible = yes
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = ac_aur_current_service }
+			}
+			set_variable = { ac_aur_current_service = 0 }
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = ac_aur_elapsed }
+			}
+			set_variable = { ac_aur_elapsed = 0 }
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = ac_aur_completed_services }
+			}
+			set_variable = { ac_aur_completed_services = 0 }
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = ac_aur_last_delivered_days }
+			}
+			set_variable = { ac_aur_last_delivered_days = 0 }
+		}
+		set_country_flag = ac_aur_initialized
+	}
+}
+
+ac_aur_pay_programme = {
+	clr_country_flag = ac_aur_payment_authorized
+	if = {
+		limit = {
+			ac_aur_can_fund = yes
+		}
+		if = {
+			limit = {
+				ac_econ_ready = yes
+			}
+			ac_econ_pay_programme = yes
+			if = {
+				limit = {
+					OR = { ac_macro_ready = no has_country_flag = ac_macro_transaction_succeeded }
+				}
+				set_country_flag = ac_aur_payment_authorized
+			}
+		}
+		else = {
+			set_country_flag = ac_aur_payment_authorized
+		}
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			add_political_power = -35
+			set_temp_variable = { ac_pol_capacity_delta = -4 }
+			ac_pol_change_capacity = yes
+		}
+	}
+}
+
+ac_aur_refresh_progress = {
+	if = {
+		limit = {
+			has_country_flag = ac_aur_service_active has_variable = ac_aur_service_started
+		}
+		set_variable = { ac_aur_elapsed = date }
+		subtract_from_variable = { ac_aur_elapsed = ac_aur_service_started }
+		clamp_variable = { var = ac_aur_elapsed min = 0 max = 90 }
+	}
+}
+
+ac_aur_interrupt_service = {
+	if = {
+		limit = {
+			ac_aur_participant = yes has_country_flag = ac_aur_service_active
+		}
+		ac_aur_refresh_progress = yes
+		set_variable = { ac_aur_last_delivered_days = ac_aur_elapsed }
+		set_variable = { ac_aur_last_interrupted_service = ac_aur_current_service }
+		set_country_flag = ac_aur_service_interrupted
+		if = {
+			limit = {
+				has_country_flag = AUR_au_services_service_1_active
+			}
+			set_country_flag = AUR_au_services_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_services_service_2_active
+			}
+			set_country_flag = AUR_au_services_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_trade_service_1_active
+			}
+			set_country_flag = AUR_au_trade_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_trade_service_2_active
+			}
+			set_country_flag = AUR_au_trade_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_airspace_service_1_active
+			}
+			set_country_flag = AUR_au_airspace_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_airspace_service_2_active
+			}
+			set_country_flag = AUR_au_airspace_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_leasath_war_service_1_active
+			}
+			set_country_flag = AUR_au_leasath_war_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_leasath_war_service_2_active
+			}
+			set_country_flag = AUR_au_leasath_war_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_finance_service_1_active
+			}
+			set_country_flag = AUR_au_finance_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_finance_service_2_active
+			}
+			set_country_flag = AUR_au_finance_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_exports_service_1_active
+			}
+			set_country_flag = AUR_au_exports_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_exports_service_2_active
+			}
+			set_country_flag = AUR_au_exports_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_relations_service_1_active
+			}
+			set_country_flag = AUR_au_relations_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_relations_service_2_active
+			}
+			set_country_flag = AUR_au_relations_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_readiness_service_1_active
+			}
+			set_country_flag = AUR_au_readiness_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_readiness_service_2_active
+			}
+			set_country_flag = AUR_au_readiness_service_2_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_account_service_1_active
+			}
+			set_country_flag = AUR_au_account_service_1_interrupted
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_account_service_2_active
+			}
+			set_country_flag = AUR_au_account_service_2_interrupted
+		}
+		clr_country_flag = AUR_au_services_service_1_active
+		remove_ideas = AUR_au_services_service_1_spirit
+		clr_country_flag = AUR_au_services_service_2_active
+		remove_ideas = AUR_au_services_service_2_spirit
+		clr_country_flag = AUR_au_trade_service_1_active
+		remove_ideas = AUR_au_trade_service_1_spirit
+		clr_country_flag = AUR_au_trade_service_2_active
+		remove_ideas = AUR_au_trade_service_2_spirit
+		clr_country_flag = AUR_au_airspace_service_1_active
+		remove_ideas = AUR_au_airspace_service_1_spirit
+		clr_country_flag = AUR_au_airspace_service_2_active
+		remove_ideas = AUR_au_airspace_service_2_spirit
+		clr_country_flag = AUR_au_leasath_war_service_1_active
+		remove_ideas = AUR_au_leasath_war_service_1_spirit
+		clr_country_flag = AUR_au_leasath_war_service_2_active
+		remove_ideas = AUR_au_leasath_war_service_2_spirit
+		clr_country_flag = AUR_au_finance_service_1_active
+		remove_ideas = AUR_au_finance_service_1_spirit
+		clr_country_flag = AUR_au_finance_service_2_active
+		remove_ideas = AUR_au_finance_service_2_spirit
+		clr_country_flag = AUR_au_exports_service_1_active
+		remove_ideas = AUR_au_exports_service_1_spirit
+		clr_country_flag = AUR_au_exports_service_2_active
+		remove_ideas = AUR_au_exports_service_2_spirit
+		clr_country_flag = AUR_au_relations_service_1_active
+		remove_ideas = AUR_au_relations_service_1_spirit
+		clr_country_flag = AUR_au_relations_service_2_active
+		remove_ideas = AUR_au_relations_service_2_spirit
+		clr_country_flag = AUR_au_readiness_service_1_active
+		remove_ideas = AUR_au_readiness_service_1_spirit
+		clr_country_flag = AUR_au_readiness_service_2_active
+		remove_ideas = AUR_au_readiness_service_2_spirit
+		clr_country_flag = AUR_au_account_service_1_active
+		remove_ideas = AUR_au_account_service_1_spirit
+		clr_country_flag = AUR_au_account_service_2_active
+		remove_ideas = AUR_au_account_service_2_spirit
+		clr_country_flag = ac_aur_service_active
+		clr_country_flag = ac_aur_service_window
+		set_variable = { ac_aur_current_service = 0 }
+	}
+}
+
+AUR_au_services_service_1_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_services_register
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_services_service_1_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 1 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_services_service_1_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_services_service_1_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_services_service_1_active check_variable = { ac_aur_current_service = 1 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_services_service_1_spirit
+		clr_country_flag = AUR_au_services_service_1_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_services_service_1_completed
+		set_country_flag = AUR_au_services_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_services_service_2_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_services_operations
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_services_service_2_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 2 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_services_service_2_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_services_service_2_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_services_service_2_active check_variable = { ac_aur_current_service = 2 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_services_service_2_spirit
+		clr_country_flag = AUR_au_services_service_2_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_services_service_2_completed
+		set_country_flag = AUR_au_services_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_trade_service_1_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_trade_register
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_trade_service_1_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 3 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_trade_service_1_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_trade_service_1_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_trade_service_1_active check_variable = { ac_aur_current_service = 3 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_trade_service_1_spirit
+		clr_country_flag = AUR_au_trade_service_1_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_trade_service_1_completed
+		set_country_flag = AUR_au_trade_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_trade_service_2_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_trade_operations
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_trade_service_2_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 4 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_trade_service_2_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_trade_service_2_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_trade_service_2_active check_variable = { ac_aur_current_service = 4 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_trade_service_2_spirit
+		clr_country_flag = AUR_au_trade_service_2_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_trade_service_2_completed
+		set_country_flag = AUR_au_trade_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_airspace_service_1_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_airspace_register
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_airspace_service_1_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 5 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_airspace_service_1_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_airspace_service_1_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_airspace_service_1_active check_variable = { ac_aur_current_service = 5 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_airspace_service_1_spirit
+		clr_country_flag = AUR_au_airspace_service_1_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_airspace_service_1_completed
+		set_country_flag = AUR_au_airspace_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_airspace_service_2_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_airspace_operations
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_airspace_service_2_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 6 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_airspace_service_2_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_airspace_service_2_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_airspace_service_2_active check_variable = { ac_aur_current_service = 6 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_airspace_service_2_spirit
+		clr_country_flag = AUR_au_airspace_service_2_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_airspace_service_2_completed
+		set_country_flag = AUR_au_airspace_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_leasath_war_service_1_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_leasath_war_register
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_leasath_war_service_1_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 7 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_leasath_war_service_1_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_leasath_war_service_1_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_leasath_war_service_1_active check_variable = { ac_aur_current_service = 7 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_leasath_war_service_1_spirit
+		clr_country_flag = AUR_au_leasath_war_service_1_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_leasath_war_service_1_completed
+		set_country_flag = AUR_au_leasath_war_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_leasath_war_service_2_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_leasath_war_operations
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_leasath_war_service_2_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 8 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_leasath_war_service_2_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_leasath_war_service_2_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_leasath_war_service_2_active check_variable = { ac_aur_current_service = 8 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_leasath_war_service_2_spirit
+		clr_country_flag = AUR_au_leasath_war_service_2_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_leasath_war_service_2_completed
+		set_country_flag = AUR_au_leasath_war_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_finance_service_1_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_finance_register
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_finance_service_1_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 9 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_finance_service_1_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_finance_service_1_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_finance_service_1_active check_variable = { ac_aur_current_service = 9 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_finance_service_1_spirit
+		clr_country_flag = AUR_au_finance_service_1_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_finance_service_1_completed
+		set_country_flag = AUR_au_finance_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_finance_service_2_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_finance_operations
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_finance_service_2_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 10 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_finance_service_2_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_finance_service_2_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_finance_service_2_active check_variable = { ac_aur_current_service = 10 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_finance_service_2_spirit
+		clr_country_flag = AUR_au_finance_service_2_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_finance_service_2_completed
+		set_country_flag = AUR_au_finance_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_exports_service_1_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_exports_register
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_exports_service_1_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 11 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_exports_service_1_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_exports_service_1_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_exports_service_1_active check_variable = { ac_aur_current_service = 11 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_exports_service_1_spirit
+		clr_country_flag = AUR_au_exports_service_1_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_exports_service_1_completed
+		set_country_flag = AUR_au_exports_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_exports_service_2_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_exports_operations
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_exports_service_2_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 12 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_exports_service_2_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_exports_service_2_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_exports_service_2_active check_variable = { ac_aur_current_service = 12 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_exports_service_2_spirit
+		clr_country_flag = AUR_au_exports_service_2_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_exports_service_2_completed
+		set_country_flag = AUR_au_exports_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_relations_service_1_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_relations_register
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_relations_service_1_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 13 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_relations_service_1_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_relations_service_1_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_relations_service_1_active check_variable = { ac_aur_current_service = 13 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_relations_service_1_spirit
+		clr_country_flag = AUR_au_relations_service_1_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_relations_service_1_completed
+		set_country_flag = AUR_au_relations_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_relations_service_2_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_relations_operations
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_relations_service_2_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 14 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_relations_service_2_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_relations_service_2_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_relations_service_2_active check_variable = { ac_aur_current_service = 14 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_relations_service_2_spirit
+		clr_country_flag = AUR_au_relations_service_2_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_relations_service_2_completed
+		set_country_flag = AUR_au_relations_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_readiness_service_1_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_readiness_register
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_readiness_service_1_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 15 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_readiness_service_1_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_readiness_service_1_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_readiness_service_1_active check_variable = { ac_aur_current_service = 15 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_readiness_service_1_spirit
+		clr_country_flag = AUR_au_readiness_service_1_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_readiness_service_1_completed
+		set_country_flag = AUR_au_readiness_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_readiness_service_2_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_readiness_operations
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_readiness_service_2_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 16 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_readiness_service_2_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_readiness_service_2_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_readiness_service_2_active check_variable = { ac_aur_current_service = 16 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_readiness_service_2_spirit
+		clr_country_flag = AUR_au_readiness_service_2_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_readiness_service_2_completed
+		set_country_flag = AUR_au_readiness_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_account_service_1_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_account_register
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_account_service_1_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 17 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_account_service_1_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_account_service_1_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_account_service_1_active check_variable = { ac_aur_current_service = 17 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_account_service_1_spirit
+		clr_country_flag = AUR_au_account_service_1_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_account_service_1_completed
+		set_country_flag = AUR_au_account_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_account_service_2_start = {
+	if = {
+		limit = {
+			ac_aur_can_fund = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_account_operations
+		}
+		ac_aur_pay_programme = yes
+		if = {
+			limit = {
+				has_country_flag = ac_aur_payment_authorized
+			}
+			clr_country_flag = ac_aur_payment_authorized
+			set_country_flag = ac_aur_service_active
+			set_country_flag = AUR_au_account_service_2_active
+			set_country_flag = { flag = ac_aur_service_window days = 90 }
+			set_variable = { ac_aur_current_service = 18 }
+			set_variable = { ac_aur_service_started = date }
+			set_variable = { ac_aur_elapsed = 0 }
+			add_timed_idea = { idea = AUR_au_account_service_2_spirit days = 90 }
+		}
+	}
+}
+
+AUR_au_account_service_2_finish = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_war = no has_country_flag = ac_aur_service_active has_country_flag = AUR_au_account_service_2_active check_variable = { ac_aur_current_service = 18 } NOT = { has_country_flag = ac_aur_service_window }
+		}
+		remove_ideas = AUR_au_account_service_2_spirit
+		clr_country_flag = AUR_au_account_service_2_active
+		clr_country_flag = ac_aur_service_active
+		set_country_flag = AUR_au_account_service_2_completed
+		set_country_flag = AUR_au_account_service_completed
+		add_to_variable = { ac_aur_completed_services = 1 }
+		set_variable = { ac_aur_elapsed = 90 }
+		set_variable = { ac_aur_last_delivered_days = 90 }
+		set_variable = { ac_aur_current_service = 0 }
+		set_country_flag = { flag = ac_aur_service_cooldown days = 90 }
+	}
+}
+
+AUR_au_services_register_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR NOT = { has_country_flag = AUR_au_services_register_done }
+		}
+		set_country_flag = AUR_au_services_register_done
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_services_policy_a_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_services_register NOT = { has_country_flag = AUR_au_services_policy_b_done } NOT = { has_country_flag = AUR_au_services_policy_a_done }
+		}
+		set_country_flag = AUR_au_services_policy_a_done
+		add_ideas = AUR_au_services_policy_a_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_services_policy_b_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_services_register NOT = { has_country_flag = AUR_au_services_policy_a_done } NOT = { has_country_flag = AUR_au_services_policy_b_done }
+		}
+		set_country_flag = AUR_au_services_policy_b_done
+		add_ideas = AUR_au_services_policy_b_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_services_operations_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_services_policy_a has_completed_focus = AUR_au_services_policy_b } NOT = { has_country_flag = AUR_au_services_operations_done }
+		}
+		set_country_flag = AUR_au_services_operations_done
+	}
+}
+
+AUR_au_services_review_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_services_operations has_country_flag = AUR_au_services_service_completed NOT = { has_country_flag = AUR_au_services_review_done }
+		}
+		set_country_flag = AUR_au_services_review_done
+	}
+}
+
+AUR_au_services_settlement_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_services_review NOT = { has_country_flag = AUR_au_services_settlement_done }
+		}
+		set_country_flag = AUR_au_services_settlement_done
+		if = {
+			limit = {
+				has_country_flag = AUR_au_services_policy_a_done
+			}
+			remove_ideas = AUR_au_services_policy_a_spirit
+			add_ideas = AUR_au_services_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_services_policy_b_done
+			}
+			remove_ideas = AUR_au_services_policy_b_spirit
+			add_ideas = AUR_au_services_policy_b_spirit_settled
+		}
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_trade_register_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR NOT = { has_country_flag = AUR_au_trade_register_done }
+		}
+		set_country_flag = AUR_au_trade_register_done
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_trade_policy_a_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_trade_register NOT = { has_country_flag = AUR_au_trade_policy_b_done } NOT = { has_country_flag = AUR_au_trade_policy_a_done }
+		}
+		set_country_flag = AUR_au_trade_policy_a_done
+		add_ideas = AUR_au_trade_policy_a_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_trade_policy_b_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_trade_register NOT = { has_country_flag = AUR_au_trade_policy_a_done } NOT = { has_country_flag = AUR_au_trade_policy_b_done }
+		}
+		set_country_flag = AUR_au_trade_policy_b_done
+		add_ideas = AUR_au_trade_policy_b_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_trade_operations_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_trade_policy_a has_completed_focus = AUR_au_trade_policy_b } NOT = { has_country_flag = AUR_au_trade_operations_done }
+		}
+		set_country_flag = AUR_au_trade_operations_done
+	}
+}
+
+AUR_au_trade_review_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_trade_operations has_country_flag = AUR_au_trade_service_completed NOT = { has_country_flag = AUR_au_trade_review_done }
+		}
+		set_country_flag = AUR_au_trade_review_done
+	}
+}
+
+AUR_au_trade_settlement_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_trade_review NOT = { has_country_flag = AUR_au_trade_settlement_done }
+		}
+		set_country_flag = AUR_au_trade_settlement_done
+		if = {
+			limit = {
+				has_country_flag = AUR_au_trade_policy_a_done
+			}
+			remove_ideas = AUR_au_trade_policy_a_spirit
+			add_ideas = AUR_au_trade_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_trade_policy_b_done
+			}
+			remove_ideas = AUR_au_trade_policy_b_spirit
+			add_ideas = AUR_au_trade_policy_b_spirit_settled
+		}
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_airspace_register_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR NOT = { has_country_flag = AUR_au_airspace_register_done }
+		}
+		set_country_flag = AUR_au_airspace_register_done
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_airspace_policy_a_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_airspace_register NOT = { has_country_flag = AUR_au_airspace_policy_b_done } NOT = { has_country_flag = AUR_au_airspace_policy_a_done }
+		}
+		set_country_flag = AUR_au_airspace_policy_a_done
+		add_ideas = AUR_au_airspace_policy_a_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_airspace_policy_b_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_airspace_register NOT = { has_country_flag = AUR_au_airspace_policy_a_done } NOT = { has_country_flag = AUR_au_airspace_policy_b_done }
+		}
+		set_country_flag = AUR_au_airspace_policy_b_done
+		add_ideas = AUR_au_airspace_policy_b_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_airspace_operations_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_airspace_policy_a has_completed_focus = AUR_au_airspace_policy_b } NOT = { has_country_flag = AUR_au_airspace_operations_done }
+		}
+		set_country_flag = AUR_au_airspace_operations_done
+	}
+}
+
+AUR_au_airspace_review_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_airspace_operations has_country_flag = AUR_au_airspace_service_completed NOT = { has_country_flag = AUR_au_airspace_review_done }
+		}
+		set_country_flag = AUR_au_airspace_review_done
+	}
+}
+
+AUR_au_airspace_settlement_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_airspace_review NOT = { has_country_flag = AUR_au_airspace_settlement_done }
+		}
+		set_country_flag = AUR_au_airspace_settlement_done
+		if = {
+			limit = {
+				has_country_flag = AUR_au_airspace_policy_a_done
+			}
+			remove_ideas = AUR_au_airspace_policy_a_spirit
+			add_ideas = AUR_au_airspace_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_airspace_policy_b_done
+			}
+			remove_ideas = AUR_au_airspace_policy_b_spirit
+			add_ideas = AUR_au_airspace_policy_b_spirit_settled
+		}
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_leasath_war_register_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_services_settlement has_completed_focus = AUR_au_trade_settlement has_completed_focus = AUR_au_airspace_settlement } date > 2009.12.31 NOT = { has_country_flag = AUR_au_leasath_war_register_done }
+		}
+		set_country_flag = AUR_au_leasath_war_register_done
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_leasath_war_policy_a_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_leasath_war_register NOT = { has_country_flag = AUR_au_leasath_war_policy_b_done } NOT = { has_country_flag = AUR_au_leasath_war_policy_a_done }
+		}
+		set_country_flag = AUR_au_leasath_war_policy_a_done
+		add_ideas = AUR_au_leasath_war_policy_a_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_leasath_war_policy_b_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_leasath_war_register NOT = { has_country_flag = AUR_au_leasath_war_policy_a_done } NOT = { has_country_flag = AUR_au_leasath_war_policy_b_done }
+		}
+		set_country_flag = AUR_au_leasath_war_policy_b_done
+		add_ideas = AUR_au_leasath_war_policy_b_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_leasath_war_operations_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_leasath_war_policy_a has_completed_focus = AUR_au_leasath_war_policy_b } NOT = { has_country_flag = AUR_au_leasath_war_operations_done }
+		}
+		set_country_flag = AUR_au_leasath_war_operations_done
+	}
+}
+
+AUR_au_leasath_war_review_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_leasath_war_operations has_country_flag = AUR_au_leasath_war_service_completed NOT = { has_country_flag = AUR_au_leasath_war_review_done }
+		}
+		set_country_flag = AUR_au_leasath_war_review_done
+	}
+}
+
+AUR_au_leasath_war_settlement_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_leasath_war_review NOT = { has_country_flag = AUR_au_leasath_war_settlement_done }
+		}
+		set_country_flag = AUR_au_leasath_war_settlement_done
+		if = {
+			limit = {
+				has_country_flag = AUR_au_leasath_war_policy_a_done
+			}
+			remove_ideas = AUR_au_leasath_war_policy_a_spirit
+			add_ideas = AUR_au_leasath_war_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_leasath_war_policy_b_done
+			}
+			remove_ideas = AUR_au_leasath_war_policy_b_spirit
+			add_ideas = AUR_au_leasath_war_policy_b_spirit_settled
+		}
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_finance_register_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_services_settlement has_completed_focus = AUR_au_trade_settlement has_completed_focus = AUR_au_airspace_settlement } date > 2005.12.31 NOT = { has_country_flag = AUR_au_finance_register_done }
+		}
+		set_country_flag = AUR_au_finance_register_done
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_finance_policy_a_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_finance_register NOT = { has_country_flag = AUR_au_finance_policy_b_done } NOT = { has_country_flag = AUR_au_finance_policy_a_done }
+		}
+		set_country_flag = AUR_au_finance_policy_a_done
+		add_ideas = AUR_au_finance_policy_a_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_finance_policy_b_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_finance_register NOT = { has_country_flag = AUR_au_finance_policy_a_done } NOT = { has_country_flag = AUR_au_finance_policy_b_done }
+		}
+		set_country_flag = AUR_au_finance_policy_b_done
+		add_ideas = AUR_au_finance_policy_b_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_finance_operations_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_finance_policy_a has_completed_focus = AUR_au_finance_policy_b } NOT = { has_country_flag = AUR_au_finance_operations_done }
+		}
+		set_country_flag = AUR_au_finance_operations_done
+	}
+}
+
+AUR_au_finance_review_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_finance_operations has_country_flag = AUR_au_finance_service_completed NOT = { has_country_flag = AUR_au_finance_review_done }
+		}
+		set_country_flag = AUR_au_finance_review_done
+	}
+}
+
+AUR_au_finance_settlement_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_finance_review NOT = { has_country_flag = AUR_au_finance_settlement_done }
+		}
+		set_country_flag = AUR_au_finance_settlement_done
+		if = {
+			limit = {
+				has_country_flag = AUR_au_finance_policy_a_done
+			}
+			remove_ideas = AUR_au_finance_policy_a_spirit
+			add_ideas = AUR_au_finance_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_finance_policy_b_done
+			}
+			remove_ideas = AUR_au_finance_policy_b_spirit
+			add_ideas = AUR_au_finance_policy_b_spirit_settled
+		}
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_exports_register_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_services_settlement has_completed_focus = AUR_au_trade_settlement has_completed_focus = AUR_au_airspace_settlement } date > 2005.12.31 NOT = { has_country_flag = AUR_au_exports_register_done }
+		}
+		set_country_flag = AUR_au_exports_register_done
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_exports_policy_a_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_exports_register NOT = { has_country_flag = AUR_au_exports_policy_b_done } NOT = { has_country_flag = AUR_au_exports_policy_a_done }
+		}
+		set_country_flag = AUR_au_exports_policy_a_done
+		add_ideas = AUR_au_exports_policy_a_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_exports_policy_b_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_exports_register NOT = { has_country_flag = AUR_au_exports_policy_a_done } NOT = { has_country_flag = AUR_au_exports_policy_b_done }
+		}
+		set_country_flag = AUR_au_exports_policy_b_done
+		add_ideas = AUR_au_exports_policy_b_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_exports_operations_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_exports_policy_a has_completed_focus = AUR_au_exports_policy_b } NOT = { has_country_flag = AUR_au_exports_operations_done }
+		}
+		set_country_flag = AUR_au_exports_operations_done
+	}
+}
+
+AUR_au_exports_review_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_exports_operations has_country_flag = AUR_au_exports_service_completed NOT = { has_country_flag = AUR_au_exports_review_done }
+		}
+		set_country_flag = AUR_au_exports_review_done
+	}
+}
+
+AUR_au_exports_settlement_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_exports_review NOT = { has_country_flag = AUR_au_exports_settlement_done }
+		}
+		set_country_flag = AUR_au_exports_settlement_done
+		if = {
+			limit = {
+				has_country_flag = AUR_au_exports_policy_a_done
+			}
+			remove_ideas = AUR_au_exports_policy_a_spirit
+			add_ideas = AUR_au_exports_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_exports_policy_b_done
+			}
+			remove_ideas = AUR_au_exports_policy_b_spirit
+			add_ideas = AUR_au_exports_policy_b_spirit_settled
+		}
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_relations_register_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_leasath_war_settlement has_completed_focus = AUR_au_finance_settlement has_completed_focus = AUR_au_exports_settlement } date > 2013.12.31 NOT = { has_country_flag = AUR_au_relations_register_done }
+		}
+		set_country_flag = AUR_au_relations_register_done
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_relations_policy_a_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_relations_register NOT = { has_country_flag = AUR_au_relations_policy_b_done } NOT = { has_country_flag = AUR_au_relations_policy_a_done }
+		}
+		set_country_flag = AUR_au_relations_policy_a_done
+		add_ideas = AUR_au_relations_policy_a_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_relations_policy_b_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_relations_register NOT = { has_country_flag = AUR_au_relations_policy_a_done } NOT = { has_country_flag = AUR_au_relations_policy_b_done }
+		}
+		set_country_flag = AUR_au_relations_policy_b_done
+		add_ideas = AUR_au_relations_policy_b_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_relations_operations_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_relations_policy_a has_completed_focus = AUR_au_relations_policy_b } NOT = { has_country_flag = AUR_au_relations_operations_done }
+		}
+		set_country_flag = AUR_au_relations_operations_done
+	}
+}
+
+AUR_au_relations_review_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_relations_operations has_country_flag = AUR_au_relations_service_completed NOT = { has_country_flag = AUR_au_relations_review_done }
+		}
+		set_country_flag = AUR_au_relations_review_done
+	}
+}
+
+AUR_au_relations_settlement_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_relations_review NOT = { has_country_flag = AUR_au_relations_settlement_done }
+		}
+		set_country_flag = AUR_au_relations_settlement_done
+		if = {
+			limit = {
+				has_country_flag = AUR_au_relations_policy_a_done
+			}
+			remove_ideas = AUR_au_relations_policy_a_spirit
+			add_ideas = AUR_au_relations_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_relations_policy_b_done
+			}
+			remove_ideas = AUR_au_relations_policy_b_spirit
+			add_ideas = AUR_au_relations_policy_b_spirit_settled
+		}
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_readiness_register_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_leasath_war_settlement has_completed_focus = AUR_au_finance_settlement has_completed_focus = AUR_au_exports_settlement } date > 2013.12.31 NOT = { has_country_flag = AUR_au_readiness_register_done }
+		}
+		set_country_flag = AUR_au_readiness_register_done
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_readiness_policy_a_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_readiness_register NOT = { has_country_flag = AUR_au_readiness_policy_b_done } NOT = { has_country_flag = AUR_au_readiness_policy_a_done }
+		}
+		set_country_flag = AUR_au_readiness_policy_a_done
+		add_ideas = AUR_au_readiness_policy_a_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_readiness_policy_b_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_readiness_register NOT = { has_country_flag = AUR_au_readiness_policy_a_done } NOT = { has_country_flag = AUR_au_readiness_policy_b_done }
+		}
+		set_country_flag = AUR_au_readiness_policy_b_done
+		add_ideas = AUR_au_readiness_policy_b_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_readiness_operations_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_readiness_policy_a has_completed_focus = AUR_au_readiness_policy_b } NOT = { has_country_flag = AUR_au_readiness_operations_done }
+		}
+		set_country_flag = AUR_au_readiness_operations_done
+	}
+}
+
+AUR_au_readiness_review_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_readiness_operations has_country_flag = AUR_au_readiness_service_completed NOT = { has_country_flag = AUR_au_readiness_review_done }
+		}
+		set_country_flag = AUR_au_readiness_review_done
+	}
+}
+
+AUR_au_readiness_settlement_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_readiness_review NOT = { has_country_flag = AUR_au_readiness_settlement_done }
+		}
+		set_country_flag = AUR_au_readiness_settlement_done
+		if = {
+			limit = {
+				has_country_flag = AUR_au_readiness_policy_a_done
+			}
+			remove_ideas = AUR_au_readiness_policy_a_spirit
+			add_ideas = AUR_au_readiness_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_readiness_policy_b_done
+			}
+			remove_ideas = AUR_au_readiness_policy_b_spirit
+			add_ideas = AUR_au_readiness_policy_b_spirit_settled
+		}
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_account_register_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_leasath_war_settlement has_completed_focus = AUR_au_finance_settlement has_completed_focus = AUR_au_exports_settlement } date > 2013.12.31 NOT = { has_country_flag = AUR_au_account_register_done }
+		}
+		set_country_flag = AUR_au_account_register_done
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_account_policy_a_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_account_register NOT = { has_country_flag = AUR_au_account_policy_b_done } NOT = { has_country_flag = AUR_au_account_policy_a_done }
+		}
+		set_country_flag = AUR_au_account_policy_a_done
+		add_ideas = AUR_au_account_policy_a_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_account_policy_b_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_account_register NOT = { has_country_flag = AUR_au_account_policy_a_done } NOT = { has_country_flag = AUR_au_account_policy_b_done }
+		}
+		set_country_flag = AUR_au_account_policy_b_done
+		add_ideas = AUR_au_account_policy_b_spirit
+		ac_aur_narrative_tick = yes
+	}
+}
+
+AUR_au_account_operations_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR OR = { has_completed_focus = AUR_au_account_policy_a has_completed_focus = AUR_au_account_policy_b } NOT = { has_country_flag = AUR_au_account_operations_done }
+		}
+		set_country_flag = AUR_au_account_operations_done
+	}
+}
+
+AUR_au_account_review_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_account_operations has_country_flag = AUR_au_account_service_completed NOT = { has_country_flag = AUR_au_account_review_done }
+		}
+		set_country_flag = AUR_au_account_review_done
+	}
+}
+
+AUR_au_account_settlement_apply = {
+	if = {
+		limit = {
+			ac_aur_active = yes tag = AUR original_tag = AUR has_completed_focus = AUR_au_account_review NOT = { has_country_flag = AUR_au_account_settlement_done }
+		}
+		set_country_flag = AUR_au_account_settlement_done
+		if = {
+			limit = {
+				has_country_flag = AUR_au_account_policy_a_done
+			}
+			remove_ideas = AUR_au_account_policy_a_spirit
+			add_ideas = AUR_au_account_policy_a_spirit_settled
+		}
+		if = {
+			limit = {
+				has_country_flag = AUR_au_account_policy_b_done
+			}
+			remove_ideas = AUR_au_account_policy_b_spirit
+			add_ideas = AUR_au_account_policy_b_spirit_settled
+		}
+		ac_aur_narrative_tick = yes
+	}
+}
+
+ac_aur_message_10_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_10_answerable = yes
+		}
+		set_country_flag = ac_aur_message_10_answered
+		clr_country_flag = ac_aur_message_10_pending
+		clr_country_flag = ac_aur_message_10_window
+		set_country_flag = AUR_au_opening_public
+		add_timed_idea = { idea = AUR_au_opening_public_spirit days = 90 }
+	}
+}
+
+ac_aur_message_10_reply_1 = {
+	if = {
+		limit = {
+			ac_aur_message_10_answerable = yes
+		}
+		set_country_flag = ac_aur_message_10_answered
+		clr_country_flag = ac_aur_message_10_pending
+		clr_country_flag = ac_aur_message_10_window
+		set_country_flag = AUR_au_opening_ministerial
+		add_timed_idea = { idea = AUR_au_opening_ministerial_spirit days = 90 }
+	}
+}
+
+ac_aur_message_20_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_20_answerable = yes
+		}
+		set_country_flag = ac_aur_message_20_answered
+		clr_country_flag = ac_aur_message_20_pending
+		clr_country_flag = ac_aur_message_20_window
+		set_country_flag = AUR_au_services_reply_public
+		add_timed_idea = { idea = AUR_au_services_reply_public_spirit days = 90 }
+	}
+}
+
+ac_aur_message_20_reply_1 = {
+	if = {
+		limit = {
+			ac_aur_message_20_answerable = yes
+		}
+		set_country_flag = ac_aur_message_20_answered
+		clr_country_flag = ac_aur_message_20_pending
+		clr_country_flag = ac_aur_message_20_window
+		set_country_flag = AUR_au_services_reply_protected
+		add_timed_idea = { idea = AUR_au_services_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_aur_message_50_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_50_answerable = yes
+		}
+		set_country_flag = ac_aur_message_50_answered
+		clr_country_flag = ac_aur_message_50_pending
+		clr_country_flag = ac_aur_message_50_window
+		set_country_flag = AUR_au_services_assessment_recorded
+	}
+}
+
+ac_aur_message_21_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_21_answerable = yes
+		}
+		set_country_flag = ac_aur_message_21_answered
+		clr_country_flag = ac_aur_message_21_pending
+		clr_country_flag = ac_aur_message_21_window
+		set_country_flag = AUR_au_trade_reply_public
+		add_timed_idea = { idea = AUR_au_trade_reply_public_spirit days = 90 }
+	}
+}
+
+ac_aur_message_21_reply_1 = {
+	if = {
+		limit = {
+			ac_aur_message_21_answerable = yes
+		}
+		set_country_flag = ac_aur_message_21_answered
+		clr_country_flag = ac_aur_message_21_pending
+		clr_country_flag = ac_aur_message_21_window
+		set_country_flag = AUR_au_trade_reply_protected
+		add_timed_idea = { idea = AUR_au_trade_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_aur_message_51_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_51_answerable = yes
+		}
+		set_country_flag = ac_aur_message_51_answered
+		clr_country_flag = ac_aur_message_51_pending
+		clr_country_flag = ac_aur_message_51_window
+		set_country_flag = AUR_au_trade_assessment_recorded
+	}
+}
+
+ac_aur_message_22_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_22_answerable = yes
+		}
+		set_country_flag = ac_aur_message_22_answered
+		clr_country_flag = ac_aur_message_22_pending
+		clr_country_flag = ac_aur_message_22_window
+		set_country_flag = AUR_au_airspace_reply_public
+		add_timed_idea = { idea = AUR_au_airspace_reply_public_spirit days = 90 }
+	}
+}
+
+ac_aur_message_22_reply_1 = {
+	if = {
+		limit = {
+			ac_aur_message_22_answerable = yes
+		}
+		set_country_flag = ac_aur_message_22_answered
+		clr_country_flag = ac_aur_message_22_pending
+		clr_country_flag = ac_aur_message_22_window
+		set_country_flag = AUR_au_airspace_reply_protected
+		add_timed_idea = { idea = AUR_au_airspace_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_aur_message_52_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_52_answerable = yes
+		}
+		set_country_flag = ac_aur_message_52_answered
+		clr_country_flag = ac_aur_message_52_pending
+		clr_country_flag = ac_aur_message_52_window
+		set_country_flag = AUR_au_airspace_assessment_recorded
+	}
+}
+
+ac_aur_message_23_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_23_answerable = yes
+		}
+		set_country_flag = ac_aur_message_23_answered
+		clr_country_flag = ac_aur_message_23_pending
+		clr_country_flag = ac_aur_message_23_window
+		set_country_flag = AUR_au_leasath_war_reply_public
+		add_timed_idea = { idea = AUR_au_leasath_war_reply_public_spirit days = 90 }
+	}
+}
+
+ac_aur_message_23_reply_1 = {
+	if = {
+		limit = {
+			ac_aur_message_23_answerable = yes
+		}
+		set_country_flag = ac_aur_message_23_answered
+		clr_country_flag = ac_aur_message_23_pending
+		clr_country_flag = ac_aur_message_23_window
+		set_country_flag = AUR_au_leasath_war_reply_protected
+		add_timed_idea = { idea = AUR_au_leasath_war_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_aur_message_53_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_53_answerable = yes
+		}
+		set_country_flag = ac_aur_message_53_answered
+		clr_country_flag = ac_aur_message_53_pending
+		clr_country_flag = ac_aur_message_53_window
+		set_country_flag = AUR_au_leasath_war_assessment_recorded
+	}
+}
+
+ac_aur_message_24_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_24_answerable = yes
+		}
+		set_country_flag = ac_aur_message_24_answered
+		clr_country_flag = ac_aur_message_24_pending
+		clr_country_flag = ac_aur_message_24_window
+		set_country_flag = AUR_au_finance_reply_public
+		add_timed_idea = { idea = AUR_au_finance_reply_public_spirit days = 90 }
+	}
+}
+
+ac_aur_message_24_reply_1 = {
+	if = {
+		limit = {
+			ac_aur_message_24_answerable = yes
+		}
+		set_country_flag = ac_aur_message_24_answered
+		clr_country_flag = ac_aur_message_24_pending
+		clr_country_flag = ac_aur_message_24_window
+		set_country_flag = AUR_au_finance_reply_protected
+		add_timed_idea = { idea = AUR_au_finance_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_aur_message_54_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_54_answerable = yes
+		}
+		set_country_flag = ac_aur_message_54_answered
+		clr_country_flag = ac_aur_message_54_pending
+		clr_country_flag = ac_aur_message_54_window
+		set_country_flag = AUR_au_finance_assessment_recorded
+	}
+}
+
+ac_aur_message_25_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_25_answerable = yes
+		}
+		set_country_flag = ac_aur_message_25_answered
+		clr_country_flag = ac_aur_message_25_pending
+		clr_country_flag = ac_aur_message_25_window
+		set_country_flag = AUR_au_exports_reply_public
+		add_timed_idea = { idea = AUR_au_exports_reply_public_spirit days = 90 }
+	}
+}
+
+ac_aur_message_25_reply_1 = {
+	if = {
+		limit = {
+			ac_aur_message_25_answerable = yes
+		}
+		set_country_flag = ac_aur_message_25_answered
+		clr_country_flag = ac_aur_message_25_pending
+		clr_country_flag = ac_aur_message_25_window
+		set_country_flag = AUR_au_exports_reply_protected
+		add_timed_idea = { idea = AUR_au_exports_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_aur_message_55_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_55_answerable = yes
+		}
+		set_country_flag = ac_aur_message_55_answered
+		clr_country_flag = ac_aur_message_55_pending
+		clr_country_flag = ac_aur_message_55_window
+		set_country_flag = AUR_au_exports_assessment_recorded
+	}
+}
+
+ac_aur_message_26_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_26_answerable = yes
+		}
+		set_country_flag = ac_aur_message_26_answered
+		clr_country_flag = ac_aur_message_26_pending
+		clr_country_flag = ac_aur_message_26_window
+		set_country_flag = AUR_au_relations_reply_public
+		add_timed_idea = { idea = AUR_au_relations_reply_public_spirit days = 90 }
+	}
+}
+
+ac_aur_message_26_reply_1 = {
+	if = {
+		limit = {
+			ac_aur_message_26_answerable = yes
+		}
+		set_country_flag = ac_aur_message_26_answered
+		clr_country_flag = ac_aur_message_26_pending
+		clr_country_flag = ac_aur_message_26_window
+		set_country_flag = AUR_au_relations_reply_protected
+		add_timed_idea = { idea = AUR_au_relations_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_aur_message_56_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_56_answerable = yes
+		}
+		set_country_flag = ac_aur_message_56_answered
+		clr_country_flag = ac_aur_message_56_pending
+		clr_country_flag = ac_aur_message_56_window
+		set_country_flag = AUR_au_relations_assessment_recorded
+	}
+}
+
+ac_aur_message_27_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_27_answerable = yes
+		}
+		set_country_flag = ac_aur_message_27_answered
+		clr_country_flag = ac_aur_message_27_pending
+		clr_country_flag = ac_aur_message_27_window
+		set_country_flag = AUR_au_readiness_reply_public
+		add_timed_idea = { idea = AUR_au_readiness_reply_public_spirit days = 90 }
+	}
+}
+
+ac_aur_message_27_reply_1 = {
+	if = {
+		limit = {
+			ac_aur_message_27_answerable = yes
+		}
+		set_country_flag = ac_aur_message_27_answered
+		clr_country_flag = ac_aur_message_27_pending
+		clr_country_flag = ac_aur_message_27_window
+		set_country_flag = AUR_au_readiness_reply_protected
+		add_timed_idea = { idea = AUR_au_readiness_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_aur_message_57_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_57_answerable = yes
+		}
+		set_country_flag = ac_aur_message_57_answered
+		clr_country_flag = ac_aur_message_57_pending
+		clr_country_flag = ac_aur_message_57_window
+		set_country_flag = AUR_au_readiness_assessment_recorded
+	}
+}
+
+ac_aur_message_28_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_28_answerable = yes
+		}
+		set_country_flag = ac_aur_message_28_answered
+		clr_country_flag = ac_aur_message_28_pending
+		clr_country_flag = ac_aur_message_28_window
+		set_country_flag = AUR_au_account_reply_public
+		add_timed_idea = { idea = AUR_au_account_reply_public_spirit days = 90 }
+	}
+}
+
+ac_aur_message_28_reply_1 = {
+	if = {
+		limit = {
+			ac_aur_message_28_answerable = yes
+		}
+		set_country_flag = ac_aur_message_28_answered
+		clr_country_flag = ac_aur_message_28_pending
+		clr_country_flag = ac_aur_message_28_window
+		set_country_flag = AUR_au_account_reply_protected
+		add_timed_idea = { idea = AUR_au_account_reply_protected_spirit days = 90 }
+	}
+}
+
+ac_aur_message_58_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_58_answerable = yes
+		}
+		set_country_flag = ac_aur_message_58_answered
+		clr_country_flag = ac_aur_message_58_pending
+		clr_country_flag = ac_aur_message_58_window
+		set_country_flag = AUR_au_account_assessment_recorded
+	}
+}
+
+ac_aur_message_80_reply_0 = {
+	if = {
+		limit = {
+			ac_aur_message_80_answerable = yes
+		}
+		set_country_flag = ac_aur_message_80_answered
+		clr_country_flag = ac_aur_message_80_pending
+		clr_country_flag = ac_aur_message_80_window
+		set_country_flag = AUR_au_final_public
+		add_timed_idea = { idea = AUR_au_final_public_spirit days = 90 }
+	}
+}
+
+ac_aur_message_80_reply_1 = {
+	if = {
+		limit = {
+			ac_aur_message_80_answerable = yes
+		}
+		set_country_flag = ac_aur_message_80_answered
+		clr_country_flag = ac_aur_message_80_pending
+		clr_country_flag = ac_aur_message_80_window
+		set_country_flag = AUR_au_final_readiness
+		add_timed_idea = { idea = AUR_au_final_readiness_spirit days = 90 }
+	}
+}
+
+ac_aur_narrative_tick = {
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes OR = { has_country_flag = AUR_au_services_register_done has_country_flag = AUR_au_trade_register_done has_country_flag = AUR_au_airspace_register_done has_country_flag = AUR_au_leasath_war_register_done has_country_flag = AUR_au_finance_register_done has_country_flag = AUR_au_exports_register_done has_country_flag = AUR_au_relations_register_done has_country_flag = AUR_au_readiness_register_done has_country_flag = AUR_au_account_register_done } NOT = { has_country_flag = ac_aur_message_10_sent }
+		}
+		set_country_flag = ac_aur_message_10_sent
+		set_country_flag = ac_aur_message_10_pending
+		set_country_flag = { flag = ac_aur_message_10_window days = 60 }
+		country_event = { id = ac_aur.10 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes OR = { has_country_flag = AUR_au_services_policy_a_done has_country_flag = AUR_au_services_policy_b_done } NOT = { has_country_flag = ac_aur_message_20_sent }
+		}
+		set_country_flag = ac_aur_message_20_sent
+		set_country_flag = ac_aur_message_20_pending
+		set_country_flag = { flag = ac_aur_message_20_window days = 60 }
+		country_event = { id = ac_aur.20 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes has_country_flag = AUR_au_services_settlement_done NOT = { has_country_flag = ac_aur_message_50_sent }
+		}
+		set_country_flag = ac_aur_message_50_sent
+		set_country_flag = ac_aur_message_50_pending
+		set_country_flag = { flag = ac_aur_message_50_window days = 60 }
+		country_event = { id = ac_aur.50 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes OR = { has_country_flag = AUR_au_trade_policy_a_done has_country_flag = AUR_au_trade_policy_b_done } NOT = { has_country_flag = ac_aur_message_21_sent }
+		}
+		set_country_flag = ac_aur_message_21_sent
+		set_country_flag = ac_aur_message_21_pending
+		set_country_flag = { flag = ac_aur_message_21_window days = 60 }
+		country_event = { id = ac_aur.21 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes has_country_flag = AUR_au_trade_settlement_done NOT = { has_country_flag = ac_aur_message_51_sent }
+		}
+		set_country_flag = ac_aur_message_51_sent
+		set_country_flag = ac_aur_message_51_pending
+		set_country_flag = { flag = ac_aur_message_51_window days = 60 }
+		country_event = { id = ac_aur.51 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes OR = { has_country_flag = AUR_au_airspace_policy_a_done has_country_flag = AUR_au_airspace_policy_b_done } NOT = { has_country_flag = ac_aur_message_22_sent }
+		}
+		set_country_flag = ac_aur_message_22_sent
+		set_country_flag = ac_aur_message_22_pending
+		set_country_flag = { flag = ac_aur_message_22_window days = 60 }
+		country_event = { id = ac_aur.22 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes has_country_flag = AUR_au_airspace_settlement_done NOT = { has_country_flag = ac_aur_message_52_sent }
+		}
+		set_country_flag = ac_aur_message_52_sent
+		set_country_flag = ac_aur_message_52_pending
+		set_country_flag = { flag = ac_aur_message_52_window days = 60 }
+		country_event = { id = ac_aur.52 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes OR = { has_country_flag = AUR_au_leasath_war_policy_a_done has_country_flag = AUR_au_leasath_war_policy_b_done } NOT = { has_country_flag = ac_aur_message_23_sent }
+		}
+		set_country_flag = ac_aur_message_23_sent
+		set_country_flag = ac_aur_message_23_pending
+		set_country_flag = { flag = ac_aur_message_23_window days = 60 }
+		country_event = { id = ac_aur.23 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes has_country_flag = AUR_au_leasath_war_settlement_done NOT = { has_country_flag = ac_aur_message_53_sent }
+		}
+		set_country_flag = ac_aur_message_53_sent
+		set_country_flag = ac_aur_message_53_pending
+		set_country_flag = { flag = ac_aur_message_53_window days = 60 }
+		country_event = { id = ac_aur.53 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes OR = { has_country_flag = AUR_au_finance_policy_a_done has_country_flag = AUR_au_finance_policy_b_done } NOT = { has_country_flag = ac_aur_message_24_sent }
+		}
+		set_country_flag = ac_aur_message_24_sent
+		set_country_flag = ac_aur_message_24_pending
+		set_country_flag = { flag = ac_aur_message_24_window days = 60 }
+		country_event = { id = ac_aur.24 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes has_country_flag = AUR_au_finance_settlement_done NOT = { has_country_flag = ac_aur_message_54_sent }
+		}
+		set_country_flag = ac_aur_message_54_sent
+		set_country_flag = ac_aur_message_54_pending
+		set_country_flag = { flag = ac_aur_message_54_window days = 60 }
+		country_event = { id = ac_aur.54 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes OR = { has_country_flag = AUR_au_exports_policy_a_done has_country_flag = AUR_au_exports_policy_b_done } NOT = { has_country_flag = ac_aur_message_25_sent }
+		}
+		set_country_flag = ac_aur_message_25_sent
+		set_country_flag = ac_aur_message_25_pending
+		set_country_flag = { flag = ac_aur_message_25_window days = 60 }
+		country_event = { id = ac_aur.25 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes has_country_flag = AUR_au_exports_settlement_done NOT = { has_country_flag = ac_aur_message_55_sent }
+		}
+		set_country_flag = ac_aur_message_55_sent
+		set_country_flag = ac_aur_message_55_pending
+		set_country_flag = { flag = ac_aur_message_55_window days = 60 }
+		country_event = { id = ac_aur.55 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes OR = { has_country_flag = AUR_au_relations_policy_a_done has_country_flag = AUR_au_relations_policy_b_done } NOT = { has_country_flag = ac_aur_message_26_sent }
+		}
+		set_country_flag = ac_aur_message_26_sent
+		set_country_flag = ac_aur_message_26_pending
+		set_country_flag = { flag = ac_aur_message_26_window days = 60 }
+		country_event = { id = ac_aur.26 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes has_country_flag = AUR_au_relations_settlement_done NOT = { has_country_flag = ac_aur_message_56_sent }
+		}
+		set_country_flag = ac_aur_message_56_sent
+		set_country_flag = ac_aur_message_56_pending
+		set_country_flag = { flag = ac_aur_message_56_window days = 60 }
+		country_event = { id = ac_aur.56 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes OR = { has_country_flag = AUR_au_readiness_policy_a_done has_country_flag = AUR_au_readiness_policy_b_done } NOT = { has_country_flag = ac_aur_message_27_sent }
+		}
+		set_country_flag = ac_aur_message_27_sent
+		set_country_flag = ac_aur_message_27_pending
+		set_country_flag = { flag = ac_aur_message_27_window days = 60 }
+		country_event = { id = ac_aur.27 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes has_country_flag = AUR_au_readiness_settlement_done NOT = { has_country_flag = ac_aur_message_57_sent }
+		}
+		set_country_flag = ac_aur_message_57_sent
+		set_country_flag = ac_aur_message_57_pending
+		set_country_flag = { flag = ac_aur_message_57_window days = 60 }
+		country_event = { id = ac_aur.57 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes OR = { has_country_flag = AUR_au_account_policy_a_done has_country_flag = AUR_au_account_policy_b_done } NOT = { has_country_flag = ac_aur_message_28_sent }
+		}
+		set_country_flag = ac_aur_message_28_sent
+		set_country_flag = ac_aur_message_28_pending
+		set_country_flag = { flag = ac_aur_message_28_window days = 60 }
+		country_event = { id = ac_aur.28 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes has_country_flag = AUR_au_account_settlement_done NOT = { has_country_flag = ac_aur_message_58_sent }
+		}
+		set_country_flag = ac_aur_message_58_sent
+		set_country_flag = ac_aur_message_58_pending
+		set_country_flag = { flag = ac_aur_message_58_window days = 60 }
+		country_event = { id = ac_aur.58 days = 1 }
+	}
+
+	if = {
+		limit = {
+			tag = AUR ac_aur_active = yes has_country_flag = AUR_au_relations_settlement_done has_country_flag = AUR_au_account_settlement_done NOT = { has_country_flag = ac_aur_message_80_sent }
+		}
+		set_country_flag = ac_aur_message_80_sent
+		set_country_flag = ac_aur_message_80_pending
+		set_country_flag = { flag = ac_aur_message_80_window days = 60 }
+		country_event = { id = ac_aur.80 days = 1 }
+	}
+}
+
+ac_aur_interrupt_narrative = {
+	if = {
+		limit = {
+			ac_aur_participant = yes
+		}
+		clr_country_flag = ac_aur_message_10_pending
+		clr_country_flag = ac_aur_message_10_window
+		clr_country_flag = ac_aur_message_20_pending
+		clr_country_flag = ac_aur_message_20_window
+		clr_country_flag = ac_aur_message_50_pending
+		clr_country_flag = ac_aur_message_50_window
+		clr_country_flag = ac_aur_message_21_pending
+		clr_country_flag = ac_aur_message_21_window
+		clr_country_flag = ac_aur_message_51_pending
+		clr_country_flag = ac_aur_message_51_window
+		clr_country_flag = ac_aur_message_22_pending
+		clr_country_flag = ac_aur_message_22_window
+		clr_country_flag = ac_aur_message_52_pending
+		clr_country_flag = ac_aur_message_52_window
+		clr_country_flag = ac_aur_message_23_pending
+		clr_country_flag = ac_aur_message_23_window
+		clr_country_flag = ac_aur_message_53_pending
+		clr_country_flag = ac_aur_message_53_window
+		clr_country_flag = ac_aur_message_24_pending
+		clr_country_flag = ac_aur_message_24_window
+		clr_country_flag = ac_aur_message_54_pending
+		clr_country_flag = ac_aur_message_54_window
+		clr_country_flag = ac_aur_message_25_pending
+		clr_country_flag = ac_aur_message_25_window
+		clr_country_flag = ac_aur_message_55_pending
+		clr_country_flag = ac_aur_message_55_window
+		clr_country_flag = ac_aur_message_26_pending
+		clr_country_flag = ac_aur_message_26_window
+		clr_country_flag = ac_aur_message_56_pending
+		clr_country_flag = ac_aur_message_56_window
+		clr_country_flag = ac_aur_message_27_pending
+		clr_country_flag = ac_aur_message_27_window
+		clr_country_flag = ac_aur_message_57_pending
+		clr_country_flag = ac_aur_message_57_window
+		clr_country_flag = ac_aur_message_28_pending
+		clr_country_flag = ac_aur_message_28_window
+		clr_country_flag = ac_aur_message_58_pending
+		clr_country_flag = ac_aur_message_58_window
+		clr_country_flag = ac_aur_message_80_pending
+		clr_country_flag = ac_aur_message_80_window
+	}
+}
+
+ac_aur_weekly_aur = {
+	if = {
+		limit = {
+			tag = AUR original_tag = AUR
+		}
+		ac_aur_initialize = yes
+		if = {
+			limit = {
+				OR = { ac_aur_active = no has_war = yes }
+			}
+			ac_aur_interrupt_service = yes
+		}
+		if = {
+			limit = {
+				ac_aur_active = yes
+			}
+			ac_aur_refresh_progress = yes
+			AUR_au_services_service_1_finish = yes
+			AUR_au_services_service_2_finish = yes
+			AUR_au_trade_service_1_finish = yes
+			AUR_au_trade_service_2_finish = yes
+			AUR_au_airspace_service_1_finish = yes
+			AUR_au_airspace_service_2_finish = yes
+			AUR_au_leasath_war_service_1_finish = yes
+			AUR_au_leasath_war_service_2_finish = yes
+			AUR_au_finance_service_1_finish = yes
+			AUR_au_finance_service_2_finish = yes
+			AUR_au_exports_service_1_finish = yes
+			AUR_au_exports_service_2_finish = yes
+			AUR_au_relations_service_1_finish = yes
+			AUR_au_relations_service_2_finish = yes
+			AUR_au_readiness_service_1_finish = yes
+			AUR_au_readiness_service_2_finish = yes
+			AUR_au_account_service_1_finish = yes
+			AUR_au_account_service_2_finish = yes
+			ac_aur_narrative_tick = yes
+		}
+	}
+}
+
+ac_aur_interrupt = {
+	ac_aur_interrupt_service = yes
+	ac_aur_interrupt_narrative = yes
+}

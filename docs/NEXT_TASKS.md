@@ -6,9 +6,7 @@ Standing rules: keep the original Project Ulysses look and layouts; **no HOI4 va
 
 Current continuation slice: the former demo handoff now consumes conventional victory, Wacht am Wal, and defeat outcome flags. It exposes provisional reconstruction, demobilization, political-settlement, affected-country administration decisions, and a guarded Ustio handoff that reconnects the inherited branch graph. See [LORE_EVENT_COVERAGE_BACKLOG.md](LORE_EVENT_COVERAGE_BACKLOG.md). Static validation is required; native reachability remains unverified.
 
-1. **Vanilla-visuals audit**
-   - List every sprite on screen that resolves to a vanilla texture: continuous focuses, grand doctrines, 1.15+ buildings, special projects, appended `.gfx` entries, MIO icons.
-   - Replace each with Strangereal art, or with mod placeholders until art exists.
+1. **Vanilla-visuals audit** — static scrub recorded in [VANILLA_VISUAL_SCRUB.md](VANILLA_VISUAL_SCRUB.md). Player-visible fallthroughs found in that pass are rebound to existing mod art or marked placeholders. Leftovers (3D building meshes, unconfirmed 1.17+ subdoctrine sprite names, designer frame counts, interface chrome) are listed there and are not treated as cleared. Native rendering was not run.
 2. **Silence vanilla content**
    - Empty-override the Earth-country focus, event, decision, scripted-effect and MIO files that error against the Strangereal setup (~3,300 log lines).
    - Keep generic files that 1.19 systems rely on.

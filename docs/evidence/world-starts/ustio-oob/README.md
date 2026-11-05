@@ -12,10 +12,12 @@ and retained payload, alongside its 1,120 selected startup cases. Its successful
 log is `compatibility.txt`. These are source checks, not native loading or unit
 delivery observations.
 
-A separate inherited reference, `UST_moblise_militia_focus_oob`, still has no
-authored file in the working source or preserved archive. Its civil-war parent
-is explicitly unavailable. Shared descendants can import through their parent,
-so absence of a direct import is not treated as proof that the reference is
-unreachable. This later branch needs its own reviewed, costed content contract;
-no roster or free units are invented to silence that gap. It is outside the 1991
-starting-roster acceptance and remains visible for Ustio branch-cohesion work.
+`UST_moblise_militia_focus_oob` was absent from the working source and the
+preserved archive when this delimiter repair was recorded. Its civil-war parent
+is explicitly unavailable (`available = { always = no }` on `UST_civil_war`);
+the civil-war event force-completes that parent. Shared descendants can import
+through their parent, so absence of a direct import is not proof that the
+reference is unreachable. The later branch now has its own provisional roster,
+labelled in [CANON_LEDGER.md](../../../CANON_LEDGER.md). That roster is outside
+the 1991 starting-roster acceptance: country history still does not load it, and
+this delimiter repair did not invent those units.

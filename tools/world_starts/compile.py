@@ -131,7 +131,8 @@ def country_output(tag, row, profile, engine=None):
     prefix += '# END ACTIVE WORLD UNLOCKS\n\n'
     body = f'set_country_flag = {tag}_ws_foundation\nset_convoys = {profile["convoys"]}\nstarting_train_buffer = 1\nset_fuel_ratio = 1.0\n'
     if not any(k == 'set_grand_doctrine' for k, _, _ in parse(source)):
-        body += 'set_grand_doctrine = new_superior_firepower\nset_grand_doctrine = new_fleet_in_being\nset_grand_doctrine = new_operational_integrity\n'
+        # 1.17+ grand-doctrine ids. new_* are pre-1.17 technology ids and do not resolve.
+        body += 'set_grand_doctrine = superior_firepower\nset_grand_doctrine = fleet_in_being\nset_grand_doctrine = operational_integrity\n'
     armour_roles = sorted(set(profile['production']) & set(ARMOR))
     if armour_roles:
         modern = ''.join(variant(tag, ARMOR[role]) for role in armour_roles)
@@ -267,7 +268,10 @@ def outputs(reference=None):
             role = plan['role']
             if profile['mode'] != 'retained_start':
                 names += block(tag + '_WS_' + role.upper(), f'name = "{role.title()} Formation"\nfor_countries = {{ {tag} }}\ncan_use = {{ always = yes }}\ndivision_types = {{ "{LAND[role]}" }}\nfallback_name = "%d {role.title()} Formation"')
-            regiments = '\n'.join(f'{kind} = {count}' for kind, count in plan['regiments'].items())
+            # Retained OOBs can still name light_armor. The AI target uses the mod's
+            # modern service armour so the designer does not request that WWII battalion.
+            ai_battalion = {'light_armor': 'modern_armor'}
+            regiments = '\n'.join(f'{ai_battalion.get(kind, kind)} = {count}' for kind, count in plan['regiments'].items())
             support = '\n'.join(f'{kind} = {count}' for kind, count in plan['support'].items())
             target = block(tag + '_ws_' + role + '_target', 'upgrade_prio = { factor = 1 }\n' + block('target_template', block('regiments', regiments) + (block('support', support) if support else '')))
             templates += block(tag + '_ws_' + role, f'available_for = {{ {tag} }}\nrole = {tag}_ws_{role}\nupgrade_prio = {{ factor = 5 }}\n' + target)

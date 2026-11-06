@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import sys
 
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246'
 PROTECTED=(
@@ -55,13 +56,47 @@ REVIEWED_STARTING_GOVERNMENT_UPDATE=dict(
     tested_source='51622f4d72c6e1c497156ce1dd7fed881723e3f0',
 )
 
+# Grand-doctrine ids in the FATO history moved off pre-1.17 new_* technology
+# names. The captured owner hash stays the original; only this byte transition
+# is admitted. Provisional gameplay, not a lore edit.
+REVIEWED_FAT_DOCTRINE_UPDATE=dict(
+    path='history/countries/FAT - FATO.txt',
+    original_sha256='bf7b3af6547329c4d6c64e27279b24f4699eccc13f0f64cea5659c4006ad127f',
+    reviewed_sha256='91cfdccce93f611c5d8a546977db03b7179dccaa0fd5d553ea4b937727b80a88',
+)
+
+# PR #71 changes only four Belkan outcome hooks. Retain the captured version,
+# pin the reviewed file separately, and require the independent ordered-event
+# restoration proof rather than approving arbitrary event-file recaptures.
+REVIEWED_BELKAN_OUTCOME_UPDATE=dict(
+    path='events/Belka.txt',
+    original_sha256='b41096b5b6a7733d1b69d1fb92eea5d772033110795a43fabef9c1d4e2321ee5',
+    reviewed_sha256='911f06d49e0e32ca6c116c5aaa7e3f43edff84e9d8bb381607cbbdc04d213cef',
+    reviewed_commit='47328d73450a262b28e066b72b6ea167fbcfd4bf',
+    tested_source='ad004bb3dc34a9a90392dae0582dd5a9d4c5620e',
+)
+
+
+def validate_reviewed_belkan_outcomes(data):
+    for directory in (ROOT/'tools',ROOT/'tools/usea_expansion'):
+        if str(directory)not in sys.path:sys.path.append(str(directory))
+    from release_foundations.event_contract import validate_file
+    original=json.loads((ROOT/'tools/release_foundations/event_inputs.json').read_text())['files']['events/Belka.txt']
+    validate_file(original,data.decode('utf-8-sig'),'events/Belka.txt')
+
+
 def validate_protected(path,expected,data):
     actual=digest(data)
     if actual==expected:return 'original'
+    update=REVIEWED_BELKAN_OUTCOME_UPDATE
+    if path==update['path'] and expected==update['original_sha256'] and actual==update['reviewed_sha256']:
+        validate_reviewed_belkan_outcomes(data)
+        return 'reviewed-belkan-outcome-owner'
     for disposition,update in (
             ('reviewed-release-owner',REVIEWED_RELEASE_UPDATE),
             ('reviewed-fat-character-owner',REVIEWED_FAT_CHARACTER_UPDATE),
-            ('reviewed-starting-government-owner',REVIEWED_STARTING_GOVERNMENT_UPDATE)):
+            ('reviewed-starting-government-owner',REVIEWED_STARTING_GOVERNMENT_UPDATE),
+            ('reviewed-fat-doctrine-ids',REVIEWED_FAT_DOCTRINE_UPDATE)):
         if (path==update['path'] and expected==update['original_sha256']
                 and actual==update['reviewed_sha256']):return disposition
     raise ValueError('Inherited owner changed: '+path)

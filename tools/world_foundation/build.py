@@ -115,7 +115,8 @@ def country_output(tag, row, profile):
               "gw_artillery", "basic_train", "motorised_infantry", "basic_machine_tools", "construction1",
               "electronic_mechanical_engineering", "fuel_silos", "fuel_refining"]
     text += block("set_technology", "\n".join(key + " = 1" for key in common))
-    text += "set_grand_doctrine = new_superior_firepower\nset_grand_doctrine = new_fleet_in_being\nset_grand_doctrine = new_operational_integrity\n"
+    # 1.17+ grand-doctrine ids. new_* are pre-1.17 technology ids and do not resolve.
+    text += "set_grand_doctrine = superior_firepower\nset_grand_doctrine = fleet_in_being\nset_grand_doctrine = operational_integrity\n"
     bba = block("set_technology", "aa_lmg = 1\nearly_bombs = 1\naircraft_construction = 1\nengines_1 = 1\nengines_2 = 1\niw_small_airframe = 1\nbasic_small_airframe = 1")
     bba += variant(tag + " Service Fighter", "small_plane_airframe_1", {"fixed_main_weapon_slot": "light_mg_4x", "engine_type_slot": "engine_2_1x"})
     if profile["cas"]:

@@ -16,6 +16,10 @@ replace_path="history/states"
 replace_path="common/countries"
 replace_path="common/bookmarks"
 replace_path="common/ai_strategy"
+# Block vanilla division templates and WWII equipment designers. Grand doctrines
+# stay on the vanilla 1.17+ common/doctrines files; this mod does not ship that folder.
+replace_path="common/ai_templates"
+replace_path="common/ai_equipment"
 replace_path="common/characters"
 #replace_path="common/country_tags"
 replace_path="gfx/loadingscreens"

@@ -2,6 +2,10 @@
 
 This is a static control-flow trace from the preserved archive. It does not prove that the branch is reachable in-game.
 
+## Current contract
+
+The archive calls below are historical. Live Belkan outcome paths no longer schedule `world_event.2`. `belka_dlp_won.9`, `belka_wacht_am_wal.8`, and `belka_dlp_lost.7` call `ac_dispatch_belkan_war_outcome`, which fires `ac_continuation.1` only when `belka_won_belkan_war`, `belka_won_belkan_war_wacht_am_wal`, or `belka_lost_belkan_war` is already set. `belka_dlp_lost.7` sets the defeat flag only after `ac_postwar_wait_for_defeat_tree`. That glue is provisional gameplay. Native HOI4 reachability is untested.
+
 ## Established flow
 
 - `common/national_focus/BLK_war_won.txt` starts the Belkan victory branch with `BLK_war_won`, whose completion fires `belka_dlp_won.1`.
@@ -18,3 +22,9 @@ This is a static control-flow trace from the preserved archive. It does not prov
 ## Explicit gaps
 
 The archive does not establish the postwar countries, borders, diplomacy, or later-war content that should consume `ac_continuation_active`. Implementing those would require design direction rather than a mechanical repair. The next safe slice is to map existing victory flags and postwar focuses into a documented continuation contract, then add only transitions supported by existing content.
+
+CI source protection: `tools/air_program/reviewed_outcome_updates.json` records the additive outcome dispatcher against current main, separately from the earlier shared campaign-commit receipt. Aviation and naval checks validate the chained digest, every existing effect AST, and the sole approved dispatcher; original captured manifests remain unchanged. Mutation checks reject existing-effect edits and unregistered additions even when a file digest is refreshed. These are offline checks, with native acceptance still pending.
+
+The release lifecycle compiler also composes the four existing reviewed Belkan outcome hooks from PR #71 without recapturing `event_inputs.json`. Its independent validator removes only their exact approved AST suffixes before the original complete ordered comparison, retaining all settlement scopes, state transfers, option ownership, rewards, and once-only release guards. Missing, moved, duplicate, extra-reward and altered defeat-guard mutations remain rejected. The dormant-release inventory is regenerated from this actual source; its release contracts stay unchanged, with only the changed `Belka.txt` source fingerprint updated.
+
+FATO/South Belka retains its original `engine_contract.json` capture and admits this one reviewed `Belka.txt` version separately. The admission also requires the independent ordered-event proof above; tests show that refreshing a fingerprint cannot approve a changed state transfer or an unreviewed handoff.

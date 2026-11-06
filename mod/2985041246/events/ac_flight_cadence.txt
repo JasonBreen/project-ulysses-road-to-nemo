@@ -1,0 +1,93 @@
+add_namespace = ac_flight_cadence
+
+country_event = {
+	id = ac_flight_cadence.1
+	title = ac_flight_cadence.1.t
+	desc = ac_flight_cadence.1.d
+	picture = GFX_report_event_flag_yuktobania
+	is_triggered_only = yes
+
+	option = {
+		name = ac_flight_cadence.1.a
+	}
+}
+
+country_event = {
+	id = ac_flight_cadence.2
+	title = ac_flight_cadence.2.t
+	desc = ac_flight_cadence.2.d
+	picture = GFX_report_event_flag_yuktobania
+	is_triggered_only = yes
+
+	option = {
+		name = ac_flight_cadence.2.a
+	}
+}
+
+country_event = {
+	id = ac_flight_cadence.3
+	title = ac_flight_cadence.3.t
+	picture = GFX_report_event_flag_yuktobania
+	is_triggered_only = yes
+
+	desc = {
+		text = ac_flight_cadence.3.d_held
+		trigger = {
+			has_idea = ac_flight_cadence
+			has_global_flag = ac_sp_stonehenge_complete
+		}
+	}
+	desc = {
+		text = ac_flight_cadence.3.d_flew
+		trigger = {
+			has_idea = ac_flight_cadence
+			NOT = { has_global_flag = ac_sp_stonehenge_complete }
+		}
+	}
+	desc = {
+		text = ac_flight_cadence.3.d_quiet
+		trigger = {
+			NOT = { has_idea = ac_flight_cadence }
+		}
+	}
+
+	option = {
+		name = ac_flight_cadence.3.a
+		trigger = {
+			has_idea = ac_flight_cadence
+			has_global_flag = ac_sp_stonehenge_complete
+		}
+		add_stability = 0.10
+		add_war_support = 0.05
+		add_political_power = 50
+		add_timed_idea = { idea = ac_flight_sky_held days = 365 }
+		if = {
+			limit = { original_tag = OSE }
+			add_tech_bonus = {
+				name = ac_flight_arkbird_head_start
+				bonus = 0.50
+				uses = 1
+				category = rocketry
+			}
+		}
+	}
+
+	option = {
+		name = ac_flight_cadence.3.b
+		trigger = {
+			has_idea = ac_flight_cadence
+			NOT = { has_global_flag = ac_sp_stonehenge_complete }
+		}
+		add_stability = 0.03
+		add_political_power = 25
+		add_timed_idea = { idea = ac_flight_we_flew days = 180 }
+	}
+
+	option = {
+		name = ac_flight_cadence.3.c
+		trigger = {
+			NOT = { has_idea = ac_flight_cadence }
+		}
+		add_stability = -0.02
+	}
+}

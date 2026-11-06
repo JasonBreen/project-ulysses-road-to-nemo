@@ -58,6 +58,14 @@ Static checks are automated by `tools/Test-UlyssesStatic.ps1` (CI: `.github/work
 - [ ] Exercise Belka victory, Belka defeat, Rhongomyniad, Osea election, and Ustio/Sapin/Gebet branches where reachable.
 - [ ] Save and reload before and after each major branch.
 
+## AI override — static only (2026-11-05)
+
+NEXT_TASKS item 4 is implemented in script. These boxes are native checks. Leaving them open is the acceptance state until an approved HOI4 run. Static validation does not close them.
+
+- [ ] Grand doctrines assign for a 1991 start: `superior_firepower`, `mobile_warfare`, `grand_battleplan`, `fleet_in_being`, `trade_interdiction`, `base_strike`, `operational_integrity`, `strategic_destruction`, `battlefield_support`. The error log does not report `new_*` doctrine technology ids.
+- [ ] The AI builds infantry, mechanized, and motorized templates for a tag that has only the generic fallback, and for Belka, Osea, and Sapin. The session has no `date < 1940` template block and does not demand an `armor` role.
+- [ ] Vanilla WWII generic plane and ship designers do not merge. The AI does not queue great-war fighters or WWII `ship_hull_*` progression from `generic_planes.txt` / `generic_naval.txt`.
+
 ## Long-run behavior (future)
 
 - [ ] Advance to 1992 and 1995 checkpoints with AI on; record deadlocks, runaway wars, supply collapse, and focus stalls.

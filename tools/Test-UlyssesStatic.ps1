@@ -167,6 +167,8 @@ if ($aftermathExitCode -ne 0) {
 & $pythonHost (Join-Path $PSScriptRoot 'Test-UseaActors.py') --mod-root $ModRoot; if ($LASTEXITCODE -ne 0) { Write-Error 'Usea actor contract checks failed.'; exit $LASTEXITCODE }
 & $pythonHost (Join-Path $PSScriptRoot 'Test-StrangerealProjects.py') --mod-root $ModRoot; if ($LASTEXITCODE -ne 0) { Write-Error 'Strangereal special project checks failed.'; exit 1 }
 
+& $pythonHost (Join-Path $PSScriptRoot 'usea_depth\run_checks.py'); if ($LASTEXITCODE -ne 0) { Write-Error 'Usea Depth checks failed.'; exit 1 }
+
 Write-Output 'Usean Continental War: offline transition and content checks'
 & $pythonHost (Join-Path $PSScriptRoot 'Test-ContinentalWar.py') --mod-root $ModRoot
 $continentalExitCode = $LASTEXITCODE

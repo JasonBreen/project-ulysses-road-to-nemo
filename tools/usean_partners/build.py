@@ -383,9 +383,12 @@ def outputs():
     build_core(triggers, effects)
     build_trees(effects)
     from ac_campaigns.imports import preserve
+    from usea_depth.seams import CAMPAIGNS, foreign_import_blocks, reinsert
     for key in list(OUT):
         if key.startswith('common/national_focus/'):
             OUT[key] = preserve(MOD/key, OUT[key])
+            # Other packages' marker blocks (tools/usea_depth/seams.py) sit before the campaign imports.
+            OUT[key] = reinsert(OUT[key], foreign_import_blocks(MOD/key, own=(CAMPAIGNS,)))
     decisions = build_programmes(effects)
     # Country-specific review rules, reciprocity and authored narrative are
     # separate authoring tables to keep each national system reviewable.

@@ -1287,6 +1287,9 @@ country_event = {
 		SBK = {
 			ac_release_observe_country = yes
 		}
+		hidden_effect = {
+			ac_dispatch_belkan_war_outcome = yes
+		}
 	}
 	immediate = {
 		ac_release_snapshot_world = yes
@@ -1607,7 +1610,7 @@ country_event = { ### wacht am wal peace event
 		clr_global_flag = belkan_war_is_happening
 		set_global_flag = belka_won_belkan_war_wacht_am_wal
 		hidden_effect = {
-			country_event = { id = world_event.2 days = 2 }
+			ac_dispatch_belkan_war_outcome = yes
 		}
 	}
 }
@@ -1751,9 +1754,18 @@ country_event = { #return of the king
 		}
 		hidden_effect = {
 			news_event = { id = ac_news_event.20 days = 1 }
-		}
-		hidden_effect = {
-			country_event = { id = world_event.2 days = 2 }
+			# The nuclear peace defers the defeat flag until this inherited
+			# ending. Do not set it on belka_dlp_war.101, or the lost tree is skipped.
+			if = {
+				limit = {
+					has_global_flag = ac_postwar_wait_for_defeat_tree
+					NOT = { has_global_flag = belka_won_belkan_war }
+					NOT = { has_global_flag = belka_won_belkan_war_wacht_am_wal }
+					NOT = { has_global_flag = belka_lost_belkan_war }
+				}
+				set_global_flag = belka_lost_belkan_war
+			}
+			ac_dispatch_belkan_war_outcome = yes
 		}
 	}
 }
@@ -1918,7 +1930,7 @@ country_event = { #event about RHONGOMYNIAD
 	option = {
 		name = belka_dlp_won.9.a
 		hidden_effect = {
-			country_event = { id = world_event.2 days = 2 }
+			ac_dispatch_belkan_war_outcome = yes
 		}
 	}
 }

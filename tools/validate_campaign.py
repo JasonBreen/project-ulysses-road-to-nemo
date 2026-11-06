@@ -248,15 +248,27 @@ def main() -> int:
     world_events = read(mod / "events" / "ac_world_events.txt") if (mod / "events" / "ac_world_events.txt").is_file() else ""
     belka_events = read(mod / "events" / "Belka.txt") if (mod / "events" / "Belka.txt").is_file() else ""
     lost_focus = read(mod / "common" / "national_focus" / "BLK_war_lost.txt") if (mod / "common" / "national_focus" / "BLK_war_lost.txt").is_file() else ""
+    won_focus = read(mod / "common" / "national_focus" / "BLK_war_won.txt") if (mod / "common" / "national_focus" / "BLK_war_won.txt").is_file() else ""
     nuclear_block = extract_block(belka_events, "country_event = {\n\tid = belka_dlp_war.101")
     lost_event_block = extract_block(belka_events, "country_event = { #return of the king")
+    won_event_block = extract_block(belka_events, "country_event = { #event about RHONGOMYNIAD")
+    wacht_event_block = extract_block(belka_events, "country_event = { ### wacht am wal peace event")
     for token, source in (
         ("set_global_flag = ac_postwar_wait_for_defeat_tree", nuclear_block),
-        ("country_event = { id = world_event.2 days = 2 }", lost_event_block),
-        ("clr_global_flag = ac_postwar_wait_for_defeat_tree", world_events),
+        ("set_global_flag = belka_lost_belkan_war", lost_event_block),
+        ("ac_dispatch_belkan_war_outcome = yes", lost_event_block),
+        ("ac_dispatch_belkan_war_outcome = yes", won_event_block),
+        ("ac_dispatch_belkan_war_outcome = yes", wacht_event_block),
+        ("set_global_flag = ac_continuation_active", effects_text),
+        ("clr_global_flag = ac_postwar_wait_for_defeat_tree", effects_text),
+        ("country_event = { id = ac_continuation.1 days = 1 }", effects_text),
     ):
         if token not in source:
-            errors.append(f"inherited defeat-story handoff coverage missing: {token}")
+            errors.append(f"inherited outcome handoff coverage missing: {token}")
+    if "id = world_event.2" in belka_events or "id = world_event.2" in won_focus:
+        errors.append("Belkan outcome script still schedules world_event.2")
+    if "country_event = { id = ac_continuation.1" in world_events:
+        errors.append("world_event.2 still dispatches postwar continuation")
     if "country_event = { id = world_event.2 days = 1 }" in nuclear_block:
         errors.append("nuclear ending still fires world_event.2 before the inherited defeat tree")
     if "country_event = belka_dlp_lost.7" not in lost_focus:

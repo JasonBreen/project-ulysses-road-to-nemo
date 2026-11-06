@@ -1,5 +1,14 @@
 # Implementation roadmap
 
+## AC04 and AC5 campaign expansion
+
+The approved [full-campaign implementation](AC04_AC05_CAMPAIGNS.md) adds 186
+focuses across sixteen countries, funded operations, the occupied San Salvacion
+story, character consequences, the Belkan network and an earned bilateral AC5
+peace route. Its additions are accounted separately from the original overhaul
+budget. Static/offline validation and native acceptance remain distinct; normal
+install synchronization and native testing are paused.
+
 The current user-approved program is [Strangereal overhaul: 1991–2020](STRANGEREAL_OVERHAUL.md),
 with machine-readable budgets and honest package status. The implementation
 records below remain historical evidence; they do not supersede that roadmap
@@ -29,9 +38,9 @@ Native play is still unverified.
 **What is not yet playable / fully validated:**
 - Complete Belkan War (canon start ~March 1995), alternate outcomes, postwar continuity, other nations’ full paths, later conflicts, and anything approaching the 2065 engineering horizon.
 - Native reachability of branch outcomes (victory / Wacht am Wal / defeat), save/load checkpoints, long runs to 1995+, AI behavior, supply, and balance.
-- Some paths still risk hitting the old demo-ending event (`world_event.2`).
+- Belkan conventional victory, Wacht am Wal, and the inherited defeat tree are statically wired to the existing postwar handoff (`ac_dispatch_belkan_war_outcome` → `ac_continuation.1`). `world_event.2` is no longer on those paths. Native reachability is untested. This handoff is provisional gameplay.
 - Vanilla WWII visuals still appear in some doctrine/continuous-focus/building/tech/special-project slots.
-- Next AI task, not started: block/override vanilla AI templates and `default.txt`, and fix doctrine keys. The mod's own templates already use the 1.19 keys (`role`, `available_for`, `upgrade_prio`, `target_template`). `descriptor.mod` replaces `common/ai_strategy` but not `common/ai_templates` or `common/doctrines`, so vanilla templates and doctrines still load. `ai_strategy/default.txt` is still the vanilla WWII copy (armor priorities and `date < 1940.1.1`), and so are `ai_equipment/generic_naval.txt` and `generic_planes.txt`. BLK, OSE, SAP, FAT, EMM, EVA and PLH have no mod AI templates. Grand-doctrine keys are inconsistent (UST and OSE use `superior_firepower`, GEB uses `grand_battleplan`, others use `new_*`) and still need a check against 1.19 `common/doctrines`. `SYC_ws_retained_1` uses `light_armor`. Subdoctrine effects still need retargeting to modern units. See `NEXT_TASKS.md`.
+- AI override (NEXT_TASKS item 4) is statically done and not native-accepted. `descriptor.mod` replaces `common/ai_strategy`, `common/ai_templates`, and `common/ai_equipment`. `common/doctrines` stays vanilla. `default.txt` is a 1991 infantry/mechanized/air/naval weight file with no armor role and no `date < 1940` block. Service templates exist for BLK, OSE, SAP, FAT, EMM, EVA, and PLH, plus a generic fallback. History grand-doctrine ids no longer use the pre-1.17 `new_*` technology names. Native confirm is still required. Subdoctrine effects still need retargeting to modern units. See `NEXT_TASKS.md`.
 - History cleanup is only partial; placeholders and incomplete map regions (e.g. state 171) remain.
 - No packaged release — development build only.
 

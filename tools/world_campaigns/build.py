@@ -114,7 +114,9 @@ def country(tag, chapters):
         unavailable = ' '.join('NOT = { has_country_flag = ' + f + ' }' for f in choices)
         event_id = namespace + '.' + str(index + 1)
         root_id = key + '_open'
-        x, y = (index % 3) * 8 + 2, (index // 3) * 6
+        # Every sector root follows the founding mandate visually as well as
+        # logically; never draw a dependency upward to an earlier canvas row.
+        x, y = (2, 0) if index == 0 else (((index-1) % 3) * 8 + 2, ((index-1) // 3 + 1) * 6)
         root_reward = guard(f'ac_wc_{tag.lower()}_active = yes NOT = {{ has_country_flag = {started} }}',
                             f'set_country_flag = {started}\nset_country_flag = {{ flag = {pending} days = 60 }}\ncountry_event = {{ id = {event_id} days = 1 }}')
         founding = '' if index == 0 else block('prerequisite', '\n'.join(

@@ -266,6 +266,11 @@ class Campaigns(unittest.TestCase):
         self.assertTrue((MOD/'localisation/english/ac_world_campaigns_l_english.yml').read_bytes().startswith(b'\xef\xbb\xbf'))
         for ident in self.base.focuses:
             self.assertIn(ident+':0',text); self.assertIn(ident+'_desc:0',text)
+            node = self.base.focuses[ident]
+            for kind, _, body in node:
+                if kind == 'prerequisite':
+                    for _, _, parent in body:
+                        self.assertGreater(int(fields(node)['y']),int(fields(self.base.focuses[parent])['y']),ident+' has an upward prerequisite connector')
         for tag in COUNTRIES:
             self.assertIn('ac_wc_'+tag.lower()+'_tree_desc:0',text)
 

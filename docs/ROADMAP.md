@@ -28,7 +28,7 @@ or establish native acceptance for its pending packages.
 **What is not yet playable / fully validated:**
 - Complete Belkan War (canon start ~March 1995), alternate outcomes, postwar continuity, other nations’ full paths, later conflicts, and anything approaching the 2065 engineering horizon.
 - Native reachability of branch outcomes (victory / Wacht am Wal / defeat), save/load checkpoints, long runs to 1995+, AI behavior, supply, and balance.
-- Some paths still risk hitting the old demo-ending event (`world_event.2`).
+- Belkan conventional victory, Wacht am Wal, and the inherited defeat tree are statically wired to the existing postwar handoff (`ac_dispatch_belkan_war_outcome` → `ac_continuation.1`). `world_event.2` is no longer on those paths. Native reachability is untested. This handoff is provisional gameplay.
 - Vanilla WWII visuals still appear in some doctrine/continuous-focus/building/tech/special-project slots.
 - AI override (NEXT_TASKS item 4) is statically done and not native-accepted. `descriptor.mod` replaces `common/ai_strategy`, `common/ai_templates`, and `common/ai_equipment`. `common/doctrines` stays vanilla. `default.txt` is a 1991 infantry/mechanized/air/naval weight file with no armor role and no `date < 1940` block. Service templates exist for BLK, OSE, SAP, FAT, EMM, EVA, and PLH, plus a generic fallback. History grand-doctrine ids no longer use the pre-1.17 `new_*` technology names. Native confirm is still required. Subdoctrine effects still need retargeting to modern units. See `NEXT_TASKS.md`.
 - History cleanup is only partial; placeholders and incomplete map regions (e.g. state 171) remain.

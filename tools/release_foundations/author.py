@@ -34,7 +34,7 @@ def capture():
     BASE.write_text(json.dumps(data,indent=2)+'\n',encoding='utf-8',newline='\n')
 
 
-def replace_events(source,transforms):
+def replace_events(source,transforms,*,raw=False):
     spans=[];cursor=0
     for match in re.finditer(r'(?m)^[ \t]*country_event[ \t]*=[ \t]*\{',source):
         if match.start()<cursor:continue
@@ -47,12 +47,49 @@ def replace_events(source,transforms):
         if end is None:raise ValueError('Unclosed inherited event')
         cursor=end;tree=parse(source[match.start():end]);ident=get(tree[0][2],'id').strip('"')
         if ident in transforms:
-            before=tree[0][2];after=transforms[ident](copy.deepcopy(before))
-            spans.append((match.start(),end,render([['country_event','=',after]])))
+            before=source[match.start():end]if raw else tree[0][2]
+            after=transforms[ident](copy.deepcopy(before))
+            text=after if raw else render([['country_event','=',after]])
+            parse(text)
+            spans.append((match.start(),end,text))
     if len(spans)!=len(transforms):raise ValueError('Missing or duplicate event-transform input')
     for begin,end,text in reversed(spans):source=source[:begin]+text.rstrip()+source[end:]
     parse(source)
     return source
+
+
+def reviewed_outcome_handoffs(source):
+    """Compose only PR #71's four reviewed hooks; retain all other source bytes.
+
+    Review source: 47328d73450a262b28e066b72b6ea167fbcfd4bf.
+    event_contract independently restores these exact ordered AST tails before
+    applying the original release-protection comparison. No input is recaptured.
+    """
+    def once(text,before,after):
+        if text.count(before)!=1:raise ValueError('Reviewed Belkan outcome source changed')
+        return text.replace(before,after,1)
+    def treaty(text):
+        tail='\t\tSBK = {\n\t\t\tac_release_observe_country = yes\n\t\t}\n'
+        return once(text,tail,tail+'\t\thidden_effect = {\n\t\t\tac_dispatch_belkan_war_outcome = yes\n\t\t}\n')
+    def dispatch(text):
+        return once(text,'\t\t\tcountry_event = { id = world_event.2 days = 2 }',
+                    '\t\t\tac_dispatch_belkan_war_outcome = yes')
+    def defeat(text):
+        before=('\t\thidden_effect = {\n\t\t\tnews_event = { id = ac_news_event.20 days = 1 }\n\t\t}\n'
+                '\t\thidden_effect = {\n\t\t\tcountry_event = { id = world_event.2 days = 2 }\n\t\t}')
+        after=('\t\thidden_effect = {\n\t\t\tnews_event = { id = ac_news_event.20 days = 1 }\n'
+               '\t\t\t# The nuclear peace defers the defeat flag until this inherited\n'
+               '\t\t\t# ending. Do not set it on belka_dlp_war.101, or the lost tree is skipped.\n'
+               '\t\t\tif = {\n\t\t\t\tlimit = {\n'
+               '\t\t\t\t\thas_global_flag = ac_postwar_wait_for_defeat_tree\n'
+               '\t\t\t\t\tNOT = { has_global_flag = belka_won_belkan_war }\n'
+               '\t\t\t\t\tNOT = { has_global_flag = belka_won_belkan_war_wacht_am_wal }\n'
+               '\t\t\t\t\tNOT = { has_global_flag = belka_lost_belkan_war }\n'
+               '\t\t\t\t}\n\t\t\t\tset_global_flag = belka_lost_belkan_war\n\t\t\t}\n'
+               '\t\t\tac_dispatch_belkan_war_outcome = yes\n\t\t}')
+        return once(text,before,after)
+    return replace_events(source,{'belka_dlp_war.103':treaty,'belka_wacht_am_wal.8':dispatch,
+                                  'belka_dlp_lost.7':defeat,'belka_dlp_won.9':dispatch},raw=True)
 
 
 def add_snapshot(body):
@@ -128,7 +165,7 @@ def event_outputs():
         for node in body:
             if node[0]=='option':node[2].extend(nodes('REC = { ac_release_observe_country = yes }\nSBK = { ac_release_observe_country = yes }'))
         return body
-    out['events/Belka.txt']=replace_events(source['events/Belka.txt'],{ident:treaty for ident in ('belka_dlp_war.101','belka_dlp_war.103')})
+    out['events/Belka.txt']=reviewed_outcome_handoffs(replace_events(source['events/Belka.txt'],{ident:treaty for ident in ('belka_dlp_war.101','belka_dlp_war.103')}))
     return out
 
 

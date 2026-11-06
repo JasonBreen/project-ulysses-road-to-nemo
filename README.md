@@ -119,7 +119,7 @@ The original alpha targeted HOI4 1.13/1.14; on 1.19 it could crash at the menu a
 - **Inherited engine errors:** vanilla Earth-country content still references removed tags and equipment. These errors need investigation and targeted overrides, not blanket assumptions that they are harmless.
 - **AI doctrine and division design:** inherited division templates use obsolete syntax; subdoctrine effects need tuning for the mod's modern units.
 - **Scenario setup and history:** duplicate 1991 bookmarks, invalid ship-name groups, equipment icons, aircraft variants and a duplicate unit ID remain on the task list.
-- **Branch continuity:** some Belkan outcomes still lead to the original demo-ending event (`world_event.2`); a working postwar campaign is not yet established.
+- **Branch continuity:** the Belkan victory, Wacht am Wal, and inherited defeat paths are statically wired to the existing postwar handoff and no longer schedule `world_event.2`. A native postwar campaign is not yet established.
 - **Long-run validation:** the 1995 milestone, later conflicts, save/load checkpoints and the proposed 2065 horizon still require substantive gameplay tests.
 
 [Prioritized tasks](docs/NEXT_TASKS.md) · [Port investigation](docs/PORT_1_19.md) · [Content inventory](docs/CONTENT_INVENTORY.md)

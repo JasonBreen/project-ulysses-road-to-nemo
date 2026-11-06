@@ -1,0 +1,1163 @@
+# Usea Depth minor states A: provisional gameplay; source tools/usea_depth/minors_a (owner: build.py).
+focus_tree = {
+	id = ac_ud_sca_tree
+	country = { factor = 0 modifier = { add = 45 tag = SCA original_tag = SCA } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 2496 y = 16 }
+	initial_show_position = { focus = SCA_ud_charts_of_the_coast }
+	focus = {
+		id = SCA_ud_charts_of_the_coast
+		icon = GFX_ac_ud_focus_SCA_ud_charts_of_the_coast
+		x = 11
+		y = 0
+		cost = 5
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.601 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_fleet_register
+		icon = GFX_ac_ud_focus_SCA_ud_fleet_register
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_charts_of_the_coast
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = SCA_ud_cold_stores
+		icon = GFX_ac_ud_focus_SCA_ud_cold_stores
+		x = 1
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_fleet_register
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_ideas = SCA_ud_cold_chain_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+			country_event = { id = ac_ud_mina.602 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_fisheries_cooperatives
+		icon = GFX_ac_ud_focus_SCA_ud_fisheries_cooperatives
+		x = 0
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = SCA_ud_cold_stores
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_trawler_companies
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = SCA_ud_fisheries_cooperatives_spirit
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = SCA_ud_trawler_companies
+		icon = GFX_ac_ud_focus_SCA_ud_trawler_companies
+		x = 2
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = SCA_ud_cold_stores
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_fisheries_cooperatives
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = SCA_ud_trawler_companies_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_cooperative_auctions
+		icon = GFX_ac_ud_focus_SCA_ud_cooperative_auctions
+		x = 0
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_fisheries_cooperatives
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_stability = 0.02
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = SCA_ud_deep_water_trawlers
+		icon = GFX_ac_ud_focus_SCA_ud_deep_water_trawlers
+		x = 2
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_trawler_companies
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 327 = { is_owned_by = ROOT } } 327 = { add_building_construction = { type = dockyard level = 1 instant_build = yes } } }
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = SCA_ud_catch_quotas
+		icon = GFX_ac_ud_focus_SCA_ud_catch_quotas
+		x = 1
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_cooperative_auctions
+			focus = SCA_ud_deep_water_trawlers
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = SCA_ud_bank_quotas_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_fish_for_the_inland
+		icon = GFX_ac_ud_focus_SCA_ud_fish_for_the_inland
+		x = 1
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_catch_quotas
+		}
+		available = {
+			date > 1992.12.31
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { has_idea = SCA_ud_cold_chain_spirit } remove_ideas = SCA_ud_cold_chain_spirit }
+			add_ideas = SCA_ud_inland_fish_trade_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_oil_survey
+		icon = GFX_ac_ud_focus_SCA_ud_oil_survey
+		x = 5
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_charts_of_the_coast
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_tech_bonus = { name = SCA_ud_oil_survey bonus = 0.5 uses = 1 category = excavation_tech }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_petrol_coast_wells
+		icon = GFX_ac_ud_focus_SCA_ud_petrol_coast_wells
+		x = 5
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_oil_survey
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			if = { limit = { 496 = { is_owned_by = ROOT } } add_resource = { type = oil amount = 4 state = 496 } }
+			country_event = { id = ac_ud_mina.603 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_national_oil_board
+		icon = GFX_ac_ud_focus_SCA_ud_national_oil_board
+		x = 4
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = SCA_ud_petrol_coast_wells
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_oil_leases
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = SCA_ud_national_oil_board_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_oil_leases
+		icon = GFX_ac_ud_focus_SCA_ud_oil_leases
+		x = 6
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = SCA_ud_petrol_coast_wells
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_national_oil_board
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = SCA_ud_oil_leases_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_capital_refinery
+		icon = GFX_ac_ud_focus_SCA_ud_capital_refinery
+		x = 5
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_national_oil_board
+			focus = SCA_ud_oil_leases
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 304 = { is_owned_by = ROOT } } 304 = { add_building_construction = { type = fuel_silo level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = SCA_ud_capital_refinery bonus = 0.5 uses = 1 category = synth_resources }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_harbour_survey
+		icon = GFX_ac_ud_focus_SCA_ud_harbour_survey
+		x = 9
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_charts_of_the_coast
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			if = { limit = { 267 = { is_owned_by = ROOT } } 267 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+			if = { limit = { 490 = { is_owned_by = ROOT } } 490 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_capital_yards
+		icon = GFX_ac_ud_focus_SCA_ud_capital_yards
+		x = 8
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_harbour_survey
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			if = { limit = { 304 = { is_owned_by = ROOT } } 304 = { add_building_construction = { type = dockyard level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = SCA_ud_capital_yards bonus = 0.5 uses = 1 category = naval_equipment }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_merchant_fleet
+		icon = GFX_ac_ud_focus_SCA_ud_merchant_fleet
+		x = 10
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_harbour_survey
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_ideas = SCA_ud_merchant_flag_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_coastal_shipping_line
+		icon = GFX_ac_ud_focus_SCA_ud_coastal_shipping_line
+		x = 9
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_capital_yards
+		}
+		prerequisite = {
+			focus = SCA_ud_merchant_fleet
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 327 = { is_owned_by = ROOT } } 327 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+			if = { limit = { 496 = { is_owned_by = ROOT } } 496 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = SCA_ud_coastal_shipping_line bonus = 0.5 uses = 1 category = logistics_tech }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_free_port
+		icon = GFX_ac_ud_focus_SCA_ud_free_port
+		x = 9
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_coastal_shipping_line
+		}
+		available = {
+			date > 1992.12.31
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = SCA_ud_free_port_spirit
+			country_event = { id = ac_ud_mina.613 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_sea_rescue_service
+		icon = GFX_ac_ud_focus_SCA_ud_sea_rescue_service
+		x = 13
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_charts_of_the_coast
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_ideas = SCA_ud_sea_rescue_spirit
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = SCA_ud_weather_stations
+		icon = GFX_ac_ud_focus_SCA_ud_weather_stations
+		x = 12
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_sea_rescue_service
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_tech_bonus = { name = SCA_ud_weather_stations bonus = 0.5 uses = 1 category = electronics }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_lifeboat_stations
+		icon = GFX_ac_ud_focus_SCA_ud_lifeboat_stations
+		x = 14
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_sea_rescue_service
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_stability = 0.02
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = SCA_ud_coastal_radar_chain
+		icon = GFX_ac_ud_focus_SCA_ud_coastal_radar_chain
+		x = 13
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_weather_stations
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_tech_bonus = { name = SCA_ud_coastal_radar_chain bonus = 0.5 uses = 1 category = radar_tech }
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = SCA_ud_rescue_coordination
+		icon = GFX_ac_ud_focus_SCA_ud_rescue_coordination
+		x = 13
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_coastal_radar_chain
+		}
+		prerequisite = {
+			focus = SCA_ud_lifeboat_stations
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			if = { limit = { has_idea = SCA_ud_sea_rescue_spirit } remove_ideas = SCA_ud_sea_rescue_spirit }
+			add_ideas = SCA_ud_rescue_network_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_navy_question
+		icon = GFX_ac_ud_focus_SCA_ud_navy_question
+		x = 17
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_charts_of_the_coast
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.604 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_coast_guard_navy
+		icon = GFX_ac_ud_focus_SCA_ud_coast_guard_navy
+		x = 16
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_navy_question
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_patrol_squadron
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = SCA_ud_coast_guard_navy_spirit
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = SCA_ud_patrol_squadron
+		icon = GFX_ac_ud_focus_SCA_ud_patrol_squadron
+		x = 18
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_navy_question
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_coast_guard_navy
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = SCA_ud_patrol_squadron_spirit
+			navy_experience = 15
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_fishery_protection
+		icon = GFX_ac_ud_focus_SCA_ud_fishery_protection
+		x = 16
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_coast_guard_navy
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = SCA_ud_fishery_protection bonus = 0.5 uses = 1 category = naval_equipment }
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = SCA_ud_squadron_exercises
+		icon = GFX_ac_ud_focus_SCA_ud_squadron_exercises
+		x = 18
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_patrol_squadron
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			navy_experience = 20
+		}
+	}
+
+	focus = {
+		id = SCA_ud_naval_reserve
+		icon = GFX_ac_ud_focus_SCA_ud_naval_reserve
+		x = 17
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_fishery_protection
+			focus = SCA_ud_squadron_exercises
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = SCA_ud_naval_reserve_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_treaty_council_seat
+		icon = GFX_ac_ud_focus_SCA_ud_treaty_council_seat
+		x = 21
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_charts_of_the_coast
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.605 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_maritime_clauses
+		icon = GFX_ac_ud_focus_SCA_ud_maritime_clauses
+		x = 20
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_treaty_council_seat
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_quiet_member
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = SCA_ud_maritime_clauses_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_quiet_member
+		icon = GFX_ac_ud_focus_SCA_ud_quiet_member
+		x = 22
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_treaty_council_seat
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_maritime_clauses
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = SCA_ud_quiet_member_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_sea_lane_convention
+		icon = GFX_ac_ud_focus_SCA_ud_sea_lane_convention
+		x = 20
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_maritime_clauses
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = SCA_ud_sea_lane_convention bonus = 0.5 uses = 1 category = logistics_tech }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = SCA_ud_bilateral_harbour_deals
+		icon = GFX_ac_ud_focus_SCA_ud_bilateral_harbour_deals
+		x = 22
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_quiet_member
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { has_idea = SCA_ud_quiet_member_spirit } remove_ideas = SCA_ud_quiet_member_spirit }
+			add_ideas = SCA_ud_harbour_deals_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_who_governs
+		icon = GFX_ac_ud_focus_SCA_ud_who_governs
+		x = 17
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_naval_reserve
+			focus = SCA_ud_sea_lane_convention
+			focus = SCA_ud_bilateral_harbour_deals
+		}
+		available = {
+			date > 1992.12.31
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_stability = -0.02
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.606 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_coastal_commonwealth
+		icon = GFX_ac_ud_focus_SCA_ud_coastal_commonwealth
+		x = 14
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = SCA_ud_who_governs
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_harbour_regency
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_sca_commonwealth = yes
+			country_event = { id = ac_ud_mina.607 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_commonwealth_charter
+		icon = GFX_ac_ud_focus_SCA_ud_commonwealth_charter
+		x = 14
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_coastal_commonwealth
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = SCA_ud_commonwealth_charter_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_port_councils
+		icon = GFX_ac_ud_focus_SCA_ud_port_councils
+		x = 13
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_commonwealth_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = SCA_ud_open_registers
+		icon = GFX_ac_ud_focus_SCA_ud_open_registers
+		x = 15
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_commonwealth_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = SCA_ud_open_registers_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_commonwealth_elections
+		icon = GFX_ac_ud_focus_SCA_ud_commonwealth_elections
+		x = 14
+		y = 9
+		cost = 10
+		prerequisite = {
+			focus = SCA_ud_port_councils
+		}
+		prerequisite = {
+			focus = SCA_ud_open_registers
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = SCA_ud_commonwealth_charter_spirit } remove_ideas = SCA_ud_commonwealth_charter_spirit }
+			add_ideas = SCA_ud_commonwealth_parliament_spirit
+			add_stability = 0.03
+		}
+	}
+
+	focus = {
+		id = SCA_ud_harbour_regency
+		icon = GFX_ac_ud_focus_SCA_ud_harbour_regency
+		x = 20
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = SCA_ud_who_governs
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_coastal_commonwealth
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_sca_regency = yes
+			country_event = { id = ac_ud_mina.608 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_regency_council
+		icon = GFX_ac_ud_focus_SCA_ud_regency_council
+		x = 20
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_harbour_regency
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = SCA_ud_regency_council_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_harbour_wardens
+		icon = GFX_ac_ud_focus_SCA_ud_harbour_wardens
+		x = 19
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_regency_council
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			navy_experience = 15
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = SCA_ud_regency_charters
+		icon = GFX_ac_ud_focus_SCA_ud_regency_charters
+		x = 21
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_regency_council
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_tech_bonus = { name = SCA_ud_regency_charters bonus = 0.5 uses = 1 category = naval_equipment }
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = SCA_ud_regency_settlement
+		icon = GFX_ac_ud_focus_SCA_ud_regency_settlement
+		x = 20
+		y = 9
+		cost = 10
+		prerequisite = {
+			focus = SCA_ud_harbour_wardens
+		}
+		prerequisite = {
+			focus = SCA_ud_regency_charters
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = SCA_ud_regency_council_spirit } remove_ideas = SCA_ud_regency_council_spirit }
+			add_ideas = SCA_ud_regency_settlement_spirit
+			add_stability = 0.03
+		}
+	}
+
+	focus = {
+		id = SCA_ud_ulysses_warning
+		icon = GFX_ac_ud_focus_SCA_ud_ulysses_warning
+		x = 7
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_sea_rescue_service
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 9 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_war_support = 0.02
+			country_event = { id = ac_ud_mina.609 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_upland_refuges
+		icon = GFX_ac_ud_focus_SCA_ud_upland_refuges
+		x = 5
+		y = 7
+		cost = 10
+		prerequisite = {
+			focus = SCA_ud_ulysses_warning
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_harbour_shelters
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = SCA_ud_upland_refuges_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_harbour_shelters
+		icon = GFX_ac_ud_focus_SCA_ud_harbour_shelters
+		x = 7
+		y = 7
+		cost = 10
+		prerequisite = {
+			focus = SCA_ud_ulysses_warning
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_upland_refuges
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = SCA_ud_harbour_shelters_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_coup_patrols
+		icon = GFX_ac_ud_focus_SCA_ud_coup_patrols
+		x = 9
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_ulysses_warning
+		}
+		available = {
+			date > 1997.5.29
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			navy_experience = 10
+			add_war_support = 0.02
+		}
+	}
+
+	focus = {
+		id = SCA_ud_tide_watch
+		icon = GFX_ac_ud_focus_SCA_ud_tide_watch
+		x = 7
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_upland_refuges
+			focus = SCA_ud_harbour_shelters
+		}
+		prerequisite = {
+			focus = SCA_ud_coastal_radar_chain
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_tech_bonus = { name = SCA_ud_tide_watch bonus = 0.5 uses = 1 category = radar_tech }
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = SCA_ud_impact_night
+		icon = GFX_ac_ud_focus_SCA_ud_impact_night
+		x = 7
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_tide_watch
+		}
+		available = {
+			date > 1999.7.7
+		}
+		ai_will_do = { factor = 9 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = -4 }
+			ac_pol_change_capacity = yes
+			add_stability = -0.03
+			country_event = { id = ac_ud_mina.610 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_rescue_flotillas
+		icon = GFX_ac_ud_focus_SCA_ud_rescue_flotillas
+		x = 5
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_impact_night
+		}
+		available = {
+			date > 1999.7.7
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_timed_idea = { idea = SCA_ud_rescue_flotillas_spirit days = 365 }
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_open_harbours
+		icon = GFX_ac_ud_focus_SCA_ud_open_harbours
+		x = 7
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_impact_night
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_harbour_screening
+		}
+		available = {
+			date > 2000.4.20
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = SCA_ud_open_harbours_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_harbour_screening
+		icon = GFX_ac_ud_focus_SCA_ud_harbour_screening
+		x = 9
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_impact_night
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_open_harbours
+		}
+		available = {
+			date > 2000.4.20
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = SCA_ud_harbour_screening_spirit
+		}
+	}
+
+	focus = {
+		id = SCA_ud_fishing_fleet_relief
+		icon = GFX_ac_ud_focus_SCA_ud_fishing_fleet_relief
+		x = 5
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_rescue_flotillas
+		}
+		available = {
+			date > 1999.7.7
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_stability = 0.03
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = SCA_ud_sea_neutrality
+		icon = GFX_ac_ud_focus_SCA_ud_sea_neutrality
+		x = 7
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_open_harbours
+			focus = SCA_ud_harbour_screening
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_war_support = 0.03
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.611 }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_calm_seas
+		icon = GFX_ac_ud_focus_SCA_ud_calm_seas
+		x = 10
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_open_harbours
+			focus = SCA_ud_harbour_screening
+		}
+		available = {
+			has_global_flag = ac_ucw_war_averted
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_stability = 0.05
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = SCA_ud_closed_waters
+		icon = GFX_ac_ud_focus_SCA_ud_closed_waters
+		x = 6
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_sea_neutrality
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_hospital_ships
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = SCA_ud_closed_waters_spirit
+			if = { limit = { 304 = { is_owned_by = ROOT } } 304 = { add_building_construction = { type = anti_air_building level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = SCA_ud_hospital_ships
+		icon = GFX_ac_ud_focus_SCA_ud_hospital_ships
+		x = 8
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_sea_neutrality
+		}
+		mutually_exclusive = {
+			focus = SCA_ud_closed_waters
+		}
+		available = {
+			has_global_flag = ac_ucw_isaf_formed
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = SCA_ud_hospital_ships_spirit
+			navy_experience = 5
+		}
+	}
+
+	focus = {
+		id = SCA_ud_escort_the_fleet
+		icon = GFX_ac_ud_focus_SCA_ud_escort_the_fleet
+		x = 10
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_sea_neutrality
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			navy_experience = 10
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = SCA_ud_coast_after_the_war
+		icon = GFX_ac_ud_focus_SCA_ud_coast_after_the_war
+		x = 7
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = SCA_ud_closed_waters
+			focus = SCA_ud_hospital_ships
+			focus = SCA_ud_escort_the_fleet
+		}
+		available = {
+			OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate }
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 6 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.04
+			country_event = { id = ac_ud_mina.612 }
+		}
+	}
+}

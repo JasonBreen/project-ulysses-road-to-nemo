@@ -15,6 +15,7 @@ from scopes import SCOPES, CAPABILITIES
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
+sys.path.insert(0,str(ROOT/'tools'))
 MOD = ROOT / "mod/2985041246"
 OUT = {}; LOC = {}; EVENTS = []
 NOTE = "# Authored gameplay; source: tools/usean_partners/content.py and build.py.\n"
@@ -381,6 +382,10 @@ def outputs():
     effects = {}; triggers = {}
     build_core(triggers, effects)
     build_trees(effects)
+    from ac_campaigns.imports import preserve
+    for key in list(OUT):
+        if key.startswith('common/national_focus/'):
+            OUT[key] = preserve(MOD/key, OUT[key])
     decisions = build_programmes(effects)
     # Country-specific review rules, reciprocity and authored narrative are
     # separate authoring tables to keep each national system reviewable.

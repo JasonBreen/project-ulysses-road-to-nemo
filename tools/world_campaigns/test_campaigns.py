@@ -266,6 +266,8 @@ class Campaigns(unittest.TestCase):
         self.assertTrue((MOD/'localisation/english/ac_world_campaigns_l_english.yml').read_bytes().startswith(b'\xef\xbb\xbf'))
         for ident in self.base.focuses:
             self.assertIn(ident+':0',text); self.assertIn(ident+'_desc:0',text)
+        for tag in COUNTRIES:
+            self.assertIn('ac_wc_'+tag.lower()+'_tree_desc:0',text)
 
     def test_inventory_credits_shared_descendants_once_and_excludes_orphans(self):
         sources = [('fixture.txt', '''shared_focus = { id = SOA_old_root x = 0 y = 0 }

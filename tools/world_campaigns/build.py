@@ -81,6 +81,7 @@ def country(tag, chapters):
     namespace = stem
     focuses, effects, events, decisions, ideas = [], [], [], [], []
     loc(stem + '_tree', 'Sotoa: The Republic We Choose' if tag == 'SOA' else 'Central Sotoa: Our Own Voice')
+    loc(stem + '_tree_desc', 'An original national campaign of governing mandates, practical development and reciprocal diplomacy. Programme choices are provisional gameplay, not official earlier history.')
     loc(stem + '_programmes', 'National Programme Operations')
     loc(stem + '_programmes_desc', 'A focus opens a specific national problem. Its dialogue selects a programme; the operation then needs a separate payment and 90 days of uninterrupted administration. A completed programme supports a renewable, bounded national service. These are original campaign stories and provisional gameplay.')
     profile = json.loads((ROOT / 'tools/world_foundation/country_registry.json').read_text())

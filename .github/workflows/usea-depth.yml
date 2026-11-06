@@ -1,0 +1,27 @@
+name: Usea Depth focus packages
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  usea-depth:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned original-art dependency
+        run: python -m pip install Pillow==11.3.0
+      - name: Check seams and every Usea Depth package
+        run: python -B tools/usea_depth/run_checks.py
+      - name: Check the owner generators that keep Usea Depth import blocks
+        run: |
+          python -B tools/usea_expansion/build_content.py --check
+          python -B tools/build_continental_war.py --check
+          cd tools/usean_partners && python -B build.py --check
+      - name: Check focus screen layout and release accounting
+        run: |
+          python -B tools/Test-FocusScreenRepairs.py
+          python -B tools/overhaul/check_release_plan.py

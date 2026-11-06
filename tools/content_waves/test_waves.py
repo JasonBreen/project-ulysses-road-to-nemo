@@ -86,13 +86,16 @@ class Source(unittest.TestCase):
             for tag, name in getattr(module, "IMPORTS", {}).items():
                 with self.subTest(tag=tag):
                     ids = [focus_id(module.WAVE, b, i) for b in module.WAVE.branches if b.tag == tag for i in range(6)]
-                    expected = f"# BEGIN {name} IMPORTS\n" + "".join(f"shared_focus = {i}\n" for i in ids) + f"# END {name} IMPORTS\n"
+                    expected = [f"# BEGIN {name} IMPORTS\n" + "".join(f"shared_focus = {i}\n" for i in ids) + f"# END {name} IMPORTS\n"]
                     if tag in ('ERU','FCU'):
                         expansion=json.loads((ROOT/'tools/ac_campaigns/manifest.json').read_text())
                         additions=[r['id'] for r in expansion['focuses'] if r['tag']==tag]
                         self.assertEqual(24,len(additions))
-                        expected += '# BEGIN AC CAMPAIGNS IMPORTS\n'+''.join('shared_focus = '+ident+'\n' for ident in additions)+'# END AC CAMPAIGNS IMPORTS\n'
-                    self.assertEqual(expected, owners[tag].preserved_imports(tag))
+                        expected.append('# BEGIN AC CAMPAIGNS IMPORTS\n'+''.join('shared_focus = '+ident+'\n' for ident in additions)+'# END AC CAMPAIGNS IMPORTS\n')
+                    # Other packages (tools/usea_depth) may add their own blocks; each owned block stays intact.
+                    preserved = owners[tag].preserved_imports(tag)
+                    for owned in expected:
+                        self.assertIn(owned, preserved)
 
     def test_approved_budgets_and_globally_unique_ids(self):
         self.assertEqual(EXPECTED, self.manifest["counts"])

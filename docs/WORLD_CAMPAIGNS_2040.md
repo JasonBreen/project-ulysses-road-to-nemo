@@ -17,9 +17,26 @@ is 22,920. PLH is excluded. Existing larger campaigns remain larger.
 The frozen baseline records actual IDs and their imports at main `38c978d0`.
 The resolver follows shared descendants, de-duplicates imports across trees,
 and excludes orphan definitions and generic/regional fallback content from
-national credit. Existing era attribution follows literal lower date bounds
-and prerequisite ancestry; ambiguous inherited context stays an explicitly
-documented accounting estimate, never a canon/reachability assertion.
+national credit. Era attribution uses full calendar days, including exclusive
+year-end bounds, transparent `custom_trigger_tooltip`/`hidden_trigger` wrappers,
+and AND/OR/NOT logic (NOT means none of its children). Alternatives within one
+prerequisite block use the earliest parent; separate blocks require all parents.
+Disjoint date windows and upper bounds are retained before applying inherited
+lower bounds. Non-date triggers and unknown wrappers remain unknown, including
+`always = no`: event-driven completion is not inferred from focus availability.
+This remains a literal-date accounting estimate, never native reachability or
+canon evidence. Completion durations, scripted triggers and event/bypass
+completion dates are not simulated.
+
+The date-accounting correction moves 167 existing definitions from e1 to e2:
+AUR 12, FAT 5, NEC 12, OSE 68, SBK 4 and YUK 66. This includes all 44 Osean
+continuation focuses and `FAT_nat_renewal_hearing`. The frozen baseline's era
+totals are now 1,293 / 316 / 0; current delivery totals are 1,611 / 316 / 0.
+The overall 1,927 delivered definitions and 20,993 remaining definitions do not
+change. Baseline IDs, imports, source paths, source commit and reservation
+receipts are unchanged; only era/year estimates were corrected from that exact
+commit. `coverage.py --refresh-baseline-eras` repeats this restricted correction
+and rejects any change to frozen IDs, imports or provenance.
 
 The six Usea Depth PRs #77–#82 are preserved as reservations with exact heads
 and budget receipts. A reservation does not increase `delivered_count` or
@@ -103,7 +120,10 @@ result, duplicate effects, arrears, an unready owner, disabled/experimental
 rules, expired dialogues, ownership loss, capitulation, foreign refusal,
 subjects, war, stale replies and idle-save migration. Other gates check emitted
 references/localization, focus geometry, sprite bindings and deterministic
-source/artwork generation. These are static/offline checks, not native parsing,
+source/artwork generation. `test_coverage.py` also checks day boundaries, nested
+boolean conditions, negated unknown predicates, prerequisite alternatives and
+real FATO/Osean source regressions; it is included in `test_campaigns.py`.
+These are static/offline checks, not native parsing,
 timer dispatch, rendering, balancing, AI or save serialization acceptance.
 
 The remaining global era allocations, Sotoa/CSO later eras, shared 2029 war

@@ -1,6 +1,7 @@
 """Country/era delivery accounting. Reservations are never delivered content."""
 import argparse
 from collections import defaultdict
+from datetime import date
 import hashlib
 import json
 from pathlib import Path
@@ -63,6 +64,82 @@ def pending_reservation_ids(reservations, tag, delivered_ids):
     return promised - set(delivered_ids)
 
 
+# Half-open ordinal-day intervals keep exclusive bounds precise at year ends.
+ALL_DATES = [(date.min.toordinal(), date.max.toordinal() + 1)]
+CAMPAIGN_START = date(1991, 1, 1).toordinal()
+
+
+def date_union(intervals):
+    result = []
+    for start, end in sorted(intervals):
+        if start >= end:
+            continue
+        if result and start <= result[-1][1]:
+            result[-1] = (result[-1][0], max(end, result[-1][1]))
+        else:
+            result.append((start, end))
+    return result
+
+
+def date_intersection(left, right):
+    return date_union((max(a, c), min(b, d))
+                      for a, b in left for c, d in right)
+
+
+def date_complement(intervals):
+    result, start = [], ALL_DATES[0][0]
+    for low, high in date_union(intervals):
+        result.append((start, low))
+        start = high
+    result.append((start, ALL_DATES[0][1]))
+    return date_union(result)
+
+
+def possible_dates(nodes, mode='AND'):
+    """Return possible true/false days, not native trigger reachability.
+
+    Unknown non-date predicates may be either true or false. Keeping both
+    possibilities is essential: negating an AND with an unknown predicate
+    must not accidentally turn that predicate into a mandatory date gate.
+    HOI4 NOT is NOR (none of its children), not NAND. Only transparent
+    trigger wrappers are traversed; arbitrary scope/effect blocks are unknown.
+    """
+    pairs = []
+    for key, op, value in nodes:
+        upper = key.upper()
+        if key == 'date' and isinstance(value, str):
+            day = date(*map(int, value.split('.'))).toordinal()
+            low, high = ALL_DATES[0]
+            intervals = {
+                '>': [(day + 1, high)], '>=': [(day, high)],
+                '<': [(low, day)], '<=': [(low, day + 1)],
+                '=': [(day, day + 1)],
+                '!=': [(low, day), (day + 1, high)],
+            }
+            if op not in intervals:
+                raise ValueError('Unsupported date operator: ' + op)
+            yes = date_union(intervals[op])
+            pair = yes, date_complement(yes)
+        elif isinstance(value, list) and upper in ('AND', 'OR', 'NOT', 'NOR', 'NAND'):
+            pair = possible_dates(value, upper)
+        elif isinstance(value, list) and key in ('custom_trigger_tooltip', 'hidden_trigger'):
+            pair = possible_dates([row for row in value if row[0] != 'tooltip'])
+        else:
+            pair = ALL_DATES, ALL_DATES
+        pairs.append(pair)
+    if mode in ('OR', 'NOT', 'NOR'):
+        yes, no = [], ALL_DATES
+        for child_yes, child_no in pairs:
+            yes = date_union(yes + child_yes)
+            no = date_intersection(no, child_no)
+    else:
+        yes, no = ALL_DATES, []
+        for child_yes, child_no in pairs:
+            yes = date_intersection(yes, child_yes)
+            no = date_union(no + child_no)
+    return (no, yes) if mode in ('NOT', 'NOR', 'NAND') else (yes, no)
+
+
 def inventory(sources):
     """Resolve actual import closure; exclude orphaned definitions from credit."""
     definitions, trees, children = {}, [], defaultdict(set)
@@ -102,29 +179,65 @@ def inventory(sources):
                 raise ValueError('Unresolved import: ' + tree_id + ':' + ident)
             bound[ident].add(tree_id)
             pending.extend(children[ident])
-    years = {}
+    days = {}
     def earliest(ident, stack=()):
-        if ident in years:
-            return years[ident]
+        if ident in days:
+            return days[ident]
         if ident in stack:
             raise ValueError('Prerequisite cycle: ' + ident)
         node = definitions[ident][0]
-        dates = [int(v[:4]) for k, n in walk(node) for f, op, v in n
-                 if k == 'available' and f == 'date' and op in ('>', '>=') and isinstance(v, str) and re.match(r'\d{4}\.', v)]
-        parents = [v for k, _, n in node if k == 'prerequisite' for f, _, v in n if f == 'focus' and v in definitions]
-        years[ident] = max([1991, *dates, *(earliest(p, stack + (ident,)) for p in parents)])
-        return years[ident]
+        lower = CAMPAIGN_START
+        for key, _, body in node:
+            if key != 'prerequisite':
+                continue
+            # Each prerequisite block is an OR; separate blocks are ANDed.
+            alternatives = [earliest(ref, stack + (ident,)) if ref in definitions else CAMPAIGN_START
+                            for field, _, ref in body if field == 'focus']
+            possible = [day for day in alternatives if day is not None]
+            if alternatives and not possible:
+                days[ident] = None
+                return None
+            if possible:
+                lower = max(lower, min(possible))
+        windows = [(lower, ALL_DATES[0][1])]
+        for key, _, body in node:
+            if key == 'available':
+                windows = date_intersection(windows, possible_dates(body)[0])
+        days[ident] = windows[0][0] if windows else None
+        return days[ident]
     rows = []
     for ident, (node, path) in sorted(definitions.items()):
         if not re.match(r'^[A-Z]{3}_', ident) or ident not in bound:
             continue
-        year = earliest(ident)
-        era = next((key for key, start, end in ERAS if start <= year <= end), None)
+        day = earliest(ident)
+        year = date.fromordinal(day).year if day is not None else None
+        era = next((key for key, start, end in ERAS if year is not None and start <= year <= end), None)
         rows.append(dict(id=ident, tag=ident[:3], era=era, earliest_literal_or_prerequisite_year=year,
                          source=path, imported_by=sorted(bound[ident]),
                          source_layer='existing mod provenance / provisional gameplay',
                          date_inference='Accounting estimate, not a claim of native reachability or canon date'))
     return rows
+
+
+def reclassify_baseline(baseline, corrected):
+    """Correct era estimates only; frozen source ownership and receipts survive."""
+    def provenance(rows):
+        return [{k: v for k, v in row.items()
+                 if k not in ('era', 'earliest_literal_or_prerequisite_year')}
+                for row in rows]
+    if baseline['commit'] != BASE or provenance(baseline['focuses']) != provenance(corrected):
+        raise ValueError('Frozen baseline IDs, imports or source provenance changed')
+    return dict(baseline, focuses=corrected)
+
+
+def refresh_baseline_eras():
+    path = HERE / 'baseline.json'
+    baseline = json.loads(path.read_text())
+    paths = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', BASE,
+                                    'mod/2985041246/common/national_focus'], cwd=ROOT).decode().splitlines()
+    corrected = inventory([(p, git_text(BASE, p)) for p in paths])
+    path.write_text(json.dumps(reclassify_baseline(baseline, corrected), indent=2) + '\n',
+                    encoding='utf-8', newline='\n')
 
 
 def capture():
@@ -205,7 +318,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--capture', action='store_true')
     parser.add_argument('--check', action='store_true')
+    parser.add_argument('--refresh-baseline-eras', action='store_true',
+                        help='Reclassify the same frozen source IDs; preserve all reservation receipts')
     args = parser.parse_args()
+    if args.refresh_baseline_eras:
+        if args.capture or args.check:
+            parser.error('--refresh-baseline-eras cannot be combined with --capture or --check')
+        refresh_baseline_eras()
     if args.capture:
         capture()
     data = report()

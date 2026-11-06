@@ -19,6 +19,7 @@ MOD = ROOT / 'mod/2985041246'
 sys.path.insert(0, str(HERE))
 from content import COUNTRIES
 from coverage import inventory, report, pending_reservation_ids
+from test_coverage import Coverage
 
 spec = importlib.util.spec_from_file_location('wc_real_shared_owners', ROOT / 'tools/Test-SharedSystems.py')
 shared = importlib.util.module_from_spec(spec); spec.loader.exec_module(shared)

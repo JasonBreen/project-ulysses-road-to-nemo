@@ -59,6 +59,7 @@ ALBUM = "gfx/interface/topbar/musicplayer/superevent_station_album_art.dds"
 EVENT_ARMY = "gfx/event_pictures/report_event_army_issues_1.dds"
 EVENT_PARLIAMENT = "gfx/event_pictures/report_event_blk_parliament.dds"
 EVENT_NEWS = "gfx/event_pictures/report_event_bad_news_1.dds"
+NEWS_DEFAULT = "gfx/AC_event_style/news_default.dds"
 PANEL = "gfx/interface/ac_visual_scrub/panel_placeholder.dds"
 PORTRAIT = "gfx/interface/ac_visual_scrub/portrait_placeholder.dds"
 AGENCY = "gfx/interface/ac_visual_scrub/agency_placeholder.dds"
@@ -223,7 +224,9 @@ def choose(name: str) -> tuple[str, int, str]:
         return SELECT_DATE, 1, "1991 bookmark picture was still the vanilla 1936 date sprite."
     if name == "GFX_leader_unknown" or name.startswith("GFX_portrait") or name.startswith("GFX_Portrait"):
         return PORTRAIT, 1, "Earth or unknown leader portrait rebound to a marked placeholder."
-    if "report_event" in lowered or lowered.startswith("gfx_news_event"):
+    if lowered.startswith("gfx_news_event_"):
+        return NEWS_DEFAULT, 1, "Earth news photograph rebound to the mod news-format picture (397 x 153)."
+    if "report_event" in lowered:
         if any(word in lowered for word in ("parliament", "treaty", "election")):
             return EVENT_PARLIAMENT, 1, "Earth news photograph rebound to the existing Belkan parliament picture."
         if any(word in lowered for word in ("soldier", "army", "civil_war", "war")):
@@ -432,6 +435,16 @@ def sprite_block(name: str, texture: str, frames: int) -> str:
     )
 
 
+def validate_bindings(text: str, rows: list[dict]) -> None:
+    for row in rows:
+        if sprite_block(row["name"], row["texture"], row["frames"]) not in text:
+            raise SystemExit("Stale sprite binding: " + row["name"])
+        if row["name"].lower().startswith("gfx_news_event_"):
+            with Image.open(MOD / row["texture"]) as image:
+                if image.size != (397, 153) or row["frames"] != 1:
+                    raise SystemExit("Invalid news picture dimensions: " + row["name"])
+
+
 def build(check_only: bool) -> int:
     if not check_only:
         write_placeholders()
@@ -461,6 +474,9 @@ def build(check_only: bool) -> int:
         if not GFX_OUT.exists():
             raise SystemExit("Missing generated interface/zz_ac_visual_scrub.gfx")
         text = GFX_OUT.read_text(encoding="utf-8-sig")
+        validate_bindings(text, rows)
+        if json.loads(INVENTORY.read_text(encoding="utf-8"))["sprites"] != rows:
+            raise SystemExit("Stale visual scrub inventory")
         present = set(NAME_RE.findall(text))
         expected = {row["name"] for row in rows}
         missing = sorted(expected - present)

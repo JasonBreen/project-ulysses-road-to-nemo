@@ -1,0 +1,1176 @@
+# Usea Depth minor states A: provisional gameplay; source tools/usea_depth/minors_a (owner: build.py).
+focus_tree = {
+	id = ac_ud_bld_tree
+	country = { factor = 0 modifier = { add = 45 tag = BLD original_tag = BLD } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 2496 y = 16 }
+	initial_show_position = { focus = BLD_ud_crossroads_register }
+	focus = {
+		id = BLD_ud_crossroads_register
+		icon = GFX_ac_ud_focus_BLD_ud_crossroads_register
+		x = 11
+		y = 0
+		cost = 5
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.701 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_customs_survey
+		icon = GFX_ac_ud_focus_BLD_ud_customs_survey
+		x = 2
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_crossroads_register
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.01
+			country_event = { id = ac_ud_mina.702 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_bonded_yards
+		icon = GFX_ac_ud_focus_BLD_ud_bonded_yards
+		x = 1
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_customs_survey
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_open_frontier_tariff
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = BLD_ud_bonded_yards_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_open_frontier_tariff
+		icon = GFX_ac_ud_focus_BLD_ud_open_frontier_tariff
+		x = 3
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_customs_survey
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_bonded_yards
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = BLD_ud_open_tariff_spirit
+			add_stability = -0.01
+		}
+	}
+
+	focus = {
+		id = BLD_ud_ferustian_freight
+		icon = GFX_ac_ud_focus_BLD_ud_ferustian_freight
+		x = 1
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_bonded_yards
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = BLD_ud_ferustian_freight_spirit
+			if = { limit = { 401 = { is_owned_by = ROOT } } 401 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_border_markets
+		icon = GFX_ac_ud_focus_BLD_ud_border_markets
+		x = 3
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_open_frontier_tariff
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = BLD_ud_border_markets_spirit
+			if = { limit = { 448 = { is_owned_by = ROOT } } 448 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_nervada_junction
+		icon = GFX_ac_ud_focus_BLD_ud_nervada_junction
+		x = 2
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_ferustian_freight
+			focus = BLD_ud_border_markets
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			if = { limit = { 379 = { is_owned_by = ROOT } } 379 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = BLD_ud_nervada_junction bonus = 0.5 uses = 1 category = train_tech }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_expo_charter
+		icon = GFX_ac_ud_focus_BLD_ud_expo_charter
+		x = 6
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_crossroads_register
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.703 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_trade_hall
+		icon = GFX_ac_ud_focus_BLD_ud_trade_hall
+		x = 5
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_expo_charter
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_science_pavilion
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = BLD_ud_trade_hall_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_science_pavilion
+		icon = GFX_ac_ud_focus_BLD_ud_science_pavilion
+		x = 7
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_expo_charter
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_trade_hall
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = BLD_ud_science_pavilion_spirit
+			add_tech_bonus = { name = BLD_ud_science_pavilion bonus = 0.5 uses = 1 category = electronics }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_buyers_week
+		icon = GFX_ac_ud_focus_BLD_ud_buyers_week
+		x = 5
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_trade_hall
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = BLD_ud_buyers_week bonus = 0.5 uses = 1 category = industry }
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = BLD_ud_engineers_congress
+		icon = GFX_ac_ud_focus_BLD_ud_engineers_congress
+		x = 7
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_science_pavilion
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = BLD_ud_engineers_congress bonus = 0.5 uses = 1 category = construction_tech }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = BLD_ud_usean_exhibition
+		icon = GFX_ac_ud_focus_BLD_ud_usean_exhibition
+		x = 6
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_buyers_week
+			focus = BLD_ud_engineers_congress
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			if = { limit = { has_idea = BLD_ud_trade_hall_spirit } remove_ideas = BLD_ud_trade_hall_spirit }
+			if = { limit = { has_idea = BLD_ud_science_pavilion_spirit } remove_ideas = BLD_ud_science_pavilion_spirit }
+			add_ideas = BLD_ud_usean_exhibition_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_expo_slipways
+		icon = GFX_ac_ud_focus_BLD_ud_expo_slipways
+		x = 6
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_usean_exhibition
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 464 = { is_owned_by = ROOT } } 464 = { add_building_construction = { type = dockyard level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = BLD_ud_expo_slipways bonus = 0.5 uses = 1 category = naval_equipment }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_sartan_survey
+		icon = GFX_ac_ud_focus_BLD_ud_sartan_survey
+		x = 12
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_crossroads_register
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_tech_bonus = { name = BLD_ud_sartan_survey bonus = 0.5 uses = 1 category = excavation_tech }
+			country_event = { id = ac_ud_mina.704 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_state_mines
+		icon = GFX_ac_ud_focus_BLD_ud_state_mines
+		x = 10
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_sartan_survey
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_foreign_leases
+			focus = BLD_ud_miners_cooperative
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_state_mines_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_miners_cooperative
+		icon = GFX_ac_ud_focus_BLD_ud_miners_cooperative
+		x = 12
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_sartan_survey
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_foreign_leases
+			focus = BLD_ud_state_mines
+		}
+		ai_will_do = { factor = 3 }
+		completion_reward = {
+			add_ideas = BLD_ud_miners_cooperatives_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_foreign_leases
+		icon = GFX_ac_ud_focus_BLD_ud_foreign_leases
+		x = 14
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_sartan_survey
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_miners_cooperative
+			focus = BLD_ud_state_mines
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = BLD_ud_upper_seam_leases_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_sartan_smelter
+		icon = GFX_ac_ud_focus_BLD_ud_sartan_smelter
+		x = 10
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_state_mines
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 448 = { is_owned_by = ROOT } } 448 = { add_building_construction = { type = industrial_complex level = 1 instant_build = yes } } }
+			if = { limit = { 448 = { is_owned_by = ROOT } } add_resource = { type = steel amount = 4 state = 448 } }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_mine_safety_board
+		icon = GFX_ac_ud_focus_BLD_ud_mine_safety_board
+		x = 12
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_miners_cooperative
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = BLD_ud_mine_safety_spirit
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = BLD_ud_royalty_accounts
+		icon = GFX_ac_ud_focus_BLD_ud_royalty_accounts
+		x = 14
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_foreign_leases
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 448 = { is_owned_by = ROOT } } add_resource = { type = aluminium amount = 4 state = 448 } }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = BLD_ud_sartan_oil
+		icon = GFX_ac_ud_focus_BLD_ud_sartan_oil
+		x = 12
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_sartan_smelter
+			focus = BLD_ud_mine_safety_board
+			focus = BLD_ud_royalty_accounts
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			if = { limit = { 448 = { is_owned_by = ROOT } } add_resource = { type = oil amount = 4 state = 448 } }
+			if = { limit = { 401 = { is_owned_by = ROOT } } 401 = { add_building_construction = { type = fuel_silo level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_neutral_ground
+		icon = GFX_ac_ud_focus_BLD_ud_neutral_ground
+		x = 17
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_crossroads_register
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			custom_effect_tooltip = BLD_ud_neutral_ground_tt
+			country_event = { id = ac_ud_mina.705 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_open_table
+		icon = GFX_ac_ud_focus_BLD_ud_open_table
+		x = 16
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_neutral_ground
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_quiet_rooms
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_open_table_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_quiet_rooms
+		icon = GFX_ac_ud_focus_BLD_ud_quiet_rooms
+		x = 18
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_neutral_ground
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_open_table
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_quiet_rooms_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_talks_secretariat
+		icon = GFX_ac_ud_focus_BLD_ud_talks_secretariat
+		x = 16
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_open_table
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = BLD_ud_crossroads_couriers
+		icon = GFX_ac_ud_focus_BLD_ud_crossroads_couriers
+		x = 18
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_quiet_rooms
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 401 = { is_owned_by = ROOT } } 401 = { add_building_construction = { type = air_base level = 1 instant_build = yes } } }
+			air_experience = 5
+		}
+	}
+
+	focus = {
+		id = BLD_ud_mediators_house
+		icon = GFX_ac_ud_focus_BLD_ud_mediators_house
+		x = 17
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_talks_secretariat
+			focus = BLD_ud_crossroads_couriers
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			if = { limit = { has_idea = BLD_ud_open_table_spirit } remove_ideas = BLD_ud_open_table_spirit }
+			if = { limit = { has_idea = BLD_ud_quiet_rooms_spirit } remove_ideas = BLD_ud_quiet_rooms_spirit }
+			add_ideas = BLD_ud_mediators_house_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_treaty_broker
+		icon = GFX_ac_ud_focus_BLD_ud_treaty_broker
+		x = 21
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_crossroads_register
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.706 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_transit_clauses
+		icon = GFX_ac_ud_focus_BLD_ud_transit_clauses
+		x = 20
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_treaty_broker
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_states_caucus
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_transit_clauses_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_states_caucus
+		icon = GFX_ac_ud_focus_BLD_ud_states_caucus
+		x = 22
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_treaty_broker
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_transit_clauses
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_small_states_caucus_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_common_waybill
+		icon = GFX_ac_ud_focus_BLD_ud_common_waybill
+		x = 20
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_transit_clauses
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = BLD_ud_common_waybill bonus = 0.5 uses = 1 category = logistics_tech }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = BLD_ud_caucus_secretariat
+		icon = GFX_ac_ud_focus_BLD_ud_caucus_secretariat
+		x = 22
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_states_caucus
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = BLD_ud_council_host
+		icon = GFX_ac_ud_focus_BLD_ud_council_host
+		x = 21
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_common_waybill
+			focus = BLD_ud_caucus_secretariat
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.03
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_crossroads_question
+		icon = GFX_ac_ud_focus_BLD_ud_crossroads_question
+		x = 17
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_mediators_house
+			focus = BLD_ud_council_host
+			focus = BLD_ud_sartan_oil
+		}
+		available = {
+			date > 1992.12.31
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_stability = -0.02
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.707 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_crown_council
+		icon = GFX_ac_ud_focus_BLD_ud_crown_council
+		x = 13
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_crossroads_question
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_customs_directorate
+			focus = BLD_ud_peoples_republic
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_bld_crown = yes
+			country_event = { id = ac_ud_mina.708 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_crown_charter
+		icon = GFX_ac_ud_focus_BLD_ud_crown_charter
+		x = 13
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_crown_council
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_crown_charter_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_crown_courts
+		icon = GFX_ac_ud_focus_BLD_ud_crown_courts
+		x = 12
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_crown_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = BLD_ud_household_guard
+		icon = GFX_ac_ud_focus_BLD_ud_household_guard
+		x = 14
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_crown_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			army_experience = 15
+			add_tech_bonus = { name = BLD_ud_household_guard bonus = 0.5 uses = 1 category = infantry_weapons }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_tsardom_restored
+		icon = GFX_ac_ud_focus_BLD_ud_tsardom_restored
+		x = 13
+		y = 9
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_crown_courts
+		}
+		prerequisite = {
+			focus = BLD_ud_household_guard
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = BLD_ud_crown_charter_spirit } remove_ideas = BLD_ud_crown_charter_spirit }
+			add_ideas = BLD_ud_tsardom_spirit
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = BLD_ud_peoples_republic
+		icon = GFX_ac_ud_focus_BLD_ud_peoples_republic
+		x = 17
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_crossroads_question
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_crown_council
+			focus = BLD_ud_customs_directorate
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_bld_peoples = yes
+			country_event = { id = ac_ud_mina.709 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_peoples_committees
+		icon = GFX_ac_ud_focus_BLD_ud_peoples_committees
+		x = 17
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_peoples_republic
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_peoples_committees_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_nationalised_railways
+		icon = GFX_ac_ud_focus_BLD_ud_nationalised_railways
+		x = 16
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_peoples_committees
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_tech_bonus = { name = BLD_ud_nationalised_railways bonus = 0.5 uses = 1 category = train_tech }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = BLD_ud_mine_committees
+		icon = GFX_ac_ud_focus_BLD_ud_mine_committees
+		x = 18
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_peoples_committees
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { 448 = { is_owned_by = ROOT } } add_resource = { type = steel amount = 3 state = 448 } }
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = BLD_ud_peoples_constitution
+		icon = GFX_ac_ud_focus_BLD_ud_peoples_constitution
+		x = 17
+		y = 9
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_nationalised_railways
+		}
+		prerequisite = {
+			focus = BLD_ud_mine_committees
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = BLD_ud_peoples_committees_spirit } remove_ideas = BLD_ud_peoples_committees_spirit }
+			add_ideas = BLD_ud_peoples_constitution_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_customs_directorate
+		icon = GFX_ac_ud_focus_BLD_ud_customs_directorate
+		x = 21
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_crossroads_question
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_crown_council
+			focus = BLD_ud_peoples_republic
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_bld_directorate = yes
+			country_event = { id = ac_ud_mina.710 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_tariff_code
+		icon = GFX_ac_ud_focus_BLD_ud_tariff_code
+		x = 21
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_customs_directorate
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_tariff_code_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_directorate_inspectors
+		icon = GFX_ac_ud_focus_BLD_ud_directorate_inspectors
+		x = 20
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_tariff_code
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_tech_bonus = { name = BLD_ud_directorate_inspectors bonus = 0.5 uses = 1 category = support_tech }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = BLD_ud_transit_concordat
+		icon = GFX_ac_ud_focus_BLD_ud_transit_concordat
+		x = 22
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_tariff_code
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = BLD_ud_free_crossroads_zone
+		icon = GFX_ac_ud_focus_BLD_ud_free_crossroads_zone
+		x = 21
+		y = 9
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_directorate_inspectors
+		}
+		prerequisite = {
+			focus = BLD_ud_transit_concordat
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = BLD_ud_tariff_code_spirit } remove_ideas = BLD_ud_tariff_code_spirit }
+			add_ideas = BLD_ud_free_zone_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_sky_over_the_crossroads
+		icon = GFX_ac_ud_focus_BLD_ud_sky_over_the_crossroads
+		x = 5
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_crossroads_register
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 9 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_war_support = 0.02
+			country_event = { id = ac_ud_mina.711 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_evacuation_junction
+		icon = GFX_ac_ud_focus_BLD_ud_evacuation_junction
+		x = 4
+		y = 7
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_sky_over_the_crossroads
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_sartan_galleries
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_evacuation_junction_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_sartan_galleries
+		icon = GFX_ac_ud_focus_BLD_ud_sartan_galleries
+		x = 6
+		y = 7
+		cost = 10
+		prerequisite = {
+			focus = BLD_ud_sky_over_the_crossroads
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_evacuation_junction
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_sartan_galleries_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_impact_night
+		icon = GFX_ac_ud_focus_BLD_ud_impact_night
+		x = 5
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_evacuation_junction
+			focus = BLD_ud_sartan_galleries
+		}
+		available = {
+			date > 1999.7.7
+		}
+		ai_will_do = { factor = 9 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = -4 }
+			ac_pol_change_capacity = yes
+			add_stability = -0.03
+			country_event = { id = ac_ud_mina.712 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_relief_fair
+		icon = GFX_ac_ud_focus_BLD_ud_relief_fair
+		x = 2
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_impact_night
+		}
+		available = {
+			date > 1999.7.7
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_timed_idea = { idea = BLD_ud_relief_fair_spirit days = 365 }
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_relief_corridor
+		icon = GFX_ac_ud_focus_BLD_ud_relief_corridor
+		x = 4
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_impact_night
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_crossroads_closed
+		}
+		available = {
+			date > 2000.4.20
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_relief_corridor_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_crossroads_closed
+		icon = GFX_ac_ud_focus_BLD_ud_crossroads_closed
+		x = 6
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_impact_night
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_relief_corridor
+		}
+		available = {
+			date > 2000.4.20
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = BLD_ud_crossroads_closed_spirit
+		}
+	}
+
+	focus = {
+		id = BLD_ud_between_six_borders
+		icon = GFX_ac_ud_focus_BLD_ud_between_six_borders
+		x = 5
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_relief_corridor
+			focus = BLD_ud_crossroads_closed
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_war_support = 0.03
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.713 }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_crossroads_at_peace
+		icon = GFX_ac_ud_focus_BLD_ud_crossroads_at_peace
+		x = 8
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_relief_corridor
+			focus = BLD_ud_crossroads_closed
+		}
+		available = {
+			has_global_flag = ac_ucw_war_averted
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_stability = 0.05
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = BLD_ud_train_inspections
+		icon = GFX_ac_ud_focus_BLD_ud_train_inspections
+		x = 4
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_between_six_borders
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_isaf_transit
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = BLD_ud_train_inspections_spirit
+			if = { limit = { 401 = { is_owned_by = ROOT } } 401 = { add_building_construction = { type = anti_air_building level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = BLD_ud_isaf_transit
+		icon = GFX_ac_ud_focus_BLD_ud_isaf_transit
+		x = 6
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_between_six_borders
+		}
+		mutually_exclusive = {
+			focus = BLD_ud_train_inspections
+		}
+		available = {
+			has_global_flag = ac_ucw_isaf_formed
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = BLD_ud_isaf_medical_transit_spirit
+			air_experience = 5
+		}
+	}
+
+	focus = {
+		id = BLD_ud_crossroads_after_the_war
+		icon = GFX_ac_ud_focus_BLD_ud_crossroads_after_the_war
+		x = 5
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = BLD_ud_train_inspections
+			focus = BLD_ud_isaf_transit
+		}
+		available = {
+			OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate }
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 6 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.04
+			country_event = { id = ac_ud_mina.714 }
+		}
+	}
+}

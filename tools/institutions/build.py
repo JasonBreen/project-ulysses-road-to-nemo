@@ -45,7 +45,8 @@ def capture_profiles():
 
 def triggers(profiles):
     tags='\n'.join('original_tag = '+r['tag'] for r in profiles)
-    rows=[block('ac_pol_profiled',block('OR',tags)),
+    # A custom tooltip preserves the full condition but suppresses all tag rows.
+    rows=[block('ac_pol_profiled',block('custom_trigger_tooltip','tooltip = ac_pol_profiled_tt\n'+block('OR',tags))),
           block('ac_pol_active','ac_pol_profiled = yes has_country_flag = ac_pol_initialized has_capitulated = no any_owned_state = { always = yes }'),
           block('ac_pol_uses_regional_tree',block('OR','\n'.join('original_tag = '+r['tag'] for r in profiles if r['regional_tree']))),
           block('ac_pol_can_adopt','ac_pol_active = yes political_power >= 30 check_variable = { ac_pol_capacity >= 15 } NOT = { has_country_flag = ac_pol_policy_cooldown }'),
@@ -233,6 +234,7 @@ def decisions_and_tree(profiles):
 
 
 def localization_and_hooks(profiles):
+    loc('ac_pol_profiled_tt','This country has a national institutional profile')
     names={'civil_administration':'Civil administration','party_secretariat':'Party and service secretariats','command_administration':'Command administration','executive_office':'Executive service offices','crown_office':'Crown and service offices','council_office':'Council administration'}
     text=''
     for form,title in names.items():

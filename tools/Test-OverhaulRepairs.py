@@ -32,14 +32,15 @@ class OverhaulRepairs(unittest.TestCase):
         manifest = json.loads((ROOT / 'tools/overhaul/overview_assets.json').read_text())
         self.assertGreaterEqual(x, 0)
         self.assertGreaterEqual(y, -316)
-        self.assertLessEqual(x + manifest['width'], 1225)
-        self.assertLess(y + manifest['height'], int(get(get(controls['countries_mini'], 'position'), 'y')))
+        scale = float(get(node, 'scale'))
+        self.assertLessEqual(x + manifest['width'] * scale, 565)
+        self.assertLess(y + manifest['height'] * scale, 326)
         self.assertLess(self.gui.index('name = "ac_overhaul_world_overview"'),
-                        self.gui.index('name ="countries"', self.gui.index('gamesetup_interesting_countries_window')))
+                        self.gui.index('name = "countries"', self.gui.index('gamesetup_interesting_countries_window')))
         self.assertNotIn('name = "ac_briefing_map_statistics"', self.gui)
 
     def test_overview_controls_are_not_a_broad_fingerprint_exemption(self):
-        for old, new in [('x = 14 y = -304', 'x = 14 y = -305'),
+        for old, new in [('scale = 0.45', 'scale = 0.46'),
                          ('"GFX_ac_overhaul_world_overview"', '"GFX_missing"'),
                          ('"ac_overhaul_overview_note"', '"missing_note"')]:
             with self.subTest(change=old):
@@ -47,7 +48,8 @@ class OverhaulRepairs(unittest.TestCase):
                 self.assertNotEqual(changed, self.gui)
                 with self.assertRaises(ValueError):
                     normalize_for_fingerprint(changed)
-        self.assertNotIn('ac_overhaul_world_overview', remove_overview(self.gui, required=True))
+        from tools_responsive_import import responsive
+        self.assertNotIn('ac_overhaul_world_overview', remove_overview(responsive.restore_historical(self.gui), required=True))
 
     def test_legacy_map_removal_preserves_every_narrative_character(self):
         sample = '\ufeffl_english:\n BLK_GATHERING_STORM_DESC:0 "£GFX_map_belka_map\\nFull narrative, £GFX_other and \\"quotation\\"."\n'

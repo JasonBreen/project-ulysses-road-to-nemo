@@ -115,7 +115,7 @@ The original alpha targeted HOI4 1.13/1.14; on 1.19 it could crash at the menu a
 
 ## ▌ KNOWN BOGEYS
 
-- **Visual parity:** vanilla WWII imagery remains in some doctrine, continuous-focus, building, technology and special-project slots. The goal is *Strangereal art on every player-visible screen*, not a claim that the goal has been reached.
+- **Visual parity:** the static scrub of doctrine, continuous-focus, building, technology, manufacturer, and menu fallthroughs is in [docs/VANILLA_VISUAL_SCRUB.md](docs/VANILLA_VISUAL_SCRUB.md). The goal is still *Strangereal art on every player-visible screen*. Placeholders and the leftovers in that note are not a claim that the goal has been reached, and it has not been checked in HOI4.
 - **Inherited engine errors:** vanilla Earth-country content still references removed tags and equipment. These errors need investigation and targeted overrides, not blanket assumptions that they are harmless.
 - **AI doctrine and division design:** inherited division templates use obsolete syntax; subdoctrine effects need tuning for the mod's modern units.
 - **Scenario setup and history:** duplicate 1991 bookmarks, invalid ship-name groups, equipment icons, aircraft variants and a duplicate unit ID remain on the task list.

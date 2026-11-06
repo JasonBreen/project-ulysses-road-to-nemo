@@ -30,9 +30,9 @@ These were verified and left for the owner. Items 8–9 are now marked done afte
 
 `events/ac_war_events.txt` `war_event.1` and `war_event.2` are unreferenced stubs (`picture = xxx`, `is_triggered_only = yes`, no caller elsewhere in the mod). `war_event.2` reuses the `war_event.1` title, description, and option keys, and the static reference audit warns that `war_event.1.t`, `war_event.1.desc`, and `war_event.1.a` have no localisation. They were not edited.
 
-1. **Vanilla-visuals audit**
-   - List every sprite on screen that resolves to a vanilla texture: continuous focuses, grand doctrines, 1.15+ buildings, special projects, appended `.gfx` entries, MIO icons.
-   - Replace each with Strangereal art, or with mod placeholders until art exists.
+## Implementation tasks
+
+1. **Vanilla-visuals audit** — static scrub recorded in [VANILLA_VISUAL_SCRUB.md](VANILLA_VISUAL_SCRUB.md). Player-visible fallthroughs found in that pass are rebound to existing mod art or marked placeholders. Leftovers (3D building meshes, unconfirmed 1.17+ subdoctrine sprite names, designer frame counts, interface chrome) are listed there and are not treated as cleared. Native rendering was not run.
 2. **Silence vanilla content**
    - Empty-override the Earth-country focus, event, decision, scripted-effect and MIO files that error against the Strangereal setup (~3,300 log lines).
    - Keep generic files that 1.19 systems rely on.

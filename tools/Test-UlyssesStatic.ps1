@@ -203,6 +203,20 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
+Write-Output 'Visual scrub news-picture regressions'
+& $pythonHost (Join-Path $PSScriptRoot 'Test-VisualScrub.py')
+if ($LASTEXITCODE -ne 0) {
+    Write-Error 'Visual scrub news-picture regressions failed.'
+    exit 1
+}
+
+Write-Output 'Vanilla visual scrub contract'
+& $pythonHost (Join-Path $PSScriptRoot 'visual_scrub/build_fallthroughs.py') --check
+if ($LASTEXITCODE -ne 0) {
+    Write-Error 'Vanilla visual scrub contract failed.'
+    exit 1
+}
+
 Write-Output 'Static regression checks passed.'
 exit 0
 } finally {

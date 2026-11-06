@@ -116,6 +116,7 @@ class Compiler:
                     self.check_reward(r, where, ideas, events, offices, states)
                 for text in (f.title, f.desc):
                     self.require(text.isascii() and '"' not in text, where + ': ASCII text without double quotes required')
+                self.require(seams.title_fits(f.title), where + ': title does not fit the caption in three lines')
         for i in m.IDEAS:
             self.require(i.modifiers, i.key + ': an idea needs at least one modifier')
             for k, v in i.modifiers.items():

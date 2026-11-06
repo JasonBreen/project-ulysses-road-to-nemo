@@ -15,6 +15,7 @@ done is `tools/Test-FocusVisibility.py`, with its ratchet in
 | `lint.py` | The bespoke and anti-filler gate (see `BRIEF.md`) |
 | `package.py` | Builds or checks every spec in both roots, and writes each package's `budget.json` and `assets.json` |
 | `test_compiler.py` | Golden output, layout, validation and lint regressions on `fixtures/fixture_spec.py` |
+| `review.py` | Review evidence: a rendered image per tree (real icons, ACBriefing16 titles, lanes, the institutional block, the panel) and a content page, in `docs/evidence/national-depth/` |
 | `BRIEF.md` | The writer brief for one country |
 
 **What `compile.py` writes:**
@@ -39,6 +40,7 @@ done is `tools/Test-FocusVisibility.py`, with its ratchet in
 ```text
 python -B tools/national_depth/test_compiler.py           # Pillow 11.3.0
 python -B tools/national_depth/package.py --check
+python -B tools/national_depth/review.py --check
 python -B tools/Test-FocusVisibility.py
 python -B tools/overhaul/check_release_plan.py
 ```

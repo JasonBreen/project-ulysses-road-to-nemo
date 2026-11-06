@@ -128,6 +128,14 @@ def main() -> int:
     require("country_event = { id = world_event.2 days = 1 }" not in nuclear, "nuclear branch still dispatches continuation early")
     require("country_event = { id = world_event.2 days = 2 }" in lost, "final inherited defeat event no longer dispatches world_event.2")
     require("clr_global_flag = ac_postwar_wait_for_defeat_tree" in world_events, "world_event.2 does not clear deferral state")
+    require("set_global_flag = belka_lost_belkan_war" in nuclear, "nuclear ending does not record the Belkan defeat")
+    require("country_event = { id = belka_dlp_war.101 days = 2 }" in event_block(belka_events, "belka_dlp_war.100"),
+            "the nuclear strikes no longer lead to the defeat that records belka_lost_belkan_war")
+    handoff = event_block(world_events, "world_event.2")
+    require(handoff.find("set_global_flag = belka_lost_belkan_war") != -1
+            and handoff.find("set_global_flag = belka_lost_belkan_war") < handoff.find("clr_global_flag = ac_postwar_wait_for_defeat_tree")
+            and handoff.find("clr_global_flag = ac_postwar_wait_for_defeat_tree") < handoff.find("ac_continuation.1"),
+            "world_event.2 must backstop the defeat flag before clearing the wait flag and routing the postwar")
 
     require("prerequisite = { focus = BLK_the_crisis_continues }" in focus, "campaign opening is not attached to the inherited prewar focus")
     require("NOT = { has_decision = ac_belkan_civilian_reserve }" in decisions, "logistics decision is not mutually exclusive")

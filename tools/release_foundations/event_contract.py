@@ -53,6 +53,9 @@ def original_option_order(original,metadata,effects,where):
 
 def restore_option(ident,original,candidate):
     if ident.startswith('belka_dlp_war.'):
+        # The nuclear ending alone records the Belkan defeat the postwar router
+        # reads (reviewed defeat-record repair); .103 already sets it in its input.
+        if ident=='belka_dlp_war.101':suffix(candidate,'set_global_flag = belka_lost_belkan_war',ident+' defeat record')
         suffix(candidate,'REC = { ac_release_observe_country = yes } SBK = { ac_release_observe_country = yes }',ident)
         return candidate
     expected_metadata=[n for n in original if n[0]in META]

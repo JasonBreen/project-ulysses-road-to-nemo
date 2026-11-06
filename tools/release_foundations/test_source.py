@@ -15,6 +15,13 @@ class Source(unittest.TestCase):
         for relative,old,new in [('events/AWWNB.txt','size = 0.25','size = 0.35'),('events/Belka.txt','transfer_state = 316','transfer_state = 345')]:
             text=(MOD/relative).read_text(encoding='utf-8-sig');self.assertIn(old,text)
             with self.assertRaisesRegex(ValueError,'Protected ordered'):source_contract.validate_event_operations({relative:text.replace(old,new,1)})
+    def test_nuclear_ending_records_the_defeat_and_only_that_suffix_is_accepted(self):
+        text=(MOD/'events/Belka.txt').read_text(encoding='utf-8-sig')
+        line='\t\tset_global_flag = belka_lost_belkan_war\n\t}\n\timmediate'
+        self.assertEqual(1,text.count(line))
+        start=text.index('id = belka_dlp_war.101');self.assertLess(start,text.index(line));self.assertLess(text.index(line),text.index('id = belka_dlp_war.102'))
+        for mutated in (text.replace(line,'\t}\n\timmediate',1),text.replace(line,line.replace('belka_lost_belkan_war','belka_won_belkan_war'),1)):
+            with self.assertRaisesRegex(ValueError,'Protected ordered'):source_contract.validate_event_operations({'events/Belka.txt':mutated})
     def test_scope_order_option_and_unreviewed_guard_mutations_fail_closed(self):
         from script import render
         def tree(relative):return source_contract.parse((MOD/relative).read_text(encoding='utf-8-sig'))

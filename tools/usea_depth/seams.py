@@ -253,7 +253,8 @@ def regime_effect(package, slug, ruling_party, character, sub_ideology, election
 
 
 BANNED = (
-    "transfer_state", "annex_country", "declare_war_on", "add_state_core", "remove_state_core", "set_owner",
+    "transfer_state", "annex_country", "declare_war_on", "add_core_of", "remove_core_of", "add_state_core",
+    "remove_state_core", "set_owner",
     "set_state_controller", "create_wargoal", "add_to_faction", "remove_from_faction", "dismantle_faction",
     "set_global_flag = ac_ucw_", "clr_global_flag = ac_ucw_", "launch_nuke",
 )

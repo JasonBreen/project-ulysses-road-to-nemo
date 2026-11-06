@@ -77,6 +77,10 @@ class Seams(unittest.TestCase):
         self.assertEqual([], seams.political_violations(effect))
         self.assertEqual(["ac_ud_eru_reward"], seams.political_violations("ac_ud_eru_reward = {\n\tset_politics = { ruling_party = fascism }\n}\n"))
         self.assertEqual(["set_global_flag = ac_ucw_"], seams.banned_uses("set_global_flag = ac_ucw_war_started"))
+        # Core changes use the state-scope effects add_core_of / remove_core_of.
+        self.assertEqual(["add_core_of"], seams.banned_uses("171 = { add_core_of = ERU }"))
+        self.assertEqual(["remove_core_of"], seams.banned_uses("310 = { remove_core_of = SNS }"))
+        self.assertEqual(["transfer_state"], seams.banned_uses("ERU = { transfer_state = 310 }"))
 
     def test_opening_trees_keep_foreign_blocks(self):
         # build_content.py writes ERU_opening.txt and FCU_opening.txt in full.

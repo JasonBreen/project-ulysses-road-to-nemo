@@ -18,7 +18,7 @@ ROOT = HERE.parents[2]
 sys.path[:0] = [str(HERE), str(ROOT / "tools")]
 
 from usea_depth import seams  # noqa: E402
-from content import (BUDGET, BY_ID, COUNTRIES, FOCUSES, GATE_TEXT, GATES, IDEAS, MARKER, NAMESPACE,  # noqa: E402
+from content import (AVAILABLE_IF_CAPITULATED, BUDGET, BY_ID, COUNTRIES, FOCUSES, GATE_TEXT, GATES, IDEAS, MARKER, NAMESPACE,  # noqa: E402
                      PACKAGE, PATH_FLAGS, REGIMES)
 from narrative import all_events  # noqa: E402
 
@@ -133,6 +133,8 @@ def focus_node(row, exclusive):
         body += block("prerequisite", " ".join("focus = " + ident for ident in group))
     if exclusive[row.id]:
         body += block("mutually_exclusive", " ".join("focus = " + ident for ident in sorted(exclusive[row.id], key=lambda i: BY_ID[i].order)))
+    if row.id in AVAILABLE_IF_CAPITULATED:
+        body += "available_if_capitulated = yes\n"
     body += block("available", gate_text(row))
     if "prewin" in row.gates:
         body += block("bypass", "custom_trigger_tooltip = { tooltip = ac_ud_partners_gate_impact_tt date > 1999.7.7 }")

@@ -131,6 +131,8 @@ class PartnersWorld(CW.World):
 
     def can_start(self, ident, tag):
         node, country = self.shared[ident], self.countries[tag]
+        if country.capitulated and mapping(node).get("available_if_capitulated", "no") != "yes":
+            return False
         finished = self.done(tag)
         for key, _, value in node:
             if key == "prerequisite" and not any(focus in finished for _, _, focus in value):
@@ -388,6 +390,81 @@ class PartnersPackage(unittest.TestCase):
         sns.capitulated = True
         self.assertFalse(world.trigger([("custom_trigger_tooltip", "=", [("tooltip", "=", "x")] + parse(GATES["free"][0]))], sns))
         self.assertTrue(world.trigger(parse(GATES["occupied"][0]), sns))
+
+    def assert_political_choices_exclusive(self, world, tag, openers):
+        for chosen in openers:
+            world.countries[tag].focuses.clear()
+            for group in BY_ID[chosen].prerequisites:
+                world.countries[tag].focuses.update(group)
+            self.assertTrue(world.can_start(chosen, tag), chosen)
+            world.finish(chosen, tag)
+            for other in openers:
+                if other != chosen:
+                    self.assertFalse(world.can_start(other, tag), (chosen, other))
+
+    def test_every_political_opener_excludes_every_other_choice(self):
+        for tag in COUNTRIES:
+            openers = [row.id for row in FOCUSES if row.tag == tag and row.y == 1 and row.x <= 40]
+            self.assertEqual(4 if tag in ("SNS", "AMB") else 3, len(openers))
+            self.assert_political_choices_exclusive(PartnersWorld(), tag, openers)
+            # Deliberately remove reform-to-reform edges, reproducing the review defect.
+            broken = PartnersWorld()
+            reforms = set(openers[1:])
+            for ident in reforms:
+                broken.shared[ident] = [(k, op, [n for n in value if n[2] not in reforms]
+                                         if k == "mutually_exclusive" else value)
+                                        for k, op, value in broken.shared[ident]]
+            with self.assertRaises(AssertionError):
+                self.assert_political_choices_exclusive(broken, tag, openers)
+
+    def occupation_world(self, prerequisite="coup_courts"):
+        world = PartnersWorld("2004.1.1")
+        world.countries["SNS"].capitulated = True
+        world.countries["SNS"].focuses.add("SNS_ud_" + prerequisite)
+        world.globals.add("ac_ucw_war_started")
+        return world
+
+    def assert_occupation_chain_reachable(self, world):
+        for slug in ("invasion_summer", "quiet_ministries", "records_into_hiding", "exile_ledger"):
+            ident = "SNS_ud_" + slug
+            self.assertTrue(world.can_start(ident, "SNS"), ident)
+            world.finish(ident, "SNS")
+        self.assertFalse(world.can_start("SNS_ud_engineers_families", "SNS"))
+        world.globals.add("ac_ucw_brief_engineers")
+        self.assertTrue(world.can_start("SNS_ud_engineers_families", "SNS"))
+        world.finish("SNS_ud_engineers_families", "SNS")
+
+    def test_occupation_chain_after_capitulation_and_missing_setting_mutations(self):
+        # Each pre-war route may be complete while the invasion focus is unfinished.
+        for prerequisite in ("open_reception_centres", "transit_only", "coup_courts", "coup_cordon"):
+            self.assert_occupation_chain_reachable(self.occupation_world(prerequisite))
+        for slug in ("invasion_summer", "quiet_ministries", "records_into_hiding", "engineers_families", "exile_ledger"):
+            broken = self.occupation_world()
+            ident = "SNS_ud_" + slug
+            broken.shared[ident] = [n for n in broken.shared[ident] if n[0] != "available_if_capitulated"]
+            with self.assertRaises(AssertionError, msg=ident):
+                self.assert_occupation_chain_reachable(broken)
+
+    def test_capitulation_default_and_scripted_gates_still_apply(self):
+        world = PartnersWorld("2004.1.1")
+        ident = "SNS_ud_national_question"
+        self.assertTrue(world.can_start(ident, "SNS"))
+        world.countries["SNS"].capitulated = True
+        self.assertFalse(world.can_start(ident, "SNS"))
+        world.shared[ident].append(("available_if_capitulated", "=", "no"))
+        self.assertFalse(world.can_start(ident, "SNS"))
+        world.shared[ident][-1] = ("available_if_capitulated", "=", "yes")
+        self.assertTrue(world.can_start(ident, "SNS"))
+        self.assertFalse(world.can_start("SNS_ud_quiet_ministries", "SNS"), "Prerequisite still required")
+        world.countries["SNS"].focuses.add("SNS_ud_invasion_summer")
+        self.assertFalse(world.can_start("SNS_ud_quiet_ministries", "SNS"), "War gate still required")
+        world.globals.add("ac_ucw_war_started")
+        self.assertTrue(world.can_start("SNS_ud_quiet_ministries", "SNS"))
+        self.assertFalse(world.can_start("SNS_ud_free_districts", "SNS"))
+        world.countries["SNS"].capitulated = False
+        self.assertFalse(world.can_start("SNS_ud_quiet_ministries", "SNS"), "Occupation gate still required")
+        world.globals.add("ac_ucw_stonehenge_seized")
+        self.assertTrue(world.can_start("SNS_ud_quiet_ministries", "SNS"))
 
     # Guards ----------------------------------------------------------------
     def test_fiscal_guards_banned_effects_and_continental_war_flags(self):

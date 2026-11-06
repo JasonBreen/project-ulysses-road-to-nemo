@@ -302,6 +302,10 @@ class PartnersPackage(unittest.TestCase):
             self.assertEqual(row["name"], self.own_loc[build.office(slug)])
             # An office, never a personal name.
             self.assertRegex(self.own_loc[build.office(slug)], r"\b(Council|Cabinet|Board|Directorate|Presidium|Committee)\b")
+        for row in REGIMES.values():
+            # The country keeps a name under every party a path can install.
+            for suffix in ("", "_DEF"):
+                self.assertTrue(self.loc.get("%s_%s%s" % (row["tag"], row["party"], suffix)), (row["tag"], row["party"], suffix))
         callers = [row for row in FOCUSES if any(t.startswith("regime:") for t in row.reward)]
         self.assertEqual(len(REGIMES), len(callers))
         for tag in COUNTRIES:
@@ -433,6 +437,10 @@ class PartnersPackage(unittest.TestCase):
         for sentence in re.split(r"(?<=[.!?])\s", prose):
             if re.search(r"\b(construct|built|building began|groundbreaking)", sentence, re.I) and re.search(r"Stonehenge|battery|railgun", sentence, re.I):
                 self.assertIsNone(re.search(r"\b(19|20)\d\d\b", sentence), sentence)
+        # No invented impact geography: where fragments fell, what was spared, or compass bearings between countries.
+        for phrase in ("fragment field", "fell where they fell", "spared", "fell far", "fell on", "struck the town", "lost its water works"):
+            self.assertNotIn(phrase, prose.lower(), phrase)
+        self.assertIsNone(re.search(r"\b(north|south|east|west)(ward|wards)?\b", prose, re.I))
         for year in re.findall(r"\b(199\d|200\d)\b", prose):
             self.assertIn(year, {"1991", "1995", "1996", "1997", "1998", "1999", "2000", "2003", "2004", "2005"}, year)
 

@@ -425,4 +425,52 @@ ac_ud_minors_b_programmes = {
 			base = 2
 		}
 	}
+
+	SHI_ud_adopt_programme = {
+		icon = ac_ud_minb_shi
+		allowed = { original_tag = SHI }
+		visible = {
+			tag = SHI original_tag = SHI NOT = { has_focus_tree = ac_ud_shi_tree }
+		}
+		available = {
+			ac_pol_previous_tree_idle = yes NOT = { has_focus_tree = ac_ud_shi_tree }
+		}
+		cost = 0
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = {
+					ac_pol_previous_tree_idle = yes NOT = { has_focus_tree = ac_ud_shi_tree }
+				}
+				load_focus_tree = { tree = ac_ud_shi_tree keep_completed = yes }
+			}
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+
+	SHI_ud_district_census_decision = {
+		icon = ac_ud_minb_shi
+		allowed = { original_tag = SHI }
+		visible = {
+			original_tag = SHI has_completed_focus = SHI_ud_count_the_districts
+		}
+		available = {
+			political_power >= 25 has_completed_focus = SHI_ud_count_the_districts NOT = { has_country_flag = ac_ud_minb_programme_cooldown }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			add_political_power = -25
+			ac_ud_minors_b_pay_programme = yes
+			add_timed_idea = { idea = SHI_ud_district_registers_spirit days = 180 }
+			add_stability = 0.01
+			set_country_flag = { flag = ac_ud_minb_programme_cooldown days = 180 }
+		}
+		ai_will_do = {
+			base = 2
+		}
+	}
 }

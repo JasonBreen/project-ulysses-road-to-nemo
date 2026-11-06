@@ -22,7 +22,8 @@ Package `minors_b` gives Spayca, Calladen, Roca Roja, Rohden, Voslage and Corsca
 | ROH | Rohden | `ac_ud_roh_tree` | 61 | 12 | Northern Charter Cabinet, Concordat Council of Industry, Central Shipyard Council | member | 214, 503, 559 |
 | VOS | Voslage | `ac_ud_vos_tree` | 61 | 12 | Frontier Neutrality Cabinet, Continental Solidarity Government, Frontier Defence Directorate | member | 437, 441, 446 |
 | CRS | Corscae | `ac_ud_crs_tree` | 60 | 12 | Western Executive Office, Harbour Commons Council, Two-Island Federal Cabinet | not a member | 62, 575, 174 |
-| | **Total** | | **364** | **74** | | | |
+| SHI | Shilage | `ac_ud_shi_tree` | 30 | 7 | Provisional Assembly Cabinet, Provisional Directorate | not a member | 426, 447, 607 |
+| | **Total** | | **394** | **81** | | | |
 
 ## Political paths
 
@@ -48,6 +49,8 @@ Each path is one scripted effect built with `seams.regime_effect()`. Every focus
 | `ac_ud_minors_b_regime_crs_western_executive` | `CRS_ud_western_executive_office` (Western Executive Office) | Non-aligned | despotism | suspended | neutrality 55, democratic 25, communism 10, fascism 8, monarchism 2 | Provisional gameplay |
 | `ac_ud_minors_b_regime_crs_harbour_commons` | `CRS_ud_harbour_commons_office` (Harbour Commons Council) | Communist | conservative_socialism | suspended | communism 46, democratic 28, neutrality 20, fascism 4, monarchism 2 | Provisional gameplay |
 | `ac_ud_minors_b_regime_crs_two_island_compact` | `CRS_ud_two_island_compact_office` (Two-Island Federal Cabinet) | Democratic | centrism | allowed | democratic 50, neutrality 30, communism 12, fascism 6, monarchism 2 | Provisional gameplay |
+| `ac_ud_minors_b_regime_shi_assembly` | `SHI_ud_assembly_office` (Provisional Assembly Cabinet) | Democratic | centrism | allowed | democratic 46, neutrality 38, communism 8, fascism 6, monarchism 2 | Provisional gameplay |
+| `ac_ud_minors_b_regime_shi_directorate` | `SHI_ud_directorate_office` (Provisional Directorate) | Non-aligned | centrism_na | suspended | neutrality 58, democratic 28, communism 7, fascism 5, monarchism 2 | Provisional gameplay |
 
 ## Events
 
@@ -129,6 +132,13 @@ Every event body is built with `seams.event_text()` and passes `seams.event_prob
 | `ac_ud_minb.610` | Boats on the Beaches | focus `CRS_ud_refugee_boats` | Provisional gameplay: the Erusean refugee closure is official (ACES Chronicle, 2000 / 04.21); the boats reaching Corscae are not |
 | `ac_ud_minb.611` | The Strait Goes Quiet | focus `CRS_ud_war_isolation` | Provisional gameplay: Erusea's invasion of San Salvacion and seizure of Stonehenge is official (ACES Chronicle, 2003 / SUMMER) |
 | `ac_ud_minb.612` | Corscae After the War | focus `CRS_ud_corscae_after_the_war` | Provisional gameplay: the war's official end is ACES Chronicle, 2005 / 09.19; Corscae's part in it is not |
+| `ac_ud_minb.701` | Shilage Restored | focus `SHI_ud_provisional_council` | Provisional gameplay: Shilage's cores are mod provenance (history/states 426, 447, 607); the official 2019 / 10.01 independence declaration is outside this window (ACES Chronicle) |
+| `ac_ud_minb.702` | The Assembly Elected | focus `SHI_ud_national_assembly` | Provisional gameplay |
+| `ac_ud_minb.703` | The Provisional Directorate | focus `SHI_ud_provisional_directorate` | Provisional gameplay |
+| `ac_ud_minb.704` | The Former Administration | focus `SHI_ud_former_administration` | Provisional gameplay |
+| `ac_ud_minb.705` | The Night the Sky Fell | focus `SHI_ud_impact_relief` | Provisional gameplay: the impact is official (ACES Chronicle, 1999 / 07.08); no impact site or damage in Shilage is asserted |
+| `ac_ud_minb.706` | Between the Armies | focus `SHI_ud_war_on_the_continent` | Provisional gameplay: Erusea's invasion of San Salvacion is official (ACES Chronicle, 2003 / SUMMER) |
+| `ac_ud_minb.707` | Shilage After the War | focus `SHI_ud_shilage_after_the_war` | Provisional gameplay: the war's official end is ACES Chronicle, 2005 / 09.19; Shilage's part in it is not |
 
 ## Lore, geography and design rows
 
@@ -173,6 +183,10 @@ Every event body is built with `seams.event_text()` and passes `seams.event_prob
 | A West-East rivalry between the two main islands, the strait ferry, the eastern fishing fleet and harbour assemblies | Provisional gameplay | No source describes Corscaen society or politics; the fishing fleet is flavour, not a mod resource | CRS_ud_strait_divide_spirit, CRS_ud_inter_island_conference, CRS_ud_east_fishing_fleet, ac_ud_minb.601, ac_ud_minb.603 | Implemented; static-validated; native untested |
 | Settlement or reserve use of Imperator Island | Provisional gameplay | No source describes Imperator Island beyond the mod's empty state 174 | CRS_ud_imperator_settlement, CRS_ud_imperator_reserve, ac_ud_minb.602 | Implemented; static-validated; native untested |
 | Refugee boats reaching Corscae after the Erusean closure | Provisional gameplay | Closure official (ACES Chronicle, 2000 / 04.21); the boats, numbers and Corscaen response are not | CRS_ud_refugee_boats, CRS_ud_land_the_boats, CRS_ud_imperator_reception, ac_ud_minb.610 | Implemented; static-validated; native untested |
+| Shilage does not exist at the 1991 start: its history file holds no state, and its three cores (426, 447, 607) are owned by Erusea | Mod provenance | history/countries/SHI - Shilage.txt; history/states/426-State_426.txt, 447-State_447.txt, 607-State_607.txt | ac_ud_shi_tree | Recorded; the tree stays dormant until a SHI country exists |
+| No authored Shilage release event exists; in 1991-2005 a SHI country can appear only through the engine's own release mechanics (an Erusean player releasing it, or a peace conference). The existing release foundation (capital 426) is unchanged | Mod provenance | docs/WORLD_RELEASE_FOUNDATIONS.md (SHI row); tools/release_foundations/README.md, 'Shilage core release' | ac_ud_shi_tree, SHI_ud_adopt_programme | No release, annexation, core or border change added |
+| Officially, Shilage is among the small nations annexed by Erusea that declare independence on 1 October 2019 | Official | ACES Chronicle, 2019 / 10.01, compiled in docs/STRANGEREAL_2006_2020_SOURCES.md | SHI event text only | Reference only; outside this package's 1991-2005 window. The SHI tree is an explicit alternate branch |
+| State 607 is an unresolved XXX placeholder and state 447 is not named in text; Shilage rewards use the capital or an ownership guard | Mod provenance | history/states/607-State_607.txt; AGENTS.md geography rule | SHI_ud_* build rewards | Implemented |
 
 ## Shared files touched
 

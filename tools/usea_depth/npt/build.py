@@ -48,10 +48,18 @@ def focus_text(f):
         body.append("prerequisite = { " + " ".join("focus = " + c.ident(r) for r in group) + " }")
     if f.excl:
         body.append("mutually_exclusive = { " + " ".join("focus = " + c.ident(r) for r in f.excl) + " }")
-    if f.available:
-        body.append("available = { " + f.available + " }")
+    available = f.available
+    if f.slug in c.NEUTRAL_FOCUSES:
+        available = (available + " " + c.NOT_HOSTING).strip() if f.slug != "neutral_waters" else c.NOT_HOSTING
+        body.extend(["cancel_if_invalid = yes", "continue_if_invalid = no"])
+    if available:
+        body.append("available = { " + available + " }")
     body.append(block("ai_will_do", f.ai).rstrip("\n"))
-    body.append(block("completion_reward", f.reward).rstrip("\n"))
+    reward = f.reward
+    if f.slug in c.NEUTRAL_FOCUSES:
+        # Also protect stale/in-flight rewards if hosting changes during the focus.
+        reward = block("if", block("limit", c.NOT_HOSTING) + reward)
+    body.append(block("completion_reward", reward).rstrip("\n"))
     body.append("search_filters = { }")
     return block("shared_focus", "\n".join(body))
 
@@ -96,8 +104,9 @@ def ideas(loc):
         loc[idea.ident] = idea.title
         loc[idea.ident + "_desc"] = idea.desc + "\n\n" + c.PROV
         modifier = "\n".join("%s = %s" % (k, number(v)) for k, v in idea.modifiers.items())
+        cancel = block("cancel", c.HOSTING) if idea.ident == "NPT_ud_neutral_waters_spirit" else ""
         rows.append(block(idea.ident, "picture = " + picture(idea) + "\nallowed = { always = no }\n"
-                          "allowed_civil_war = { always = no }\nremoval_cost = -1\n" + block("modifier", modifier).rstrip("\n")))
+                          "allowed_civil_war = { always = no }\nremoval_cost = -1\n" + cancel + block("modifier", modifier).rstrip("\n")))
     return HEADER + block("ideas", block("country", "\n".join(rows)).rstrip("\n"))
 
 
@@ -184,7 +193,7 @@ def ledger(ids):
             "| Stonehenge completed in a desert region of San Salvacion: eight railguns, an FCU-led international project, 19 June 1998 | Official | %s, 1998 / 06.19; Super Weapons, Stonehenge (https://acecombat.jp/en/chronicle/weapons/) | `NPT_ud_fragment_forecasts`, `ac_ud_npt.14` | Implemented as a date gate. The forecast request is provisional gameplay; no state is mapped |" % CHRON,
             "| Ulysses passes the Roche limit, 8 July 1999 | Official | %s, 1999 / 07.08 | `NPT_ud_after_the_fragments`, `ac_ud_npt.16`; shelter focuses end `date < 1999.7.8` | Implemented as a date gate. No impact site or damage on the islands is asserted |" % CHRON,
             "| Erusea stops taking in refugees, 21 April 2000 | Official | %s, 2000 / 04.21 | `NPT_ud_boats_from_the_south`, `ac_ud_npt.17` | Implemented as a date gate. Text reads correctly whether Erusea closes the border (`ac_ucw_border_closed`) or keeps it open; nothing is read or written |" % CHRON,
-            "| ISAF establishes its headquarters in North Point, 16 September 2004 | Official | %s, 2004 / 09.16 | `NPT_ud_allied_rear` (available only after `NPT_host_isaf` or with `ac_ucw_npt_isaf_rear_base`), its lane, `ac_ud_npt.20`, `NPT_ud_allied_rear_services_spirit` | Implemented. Never reads or sets `ac_ucw_isaf_formed`; the neutral lane is the alternative when no hosting happens |" % CHRON,
+            "| ISAF establishes its headquarters in North Point, 16 September 2004 | Official | %s, 2004 / 09.16 | `NPT_ud_allied_rear`, `ac_ud_npt_accept_hosting` (called by `NPT_host_isaf`, `ac_ucw.32.a` and the North Point HQ stage), its lane, `ac_ud_npt.20`, `NPT_ud_allied_rear_services_spirit` | Implemented. Never reads or sets `ac_ucw_isaf_formed`; the neutral lane remains available only without hosting. Provisional gameplay: later accepted hosting removes neutral status, cancels unfinished neutral focuses and opens the allied lane without blocking existing hosting choices |" % CHRON,
             "| Council, Parliament and Readiness Directorate paths; the convention; the prefects; national service | Provisional gameplay | Authored for this package (Usea Depth plan, private user approval 2026-11-06) | Politics band x 44-60 | Player-only alternate history; the AI stays on the Council path |",
             "| Island industry, fleet doctrines, shelter programme, relief, refugee policy, rear-base and neutral lanes, 2001-2005 briefings | Provisional gameplay | Authored for this package. There are no Chronicle entries for North Point before 2004 or for Usea in 2001-2002 | All other `NPT_ud_*` focuses and `ac_ud_npt.*` events | Implemented; values are placeholders |",
             "| Unnamed office leaders `NPT_ud_island_cabinet_office`, `NPT_ud_readiness_directorate_office` with generated portraits | Provisional gameplay | `seams.office_character()`; no new named person | `ac_ud_npt_regime_parliament`, `ac_ud_npt_regime_directorate` | Implemented |", "",

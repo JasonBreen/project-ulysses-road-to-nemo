@@ -416,7 +416,7 @@ class Guards(unittest.TestCase):
                                 for p in (MOD / "common/scripted_effects").glob("*.txt")), name)
 
     def test_war_still_starts_by_default(self):
-        # The package never touches the war files, so the Track A simulation is unchanged.
+        # The hosting reconciliation must not alter the default war-start calendar.
         spec = importlib.util.spec_from_file_location("ucw_for_npt", ROOT / "tools/Test-ContinentalWar.py")
         ucw = importlib.util.module_from_spec(spec)
         sys.modules["ucw_for_npt"] = ucw

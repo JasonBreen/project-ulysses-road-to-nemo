@@ -447,7 +447,7 @@ def build_state_parts(state, parts):
         ident = decision_id(state, d.slug)
         loc(ident, d.title)
         loc(ident + "_desc", d.desc + " Costs %d political power and 2 institutional capacity; when the fiscal model is ready, it also books a programme payment. Provisional gameplay." % d.pp)
-        available = "political_power >= %d %s NOT = { has_country_flag = ac_ud_minb_programme_cooldown }" % (d.pp, d.requires)
+        available = "political_power >= %d check_variable = { ac_pol_capacity >= 2 } %s NOT = { has_country_flag = ac_ud_minb_programme_cooldown }" % (d.pp, d.requires)
         effects = expand(state, d.effects, ident, ideas, events)
         complete = "add_political_power = -%d\nac_ud_minors_b_pay_programme = yes\n%s\nset_country_flag = { flag = ac_ud_minb_programme_cooldown days = %d }" % (d.pp, effects, d.days_re_enable)
         parts["decisions"].append(block(ident, "icon = ac_ud_minb_%s\nallowed = { original_tag = %s }\n" % (tag.lower(), tag) +

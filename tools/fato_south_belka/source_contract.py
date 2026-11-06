@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import sys
 
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246'
 PROTECTED=(
@@ -55,9 +56,33 @@ REVIEWED_STARTING_GOVERNMENT_UPDATE=dict(
     tested_source='51622f4d72c6e1c497156ce1dd7fed881723e3f0',
 )
 
+# PR #71 changes only four Belkan outcome hooks. Retain the captured version,
+# pin the reviewed file separately, and require the independent ordered-event
+# restoration proof rather than approving arbitrary event-file recaptures.
+REVIEWED_BELKAN_OUTCOME_UPDATE=dict(
+    path='events/Belka.txt',
+    original_sha256='b41096b5b6a7733d1b69d1fb92eea5d772033110795a43fabef9c1d4e2321ee5',
+    reviewed_sha256='911f06d49e0e32ca6c116c5aaa7e3f43edff84e9d8bb381607cbbdc04d213cef',
+    reviewed_commit='47328d73450a262b28e066b72b6ea167fbcfd4bf',
+    tested_source='ad004bb3dc34a9a90392dae0582dd5a9d4c5620e',
+)
+
+
+def validate_reviewed_belkan_outcomes(data):
+    for directory in (ROOT/'tools',ROOT/'tools/usea_expansion'):
+        if str(directory)not in sys.path:sys.path.append(str(directory))
+    from release_foundations.event_contract import validate_file
+    original=json.loads((ROOT/'tools/release_foundations/event_inputs.json').read_text())['files']['events/Belka.txt']
+    validate_file(original,data.decode('utf-8-sig'),'events/Belka.txt')
+
+
 def validate_protected(path,expected,data):
     actual=digest(data)
     if actual==expected:return 'original'
+    update=REVIEWED_BELKAN_OUTCOME_UPDATE
+    if path==update['path'] and expected==update['original_sha256'] and actual==update['reviewed_sha256']:
+        validate_reviewed_belkan_outcomes(data)
+        return 'reviewed-belkan-outcome-owner'
     for disposition,update in (
             ('reviewed-release-owner',REVIEWED_RELEASE_UPDATE),
             ('reviewed-fat-character-owner',REVIEWED_FAT_CHARACTER_UPDATE),

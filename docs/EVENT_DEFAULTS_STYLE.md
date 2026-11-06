@@ -136,12 +136,12 @@ Regenerated with `python -B tools/content_waves/refresh_records.py` (which runs
 
 | Figure | Value |
 | --- | ---: |
-| Measured fields | 3,369 |
-| Country-event fields | 3,007 |
+| Measured fields | 3,421 |
+| Country-event fields | 3,059 |
 | News-event fields | 362 |
 | Static title clips | 0 |
 | Unscrollable static body clips | 0 |
-| Scroll-accessible long bodies | 537 |
+| Scroll-accessible long bodies | 563 |
 | Dynamic fields | 329 |
 | Missing-glyph fields | 0 |
 | Parent-clearance findings | 0 |

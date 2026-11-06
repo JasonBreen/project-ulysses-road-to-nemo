@@ -150,12 +150,15 @@ def page(rows):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--check', action='store_true')
+    parser.add_argument('--only', nargs='*', help='limit to these tags (for work in progress)')
     args = parser.parse_args()
     art.require_pinned_pillow()
     font = atlas_font()
     rows, files = [], {}
     for path in package.discover():
         module = package.load(path)
+        if args.only and module.COUNTRY.tag not in args.only:
+            continue
         outputs, budget, _, positions = compile_country(module)
         image = tree_image(module, outputs, budget, positions, font)
         files['%s.png' % module.COUNTRY.tag.lower()] = art.encoded(image, 'PNG')

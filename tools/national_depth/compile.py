@@ -59,6 +59,7 @@ class Compiler:
         self.n = names(self.c)
         self.loc = {}
         self.problems = []
+        self.option_titles = {}
 
     # --- identifiers ------------------------------------------------------------------------
     def fid(self, key):
@@ -132,6 +133,16 @@ class Compiler:
                     self.check_reward(r, e.key, ideas, events, offices, states)
         for o in m.OFFICES:
             self.require(o.party in parties and o.ideology in parties[o.party], o.key + ': unknown party or sub-ideology')
+        # Focus, idea, flag and office identifiers share one prefix; a collision would make two
+        # objects share a localisation key, so one title would silently overwrite the other.
+        flags = {r.name for b in m.BRANCHES for f in b.focuses for r in (*f.reward, *f.requires) if isinstance(r, (S.Flag, S.HasFlag, S.NotFlag))}
+        flags |= {r.name for e in m.EVENTS for o in e.options for r in o.effects if isinstance(r, S.Flag)}
+        spaces = {'focus': set(keys), 'idea': set(ideas), 'flag': flags, 'office': {o.key + '_office' for o in m.OFFICES}}
+        seen = {}
+        for kind, members in spaces.items():
+            for member in members:
+                self.require(member not in seen, 'identifier %s is both a %s and a %s' % (self.fid(member), seen.get(member), kind))
+                seen[member] = kind
         self.require(all(s.layer in catalogue.LAYERS for s in m.SOURCES) and m.SOURCES, 'sources need a known layer')
 
     def check_reward(self, r, where, ideas, events, offices, states):
@@ -177,6 +188,10 @@ class Compiler:
                 return block('capital_scope', build)
             return block('if', block('limit', 'owns_state = %d' % r.state) + block(str(r.state), build))
         if isinstance(r, S.Research):
+            # The bonus is listed under its source's name: a focus id is already localised;
+            # an event option's bonus is named after the option, so it gets the option text.
+            if owner not in self.loc:
+                self.loc[owner] = self.option_titles.get(owner, owner)
             return block('add_tech_bonus', 'name = %s\nbonus = %s\nuses = %d\ncategory = %s' % (owner, r.bonus, r.uses, r.category))
         if isinstance(r, S.PP):
             return 'add_political_power = %d\n' % r.amount
@@ -264,6 +279,8 @@ class Compiler:
         provenance = '# Bespoke national tree; source: tools/national_depth (%s). Provisional gameplay unless a ledger row says otherwise. Native acceptance pending.\n' % c.name
         outputs[n['focus_file']] = (provenance + tree).encode('utf-8')
         self.loc[n['tree']] = c.name + ': National Programme'
+        self.loc[n['tree'] + '_desc'] = ('The national focus programme of %s, with the shared institutional programme. '
+                                          'Provisional gameplay unless a source ledger row says otherwise.' % c.name)
         # ideas
         idea_rows = ''
         for i in m.IDEAS:
@@ -295,6 +312,7 @@ class Compiler:
             for k, o in enumerate(e.options):
                 name = '%s.%s' % (ident, 'abcd'[k])
                 self.loc[name] = o.title
+                self.option_titles[name.replace('.', '_')] = o.title
                 options += block('option', 'name = %s\n' % name + block('ai_chance', 'base = %d' % o.ai) +
                                  ''.join(self.reward(r, name.replace('.', '_'), i) for i, r in enumerate(o.effects)))
             events += block('country_event', 'id = %s\ntitle = %s.t\ndesc = %s.d\npicture = GFX_%s_event_%d\nis_triggered_only = yes\n'

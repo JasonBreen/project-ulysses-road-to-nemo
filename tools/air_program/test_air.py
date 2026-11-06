@@ -170,14 +170,36 @@ class Definitions(Captured):
         baseline=json.loads((HERE/'preserved_sources.json').read_text())
         updates=reviewed_updates()
         cleanup=json.loads((ROOT/'tools/history_data_cleanup_updates.json').read_text())['files']
+        campaign=json.loads((ROOT/'tools/ac_campaigns/reviewed_owner_updates.json').read_text())['files']
         for path,expected in baseline['sources'].items():
             update=updates.get(path)
             repair=cleanup.get(path)
-            self.assertFalse(update and repair,path)
+            continuation=campaign.get(path)
+            self.assertLessEqual(sum(bool(row) for row in (update,repair,continuation)),1,path)
             if update:self.assertEqual(expected,update['old_sha256'],path)
             if repair:self.assertEqual(expected,repair['old_normalized_sha256'],path)
-            current=update['new_sha256'] if update else repair['new_normalized_sha256'] if repair else expected
+            if continuation:self.assertEqual(expected,continuation['old_sha256'],path)
+            current=update['new_sha256'] if update else repair['new_normalized_sha256'] if repair else continuation['new_sha256'] if continuation else expected
             self.assertEqual(current,digest(ROOT/path),path)
+
+    def test_campaign_owner_delta_preserves_all_other_functions_and_canonical_output(self):
+        files=json.loads((ROOT/'tools/ac_campaigns/reviewed_owner_updates.json').read_text())['files']
+        relative='mod/2985041246/common/scripted_effects/ac_ucw.txt'
+        self.assertEqual({relative},set(files));row=files[relative]
+        self.assertEqual([],row['added']);self.assertEqual([],row['removed'])
+        changed={'ac_ucw_eru_war_tick','ac_ucw_destroy_megalith'}
+        self.assertEqual(changed,set(row['changed']))
+        self.assertEqual(changed,set(row['old_changed_function_ast_sha256']))
+        self.assertEqual(changed,set(row['reviewed_function_ast_sha256']))
+        old=row['unchanged_function_ast_sha256'];self.assertEqual(25,len(old))
+        self.assertFalse(set(old)&changed)
+        current={key:body for key,_,body in read(ROOT/relative)}
+        self.assertEqual(set(old)|changed,set(current))
+        for name,body in current.items():
+            actual=hashlib.sha256(json.dumps(body,separators=(',',':')).encode()).hexdigest()
+            self.assertEqual((row['reviewed_function_ast_sha256'] if name in changed else old)[name],actual,name)
+        result=subprocess.run([sys.executable,'-B','tools/build_continental_war.py','--check','--check-owner-effects'],cwd=ROOT,capture_output=True,text=True)
+        self.assertEqual(0,result.returncode,result.stdout+result.stderr)
 
     def test_reviewed_release_owner_delta_matches_canonical_generator(self):
         updates=json.loads((HERE/'reviewed_owner_updates.json').read_text());files=updates['files']

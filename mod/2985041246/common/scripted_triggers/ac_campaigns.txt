@@ -1,0 +1,591 @@
+ac_camp_participant = {
+	OR = { AND = { tag = ERU original_tag = ERU } AND = { tag = FCU original_tag = FCU } AND = { tag = OSE original_tag = OSE } AND = { tag = YUK original_tag = YUK } AND = { tag = BLK original_tag = BLK } AND = { tag = SNS original_tag = SNS } AND = { tag = NPT original_tag = NPT } AND = { tag = AMB original_tag = AMB } AND = { tag = UGE original_tag = UGE } AND = { tag = DEL original_tag = DEL } AND = { tag = SBK original_tag = SBK } AND = { tag = SAP original_tag = SAP } AND = { tag = UST original_tag = UST } AND = { tag = GEB original_tag = GEB } AND = { tag = REC original_tag = REC } AND = { tag = FAT original_tag = FAT } }
+}
+
+ac_camp_eligible = {
+	ac_camp_participant = yes OR = { has_capitulated = no tag = SNS } any_owned_state = { always = yes }
+}
+
+ac_camp_can_pay = {
+	ac_camp_eligible = yes political_power >= 25 ac_pol_active = yes check_variable = { ac_pol_capacity >= 2 } OR = { ac_econ_enabled = no AND = { ac_econ_ready = yes ac_econ_can_pay_programme = yes } }
+}
+
+ac_camp_relief_context = {
+	ac_camp_eligible = yes tag = SNS original_tag = SNS has_country_flag = SNS_camp_0_prepared date > 2003.6.20 ac_ucw_war_running = yes
+}
+
+ac_camp_relief_can_start = {
+	ac_camp_eligible = yes tag = SNS original_tag = SNS has_country_flag = SNS_camp_0_prepared date > 2003.6.20 ac_ucw_war_running = yes country_exists = ERU country_exists = FCU has_global_flag = ac_camp_clinic_sponsorship country_exists = FCU FCU = { ac_camp_can_pay = yes NOT = { has_war_with = SNS } } NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_relief_success has_global_flag = ac_camp_relief_failed has_global_flag = ac_camp_relief_cancelled has_global_flag = ac_camp_relief_interrupted has_global_flag = ac_camp_relief_limited } }
+}
+
+ac_camp_relief_can_finish = {
+	ac_camp_relief_context = yes has_country_flag = ac_camp_relief_deadline country_exists = ERU country_exists = FCU has_global_flag = ac_camp_clinic_civil_permission has_global_flag = ac_camp_clinic_military_permission
+}
+
+ac_camp_occupation_context = {
+	ac_camp_eligible = yes tag = ERU original_tag = ERU has_country_flag = ERU_camp_0_prepared date > 2003.6.20 ac_ucw_war_running = yes
+}
+
+ac_camp_occupation_can_start = {
+	ac_camp_eligible = yes tag = ERU original_tag = ERU has_country_flag = ERU_camp_0_prepared date > 2003.6.20 ac_ucw_war_running = yes 310 = { is_controlled_by = ERU } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_occupation_success has_global_flag = ac_camp_occupation_failed has_global_flag = ac_camp_occupation_cancelled has_global_flag = ac_camp_occupation_interrupted } }
+}
+
+ac_camp_occupation_can_finish = {
+	ac_camp_occupation_context = yes has_country_flag = ac_camp_occupation_deadline 310 = { is_controlled_by = ERU }
+}
+
+ac_camp_recon_context = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_0_prepared date > 2003.8.21 ac_ucw_war_running = yes
+}
+
+ac_camp_recon_can_start = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_0_prepared date > 2003.8.21 ac_ucw_war_running = yes check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_recon_success has_global_flag = ac_camp_recon_failed has_global_flag = ac_camp_recon_cancelled has_global_flag = ac_camp_recon_interrupted } }
+}
+
+ac_camp_recon_can_finish = {
+	ac_camp_recon_context = yes has_country_flag = ac_camp_recon_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_rearbase_context = {
+	ac_camp_eligible = yes tag = NPT original_tag = NPT has_country_flag = NPT_camp_0_prepared date > 2003.8.21 ac_ucw_war_running = yes country_exists = FCU FCU = { has_capitulated = no is_subject = no NOT = { has_war_with = NPT } }
+}
+
+ac_camp_rearbase_can_start = {
+	ac_camp_eligible = yes tag = NPT original_tag = NPT has_country_flag = NPT_camp_0_prepared date > 2003.8.21 ac_ucw_war_running = yes country_exists = FCU FCU = { has_capitulated = no is_subject = no NOT = { has_war_with = NPT } } has_global_flag = ac_ucw_isaf_formed NOT = { has_war_with = FCU } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_rearbase_success has_global_flag = ac_camp_rearbase_failed has_global_flag = ac_camp_rearbase_cancelled has_global_flag = ac_camp_rearbase_interrupted } }
+}
+
+ac_camp_rearbase_can_finish = {
+	ac_camp_rearbase_context = yes has_country_flag = ac_camp_rearbase_deadline has_global_flag = ac_ucw_isaf_formed NOT = { has_war_with = FCU } has_global_flag = ac_camp_rearbase_accepted
+}
+
+ac_camp_transport_context = {
+	ac_camp_eligible = yes tag = AMB original_tag = AMB has_country_flag = AMB_camp_0_prepared date > 2003.8.21 ac_ucw_war_running = yes country_exists = FCU FCU = { has_capitulated = no is_subject = no NOT = { has_war_with = AMB } }
+}
+
+ac_camp_transport_can_start = {
+	ac_camp_eligible = yes tag = AMB original_tag = AMB has_country_flag = AMB_camp_0_prepared date > 2003.8.21 ac_ucw_war_running = yes country_exists = FCU FCU = { has_capitulated = no is_subject = no NOT = { has_war_with = AMB } } country_exists = FCU NOT = { has_war_with = FCU } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_transport_success has_global_flag = ac_camp_transport_failed has_global_flag = ac_camp_transport_cancelled has_global_flag = ac_camp_transport_interrupted } }
+}
+
+ac_camp_transport_can_finish = {
+	ac_camp_transport_context = yes has_country_flag = ac_camp_transport_deadline country_exists = FCU NOT = { has_war_with = FCU } has_global_flag = ac_camp_transport_accepted
+}
+
+ac_camp_dispersal_context = {
+	ac_camp_eligible = yes tag = UGE original_tag = UGE has_country_flag = UGE_camp_0_prepared date > 2003.8.21 ac_ucw_war_running = yes country_exists = FCU FCU = { has_capitulated = no is_subject = no NOT = { has_war_with = UGE } }
+}
+
+ac_camp_dispersal_can_start = {
+	ac_camp_eligible = yes tag = UGE original_tag = UGE has_country_flag = UGE_camp_0_prepared date > 2003.8.21 ac_ucw_war_running = yes country_exists = FCU FCU = { has_capitulated = no is_subject = no NOT = { has_war_with = UGE } } country_exists = FCU NOT = { has_war_with = FCU } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_dispersal_success has_global_flag = ac_camp_dispersal_failed has_global_flag = ac_camp_dispersal_cancelled has_global_flag = ac_camp_dispersal_interrupted } }
+}
+
+ac_camp_dispersal_can_finish = {
+	ac_camp_dispersal_context = yes has_country_flag = ac_camp_dispersal_deadline country_exists = FCU NOT = { has_war_with = FCU } has_global_flag = ac_camp_dispersal_accepted
+}
+
+ac_camp_inspection_context = {
+	ac_camp_eligible = yes tag = DEL original_tag = DEL has_country_flag = DEL_camp_0_prepared date > 2003.8.21 ac_ucw_war_running = yes country_exists = FCU FCU = { has_capitulated = no is_subject = no NOT = { has_war_with = DEL } }
+}
+
+ac_camp_inspection_can_start = {
+	ac_camp_eligible = yes tag = DEL original_tag = DEL has_country_flag = DEL_camp_0_prepared date > 2003.8.21 ac_ucw_war_running = yes country_exists = FCU FCU = { has_capitulated = no is_subject = no NOT = { has_war_with = DEL } } country_exists = FCU NOT = { has_war_with = FCU } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_inspection_success has_global_flag = ac_camp_inspection_failed has_global_flag = ac_camp_inspection_cancelled has_global_flag = ac_camp_inspection_interrupted } }
+}
+
+ac_camp_inspection_can_finish = {
+	ac_camp_inspection_context = yes has_country_flag = ac_camp_inspection_deadline country_exists = FCU NOT = { has_war_with = FCU } has_global_flag = ac_camp_inspection_accepted
+}
+
+ac_camp_fleet_context = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_1_prepared date > 2004.11.22 ac_ucw_war_running = yes has_global_flag = ac_camp_recon_success
+}
+
+ac_camp_fleet_can_start = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_1_prepared date > 2004.11.22 ac_ucw_war_running = yes has_global_flag = ac_camp_recon_success check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_fleet_success has_global_flag = ac_camp_fleet_failed has_global_flag = ac_camp_fleet_cancelled has_global_flag = ac_camp_fleet_interrupted } }
+}
+
+ac_camp_fleet_can_finish = {
+	ac_camp_fleet_context = yes has_country_flag = ac_camp_fleet_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_comona_context = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_1_prepared date > 2004.12.30 ac_ucw_war_running = yes has_global_flag = ac_camp_recon_success
+}
+
+ac_camp_comona_can_start = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_1_prepared date > 2004.12.30 ac_ucw_war_running = yes has_global_flag = ac_camp_recon_success check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_comona_success has_global_flag = ac_camp_comona_failed has_global_flag = ac_camp_comona_cancelled has_global_flag = ac_camp_comona_interrupted } }
+}
+
+ac_camp_comona_can_finish = {
+	ac_camp_comona_context = yes has_country_flag = ac_camp_comona_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_landing_context = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_2_prepared date > 2005.1.23 ac_ucw_war_running = yes has_global_flag = ac_camp_comona_success
+}
+
+ac_camp_landing_can_start = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_2_prepared date > 2005.1.23 ac_ucw_war_running = yes has_global_flag = ac_camp_comona_success any_controlled_state = { is_core_of = ERU } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_landing_success has_global_flag = ac_camp_landing_failed has_global_flag = ac_camp_landing_cancelled has_global_flag = ac_camp_landing_interrupted } }
+}
+
+ac_camp_landing_can_finish = {
+	ac_camp_landing_context = yes has_country_flag = ac_camp_landing_deadline any_controlled_state = { is_core_of = ERU }
+}
+
+ac_camp_engineers_context = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_2_prepared date > 2005.3.13 ac_ucw_war_running = yes has_global_flag = ac_camp_landing_success has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_destroyed }
+}
+
+ac_camp_engineers_can_start = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_2_prepared date > 2005.3.13 ac_ucw_war_running = yes has_global_flag = ac_camp_landing_success has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_destroyed } check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_engineers_success has_global_flag = ac_camp_engineers_failed has_global_flag = ac_camp_engineers_cancelled has_global_flag = ac_camp_engineers_interrupted } }
+}
+
+ac_camp_engineers_can_finish = {
+	ac_camp_engineers_context = yes has_country_flag = ac_camp_engineers_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_battery_context = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_2_prepared date > 2005.4.1 ac_ucw_war_running = yes has_global_flag = ac_camp_engineers_success has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_destroyed }
+}
+
+ac_camp_battery_can_start = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_2_prepared date > 2005.4.1 ac_ucw_war_running = yes has_global_flag = ac_camp_engineers_success has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_destroyed } check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_battery_success has_global_flag = ac_camp_battery_failed has_global_flag = ac_camp_battery_cancelled has_global_flag = ac_camp_battery_interrupted } }
+}
+
+ac_camp_battery_can_finish = {
+	ac_camp_battery_context = yes has_country_flag = ac_camp_battery_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_maintenance_context = {
+	ac_camp_eligible = yes tag = ERU original_tag = ERU has_country_flag = ERU_camp_1_prepared date > 2004.10.1 ac_ucw_war_running = yes has_global_flag = ac_camp_occupation_success NOT = { has_global_flag = ac_camp_battery_success }
+}
+
+ac_camp_maintenance_can_start = {
+	ac_camp_eligible = yes tag = ERU original_tag = ERU has_country_flag = ERU_camp_1_prepared date > 2004.10.1 ac_ucw_war_running = yes has_global_flag = ac_camp_occupation_success NOT = { has_global_flag = ac_camp_battery_success } has_country_flag = ERU_camp_1_policy_a ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_maintenance_success has_global_flag = ac_camp_maintenance_failed has_global_flag = ac_camp_maintenance_cancelled has_global_flag = ac_camp_maintenance_interrupted } }
+}
+
+ac_camp_maintenance_can_finish = {
+	ac_camp_maintenance_context = yes has_country_flag = ac_camp_maintenance_deadline has_country_flag = ERU_camp_1_policy_a
+}
+
+ac_camp_withdrawal_context = {
+	ac_camp_eligible = yes tag = ERU original_tag = ERU has_country_flag = ERU_camp_2_prepared date > 2005.8.1 ac_ucw_war_running = yes has_global_flag = ac_camp_maintenance_success
+}
+
+ac_camp_withdrawal_can_start = {
+	ac_camp_eligible = yes tag = ERU original_tag = ERU has_country_flag = ERU_camp_2_prepared date > 2005.8.1 ac_ucw_war_running = yes has_global_flag = ac_camp_maintenance_success has_country_flag = ERU_camp_2_policy_a ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_withdrawal_success has_global_flag = ac_camp_withdrawal_failed has_global_flag = ac_camp_withdrawal_cancelled has_global_flag = ac_camp_withdrawal_interrupted } }
+}
+
+ac_camp_withdrawal_can_finish = {
+	ac_camp_withdrawal_context = yes has_country_flag = ac_camp_withdrawal_deadline has_country_flag = ERU_camp_2_policy_a
+}
+
+ac_camp_liberation_context = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_3_prepared date > 2005.7.9 ac_ucw_war_running = yes has_global_flag = ac_camp_battery_success has_global_flag = ac_ucw_stonehenge_seized
+}
+
+ac_camp_liberation_can_start = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_3_prepared date > 2005.7.9 ac_ucw_war_running = yes has_global_flag = ac_camp_battery_success has_global_flag = ac_ucw_stonehenge_seized 310 = { is_controlled_by = SNS } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_liberation_success has_global_flag = ac_camp_liberation_failed has_global_flag = ac_camp_liberation_cancelled has_global_flag = ac_camp_liberation_interrupted } }
+}
+
+ac_camp_liberation_can_finish = {
+	ac_camp_liberation_context = yes has_country_flag = ac_camp_liberation_deadline 310 = { is_controlled_by = SNS }
+}
+
+ac_camp_megalith_context = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_3_prepared has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_isaf_victory NOT = { has_global_flag = ac_ucw_megalith_destroyed } has_global_flag = ac_ucw_megalith_active
+}
+
+ac_camp_megalith_can_start = {
+	ac_camp_eligible = yes tag = FCU original_tag = FCU has_country_flag = FCU_camp_3_prepared has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_isaf_victory NOT = { has_global_flag = ac_ucw_megalith_destroyed } has_global_flag = ac_ucw_megalith_active check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_megalith_success has_global_flag = ac_camp_megalith_failed has_global_flag = ac_camp_megalith_cancelled has_global_flag = ac_camp_megalith_interrupted } }
+}
+
+ac_camp_megalith_can_finish = {
+	ac_camp_megalith_context = yes has_country_flag = ac_camp_megalith_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_eru_account_context = {
+	ac_camp_eligible = yes tag = ERU original_tag = ERU has_country_flag = ERU_camp_3_prepared date > 2005.9.25 ac_ucw_war_over = yes has_global_flag = ac_camp_occupation_success
+}
+
+ac_camp_eru_account_can_start = {
+	ac_camp_eligible = yes tag = ERU original_tag = ERU has_country_flag = ERU_camp_3_prepared date > 2005.9.25 ac_ucw_war_over = yes has_global_flag = ac_camp_occupation_success ac_ucw_war_over = yes ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_eru_account_success has_global_flag = ac_camp_eru_account_failed has_global_flag = ac_camp_eru_account_cancelled has_global_flag = ac_camp_eru_account_interrupted } }
+}
+
+ac_camp_eru_account_can_finish = {
+	ac_camp_eru_account_context = yes has_country_flag = ac_camp_eru_account_deadline ac_ucw_war_over = yes
+}
+
+ac_camp_contact_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_0_prepared date > 2006.1.1 has_war = no
+}
+
+ac_camp_contact_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_0_prepared date > 2006.1.1 has_war = no country_exists = YUK NOT = { has_war_with = YUK } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_contact_success has_global_flag = ac_camp_contact_failed has_global_flag = ac_camp_contact_cancelled has_global_flag = ac_camp_contact_interrupted } }
+}
+
+ac_camp_contact_can_finish = {
+	ac_camp_contact_context = yes has_country_flag = ac_camp_contact_deadline country_exists = YUK NOT = { has_war_with = YUK }
+}
+
+ac_camp_yuk_contact_context = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_0_prepared date > 2006.1.1 has_war = no
+}
+
+ac_camp_yuk_contact_can_start = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_0_prepared date > 2006.1.1 has_war = no country_exists = OSE NOT = { has_war_with = OSE } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_yuk_contact_success has_global_flag = ac_camp_yuk_contact_failed has_global_flag = ac_camp_yuk_contact_cancelled has_global_flag = ac_camp_yuk_contact_interrupted } }
+}
+
+ac_camp_yuk_contact_can_finish = {
+	ac_camp_yuk_contact_context = yes has_country_flag = ac_camp_yuk_contact_deadline country_exists = OSE NOT = { has_war_with = OSE }
+}
+
+ac_camp_island_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_1_prepared date > 2010.9.29 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_contact_success
+}
+
+ac_camp_island_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_1_prepared date > 2010.9.29 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_contact_success check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_island_success has_global_flag = ac_camp_island_failed has_global_flag = ac_camp_island_cancelled has_global_flag = ac_camp_island_interrupted } }
+}
+
+ac_camp_island_can_finish = {
+	ac_camp_island_context = yes has_country_flag = ac_camp_island_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_submarine_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_1_prepared date > 2010.10.3 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_island_success
+}
+
+ac_camp_submarine_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_1_prepared date > 2010.10.3 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_island_success check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_submarine_success has_global_flag = ac_camp_submarine_failed has_global_flag = ac_camp_submarine_cancelled has_global_flag = ac_camp_submarine_interrupted } }
+}
+
+ac_camp_submarine_can_finish = {
+	ac_camp_submarine_context = yes has_country_flag = ac_camp_submarine_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_denial_context = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_1_prepared date > 2010.9.29 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_yuk_contact_success
+}
+
+ac_camp_denial_can_start = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_1_prepared date > 2010.9.29 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_yuk_contact_success check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_denial_success has_global_flag = ac_camp_denial_failed has_global_flag = ac_camp_denial_cancelled has_global_flag = ac_camp_denial_interrupted } }
+}
+
+ac_camp_denial_can_finish = {
+	ac_camp_denial_context = yes has_country_flag = ac_camp_denial_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_naval_reserve_context = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_1_prepared date > 2010.11.1 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_denial_success
+}
+
+ac_camp_naval_reserve_can_start = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_1_prepared date > 2010.11.1 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_denial_success has_country_flag = YUK_camp_1_policy_b NOT = { has_global_flag = ac_camp_second_submarine_success } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_naval_reserve_success has_global_flag = ac_camp_naval_reserve_failed has_global_flag = ac_camp_naval_reserve_cancelled has_global_flag = ac_camp_naval_reserve_interrupted } }
+}
+
+ac_camp_naval_reserve_can_finish = {
+	ac_camp_naval_reserve_context = yes has_country_flag = ac_camp_naval_reserve_deadline has_country_flag = YUK_camp_1_policy_b NOT = { has_global_flag = ac_camp_second_submarine_success }
+}
+
+ac_camp_foothold_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_2_prepared date > 2010.10.31 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_submarine_success
+}
+
+ac_camp_foothold_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_2_prepared date > 2010.10.31 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_submarine_success ac_cpw_osean_foothold = yes ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_foothold_success has_global_flag = ac_camp_foothold_failed has_global_flag = ac_camp_foothold_cancelled has_global_flag = ac_camp_foothold_interrupted } }
+}
+
+ac_camp_foothold_can_finish = {
+	ac_camp_foothold_context = yes has_country_flag = ac_camp_foothold_deadline ac_cpw_osean_foothold = yes
+}
+
+ac_camp_second_submarine_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_2_prepared date > 2010.11.13 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_submarine_success
+}
+
+ac_camp_second_submarine_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_2_prepared date > 2010.11.13 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_submarine_success check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } NOT = { has_global_flag = ac_camp_naval_reserve_success } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_second_submarine_success has_global_flag = ac_camp_second_submarine_failed has_global_flag = ac_camp_second_submarine_cancelled has_global_flag = ac_camp_second_submarine_interrupted } }
+}
+
+ac_camp_second_submarine_can_finish = {
+	ac_camp_second_submarine_context = yes has_country_flag = ac_camp_second_submarine_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } NOT = { has_global_flag = ac_camp_naval_reserve_success }
+}
+
+ac_camp_evacuation_context = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_2_prepared date > 2010.10.31 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_denial_success
+}
+
+ac_camp_evacuation_can_start = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_2_prepared date > 2010.10.31 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_denial_success OSE = { ac_cpw_osean_foothold = yes } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_evacuation_success has_global_flag = ac_camp_evacuation_failed has_global_flag = ac_camp_evacuation_cancelled has_global_flag = ac_camp_evacuation_interrupted } }
+}
+
+ac_camp_evacuation_can_finish = {
+	ac_camp_evacuation_context = yes has_country_flag = ac_camp_evacuation_deadline OSE = { ac_cpw_osean_foothold = yes }
+}
+
+ac_camp_rescue_cover_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_2_prepared date > 2010.11.1 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_island_success date < 2010.11.29
+}
+
+ac_camp_rescue_cover_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_2_prepared date > 2010.11.1 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_island_success date < 2010.11.29 check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_rescue_cover_success has_global_flag = ac_camp_rescue_cover_failed has_global_flag = ac_camp_rescue_cover_cancelled has_global_flag = ac_camp_rescue_cover_interrupted } }
+}
+
+ac_camp_rescue_cover_can_finish = {
+	ac_camp_rescue_cover_context = yes has_country_flag = ac_camp_rescue_cover_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_evidence_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_2_prepared date > 2010.11.1 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_contact_success
+}
+
+ac_camp_evidence_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_2_prepared date > 2010.11.1 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_contact_success has_country_flag = OSE_camp_2_prepared ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_evidence_success has_global_flag = ac_camp_evidence_failed has_global_flag = ac_camp_evidence_cancelled has_global_flag = ac_camp_evidence_interrupted } }
+}
+
+ac_camp_evidence_can_finish = {
+	ac_camp_evidence_context = yes has_country_flag = ac_camp_evidence_deadline has_country_flag = OSE_camp_2_prepared
+}
+
+ac_camp_breakout_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_2_prepared date > 2010.12.6 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_evidence_success
+}
+
+ac_camp_breakout_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_2_prepared date > 2010.12.6 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_evidence_success check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_breakout_success has_global_flag = ac_camp_breakout_failed has_global_flag = ac_camp_breakout_cancelled has_global_flag = ac_camp_breakout_interrupted } }
+}
+
+ac_camp_breakout_can_finish = {
+	ac_camp_breakout_context = yes has_country_flag = ac_camp_breakout_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_liaison_context = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_2_prepared date > 2010.12.6 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_evacuation_success
+}
+
+ac_camp_liaison_can_start = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_2_prepared date > 2010.12.6 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_evacuation_success has_country_flag = YUK_camp_2_prepared ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_liaison_success has_global_flag = ac_camp_liaison_failed has_global_flag = ac_camp_liaison_cancelled has_global_flag = ac_camp_liaison_interrupted } }
+}
+
+ac_camp_liaison_can_finish = {
+	ac_camp_liaison_context = yes has_country_flag = ac_camp_liaison_deadline has_country_flag = YUK_camp_2_prepared
+}
+
+ac_camp_harling_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_3_prepared date > 2010.12.8 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_breakout_success
+}
+
+ac_camp_harling_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_3_prepared date > 2010.12.8 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_breakout_success check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_harling_success has_global_flag = ac_camp_harling_failed has_global_flag = ac_camp_harling_cancelled has_global_flag = ac_camp_harling_interrupted } }
+}
+
+ac_camp_harling_can_finish = {
+	ac_camp_harling_context = yes has_country_flag = ac_camp_harling_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_nikanor_context = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_3_prepared date > 2010.12.22 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_liaison_success
+}
+
+ac_camp_nikanor_can_start = {
+	ac_camp_eligible = yes tag = YUK original_tag = YUK has_country_flag = YUK_camp_3_prepared date > 2010.12.22 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_liaison_success has_country_flag = YUK_camp_3_prepared ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_nikanor_success has_global_flag = ac_camp_nikanor_failed has_global_flag = ac_camp_nikanor_cancelled has_global_flag = ac_camp_nikanor_interrupted } }
+}
+
+ac_camp_nikanor_can_finish = {
+	ac_camp_nikanor_context = yes has_country_flag = ac_camp_nikanor_deadline has_country_flag = YUK_camp_3_prepared
+}
+
+ac_camp_joint_fleet_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_3_prepared date > 2010.12.29 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_harling_success
+}
+
+ac_camp_joint_fleet_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_3_prepared date > 2010.12.29 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_harling_success YUK = { has_country_flag = YUK_camp_3_prepared } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_joint_fleet_success has_global_flag = ac_camp_joint_fleet_failed has_global_flag = ac_camp_joint_fleet_cancelled has_global_flag = ac_camp_joint_fleet_interrupted } }
+}
+
+ac_camp_joint_fleet_can_finish = {
+	ac_camp_joint_fleet_context = yes has_country_flag = ac_camp_joint_fleet_deadline YUK = { has_country_flag = YUK_camp_3_prepared }
+}
+
+ac_camp_arkbird_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_3_prepared date > 2010.12.18 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_evidence_success has_global_flag = ac_cpw_arkbird_committed NOT = { has_global_flag = ac_cpw_arkbird_lost }
+}
+
+ac_camp_arkbird_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_3_prepared date > 2010.12.18 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_evidence_success has_global_flag = ac_cpw_arkbird_committed NOT = { has_global_flag = ac_cpw_arkbird_lost } check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } has_global_flag = ac_cpw_arkbird_committed ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_arkbird_success has_global_flag = ac_camp_arkbird_failed has_global_flag = ac_camp_arkbird_cancelled has_global_flag = ac_camp_arkbird_interrupted } }
+}
+
+ac_camp_arkbird_can_finish = {
+	ac_camp_arkbird_context = yes has_country_flag = ac_camp_arkbird_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } has_global_flag = ac_cpw_arkbird_committed
+}
+
+ac_camp_solg_context = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_3_prepared date > 2010.12.30 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_harling_success
+}
+
+ac_camp_solg_can_start = {
+	ac_camp_eligible = yes tag = OSE original_tag = OSE has_country_flag = OSE_camp_3_prepared date > 2010.12.30 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_harling_success check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_solg_success has_global_flag = ac_camp_solg_failed has_global_flag = ac_camp_solg_cancelled has_global_flag = ac_camp_solg_interrupted } }
+}
+
+ac_camp_solg_can_finish = {
+	ac_camp_solg_context = yes has_country_flag = ac_camp_solg_deadline check_variable = { deployed_airforce_manpower_k > 0 } check_variable = { num_deployed_planes > 0 }
+}
+
+ac_camp_archive_context = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_0_prepared date > 1996.1.1 always = yes
+}
+
+ac_camp_archive_can_start = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_0_prepared date > 1996.1.1 always = yes always = yes ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_archive_success has_global_flag = ac_camp_archive_failed has_global_flag = ac_camp_archive_cancelled has_global_flag = ac_camp_archive_interrupted } }
+}
+
+ac_camp_archive_can_finish = {
+	ac_camp_archive_context = yes has_country_flag = ac_camp_archive_deadline always = yes
+}
+
+ac_camp_counterintel_context = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_1_prepared date > 2006.1.1 always = yes has_global_flag = ac_camp_archive_success
+}
+
+ac_camp_counterintel_can_start = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_1_prepared date > 2006.1.1 always = yes has_global_flag = ac_camp_archive_success has_country_flag = BLK_camp_1_policy_a ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_counterintel_success has_global_flag = ac_camp_counterintel_failed has_global_flag = ac_camp_counterintel_cancelled has_global_flag = ac_camp_counterintel_interrupted } }
+}
+
+ac_camp_counterintel_can_finish = {
+	ac_camp_counterintel_context = yes has_country_flag = ac_camp_counterintel_deadline has_country_flag = BLK_camp_1_policy_a
+}
+
+ac_camp_network_context = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_1_prepared date > 2006.1.1 always = yes has_global_flag = ac_camp_archive_success
+}
+
+ac_camp_network_can_start = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_1_prepared date > 2006.1.1 always = yes has_global_flag = ac_camp_archive_success has_country_flag = BLK_camp_1_policy_b ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_network_success has_global_flag = ac_camp_network_failed has_global_flag = ac_camp_network_cancelled has_global_flag = ac_camp_network_interrupted } }
+}
+
+ac_camp_network_can_finish = {
+	ac_camp_network_context = yes has_country_flag = ac_camp_network_deadline has_country_flag = BLK_camp_1_policy_b
+}
+
+ac_camp_procurement_context = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_2_prepared date > 2008.1.1 always = yes has_global_flag = ac_camp_network_success
+}
+
+ac_camp_procurement_can_start = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_2_prepared date > 2008.1.1 always = yes has_global_flag = ac_camp_network_success has_country_flag = BLK_camp_2_policy_b ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_procurement_success has_global_flag = ac_camp_procurement_failed has_global_flag = ac_camp_procurement_cancelled has_global_flag = ac_camp_procurement_interrupted } }
+}
+
+ac_camp_procurement_can_finish = {
+	ac_camp_procurement_context = yes has_country_flag = ac_camp_procurement_deadline has_country_flag = BLK_camp_2_policy_b
+}
+
+ac_camp_witness_context = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_2_prepared date > 2008.1.1 always = yes has_global_flag = ac_camp_counterintel_success
+}
+
+ac_camp_witness_can_start = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_2_prepared date > 2008.1.1 always = yes has_global_flag = ac_camp_counterintel_success has_country_flag = BLK_camp_2_policy_a ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_witness_success has_global_flag = ac_camp_witness_failed has_global_flag = ac_camp_witness_cancelled has_global_flag = ac_camp_witness_interrupted } }
+}
+
+ac_camp_witness_can_finish = {
+	ac_camp_witness_context = yes has_country_flag = ac_camp_witness_deadline has_country_flag = BLK_camp_2_policy_a
+}
+
+ac_camp_seizure_context = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_3_prepared date > 2010.12.1 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_procurement_success
+}
+
+ac_camp_seizure_can_start = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_3_prepared date > 2010.12.1 ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_procurement_success has_country_flag = BLK_camp_3_policy_b ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_seizure_success has_global_flag = ac_camp_seizure_failed has_global_flag = ac_camp_seizure_cancelled has_global_flag = ac_camp_seizure_interrupted } } NOT = { has_global_flag = ac_camp_witness_success } NOT = { has_global_flag = ac_camp_evidence_success }
+}
+
+ac_camp_seizure_can_finish = {
+	ac_camp_seizure_context = yes has_country_flag = ac_camp_seizure_deadline has_country_flag = BLK_camp_3_policy_b NOT = { has_global_flag = ac_camp_witness_success } NOT = { has_global_flag = ac_camp_evidence_success }
+}
+
+ac_camp_reckoning_context = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_3_prepared date > 2011.1.1 always = yes has_global_flag = ac_camp_archive_success
+}
+
+ac_camp_reckoning_can_start = {
+	ac_camp_eligible = yes tag = BLK original_tag = BLK has_country_flag = BLK_camp_3_prepared date > 2011.1.1 always = yes has_global_flag = ac_camp_archive_success always = yes ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_reckoning_success has_global_flag = ac_camp_reckoning_failed has_global_flag = ac_camp_reckoning_cancelled has_global_flag = ac_camp_reckoning_interrupted } }
+}
+
+ac_camp_reckoning_can_finish = {
+	ac_camp_reckoning_context = yes has_country_flag = ac_camp_reckoning_deadline always = yes
+}
+
+ac_camp_civil_files_context = {
+	ac_camp_eligible = yes tag = SBK original_tag = SBK has_country_flag = SBK_camp_0_prepared date > 2006.1.1 always = yes
+}
+
+ac_camp_civil_files_can_start = {
+	ac_camp_eligible = yes tag = SBK original_tag = SBK has_country_flag = SBK_camp_0_prepared date > 2006.1.1 always = yes always = yes ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_civil_files_success has_global_flag = ac_camp_civil_files_failed has_global_flag = ac_camp_civil_files_cancelled has_global_flag = ac_camp_civil_files_interrupted } }
+}
+
+ac_camp_civil_files_can_finish = {
+	ac_camp_civil_files_context = yes has_country_flag = ac_camp_civil_files_deadline always = yes
+}
+
+ac_camp_access_context = {
+	ac_camp_eligible = yes tag = SAP original_tag = SAP has_country_flag = SAP_camp_0_prepared date > 2006.1.1 always = yes country_exists = OSE OSE = { has_capitulated = no is_subject = no NOT = { has_war_with = SAP } }
+}
+
+ac_camp_access_can_start = {
+	ac_camp_eligible = yes tag = SAP original_tag = SAP has_country_flag = SAP_camp_0_prepared date > 2006.1.1 always = yes country_exists = OSE OSE = { has_capitulated = no is_subject = no NOT = { has_war_with = SAP } } country_exists = OSE NOT = { has_war_with = OSE } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_access_success has_global_flag = ac_camp_access_failed has_global_flag = ac_camp_access_cancelled has_global_flag = ac_camp_access_interrupted } }
+}
+
+ac_camp_access_can_finish = {
+	ac_camp_access_context = yes has_country_flag = ac_camp_access_deadline country_exists = OSE NOT = { has_war_with = OSE } has_global_flag = ac_camp_access_accepted
+}
+
+ac_camp_sovereignty_context = {
+	ac_camp_eligible = yes tag = UST original_tag = UST has_country_flag = UST_camp_0_prepared date > 2006.1.1 always = yes country_exists = OSE OSE = { has_capitulated = no is_subject = no NOT = { has_war_with = UST } }
+}
+
+ac_camp_sovereignty_can_start = {
+	ac_camp_eligible = yes tag = UST original_tag = UST has_country_flag = UST_camp_0_prepared date > 2006.1.1 always = yes country_exists = OSE OSE = { has_capitulated = no is_subject = no NOT = { has_war_with = UST } } country_exists = OSE NOT = { has_war_with = OSE } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_sovereignty_success has_global_flag = ac_camp_sovereignty_failed has_global_flag = ac_camp_sovereignty_cancelled has_global_flag = ac_camp_sovereignty_interrupted } }
+}
+
+ac_camp_sovereignty_can_finish = {
+	ac_camp_sovereignty_context = yes has_country_flag = ac_camp_sovereignty_deadline country_exists = OSE NOT = { has_war_with = OSE } has_global_flag = ac_camp_sovereignty_accepted
+}
+
+ac_camp_transit_context = {
+	ac_camp_eligible = yes tag = GEB original_tag = GEB has_country_flag = GEB_camp_0_prepared date > 2006.1.1 always = yes country_exists = FAT FAT = { has_capitulated = no is_subject = no NOT = { has_war_with = GEB } }
+}
+
+ac_camp_transit_can_start = {
+	ac_camp_eligible = yes tag = GEB original_tag = GEB has_country_flag = GEB_camp_0_prepared date > 2006.1.1 always = yes country_exists = FAT FAT = { has_capitulated = no is_subject = no NOT = { has_war_with = GEB } } country_exists = FAT NOT = { has_war_with = FAT } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_transit_success has_global_flag = ac_camp_transit_failed has_global_flag = ac_camp_transit_cancelled has_global_flag = ac_camp_transit_interrupted } }
+}
+
+ac_camp_transit_can_finish = {
+	ac_camp_transit_context = yes has_country_flag = ac_camp_transit_deadline country_exists = FAT NOT = { has_war_with = FAT } has_global_flag = ac_camp_transit_accepted
+}
+
+ac_camp_contribution_context = {
+	ac_camp_eligible = yes tag = REC original_tag = REC has_country_flag = REC_camp_0_prepared date > 2006.1.1 always = yes country_exists = FAT FAT = { has_capitulated = no is_subject = no NOT = { has_war_with = REC } }
+}
+
+ac_camp_contribution_can_start = {
+	ac_camp_eligible = yes tag = REC original_tag = REC has_country_flag = REC_camp_0_prepared date > 2006.1.1 always = yes country_exists = FAT FAT = { has_capitulated = no is_subject = no NOT = { has_war_with = REC } } country_exists = FAT NOT = { has_war_with = FAT } ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_contribution_success has_global_flag = ac_camp_contribution_failed has_global_flag = ac_camp_contribution_cancelled has_global_flag = ac_camp_contribution_interrupted } }
+}
+
+ac_camp_contribution_can_finish = {
+	ac_camp_contribution_context = yes has_country_flag = ac_camp_contribution_deadline country_exists = FAT NOT = { has_war_with = FAT } has_global_flag = ac_camp_contribution_accepted
+}
+
+ac_camp_consultation_context = {
+	ac_camp_eligible = yes tag = FAT original_tag = FAT has_country_flag = FAT_camp_0_prepared date > 2006.1.1 always = yes
+}
+
+ac_camp_consultation_can_start = {
+	ac_camp_eligible = yes tag = FAT original_tag = FAT has_country_flag = FAT_camp_0_prepared date > 2006.1.1 always = yes always = yes ac_camp_can_pay = yes NOT = { has_country_flag = ac_camp_busy } NOT = { OR = { has_global_flag = ac_camp_consultation_success has_global_flag = ac_camp_consultation_failed has_global_flag = ac_camp_consultation_cancelled has_global_flag = ac_camp_consultation_interrupted } }
+}
+
+ac_camp_consultation_can_finish = {
+	ac_camp_consultation_context = yes has_country_flag = ac_camp_consultation_deadline always = yes
+}
+
+ac_cpw_campaign_peace_safe = {
+	ac_cpw_course_open = yes ac_cpw_pair_at_war = yes has_global_flag = ac_camp_harling_success has_global_flag = ac_camp_nikanor_success has_global_flag = ac_camp_solg_success OSE = { has_capitulated = no is_subject = no } YUK = { has_capitulated = no is_subject = no } NOT = { any_country = { NOT = { tag = OSE } NOT = { tag = YUK } OR = { has_war_with = OSE has_war_with = YUK } } }
+}

@@ -205,7 +205,7 @@ ac_ucw_eru_war_tick = {
 	    if = { limit = { NOT = { has_global_flag = ac_ucw_stonehenge_seized } ac_ucw_stonehenge_held_by_erusea = yes } ac_ucw_seize_stonehenge = yes }
 	    # A playtest seizure leaves the map unchanged; only a real Erusean hold can later be lost.
 	    if = { limit = { has_global_flag = ac_ucw_stonehenge_simulated ac_ucw_stonehenge_held_by_erusea = yes } clr_global_flag = ac_ucw_stonehenge_simulated }
-	    if = { limit = { has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_simulated } ac_ucw_stonehenge_held_by_erusea = no } ac_ucw_destroy_stonehenge = yes }
+	    if = { limit = { has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_simulated } NOT = { has_global_flag = ac_camp_enabled } ac_ucw_stonehenge_held_by_erusea = no } ac_ucw_destroy_stonehenge = yes }
 	    if = {
 	        limit = { is_ai = yes has_global_flag = ac_ucw_stage_stonehenge NOT = { has_country_flag = ac_ucw_armistice_sought } country_exists = FCU FCU = { check_variable = { ac_ucw_stage_weeks > 40 } } }
 	        set_country_flag = ac_ucw_armistice_sought
@@ -451,9 +451,10 @@ ac_ucw_outcome_tick = {
 
 ac_ucw_destroy_megalith = {
 	if = {
-		limit = { has_global_flag = ac_ucw_megalith_active NOT = { has_global_flag = ac_ucw_megalith_destroyed } }
+		limit = { has_global_flag = ac_ucw_megalith_active OR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_megalith_success } NOT = { has_global_flag = ac_ucw_megalith_destroyed } }
 		set_global_flag = ac_ucw_megalith_destroyed
 		clr_global_flag = ac_ucw_megalith_active
+		remove_ideas = ac_ucw_megalith_threat
 		news_event = { id = ac_ucw.62 days = 1 }
 		if = {
 			limit = { country_exists = ERU }

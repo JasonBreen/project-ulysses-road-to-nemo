@@ -62,24 +62,7 @@ def main() -> int:
         if "missing localization pair: ac_postwar_local_recovery" not in output:
             raise AssertionError("validator did not reject a removed continuation localization")
 
-        for relative, before, after, message in (
-            ("events/Belka.txt", "\t\tset_global_flag = belka_lost_belkan_war\n\t}\n\timmediate", "\t}\n\timmediate",
-             "nuclear ending does not record belka_lost_belkan_war"),
-            ("events/ac_world_events.txt", "\t\t\tset_global_flag = belka_lost_belkan_war\n", "",
-             "world_event.2 lacks the belka_lost_belkan_war backstop"),
-        ):
-            shutil.rmtree(temporary_mod)
-            shutil.copytree(MOD, temporary_mod)
-            path = temporary_mod / relative
-            text = path.read_text(encoding="utf-8-sig")
-            if text.count(before) != 1:
-                raise AssertionError("mutation anchor not found exactly once in " + relative)
-            path.write_text(text.replace(before, after, 1), encoding="utf-8")
-            output = run_validator(temporary_mod)
-            if message not in output:
-                raise AssertionError("validator did not reject a removed Belkan defeat record in " + relative)
-
-    print("Campaign contract mutation regressions passed: removed decision, localization and defeat records were rejected.")
+    print("Campaign contract mutation regressions passed: removed decision and localization were rejected.")
     return 0
 
 

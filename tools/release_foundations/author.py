@@ -20,7 +20,6 @@ from script import parse,get,render
 TAGS=('AWW','REC','REL','SBK','SER','SHI','TER')
 EVENT_FILES=('events/AWWNB.txt','events/Recta.txt','events/South_Belka.txt','events/Belka.txt')
 BASE=HERE/'event_inputs.json'
-DEFEAT_FLAG='belka_lost_belkan_war'
 
 
 def block(name,body):return name+' = {\n'+'\n'.join(('\t'+line.rstrip() if line.strip() else '') for line in body.splitlines())+'\n}\n'
@@ -129,15 +128,7 @@ def event_outputs():
         for node in body:
             if node[0]=='option':node[2].extend(nodes('REC = { ac_release_observe_country = yes }\nSBK = { ac_release_observe_country = yes }'))
         return body
-    def nuclear_defeat(body):
-        # Defeat-record repair (mod provenance, reviewed 6 November 2026): the
-        # nuclear ending is the route every Belkan defeat takes, but only the
-        # uncalled .103 ever set the defeat flag the postwar router reads.
-        treaty(body)
-        for node in body:
-            if node[0]=='option':node[2].extend(nodes('set_global_flag = '+DEFEAT_FLAG))
-        return body
-    out['events/Belka.txt']=replace_events(source['events/Belka.txt'],{'belka_dlp_war.101':nuclear_defeat,'belka_dlp_war.103':treaty})
+    out['events/Belka.txt']=replace_events(source['events/Belka.txt'],{ident:treaty for ident in ('belka_dlp_war.101','belka_dlp_war.103')})
     return out
 
 

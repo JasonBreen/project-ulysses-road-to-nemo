@@ -34,13 +34,6 @@ Belkan collapse events share one receipt for their unchanged 25%/25%/15% options
 Recta's original birth army remains ten formations; the two-state treaty route
 does not replay that army. Stale option effects are guarded as well as triggers.
 
-One reviewed suffix is not a release receipt. The nuclear ending
-`belka_dlp_war.101` also gains `set_global_flag = belka_lost_belkan_war`,
-the defeat flag the postwar router reads, which only the uncalled
-`belka_dlp_war.103` set before (defeat-record repair, 6 November 2026; see
-`docs/BELKAN_WAR_SOURCES.md`). `event_contract.py` accepts exactly that line
-on `.101` and nothing else; `event_inputs.json` is unchanged.
-
 The public `ac_econ_adopt_release_account` and canonical monthly owner initialize
 a genuinely new account with **zero cash/debt seed**, preserve valid accounts,
 and lock incomplete or mismatched identities for review without erasing their

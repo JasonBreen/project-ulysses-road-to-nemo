@@ -227,13 +227,9 @@ Three triggers lead to the same follow-up `belka_dlp_war.99`:
 - **Check.** The lost tree stays; complete it with
   `focus.autocomplete` up to the Return of the King (`belka_dlp_lost.7`), then
   confirm `world_event.2` fires once.
-- **Outcome.** Since 6 November 2026 `belka_dlp_war.101` records
-  `belka_lost_belkan_war` (a reviewed release-foundations mutation), so
-  `ac_continuation.1` takes the defeat option (`ac_continuation.1.c`): OSE gets
-  `ac_postwar_guarantor` and `ac_continuation.11` after 7 days, and UST (if it
-  exists) `ac_ustio.1`. Confirm `list_flags` shows `belka_lost_belkan_war`
-  straight after `.101`, that `ac_belkan_war_council` stays closed during the
-  lost tree, and that option c is the one that shows.
+- **Outcome.** Either way `belka_lost_belkan_war` is not set, so
+  `ac_continuation.1` takes the unclassified option (`ac_continuation.1.e`). Confirm which option
+  actually shows.
 
 ### O4. Wacht am Wal (option b)
 
@@ -267,24 +263,24 @@ Three triggers lead to the same follow-up `belka_dlp_war.99`:
   natural route, and pick b when `belka_dlp_war.99` appears the next day.
 - Save `pt5_o4_wacht_start` and `pt5_o4_handoff`.
 
-### O5. The dormant surrender treaty (forced only)
+### O5. Defeat flag (forced only)
 
-The defeat flag is now set naturally by the nuclear ending (O3). The archive's
-other setter, `belka_dlp_war.103` (a non-nuclear surrender treaty with the same
-transfers), still has no caller: no event, focus, decision or on-action fires
-it, and it stays dormant by decision (6 November 2026). To exercise its content:
+`belka_lost_belkan_war` is set only by `belka_dlp_war.103`, and no event,
+focus, decision or on-action fires `.103` (static search of `common/` and
+`events/`). This means option c of `ac_continuation.1`, the defeat settlement
+focus and decision, and the Osean guarantor event `ac_continuation.11` look
+unreachable in normal play. Confirm in game, then test the content:
 
 - **Forced route.** From `pt3_war_day1`: `event belka_dlp_war.103 BLK`, then
   `event world_event.2 BLK`.
 - **Check.** White peace, state transfers, option c shows, OSE gets
   `ac_postwar_guarantor` and `ac_continuation.11` after 7 days.
-- Record as `native-pass (forced)` at best; `.103` remains unreachable in
-  normal play by design.
+- Record as `native-pass (forced)` at best; reachability stays open.
 
 ### O6. Unclassified fallback
 
-No longer reached by O3: it now shows only when the handoff fires with no
-outcome flag (a forced or unusual route). Forcing it from `pt3_war_day1` with `event world_event.2 BLK`
+Reached naturally by O3; use the post-`belka_dlp_war.101` save for postwar
+continuity. Forcing it from `pt3_war_day1` with `event world_event.2 BLK`
 only checks that the unclassified option shows. The war is still running and
 `belkan_war_is_happening` is still set, so the collapse mission can fire the
 South Belka split over the postwar tree. Do not count anything downstream of
@@ -294,7 +290,7 @@ that forced run as a postwar pass.
 
 | # | Finding | Where | Affects |
 | --- | --- | --- | --- |
-| 1 | Fixed 6 November 2026 (static): the nuclear ending `belka_dlp_war.101` now records `belka_lost_belkan_war`, and `world_event.2` backstops saves in which `.101` fired earlier; `.103` stays dormant. Confirm the flag and option c in game | `events/Belka.txt`, `events/ac_world_events.txt`, `events/ac_continuation.txt` | O3, O5, defeat postwar branch |
+| 1 | `belka_dlp_war.103` has no caller, so the defeat outcome flag is never set naturally | `events/Belka.txt`, `events/ac_continuation.txt` | O5, defeat postwar branch |
 | 2 | Fixed by PR #13: the nuclear ending used to fire `world_event.2` right after loading the lost tree; confirm the lost tree now survives | `events/Belka.txt` (`belka_dlp_war.101`) | O3 |
 | 3 | Uncompleted campaign opening focuses vanish when `belka.13` loads the DLP tree | `events/Belka.txt` (`belka.13`), `common/national_focus/BLK.txt` | P1 |
 | 4 | The legacy war start (`world_event.1`, 1995+) skips the campaign stage decisions | `events/ac_world_events.txt`, `common/decisions/ac_belkan_campaign.txt` | W2 |

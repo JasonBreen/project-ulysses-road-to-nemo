@@ -257,13 +257,6 @@ def main() -> int:
     ):
         if token not in source:
             errors.append(f"inherited defeat-story handoff coverage missing: {token}")
-    # The nuclear ending is every Belkan defeat's route; it must record the defeat the
-    # postwar router reads, and the handoff must backstop saves from before that repair.
-    backstop = "limit = { has_global_flag = ac_postwar_wait_for_defeat_tree }\n\t\t\tset_global_flag = belka_lost_belkan_war"
-    if "set_global_flag = belka_lost_belkan_war" not in nuclear_block:
-        errors.append("nuclear ending does not record belka_lost_belkan_war")
-    if backstop not in world_events:
-        errors.append("world_event.2 lacks the belka_lost_belkan_war backstop for earlier saves")
     if "country_event = { id = world_event.2 days = 1 }" in nuclear_block:
         errors.append("nuclear ending still fires world_event.2 before the inherited defeat tree")
     if "country_event = belka_dlp_lost.7" not in lost_focus:

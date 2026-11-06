@@ -73,27 +73,13 @@ South Belka release; 1995 / 06.06 (seven nuclear devices in the Waldreich
 Mountains) by `belka_dlp_war.100` and `ac_news_event.8`. Hresvelgr stays
 reference only.
 
-## Archive defect: fixed 6 November 2026
+## Archive defect recorded for separate review
 
 `belka_lost_belkan_war` is read by `events/ac_continuation.txt` and by
 `common/decisions/ac_belkan_campaign.txt`, but its only setter,
-`belka_dlp_war.103` (`events/Belka.txt`), has no caller. Every Belkan defeat in
-play runs through the nuclear ending (`belka_dlp_war.99` a, the 14-day timer,
-`.100`, `.101`), so a defeat never recorded the flag, and the postwar router took
-its unclassified option.
-
-The reviewed repair (mod provenance, not archive text):
-`tools/release_foundations/author.py` appends
-`set_global_flag = belka_lost_belkan_war` to `.101`'s option as a reviewed
-suffix, which `event_contract.py` accepts and nothing else; `event_inputs.json`
-is not recaptured. `world_event.2` (`events/ac_world_events.txt`) sets the same
-flag when the nuclear ending's wait flag is still present, for saves in which
-`.101` fired before the repair. The defeat now reaches `ac_continuation.1.c`
-(Osea as guarantor) and The Peace We Inherit's defeat lane, and the war
-council stays closed after a defeat. `.103` stays dormant by decision; wiring a
-conventional surrender to it would need guards against the nuclear timer and
-the hash-pinned `ac_on_actions.txt`. Static/offline only; native confirmation
-is playtest O3 (#8).
+`belka_dlp_war.103` (`events/Belka.txt`), has no caller. A Belkan defeat
+therefore never records that flag. Fixing it changes the postwar route, so it is
+recorded here for a separate, reviewed change and not fixed by the record.
 
 ## Rules for any later use
 

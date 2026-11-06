@@ -1,0 +1,1437 @@
+# Usea Depth minors B: provisional gameplay; owner: tools/usea_depth/minors_b/build.py.
+focus_tree = {
+	id = ac_ud_crs_tree
+	country = { factor = 0 modifier = { add = 45 tag = CRS original_tag = CRS } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 2400 y = 16 }
+	initial_show_position = { focus = CRS_ud_two_island_question }
+	focus = {
+		id = CRS_ud_two_island_question
+		icon = GFX_ac_ud_focus_CRS_ud_two_island_question
+		x = 11
+		y = 0
+		cost = 5
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_strait_divide_spirit
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.601 days = 1 }
+		}
+	}
+	focus = {
+		id = CRS_ud_western_audit
+		icon = GFX_ac_ud_focus_CRS_ud_western_audit
+		x = 3
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_two_island_question
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = CRS_ud_west_harbour_works
+		icon = GFX_ac_ud_focus_CRS_ud_west_harbour_works
+		x = 1
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_western_audit
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					62 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = dockyard size > 0 include_locked = no } }
+				}
+				62 = {
+					add_building_construction = { type = dockyard level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_west_oil_wells
+		icon = GFX_ac_ud_focus_CRS_ud_west_oil_wells
+		x = 5
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_western_audit
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					62 = { is_owned_by = ROOT }
+				}
+				add_resource = { type = oil amount = 2 state = 62 }
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_west_airstrip
+		icon = GFX_ac_ud_focus_CRS_ud_west_airstrip
+		x = 1
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_west_harbour_works
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					62 = { is_owned_and_controlled_by = ROOT }
+				}
+				62 = {
+					add_building_construction = { type = air_base level = 2 instant_build = yes }
+				}
+			}
+
+			air_experience = 5
+		}
+	}
+	focus = {
+		id = CRS_ud_west_road_grid
+		icon = GFX_ac_ud_focus_CRS_ud_west_road_grid
+		x = 5
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_west_oil_wells
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					62 = { is_owned_and_controlled_by = ROOT }
+				}
+				62 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_western_claim
+		icon = GFX_ac_ud_focus_CRS_ud_western_claim
+		x = 3
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_west_airstrip focus = CRS_ud_west_road_grid
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_popularity = { ideology = neutrality popularity = 0.04 }
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = CRS_ud_strait_ferry
+		icon = GFX_ac_ud_focus_CRS_ud_strait_ferry
+		x = 7
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_western_audit focus = CRS_ud_eastern_audit
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = CRS_ud_eastern_audit
+		icon = GFX_ac_ud_focus_CRS_ud_eastern_audit
+		x = 19
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_two_island_question
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = CRS_ud_east_fishing_fleet
+		icon = GFX_ac_ud_focus_CRS_ud_east_fishing_fleet
+		x = 17
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_eastern_audit
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			navy_experience = 5
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = CRS_ud_east_oil_wells
+		icon = GFX_ac_ud_focus_CRS_ud_east_oil_wells
+		x = 21
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_eastern_audit
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					575 = { is_owned_by = ROOT }
+				}
+				add_resource = { type = oil amount = 2 state = 575 }
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_east_harbour
+		icon = GFX_ac_ud_focus_CRS_ud_east_harbour
+		x = 17
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_east_fishing_fleet
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					575 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = dockyard size > 0 include_locked = no } }
+				}
+				575 = {
+					add_building_construction = { type = dockyard level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_east_rubber_groves
+		icon = GFX_ac_ud_focus_CRS_ud_east_rubber_groves
+		x = 21
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_east_oil_wells
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					575 = { is_owned_by = ROOT }
+				}
+				add_resource = { type = rubber amount = 2 state = 575 }
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_eastern_claim
+		icon = GFX_ac_ud_focus_CRS_ud_eastern_claim
+		x = 19
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_east_harbour focus = CRS_ud_east_rubber_groves
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_popularity = { ideology = communism popularity = 0.04 }
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = CRS_ud_imperator_survey
+		icon = GFX_ac_ud_focus_CRS_ud_imperator_survey
+		x = 11
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_two_island_question
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = CRS_ud_imperator_survey bonus = 0.5 uses = 1 category = excavation_tech }
+			country_event = { id = ac_ud_minb.602 days = 1 }
+		}
+	}
+	focus = {
+		id = CRS_ud_imperator_landing
+		icon = GFX_ac_ud_focus_CRS_ud_imperator_landing
+		x = 9
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_imperator_survey
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					174 = { is_owned_and_controlled_by = ROOT }
+				}
+				174 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_imperator_prospect
+		icon = GFX_ac_ud_focus_CRS_ud_imperator_prospect
+		x = 13
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_imperator_survey
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					174 = { is_owned_by = ROOT }
+				}
+				add_resource = { type = oil amount = 2 state = 174 }
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_imperator_station
+		icon = GFX_ac_ud_focus_CRS_ud_imperator_station
+		x = 11
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_imperator_landing focus = CRS_ud_imperator_prospect
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					174 = { is_owned_and_controlled_by = ROOT }
+				}
+				174 = {
+					add_building_construction = { type = air_base level = 1 instant_build = yes }
+				}
+			}
+
+			if = {
+				limit = {
+					174 = { is_owned_by = ROOT }
+				}
+				174 = { add_extra_state_shared_building_slots = 1 }
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_imperator_settlement
+		icon = GFX_ac_ud_focus_CRS_ud_imperator_settlement
+		x = 9
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_imperator_station
+		}
+		mutually_exclusive = {
+			focus = CRS_ud_imperator_reserve
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_imperator_settlers_spirit
+			set_country_flag = CRS_ud_imperator_settled
+			if = {
+				limit = {
+					174 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = industrial_complex size > 0 include_locked = no } }
+				}
+				174 = {
+					add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_imperator_reserve
+		icon = GFX_ac_ud_focus_CRS_ud_imperator_reserve
+		x = 13
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_imperator_station
+		}
+		mutually_exclusive = {
+			focus = CRS_ud_imperator_settlement
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_imperator_reserve_spirit
+			set_country_flag = CRS_ud_imperator_reserved
+			if = {
+				limit = {
+					174 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = fuel_silo size > 0 include_locked = no } }
+				}
+				174 = {
+					add_building_construction = { type = fuel_silo level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_imperator_homesteads
+		icon = GFX_ac_ud_focus_CRS_ud_imperator_homesteads
+		x = 8
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_imperator_settlement
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					174 = { is_owned_and_controlled_by = ROOT }
+				}
+				174 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = CRS_ud_imperator_watch
+		icon = GFX_ac_ud_focus_CRS_ud_imperator_watch
+		x = 14
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_imperator_reserve
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					174 = { is_owned_and_controlled_by = ROOT }
+				}
+				174 = {
+					add_building_construction = { type = radar_station level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_inter_island_conference
+		icon = GFX_ac_ud_focus_CRS_ud_inter_island_conference
+		x = 11
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_western_claim
+		}
+		prerequisite = {
+			focus = CRS_ud_eastern_claim
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = CRS_ud_strait_divide_spirit
+				}
+				remove_ideas = CRS_ud_strait_divide_spirit
+			}
+			add_ideas = CRS_ud_strait_accord_spirit
+			country_event = { id = ac_ud_minb.603 days = 1 }
+		}
+	}
+	focus = {
+		id = CRS_ud_western_executive
+		icon = GFX_ac_ud_focus_CRS_ud_western_executive
+		x = 3
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = CRS_ud_western_claim
+		}
+		mutually_exclusive = {
+			focus = CRS_ud_harbour_commons focus = CRS_ud_two_island_compact
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = CRS_ud_strait_divide_spirit
+				}
+				remove_ideas = CRS_ud_strait_divide_spirit
+			}
+			add_ideas = CRS_ud_western_order_spirit
+			remove_ideas = CRS_ud_strait_accord_spirit
+			ac_ud_minors_b_regime_crs_western_executive = yes
+			country_event = { id = ac_ud_minb.604 days = 1 }
+		}
+	}
+	focus = {
+		id = CRS_ud_harbour_commons
+		icon = GFX_ac_ud_focus_CRS_ud_harbour_commons
+		x = 19
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = CRS_ud_eastern_claim
+		}
+		mutually_exclusive = {
+			focus = CRS_ud_two_island_compact focus = CRS_ud_western_executive
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = CRS_ud_strait_divide_spirit
+				}
+				remove_ideas = CRS_ud_strait_divide_spirit
+			}
+			add_ideas = CRS_ud_harbour_commons_spirit
+			remove_ideas = CRS_ud_strait_accord_spirit
+			ac_ud_minors_b_regime_crs_harbour_commons = yes
+			country_event = { id = ac_ud_minb.605 days = 1 }
+		}
+	}
+	focus = {
+		id = CRS_ud_two_island_compact
+		icon = GFX_ac_ud_focus_CRS_ud_two_island_compact
+		x = 11
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = CRS_ud_inter_island_conference
+		}
+		mutually_exclusive = {
+			focus = CRS_ud_harbour_commons focus = CRS_ud_western_executive
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = CRS_ud_strait_accord_spirit
+				}
+				remove_ideas = CRS_ud_strait_accord_spirit
+			}
+			add_ideas = CRS_ud_federal_compact_spirit
+			ac_ud_minors_b_regime_crs_two_island_compact = yes
+			country_event = { id = ac_ud_minb.606 days = 1 }
+		}
+	}
+	focus = {
+		id = CRS_ud_executive_decrees
+		icon = GFX_ac_ud_focus_CRS_ud_executive_decrees
+		x = 3
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_western_executive
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = CRS_ud_western_gendarmerie
+		icon = GFX_ac_ud_focus_CRS_ud_western_gendarmerie
+		x = 3
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_executive_decrees
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = CRS_ud_western_order_spirit
+				}
+				remove_ideas = CRS_ud_western_order_spirit
+			}
+			add_ideas = CRS_ud_western_gendarmerie_spirit
+			add_manpower = 1000
+		}
+	}
+	focus = {
+		id = CRS_ud_eastern_prefects
+		icon = GFX_ac_ud_focus_CRS_ud_eastern_prefects
+		x = 3
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_western_gendarmerie
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.04
+			if = {
+				limit = {
+					575 = { is_owned_and_controlled_by = ROOT }
+				}
+				575 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_boat_cooperatives
+		icon = GFX_ac_ud_focus_CRS_ud_boat_cooperatives
+		x = 19
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_harbour_commons
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = CRS_ud_common_fuel_pool
+		icon = GFX_ac_ud_focus_CRS_ud_common_fuel_pool
+		x = 19
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_boat_cooperatives
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_common_fuel_pool_spirit
+		}
+	}
+	focus = {
+		id = CRS_ud_commons_assembly
+		icon = GFX_ac_ud_focus_CRS_ud_commons_assembly
+		x = 19
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = CRS_ud_common_fuel_pool
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_popularity = { ideology = communism popularity = 0.05 }
+			add_stability = 0.04
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = CRS_ud_federal_senate
+		icon = GFX_ac_ud_focus_CRS_ud_federal_senate
+		x = 11
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_two_island_compact
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = CRS_ud_federal_compact_spirit
+				}
+				remove_ideas = CRS_ud_federal_compact_spirit
+			}
+			add_ideas = CRS_ud_federal_senate_spirit
+		}
+	}
+	focus = {
+		id = CRS_ud_island_elections
+		icon = GFX_ac_ud_focus_CRS_ud_island_elections
+		x = 11
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = CRS_ud_federal_senate
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.05
+			add_popularity = { ideology = democratic popularity = 0.05 }
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = CRS_ud_federal_budget
+		icon = GFX_ac_ud_focus_CRS_ud_federal_budget
+		x = 11
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_island_elections
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			if = {
+				limit = {
+					575 = { is_owned_by = ROOT }
+				}
+				575 = { add_extra_state_shared_building_slots = 1 }
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_outside_contacts
+		icon = GFX_ac_ud_focus_CRS_ud_outside_contacts
+		x = 4
+		y = 10
+		cost = 5
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.607 days = 1 }
+		}
+	}
+	focus = {
+		id = CRS_ud_council_association
+		icon = GFX_ac_ud_focus_CRS_ud_council_association
+		x = 2
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_outside_contacts
+		}
+		mutually_exclusive = {
+			focus = CRS_ud_stand_outside
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_council_associate_spirit
+			set_country_flag = CRS_ud_council_associate
+		}
+	}
+	focus = {
+		id = CRS_ud_stand_outside
+		icon = GFX_ac_ud_focus_CRS_ud_stand_outside
+		x = 6
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_outside_contacts
+		}
+		mutually_exclusive = {
+			focus = CRS_ud_council_association
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_outside_council_spirit
+			set_country_flag = CRS_ud_outside_council
+		}
+	}
+	focus = {
+		id = CRS_ud_council_harbour_grants
+		icon = GFX_ac_ud_focus_CRS_ud_council_harbour_grants
+		x = 2
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_council_association
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					62 = { is_owned_by = ROOT }
+				}
+				62 = { add_extra_state_shared_building_slots = 1 }
+			}
+
+			if = {
+				limit = {
+					575 = { is_owned_and_controlled_by = ROOT }
+				}
+				575 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_independent_fuel_contracts
+		icon = GFX_ac_ud_focus_CRS_ud_independent_fuel_contracts
+		x = 6
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_stand_outside
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					62 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = fuel_silo size > 0 include_locked = no } }
+				}
+				62 = {
+					add_building_construction = { type = fuel_silo level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_island_guard
+		icon = GFX_ac_ud_focus_CRS_ud_island_guard
+		x = 18
+		y = 10
+		cost = 5
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			army_experience = 5
+			add_manpower = 1500
+			set_country_flag = CRS_ud_guard_shared
+		}
+	}
+	focus = {
+		id = CRS_ud_guard_patrol_boats
+		icon = GFX_ac_ud_focus_CRS_ud_guard_patrol_boats
+		x = 16
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_island_guard
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			navy_experience = 10
+		}
+	}
+	focus = {
+		id = CRS_ud_coastal_watch_posts
+		icon = GFX_ac_ud_focus_CRS_ud_coastal_watch_posts
+		x = 20
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_island_guard
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					575 = { is_owned_and_controlled_by = ROOT }
+				}
+				575 = {
+					add_building_construction = { type = radar_station level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_guard_unified
+		icon = GFX_ac_ud_focus_CRS_ud_guard_unified
+		x = 18
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_guard_patrol_boats focus = CRS_ud_coastal_watch_posts
+		}
+		available = {
+			original_tag = CRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_island_guard_spirit
+		}
+	}
+	focus = {
+		id = CRS_ud_ulysses_news
+		icon = GFX_ac_ud_focus_CRS_ud_ulysses_news
+		x = 11
+		y = 10
+		cost = 5
+		available = {
+			original_tag = CRS
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.608 days = 1 }
+		}
+	}
+	focus = {
+		id = CRS_ud_island_shelters
+		icon = GFX_ac_ud_focus_CRS_ud_island_shelters
+		x = 9
+		y = 11
+		cost = 10
+		prerequisite = {
+			focus = CRS_ud_ulysses_news
+		}
+		available = {
+			original_tag = CRS
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_island_shelters_spirit
+		}
+	}
+	focus = {
+		id = CRS_ud_sky_watch
+		icon = GFX_ac_ud_focus_CRS_ud_sky_watch
+		x = 13
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_ulysses_news
+		}
+		available = {
+			original_tag = CRS
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					62 = { is_owned_and_controlled_by = ROOT }
+				}
+				62 = {
+					add_building_construction = { type = radar_station level = 1 instant_build = yes }
+				}
+			}
+
+			add_tech_bonus = { name = CRS_ud_sky_watch bonus = 0.5 uses = 1 category = radar_tech }
+		}
+	}
+	focus = {
+		id = CRS_ud_imperator_refuge
+		icon = GFX_ac_ud_focus_CRS_ud_imperator_refuge
+		x = 11
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_island_shelters focus = CRS_ud_sky_watch
+		}
+		available = {
+			original_tag = CRS
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = CRS_ud_readiness_count
+		icon = GFX_ac_ud_focus_CRS_ud_readiness_count
+		x = 11
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_imperator_refuge
+		}
+		available = {
+			original_tag = CRS
+			date > 1998.6.18
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = CRS_ud_impact_vigil
+		icon = GFX_ac_ud_focus_CRS_ud_impact_vigil
+		x = 11
+		y = 14
+		cost = 5
+		available = {
+			original_tag = CRS
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.609 days = 1 }
+		}
+	}
+	focus = {
+		id = CRS_ud_fuel_rationing
+		icon = GFX_ac_ud_focus_CRS_ud_fuel_rationing
+		x = 8
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_impact_vigil
+		}
+		available = {
+			original_tag = CRS
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_fuel_rationing_spirit
+		}
+	}
+	focus = {
+		id = CRS_ud_relief_requests
+		icon = GFX_ac_ud_focus_CRS_ud_relief_requests
+		x = 14
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_impact_vigil
+		}
+		available = {
+			original_tag = CRS
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.04
+			add_political_power = -15
+		}
+	}
+	focus = {
+		id = CRS_ud_refugee_boats
+		icon = GFX_ac_ud_focus_CRS_ud_refugee_boats
+		x = 11
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_fuel_rationing focus = CRS_ud_relief_requests
+		}
+		available = {
+			original_tag = CRS
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = { id = ac_ud_minb.610 days = 1 }
+		}
+	}
+	focus = {
+		id = CRS_ud_land_the_boats
+		icon = GFX_ac_ud_focus_CRS_ud_land_the_boats
+		x = 9
+		y = 17
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_refugee_boats
+		}
+		mutually_exclusive = {
+			focus = CRS_ud_imperator_reception
+		}
+		available = {
+			original_tag = CRS
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_landed_refugees_spirit
+			set_country_flag = CRS_ud_boats_landed
+			add_manpower = 2000
+		}
+	}
+	focus = {
+		id = CRS_ud_imperator_reception
+		icon = GFX_ac_ud_focus_CRS_ud_imperator_reception
+		x = 13
+		y = 17
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_refugee_boats
+		}
+		mutually_exclusive = {
+			focus = CRS_ud_land_the_boats
+		}
+		available = {
+			original_tag = CRS
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_imperator_reception_spirit
+			set_country_flag = CRS_ud_boats_to_imperator
+			if = {
+				limit = {
+					174 = { is_owned_and_controlled_by = ROOT }
+				}
+				174 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = CRS_ud_war_isolation
+		icon = GFX_ac_ud_focus_CRS_ud_war_isolation
+		x = 11
+		y = 18
+		cost = 5
+		available = {
+			original_tag = CRS
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.611 days = 1 }
+		}
+	}
+	focus = {
+		id = CRS_ud_war_fuel_allocation
+		icon = GFX_ac_ud_focus_CRS_ud_war_fuel_allocation
+		x = 9
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_war_isolation
+		}
+		mutually_exclusive = {
+			focus = CRS_ud_neutral_fishing_grounds
+		}
+		available = {
+			original_tag = CRS
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_war_fuel_spirit
+		}
+	}
+	focus = {
+		id = CRS_ud_neutral_fishing_grounds
+		icon = GFX_ac_ud_focus_CRS_ud_neutral_fishing_grounds
+		x = 13
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = CRS_ud_war_isolation
+		}
+		mutually_exclusive = {
+			focus = CRS_ud_war_fuel_allocation
+		}
+		available = {
+			original_tag = CRS
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CRS_ud_neutral_fishing_spirit
+		}
+	}
+	focus = {
+		id = CRS_ud_accord_harbours
+		icon = GFX_ac_ud_focus_CRS_ud_accord_harbours
+		x = 15
+		y = 18
+		cost = 5
+		available = {
+			original_tag = CRS
+			has_global_flag = ac_ucw_war_averted
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			navy_experience = 5
+		}
+	}
+	focus = {
+		id = CRS_ud_corscae_after_the_war
+		icon = GFX_ac_ud_focus_CRS_ud_corscae_after_the_war
+		x = 11
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = CRS_ud_war_fuel_allocation focus = CRS_ud_neutral_fishing_grounds focus = CRS_ud_accord_harbours
+		}
+		available = {
+			original_tag = CRS
+			OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate has_global_flag = ac_ucw_war_averted }
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.612 days = 1 }
+		}
+	}
+}

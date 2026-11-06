@@ -70,4 +70,146 @@ ac_ud_minors_b_programmes = {
 			base = 2
 		}
 	}
+
+	CAL_ud_adopt_programme = {
+		icon = ac_ud_minb_cal
+		allowed = { original_tag = CAL }
+		visible = {
+			tag = CAL original_tag = CAL NOT = { has_focus_tree = ac_ud_cal_tree }
+		}
+		available = {
+			ac_pol_previous_tree_idle = yes NOT = { has_focus_tree = ac_ud_cal_tree }
+		}
+		cost = 0
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = {
+					ac_pol_previous_tree_idle = yes NOT = { has_focus_tree = ac_ud_cal_tree }
+				}
+				load_focus_tree = { tree = ac_ud_cal_tree keep_completed = yes }
+			}
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+
+	CAL_ud_transit_fees_decision = {
+		icon = ac_ud_minb_cal
+		allowed = { original_tag = CAL }
+		visible = {
+			original_tag = CAL has_completed_focus = CAL_ud_customs_code
+		}
+		available = {
+			political_power >= 25 has_completed_focus = CAL_ud_customs_code NOT = { has_country_flag = ac_ud_minb_programme_cooldown }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			add_political_power = -25
+			ac_ud_minors_b_pay_programme = yes
+			add_timed_idea = { idea = CAL_ud_transit_fees_spirit days = 180 }
+			set_country_flag = { flag = ac_ud_minb_programme_cooldown days = 180 }
+		}
+		ai_will_do = {
+			base = 2
+		}
+	}
+
+	CAL_ud_relief_train_service_decision = {
+		icon = ac_ud_minb_cal
+		allowed = { original_tag = CAL }
+		visible = {
+			original_tag = CAL has_completed_focus = CAL_ud_relief_trains
+		}
+		available = {
+			political_power >= 25 has_completed_focus = CAL_ud_relief_trains NOT = { has_country_flag = ac_ud_minb_programme_cooldown }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 240
+		complete_effect = {
+			add_political_power = -25
+			ac_ud_minors_b_pay_programme = yes
+			add_timed_idea = { idea = CAL_ud_relief_priority_spirit days = 120 }
+			add_stability = 0.01
+			set_country_flag = { flag = ac_ud_minb_programme_cooldown days = 240 }
+		}
+		ai_will_do = {
+			base = 2
+		}
+	}
+
+	RJR_ud_adopt_programme = {
+		icon = ac_ud_minb_rjr
+		allowed = { original_tag = RJR }
+		visible = {
+			tag = RJR original_tag = RJR NOT = { has_focus_tree = ac_ud_rjr_tree }
+		}
+		available = {
+			ac_pol_previous_tree_idle = yes NOT = { has_focus_tree = ac_ud_rjr_tree }
+		}
+		cost = 0
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = {
+					ac_pol_previous_tree_idle = yes NOT = { has_focus_tree = ac_ud_rjr_tree }
+				}
+				load_focus_tree = { tree = ac_ud_rjr_tree keep_completed = yes }
+			}
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+
+	RJR_ud_road_programme_decision = {
+		icon = ac_ud_minb_rjr
+		allowed = { original_tag = RJR }
+		visible = {
+			original_tag = RJR has_completed_focus = RJR_ud_scofield_mine_roads
+		}
+		available = {
+			political_power >= 25 has_completed_focus = RJR_ud_scofield_mine_roads NOT = { has_country_flag = ac_ud_minb_programme_cooldown }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			add_political_power = -25
+			ac_ud_minors_b_pay_programme = yes
+			add_timed_idea = { idea = RJR_ud_road_works_spirit days = 180 }
+			set_country_flag = { flag = ac_ud_minb_programme_cooldown days = 180 }
+		}
+		ai_will_do = {
+			base = 2
+		}
+	}
+
+	RJR_ud_mine_safety_decision = {
+		icon = ac_ud_minb_rjr
+		allowed = { original_tag = RJR }
+		visible = {
+			original_tag = RJR has_completed_focus = RJR_ud_highland_mining_leases
+		}
+		available = {
+			political_power >= 25 has_completed_focus = RJR_ud_highland_mining_leases NOT = { has_country_flag = ac_ud_minb_programme_cooldown }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 240
+		complete_effect = {
+			add_political_power = -25
+			ac_ud_minors_b_pay_programme = yes
+			add_timed_idea = { idea = RJR_ud_mine_safety_spirit days = 180 }
+			add_stability = 0.01
+			set_country_flag = { flag = ac_ud_minb_programme_cooldown days = 240 }
+		}
+		ai_will_do = {
+			base = 2
+		}
+	}
 }

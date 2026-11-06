@@ -17,7 +17,9 @@ Package `minors_b` gives Spayca, Calladen, Roca Roja, Rohden, Voslage and Corsca
 | Tag | Country | Tree | Focuses | Events | Political paths | Treaty council (CNEA) in 1991 | Mod states |
 | --- | --- | --- | ---: | ---: | --- | --- | --- |
 | SYC | Spayca | `ac_ud_syc_tree` | 61 | 13 | Free Port Council of Ministers, Mineral Board Directorate, Compact Coordinating Committee | not a member | 346, 343, 593, 599 |
-| | **Total** | | **61** | **13** | | | |
+| CAL | Calladen | `ac_ud_cal_tree` | 61 | 12 | Council of the Electoral Charter, Transit Directorate, Frontier Security Council | member | 355, 15, 393 |
+| RJR | Roca Roja | `ac_ud_rjr_tree` | 60 | 13 | Federal Association Cabinet, League Council of the Cantons, Commonwealth Council of Delegates | member | 416, 465, 67 |
+| | **Total** | | **182** | **38** | | | |
 
 ## Political paths
 
@@ -28,6 +30,12 @@ Each path is one scripted effect built with `seams.regime_effect()`. Every focus
 | `ac_ud_minors_b_regime_syc_free_port` | `SYC_ud_free_port_office` (Free Port Council of Ministers) | Democratic | liberalism | allowed | democratic 52, neutrality 33, communism 10, fascism 3, monarchism 2 | Provisional gameplay |
 | `ac_ud_minors_b_regime_syc_mineral_board` | `SYC_ud_mineral_board_office` (Mineral Board Directorate) | Non-aligned | oligarchism | suspended | neutrality 61, democratic 22, communism 9, fascism 6, monarchism 2 | Provisional gameplay |
 | `ac_ud_minors_b_regime_syc_compact` | `SYC_ud_compact_office` (Compact Coordinating Committee) | Communist | democratic_socialism | suspended | communism 48, neutrality 27, democratic 20, fascism 3, monarchism 2 | Provisional gameplay |
+| `ac_ud_minors_b_regime_cal_charter` | `CAL_ud_charter_office` (Council of the Electoral Charter) | Democratic | conservatism | allowed | democratic 54, neutrality 30, fascism 8, communism 6, monarchism 2 | Provisional gameplay |
+| `ac_ud_minors_b_regime_cal_directorate` | `CAL_ud_directorate_office` (Transit Directorate) | Non-aligned | centrism_na | suspended | neutrality 58, democratic 26, fascism 9, communism 5, monarchism 2 | Provisional gameplay |
+| `ac_ud_minors_b_regime_cal_frontier` | `CAL_ud_frontier_office` (Frontier Security Council) | Fascist | nativism | suspended | fascism 50, neutrality 30, democratic 14, communism 4, monarchism 2 | Provisional gameplay |
+| `ac_ud_minors_b_regime_rjr_federal` | `RJR_ud_federal_office` (Federal Association Cabinet) | Democratic | conservatism | allowed | democratic 50, neutrality 32, communism 10, fascism 6, monarchism 2 | Provisional gameplay |
+| `ac_ud_minors_b_regime_rjr_cantonal` | `RJR_ud_cantonal_office` (League Council of the Cantons) | Non-aligned | centrism_na | suspended | neutrality 54, democratic 30, communism 9, fascism 5, monarchism 2 | Provisional gameplay |
+| `ac_ud_minors_b_regime_rjr_commonwealth` | `RJR_ud_commonwealth_office` (Commonwealth Council of Delegates) | Communist | liberal_socialism | allowed | communism 46, democratic 28, neutrality 18, fascism 6, monarchism 2 | Provisional gameplay |
 
 ## Events
 
@@ -48,6 +56,31 @@ Every event body is built with `seams.event_text()` and passes `seams.event_prob
 | `ac_ud_minb.111` | Ships Turned Away | focus `SYC_ud_refugee_ships_at_wyatt` | Provisional gameplay: the Erusean refugee closure is official (ACES Chronicle, 2000 / 04.21); the ships at Wyatt are not |
 | `ac_ud_minb.112` | News from San Salvacion | focus `SYC_ud_news_from_san_salvacion` | Provisional gameplay: Erusea's invasion of San Salvacion and seizure of Stonehenge is official (ACES Chronicle, 2003 / SUMMER) |
 | `ac_ud_minb.113` | The Archipelago After the War | focus `SYC_ud_archipelago_after_the_war` | Provisional gameplay: the war's official end is ACES Chronicle, 2005 / 09.19; Spayca's part in it is not |
+| `ac_ud_minb.201` | Counting the Crossroads | focus `CAL_ud_crossroads_survey` | Provisional gameplay: Calladen's states, resources, neighbours and 1991 government are mod provenance (history/states 15, 355, 393; history/countries/CAL - Calladen.txt; adjacency from the province map) |
+| `ac_ud_minb.202` | Two Customs Doctrines | focus `CAL_ud_customs_code` | Provisional gameplay |
+| `ac_ud_minb.203` | The Electoral Charter | focus `CAL_ud_electoral_charter` | Provisional gameplay |
+| `ac_ud_minb.204` | The Transit Directorate | focus `CAL_ud_transit_directorate` | Provisional gameplay |
+| `ac_ud_minb.205` | The Frontier Security Council | focus `CAL_ud_frontier_council` | Provisional gameplay |
+| `ac_ud_minb.206` | The Council and the Crossroads | focus `CAL_ud_council_delegation` | Provisional gameplay: the Central Usean Treaty Council is the mod's CNEA membership; Scandia, Dorondo and Bulgurdarest are members and Ferustia is not (mod provenance, history files) |
+| `ac_ud_minb.207` | The Ulysses Corridors | focus `CAL_ud_ulysses_corridors` | Provisional gameplay: the Ulysses announcement is official (ACES Chronicle, 1996 / 04.20); Calladen's response is not |
+| `ac_ud_minb.208` | The Coup Reports | focus `CAL_ud_coup_reports` | Provisional gameplay: the Usea-wide coup is official (ACES Chronicle, 1997 / 05.30); no Calladenian unit or officer is named or asserted to have taken part |
+| `ac_ud_minb.209` | Relief Through the Crossroads | focus `CAL_ud_relief_transit` | Provisional gameplay: the impact is official (ACES Chronicle, 1999 / 07.08); no impact site or damage in Calladen is asserted |
+| `ac_ud_minb.210` | Refugees at the Frontier Posts | focus `CAL_ud_refugees_at_frontier` | Provisional gameplay: the Erusean refugee closure is official (ACES Chronicle, 2000 / 04.21); the arrivals at Calladen's posts are not |
+| `ac_ud_minb.211` | Cargo for the War | focus `CAL_ud_belligerent_cargo` | Provisional gameplay: Erusea's invasion of San Salvacion and seizure of Stonehenge is official (ACES Chronicle, 2003 / SUMMER) |
+| `ac_ud_minb.212` | The Crossroads After the War | focus `CAL_ud_crossroads_after_war` | Provisional gameplay: the war's official end is ACES Chronicle, 2005 / 09.19; Calladen's part in it is not |
+| `ac_ud_minb.301` | Three Districts, One Republic | focus `RJR_ud_convene_three_districts` | Provisional gameplay: Roca Roja's three states, resources, neighbours and 1991 government are mod provenance (history/states 67, 416, 465; history/countries/RJR - Roca Roja.txt) |
+| `ac_ud_minb.302` | The Frontier Office | focus `RJR_ud_frontier_office` | Provisional gameplay |
+| `ac_ud_minb.303` | The Scofield Survey | focus `RJR_ud_scofield_pass_survey` | Provisional gameplay |
+| `ac_ud_minb.304` | The Mountain Constitution | focus `RJR_ud_constitution_debate` | Provisional gameplay |
+| `ac_ud_minb.305` | The Federal Association Cabinet | focus `RJR_ud_federal_association` | Provisional gameplay |
+| `ac_ud_minb.306` | The Cantonal League | focus `RJR_ud_cantonal_league` | Provisional gameplay |
+| `ac_ud_minb.307` | The Miners' Commonwealth | focus `RJR_ud_miners_commonwealth` | Provisional gameplay |
+| `ac_ud_minb.308` | Word of Ulysses | focus `RJR_ud_word_of_ulysses` | Provisional gameplay: the Ulysses announcement is official (ACES Chronicle, 1996 / 04.20); Roca Roja's response is not |
+| `ac_ud_minb.309` | Reports of a Coup | focus `RJR_ud_coup_bulletins` | Provisional gameplay: the Usea-wide coup of 1997 / 05.30 is official (ACES Chronicle); no rebel country is named and no event in Roca Roja is asserted |
+| `ac_ud_minb.310` | The Night of the Impact | focus `RJR_ud_night_of_the_impact` | Provisional gameplay: the impact is official (ACES Chronicle, 1999 / 07.08); no impact site or damage in Roca Roja is asserted |
+| `ac_ud_minb.311` | Columns on the Pass Roads | focus `RJR_ud_refugees_on_the_mountain_roads` | Provisional gameplay: the Erusean refugee closure is official (ACES Chronicle, 2000 / 04.21); the columns in Roca Roja are not |
+| `ac_ud_minb.312` | War Beyond the Frontier | focus `RJR_ud_war_on_the_frontier` | Provisional gameplay: Erusea's invasion of San Salvacion and seizure of Stonehenge is official (ACES Chronicle, 2003 / SUMMER) |
+| `ac_ud_minb.313` | After the War | focus `RJR_ud_republic_after_the_war` | Provisional gameplay: the war's official end is ACES Chronicle, 2005 / 09.19; Roca Roja's part in it is not |
 
 ## Lore, geography and design rows
 
@@ -58,6 +91,21 @@ Every event body is built with `seams.event_text()` and passes `seams.event_prob
 | Spayca's 1991 government is non-aligned with no elections, 100 percent neutrality popularity and the inherited leader SYC_gilmore_harrison_wilks; it is not a treaty-council (CNEA) member | Mod provenance | history/countries/SYC - Spayca.txt | SYC political paths; the inherited leader is neither named in text nor removed | Implemented; static-validated; native untested |
 | Ore contracts for the FCU-led railgun project | Provisional gameplay | Stonehenge's completion and FCU-led international character are official (ACES Chronicle, 1998 / 06.19; Super Weapons, Stonehenge); Spayca's participation is not | SYC_ud_railgun_ore_contracts, ac_ud_minb.109 and its three flags | Implemented; no construction date asserted; native untested |
 | Refugee ships at Wyatt after the Erusean closure | Provisional gameplay | Closure official (ACES Chronicle, 2000 / 04.21); the ships, numbers and Spaycan response are not | SYC_ud_refugee_ships_at_wyatt, SYC_ud_open_harbours, SYC_ud_transit_only, ac_ud_minb.111 | Implemented; static-validated; native untested |
+| Calladen's three states (355 capital district, capital; 15 Port Edwards; 393 inland district), their steel, aluminium, oil and rubber, factories, dockyards, air base and fuel silo | Mod provenance | history/states/15-State_15.txt, 355-State_355.txt, 393-State_393.txt and their localisation | CAL_ud_* build, slot and resource rewards; all CAL event text | Implemented; static-validated; native untested |
+| Calladen's land neighbours: Scandia (267, 490), Dorondo (149), Ferustia (494) and Bulgurdarest (379, 401) | Mod provenance | map/provinces.bmp, map/definition.csv and history/states province lists (adjacency computed for this package) | CAL_ud_scandian_desk, CAL_ud_ferustian_desk, CAL_ud_dorondan_desk, CAL_ud_bulgurdaresti_desk and their branches | Implemented; static-validated; native untested |
+| State 393's mod name is not used in any text; the package calls it the inland or interior district | Provisional gameplay | Package rule: no official place name is mapped to a state beyond Stonehenge = state 310 | CAL_ud_interior_junction, CAL_ud_interior_highway, CAL_ud_interior_shelters | Implemented; static-validated; native untested |
+| Calladen's 1991 government is the generated National Administration office (democratic ruling party, elections not allowed); history popularities are placeholders; it is a treaty-council (CNEA) member | Mod provenance | history/countries/CAL - Calladen.txt; CAL_ac_government_office from tools/usea_expansion/leaders.json | CAL political paths; CNEA_member_idea is neither added nor removed | Implemented; static-validated; native untested |
+| Scandia, Dorondo and Bulgurdarest are treaty-council (CNEA) members and Ferustia is not | Mod provenance | history/countries SCA, DOR, BLD and FRU (CNEA_member_idea present or absent) | CAL_ud_council_delegation, CAL_ud_ferustian_exception, ac_ud_minb.206 | Implemented; static-validated; native untested |
+| Calladen's review of its garrison commands after the Usea-wide coup | Provisional gameplay | Coup official (ACES Chronicle, 1997 / 05.30); no Calladenian unit or officer is asserted to have taken part | CAL_ud_coup_reports, CAL_ud_garrison_review, ac_ud_minb.208 | Implemented; static-validated; native untested |
+| Relief transit and refugees crossing Calladen after the impact and the Erusean closure | Provisional gameplay | Impact official (ACES Chronicle, 1999 / 07.08); closure official (ACES Chronicle, 2000 / 04.21); Calladen's role is not | CAL_ud_relief_transit, CAL_ud_refugees_at_frontier, ac_ud_minb.209, ac_ud_minb.210 | Implemented; static-validated; native untested |
+| Requests to move belligerent cargo across Calladen during the Continental War | Provisional gameplay | War official (ACES Chronicle, 2003 / SUMMER onward); the requests and Calladen's rules are not | CAL_ud_belligerent_cargo, CAL_ud_neutral_transit_rules, CAL_ud_licensed_war_freight, ac_ud_minb.211 | Implemented; static-validated; native untested |
+| Roca Roja's three states (416 capital district, capital; 465 Roca Roja; 67 Scofield Mountains), their steel, aluminium and oil, and the capital's dockyard, air base and fuel silo | Mod provenance | history/states/416-State_416.txt, 465-State_465.txt, 67-State_67.txt and their localisation | RJR_ud_* build, resource and slot rewards; all RJR event text | Implemented; static-validated; native untested |
+| Roca Roja borders Platania (191, 523, 548), Albard (420, 462, 485), Bulgurdarest (448) and Central Usea (258, 461); the Central Usean frontier runs along state 465 | Mod provenance | map/provinces.bmp, map/definition.csv and history/states province lists (adjacency computed for this package) | RJR_ud_frontier_office, the Central Usea stance focuses and the war lane | Implemented; static-validated; native untested |
+| Roca Roja's 1991 government is the generated National Administration office (democratic ruling party, elections not allowed); it is a treaty-council (CNEA) member | Mod provenance | history/countries/RJR - Roca Roja.txt; tools/usea_expansion/leaders.json | RJR political paths; the treaty-council lane | Implemented; static-validated; native untested |
+| The capital's VP is named 'Roca Roja Capital Centre' and the interior's 'Roca Roja Logistics Centre 8880' in mod localisation; both are placeholders and are not used in text | Mod provenance | localisation VICTORY_POINTS_9229 and VICTORY_POINTS_8880 | RJR event text (refers to 'the capital' and 'the interior') | Implemented; static-validated; native untested |
+| Reports of the Usea-wide coup reach Roca Roja; the republic reviews its own chain of command | Provisional gameplay | Coup official (ACES Chronicle, 1997 / 05.30); no rebel country is named and no event in Roca Roja is asserted | RJR_ud_coup_bulletins, RJR_ud_chain_of_command_review, ac_ud_minb.309 and its two flags | Implemented; static-validated; native untested |
+| Rear-area services for Central Usea during the Continental War | Provisional gameplay | ISAF founding official (ACES Chronicle, 2003 / 08.22); Roca Roja's role is not. Ideas and flags only: no faction, war, guarantee or access change | RJR_ud_rear_area_requests, RJR_ud_neutral_roads_ordinance and their flags | Implemented; static-validated; native untested |
+| Mountain-road refugee columns after the Erusean closure | Provisional gameplay | Closure official (ACES Chronicle, 2000 / 04.21); the columns and Roca Roja's response are not | RJR_ud_refugees_on_the_mountain_roads, RJR_ud_settle_the_interior, RJR_ud_escort_through_the_passes, ac_ud_minb.311 | Implemented; static-validated; native untested |
 
 ## Shared files touched
 

@@ -116,7 +116,9 @@ def country(tag, chapters):
         x, y = (index % 3) * 8 + 2, (index // 3) * 6
         root_reward = guard(f'ac_wc_{tag.lower()}_active = yes NOT = {{ has_country_flag = {started} }}',
                             f'set_country_flag = {started}\nset_country_flag = {{ flag = {pending} days = 60 }}\ncountry_event = {{ id = {event_id} days = 1 }}')
-        add_focus(focuses, tag, chapter, root_id, chapter.title, x, y, '', root_reward,
+        founding = '' if index == 0 else block('prerequisite', '\n'.join(
+            f'focus = {tag}_wc_e1_{chapters[0].slug}_p{i}_2' for i in range(3)))
+        add_focus(focuses, tag, chapter, root_id, chapter.title, x, y, founding, root_reward,
                   'The opening dialogue chooses one of three programmes. No operation is completed or paid merely by opening the discussion.')
         event_options = ''
         for policy, titles in enumerate(chapter.paths):

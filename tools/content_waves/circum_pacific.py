@@ -64,7 +64,9 @@ STAGES = (
      "OSE = { add_timed_idea = { idea = ac_cpw_ose_carrier_losses days = 90 } }\n" +
      guard("ac_cpw_arkbird_available = yes NOT = { has_global_flag = ac_cpw_arkbird_committed } NOT = { has_global_flag = ac_cpw_arkbird_held_back }",
            "OSE = { country_event = { id = ac_cpw.6 days = 1 } }"), 20),
-    ("sand_island", "2010.10.3", "", "remove_ideas = ac_cpw_yuk_submarine_carriers\nadd_ideas = ac_cpw_yuk_submarine_carrier", 21),
+    ("sand_island", "2010.10.3", "", "remove_ideas = ac_cpw_yuk_submarine_carriers\n" +
+     guard("NOT = { has_global_flag = ac_cpw_stage_razgriz_straits } NOT = { has_global_flag = ac_camp_naval_reserve_success } NOT = { has_global_flag = ac_camp_second_submarine_success }",
+           "add_ideas = ac_cpw_yuk_submarine_carrier"), 21),
     ("akerson_hill", "2010.10.21", "", "", 22),
     ("arkbird_sabotage", "2010.10.24", "has_global_flag = ac_cpw_arkbird_committed",
      "set_global_flag = ac_cpw_arkbird_sabotaged\nOSE = { add_timed_idea = { idea = ac_cpw_ose_arkbird_grounded days = 56 } }", 23),
@@ -214,9 +216,17 @@ def owner():
         guard(f"NOT = {{ {TAINTED} }} ac_cpw_third_party_present = yes", "ac_cpw_taint = yes\nnews_event = { id = ac_cpw.9 days = 1 }") +
         guard("OR = { ac_cpw_principal_fallen = yes NOT = { ac_cpw_pair_at_war = yes } }", "ac_cpw_record_end = yes"))
     stages = ""
+    from ac_campaigns.catalogue import CPW_GATES
     for name, after, extra, body, number in STAGES:
+        if name=='razgriz_straits':
+            extra += ' OR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_second_submarine_success has_global_flag = ac_camp_naval_reserve_success }'
+        elif name in CPW_GATES:
+            extra += ' OR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_'+CPW_GATES[name]+'_success }'
+        report = f'news_event = {{ id = ac_cpw.{number} days = 1 }}'
+        if name=='razgriz_straits':
+            report = guard('NOT = { has_global_flag = ac_camp_naval_reserve_success }',report)
         stages += guard(f"ac_cpw_course_open = yes date > {after} NOT = {{ has_global_flag = ac_cpw_stage_{name} }} {extra}".rstrip(),
-                        f"set_global_flag = ac_cpw_stage_{name}\n" + body + ("\n" if body else "") + f"news_event = {{ id = ac_cpw.{number} days = 1 }}")
+                        f"set_global_flag = ac_cpw_stage_{name}\n" + body + ("\n" if body else "") + report)
     effects["ac_cpw_stage_tick"] = stages
     effects["ac_cpw_owner_weekly"] = guard("tag = YUK original_tag = YUK",
         "ac_cpw_summit_tick = yes\nac_cpw_calendar_tick = yes\nac_cpw_prelude_tick = yes\nac_cpw_declaration_tick = yes\n"

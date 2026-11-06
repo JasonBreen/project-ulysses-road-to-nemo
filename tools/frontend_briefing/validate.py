@@ -53,9 +53,13 @@ def lobby(gui, sprites, tiles, specs, check):
         check(row is not None, 'Engine sprite without a disposition: '+name)
         if row:check(row['disposition'] == 'keep_engine', 'Restyled or hidden sprite still bound to the engine: '+name)
     for row in record:
-        check(row['disposition'] in ('restyle', 'hide', 'keep_engine') and len(row['reason']) > 20, 'Bad disposition '+row['sprite'])
+        check(row['disposition'] in ('restyle', 'hide', 'keep_engine', 'mod_override') and len(row['reason']) > 20, 'Bad disposition '+row['sprite'])
         if row['disposition'] == 'keep_engine':
             check(row['sprite'] in engine, 'Kept engine sprite no longer on the screen: '+row['sprite'])
+            continue
+        if row['disposition'] == 'mod_override':
+            # Still bound by name, but the mod now defines that name itself (the vanilla visual scrub).
+            check(row['sprite'] in bound and row['sprite'] in mod_sprite_names(), 'Mod override is not bound and mod-defined: '+row['sprite'])
             continue
         check(row['sprite'] not in bound, 'Still bound: '+row['sprite'])
         check(row['replacement'] in bound, 'Replacement not bound on the screen: '+row['replacement'])

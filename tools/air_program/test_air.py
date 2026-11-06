@@ -27,6 +27,8 @@ ENGINE=None
 def ids(nodes):return {k for k,_,_ in nodes}
 def read(path):return parse(path.read_text(encoding='utf-8-sig'))
 def digest(path):return hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
+sys.path.append(str(ROOT/'tools/air_program'))
+from reviewed_sources import reviewed_updates,validate_outcome
 
 
 class Captured(unittest.TestCase):
@@ -161,16 +163,38 @@ class Definitions(Captured):
         text=(MOD/'common/technologies/ac_air_program.txt').read_text()
         self.assertNotIn('ac_wl_transport_support',text);self.assertNotIn('ac_sp_',text)
         baseline=json.loads((HERE/'preserved_sources.json').read_text())
-        updates=json.loads((HERE/'reviewed_owner_updates.json').read_text())['files']
+        updates=reviewed_updates()
         cleanup=json.loads((ROOT/'tools/history_data_cleanup_updates.json').read_text())['files']
+        campaign=json.loads((ROOT/'tools/ac_campaigns/reviewed_owner_updates.json').read_text())['files']
         for path,expected in baseline['sources'].items():
             update=updates.get(path)
             repair=cleanup.get(path)
-            self.assertFalse(update and repair,path)
+            continuation=campaign.get(path)
+            self.assertLessEqual(sum(bool(row) for row in (update,repair,continuation)),1,path)
             if update:self.assertEqual(expected,update['old_sha256'],path)
             if repair:self.assertEqual(expected,repair['old_normalized_sha256'],path)
-            current=update['new_sha256'] if update else repair['new_normalized_sha256'] if repair else expected
+            if continuation:self.assertEqual(expected,continuation['old_sha256'],path)
+            current=update['new_sha256'] if update else repair['new_normalized_sha256'] if repair else continuation['new_sha256'] if continuation else expected
             self.assertEqual(current,digest(ROOT/path),path)
+
+    def test_campaign_owner_delta_preserves_all_other_functions_and_canonical_output(self):
+        files=json.loads((ROOT/'tools/ac_campaigns/reviewed_owner_updates.json').read_text())['files']
+        relative='mod/2985041246/common/scripted_effects/ac_ucw.txt'
+        self.assertEqual({relative},set(files));row=files[relative]
+        self.assertEqual([],row['added']);self.assertEqual([],row['removed'])
+        changed={'ac_ucw_eru_war_tick','ac_ucw_destroy_megalith'}
+        self.assertEqual(changed,set(row['changed']))
+        self.assertEqual(changed,set(row['old_changed_function_ast_sha256']))
+        self.assertEqual(changed,set(row['reviewed_function_ast_sha256']))
+        old=row['unchanged_function_ast_sha256'];self.assertEqual(25,len(old))
+        self.assertFalse(set(old)&changed)
+        current={key:body for key,_,body in read(ROOT/relative)}
+        self.assertEqual(set(old)|changed,set(current))
+        for name,body in current.items():
+            actual=hashlib.sha256(json.dumps(body,separators=(',',':')).encode()).hexdigest()
+            self.assertEqual((row['reviewed_function_ast_sha256'] if name in changed else old)[name],actual,name)
+        result=subprocess.run([sys.executable,'-B','tools/build_continental_war.py','--check','--check-owner-effects'],cwd=ROOT,capture_output=True,text=True)
+        self.assertEqual(0,result.returncode,result.stdout+result.stderr)
 
     def test_reviewed_release_owner_delta_matches_canonical_generator(self):
         updates=json.loads((HERE/'reviewed_owner_updates.json').read_text());files=updates['files']
@@ -189,6 +213,44 @@ class Definitions(Captured):
                 self.assertEqual((reviewed if name in reviewed else old)[name],actual,(path,name))
         result=subprocess.run([sys.executable,'-B','tools/economy_v2/build.py','--check'],cwd=ROOT,capture_output=True,text=True)
         self.assertEqual(0,result.returncode,result.stdout+result.stderr)
+
+    def test_reviewed_campaign_delta_adds_only_shared_commit_effect(self):
+        receipt=json.loads((HERE/'reviewed_campaign_updates.json').read_text());files=receipt['files']
+        path='mod/2985041246/common/scripted_effects/ac_campaign_effects.txt'
+        self.assertEqual(1,receipt['schema'])
+        self.assertEqual('797f941e04e51a884b2d26f14eb1b9d66d49ce95',receipt['source_base_commit'])
+        self.assertEqual('b90798c9d92cb2e35ebfa02a884d046602623fd8',receipt['reviewed_change_commit'])
+        self.assertEqual({path},set(files));row=files[path]
+        self.assertEqual([],row['removed']);self.assertEqual([],row['changed'])
+        self.assertEqual({'ac_commit_belkan_war_campaign'},set(row['added']))
+        self.assertEqual('f8e0e7fdee5676c941ce7036a88e99ec549ae06e9c2a0235ac2f60ee9e3254f2',row['old_sha256'])
+        composite=reviewed_updates()[path]
+        self.assertEqual(composite['new_sha256'],digest(ROOT/path))
+        current={key:value for key,_,value in read(ROOT/path) if key!='ac_dispatch_belkan_war_outcome'}
+        old=row['unchanged_function_ast_sha256'];reviewed=row['reviewed_function_ast_sha256']
+        self.assertEqual(set(current),set(old)|set(reviewed))
+        self.assertEqual(set(row['added']),set(reviewed));self.assertFalse(set(old)&set(reviewed))
+        for name,body in current.items():
+            actual=hashlib.sha256(json.dumps(body,separators=(',',':')).encode()).hexdigest()
+            self.assertEqual((reviewed if name in reviewed else old)[name],actual,(path,name))
+
+    def test_outcome_followup_rejects_existing_effect_edits_and_unregistered_additions(self):
+        path='mod/2985041246/common/scripted_effects/ac_campaign_effects.txt'
+        previous=json.loads((HERE/'reviewed_campaign_updates.json').read_text())['files'][path]
+        receipt=json.loads((HERE/'reviewed_outcome_updates.json').read_text())
+        source=(ROOT/path).read_text(encoding='utf-8-sig')
+        validate_outcome(previous,receipt,source)
+        mutations=(source.replace('remove_ideas = ac_prewar_cabinet','remove_ideas = ac_unreviewed_idea',1),
+                   source+'\nac_unreviewed_extra = { log = "unreviewed" }\n',
+                   source.replace('ac_dispatch_belkan_war_outcome = {','ac_unreviewed_handoff = {',1))
+        for text in mutations:
+            # Even a refreshed file digest cannot approve changed or extra functions.
+            altered=copy.deepcopy(receipt)
+            altered['files'][path]['new_sha256']=hashlib.sha256(text.replace('\r\n','\n').encode()).hexdigest()
+            with self.assertRaises(ValueError):validate_outcome(previous,altered,text)
+        altered=copy.deepcopy(receipt)
+        altered['files'][path]['old_sha256']='0'*64
+        with self.assertRaises(ValueError):validate_outcome(previous,altered,source)
 
     def test_ai_designs_require_research_current_components_dates_and_dlc(self):
         groups=read(MOD/'common/ai_equipment/ac_air_designs.txt')

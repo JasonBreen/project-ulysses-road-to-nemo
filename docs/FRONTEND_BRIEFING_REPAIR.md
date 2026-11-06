@@ -108,7 +108,8 @@ record with a reason per sprite is `tools/frontend_briefing/lobby_sprites.json`.
 | Restyle | `tiled_frontend_upper_bar`, `tiled_frontend_lower_bar` (lobby top and bottom bars); `tiled_window2_1b_border`, `tiled_window_1b_thin_border` (random-country, custom-settings, more-countries and dropdown windows); `tiled_header_1` (setting group headers); `tiled_generic_bg_1` (difficulty and game-rule rows); `no_frame_special_bg` (load and ironman save lists); `game_settings_bg` (multiplayer settings strip) |
 | Hide | `small_pol_piechart_frame`, `small_pol_piechart_overlay` (decoration over the engine-drawn pie chart); `load_save_top_screen`, `load_save_bottom_screen` (load and ironman-save dialog ornaments) |
 | Keep (phase 2 capture) | Buttons, checkboxes, sliders and scrollbars, whose state frames must match the engine; four fixed-size frames whose sizes need the installed game |
-| Keep (by design) | Flags and shields, runtime placeholders (idea, leader, bookmark picture), the engine-drawn pie chart, functional indicators (ironman, achievements, new content), and the already transparent window background |
+| Keep (by design) | Flags and shields, the bookmark picture placeholder, the engine-drawn pie chart, functional indicators (ironman, achievements, new content), and the already transparent window background |
+| Mod override | `idea_unknown`, `leader_unknown` (runtime placeholders) and `select_date_1936`: still bound by name, but the vanilla visual scrub redefines each with mod art in `interface/zz_ac_visual_scrub.gfx` ([VANILLA_VISUAL_SCRUB.md](VANILLA_VISUAL_SCRUB.md)) |
 
 `style_gui.py` carries the remap used when `tools/port_1_19/restore_original_gui.py`
 rebuilds the GUI, and `--apply/--check` applies or checks it on the committed GUI.

@@ -18,7 +18,7 @@ country_event = { ### USTIO RESURCES
 						BLK = { has_government = fascism }
 					}
 				}
-				BLK = { country_event = { id = belka_dlp_war.1 days = 1 }}
+				BLK = { ac_commit_belkan_war_campaign = yes }
 				UST = { country_event = { id = ustio.18 }}
 				UST = {  country_event = { id = ustio.17 days = 2 }}
 			}
@@ -26,20 +26,19 @@ country_event = { ### USTIO RESURCES
 	}
 }
 
-country_event = { ### private continuation handoff for the existing demo-end branch
+country_event = { ### retired archive demo popup; Belkan outcomes must not call this
 	id = world_event.2
 	title = world_event.2.t
 	desc = world_event.2.d
 	picture = GFX_report_event_belka_meme_read_write
+	hidden = yes
 	fire_only_once = yes
 	is_triggered_only = yes
 	option = {
 		name = world_event.2.a
-		# The clock already continues after this popup; this flag gives postwar systems a stable hook.
-		set_global_flag = ac_continuation_active
-		clr_global_flag = ac_postwar_wait_for_defeat_tree
-		hidden_effect = {
-			country_event = { id = ac_continuation.1 days = 1 }
-		}
+		# Provisional gameplay: the preserved demo popup is not a war outcome.
+		# Victory, Wacht am Wal, and defeat hand off through
+		# ac_dispatch_belkan_war_outcome. This option must not set continuation
+		# flags or load a postwar tree if the id is still triggered.
 	}
 }

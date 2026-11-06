@@ -1,0 +1,47 @@
+# 1991 hull programs. Dates are the ACES Chronicle. Bonuses are provisional gameplay.
+ac_yards_announce_kestrel = {
+	set_country_flag = ac_yards_kestrel_announced
+	set_variable = { var = ac_yards_trials value = 0 }
+	set_variable = { var = ac_yards_trial_attempts value = 0 }
+	if = {
+		limit = { has_country_flag = ac_yards_berth_funded }
+		navy_experience = 10
+		add_timed_idea = { idea = ac_yards_kestrel_fitting days = 180 }
+	}
+	country_event = ac_yards.1
+}
+
+ac_yards_commission_kestrel = {
+	set_country_flag = ac_yards_kestrel_commissioned
+	navy_experience = 15
+	if = {
+		limit = { check_variable = { ac_yards_trials > 2 } }
+		navy_experience = 25
+		add_timed_idea = { idea = ac_yards_kestrel_worked_up days = 180 }
+	}
+	country_event = ac_yards.2
+}
+
+ac_yards_announce_scinfaxi = {
+	set_country_flag = ac_yards_scinfaxi_announced
+	set_global_flag = ac_yards_scinfaxi_public
+	if = {
+		limit = { has_country_flag = ac_yards_class_drafted }
+		add_timed_idea = { idea = ac_yards_scinfaxi_draft days = 180 }
+	}
+	country_event = ac_yards.3
+}
+
+ac_yards_sea_trial_effect = {
+	add_to_variable = { var = ac_yards_trial_attempts value = 1 }
+	random_list = {
+		70 = {
+			add_to_variable = { var = ac_yards_trials value = 1 }
+			country_event = ac_yards.10
+		}
+		30 = {
+			add_stability = -0.01
+			country_event = ac_yards.11
+		}
+	}
+}

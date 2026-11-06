@@ -1,3 +1,30 @@
+ac_commit_belkan_war_campaign = {
+	# Shared, idempotent entry point for both the player War Council and the
+	# historical 1995 world event. The effect runs in Belka's country scope.
+	if = {
+		limit = {
+			original_tag = BLK
+			NOT = { has_country_flag = ac_campaign_war_committed }
+			NOT = { has_country_flag = ac_postwar_ready }
+			NOT = { has_active_mission = BLK_war_start_timer_dec }
+			NOT = { has_global_flag = ac_campaign_arc_started }
+			NOT = { has_global_flag = belkan_war_is_happening }
+			NOT = { has_global_flag = belka_won_belkan_war }
+			NOT = { has_global_flag = belka_lost_belkan_war }
+			NOT = { has_global_flag = belka_won_belkan_war_wacht_am_wal }
+			NOT = { has_global_flag = ac_continuation_active }
+			NOT = { has_global_flag = ac_postwar_victory }
+			NOT = { has_global_flag = ac_postwar_wacht_am_wal }
+			NOT = { has_global_flag = ac_postwar_defeat }
+			NOT = { has_global_flag = ac_postwar_unclassified }
+		}
+		set_country_flag = ac_campaign_war_committed
+		set_global_flag = ac_campaign_arc_started
+		set_variable = { ac_campaign_war_weeks = 0 }
+		country_event = { id = belka_dlp_war.1 days = 1 }
+	}
+}
+
 ac_clear_belkan_campaign_ideas = {
 	remove_ideas = ac_prewar_cabinet
 	remove_ideas = ac_industrial_preparations
@@ -10,4 +37,27 @@ ac_clear_belkan_campaign_ideas = {
 	clr_country_flag = ac_campaign_stage_one_pending
 	clr_country_flag = ac_campaign_stage_two_pending
 	clr_country_flag = ac_campaign_stage_three_pending
+}
+
+# Provisional gameplay glue. Call from Belka after one existing war-outcome
+# flag is already set: belka_won_belkan_war, belka_won_belkan_war_wacht_am_wal,
+# or belka_lost_belkan_war. ac_continuation.1 consumes that flag. This effect
+# does not fire world_event.2, choose a border, or add postwar lore.
+ac_dispatch_belkan_war_outcome = {
+	if = {
+		limit = {
+			original_tag = BLK
+			NOT = { has_country_flag = ac_belkan_outcome_handoff_pending }
+			NOT = { has_global_flag = ac_postwar_contract_started }
+			OR = {
+				has_global_flag = belka_won_belkan_war
+				has_global_flag = belka_won_belkan_war_wacht_am_wal
+				has_global_flag = belka_lost_belkan_war
+			}
+		}
+		set_country_flag = ac_belkan_outcome_handoff_pending
+		set_global_flag = ac_continuation_active
+		clr_global_flag = ac_postwar_wait_for_defeat_tree
+		country_event = { id = ac_continuation.1 days = 1 }
+	}
 }

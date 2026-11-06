@@ -18,6 +18,7 @@ from superpowers import build
 from superpowers.content import BRANCHES,focus_id
 from superpowers.mechanics import COUNTRIES,SERVICES
 from usea_expansion.script import parse,get
+from ac_campaigns.imports import strip_imports as strip_campaign_imports
 
 
 def descend(nodes):
@@ -65,10 +66,28 @@ class SuperpowerAssets(unittest.TestCase):
             if (ROOT/'tools/pacific_nations/build.py').is_file():
                 from pacific_nations.build import strip_imports
                 source=strip_imports(source,tag)
+            source=strip_campaign_imports(source,tag)
             for key,_,tree in source:
                 if key=='focus_tree':tree[:]=[r for r in tree if r[0]!='continuous_focus_position'and not(r[0]=='shared_focus'and isinstance(r[2],str)and'_snp_'in r[2])]
             digest=hashlib.sha256(json.dumps(source,separators=(',',':')).encode()).hexdigest()
             self.assertEqual(row['normalized_foreign_ast_sha256'],digest,tag)
+
+    def test_campaign_import_restoration_rejects_missing_duplicate_and_unknown_nodes(self):
+        import copy
+        original=parse((MOD/'common/national_focus/OSE.txt').read_text())
+        trees=[body for kind,_,body in original if kind=='focus_tree']
+        for number in range(len(trees)):
+            for mode in ('missing','duplicate','unknown'):
+                nodes=copy.deepcopy(original);tree=[body for kind,_,body in nodes if kind=='focus_tree'][number]
+                owned=next(row for row in tree if row[0]=='shared_focus' and isinstance(row[2],str) and row[2].startswith('OSE_camp_'))
+                if mode=='missing':tree.remove(owned)
+                elif mode=='duplicate':tree.append(copy.deepcopy(owned))
+                else:tree.append(['shared_focus','=','OSE_camp_unregistered'])
+                with self.assertRaisesRegex(ValueError,'campaign imports'):strip_campaign_imports(nodes,'OSE')
+        nodes=copy.deepcopy(original);tree=next(body for kind,_,body in nodes if kind=='focus_tree')
+        tree.append(['shared_focus','=','unregistered_foreign_focus'])
+        restored=strip_campaign_imports(nodes,'OSE')
+        self.assertTrue(any(row==['shared_focus','=','unregistered_foreign_focus'] for kind,_,body in restored if kind=='focus_tree' for row in body))
 
     def test_original_assets_are_complete_and_every_row_uses_its_native_aperture(self):
         self.assertEqual(320,len(self.assets));self.assertEqual(Counter({'focus':96,'idea':136,'decision row':68,'category':2,'event illustration':18}),Counter(a['role']for a in self.assets))

@@ -64,6 +64,20 @@ def read_source(folder, name):
     return text
 
 
+
+def reviewed_history_presentation(tag, text):
+    """Project the reviewed visual-scrub caption without recapturing history."""
+    if tag != 'BLK':
+        return text
+    original = ('create_intelligence_agency = {\n'
+                '    name = "Bundesnachrichtendienst"\n'
+                '    icon = GFX_intelligence_agency_logo_ger\n}')
+    replacement = original.replace('"Bundesnachrichtendienst"', '"Belkan intelligence office"')
+    if text.count(original) != 1:
+        raise ValueError('Reviewed BLK agency-caption source changed')
+    return text.replace(original, replacement, 1)
+
+
 def condition(nodes, dlcs, tag, human=(), loaded=False):
     values=[]
     for key,_,value in nodes:
@@ -350,7 +364,7 @@ def stocks(tag,airtree):
 
 def compile_tag(tag,contract):
     filename=next((HERE/'baseline/countries').glob(tag+' - *.txt')).name
-    original=read_source('countries',filename)
+    original=reviewed_history_presentation(tag,read_source('countries',filename))
     if tag=='BLK':
         # Keep the captured baseline immutable, but reproduce the reviewed
         # history cleanup that removes/replaces its two placeholder icons.
@@ -363,6 +377,19 @@ def compile_tag(tag,contract):
         for old,new in repairs:
             if original.count(old)!=1:raise ValueError('Reviewed BLK icon repair source changed')
             original=original.replace(old,new)
+    # Baseline snapshots keep pre-1.17 new_* technology ids. Live histories use
+    # the 1.17+ grand-doctrine ids. The captured baseline stays unchanged.
+    for old, new in (
+        ('new_mobile_warfare', 'mobile_warfare'),
+        ('new_superior_firepower', 'superior_firepower'),
+        ('new_fleet_in_being', 'fleet_in_being'),
+        ('new_base_strike', 'base_strike'),
+        ('new_operational_integrity', 'operational_integrity'),
+        ('new_strategic_destruction', 'strategic_destruction'),
+        ('new_battlefield_support', 'battlefield_support'),
+        ('new_convoy_raiding', 'trade_interdiction'),
+    ):
+        original=original.replace(old, new)
     # The original bookmark erroneously selected the designer navy in both arms.
     if tag=='OSE':original=original.replace('set_naval_oob = "OSE_navy_dlc"\n\t}', 'set_naval_oob = "OSE_navy_1991_legacy"\n\t}')
     else:original=original.replace('set_naval_oob = "'+tag+'_navy"','set_naval_oob = "'+tag+'_navy_1991_legacy"')

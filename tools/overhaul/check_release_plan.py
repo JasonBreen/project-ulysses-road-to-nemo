@@ -6,6 +6,7 @@ from pathlib import Path
 
 
 DEFAULT_PLAN = Path(__file__).with_name("release_plan.json")
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def check(plan):
@@ -19,6 +20,14 @@ def check(plan):
     countries = plan["countries"]
     require(len(countries) == 19, "Expected 19 individually budgeted countries")
     require(len({row["tag"] for row in countries}) == len(countries), "Duplicate country budget")
+    expansion=plan.get('approved_expansions',{}).get('ac04_ac05')
+    if expansion:
+        require(expansion['original_1028_budget_unchanged'], 'Expansion must preserve the original approval baseline')
+        require(sum(expansion['country_counts'].values())==expansion['additional_focuses']==186,'AC04/AC5 expansion accounting mismatch')
+        require(len(expansion['country_counts'])==16,'AC04/AC5 expansion must cover sixteen countries')
+    depth = plan.get('approved_expansions', {}).get('usea_depth')
+    if depth:
+        problems.extend(check_addenda(depth))
     packages = {row["id"] for row in plan["packages"]}
     require(packages == set(range(6)), "Expected Packages 0 through 5")
     for row in countries:
@@ -65,6 +74,47 @@ def check(plan):
     economy = plan["economy"]
     require(len(economy["tax_bases"]) == 3 and len(economy["spending_envelopes"]) == 5
             and len(economy["pages"]) == 5, "Economic tax/envelope/page contract mismatch")
+    return problems
+
+
+def check_addenda(depth, root=ROOT):
+    """Usea Depth packages record their own counts in tools/usea_depth/<pkg>/budget.json.
+
+    Each package's own test compares these numbers with its real definitions; this
+    gate only keeps the addenda well formed and inside the approved package list.
+    """
+    problems = []
+
+    def require(condition, message):
+        if not condition:
+            problems.append(message)
+
+    require(depth.get('original_1028_budget_unchanged') is True, 'Usea Depth must preserve the original approval baseline')
+    require(depth.get('native_acceptance') is False, 'Usea Depth is not native-accepted')
+    packages = depth.get('packages', {})
+    owners = [tag for row in packages.values() for tag in row['tags']]
+    require(len(owners) == len(set(owners)), 'Usea Depth tags must belong to one package each')
+    seen = set()
+    for path in sorted(root.glob(depth['addenda_glob'])):
+        name = path.parent.name
+        try:
+            row = json.loads(path.read_text(encoding='utf-8'))
+        except ValueError as exc:
+            problems.append(f'{path}: invalid JSON ({exc})')
+            continue
+        package = row.get('package')
+        require(package == name, f'{path}: package must match its folder')
+        require(package in packages, f'{path}: unknown Usea Depth package {package}')
+        require(package not in seen, f'{path}: duplicate Usea Depth package {package}')
+        seen.add(package)
+        focuses, trees = row.get('focuses', {}), row.get('trees', {})
+        allowed = set(packages.get(package, {}).get('tags', []))
+        require(set(focuses) <= allowed, f'{package}: focus counts for tags outside the package')
+        counts = list(focuses.values()) + list(trees.values()) + [row.get('events', 0)]
+        require(all(isinstance(n, int) and not isinstance(n, bool) and n >= 0 for n in counts),
+                f'{package}: counts must be non-negative integers')
+        require(sum(focuses.values()) == sum(trees.values()),
+                f'{package}: every new focus must be imported by exactly one tree')
     return problems
 
 

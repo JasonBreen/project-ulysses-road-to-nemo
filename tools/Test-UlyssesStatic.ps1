@@ -35,10 +35,29 @@ foreach ($property in @(
 }
 
 $continuationEvent = Join-Path $ModRoot 'events\ac_world_events.txt'
+$outcomeEffect = Join-Path $ModRoot 'common\scripted_effects\ac_campaign_effects.txt'
+$belkaEvents = Join-Path $ModRoot 'events\Belka.txt'
+$wonFocus = Join-Path $ModRoot 'common\national_focus\BLK_war_won.txt'
 if (-not (Test-Path -LiteralPath $continuationEvent -PathType Leaf)) {
     [void]$failures.Add('events/ac_world_events.txt is missing')
-} elseif ((Get-Content -LiteralPath $continuationEvent -Raw) -notmatch '(?s)id\s*=\s*world_event\.2.*?set_global_flag\s*=\s*ac_continuation_active') {
-    [void]$failures.Add('world_event.2 does not set ac_continuation_active')
+} else {
+    $worldEventText = Get-Content -LiteralPath $continuationEvent -Raw
+    if ($worldEventText -match '(?s)id\s*=\s*world_event\.2.*?country_event\s*=\s*\{\s*id\s*=\s*ac_continuation\.1') {
+        [void]$failures.Add('world_event.2 still dispatches ac_continuation.1')
+    }
+    if ($worldEventText -notmatch '(?s)id\s*=\s*world_event\.2.*?hidden\s*=\s*yes') {
+        [void]$failures.Add('world_event.2 is not a hidden retired demo popup')
+    }
+}
+if (-not (Test-Path -LiteralPath $outcomeEffect -PathType Leaf)) {
+    [void]$failures.Add('ac_campaign_effects.txt is missing')
+} elseif ((Get-Content -LiteralPath $outcomeEffect -Raw) -notmatch '(?s)ac_dispatch_belkan_war_outcome\s*=\s*\{.*?set_global_flag\s*=\s*ac_continuation_active.*?id\s*=\s*ac_continuation\.1') {
+    [void]$failures.Add('ac_dispatch_belkan_war_outcome does not hand off through ac_continuation.1')
+}
+foreach ($scheduled in @($belkaEvents, $wonFocus)) {
+    if ((Test-Path -LiteralPath $scheduled -PathType Leaf) -and ((Get-Content -LiteralPath $scheduled -Raw) -match 'id\s*=\s*world_event\.2')) {
+        [void]$failures.Add("$(Split-Path -Leaf $scheduled) still schedules world_event.2")
+    }
 }
 
 $report.Summary.PSObject.Properties | ForEach-Object { '{0}={1}' -f $_.Name, $_.Value }
@@ -132,6 +151,12 @@ $pythonHost = if ($pathPython) {
     throw 'Could not locate Python for aftermath contract checks.'
 }
 Write-Output "Python contract host: $pythonHost"
+Write-Output 'Ustio continuity: offline chronology and scaffold checks'
+& $pythonHost (Join-Path $PSScriptRoot 'Test-UstioContinuity.py') --mod-root $ModRoot
+if ($LASTEXITCODE -ne 0) {
+    Write-Error 'Ustio continuity contract checks failed.'
+    exit $LASTEXITCODE
+}
 Write-Output 'The Peace We Inherit: offline transition and content checks'
 & $pythonHost (Join-Path $PSScriptRoot 'Test-PeaceWeInherit.py') --mod-root $ModRoot
 $aftermathExitCode = $LASTEXITCODE
@@ -142,6 +167,8 @@ if ($aftermathExitCode -ne 0) {
 & $pythonHost (Join-Path $PSScriptRoot 'Test-UseaActors.py') --mod-root $ModRoot; if ($LASTEXITCODE -ne 0) { Write-Error 'Usea actor contract checks failed.'; exit $LASTEXITCODE }
 & $pythonHost (Join-Path $PSScriptRoot 'Test-StrangerealProjects.py') --mod-root $ModRoot; if ($LASTEXITCODE -ne 0) { Write-Error 'Strangereal special project checks failed.'; exit 1 }
 
+& $pythonHost (Join-Path $PSScriptRoot 'usea_depth\run_checks.py'); if ($LASTEXITCODE -ne 0) { Write-Error 'Usea Depth checks failed.'; exit 1 }
+
 Write-Output 'Usean Continental War: offline transition and content checks'
 & $pythonHost (Join-Path $PSScriptRoot 'Test-ContinentalWar.py') --mod-root $ModRoot
 $continentalExitCode = $LASTEXITCODE
@@ -150,6 +177,9 @@ if ($continentalExitCode -ne 0) {
     exit $continentalExitCode
 }
 
+Write-Output 'Expanded AC04/AC5 campaigns: actual-script offline contracts'
+& $pythonHost (Join-Path $PSScriptRoot 'ac_campaigns\test_campaigns.py')
+if ($LASTEXITCODE -ne 0) { Write-Error 'Expanded AC04/AC5 contract checks failed.'; exit $LASTEXITCODE }
 Write-Output 'Usean rebellion: offline contract checks'
 & $pythonHost (Join-Path $PSScriptRoot 'Test-UseanRebellion.py') --mod-root $ModRoot
 if ($LASTEXITCODE -ne 0) {
@@ -172,6 +202,20 @@ Write-Output 'Focus art and Economy Dashboard visual contract audit'
 & $pythonHost (Join-Path $PSScriptRoot 'audit_visual_dependencies.py') --mod-root $ModRoot
 if ($LASTEXITCODE -ne 0) {
     Write-Error 'Focus/economy artwork contract audit failed.'
+    exit 1
+}
+
+Write-Output 'Visual scrub news-picture regressions'
+& $pythonHost (Join-Path $PSScriptRoot 'Test-VisualScrub.py')
+if ($LASTEXITCODE -ne 0) {
+    Write-Error 'Visual scrub news-picture regressions failed.'
+    exit 1
+}
+
+Write-Output 'Vanilla visual scrub contract'
+& $pythonHost (Join-Path $PSScriptRoot 'visual_scrub/build_fallthroughs.py') --check
+if ($LASTEXITCODE -ne 0) {
+    Write-Error 'Vanilla visual scrub contract failed.'
     exit 1
 }
 

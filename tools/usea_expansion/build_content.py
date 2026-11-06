@@ -12,6 +12,7 @@ HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/29850412
 sys.path.insert(0,str(ROOT/'tools'))
 from usea_expansion.script import parse,get,render
 from port_1_19.pdx import children,strip_comments_mask
+from usea_depth.seams import foreign_import_blocks,reinsert,shared_nodes
 
 OUT={};LOC={};EFFECTS=[];EVENTS=['add_namespace = ac_expansion'];IDEAS=[]
 TAGS=('ERU','FCU','NPT','REC','YUK')
@@ -84,16 +85,24 @@ def build_trees():
                       'FCU_ur_stand_down','FCU_ur_keep_mobilized','FCU_ur_assessment']
         imported_nodes=[node for kind,_,node in parse((MOD/'common/national_focus/ac_usean_rebellion.txt').read_text())
                         if kind=='shared_focus' and get(node,'id') in imported] if imported else []
+        # Other packages attach marker-delimited import blocks (tools/usea_depth/seams.py);
+        # keep them and count their nodes when placing the continuous-focus panel.
+        treepath='common/national_focus/'+tag+'_opening.txt'
+        foreign=foreign_import_blocks(MOD/treepath)
+        foreign_ids=[i for text in foreign for i in re.findall(r'shared_focus = (\w+)',text)]
+        imported_nodes+=list(shared_nodes(foreign_ids).values()) if foreign_ids else []
         # Imported branches contribute to the canvas extent too. In particular,
         # the rebellion branch reaches column23, beyond the old opening roots.
-        panel_x=(max([row.x for row in rows]+[int(get(node,'x')) for node in imported_nodes])+4)*96
+        panel_x=(max([row.x for row in rows]+[int(float(get(node,'x'))) for node in imported_nodes])+4)*96
+        # The 770px panel must stay inside the primary 3440px view (Test-FocusScreenRepairs).
+        if panel_x+50+770>3440:raise SystemExit(tag+' opening tree is too wide for its continuous-focus panel; keep x <= 23')
         body='id = '+ident+'\ncountry = { factor = 0 modifier = { add = 20 original_tag = '+tag+' NOT = { has_global_flag = ac_ucw_calendar_started } date < 1999.12.1 } }\ndefault = no\ncontinuous_focus_position = { x = '+str(panel_x)+' y = 16 }\n'
         rows_text='\n'.join(focus(r) for r in rows)
         # Hand-authored shared focuses live in ac_usean_rebellion.txt. Listing
         # them here keeps the 1997 branch on this tree without a second tree.
         if tag=='FCU':
             rows_text+='\n'+'\n'.join('shared_focus = '+i for i in imported)
-        put('common/national_focus/'+tag+'_opening.txt',block('focus_tree',body+rows_text))
+        put(treepath,reinsert(block('focus_tree',body+rows_text),foreign))
     for tag in ('NPT','REC','YUK'):
         rows=[r for r in FOCUSES if r.tag==tag and r.phase=='support']
         treepath='common/national_focus/'+tag+'.txt'

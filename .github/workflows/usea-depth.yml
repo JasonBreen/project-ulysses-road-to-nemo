@@ -1,0 +1,31 @@
+name: Usea Depth focus packages
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  usea-depth:
+    # The owner generators compare PNG bytes, which match the committed files only on
+    # the Windows runner used by Static validation.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned original-art dependencies
+        run: python -m pip install Pillow==11.3.0 numpy==2.2.6
+      - name: Check seams and every Usea Depth package
+        run: python -B tools/usea_depth/run_checks.py
+      - name: Check the opening-tree owner generator
+        run: python -B tools/usea_expansion/build_content.py --check
+      - name: Check the Continental War owner generator
+        run: python -B tools/build_continental_war.py --check
+      - name: Check the partner owner generator
+        working-directory: tools/usean_partners
+        run: python -B build.py --check
+      - name: Check focus screen layout
+        run: python -B tools/Test-FocusScreenRepairs.py
+      - name: Check release accounting
+        run: python -B tools/overhaul/check_release_plan.py

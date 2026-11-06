@@ -96,16 +96,26 @@ class Source(unittest.TestCase):
         for module in MODULES:
             for tag, name in getattr(module, "IMPORTS", {}).items():
                 ids = [focus_id(module.WAVE, b, i) for b in module.WAVE.branches if b.tag == tag for i in range(6)]
-                expected[tag] = expected.get(tag, "") + f"# BEGIN {name} IMPORTS\n" + "".join(f"shared_focus = {i}\n" for i in ids) + f"# END {name} IMPORTS\n"
+                expected.setdefault(tag, []).append(f"# BEGIN {name} IMPORTS\n" + "".join(f"shared_focus = {i}\n" for i in ids) + f"# END {name} IMPORTS\n")
+        # The AC campaigns expansion (tools/ac_campaigns) adds its own 24-focus block to ERU and FCU.
+        expansion = json.loads((ROOT / "tools/ac_campaigns/manifest.json").read_text())
+        for tag in ("ERU", "FCU"):
+            additions = [r["id"] for r in expansion["focuses"] if r["tag"] == tag]
+            self.assertEqual(24, len(additions))
+            expected.setdefault(tag, []).append("# BEGIN AC CAMPAIGNS IMPORTS\n" + "".join("shared_focus = " + ident + "\n" for ident in additions) + "# END AC CAMPAIGNS IMPORTS\n")
         own_trees = {tag for module in MODULES for tag in getattr(module, "TREES", {})}
         for tag, blocks in expected.items():
             with self.subTest(tag=tag):
                 if tag in own_trees:
                     # A tree the content waves generate themselves carries the later waves' blocks directly.
                     source = text(f"common/national_focus/{tag}.txt").replace("\n\t", "\n")
-                    self.assertIn(blocks, source)
+                    for owned in blocks:
+                        self.assertIn(owned, source)
                 else:
-                    self.assertEqual(blocks, owners[tag].preserved_imports(tag))
+                    # Other packages (tools/usea_depth) may add their own blocks; each owned block stays intact.
+                    preserved = owners[tag].preserved_imports(tag)
+                    for owned in blocks:
+                        self.assertIn(owned, preserved)
 
     def test_approved_budgets_and_globally_unique_ids(self):
         self.assertEqual(EXPECTED, self.manifest["counts"])

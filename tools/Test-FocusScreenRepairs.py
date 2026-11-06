@@ -62,6 +62,24 @@ def title_variants(text,localization,scripted):
     return result
 
 
+def imported_by_others(relative):
+    """Focus ids inside a tree file's marked import blocks, and their shared descendants."""
+    text=(MOD/relative).read_text(encoding='utf-8-sig')
+    ids=set()
+    for block in re.findall(r'# BEGIN [^\n]* IMPORTS\n(.*?)# END [^\n]* IMPORTS',text,re.S):
+        ids.update(re.findall(r'shared_focus\s*=\s*([A-Za-z0-9_]+)',block))
+    children={}
+    for path in (MOD/'common/national_focus').glob('*.txt'):
+        for ident,body in re.findall(r'(?ms)^shared_focus\s*=\s*\{\s*id\s*=\s*([A-Za-z0-9_]+)(.*?)^\}',path.read_text(encoding='utf-8-sig')):
+            for parent in re.findall(r'focus\s*=\s*([A-Za-z0-9_]+)',' '.join(re.findall(r'prerequisite\s*=\s*\{[^}]*\}',body))):
+                children.setdefault(parent,set()).add(ident)
+    pending=list(ids)
+    while pending:
+        for child in children.get(pending.pop(),()):
+            if child not in ids:ids.add(child);pending.append(child)
+    return ids
+
+
 class FocusScreen(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -157,7 +175,8 @@ class FocusScreen(unittest.TestCase):
         for tree in ('ac_exp_fcu_opening','ac_ucw_fcu_tree'):
             self.assertIn(tree,trees)
             self.assertFalse([pair for pair in actual if pair[0]==tree])
-        self.assertEqual((10.,2.),trees['belka_start']['ac_belkan_industrial_mobilization'])
+        self.assertEqual((15.,2.),trees['belka_start']['ac_belkan_industrial_mobilization'])
+        self.assertEqual((15.,2.),trees['belka_dlp_pre_war']['ac_belkan_industrial_mobilization'])
         for suffix,y in (('settlement',3.),('legacy',4.)):
             self.assertEqual((4.,y),trees['ac_belkan_postwar']['ac_postwar_unclassified_'+suffix])
         for suffix in ('brief','costs','demobilize','loyalty','commitments','legacy'):
@@ -237,10 +256,12 @@ class FocusScreen(unittest.TestCase):
                 clear=focus_layout.clearance(trees[tree],info['panel'],geometry)
                 if clear is not None:self.assertGreaterEqual(clear,focus_layout.CLEARANCE)
         # The four trees repaired on 5 November 2026 and the hand-maintained
-        # generic tree follow the placement rule exactly.
+        # generic tree follow the placement rule exactly, over the tree's own
+        # nodes: blocks other packages import later (marked BEGIN/END) never move it.
         for tree in ('ac_ucw_eru_tree','ac_ucw_fcu_tree','ac_anea_emm_tree','ac_anea_eva_tree','generic_focus'):
             with self.subTest(rule=tree):
-                self.assertEqual(focus_layout.panel_position(trees[tree],geometry),definitions[tree]['panel'])
+                own={ref:at for ref,at in trees[tree].items() if ref not in imported_by_others(definitions[tree]['file'])}
+                self.assertEqual(focus_layout.panel_position(own,geometry),definitions[tree]['panel'])
 
     def test_opening_continuous_panels_clear_tree_and_fit_primary_view(self):
         geometry=focus_layout.gui_geometry();trees=resolved_tree_positions()

@@ -7,7 +7,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
-from build import HERE,ROOT,MOD,TAGS,FLAG,ARMOR,parse,get,walk,selected,read_source,normalized_hash
+from build import HERE,ROOT,MOD,TAGS,FLAG,ARMOR,parse,get,walk,selected,read_source,normalized_hash,reviewed_history_presentation
 from audit import report,actual_case
 from primary import Primary
 
@@ -67,13 +67,49 @@ class Legacy(unittest.TestCase):
 
     def test_politics_leaders_and_existing_shared_history_flags_unchanged(self):
         military={'set_technology','create_equipment_variant','set_oob','set_air_oob','set_naval_oob','add_equipment_to_stockpile'}
+        # Baseline snapshots keep pre-1.17 new_* technology ids. Live histories
+        # use the 1.17+ grand-doctrine ids. The map is the approved repair.
+        doctrine_repair={
+            'new_mobile_warfare':'mobile_warfare',
+            'new_superior_firepower':'superior_firepower',
+            'new_fleet_in_being':'fleet_in_being',
+            'new_base_strike':'base_strike',
+            'new_operational_integrity':'operational_integrity',
+            'new_strategic_destruction':'strategic_destruction',
+            'new_battlefield_support':'battlefield_support',
+            'new_convoy_raiding':'trade_interdiction',
+        }
+        def repair(node):
+            if node[0]=='set_grand_doctrine' and node[2] in doctrine_repair:
+                return (node[0], node[1], doctrine_repair[node[2]])
+            return node
         for tag in TAGS:
-            old=parse(read_source('countries',next((HERE/'baseline/countries').glob(tag+' - *.txt')).name))
+            old=parse(reviewed_history_presentation(tag,read_source('countries',next((HERE/'baseline/countries').glob(tag+' - *.txt')).name)))
             new=parse(next((MOD/'history/countries').glob(tag+' - *.txt')).read_text())
             for dlcs in DLC_PROFILES:
-                before=[n for n in selected(old,dlcs,tag) if n[0] not in military]
+                before=[repair(n) for n in selected(old,dlcs,tag) if n[0] not in military]
                 after=[n for n in selected(new,dlcs,tag) if n[0] not in military and not(n[0]=='set_country_flag' and n[2]==FLAG)]
                 self.assertEqual(before,after,tag)
+
+    def test_reviewed_caption_projection_changes_only_the_one_agency_name(self):
+        original=read_source('countries','BLK - Belka.txt')
+        projected=reviewed_history_presentation('BLK',original)
+        self.assertEqual(original.replace('name = "Bundesnachrichtendienst"',
+                                         'name = "Belkan intelligence office"',1),projected)
+        before=parse(original);after=parse(projected)
+        agency=[n for n in after if n[0]=='create_intelligence_agency']
+        self.assertEqual(1,len(agency))
+        self.assertEqual('"Belkan intelligence office"',get(agency[0][2],'name'))
+        self.assertEqual([n for n in before if n[0]!='create_intelligence_agency'],
+                         [n for n in after if n[0]!='create_intelligence_agency'])
+        old_agency=[n for n in before if n[0]=='create_intelligence_agency'][0][2]
+        self.assertEqual([n for n in old_agency if n[0]!='name'],
+                         [n for n in agency[0][2] if n[0]!='name'])
+        self.assertEqual(original,reviewed_history_presentation('OSE',original))
+        with self.assertRaisesRegex(ValueError,'agency-caption source changed'):
+            reviewed_history_presentation('BLK',original.replace('GFX_intelligence_agency_logo_ger','unexpected_icon'))
+        with self.assertRaisesRegex(ValueError,'agency-caption source changed'):
+            reviewed_history_presentation('BLK',projected)
 
     def test_startup_reload_guards_prevent_duplicate_force_or_stock_grants(self):
         for tag in TAGS:

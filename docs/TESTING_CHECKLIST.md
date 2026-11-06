@@ -9,6 +9,18 @@ this task. Its evidence is limited to offline static contract, path-reference,
 repository, economy, and no-vanilla checks. The checklist below is the required
 native handoff, not a claim that any item has passed on this branch.
 
+## Belkan War outcome reachability (native, not run)
+
+Static wiring only: victory (`belka_dlp_won.9`), Wacht am Wal (`belka_wacht_am_wal.8`), and the inherited defeat tree (`belka_dlp_lost.7`) call `ac_dispatch_belkan_war_outcome`. That effect requires one of `belka_won_belkan_war`, `belka_won_belkan_war_wacht_am_wal`, or `belka_lost_belkan_war`, then fires `ac_continuation.1`. `world_event.2` is not scheduled from those paths. These mechanics are provisional gameplay.
+
+- [ ] Play Belka from the 1 Jan 1991 bookmark until a war outcome flag fires (`belka_won_belkan_war`, `belka_won_belkan_war_wacht_am_wal`, or `belka_lost_belkan_war`).
+- [ ] Confirm `ac_continuation.1` loads `ac_belkan_postwar` for that flag, and confirm `world_event.2` never fires.
+- [ ] Confirm `error.log` has no new parser errors from the outcome handoff.
+- [ ] Do not record this item as passed from static checks. Native HOI4 was not launched for this change.
+- [ ] Test the DLP election separately from the outcome handoff: `belka.13.a` is the only scripted load of `belka_dlp_pre_war`, with `keep_completed = yes`; it follows `belka.12.a` after 35 days. Confirm this prewar swap does not substitute for the later `ac_belkan_postwar` handoff.
+- [ ] Repeat the natural election before selecting `ac_belkan_prewar_briefing`, while it is in progress, and after completion. Both `belka_start` and `belka_dlp_pre_war` now mount the same briefing ID following merged PR #65. Verify the chain remains visible without duplicates or lost completion, and that the completed `BLK_the_crisis_continues` prerequisite is retained even though the crisis branch is not remounted. Check the briefing's position relative to that inherited anchor.
+- [ ] Finish the briefing's children through `ac_belkan_council_mandate`, confirm `ac_campaign_prepared` and `ac_belkan_war_council` are reachable, and save/reload around the election swap. These items remain native-unrun; the [static load/mount audit](NEXT_TASKS.md#dlp-election-tree-swap-and-briefing-continuity) is not a pass.
+
 ## Runtime results — 2026-10-17, HOI4 1.19.3 (Operation Postern), mod 0.3-dev, debug mode, mod enabled alone
 
 - [x] Main menu loads and stays stable (no GPU device-removed crash) — original Project Ulysses menu.
@@ -42,8 +54,17 @@ Static checks are automated by `tools/Test-UlyssesStatic.ps1` (CI: `.github/work
 - [x] Confirm country selection, map render, focus tree render, basic diplomacy, and first-day tick.
 - [x] Advance 30 days and 180 days with AI on; inspect error logs and major country stability. (ran ~13 months; no crash)
 - [ ] Trigger a Belkan War opening and confirm focus/event/war/OOB continuity.
+- [ ] As Ustio, take decision `UST_buy_mercs` during `UST_ratio_war_timer` and complete focus `UST_moblise_militia` after `UST_civil_war` is force-completed. Confirm the hired infantry and militia divisions spawn, and `error.log` has no new entries for `UST_mercs_1` or `UST_moblise_militia_focus_oob`. This item is unchecked: native HOI4 was not launched for the roster fill.
 - [ ] Exercise Belka victory, Belka defeat, Rhongomyniad, Osea election, and Ustio/Sapin/Gebet branches where reachable.
 - [ ] Save and reload before and after each major branch.
+
+## AI override — static only (2026-11-05)
+
+NEXT_TASKS item 4 is implemented in script. These boxes are native checks. Leaving them open is the acceptance state until an approved HOI4 run. Static validation does not close them.
+
+- [ ] Grand doctrines assign for a 1991 start: `superior_firepower`, `mobile_warfare`, `grand_battleplan`, `fleet_in_being`, `trade_interdiction`, `base_strike`, `operational_integrity`, `strategic_destruction`, `battlefield_support`. The error log does not report `new_*` doctrine technology ids.
+- [ ] The AI builds infantry, mechanized, and motorized templates for a tag that has only the generic fallback, and for Belka, Osea, and Sapin. The session has no `date < 1940` template block and does not demand an `armor` role.
+- [ ] Vanilla WWII generic plane and ship designers do not merge. The AI does not queue great-war fighters or WWII `ship_hull_*` progression from `generic_planes.txt` / `generic_naval.txt`.
 
 ## Long-run behavior (future)
 

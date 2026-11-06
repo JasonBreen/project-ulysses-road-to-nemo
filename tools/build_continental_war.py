@@ -261,7 +261,7 @@ if = {
     if = { limit = { NOT = { has_global_flag = ac_ucw_stonehenge_seized } ac_ucw_stonehenge_held_by_erusea = yes } ac_ucw_seize_stonehenge = yes }
     # A playtest seizure leaves the map unchanged; only a real Erusean hold can later be lost.
     if = { limit = { has_global_flag = ac_ucw_stonehenge_simulated ac_ucw_stonehenge_held_by_erusea = yes } clr_global_flag = ac_ucw_stonehenge_simulated }
-    if = { limit = { has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_simulated } ac_ucw_stonehenge_held_by_erusea = no } ac_ucw_destroy_stonehenge = yes }
+    if = { limit = { has_global_flag = ac_ucw_stonehenge_seized NOT = { has_global_flag = ac_ucw_stonehenge_simulated } NOT = { has_global_flag = ac_camp_enabled } ac_ucw_stonehenge_held_by_erusea = no } ac_ucw_destroy_stonehenge = yes }
     if = {
         limit = { is_ai = yes has_global_flag = ac_ucw_stage_stonehenge NOT = { has_country_flag = ac_ucw_armistice_sought } country_exists = FCU FCU = { check_variable = { ac_ucw_stage_weeks > 40 } } }
         set_country_flag = ac_ucw_armistice_sought
@@ -298,8 +298,12 @@ if = {
     limit = { is_ai = yes ac_ucw_war_running = yes }
 """ + "\n".join("    if = { limit = { ac_ucw_stage_%s_ready = yes check_variable = { ac_ucw_stage_weeks > %d } } ac_ucw_stage_%s = yes }" % (s, ai - 1, s) for s, _, _, ai, *_ in STAGES) + "\n}")
     previous = "has_global_flag = ac_ucw_isaf_formed"
+    from ac_campaigns.catalogue import UCW_GATES
     for name, title, desc, ai, human, news, extra, picture in STAGES:
         ready = previous + "\nNOT = { has_global_flag = ac_ucw_stage_%s }\n%s" % (name, extra)
+        if name in UCW_GATES:
+            ready += '\nOR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_'+UCW_GATES[name]+'_success }'
+        if name=='stonehenge':ready+='\nOR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_battery_disposition }'
         trigger("ac_ucw_stage_%s_ready" % name, "original_tag = FCU\nac_ucw_war_running = yes\n" + ready.strip())
         # The Stonehenge stage reuses the destruction effect, which reports itself.
         report = "\nnews_event = { id = ac_ucw.%d days = 1 }" % news if news else ""
@@ -346,9 +350,9 @@ else_if = { limit = { has_global_flag = ac_ucw_isaf_formed ERU = { NOT = { has_w
     brief(51, "Erusea wins the Continental War", "Central Usea's command has collapsed and Erusea dominates the continent. In the official chronology ISAF wins the war; this outcome is a provisional gameplay branch.", picture="GFX_report_event_bad_news_2")
     brief(52, "An armistice in Usea", "The Usean Continental War has ended in an armistice along the front lines, with no decision on the battlefield. In the official chronology ISAF wins the war; this outcome is a provisional gameplay branch.", picture="GFX_report_event_treaty_2")
     event(60, "Megalith", "The official chronology records that young Erusean officers seized Megalith on 26 September 2005, a fortress built to bring down orbiting Ulysses fragments. ISAF must take the fortress before it can be used.", [
-        ("Send ISAF into Megalith.", "set_global_flag = ac_ucw_megalith_active\nadd_timed_idea = { idea = ac_ucw_megalith_threat days = 14 }\ncountry_event = { id = ac_ucw.61 days = 14 }", "", 100)], picture="GFX_report_event_excalibur_1")
-    effect("ac_ucw_destroy_megalith", gonce("ac_ucw_megalith_destroyed", "clr_global_flag = ac_ucw_megalith_active\nnews_event = { id = ac_ucw.62 days = 1 }\n" + scoped("ERU", "remove_ideas = ac_sp_megalith_fortress\nadd_ideas = ac_ucw_eru_provisional_government"), "has_global_flag = ac_ucw_megalith_active"))
-    event(61, "Megalith is destroyed", "ISAF has destroyed Megalith. Erusea's surrender stands.", [("Close the operation.", "ac_ucw_destroy_megalith = yes", "", 100)], picture="GFX_report_event_excalibur_1")
+        ("Send ISAF into Megalith.", "set_global_flag = ac_ucw_megalith_active\nif = { limit = { has_global_flag = ac_camp_enabled } add_ideas = ac_ucw_megalith_threat } else = { add_timed_idea = { idea = ac_ucw_megalith_threat days = 14 } }\ncountry_event = { id = ac_ucw.61 days = 14 }", "", 100)], picture="GFX_report_event_excalibur_1")
+    effect("ac_ucw_destroy_megalith", gonce("ac_ucw_megalith_destroyed", "clr_global_flag = ac_ucw_megalith_active\nremove_ideas = ac_ucw_megalith_threat\nnews_event = { id = ac_ucw.62 days = 1 }\n" + scoped("ERU", "remove_ideas = ac_sp_megalith_fortress\nadd_ideas = ac_ucw_eru_provisional_government"), "has_global_flag = ac_ucw_megalith_active OR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_megalith_success }"))
+    event(61, "Megalith is destroyed", "ISAF has destroyed Megalith. Erusea's surrender stands.", [("Close the operation.", "ac_ucw_destroy_megalith = yes", "", 100)], trigger_text='OR = { NOT = { has_global_flag = ac_camp_enabled } has_global_flag = ac_camp_megalith_success }',picture="GFX_report_event_excalibur_1")
     brief(62, "Erusea's provisional government", "The official chronology records that after Megalith was destroyed, Erusea formed a provisional autonomous government under ISAF oversight. The government in office stays in place; the arrangement is shown as a national spirit, not a change of borders or ideology.", picture="GFX_report_event_treaty_1")
     effect("ac_ucw_assessment_tick", block("if", """limit = {
     has_country_flag = ac_ucw_started
@@ -409,7 +413,7 @@ def build_ideas():
         ("ac_ucw_isaf_north_point_hq", "Headquarters at North Point", "From North Point, ISAF rebuilds its air wings and plans the return. Provisional gameplay values.", "UTO_president", "air_attack_factor = 0.05\nindustrial_capacity_factory = 0.05"),
         ("ac_ucw_isaf_counteroffensive", "The Counteroffensive", "ISAF is back on the continent and on the attack. Provisional gameplay values.", "generic_expeditionary_army", "army_attack_factor = 0.1\nnaval_speed_factor = 0.05"),
         ("ac_ucw_npt_isaf_rear_base", "ISAF Rear Base", "North Point's harbours and airfields serve the allied command. Provisional gameplay values.", "UTO_member", "industrial_capacity_factory = 0.05\nair_defence_factor = 0.05"),
-        ("ac_ucw_megalith_threat", "The Megalith Threat", "While Megalith is held, its threat hangs over the allied capitals. Expires after 14 days.", "excalibur_fire_idea", "stability_factor = -0.05"),
+        ("ac_ucw_megalith_threat", "The Megalith Threat", "While Megalith is held, its threat hangs over the allied capitals. Clear the launch complex to end the crisis. Provisional gameplay.", "excalibur_fire_idea", "stability_factor = -0.05"),
         ("ac_ucw_eru_provisional_government", "Provisional Autonomous Government", "Erusea governs itself under ISAF oversight (official chronology, 26 September 2005). The government in office remains; the modifiers are provisional gameplay.", "cold_war_eco", "stability_factor = 0.05\nwar_support_factor = -0.15\npolitical_power_factor = -0.1"),
         ("ac_ucw_eru_victors_order", "The Victor's Order", "Erusea dictates the continental order. Provisional gameplay branch.", "generic_aggressive_military_thought", "political_power_factor = 0.1\nstability_factor = -0.05"),
         ("ac_ucw_armistice_line", "The Armistice Line", "An armistice holds along the front lines. Provisional gameplay branch.", "generic_defensive_army", "army_core_defence_factor = 0.1\nconsumer_goods_factor = 0.03"),
@@ -615,6 +619,8 @@ ai_strategy = { type = antagonize id = ERU value = 100 }"""))
 
 
 def build_flag_localization():
+    for key,title in {'ac_camp_enabled':'Expanded AC04/AC5 campaign active','ac_camp_landing_success':'Prepared landing operation completed','ac_camp_battery_success':'Prepared battery operation completed','ac_camp_battery_disposition':'Battery disposition recorded','ac_camp_megalith_success':'Prepared Megalith operation completed'}.items():
+        if key not in LOC:loc(key,title)
     labels = {
         "ac_ucw_calendar_started": "The Usean calendar has begun",
         "ac_ucw_playtest_forced": "The Usean calendar was opened by a playtest shortcut",
@@ -883,7 +889,11 @@ The official chronology records that ISAF breached the Whiskey Corridor on 15 Au
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--check-owner-effects", action="store_true",
+                        help="With --check, validate only the protected scripted-effect owner; artwork has separate checks.")
     args = parser.parse_args()
+    if args.check_owner_effects and not args.check:
+        parser.error("--check-owner-effects requires --check")
     build_core()
     build_fallout()
     build_war()
@@ -894,7 +904,11 @@ def main():
     build_playtest()
     build_ai()
     failures = []
-    for relative, text in render().items():
+    outputs = render()
+    if args.check_owner_effects:
+        relative = "common/scripted_effects/ac_ucw.txt"
+        outputs = {relative: outputs[relative]}
+    for relative, text in outputs.items():
         path = MOD / relative
         header = "# Authored gameplay; source: tools/build_continental_war.py.\n"
         payload = text if path.suffix == ".yml" or text.startswith(header) else header + text
@@ -906,7 +920,7 @@ def main():
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
-    for path, data in news_art_outputs().items():
+    for path, data in ({} if args.check_owner_effects else news_art_outputs()).items():
         if args.check:
             current = path.read_bytes() if path.exists() else b''
             if path.suffix in ('.json', '.gfx'):
@@ -918,6 +932,9 @@ def main():
             path.write_bytes(data)
     if failures:
         raise SystemExit("Generated content differs: " + ", ".join(failures))
+    if args.check_owner_effects:
+        print("Continental War: protected scripted-effect owner matches canonical output; artwork checked separately.")
+        return
     focuses = sum(len(rows) for rows in TREES.values())
     print("Continental War: %s files, %s focuses, %s events, %s localization keys%s." % (
         len(OUTPUT), focuses, sum(1 for e in EVENTS if e.startswith(("country_event", "news_event"))), len(LOC), " checked" if args.check else " generated"))

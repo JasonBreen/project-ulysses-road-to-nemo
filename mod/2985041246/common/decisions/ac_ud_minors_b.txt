@@ -1,0 +1,73 @@
+# Usea Depth minors B: provisional gameplay; owner: tools/usea_depth/minors_b/build.py.
+ac_ud_minors_b_programmes = {
+	SYC_ud_adopt_programme = {
+		icon = ac_ud_minb_syc
+		allowed = { original_tag = SYC }
+		visible = {
+			tag = SYC original_tag = SYC NOT = { has_focus_tree = ac_ud_syc_tree }
+		}
+		available = {
+			ac_pol_previous_tree_idle = yes NOT = { has_focus_tree = ac_ud_syc_tree }
+		}
+		cost = 0
+		fire_only_once = no
+		complete_effect = {
+			if = {
+				limit = {
+					ac_pol_previous_tree_idle = yes NOT = { has_focus_tree = ac_ud_syc_tree }
+				}
+				load_focus_tree = { tree = ac_ud_syc_tree keep_completed = yes }
+			}
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+
+	SYC_ud_export_drive_decision = {
+		icon = ac_ud_minb_syc
+		allowed = { original_tag = SYC }
+		visible = {
+			original_tag = SYC has_completed_focus = SYC_ud_mineral_survey
+		}
+		available = {
+			political_power >= 25 has_completed_focus = SYC_ud_mineral_survey NOT = { has_country_flag = ac_ud_minb_programme_cooldown }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 180
+		complete_effect = {
+			add_political_power = -25
+			ac_ud_minors_b_pay_programme = yes
+			add_timed_idea = { idea = SYC_ud_export_drive_spirit days = 180 }
+			set_country_flag = { flag = ac_ud_minb_programme_cooldown days = 180 }
+		}
+		ai_will_do = {
+			base = 2
+		}
+	}
+
+	SYC_ud_relief_charter_decision = {
+		icon = ac_ud_minb_syc
+		allowed = { original_tag = SYC }
+		visible = {
+			original_tag = SYC has_completed_focus = SYC_ud_relief_convoys
+		}
+		available = {
+			political_power >= 25 has_completed_focus = SYC_ud_relief_convoys NOT = { has_country_flag = ac_ud_minb_programme_cooldown }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 240
+		complete_effect = {
+			add_political_power = -25
+			ac_ud_minors_b_pay_programme = yes
+			add_timed_idea = { idea = SYC_ud_relief_charter_spirit days = 120 }
+			navy_experience = 5
+			set_country_flag = { flag = ac_ud_minb_programme_cooldown days = 240 }
+		}
+		ai_will_do = {
+			base = 2
+		}
+	}
+}

@@ -210,7 +210,7 @@ def add_focus(target, tag, chapter, ident, title, x, y, prereq, reward, explanat
     loc(ident, title)
     loc(ident + '_desc', chapter.problem + '\\n\\n' + explanation + '\\n\\nOriginal national campaign fiction and provisional gameplay.')
     target.append(block('focus', f'id = {ident}\nicon = GFX_{tag}_wc_{chapter.domain}\nx = {x}\ny = {y}\ncost = 5\ncancel_if_invalid = yes\n' + prereq +
-        block('available', f'ac_wc_{tag.lower()}_active = yes ' + condition) +
+        block('available', (f'ac_wc_{tag.lower()}_active = yes ' + condition).rstrip()) +
         block('completion_reward', reward) + block('ai_will_do', 'factor = 1')))
 
 

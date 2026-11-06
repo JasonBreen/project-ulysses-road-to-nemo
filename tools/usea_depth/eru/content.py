@@ -1377,7 +1377,7 @@ F("battery_umbrella_doctrine", 80, 1, "The Battery Umbrella",
   """If Erusea holds Stonehenge, its railguns can close the sky to enemy aircraft. Fight under the battery's
   umbrella. The official chronology records that Erusea used the railguns against aircraft; this doctrine is
   provisional gameplay.""",
-  [idea("ERU_ud_battery_umbrella")], pre="air_doctrine_board", excl="air_superiority_doctrine", gate=AIR, ai=25,
+  [idea("ERU_ud_battery_umbrella")], pre="air_doctrine_board", excl="air_superiority_doctrine", gate=AIR + " ac_ud_eru_battery_operational = yes", ai=25,
   art=("missile", "air"))
 F("elite_squadrons", 76, 2, "Elite Squadrons",
   """The best pilots are gathered into a few elite squadrons and sent where the fighting is hardest.""",

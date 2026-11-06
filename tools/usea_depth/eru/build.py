@@ -169,7 +169,8 @@ def ideas_text():
     rows = []
     for ident, (_, _, modifiers, _) in C.IDEAS.items():
         mod = "\n".join("%s = %s" % (k, C.num(v)) for k, v in modifiers.items())
-        rows.append(block(ident, "picture = %s\nallowed = { always = no }\nallowed_civil_war = { always = no }\nremoval_cost = -1\n%s" % (ident, block("modifier", mod))))
+        cancel = "cancel = { ac_ud_eru_battery_operational = no }\n" if ident == "ERU_ud_battery_umbrella" else ""
+        rows.append(block(ident, cancel + "picture = %s\nallowed = { always = no }\nallowed_civil_war = { always = no }\nremoval_cost = -1\n%s" % (ident, block("modifier", mod))))
     return HEADER + block("ideas", block("country", "\n".join(rows)))
 
 
@@ -198,19 +199,20 @@ def weekly_text():
                                 "if = { limit = { date < %s } country_event = { id = %s.%d days = 1 } }" % (start, flag_name, flag_name, until, C.NAMESPACE, number)))
     opening = block("if", "limit = { original_tag = ERU date < 1999.12.1 NOT = { has_global_flag = ac_ucw_calendar_started } }\n" + "".join(eras))
     carry = "if = { limit = { original_tag = ERU } ac_ud_eru_carry_over = yes }"
+    carry += "\nif = { limit = { has_idea = ERU_ud_battery_umbrella ac_ud_eru_battery_operational = no } remove_ideas = ERU_ud_battery_umbrella }"
     return "# Era transitions of the opening tree; a late load marks them as past without replaying them.\n" + block("ac_ud_eru_weekly", opening + carry)
 
 
 def carry_text():
     body = """set_country_flag = ERU_ud_carried_over
 if = {
-	limit = { has_country_flag = ERU_ud_course_constitution }
+	limit = { has_country_flag = ERU_ud_first_assembly_elections_done }
 	set_country_flag = ERU_ud_war_assembly
 	add_to_variable = { ac_ucw_grievance = -8 }
 	country_event = { id = ac_ud_eru.41 days = 3 }
 }
 else_if = {
-	limit = { has_country_flag = ERU_ud_course_regency NOT = { has_country_flag = ERU_ud_return_the_seals_done } }
+	limit = { has_country_flag = ERU_ud_regency_ordinance_done NOT = { has_country_flag = ERU_ud_return_the_seals_done } }
 	set_country_flag = ERU_ud_war_regency
 	add_to_variable = { ac_ucw_grievance = 5 }
 	country_event = { id = ac_ud_eru.42 days = 3 }
@@ -240,7 +242,8 @@ def effects_text():
 
 
 def triggers_text():
-    return HEADER + block("ac_ud_eru_carry_ready",
+    return HEADER + block("ac_ud_eru_battery_operational",
+                          "original_tag = ERU\nhas_global_flag = ac_ucw_stonehenge_seized\nhas_global_flag = ac_ucw_stonehenge_operational\nNOT = { has_global_flag = ac_ucw_stonehenge_destroyed }\nac_ucw_controls_stonehenge = yes") + block("ac_ud_eru_carry_ready",
                           "original_tag = ERU\nhas_country_flag = ac_ucw_started\nhas_variable = ac_ucw_grievance\nNOT = { has_country_flag = ERU_ud_carried_over }")
 
 

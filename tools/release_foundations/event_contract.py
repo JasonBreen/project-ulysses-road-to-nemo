@@ -9,6 +9,7 @@ from script import parse,get
 
 META={'name','ai_chance','trigger','highlighted'}
 MODIFIED={'awwnb.1','awwnb.2','recta.1','south_belka.2','south_belka.3','south_belka.4','belka_dlp_war.101','belka_dlp_war.103'}
+OUTCOME_HANDOFFS={'belka_dlp_war.103','belka_wacht_am_wal.8','belka_dlp_lost.7','belka_dlp_won.9'}
 AWW_ARMY='country_exists = AWW NOT = { has_global_flag = ac_release_AWW_legacy_oob_done } NOT = { has_global_flag = ac_release_AWW_annexed } AWW = { has_country_flag = ac_release_awaiting_legacy_army has_capitulated = no }'
 GATES={'awwnb.1':'NOT = { has_global_flag = ac_release_AWW_entry_begun }',
        'awwnb.2':AWW_ARMY,
@@ -107,6 +108,36 @@ def restore_event(ident,original,candidate):
     return candidate
 
 
+def restore_outcome_handoff(ident,original,candidate):
+    """Restore only the reviewed PR #71 suffix, preserving every other AST node."""
+    candidate=copy.deepcopy(candidate)
+    before=[node[2]for node in original if node[0]=='option']
+    options=[node[2]for node in candidate if node[0]=='option']
+    require(len(before)==len(options)==1,ident+' outcome option ownership')
+    option=options[0]
+    if ident=='belka_dlp_lost.7':
+        suffix(option,'''hidden_effect = {
+            news_event = { id = ac_news_event.20 days = 1 }
+            if = {
+                limit = {
+                    has_global_flag = ac_postwar_wait_for_defeat_tree
+                    NOT = { has_global_flag = belka_won_belkan_war }
+                    NOT = { has_global_flag = belka_won_belkan_war_wacht_am_wal }
+                    NOT = { has_global_flag = belka_lost_belkan_war }
+                }
+                set_global_flag = belka_lost_belkan_war
+            }
+            ac_dispatch_belkan_war_outcome = yes
+        }''',ident+' outcome')
+        option.extend(parse('hidden_effect = { news_event = { id = ac_news_event.20 days = 1 } } '
+                            'hidden_effect = { country_event = { id = world_event.2 days = 2 } }'))
+    else:
+        suffix(option,'hidden_effect = { ac_dispatch_belkan_war_outcome = yes }',ident+' outcome')
+        if ident!='belka_dlp_war.103':
+            option.extend(parse('hidden_effect = { country_event = { id = world_event.2 days = 2 } }'))
+    return candidate
+
+
 def validate_file(original_text,candidate_text,relative):
     original=parse(original_text);candidate=parse(candidate_text)
     require(len(original)==len(candidate),relative+' top-level length')
@@ -115,6 +146,7 @@ def validate_file(original_text,candidate_text,relative):
         if old[0]=='country_event':
             ident=get(old[2],'id').strip('"')
             require(get(new[2],'id')==get(old[2],'id'),relative+' event identity/order '+ident)
-            restored=restore_event(ident,old[2],new[2])if ident in MODIFIED else new[2]
+            restored=restore_outcome_handoff(ident,old[2],new[2])if ident in OUTCOME_HANDOFFS else new[2]
+            restored=restore_event(ident,old[2],restored)if ident in MODIFIED else restored
             require(old[2]==restored,relative+' '+ident+' complete ordered AST')
         else:require(old==new,relative+' unrelated top-level node '+str(index))

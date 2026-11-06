@@ -386,8 +386,20 @@ class WorldFoundationTests(unittest.TestCase):
             original=original_generated(relative,tag,old_rows[tag],old_profiles[tag],builder)
             if original is None:original=(MOD / relative).read_text(encoding='utf-8')
             self.assertEqual(hashlib.sha256(original.encode()).hexdigest(), digest, relative)
+        # Live histories use 1.17+ grand-doctrine ids. The inherited fingerprint
+        # stays on the pre-repair new_* technology ids, the same way the macro
+        # eligibility flag is excluded. Do not recapture the rest of the tree.
+        doctrine_fingerprint = {
+            "superior_firepower": "new_superior_firepower",
+            "fleet_in_being": "new_fleet_in_being",
+            "operational_integrity": "new_operational_integrity",
+        }
+        def restore_doctrine(node):
+            if node[0] == "set_grand_doctrine" and node[2] in doctrine_fingerprint:
+                return [node[0], node[1], doctrine_fingerprint[node[2]]]
+            return node
         for relative, digest in baseline["history_ast_sha256_except_declared_macro_eligibility"].items():
-            tree = [n for n in read(relative) if n != ["set_country_flag", "=", "ac_macro_history_eligible"]]
+            tree = [restore_doctrine(n) for n in read(relative) if n != ["set_country_flag", "=", "ac_macro_history_eligible"]]
             self.assertEqual(hashlib.sha256(json.dumps(tree, sort_keys=True).encode()).hexdigest(), digest, relative)
 
     def test_erusea_calibration_worksheet_and_bounded_resource_additions(self):

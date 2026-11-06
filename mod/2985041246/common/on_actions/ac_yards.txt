@@ -1,0 +1,46 @@
+# Calendar beats for the 1991 hull programs. on_daily runs in country scope.
+on_actions = {
+	on_daily = {
+		effect = {
+			if = {
+				limit = {
+					tag = OSE
+					date > 1991.7.28
+					NOT = { date > 1991.8.15 }
+					NOT = { has_country_flag = ac_yards_kestrel_announced }
+				}
+				ac_yards_announce_kestrel = yes
+			}
+			if = {
+				limit = {
+					tag = OSE
+					has_country_flag = ac_yards_kestrel_announced
+					date > 1999.9.15
+					NOT = { date > 1999.9.30 }
+					NOT = { has_country_flag = ac_yards_kestrel_commissioned }
+				}
+				ac_yards_commission_kestrel = yes
+			}
+			if = {
+				limit = {
+					tag = YUK
+					date > 1991.9.1
+					NOT = { date > 1991.9.20 }
+					NOT = { has_country_flag = ac_yards_scinfaxi_announced }
+				}
+				ac_yards_announce_scinfaxi = yes
+			}
+			if = {
+				limit = {
+					tag = OSE
+					has_global_flag = ac_yards_scinfaxi_public
+					date > 1991.9.2
+					NOT = { date > 1991.9.25 }
+					NOT = { has_country_flag = ac_yards_howards_spoken }
+				}
+				set_country_flag = ac_yards_howards_spoken
+				country_event = ac_yards.4
+			}
+		}
+	}
+}

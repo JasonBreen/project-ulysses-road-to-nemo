@@ -136,12 +136,12 @@ Name every save `pt<step>_<short label>` so failures can be replayed.
 War start: BLK_war_start_timer_dec timeout → war on UST/OSE/SAP/FAT/GEB/REC,
            flag belkan_war_is_happening, belka_dlp_war.2 loads war tree
 ├─ Campaign stages (player decisions or AI weekly fallback)
-├─ Victory: BLK_force_osea_to_peace → belka_dlp_war.102 → won tree → Rhongomyniad → world_event.2
+├─ Victory: BLK_force_osea_to_peace → belka_dlp_war.102 → won tree → Rhongomyniad → belka_dlp_won.9 → outcome dispatcher
 ├─ South Belka split (south_belka.2/.3/.4) → belka_dlp_war.99
-│   ├─ a) nuclear ending: 14-day mission → belka_dlp_war.100 → .101 → lost tree
-│   └─ b) Wacht am Wal (needs counter = 5 and FAT/GEB/REC subjects) → wacht tree → hold 60 days → wacht.8 → world_event.2
+│   ├─ a) nuclear ending: 14-day mission → belka_dlp_war.100 → .101 → lost tree → belka_dlp_lost.7 → defeat flag → outcome dispatcher
+│   └─ b) Wacht am Wal (needs counter = 5 and FAT/GEB/REC subjects) → wacht tree → hold 60 days → belka_wacht_am_wal.8 → outcome dispatcher
 └─ Defeat flag path: belka_dlp_war.103 (no caller found, see section 6)
-Postwar: world_event.2 → ac_continuation.1 → one of four outcomes → ac_belkan_postwar tree + decisions
+Postwar: ac_dispatch_belkan_war_outcome → ac_continuation.1 → matching victory/Wacht/defeat option → ac_belkan_postwar tree + decisions
 ```
 
 ## 2. Prewar
@@ -164,8 +164,12 @@ Postwar: world_event.2 → ac_continuation.1 → one of four outcomes → ac_bel
   `belka_dlp_pre_war` with `keep_completed = yes`. That tree now includes the
   same `ac_belkan_prewar_briefing` shared-focus ID. Run the transition before
   selecting it, while it is in progress, and after it is complete. The branch
-  must remain present without a duplicate focus or lost completion. Save
-  `pt1_prepared` once `ac_campaign_prepared` is set.
+  must remain present without a duplicate focus or lost completion. Check
+  that the already-completed `BLK_the_crisis_continues` prerequisite is retained
+  even though its crisis branch is not remounted, and that the briefing's
+  relative-position anchor and `x = 9` offset render correctly. Save/reload
+  around the swap, then save `pt1_prepared` once `ac_campaign_prepared` is set.
+  These are native-unrun checks, not consequences proven by static inclusion.
 - **AI/player split.** Before `BLK_DLP_won_flag`, AI weight for the opening is
   suppressed to zero. Human availability has no calendar lock. After the DLP
   election, AI priority returns.
@@ -174,8 +178,11 @@ Postwar: world_event.2 → ac_continuation.1 → one of four outcomes → ac_bel
 
 - **Natural route.** Finish the crisis chain to `BLK_wait_for_profit` and its
   follow-up so `belka.12` fires; `belka.13` follows 35 days later.
-- **Check.** `belka.13` sets fascism, flag `BLK_DLP_won_flag`, and loads the
-  `BLK_DLP` tree. `BLK_pull_the_trigger` sets `BLK_wacht_am_wal_var = 0`.
+- **Check.** Option `belka.13.a` sets fascism, flag `BLK_DLP_won_flag`, and is
+  the only scripted load of `belka_dlp_pre_war` (`keep_completed = yes`). Its
+  `BLK_dlp_victory` branch concerns the election, not a war outcome. The later
+  outcome handoff uses `ac_continuation.1` to load `ac_belkan_postwar` instead.
+  `BLK_pull_the_trigger` sets `BLK_wacht_am_wal_var = 0`.
 - **Forced route.** `event belka.13 BLK`.
 - Save `pt2_dlp` after the election. Most later branches start from this save.
 
@@ -266,7 +273,8 @@ All from `pt3_war_day1` with Belka played by a human.
 - **Chain.** `belka_dlp_war.102` (annex UST, white peace, flag
   `belka_won_belkan_war`) → `belka_dlp_war.104` loads `belka_belkan_war_won` →
   `BLK_war_won` fires `belka_dlp_won.1` → ... → `BLK_project_rhongomyniad`
-  fires `belka_dlp_won.9` → `world_event.2` → `ac_continuation.1` option a.
+  fires `belka_dlp_won.9` → `ac_dispatch_belkan_war_outcome` →
+  `ac_continuation.1` option a.
 - **Forced route.** From `pt3_war_day1`: `event belka_dlp_war.102 BLK`, then
   `focus.autocomplete` through the won tree. `.102` only makes peace with SAP
   and OSE and annexes UST, so FAT, GEB and REC are still at war with Belka.
@@ -277,7 +285,8 @@ All from `pt3_war_day1` with Belka played by a human.
   the Ustio set needs UST capitulated, so record how much of this the forced
   setup had to fake.
 - **Check.** The won tree loads once; Rhongomyniad branch completes;
-  `world_event.2` fires once; postwar outcome is "victory" (section 7).
+  `ac_continuation.1` fires once; postwar outcome is "victory" (section 7).
+  The retired `world_event.2` must not fire.
 - Save `pt5_o1_won_tree` and `pt5_o1_handoff`.
 
 ### O2. South Belka split
@@ -303,14 +312,17 @@ Three triggers lead to the same follow-up `belka_dlp_war.99`:
 - **Chain.** `BLK_cook_nukes_timer_dec` (14 days) → `belka_dlp_war.100`
   (nuclear strikes) → `belka_dlp_war.101` (white peace, puppets released,
   states to SBK/GEB/REC/FAT, loads `belka_belkan_war_lost`).
-  `.101` sets `ac_postwar_wait_for_defeat_tree`; `world_event.2` waits for
-  `belka_dlp_lost.7` at the end of the lost tree.
+  `.101` sets `ac_postwar_wait_for_defeat_tree` and defers the handoff until
+  `belka_dlp_lost.7` at the end of the lost tree. With that deferral flag and
+  neither victory flag set, `.7` sets `belka_lost_belkan_war` if it is not
+  already set, then calls `ac_dispatch_belkan_war_outcome`.
 - **Check.** The lost tree stays; complete it with
   `focus.autocomplete` up to the Return of the King (`belka_dlp_lost.7`), then
-  confirm `world_event.2` fires once.
-- **Outcome.** Either way `belka_lost_belkan_war` is not set, so
-  `ac_continuation.1` takes the unclassified option (`ac_continuation.1.e`). Confirm which option
-  actually shows.
+  confirm `ac_continuation.1` fires once and `world_event.2` never fires.
+- **Outcome.** The guarded lost-tree completion now selects defeat
+  (`ac_continuation.1.c`), not the unclassified fallback. Confirm the flag and
+  visible option in a save without a conflicting victory flag. This is
+  provisional gameplay wiring, not a new canonical ending.
 
 ### O4. Wacht am Wal (option b)
 
@@ -325,7 +337,8 @@ Three triggers lead to the same follow-up `belka_dlp_war.99`:
   `BLK_wacht_am_wall_state_control`) → mission
   `BLK_wacht_am_wal_hold_timer` (60 days).
   - Timeout while holding: `.6` → `.8` (white peace with SAP, OSE, UST; flag
-    `belka_won_belkan_war_wacht_am_wal`) → `world_event.2` → option b.
+    `belka_won_belkan_war_wacht_am_wal`) → `ac_dispatch_belkan_war_outcome`
+    → `ac_continuation.1` option b. Confirm `world_event.2` never fires.
   - Losing a held state cancels the mission: `.7` adds
     `BLK_last_order_lost_hope`. No scripted ending follows; record how the war
     ends and which postwar option (if any) appears.
@@ -344,39 +357,41 @@ Three triggers lead to the same follow-up `belka_dlp_war.99`:
   natural route, and pick b when `belka_dlp_war.99` appears the next day.
 - Save `pt5_o4_wacht_start` and `pt5_o4_handoff`.
 
-### O5. Defeat flag (forced only)
+### O5. Legacy defeat event (forced only)
 
-`belka_lost_belkan_war` is set only by `belka_dlp_war.103`, and no event,
-focus, decision or on-action fires `.103` (static search of `common/` and
-`events/`). This means option c of `ac_continuation.1`, the defeat settlement
-focus and decision, and the Osean guarantor event `ac_continuation.11` look
-unreachable in normal play. Confirm in game, then test the content:
+`belka_dlp_war.103` still has no caller in `common/` or `events/`. It sets
+`belka_lost_belkan_war` and now calls the outcome dispatcher if fired. O3 is
+separately wired to the same defeat outcome through the inherited lost tree;
+`.103` is no longer the only source of the defeat flag. Its mismatched title
+and defeat effects still require an owner decision before adding a caller.
 
 - **Forced route.** From `pt3_war_day1`: `event belka_dlp_war.103 BLK`, then
-  `event world_event.2 BLK`.
+  allow the dispatcher its one-day delay. Do not fire `world_event.2`.
 - **Check.** White peace, state transfers, option c shows, OSE gets
   `ac_postwar_guarantor` and `ac_continuation.11` after 7 days.
-- Record as `native-pass (forced)` at best; reachability stays open.
+- Record as `native-pass (forced)` at best; natural reachability of `.103`
+  stays open. This diagnostic does not approve a new natural ending.
 
 ### O6. Unclassified fallback
 
-Reached naturally by O3; use the post-`belka_dlp_war.101` save for postwar
-continuity. Forcing it from `pt3_war_day1` with `event world_event.2 BLK`
-only checks that the unclassified option shows. The war is still running and
-`belkan_war_is_happening` is still set, so the collapse mission can fire the
-South Belka split over the postwar tree. Do not count anything downstream of
-that forced run as a postwar pass.
+O3 now reaches defeat after the inherited lost tree, not this fallback.
+The current dispatcher requires one of the three known outcome flags, while
+`ac_continuation.1.e` requires all three to be absent. The fallback remains a
+handler diagnostic with no natural entry established by this dispatcher.
+Keep it unrun until a separately approved controlled fixture establishes the
+required postwar state; the retired `world_event.2` no longer dispatches it.
+Do not treat a forced handler during an active war as a postwar pass.
 
 ## 6. Static findings to confirm in game
 
 | # | Finding | Where | Affects |
 | --- | --- | --- | --- |
-| 1 | `belka_dlp_war.103` has no caller, so the defeat outcome flag is never set naturally | `events/Belka.txt`, `events/ac_continuation.txt` | O5, defeat postwar branch |
-| 2 | Fixed by PR #13: the nuclear ending used to fire `world_event.2` right after loading the lost tree; confirm the lost tree now survives | `events/Belka.txt` (`belka_dlp_war.101`) | O3 |
+| 1 | `belka_dlp_war.103` has no caller; the inherited lost-tree completion now sets the guarded defeat flag via `belka_dlp_lost.7` | `events/Belka.txt`, `events/ac_continuation.txt` | O3, O5, defeat postwar branch |
+| 2 | The nuclear ending defers the outcome dispatcher until the lost tree completes; confirm the tree survives and `world_event.2` never fires | `events/Belka.txt` (`belka_dlp_war.101`, `belka_dlp_lost.7`) | O3 |
 | 3 | Repaired statically in this round: `belka_dlp_pre_war` now exposes the same campaign shared-focus ID; selected/in-progress behavior still requires native observation | `common/national_focus/BLK.txt`, `ac_belkan_campaign.txt` | P1 |
 | 4 | Repaired statically in this round: War Council and the 1995 route use one guarded `ac_commit_belkan_war_campaign` effect; duplicate prevention and stage availability still require native observation | `events/ac_world_events.txt`, `common/decisions/ac_belkan_campaign.txt`, `common/scripted_effects/ac_campaign_effects.txt` | W1/W2 |
 | 5 | Wacht am Wal failures (`belka_wacht_am_wal.4` and `.7`) have no scripted ending | `events/Belka.txt` | O4 |
-| 6 | `world_event.2` is `fire_only_once` and `ac_continuation.1` is blocked once the contract starts, so only the first ending reaches the postwar tree | `events/ac_world_events.txt`, `events/ac_continuation.txt` | all outcomes |
+| 6 | The outcome dispatcher guards pending/started handoffs, and `ac_continuation.1` is blocked once the contract starts; `world_event.2` is retired and does not dispatch continuation | `common/scripted_effects/ac_campaign_effects.txt`, `events/ac_world_events.txt`, `events/ac_continuation.txt` | all outcomes |
 
 These findings remain source observations until the dated native ledger records
 the corresponding exact-head result. Rows 3 and 4 describe implemented repairs,
@@ -384,12 +399,14 @@ not an assertion that the engine accepted or reached them.
 
 ## 7. Postwar (run once per outcome reached)
 
-From each handoff save (`pt5_o1_handoff`, O3, `pt5_o4_handoff`, O5, O6):
+From each supported handoff save (`pt5_o1_handoff`, O3, `pt5_o4_handoff`, O5):
 
-1. `world_event.2` sets `ac_continuation_active`; `ac_continuation.1` shows
-   only the option matching the outcome flag; global flag
-   `ac_postwar_contract_started` and country flag `ac_postwar_ready` are set;
-   `ac_belkan_postwar` loads.
+1. `ac_dispatch_belkan_war_outcome` sets `ac_continuation_active` and schedules
+   `ac_continuation.1` after one day. Only the option matching the outcome flag
+   shows; global flag `ac_postwar_contract_started` and country flag
+   `ac_postwar_ready` are set; `ac_belkan_postwar` loads. Confirm the handoff
+   happens once and `world_event.2` never fires. O6 remains a separate handler
+   diagnostic, not a normal dispatcher route.
 2. Focus chain: `ac_postwar_reconstruction` → `ac_postwar_recovery_budget`
    (fires `ac_continuation.2`, one factory) → `ac_postwar_demobilization`.
    Then only the matching settlement is available:

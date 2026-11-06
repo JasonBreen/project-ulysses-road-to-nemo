@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 import sys
 import unittest
+from unittest.mock import patch
 from PIL import Image
 
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246'
@@ -15,7 +16,9 @@ import build
 import build_art
 from source_contract import (validate,validate_protected,REVIEWED_RELEASE_UPDATE,
                              REVIEWED_FAT_CHARACTER_UPDATE,
-                             REVIEWED_STARTING_GOVERNMENT_UPDATE)
+                             REVIEWED_FAT_DOCTRINE_UPDATE,
+                             REVIEWED_STARTING_GOVERNMENT_UPDATE,
+                             REVIEWED_BELKAN_OUTCOME_UPDATE)
 sys.path.insert(0,str(ROOT/'tools'))
 from economy_script import parse
 
@@ -122,6 +125,22 @@ class SourceAndArt(unittest.TestCase):
             with self.subTest(path=path,before=before),self.assertRaises(ValueError):
                 validate_protected(path,before,data)
 
+    def test_only_exact_reviewed_fat_doctrine_ids_are_admitted(self):
+        update=REVIEWED_FAT_DOCTRINE_UPDATE
+        capture=json.loads((HERE/'engine_contract.json').read_text())
+        expected=capture['protected_sha256'][update['path']]
+        self.assertEqual(update['original_sha256'],expected)
+        actual=(MOD/update['path']).read_bytes()
+        self.assertEqual('reviewed-fat-doctrine-ids',
+                         validate_protected(update['path'],expected,actual))
+        for path,before,data in (
+                (update['path'],expected,actual+b'\n'),
+                (update['path'],'0'*64,actual),
+                ('history/countries/SBK - South Belka.txt',expected,actual),
+                (update['path'],expected,actual.replace(b'mobile_warfare',b'new_mobile_warfare',1))):
+            with self.subTest(path=path,before=before),self.assertRaises(ValueError):
+                validate_protected(path,before,data)
+
     def test_only_exact_reviewed_starting_government_cleanup_is_admitted(self):
         update=REVIEWED_STARTING_GOVERNMENT_UPDATE
         capture=json.loads((HERE/'engine_contract.json').read_text())
@@ -137,6 +156,27 @@ class SourceAndArt(unittest.TestCase):
                 (update['path'],expected,actual.replace(b'SHI_ac_government_office',b'SHI_changed_office',1))):
             with self.subTest(path=path,before=before),self.assertRaises(ValueError):
                 validate_protected(path,before,data)
+
+    def test_only_reviewed_belkan_handoffs_preserve_the_original_ordered_contract(self):
+        update=REVIEWED_BELKAN_OUTCOME_UPDATE
+        capture=json.loads((HERE/'engine_contract.json').read_text())
+        expected=capture['protected_sha256'][update['path']]
+        self.assertEqual(update['original_sha256'],expected)
+        actual=(MOD/update['path']).read_bytes()
+        self.assertEqual('reviewed-belkan-outcome-owner',validate_protected(update['path'],expected,actual))
+        for path,before,data in ((update['path'],expected,actual+b'\n'),
+                                 (update['path'],'0'*64,actual),
+                                 ('events/South_Belka.txt',expected,actual)):
+            with self.subTest(path=path,before=before),self.assertRaises(ValueError):
+                validate_protected(path,before,data)
+        for old,new in ((b'transfer_state = 316',b'transfer_state = 345'),
+                        (b'ac_dispatch_belkan_war_outcome = yes',b'ac_unreviewed_handoff = yes')):
+            self.assertIn(old,actual)
+            changed=actual.replace(old,new,1)
+            # A mistaken fingerprint update still cannot approve a territory or hook edit.
+            with patch.dict(update,{'reviewed_sha256':hashlib.sha256(changed.replace(b'\r\n',b'\n')).hexdigest()}):
+                with self.assertRaisesRegex(ValueError,'Protected ordered'):
+                    validate_protected(update['path'],expected,changed)
 
     def test_dedicated_tree_disposition_preserves_other_67_institution_profiles(self):
         profiles=json.loads((ROOT/'tools/institutions/profiles.json').read_text());self.assertEqual(69,len(profiles))

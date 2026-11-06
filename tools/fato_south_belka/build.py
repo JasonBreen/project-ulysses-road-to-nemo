@@ -11,6 +11,7 @@ import sys
 from content import COUNTRIES, FOCUSES, POLICIES
 
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];MOD=ROOT/'mod/2985041246'
+sys.path.insert(0,str(ROOT/'tools'))
 sys.modules.setdefault('fato_south_belka_builder',sys.modules[__name__])
 OUT={};LOC={};EFFECTS={};TRIGGERS={};IDEAS={};DECISIONS={};EVENTS=[]
 
@@ -190,7 +191,8 @@ def outputs():
     OUT['events/ac_fato_south_belka.txt']='add_namespace = ac_fsb\n\n'+''.join(EVENTS)
     flag_names()
     OUT['localisation/english/ac_fato_south_belka_l_english.yml']='\ufeffl_english:\n'+''.join(' '+k+':0 "'+v.replace('"',"'").replace('\n','\\n')+'"\n' for k,v in LOC.items())
-    return {MOD/k:v.encode('utf-8') for k,v in OUT.items()}
+    from ac_campaigns.imports import preserve
+    return {MOD/k:(preserve(MOD/k,v) if k.startswith('common/national_focus/') else v).encode('utf-8') for k,v in OUT.items()}
 
 def purpose_inventory():
     return {'schema':1,'source_layer':'provisional authored gameplay','dedicated_focuses':{'FAT':54,'SBK':42},

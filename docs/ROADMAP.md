@@ -1,5 +1,14 @@
 # Implementation roadmap
 
+## AC04 and AC5 campaign expansion
+
+The approved [full-campaign implementation](AC04_AC05_CAMPAIGNS.md) adds 186
+focuses across sixteen countries, funded operations, the occupied San Salvacion
+story, character consequences, the Belkan network and an earned bilateral AC5
+peace route. Its additions are accounted separately from the original overhaul
+budget. Static/offline validation and native acceptance remain distinct; normal
+install synchronization and native testing are paused.
+
 The current user-approved program is [Strangereal overhaul: 1991–2020](STRANGEREAL_OVERHAUL.md),
 with machine-readable budgets and honest package status. The implementation
 records below remain historical evidence; they do not supersede that roadmap

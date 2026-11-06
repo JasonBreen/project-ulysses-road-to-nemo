@@ -18,7 +18,7 @@ ROOT = HERE.parents[1]
 MOD = ROOT / 'mod/2985041246'
 sys.path.insert(0, str(HERE))
 from content import COUNTRIES
-from coverage import inventory, report
+from coverage import inventory, report, pending_reservation_ids
 
 spec = importlib.util.spec_from_file_location('wc_real_shared_owners', ROOT / 'tools/Test-SharedSystems.py')
 shared = importlib.util.module_from_spec(spec); spec.loader.exec_module(shared)
@@ -284,6 +284,13 @@ focus_tree = { id = second shared_focus = SOA_old_root }''')]
         self.assertEqual({'SOA_old_root','SOA_old_child'},{r['id'] for r in rows})
         self.assertTrue(all(r['imported_by']==['first','second'] for r in rows))
         with self.assertRaises(ValueError): inventory([('bad.txt','focus_tree = { id = broken shared_focus = missing }')])
+
+    def test_reserved_ids_move_to_delivery_without_receiving_a_second_credit(self):
+        receipt = [{'focuses':{'SOA':2},'focus_ids':{'SOA':['SOA_ud_first','SOA_ud_second']}}]
+        self.assertEqual({'SOA_ud_first','SOA_ud_second'},pending_reservation_ids(receipt,'SOA',{'SOA_existing'}))
+        self.assertEqual({'SOA_ud_second'},pending_reservation_ids(receipt,'SOA',{'SOA_existing','SOA_ud_first'}))
+        self.assertEqual(set(),pending_reservation_ids(receipt,'SOA',{'SOA_ud_first','SOA_ud_second'}))
+        with self.assertRaises(ValueError):pending_reservation_ids(receipt+receipt,'SOA',set())
 
 
 if __name__ == '__main__': unittest.main(verbosity=2)

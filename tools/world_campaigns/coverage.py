@@ -33,6 +33,36 @@ def git_text(ref, path):
     return subprocess.check_output(['git', 'show', ref + ':' + path], cwd=ROOT).decode('utf-8-sig')
 
 
+def reservation_ids(head, counts):
+    """Capture once from the exact PR receipt; normal checks need no Git objects."""
+    ids = {tag: set() for tag in counts}
+    paths = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', head,
+                                    'mod/2985041246/common/national_focus'], cwd=ROOT).decode().splitlines()
+    for path in paths:
+        if 'ac_ud_' not in path:
+            continue
+        for kind, node in walk(parse(git_text(head, path))):
+            if kind in ('focus', 'shared_focus'):
+                ident = get(node, 'id', '')
+                if ident[:3] in ids and ident.startswith(ident[:3] + '_ud_'):
+                    ids[ident[:3]].add(ident)
+    if {tag: len(values) for tag, values in ids.items()} != counts:
+        raise ValueError('Reserved PR IDs differ from the budget at ' + head)
+    return {tag: sorted(values) for tag, values in ids.items()}
+
+
+def pending_reservation_ids(reservations, tag, delivered_ids):
+    promised = set()
+    for row in reservations:
+        ids = row['focus_ids'][tag]
+        if len(ids) != row['focuses'][tag] or len(set(ids)) != len(ids):
+            raise ValueError('Reserved ID receipt differs from its budget')
+        if promised.intersection(ids):
+            raise ValueError('Duplicate reservation ownership for ' + tag)
+        promised.update(ids)
+    return promised - set(delivered_ids)
+
+
 def inventory(sources):
     """Resolve actual import closure; exclude orphaned definitions from credit."""
     definitions, trees, children = {}, [], defaultdict(set)
@@ -112,7 +142,8 @@ def capture():
         baseline['reservations'].append(dict(package=package, pull_request=pr, head=head,
             reference=f'https://github.com/JasonBreen/project-ulysses-road-to-nemo/pull/{pr}',
             path=path, sha256=hashlib.sha256(raw.encode()).hexdigest(), era='e1',
-            focuses=budget['focuses'], status='reserved external PR; not delivered on this branch'))
+            focuses=budget['focuses'], focus_ids=reservation_ids(head,budget['focuses']),
+            status='reserved external PR at capture; source integration is recalculated from actual IDs'))
     target.write_text(json.dumps(baseline, indent=2) + '\n', encoding='utf-8', newline='\n')
 
 
@@ -123,8 +154,10 @@ def report():
                for p in sorted((MOD / 'common/national_focus').glob('*.txt'))]
     actual = inventory(sources)
     by_era = defaultdict(list)
+    source_ids = defaultdict(set)
     for row in actual:
         by_era[row['tag'], row['era']].append(row)
+        source_ids[row['tag']].add(row['id'])
     rows = []
     for country in sorted(registry['countries'], key=lambda c: c['tag']):
         tag = country['tag']
@@ -138,10 +171,15 @@ def report():
             reservations = [r for r in baseline['reservations'] if r['era'] == era and tag in r['focuses']]
             current = by_era[tag, era]
             actual_ids = {r['id'] for r in current}
-            reserved = sum(r['focuses'][tag] for r in reservations)
+            reserved_at_approval = sum(r['focuses'][tag] for r in reservations)
+            # A delivered ID is not pending even if its actual date gates put
+            # it in a different era than the original reservation estimate.
+            reserved = len(pending_reservation_ids(reservations, tag, source_ids[tag]))
             allocations.append(dict(era=era, years=[start, end], target=target,
                 baseline_ids=[r['id'] for r in existing], baseline_owners=sorted({r['source'] for r in existing}),
-                reserved_additions=reserved, reservation_references=[r['reference'] for r in reservations],
+                reserved_at_approval=reserved_at_approval, reserved_additions=reserved,
+                reserved_now_in_source=reserved_at_approval-reserved,
+                reservation_references=[r['reference'] for r in reservations],
                 delivered_count=len(actual_ids), delivered_ids=sorted(actual_ids),
                 remaining_actual=max(0, target-len(actual_ids)),
                 unreserved_authoring_gap=max(0, target-len(actual_ids)-reserved),

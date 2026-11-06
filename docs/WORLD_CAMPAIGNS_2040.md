@@ -26,6 +26,10 @@ and budget receipts. A reservation does not increase `delivered_count` or
 decrease `remaining_actual`. `unreserved_authoring_gap` is a separate planning
 figure. Regenerate with `python -B tools/world_campaigns/coverage.py`; use
 `--check` in validation. Never recapture the frozen baseline to erase debt.
+The reservation appendix records each exact reserved ID from the frozen PR
+head. As those IDs enter source they leave the pending reservation set, so
+delivery and reservations cannot credit the same definition twice. The
+original promised counts remain separately available as `reserved_at_approval`.
 
 ## Delivered opening contract: Sotoa and Central Sotoa
 

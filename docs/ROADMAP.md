@@ -14,6 +14,10 @@ with machine-readable budgets and honest package status. The implementation
 records below remain historical evidence; they do not supersede that roadmap
 or establish native acceptance for its pending packages.
 
+## Flight cadence
+
+Osea, Yuktobania, and Erusea can static-fire rockets from 1991, lose a flight, and lock in a cadence that raises one pad. The result is checked on 8 July 1999 and does not replace Stonehenge, Megalith, or Arkbird. Belka is unchanged. [Source layers, affected IDs, and acceptance status](CANON_LEDGER.md#flight-cadence-campaign) distinguish the official Ulysses date from the authored launch programs. Native play is still unverified.
+
 ## Chronicle opening
 
 Osea can fund the Kestrel's berth before 29 July 1991 and run sea trials until

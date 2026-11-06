@@ -1,0 +1,48 @@
+# Shows the Ulysses clock from 1991 and resolves it on 8 July 1999.
+# Only Osea, Yuktobania, and Erusea. Does not touch Belka.
+on_actions = {
+	on_startup = {
+		effect = {
+			every_country = {
+				limit = {
+					OR = {
+						original_tag = OSE
+						original_tag = YUK
+						original_tag = ERU
+					}
+					date < 1999.7.8
+					NOT = { has_country_flag = ac_flight_planetfall_resolved }
+				}
+				if = {
+					limit = { NOT = { has_country_flag = ac_flight_program_open } }
+					set_country_flag = ac_flight_program_open
+					set_variable = { ac_flight_success = 0 }
+				}
+				if = {
+					limit = { NOT = { has_active_mission = ac_flight_ulysses_clock } }
+					activate_mission = ac_flight_ulysses_clock
+				}
+			}
+		}
+	}
+
+	on_daily = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						original_tag = OSE
+						original_tag = YUK
+						original_tag = ERU
+					}
+					has_country_flag = ac_flight_program_open
+					date > 1999.7.7
+					NOT = { date > 1999.7.20 }
+					NOT = { has_country_flag = ac_flight_planetfall_resolved }
+				}
+				set_country_flag = ac_flight_planetfall_resolved
+				country_event = ac_flight_cadence.3
+			}
+		}
+	}
+}

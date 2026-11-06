@@ -58,6 +58,23 @@ def require(condition: bool, message: str) -> None:
         raise AssertionError(message)
 
 
+def assert_starting_chronology(text: str, key: str) -> None:
+    # Official Chronicle, ZERO: 1987/12.17 reforms and 1988/05.12 independence.
+    # "Federal Law Review" and the surrounding occupation story are mod provenance.
+    # https://acecombat.jp/en/chronicle/details/
+    matches = re.findall(rf'(?m)^\s*{re.escape(key)}:(?:\d+)?\s+"([^"\n]+)"', text)
+    require(len(matches) == 1, f"expected exactly one Ustio chronology entry: {key}")
+    value = matches[0]
+    require(
+        re.search(r"\bFederal Law Review\b[^.!?]*\b17 December 1987\.", value) is not None,
+        f"{key} must date the Belkan legal reforms to 17 December 1987",
+    )
+    require(
+        re.search(r"\b(?:Ustio|Our nation) gained independence on 12 May 1988\.", value) is not None,
+        f"{key} must separately date Ustio's independence to 12 May 1988",
+    )
+
+
 def assert_focus_coordinate(text: str, focus_id: str, expected_x: int) -> None:
     block = focus_block(text, focus_id)
     require(block, f"focus block is missing: {focus_id}")
@@ -79,6 +96,22 @@ def main() -> int:
     legacy_ustio = read(mod_root, "events/Ustio.txt")
     default_ai = read(mod_root, "common/ai_strategy/default.txt")
     localization = read(mod_root, "localisation/english/country_UST_l_english.yml")
+
+    for text, key in (
+        (read(mod_root, "localisation/english/bookmarks_l_english.yml"), "UST_GATHERING_STORM_DESC"),
+        (localization, "UST_start_desc"),
+    ):
+        assert_starting_chronology(text, key)
+        for correct, incorrect in (
+            ("17 December 1987", "17 December 1988"),
+            ("12 May 1988", "12 May 1987"),
+        ):
+            try:
+                assert_starting_chronology(text.replace(correct, incorrect), key)
+            except AssertionError:
+                pass
+            else:
+                raise AssertionError(f"{key} accepted the incorrect date {incorrect}")
 
     for focus_id in (
         "UST_start",
@@ -175,7 +208,7 @@ def main() -> int:
             f"Ustio localization key missing or unversioned: {key}",
         )
 
-    print("Ustio continuity regressions passed: restored scaffold, repaired coordinate, guarded handoff, and localization.")
+    print("Ustio continuity regressions passed: distinct reform/independence dates, restored scaffold, repaired coordinate, guarded handoff, and localization.")
     return 0
 
 

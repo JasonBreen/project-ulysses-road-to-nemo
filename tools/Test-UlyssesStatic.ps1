@@ -151,6 +151,12 @@ $pythonHost = if ($pathPython) {
     throw 'Could not locate Python for aftermath contract checks.'
 }
 Write-Output "Python contract host: $pythonHost"
+Write-Output 'Ustio continuity: offline chronology and scaffold checks'
+& $pythonHost (Join-Path $PSScriptRoot 'Test-UstioContinuity.py') --mod-root $ModRoot
+if ($LASTEXITCODE -ne 0) {
+    Write-Error 'Ustio continuity contract checks failed.'
+    exit $LASTEXITCODE
+}
 Write-Output 'The Peace We Inherit: offline transition and content checks'
 & $pythonHost (Join-Path $PSScriptRoot 'Test-PeaceWeInherit.py') --mod-root $ModRoot
 $aftermathExitCode = $LASTEXITCODE

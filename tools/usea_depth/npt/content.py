@@ -482,7 +482,7 @@ F("command_of_waters", "Command of the Island Waters", 80, 6, [
 F("sky_announcement", "A Date Written in the Sky", 90, 0, [
     "Central Usea has announced that the asteroid Ulysses will strike the Earth. The broadcast is repeated on the islands' radio in full, twice, and followed by a long silence while the station decides what to play next.",
     "The government and the subdivision councils meet the same evening. The astronomers cannot yet say where the fragments will fall. North Point has to prepare for a disaster nobody can map."],
-  "set_variable = { NPT_ud_shelter_readiness = 1 }\nset_country_flag = NPT_ud_ulysses_brief\nadd_ideas = NPT_ud_shelter_programme_spirit\n"
+  SHELTER + "\nset_country_flag = NPT_ud_ulysses_brief\nadd_ideas = NPT_ud_shelter_programme_spirit\n"
   "country_event = { id = ac_ud_npt.12 }", ("meteor", "communications"), "shelters",
   available="date > 1996.4.19 date < 1999.7.8", ai="factor = 90", layer="official", cite="1996 / 04.20", event=12)
 

@@ -1,5 +1,11 @@
 # Implementation roadmap
 
+The approved [68-country expansion through 2040](WORLD_CAMPAIGNS_2040.md) now
+extends the target below. Its machine-readable ledger distinguishes actual
+delivery from Usea Depth reservations. The screenshot UI repair and Sotoa /
+Central Sotoa opening are separate review packages; all later allocations
+remain explicitly pending until authored and validated.
+
 ## AC04 and AC5 campaign expansion
 
 The approved [full-campaign implementation](AC04_AC05_CAMPAIGNS.md) adds 186

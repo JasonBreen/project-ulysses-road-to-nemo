@@ -1,0 +1,3360 @@
+# Original fiction/provisional gameplay; owner: tools/world_campaigns/build.py
+ac_wc_soa_programmes = {
+	SOA_wc_e1_authority_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_authority_opened NOT = { has_country_flag = SOA_wc_e1_authority_choice_0 } NOT = { has_country_flag = SOA_wc_e1_authority_choice_1 } NOT = { has_country_flag = SOA_wc_e1_authority_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_authority_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_authority_choice_0 } NOT = { has_country_flag = SOA_wc_e1_authority_choice_1 } NOT = { has_country_flag = SOA_wc_e1_authority_choice_2 } NOT = { has_country_flag = SOA_wc_e1_authority_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_authority_pending days = 60 }
+				country_event = { id = ac_wc_soa.1 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_authority_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_authority_p0_1 has_completed_focus = SOA_wc_e1_authority_p1_1 has_completed_focus = SOA_wc_e1_authority_p2_1 } NOT = { has_country_flag = SOA_wc_e1_authority_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_authority_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_authority_choice_0 has_country_flag = SOA_wc_e1_authority_choice_1 has_country_flag = SOA_wc_e1_authority_choice_2 } OR = { has_completed_focus = SOA_wc_e1_authority_p0_1 has_completed_focus = SOA_wc_e1_authority_p1_1 has_completed_focus = SOA_wc_e1_authority_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_authority_running } NOT = { has_country_flag = SOA_wc_e1_authority_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_authority_running
+					set_country_flag = { flag = SOA_wc_e1_authority_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_authority_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_authority_choice_0 has_country_flag = SOA_wc_e1_authority_choice_1 has_country_flag = SOA_wc_e1_authority_choice_2 } OR = { has_completed_focus = SOA_wc_e1_authority_p0_1 has_completed_focus = SOA_wc_e1_authority_p1_1 has_completed_focus = SOA_wc_e1_authority_p2_1 } has_country_flag = SOA_wc_e1_authority_running NOT = { has_country_flag = SOA_wc_e1_authority_maturing } NOT = { has_country_flag = SOA_wc_e1_authority_done }
+			}
+			set_country_flag = SOA_wc_e1_authority_done
+			clr_country_flag = SOA_wc_e1_authority_running
+			clr_country_flag = SOA_wc_e1_authority_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_authority_running
+			}
+			clr_country_flag = SOA_wc_e1_authority_running
+			set_country_flag = SOA_wc_e1_authority_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_authority_running
+			set_country_flag = SOA_wc_e1_authority_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_authority_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_authority_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_authority_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_authority_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_authority_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_authority_choice_0
+						}
+						remove_ideas = SOA_wc_civil_0
+						remove_ideas = SOA_wc_civil_1
+						remove_ideas = SOA_wc_civil_2
+						add_timed_idea = { idea = SOA_wc_civil_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_authority_choice_1
+						}
+						remove_ideas = SOA_wc_civil_0
+						remove_ideas = SOA_wc_civil_1
+						remove_ideas = SOA_wc_civil_2
+						add_timed_idea = { idea = SOA_wc_civil_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_authority_choice_2
+						}
+						remove_ideas = SOA_wc_civil_0
+						remove_ideas = SOA_wc_civil_1
+						remove_ideas = SOA_wc_civil_2
+						add_timed_idea = { idea = SOA_wc_civil_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_courts_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_courts_opened NOT = { has_country_flag = SOA_wc_e1_courts_choice_0 } NOT = { has_country_flag = SOA_wc_e1_courts_choice_1 } NOT = { has_country_flag = SOA_wc_e1_courts_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_courts_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_courts_choice_0 } NOT = { has_country_flag = SOA_wc_e1_courts_choice_1 } NOT = { has_country_flag = SOA_wc_e1_courts_choice_2 } NOT = { has_country_flag = SOA_wc_e1_courts_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_courts_pending days = 60 }
+				country_event = { id = ac_wc_soa.2 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_courts_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_courts_p0_1 has_completed_focus = SOA_wc_e1_courts_p1_1 has_completed_focus = SOA_wc_e1_courts_p2_1 } NOT = { has_country_flag = SOA_wc_e1_courts_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_courts_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_courts_choice_0 has_country_flag = SOA_wc_e1_courts_choice_1 has_country_flag = SOA_wc_e1_courts_choice_2 } OR = { has_completed_focus = SOA_wc_e1_courts_p0_1 has_completed_focus = SOA_wc_e1_courts_p1_1 has_completed_focus = SOA_wc_e1_courts_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_courts_running } NOT = { has_country_flag = SOA_wc_e1_courts_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_courts_running
+					set_country_flag = { flag = SOA_wc_e1_courts_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_courts_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_courts_choice_0 has_country_flag = SOA_wc_e1_courts_choice_1 has_country_flag = SOA_wc_e1_courts_choice_2 } OR = { has_completed_focus = SOA_wc_e1_courts_p0_1 has_completed_focus = SOA_wc_e1_courts_p1_1 has_completed_focus = SOA_wc_e1_courts_p2_1 } has_country_flag = SOA_wc_e1_courts_running NOT = { has_country_flag = SOA_wc_e1_courts_maturing } NOT = { has_country_flag = SOA_wc_e1_courts_done }
+			}
+			set_country_flag = SOA_wc_e1_courts_done
+			clr_country_flag = SOA_wc_e1_courts_running
+			clr_country_flag = SOA_wc_e1_courts_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_courts_running
+			}
+			clr_country_flag = SOA_wc_e1_courts_running
+			set_country_flag = SOA_wc_e1_courts_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_courts_running
+			set_country_flag = SOA_wc_e1_courts_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_courts_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_courts_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_courts_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_courts_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_courts_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_courts_choice_0
+						}
+						remove_ideas = SOA_wc_civil_0
+						remove_ideas = SOA_wc_civil_1
+						remove_ideas = SOA_wc_civil_2
+						add_timed_idea = { idea = SOA_wc_civil_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_courts_choice_1
+						}
+						remove_ideas = SOA_wc_civil_0
+						remove_ideas = SOA_wc_civil_1
+						remove_ideas = SOA_wc_civil_2
+						add_timed_idea = { idea = SOA_wc_civil_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_courts_choice_2
+						}
+						remove_ideas = SOA_wc_civil_0
+						remove_ideas = SOA_wc_civil_1
+						remove_ideas = SOA_wc_civil_2
+						add_timed_idea = { idea = SOA_wc_civil_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_assembly_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_assembly_opened NOT = { has_country_flag = SOA_wc_e1_assembly_choice_0 } NOT = { has_country_flag = SOA_wc_e1_assembly_choice_1 } NOT = { has_country_flag = SOA_wc_e1_assembly_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_assembly_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_assembly_choice_0 } NOT = { has_country_flag = SOA_wc_e1_assembly_choice_1 } NOT = { has_country_flag = SOA_wc_e1_assembly_choice_2 } NOT = { has_country_flag = SOA_wc_e1_assembly_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_assembly_pending days = 60 }
+				country_event = { id = ac_wc_soa.3 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_assembly_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_assembly_p0_1 has_completed_focus = SOA_wc_e1_assembly_p1_1 has_completed_focus = SOA_wc_e1_assembly_p2_1 } NOT = { has_country_flag = SOA_wc_e1_assembly_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_assembly_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_assembly_choice_0 has_country_flag = SOA_wc_e1_assembly_choice_1 has_country_flag = SOA_wc_e1_assembly_choice_2 } OR = { has_completed_focus = SOA_wc_e1_assembly_p0_1 has_completed_focus = SOA_wc_e1_assembly_p1_1 has_completed_focus = SOA_wc_e1_assembly_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_assembly_running } NOT = { has_country_flag = SOA_wc_e1_assembly_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_assembly_running
+					set_country_flag = { flag = SOA_wc_e1_assembly_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_assembly_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_assembly_choice_0 has_country_flag = SOA_wc_e1_assembly_choice_1 has_country_flag = SOA_wc_e1_assembly_choice_2 } OR = { has_completed_focus = SOA_wc_e1_assembly_p0_1 has_completed_focus = SOA_wc_e1_assembly_p1_1 has_completed_focus = SOA_wc_e1_assembly_p2_1 } has_country_flag = SOA_wc_e1_assembly_running NOT = { has_country_flag = SOA_wc_e1_assembly_maturing } NOT = { has_country_flag = SOA_wc_e1_assembly_done }
+			}
+			set_country_flag = SOA_wc_e1_assembly_done
+			clr_country_flag = SOA_wc_e1_assembly_running
+			clr_country_flag = SOA_wc_e1_assembly_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_assembly_running
+			}
+			clr_country_flag = SOA_wc_e1_assembly_running
+			set_country_flag = SOA_wc_e1_assembly_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_assembly_running
+			set_country_flag = SOA_wc_e1_assembly_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_assembly_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_assembly_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_assembly_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_assembly_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_assembly_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_assembly_choice_0
+						}
+						remove_ideas = SOA_wc_civil_0
+						remove_ideas = SOA_wc_civil_1
+						remove_ideas = SOA_wc_civil_2
+						add_timed_idea = { idea = SOA_wc_civil_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_assembly_choice_1
+						}
+						remove_ideas = SOA_wc_civil_0
+						remove_ideas = SOA_wc_civil_1
+						remove_ideas = SOA_wc_civil_2
+						add_timed_idea = { idea = SOA_wc_civil_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_assembly_choice_2
+						}
+						remove_ideas = SOA_wc_civil_0
+						remove_ideas = SOA_wc_civil_1
+						remove_ideas = SOA_wc_civil_2
+						add_timed_idea = { idea = SOA_wc_civil_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_foundries_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_foundries_opened NOT = { has_country_flag = SOA_wc_e1_foundries_choice_0 } NOT = { has_country_flag = SOA_wc_e1_foundries_choice_1 } NOT = { has_country_flag = SOA_wc_e1_foundries_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_foundries_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_foundries_choice_0 } NOT = { has_country_flag = SOA_wc_e1_foundries_choice_1 } NOT = { has_country_flag = SOA_wc_e1_foundries_choice_2 } NOT = { has_country_flag = SOA_wc_e1_foundries_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_foundries_pending days = 60 }
+				country_event = { id = ac_wc_soa.4 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_foundries_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_foundries_p0_1 has_completed_focus = SOA_wc_e1_foundries_p1_1 has_completed_focus = SOA_wc_e1_foundries_p2_1 } NOT = { has_country_flag = SOA_wc_e1_foundries_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_foundries_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_foundries_choice_0 has_country_flag = SOA_wc_e1_foundries_choice_1 has_country_flag = SOA_wc_e1_foundries_choice_2 } OR = { has_completed_focus = SOA_wc_e1_foundries_p0_1 has_completed_focus = SOA_wc_e1_foundries_p1_1 has_completed_focus = SOA_wc_e1_foundries_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_foundries_running } NOT = { has_country_flag = SOA_wc_e1_foundries_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_foundries_running
+					set_country_flag = { flag = SOA_wc_e1_foundries_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_foundries_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_foundries_choice_0 has_country_flag = SOA_wc_e1_foundries_choice_1 has_country_flag = SOA_wc_e1_foundries_choice_2 } OR = { has_completed_focus = SOA_wc_e1_foundries_p0_1 has_completed_focus = SOA_wc_e1_foundries_p1_1 has_completed_focus = SOA_wc_e1_foundries_p2_1 } has_country_flag = SOA_wc_e1_foundries_running NOT = { has_country_flag = SOA_wc_e1_foundries_maturing } NOT = { has_country_flag = SOA_wc_e1_foundries_done }
+			}
+			set_country_flag = SOA_wc_e1_foundries_done
+			clr_country_flag = SOA_wc_e1_foundries_running
+			clr_country_flag = SOA_wc_e1_foundries_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_foundries_running
+			}
+			clr_country_flag = SOA_wc_e1_foundries_running
+			set_country_flag = SOA_wc_e1_foundries_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_foundries_running
+			set_country_flag = SOA_wc_e1_foundries_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_foundries_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_foundries_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_foundries_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_foundries_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_foundries_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_foundries_choice_0
+						}
+						remove_ideas = SOA_wc_industry_0
+						remove_ideas = SOA_wc_industry_1
+						remove_ideas = SOA_wc_industry_2
+						add_timed_idea = { idea = SOA_wc_industry_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_foundries_choice_1
+						}
+						remove_ideas = SOA_wc_industry_0
+						remove_ideas = SOA_wc_industry_1
+						remove_ideas = SOA_wc_industry_2
+						add_timed_idea = { idea = SOA_wc_industry_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_foundries_choice_2
+						}
+						remove_ideas = SOA_wc_industry_0
+						remove_ideas = SOA_wc_industry_1
+						remove_ideas = SOA_wc_industry_2
+						add_timed_idea = { idea = SOA_wc_industry_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_orders_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_orders_opened NOT = { has_country_flag = SOA_wc_e1_orders_choice_0 } NOT = { has_country_flag = SOA_wc_e1_orders_choice_1 } NOT = { has_country_flag = SOA_wc_e1_orders_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_orders_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_orders_choice_0 } NOT = { has_country_flag = SOA_wc_e1_orders_choice_1 } NOT = { has_country_flag = SOA_wc_e1_orders_choice_2 } NOT = { has_country_flag = SOA_wc_e1_orders_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_orders_pending days = 60 }
+				country_event = { id = ac_wc_soa.5 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_orders_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_orders_p0_1 has_completed_focus = SOA_wc_e1_orders_p1_1 has_completed_focus = SOA_wc_e1_orders_p2_1 } NOT = { has_country_flag = SOA_wc_e1_orders_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_orders_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_orders_choice_0 has_country_flag = SOA_wc_e1_orders_choice_1 has_country_flag = SOA_wc_e1_orders_choice_2 } OR = { has_completed_focus = SOA_wc_e1_orders_p0_1 has_completed_focus = SOA_wc_e1_orders_p1_1 has_completed_focus = SOA_wc_e1_orders_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_orders_running } NOT = { has_country_flag = SOA_wc_e1_orders_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_orders_running
+					set_country_flag = { flag = SOA_wc_e1_orders_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_orders_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_orders_choice_0 has_country_flag = SOA_wc_e1_orders_choice_1 has_country_flag = SOA_wc_e1_orders_choice_2 } OR = { has_completed_focus = SOA_wc_e1_orders_p0_1 has_completed_focus = SOA_wc_e1_orders_p1_1 has_completed_focus = SOA_wc_e1_orders_p2_1 } has_country_flag = SOA_wc_e1_orders_running NOT = { has_country_flag = SOA_wc_e1_orders_maturing } NOT = { has_country_flag = SOA_wc_e1_orders_done }
+			}
+			set_country_flag = SOA_wc_e1_orders_done
+			clr_country_flag = SOA_wc_e1_orders_running
+			clr_country_flag = SOA_wc_e1_orders_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_orders_running
+			}
+			clr_country_flag = SOA_wc_e1_orders_running
+			set_country_flag = SOA_wc_e1_orders_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_orders_running
+			set_country_flag = SOA_wc_e1_orders_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_orders_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_orders_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_orders_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_orders_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_orders_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_orders_choice_0
+						}
+						remove_ideas = SOA_wc_industry_0
+						remove_ideas = SOA_wc_industry_1
+						remove_ideas = SOA_wc_industry_2
+						add_timed_idea = { idea = SOA_wc_industry_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_orders_choice_1
+						}
+						remove_ideas = SOA_wc_industry_0
+						remove_ideas = SOA_wc_industry_1
+						remove_ideas = SOA_wc_industry_2
+						add_timed_idea = { idea = SOA_wc_industry_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_orders_choice_2
+						}
+						remove_ideas = SOA_wc_industry_0
+						remove_ideas = SOA_wc_industry_1
+						remove_ideas = SOA_wc_industry_2
+						add_timed_idea = { idea = SOA_wc_industry_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_competition_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_competition_opened NOT = { has_country_flag = SOA_wc_e1_competition_choice_0 } NOT = { has_country_flag = SOA_wc_e1_competition_choice_1 } NOT = { has_country_flag = SOA_wc_e1_competition_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_competition_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_competition_choice_0 } NOT = { has_country_flag = SOA_wc_e1_competition_choice_1 } NOT = { has_country_flag = SOA_wc_e1_competition_choice_2 } NOT = { has_country_flag = SOA_wc_e1_competition_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_competition_pending days = 60 }
+				country_event = { id = ac_wc_soa.6 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_competition_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_competition_p0_1 has_completed_focus = SOA_wc_e1_competition_p1_1 has_completed_focus = SOA_wc_e1_competition_p2_1 } NOT = { has_country_flag = SOA_wc_e1_competition_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_competition_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_competition_choice_0 has_country_flag = SOA_wc_e1_competition_choice_1 has_country_flag = SOA_wc_e1_competition_choice_2 } OR = { has_completed_focus = SOA_wc_e1_competition_p0_1 has_completed_focus = SOA_wc_e1_competition_p1_1 has_completed_focus = SOA_wc_e1_competition_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_competition_running } NOT = { has_country_flag = SOA_wc_e1_competition_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_competition_running
+					set_country_flag = { flag = SOA_wc_e1_competition_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_competition_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_competition_choice_0 has_country_flag = SOA_wc_e1_competition_choice_1 has_country_flag = SOA_wc_e1_competition_choice_2 } OR = { has_completed_focus = SOA_wc_e1_competition_p0_1 has_completed_focus = SOA_wc_e1_competition_p1_1 has_completed_focus = SOA_wc_e1_competition_p2_1 } has_country_flag = SOA_wc_e1_competition_running NOT = { has_country_flag = SOA_wc_e1_competition_maturing } NOT = { has_country_flag = SOA_wc_e1_competition_done }
+			}
+			set_country_flag = SOA_wc_e1_competition_done
+			clr_country_flag = SOA_wc_e1_competition_running
+			clr_country_flag = SOA_wc_e1_competition_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_competition_running
+			}
+			clr_country_flag = SOA_wc_e1_competition_running
+			set_country_flag = SOA_wc_e1_competition_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_competition_running
+			set_country_flag = SOA_wc_e1_competition_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_competition_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_competition_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_competition_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_competition_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_competition_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_competition_choice_0
+						}
+						remove_ideas = SOA_wc_industry_0
+						remove_ideas = SOA_wc_industry_1
+						remove_ideas = SOA_wc_industry_2
+						add_timed_idea = { idea = SOA_wc_industry_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_competition_choice_1
+						}
+						remove_ideas = SOA_wc_industry_0
+						remove_ideas = SOA_wc_industry_1
+						remove_ideas = SOA_wc_industry_2
+						add_timed_idea = { idea = SOA_wc_industry_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_competition_choice_2
+						}
+						remove_ideas = SOA_wc_industry_0
+						remove_ideas = SOA_wc_industry_1
+						remove_ideas = SOA_wc_industry_2
+						add_timed_idea = { idea = SOA_wc_industry_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_rail_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_rail_opened NOT = { has_country_flag = SOA_wc_e1_rail_choice_0 } NOT = { has_country_flag = SOA_wc_e1_rail_choice_1 } NOT = { has_country_flag = SOA_wc_e1_rail_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_rail_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_rail_choice_0 } NOT = { has_country_flag = SOA_wc_e1_rail_choice_1 } NOT = { has_country_flag = SOA_wc_e1_rail_choice_2 } NOT = { has_country_flag = SOA_wc_e1_rail_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_rail_pending days = 60 }
+				country_event = { id = ac_wc_soa.7 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_rail_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_rail_p0_1 has_completed_focus = SOA_wc_e1_rail_p1_1 has_completed_focus = SOA_wc_e1_rail_p2_1 } NOT = { has_country_flag = SOA_wc_e1_rail_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_rail_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_rail_choice_0 has_country_flag = SOA_wc_e1_rail_choice_1 has_country_flag = SOA_wc_e1_rail_choice_2 } OR = { has_completed_focus = SOA_wc_e1_rail_p0_1 has_completed_focus = SOA_wc_e1_rail_p1_1 has_completed_focus = SOA_wc_e1_rail_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_rail_running } NOT = { has_country_flag = SOA_wc_e1_rail_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_rail_running
+					set_country_flag = { flag = SOA_wc_e1_rail_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_rail_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_rail_choice_0 has_country_flag = SOA_wc_e1_rail_choice_1 has_country_flag = SOA_wc_e1_rail_choice_2 } OR = { has_completed_focus = SOA_wc_e1_rail_p0_1 has_completed_focus = SOA_wc_e1_rail_p1_1 has_completed_focus = SOA_wc_e1_rail_p2_1 } has_country_flag = SOA_wc_e1_rail_running NOT = { has_country_flag = SOA_wc_e1_rail_maturing } NOT = { has_country_flag = SOA_wc_e1_rail_done }
+			}
+			set_country_flag = SOA_wc_e1_rail_done
+			clr_country_flag = SOA_wc_e1_rail_running
+			clr_country_flag = SOA_wc_e1_rail_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_rail_running
+			}
+			clr_country_flag = SOA_wc_e1_rail_running
+			set_country_flag = SOA_wc_e1_rail_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_rail_running
+			set_country_flag = SOA_wc_e1_rail_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_rail_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_rail_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_rail_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_rail_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_rail_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_rail_choice_0
+						}
+						remove_ideas = SOA_wc_logistics_0
+						remove_ideas = SOA_wc_logistics_1
+						remove_ideas = SOA_wc_logistics_2
+						add_timed_idea = { idea = SOA_wc_logistics_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_rail_choice_1
+						}
+						remove_ideas = SOA_wc_logistics_0
+						remove_ideas = SOA_wc_logistics_1
+						remove_ideas = SOA_wc_logistics_2
+						add_timed_idea = { idea = SOA_wc_logistics_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_rail_choice_2
+						}
+						remove_ideas = SOA_wc_logistics_0
+						remove_ideas = SOA_wc_logistics_1
+						remove_ideas = SOA_wc_logistics_2
+						add_timed_idea = { idea = SOA_wc_logistics_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_distribution_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_distribution_opened NOT = { has_country_flag = SOA_wc_e1_distribution_choice_0 } NOT = { has_country_flag = SOA_wc_e1_distribution_choice_1 } NOT = { has_country_flag = SOA_wc_e1_distribution_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_distribution_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_distribution_choice_0 } NOT = { has_country_flag = SOA_wc_e1_distribution_choice_1 } NOT = { has_country_flag = SOA_wc_e1_distribution_choice_2 } NOT = { has_country_flag = SOA_wc_e1_distribution_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_distribution_pending days = 60 }
+				country_event = { id = ac_wc_soa.8 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_distribution_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_distribution_p0_1 has_completed_focus = SOA_wc_e1_distribution_p1_1 has_completed_focus = SOA_wc_e1_distribution_p2_1 } NOT = { has_country_flag = SOA_wc_e1_distribution_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_distribution_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_distribution_choice_0 has_country_flag = SOA_wc_e1_distribution_choice_1 has_country_flag = SOA_wc_e1_distribution_choice_2 } OR = { has_completed_focus = SOA_wc_e1_distribution_p0_1 has_completed_focus = SOA_wc_e1_distribution_p1_1 has_completed_focus = SOA_wc_e1_distribution_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_distribution_running } NOT = { has_country_flag = SOA_wc_e1_distribution_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_distribution_running
+					set_country_flag = { flag = SOA_wc_e1_distribution_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_distribution_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_distribution_choice_0 has_country_flag = SOA_wc_e1_distribution_choice_1 has_country_flag = SOA_wc_e1_distribution_choice_2 } OR = { has_completed_focus = SOA_wc_e1_distribution_p0_1 has_completed_focus = SOA_wc_e1_distribution_p1_1 has_completed_focus = SOA_wc_e1_distribution_p2_1 } has_country_flag = SOA_wc_e1_distribution_running NOT = { has_country_flag = SOA_wc_e1_distribution_maturing } NOT = { has_country_flag = SOA_wc_e1_distribution_done }
+			}
+			set_country_flag = SOA_wc_e1_distribution_done
+			clr_country_flag = SOA_wc_e1_distribution_running
+			clr_country_flag = SOA_wc_e1_distribution_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_distribution_running
+			}
+			clr_country_flag = SOA_wc_e1_distribution_running
+			set_country_flag = SOA_wc_e1_distribution_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_distribution_running
+			set_country_flag = SOA_wc_e1_distribution_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_distribution_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_distribution_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_distribution_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_distribution_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_distribution_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_distribution_choice_0
+						}
+						remove_ideas = SOA_wc_logistics_0
+						remove_ideas = SOA_wc_logistics_1
+						remove_ideas = SOA_wc_logistics_2
+						add_timed_idea = { idea = SOA_wc_logistics_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_distribution_choice_1
+						}
+						remove_ideas = SOA_wc_logistics_0
+						remove_ideas = SOA_wc_logistics_1
+						remove_ideas = SOA_wc_logistics_2
+						add_timed_idea = { idea = SOA_wc_logistics_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_distribution_choice_2
+						}
+						remove_ideas = SOA_wc_logistics_0
+						remove_ideas = SOA_wc_logistics_1
+						remove_ideas = SOA_wc_logistics_2
+						add_timed_idea = { idea = SOA_wc_logistics_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_fuel_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fuel_opened NOT = { has_country_flag = SOA_wc_e1_fuel_choice_0 } NOT = { has_country_flag = SOA_wc_e1_fuel_choice_1 } NOT = { has_country_flag = SOA_wc_e1_fuel_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_fuel_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fuel_choice_0 } NOT = { has_country_flag = SOA_wc_e1_fuel_choice_1 } NOT = { has_country_flag = SOA_wc_e1_fuel_choice_2 } NOT = { has_country_flag = SOA_wc_e1_fuel_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_fuel_pending days = 60 }
+				country_event = { id = ac_wc_soa.9 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_fuel_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_fuel_p0_1 has_completed_focus = SOA_wc_e1_fuel_p1_1 has_completed_focus = SOA_wc_e1_fuel_p2_1 } NOT = { has_country_flag = SOA_wc_e1_fuel_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_fuel_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_fuel_choice_0 has_country_flag = SOA_wc_e1_fuel_choice_1 has_country_flag = SOA_wc_e1_fuel_choice_2 } OR = { has_completed_focus = SOA_wc_e1_fuel_p0_1 has_completed_focus = SOA_wc_e1_fuel_p1_1 has_completed_focus = SOA_wc_e1_fuel_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_fuel_running } NOT = { has_country_flag = SOA_wc_e1_fuel_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_fuel_running
+					set_country_flag = { flag = SOA_wc_e1_fuel_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_fuel_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_fuel_choice_0 has_country_flag = SOA_wc_e1_fuel_choice_1 has_country_flag = SOA_wc_e1_fuel_choice_2 } OR = { has_completed_focus = SOA_wc_e1_fuel_p0_1 has_completed_focus = SOA_wc_e1_fuel_p1_1 has_completed_focus = SOA_wc_e1_fuel_p2_1 } has_country_flag = SOA_wc_e1_fuel_running NOT = { has_country_flag = SOA_wc_e1_fuel_maturing } NOT = { has_country_flag = SOA_wc_e1_fuel_done }
+			}
+			set_country_flag = SOA_wc_e1_fuel_done
+			clr_country_flag = SOA_wc_e1_fuel_running
+			clr_country_flag = SOA_wc_e1_fuel_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_fuel_running
+			}
+			clr_country_flag = SOA_wc_e1_fuel_running
+			set_country_flag = SOA_wc_e1_fuel_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_fuel_running
+			set_country_flag = SOA_wc_e1_fuel_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_fuel_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fuel_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_fuel_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_fuel_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_fuel_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_fuel_choice_0
+						}
+						remove_ideas = SOA_wc_logistics_0
+						remove_ideas = SOA_wc_logistics_1
+						remove_ideas = SOA_wc_logistics_2
+						add_timed_idea = { idea = SOA_wc_logistics_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_fuel_choice_1
+						}
+						remove_ideas = SOA_wc_logistics_0
+						remove_ideas = SOA_wc_logistics_1
+						remove_ideas = SOA_wc_logistics_2
+						add_timed_idea = { idea = SOA_wc_logistics_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_fuel_choice_2
+						}
+						remove_ideas = SOA_wc_logistics_0
+						remove_ideas = SOA_wc_logistics_1
+						remove_ideas = SOA_wc_logistics_2
+						add_timed_idea = { idea = SOA_wc_logistics_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_pilots_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_pilots_opened NOT = { has_country_flag = SOA_wc_e1_pilots_choice_0 } NOT = { has_country_flag = SOA_wc_e1_pilots_choice_1 } NOT = { has_country_flag = SOA_wc_e1_pilots_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_pilots_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_pilots_choice_0 } NOT = { has_country_flag = SOA_wc_e1_pilots_choice_1 } NOT = { has_country_flag = SOA_wc_e1_pilots_choice_2 } NOT = { has_country_flag = SOA_wc_e1_pilots_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_pilots_pending days = 60 }
+				country_event = { id = ac_wc_soa.10 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_pilots_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_pilots_p0_1 has_completed_focus = SOA_wc_e1_pilots_p1_1 has_completed_focus = SOA_wc_e1_pilots_p2_1 } NOT = { has_country_flag = SOA_wc_e1_pilots_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_pilots_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_pilots_choice_0 has_country_flag = SOA_wc_e1_pilots_choice_1 has_country_flag = SOA_wc_e1_pilots_choice_2 } OR = { has_completed_focus = SOA_wc_e1_pilots_p0_1 has_completed_focus = SOA_wc_e1_pilots_p1_1 has_completed_focus = SOA_wc_e1_pilots_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_pilots_running } NOT = { has_country_flag = SOA_wc_e1_pilots_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_pilots_running
+					set_country_flag = { flag = SOA_wc_e1_pilots_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_pilots_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_pilots_choice_0 has_country_flag = SOA_wc_e1_pilots_choice_1 has_country_flag = SOA_wc_e1_pilots_choice_2 } OR = { has_completed_focus = SOA_wc_e1_pilots_p0_1 has_completed_focus = SOA_wc_e1_pilots_p1_1 has_completed_focus = SOA_wc_e1_pilots_p2_1 } has_country_flag = SOA_wc_e1_pilots_running NOT = { has_country_flag = SOA_wc_e1_pilots_maturing } NOT = { has_country_flag = SOA_wc_e1_pilots_done }
+			}
+			set_country_flag = SOA_wc_e1_pilots_done
+			clr_country_flag = SOA_wc_e1_pilots_running
+			clr_country_flag = SOA_wc_e1_pilots_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_pilots_running
+			}
+			clr_country_flag = SOA_wc_e1_pilots_running
+			set_country_flag = SOA_wc_e1_pilots_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_pilots_running
+			set_country_flag = SOA_wc_e1_pilots_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_pilots_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_pilots_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_pilots_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_pilots_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_pilots_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_pilots_choice_0
+						}
+						remove_ideas = SOA_wc_air_0
+						remove_ideas = SOA_wc_air_1
+						remove_ideas = SOA_wc_air_2
+						add_timed_idea = { idea = SOA_wc_air_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_pilots_choice_1
+						}
+						remove_ideas = SOA_wc_air_0
+						remove_ideas = SOA_wc_air_1
+						remove_ideas = SOA_wc_air_2
+						add_timed_idea = { idea = SOA_wc_air_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_pilots_choice_2
+						}
+						remove_ideas = SOA_wc_air_0
+						remove_ideas = SOA_wc_air_1
+						remove_ideas = SOA_wc_air_2
+						add_timed_idea = { idea = SOA_wc_air_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_airmaintenance_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airmaintenance_opened NOT = { has_country_flag = SOA_wc_e1_airmaintenance_choice_0 } NOT = { has_country_flag = SOA_wc_e1_airmaintenance_choice_1 } NOT = { has_country_flag = SOA_wc_e1_airmaintenance_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_airmaintenance_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_choice_0 } NOT = { has_country_flag = SOA_wc_e1_airmaintenance_choice_1 } NOT = { has_country_flag = SOA_wc_e1_airmaintenance_choice_2 } NOT = { has_country_flag = SOA_wc_e1_airmaintenance_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_airmaintenance_pending days = 60 }
+				country_event = { id = ac_wc_soa.11 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_airmaintenance_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_airmaintenance_p0_1 has_completed_focus = SOA_wc_e1_airmaintenance_p1_1 has_completed_focus = SOA_wc_e1_airmaintenance_p2_1 } NOT = { has_country_flag = SOA_wc_e1_airmaintenance_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_airmaintenance_choice_0 has_country_flag = SOA_wc_e1_airmaintenance_choice_1 has_country_flag = SOA_wc_e1_airmaintenance_choice_2 } OR = { has_completed_focus = SOA_wc_e1_airmaintenance_p0_1 has_completed_focus = SOA_wc_e1_airmaintenance_p1_1 has_completed_focus = SOA_wc_e1_airmaintenance_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_running } NOT = { has_country_flag = SOA_wc_e1_airmaintenance_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_airmaintenance_running
+					set_country_flag = { flag = SOA_wc_e1_airmaintenance_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_airmaintenance_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_airmaintenance_choice_0 has_country_flag = SOA_wc_e1_airmaintenance_choice_1 has_country_flag = SOA_wc_e1_airmaintenance_choice_2 } OR = { has_completed_focus = SOA_wc_e1_airmaintenance_p0_1 has_completed_focus = SOA_wc_e1_airmaintenance_p1_1 has_completed_focus = SOA_wc_e1_airmaintenance_p2_1 } has_country_flag = SOA_wc_e1_airmaintenance_running NOT = { has_country_flag = SOA_wc_e1_airmaintenance_maturing } NOT = { has_country_flag = SOA_wc_e1_airmaintenance_done }
+			}
+			set_country_flag = SOA_wc_e1_airmaintenance_done
+			clr_country_flag = SOA_wc_e1_airmaintenance_running
+			clr_country_flag = SOA_wc_e1_airmaintenance_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_airmaintenance_running
+			}
+			clr_country_flag = SOA_wc_e1_airmaintenance_running
+			set_country_flag = SOA_wc_e1_airmaintenance_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_airmaintenance_running
+			set_country_flag = SOA_wc_e1_airmaintenance_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_airmaintenance_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airmaintenance_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_airmaintenance_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_airmaintenance_choice_0
+						}
+						remove_ideas = SOA_wc_air_0
+						remove_ideas = SOA_wc_air_1
+						remove_ideas = SOA_wc_air_2
+						add_timed_idea = { idea = SOA_wc_air_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_airmaintenance_choice_1
+						}
+						remove_ideas = SOA_wc_air_0
+						remove_ideas = SOA_wc_air_1
+						remove_ideas = SOA_wc_air_2
+						add_timed_idea = { idea = SOA_wc_air_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_airmaintenance_choice_2
+						}
+						remove_ideas = SOA_wc_air_0
+						remove_ideas = SOA_wc_air_1
+						remove_ideas = SOA_wc_air_2
+						add_timed_idea = { idea = SOA_wc_air_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_airdispersal_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airdispersal_opened NOT = { has_country_flag = SOA_wc_e1_airdispersal_choice_0 } NOT = { has_country_flag = SOA_wc_e1_airdispersal_choice_1 } NOT = { has_country_flag = SOA_wc_e1_airdispersal_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_airdispersal_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_choice_0 } NOT = { has_country_flag = SOA_wc_e1_airdispersal_choice_1 } NOT = { has_country_flag = SOA_wc_e1_airdispersal_choice_2 } NOT = { has_country_flag = SOA_wc_e1_airdispersal_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_airdispersal_pending days = 60 }
+				country_event = { id = ac_wc_soa.12 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_airdispersal_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_airdispersal_p0_1 has_completed_focus = SOA_wc_e1_airdispersal_p1_1 has_completed_focus = SOA_wc_e1_airdispersal_p2_1 } NOT = { has_country_flag = SOA_wc_e1_airdispersal_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_airdispersal_choice_0 has_country_flag = SOA_wc_e1_airdispersal_choice_1 has_country_flag = SOA_wc_e1_airdispersal_choice_2 } OR = { has_completed_focus = SOA_wc_e1_airdispersal_p0_1 has_completed_focus = SOA_wc_e1_airdispersal_p1_1 has_completed_focus = SOA_wc_e1_airdispersal_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_running } NOT = { has_country_flag = SOA_wc_e1_airdispersal_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_airdispersal_running
+					set_country_flag = { flag = SOA_wc_e1_airdispersal_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_airdispersal_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_airdispersal_choice_0 has_country_flag = SOA_wc_e1_airdispersal_choice_1 has_country_flag = SOA_wc_e1_airdispersal_choice_2 } OR = { has_completed_focus = SOA_wc_e1_airdispersal_p0_1 has_completed_focus = SOA_wc_e1_airdispersal_p1_1 has_completed_focus = SOA_wc_e1_airdispersal_p2_1 } has_country_flag = SOA_wc_e1_airdispersal_running NOT = { has_country_flag = SOA_wc_e1_airdispersal_maturing } NOT = { has_country_flag = SOA_wc_e1_airdispersal_done }
+			}
+			set_country_flag = SOA_wc_e1_airdispersal_done
+			clr_country_flag = SOA_wc_e1_airdispersal_running
+			clr_country_flag = SOA_wc_e1_airdispersal_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_airdispersal_running
+			}
+			clr_country_flag = SOA_wc_e1_airdispersal_running
+			set_country_flag = SOA_wc_e1_airdispersal_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_airdispersal_running
+			set_country_flag = SOA_wc_e1_airdispersal_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_airdispersal_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airdispersal_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_airdispersal_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_airdispersal_choice_0
+						}
+						remove_ideas = SOA_wc_air_0
+						remove_ideas = SOA_wc_air_1
+						remove_ideas = SOA_wc_air_2
+						add_timed_idea = { idea = SOA_wc_air_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_airdispersal_choice_1
+						}
+						remove_ideas = SOA_wc_air_0
+						remove_ideas = SOA_wc_air_1
+						remove_ideas = SOA_wc_air_2
+						add_timed_idea = { idea = SOA_wc_air_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_airdispersal_choice_2
+						}
+						remove_ideas = SOA_wc_air_0
+						remove_ideas = SOA_wc_air_1
+						remove_ideas = SOA_wc_air_2
+						add_timed_idea = { idea = SOA_wc_air_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_reserves_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_reserves_opened NOT = { has_country_flag = SOA_wc_e1_reserves_choice_0 } NOT = { has_country_flag = SOA_wc_e1_reserves_choice_1 } NOT = { has_country_flag = SOA_wc_e1_reserves_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_reserves_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_reserves_choice_0 } NOT = { has_country_flag = SOA_wc_e1_reserves_choice_1 } NOT = { has_country_flag = SOA_wc_e1_reserves_choice_2 } NOT = { has_country_flag = SOA_wc_e1_reserves_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_reserves_pending days = 60 }
+				country_event = { id = ac_wc_soa.13 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_reserves_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_reserves_p0_1 has_completed_focus = SOA_wc_e1_reserves_p1_1 has_completed_focus = SOA_wc_e1_reserves_p2_1 } NOT = { has_country_flag = SOA_wc_e1_reserves_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_reserves_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_reserves_choice_0 has_country_flag = SOA_wc_e1_reserves_choice_1 has_country_flag = SOA_wc_e1_reserves_choice_2 } OR = { has_completed_focus = SOA_wc_e1_reserves_p0_1 has_completed_focus = SOA_wc_e1_reserves_p1_1 has_completed_focus = SOA_wc_e1_reserves_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_reserves_running } NOT = { has_country_flag = SOA_wc_e1_reserves_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_reserves_running
+					set_country_flag = { flag = SOA_wc_e1_reserves_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_reserves_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_reserves_choice_0 has_country_flag = SOA_wc_e1_reserves_choice_1 has_country_flag = SOA_wc_e1_reserves_choice_2 } OR = { has_completed_focus = SOA_wc_e1_reserves_p0_1 has_completed_focus = SOA_wc_e1_reserves_p1_1 has_completed_focus = SOA_wc_e1_reserves_p2_1 } has_country_flag = SOA_wc_e1_reserves_running NOT = { has_country_flag = SOA_wc_e1_reserves_maturing } NOT = { has_country_flag = SOA_wc_e1_reserves_done }
+			}
+			set_country_flag = SOA_wc_e1_reserves_done
+			clr_country_flag = SOA_wc_e1_reserves_running
+			clr_country_flag = SOA_wc_e1_reserves_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_reserves_running
+			}
+			clr_country_flag = SOA_wc_e1_reserves_running
+			set_country_flag = SOA_wc_e1_reserves_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_reserves_running
+			set_country_flag = SOA_wc_e1_reserves_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_reserves_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_reserves_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_reserves_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_reserves_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_reserves_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_reserves_choice_0
+						}
+						remove_ideas = SOA_wc_land_0
+						remove_ideas = SOA_wc_land_1
+						remove_ideas = SOA_wc_land_2
+						add_timed_idea = { idea = SOA_wc_land_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_reserves_choice_1
+						}
+						remove_ideas = SOA_wc_land_0
+						remove_ideas = SOA_wc_land_1
+						remove_ideas = SOA_wc_land_2
+						add_timed_idea = { idea = SOA_wc_land_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_reserves_choice_2
+						}
+						remove_ideas = SOA_wc_land_0
+						remove_ideas = SOA_wc_land_1
+						remove_ideas = SOA_wc_land_2
+						add_timed_idea = { idea = SOA_wc_land_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_mobility_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_mobility_opened NOT = { has_country_flag = SOA_wc_e1_mobility_choice_0 } NOT = { has_country_flag = SOA_wc_e1_mobility_choice_1 } NOT = { has_country_flag = SOA_wc_e1_mobility_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_mobility_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_mobility_choice_0 } NOT = { has_country_flag = SOA_wc_e1_mobility_choice_1 } NOT = { has_country_flag = SOA_wc_e1_mobility_choice_2 } NOT = { has_country_flag = SOA_wc_e1_mobility_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_mobility_pending days = 60 }
+				country_event = { id = ac_wc_soa.14 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_mobility_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_mobility_p0_1 has_completed_focus = SOA_wc_e1_mobility_p1_1 has_completed_focus = SOA_wc_e1_mobility_p2_1 } NOT = { has_country_flag = SOA_wc_e1_mobility_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_mobility_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_mobility_choice_0 has_country_flag = SOA_wc_e1_mobility_choice_1 has_country_flag = SOA_wc_e1_mobility_choice_2 } OR = { has_completed_focus = SOA_wc_e1_mobility_p0_1 has_completed_focus = SOA_wc_e1_mobility_p1_1 has_completed_focus = SOA_wc_e1_mobility_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_mobility_running } NOT = { has_country_flag = SOA_wc_e1_mobility_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_mobility_running
+					set_country_flag = { flag = SOA_wc_e1_mobility_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_mobility_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_mobility_choice_0 has_country_flag = SOA_wc_e1_mobility_choice_1 has_country_flag = SOA_wc_e1_mobility_choice_2 } OR = { has_completed_focus = SOA_wc_e1_mobility_p0_1 has_completed_focus = SOA_wc_e1_mobility_p1_1 has_completed_focus = SOA_wc_e1_mobility_p2_1 } has_country_flag = SOA_wc_e1_mobility_running NOT = { has_country_flag = SOA_wc_e1_mobility_maturing } NOT = { has_country_flag = SOA_wc_e1_mobility_done }
+			}
+			set_country_flag = SOA_wc_e1_mobility_done
+			clr_country_flag = SOA_wc_e1_mobility_running
+			clr_country_flag = SOA_wc_e1_mobility_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_mobility_running
+			}
+			clr_country_flag = SOA_wc_e1_mobility_running
+			set_country_flag = SOA_wc_e1_mobility_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_mobility_running
+			set_country_flag = SOA_wc_e1_mobility_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_mobility_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_mobility_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_mobility_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_mobility_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_mobility_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_mobility_choice_0
+						}
+						remove_ideas = SOA_wc_land_0
+						remove_ideas = SOA_wc_land_1
+						remove_ideas = SOA_wc_land_2
+						add_timed_idea = { idea = SOA_wc_land_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_mobility_choice_1
+						}
+						remove_ideas = SOA_wc_land_0
+						remove_ideas = SOA_wc_land_1
+						remove_ideas = SOA_wc_land_2
+						add_timed_idea = { idea = SOA_wc_land_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_mobility_choice_2
+						}
+						remove_ideas = SOA_wc_land_0
+						remove_ideas = SOA_wc_land_1
+						remove_ideas = SOA_wc_land_2
+						add_timed_idea = { idea = SOA_wc_land_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_command_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_command_opened NOT = { has_country_flag = SOA_wc_e1_command_choice_0 } NOT = { has_country_flag = SOA_wc_e1_command_choice_1 } NOT = { has_country_flag = SOA_wc_e1_command_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_command_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_command_choice_0 } NOT = { has_country_flag = SOA_wc_e1_command_choice_1 } NOT = { has_country_flag = SOA_wc_e1_command_choice_2 } NOT = { has_country_flag = SOA_wc_e1_command_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_command_pending days = 60 }
+				country_event = { id = ac_wc_soa.15 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_command_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_command_p0_1 has_completed_focus = SOA_wc_e1_command_p1_1 has_completed_focus = SOA_wc_e1_command_p2_1 } NOT = { has_country_flag = SOA_wc_e1_command_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_command_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_command_choice_0 has_country_flag = SOA_wc_e1_command_choice_1 has_country_flag = SOA_wc_e1_command_choice_2 } OR = { has_completed_focus = SOA_wc_e1_command_p0_1 has_completed_focus = SOA_wc_e1_command_p1_1 has_completed_focus = SOA_wc_e1_command_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_command_running } NOT = { has_country_flag = SOA_wc_e1_command_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_command_running
+					set_country_flag = { flag = SOA_wc_e1_command_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_command_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_command_choice_0 has_country_flag = SOA_wc_e1_command_choice_1 has_country_flag = SOA_wc_e1_command_choice_2 } OR = { has_completed_focus = SOA_wc_e1_command_p0_1 has_completed_focus = SOA_wc_e1_command_p1_1 has_completed_focus = SOA_wc_e1_command_p2_1 } has_country_flag = SOA_wc_e1_command_running NOT = { has_country_flag = SOA_wc_e1_command_maturing } NOT = { has_country_flag = SOA_wc_e1_command_done }
+			}
+			set_country_flag = SOA_wc_e1_command_done
+			clr_country_flag = SOA_wc_e1_command_running
+			clr_country_flag = SOA_wc_e1_command_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_command_running
+			}
+			clr_country_flag = SOA_wc_e1_command_running
+			set_country_flag = SOA_wc_e1_command_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_command_running
+			set_country_flag = SOA_wc_e1_command_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_command_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_command_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_command_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_command_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_command_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_command_choice_0
+						}
+						remove_ideas = SOA_wc_land_0
+						remove_ideas = SOA_wc_land_1
+						remove_ideas = SOA_wc_land_2
+						add_timed_idea = { idea = SOA_wc_land_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_command_choice_1
+						}
+						remove_ideas = SOA_wc_land_0
+						remove_ideas = SOA_wc_land_1
+						remove_ideas = SOA_wc_land_2
+						add_timed_idea = { idea = SOA_wc_land_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_command_choice_2
+						}
+						remove_ideas = SOA_wc_land_0
+						remove_ideas = SOA_wc_land_1
+						remove_ideas = SOA_wc_land_2
+						add_timed_idea = { idea = SOA_wc_land_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_convoys_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_convoys_opened NOT = { has_country_flag = SOA_wc_e1_convoys_choice_0 } NOT = { has_country_flag = SOA_wc_e1_convoys_choice_1 } NOT = { has_country_flag = SOA_wc_e1_convoys_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_convoys_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_convoys_choice_0 } NOT = { has_country_flag = SOA_wc_e1_convoys_choice_1 } NOT = { has_country_flag = SOA_wc_e1_convoys_choice_2 } NOT = { has_country_flag = SOA_wc_e1_convoys_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_convoys_pending days = 60 }
+				country_event = { id = ac_wc_soa.16 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_convoys_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_convoys_p0_1 has_completed_focus = SOA_wc_e1_convoys_p1_1 has_completed_focus = SOA_wc_e1_convoys_p2_1 } NOT = { has_country_flag = SOA_wc_e1_convoys_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_convoys_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_convoys_choice_0 has_country_flag = SOA_wc_e1_convoys_choice_1 has_country_flag = SOA_wc_e1_convoys_choice_2 } OR = { has_completed_focus = SOA_wc_e1_convoys_p0_1 has_completed_focus = SOA_wc_e1_convoys_p1_1 has_completed_focus = SOA_wc_e1_convoys_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_convoys_running } NOT = { has_country_flag = SOA_wc_e1_convoys_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_convoys_running
+					set_country_flag = { flag = SOA_wc_e1_convoys_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_convoys_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_convoys_choice_0 has_country_flag = SOA_wc_e1_convoys_choice_1 has_country_flag = SOA_wc_e1_convoys_choice_2 } OR = { has_completed_focus = SOA_wc_e1_convoys_p0_1 has_completed_focus = SOA_wc_e1_convoys_p1_1 has_completed_focus = SOA_wc_e1_convoys_p2_1 } has_country_flag = SOA_wc_e1_convoys_running NOT = { has_country_flag = SOA_wc_e1_convoys_maturing } NOT = { has_country_flag = SOA_wc_e1_convoys_done }
+			}
+			set_country_flag = SOA_wc_e1_convoys_done
+			clr_country_flag = SOA_wc_e1_convoys_running
+			clr_country_flag = SOA_wc_e1_convoys_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_convoys_running
+			}
+			clr_country_flag = SOA_wc_e1_convoys_running
+			set_country_flag = SOA_wc_e1_convoys_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_convoys_running
+			set_country_flag = SOA_wc_e1_convoys_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_convoys_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_convoys_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_convoys_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_convoys_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_convoys_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_convoys_choice_0
+						}
+						remove_ideas = SOA_wc_naval_0
+						remove_ideas = SOA_wc_naval_1
+						remove_ideas = SOA_wc_naval_2
+						add_timed_idea = { idea = SOA_wc_naval_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_convoys_choice_1
+						}
+						remove_ideas = SOA_wc_naval_0
+						remove_ideas = SOA_wc_naval_1
+						remove_ideas = SOA_wc_naval_2
+						add_timed_idea = { idea = SOA_wc_naval_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_convoys_choice_2
+						}
+						remove_ideas = SOA_wc_naval_0
+						remove_ideas = SOA_wc_naval_1
+						remove_ideas = SOA_wc_naval_2
+						add_timed_idea = { idea = SOA_wc_naval_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_coast_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_coast_opened NOT = { has_country_flag = SOA_wc_e1_coast_choice_0 } NOT = { has_country_flag = SOA_wc_e1_coast_choice_1 } NOT = { has_country_flag = SOA_wc_e1_coast_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_coast_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_coast_choice_0 } NOT = { has_country_flag = SOA_wc_e1_coast_choice_1 } NOT = { has_country_flag = SOA_wc_e1_coast_choice_2 } NOT = { has_country_flag = SOA_wc_e1_coast_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_coast_pending days = 60 }
+				country_event = { id = ac_wc_soa.17 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_coast_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_coast_p0_1 has_completed_focus = SOA_wc_e1_coast_p1_1 has_completed_focus = SOA_wc_e1_coast_p2_1 } NOT = { has_country_flag = SOA_wc_e1_coast_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_coast_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_coast_choice_0 has_country_flag = SOA_wc_e1_coast_choice_1 has_country_flag = SOA_wc_e1_coast_choice_2 } OR = { has_completed_focus = SOA_wc_e1_coast_p0_1 has_completed_focus = SOA_wc_e1_coast_p1_1 has_completed_focus = SOA_wc_e1_coast_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_coast_running } NOT = { has_country_flag = SOA_wc_e1_coast_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_coast_running
+					set_country_flag = { flag = SOA_wc_e1_coast_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_coast_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_coast_choice_0 has_country_flag = SOA_wc_e1_coast_choice_1 has_country_flag = SOA_wc_e1_coast_choice_2 } OR = { has_completed_focus = SOA_wc_e1_coast_p0_1 has_completed_focus = SOA_wc_e1_coast_p1_1 has_completed_focus = SOA_wc_e1_coast_p2_1 } has_country_flag = SOA_wc_e1_coast_running NOT = { has_country_flag = SOA_wc_e1_coast_maturing } NOT = { has_country_flag = SOA_wc_e1_coast_done }
+			}
+			set_country_flag = SOA_wc_e1_coast_done
+			clr_country_flag = SOA_wc_e1_coast_running
+			clr_country_flag = SOA_wc_e1_coast_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_coast_running
+			}
+			clr_country_flag = SOA_wc_e1_coast_running
+			set_country_flag = SOA_wc_e1_coast_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_coast_running
+			set_country_flag = SOA_wc_e1_coast_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_coast_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_coast_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_coast_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_coast_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_coast_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_coast_choice_0
+						}
+						remove_ideas = SOA_wc_naval_0
+						remove_ideas = SOA_wc_naval_1
+						remove_ideas = SOA_wc_naval_2
+						add_timed_idea = { idea = SOA_wc_naval_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_coast_choice_1
+						}
+						remove_ideas = SOA_wc_naval_0
+						remove_ideas = SOA_wc_naval_1
+						remove_ideas = SOA_wc_naval_2
+						add_timed_idea = { idea = SOA_wc_naval_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_coast_choice_2
+						}
+						remove_ideas = SOA_wc_naval_0
+						remove_ideas = SOA_wc_naval_1
+						remove_ideas = SOA_wc_naval_2
+						add_timed_idea = { idea = SOA_wc_naval_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_overseas_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_overseas_opened NOT = { has_country_flag = SOA_wc_e1_overseas_choice_0 } NOT = { has_country_flag = SOA_wc_e1_overseas_choice_1 } NOT = { has_country_flag = SOA_wc_e1_overseas_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_overseas_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_overseas_choice_0 } NOT = { has_country_flag = SOA_wc_e1_overseas_choice_1 } NOT = { has_country_flag = SOA_wc_e1_overseas_choice_2 } NOT = { has_country_flag = SOA_wc_e1_overseas_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_overseas_pending days = 60 }
+				country_event = { id = ac_wc_soa.18 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_overseas_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_overseas_p0_1 has_completed_focus = SOA_wc_e1_overseas_p1_1 has_completed_focus = SOA_wc_e1_overseas_p2_1 } NOT = { has_country_flag = SOA_wc_e1_overseas_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_overseas_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_overseas_choice_0 has_country_flag = SOA_wc_e1_overseas_choice_1 has_country_flag = SOA_wc_e1_overseas_choice_2 } OR = { has_completed_focus = SOA_wc_e1_overseas_p0_1 has_completed_focus = SOA_wc_e1_overseas_p1_1 has_completed_focus = SOA_wc_e1_overseas_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_overseas_running } NOT = { has_country_flag = SOA_wc_e1_overseas_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_overseas_running
+					set_country_flag = { flag = SOA_wc_e1_overseas_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_overseas_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_overseas_choice_0 has_country_flag = SOA_wc_e1_overseas_choice_1 has_country_flag = SOA_wc_e1_overseas_choice_2 } OR = { has_completed_focus = SOA_wc_e1_overseas_p0_1 has_completed_focus = SOA_wc_e1_overseas_p1_1 has_completed_focus = SOA_wc_e1_overseas_p2_1 } has_country_flag = SOA_wc_e1_overseas_running NOT = { has_country_flag = SOA_wc_e1_overseas_maturing } NOT = { has_country_flag = SOA_wc_e1_overseas_done }
+			}
+			set_country_flag = SOA_wc_e1_overseas_done
+			clr_country_flag = SOA_wc_e1_overseas_running
+			clr_country_flag = SOA_wc_e1_overseas_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_overseas_running
+			}
+			clr_country_flag = SOA_wc_e1_overseas_running
+			set_country_flag = SOA_wc_e1_overseas_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_overseas_running
+			set_country_flag = SOA_wc_e1_overseas_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_overseas_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_overseas_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_overseas_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_overseas_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_overseas_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_overseas_choice_0
+						}
+						remove_ideas = SOA_wc_naval_0
+						remove_ideas = SOA_wc_naval_1
+						remove_ideas = SOA_wc_naval_2
+						add_timed_idea = { idea = SOA_wc_naval_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_overseas_choice_1
+						}
+						remove_ideas = SOA_wc_naval_0
+						remove_ideas = SOA_wc_naval_1
+						remove_ideas = SOA_wc_naval_2
+						add_timed_idea = { idea = SOA_wc_naval_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_overseas_choice_2
+						}
+						remove_ideas = SOA_wc_naval_0
+						remove_ideas = SOA_wc_naval_1
+						remove_ideas = SOA_wc_naval_2
+						add_timed_idea = { idea = SOA_wc_naval_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_liaisons_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_liaisons_opened NOT = { has_country_flag = SOA_wc_e1_liaisons_choice_0 } NOT = { has_country_flag = SOA_wc_e1_liaisons_choice_1 } NOT = { has_country_flag = SOA_wc_e1_liaisons_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_liaisons_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_choice_0 } NOT = { has_country_flag = SOA_wc_e1_liaisons_choice_1 } NOT = { has_country_flag = SOA_wc_e1_liaisons_choice_2 } NOT = { has_country_flag = SOA_wc_e1_liaisons_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_liaisons_pending days = 60 }
+				country_event = { id = ac_wc_soa.19 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_liaisons_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_liaisons_p0_1 has_completed_focus = SOA_wc_e1_liaisons_p1_1 has_completed_focus = SOA_wc_e1_liaisons_p2_1 } NOT = { has_country_flag = SOA_wc_e1_liaisons_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_liaisons_choice_0 has_country_flag = SOA_wc_e1_liaisons_choice_1 has_country_flag = SOA_wc_e1_liaisons_choice_2 } OR = { has_completed_focus = SOA_wc_e1_liaisons_p0_1 has_completed_focus = SOA_wc_e1_liaisons_p1_1 has_completed_focus = SOA_wc_e1_liaisons_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_running } NOT = { has_country_flag = SOA_wc_e1_liaisons_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_liaisons_running
+					set_country_flag = { flag = SOA_wc_e1_liaisons_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_liaisons_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_liaisons_choice_0 has_country_flag = SOA_wc_e1_liaisons_choice_1 has_country_flag = SOA_wc_e1_liaisons_choice_2 } OR = { has_completed_focus = SOA_wc_e1_liaisons_p0_1 has_completed_focus = SOA_wc_e1_liaisons_p1_1 has_completed_focus = SOA_wc_e1_liaisons_p2_1 } has_country_flag = SOA_wc_e1_liaisons_running NOT = { has_country_flag = SOA_wc_e1_liaisons_maturing } NOT = { has_country_flag = SOA_wc_e1_liaisons_done }
+			}
+			set_country_flag = SOA_wc_e1_liaisons_done
+			clr_country_flag = SOA_wc_e1_liaisons_running
+			clr_country_flag = SOA_wc_e1_liaisons_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_liaisons_running
+			}
+			clr_country_flag = SOA_wc_e1_liaisons_running
+			set_country_flag = SOA_wc_e1_liaisons_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_liaisons_running
+			set_country_flag = SOA_wc_e1_liaisons_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_liaisons_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_liaisons_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_liaisons_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_liaisons_choice_0
+						}
+						remove_ideas = SOA_wc_intelligence_0
+						remove_ideas = SOA_wc_intelligence_1
+						remove_ideas = SOA_wc_intelligence_2
+						add_timed_idea = { idea = SOA_wc_intelligence_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_liaisons_choice_1
+						}
+						remove_ideas = SOA_wc_intelligence_0
+						remove_ideas = SOA_wc_intelligence_1
+						remove_ideas = SOA_wc_intelligence_2
+						add_timed_idea = { idea = SOA_wc_intelligence_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_liaisons_choice_2
+						}
+						remove_ideas = SOA_wc_intelligence_0
+						remove_ideas = SOA_wc_intelligence_1
+						remove_ideas = SOA_wc_intelligence_2
+						add_timed_idea = { idea = SOA_wc_intelligence_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_signals_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_signals_opened NOT = { has_country_flag = SOA_wc_e1_signals_choice_0 } NOT = { has_country_flag = SOA_wc_e1_signals_choice_1 } NOT = { has_country_flag = SOA_wc_e1_signals_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_signals_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_signals_choice_0 } NOT = { has_country_flag = SOA_wc_e1_signals_choice_1 } NOT = { has_country_flag = SOA_wc_e1_signals_choice_2 } NOT = { has_country_flag = SOA_wc_e1_signals_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_signals_pending days = 60 }
+				country_event = { id = ac_wc_soa.20 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_signals_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_signals_p0_1 has_completed_focus = SOA_wc_e1_signals_p1_1 has_completed_focus = SOA_wc_e1_signals_p2_1 } NOT = { has_country_flag = SOA_wc_e1_signals_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_signals_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_signals_choice_0 has_country_flag = SOA_wc_e1_signals_choice_1 has_country_flag = SOA_wc_e1_signals_choice_2 } OR = { has_completed_focus = SOA_wc_e1_signals_p0_1 has_completed_focus = SOA_wc_e1_signals_p1_1 has_completed_focus = SOA_wc_e1_signals_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_signals_running } NOT = { has_country_flag = SOA_wc_e1_signals_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_signals_running
+					set_country_flag = { flag = SOA_wc_e1_signals_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_signals_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_signals_choice_0 has_country_flag = SOA_wc_e1_signals_choice_1 has_country_flag = SOA_wc_e1_signals_choice_2 } OR = { has_completed_focus = SOA_wc_e1_signals_p0_1 has_completed_focus = SOA_wc_e1_signals_p1_1 has_completed_focus = SOA_wc_e1_signals_p2_1 } has_country_flag = SOA_wc_e1_signals_running NOT = { has_country_flag = SOA_wc_e1_signals_maturing } NOT = { has_country_flag = SOA_wc_e1_signals_done }
+			}
+			set_country_flag = SOA_wc_e1_signals_done
+			clr_country_flag = SOA_wc_e1_signals_running
+			clr_country_flag = SOA_wc_e1_signals_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_signals_running
+			}
+			clr_country_flag = SOA_wc_e1_signals_running
+			set_country_flag = SOA_wc_e1_signals_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_signals_running
+			set_country_flag = SOA_wc_e1_signals_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_signals_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_signals_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_signals_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_signals_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_signals_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_signals_choice_0
+						}
+						remove_ideas = SOA_wc_intelligence_0
+						remove_ideas = SOA_wc_intelligence_1
+						remove_ideas = SOA_wc_intelligence_2
+						add_timed_idea = { idea = SOA_wc_intelligence_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_signals_choice_1
+						}
+						remove_ideas = SOA_wc_intelligence_0
+						remove_ideas = SOA_wc_intelligence_1
+						remove_ideas = SOA_wc_intelligence_2
+						add_timed_idea = { idea = SOA_wc_intelligence_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_signals_choice_2
+						}
+						remove_ideas = SOA_wc_intelligence_0
+						remove_ideas = SOA_wc_intelligence_1
+						remove_ideas = SOA_wc_intelligence_2
+						add_timed_idea = { idea = SOA_wc_intelligence_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_supplierchecks_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_supplierchecks_opened NOT = { has_country_flag = SOA_wc_e1_supplierchecks_choice_0 } NOT = { has_country_flag = SOA_wc_e1_supplierchecks_choice_1 } NOT = { has_country_flag = SOA_wc_e1_supplierchecks_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_supplierchecks_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_choice_0 } NOT = { has_country_flag = SOA_wc_e1_supplierchecks_choice_1 } NOT = { has_country_flag = SOA_wc_e1_supplierchecks_choice_2 } NOT = { has_country_flag = SOA_wc_e1_supplierchecks_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_supplierchecks_pending days = 60 }
+				country_event = { id = ac_wc_soa.21 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_supplierchecks_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_supplierchecks_p0_1 has_completed_focus = SOA_wc_e1_supplierchecks_p1_1 has_completed_focus = SOA_wc_e1_supplierchecks_p2_1 } NOT = { has_country_flag = SOA_wc_e1_supplierchecks_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_supplierchecks_choice_0 has_country_flag = SOA_wc_e1_supplierchecks_choice_1 has_country_flag = SOA_wc_e1_supplierchecks_choice_2 } OR = { has_completed_focus = SOA_wc_e1_supplierchecks_p0_1 has_completed_focus = SOA_wc_e1_supplierchecks_p1_1 has_completed_focus = SOA_wc_e1_supplierchecks_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_running } NOT = { has_country_flag = SOA_wc_e1_supplierchecks_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_supplierchecks_running
+					set_country_flag = { flag = SOA_wc_e1_supplierchecks_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_supplierchecks_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_supplierchecks_choice_0 has_country_flag = SOA_wc_e1_supplierchecks_choice_1 has_country_flag = SOA_wc_e1_supplierchecks_choice_2 } OR = { has_completed_focus = SOA_wc_e1_supplierchecks_p0_1 has_completed_focus = SOA_wc_e1_supplierchecks_p1_1 has_completed_focus = SOA_wc_e1_supplierchecks_p2_1 } has_country_flag = SOA_wc_e1_supplierchecks_running NOT = { has_country_flag = SOA_wc_e1_supplierchecks_maturing } NOT = { has_country_flag = SOA_wc_e1_supplierchecks_done }
+			}
+			set_country_flag = SOA_wc_e1_supplierchecks_done
+			clr_country_flag = SOA_wc_e1_supplierchecks_running
+			clr_country_flag = SOA_wc_e1_supplierchecks_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_supplierchecks_running
+			}
+			clr_country_flag = SOA_wc_e1_supplierchecks_running
+			set_country_flag = SOA_wc_e1_supplierchecks_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_supplierchecks_running
+			set_country_flag = SOA_wc_e1_supplierchecks_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_supplierchecks_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_supplierchecks_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_supplierchecks_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_supplierchecks_choice_0
+						}
+						remove_ideas = SOA_wc_intelligence_0
+						remove_ideas = SOA_wc_intelligence_1
+						remove_ideas = SOA_wc_intelligence_2
+						add_timed_idea = { idea = SOA_wc_intelligence_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_supplierchecks_choice_1
+						}
+						remove_ideas = SOA_wc_intelligence_0
+						remove_ideas = SOA_wc_intelligence_1
+						remove_ideas = SOA_wc_intelligence_2
+						add_timed_idea = { idea = SOA_wc_intelligence_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_supplierchecks_choice_2
+						}
+						remove_ideas = SOA_wc_intelligence_0
+						remove_ideas = SOA_wc_intelligence_1
+						remove_ideas = SOA_wc_intelligence_2
+						add_timed_idea = { idea = SOA_wc_intelligence_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_central_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_central_opened NOT = { has_country_flag = SOA_wc_e1_central_choice_0 } NOT = { has_country_flag = SOA_wc_e1_central_choice_1 } NOT = { has_country_flag = SOA_wc_e1_central_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_central_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_central_choice_0 } NOT = { has_country_flag = SOA_wc_e1_central_choice_1 } NOT = { has_country_flag = SOA_wc_e1_central_choice_2 } NOT = { has_country_flag = SOA_wc_e1_central_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_central_pending days = 60 }
+				country_event = { id = ac_wc_soa.22 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_central_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_central_p0_1 has_completed_focus = SOA_wc_e1_central_p1_1 has_completed_focus = SOA_wc_e1_central_p2_1 } NOT = { has_country_flag = SOA_wc_e1_central_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_central_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_central_choice_0 has_country_flag = SOA_wc_e1_central_choice_1 has_country_flag = SOA_wc_e1_central_choice_2 } OR = { has_completed_focus = SOA_wc_e1_central_p0_1 has_completed_focus = SOA_wc_e1_central_p1_1 has_completed_focus = SOA_wc_e1_central_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_central_running } NOT = { has_country_flag = SOA_wc_e1_central_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_central_running
+					set_country_flag = { flag = SOA_wc_e1_central_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_central_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_central_choice_0 has_country_flag = SOA_wc_e1_central_choice_1 has_country_flag = SOA_wc_e1_central_choice_2 } OR = { has_completed_focus = SOA_wc_e1_central_p0_1 has_completed_focus = SOA_wc_e1_central_p1_1 has_completed_focus = SOA_wc_e1_central_p2_1 } has_country_flag = SOA_wc_e1_central_running NOT = { has_country_flag = SOA_wc_e1_central_maturing } NOT = { has_country_flag = SOA_wc_e1_central_done }
+			}
+			set_country_flag = SOA_wc_e1_central_done
+			clr_country_flag = SOA_wc_e1_central_running
+			clr_country_flag = SOA_wc_e1_central_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_central_running
+			}
+			clr_country_flag = SOA_wc_e1_central_running
+			set_country_flag = SOA_wc_e1_central_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_central_running
+			set_country_flag = SOA_wc_e1_central_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_central_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_central_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_central_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_central_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_central_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_central_choice_0
+						}
+						remove_ideas = SOA_wc_diplomacy_0
+						remove_ideas = SOA_wc_diplomacy_1
+						remove_ideas = SOA_wc_diplomacy_2
+						add_timed_idea = { idea = SOA_wc_diplomacy_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_central_choice_1
+						}
+						remove_ideas = SOA_wc_diplomacy_0
+						remove_ideas = SOA_wc_diplomacy_1
+						remove_ideas = SOA_wc_diplomacy_2
+						add_timed_idea = { idea = SOA_wc_diplomacy_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_central_choice_2
+						}
+						remove_ideas = SOA_wc_diplomacy_0
+						remove_ideas = SOA_wc_diplomacy_1
+						remove_ideas = SOA_wc_diplomacy_2
+						add_timed_idea = { idea = SOA_wc_diplomacy_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_fcu_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fcu_opened NOT = { has_country_flag = SOA_wc_e1_fcu_choice_0 } NOT = { has_country_flag = SOA_wc_e1_fcu_choice_1 } NOT = { has_country_flag = SOA_wc_e1_fcu_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_fcu_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fcu_choice_0 } NOT = { has_country_flag = SOA_wc_e1_fcu_choice_1 } NOT = { has_country_flag = SOA_wc_e1_fcu_choice_2 } NOT = { has_country_flag = SOA_wc_e1_fcu_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_fcu_pending days = 60 }
+				country_event = { id = ac_wc_soa.23 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_fcu_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_fcu_p0_1 has_completed_focus = SOA_wc_e1_fcu_p1_1 has_completed_focus = SOA_wc_e1_fcu_p2_1 } NOT = { has_country_flag = SOA_wc_e1_fcu_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_fcu_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_fcu_choice_0 has_country_flag = SOA_wc_e1_fcu_choice_1 has_country_flag = SOA_wc_e1_fcu_choice_2 } OR = { has_completed_focus = SOA_wc_e1_fcu_p0_1 has_completed_focus = SOA_wc_e1_fcu_p1_1 has_completed_focus = SOA_wc_e1_fcu_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_fcu_running } NOT = { has_country_flag = SOA_wc_e1_fcu_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_fcu_running
+					set_country_flag = { flag = SOA_wc_e1_fcu_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_fcu_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_fcu_choice_0 has_country_flag = SOA_wc_e1_fcu_choice_1 has_country_flag = SOA_wc_e1_fcu_choice_2 } OR = { has_completed_focus = SOA_wc_e1_fcu_p0_1 has_completed_focus = SOA_wc_e1_fcu_p1_1 has_completed_focus = SOA_wc_e1_fcu_p2_1 } has_country_flag = SOA_wc_e1_fcu_running NOT = { has_country_flag = SOA_wc_e1_fcu_maturing } NOT = { has_country_flag = SOA_wc_e1_fcu_done }
+			}
+			set_country_flag = SOA_wc_e1_fcu_done
+			clr_country_flag = SOA_wc_e1_fcu_running
+			clr_country_flag = SOA_wc_e1_fcu_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_fcu_running
+			}
+			clr_country_flag = SOA_wc_e1_fcu_running
+			set_country_flag = SOA_wc_e1_fcu_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_fcu_running
+			set_country_flag = SOA_wc_e1_fcu_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_fcu_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fcu_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_fcu_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_fcu_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_fcu_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_fcu_choice_0
+						}
+						remove_ideas = SOA_wc_diplomacy_0
+						remove_ideas = SOA_wc_diplomacy_1
+						remove_ideas = SOA_wc_diplomacy_2
+						add_timed_idea = { idea = SOA_wc_diplomacy_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_fcu_choice_1
+						}
+						remove_ideas = SOA_wc_diplomacy_0
+						remove_ideas = SOA_wc_diplomacy_1
+						remove_ideas = SOA_wc_diplomacy_2
+						add_timed_idea = { idea = SOA_wc_diplomacy_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_fcu_choice_2
+						}
+						remove_ideas = SOA_wc_diplomacy_0
+						remove_ideas = SOA_wc_diplomacy_1
+						remove_ideas = SOA_wc_diplomacy_2
+						add_timed_idea = { idea = SOA_wc_diplomacy_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_relief_reopen = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_relief_opened NOT = { has_country_flag = SOA_wc_e1_relief_choice_0 } NOT = { has_country_flag = SOA_wc_e1_relief_choice_1 } NOT = { has_country_flag = SOA_wc_e1_relief_choice_2 }
+		}
+		available = {
+			NOT = { has_country_flag = SOA_wc_e1_relief_pending }
+		}
+		cost = 0
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_relief_choice_0 } NOT = { has_country_flag = SOA_wc_e1_relief_choice_1 } NOT = { has_country_flag = SOA_wc_e1_relief_choice_2 } NOT = { has_country_flag = SOA_wc_e1_relief_pending }
+				}
+				set_country_flag = { flag = SOA_wc_e1_relief_pending days = 60 }
+				country_event = { id = ac_wc_soa.24 days = 1 }
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_relief_operate = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_relief_p0_1 has_completed_focus = SOA_wc_e1_relief_p1_1 has_completed_focus = SOA_wc_e1_relief_p2_1 } NOT = { has_country_flag = SOA_wc_e1_relief_done }
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_relief_running }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 30
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_relief_choice_0 has_country_flag = SOA_wc_e1_relief_choice_1 has_country_flag = SOA_wc_e1_relief_choice_2 } OR = { has_completed_focus = SOA_wc_e1_relief_p0_1 has_completed_focus = SOA_wc_e1_relief_p1_1 has_completed_focus = SOA_wc_e1_relief_p2_1 } ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_relief_running } NOT = { has_country_flag = SOA_wc_e1_relief_done }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = SOA_wc_e1_relief_running
+					set_country_flag = { flag = SOA_wc_e1_relief_maturing days = 90 }
+					clr_country_flag = SOA_wc_e1_relief_failed
+				}
+			}
+		}
+		days_remove = 90
+		remove_effect = {
+		if = {
+			limit = {
+				ac_wc_soa_active = yes OR = { has_country_flag = SOA_wc_e1_relief_choice_0 has_country_flag = SOA_wc_e1_relief_choice_1 has_country_flag = SOA_wc_e1_relief_choice_2 } OR = { has_completed_focus = SOA_wc_e1_relief_p0_1 has_completed_focus = SOA_wc_e1_relief_p1_1 has_completed_focus = SOA_wc_e1_relief_p2_1 } has_country_flag = SOA_wc_e1_relief_running NOT = { has_country_flag = SOA_wc_e1_relief_maturing } NOT = { has_country_flag = SOA_wc_e1_relief_done }
+			}
+			set_country_flag = SOA_wc_e1_relief_done
+			clr_country_flag = SOA_wc_e1_relief_running
+			clr_country_flag = SOA_wc_e1_relief_failed
+		}
+		if = {
+			limit = {
+				has_country_flag = SOA_wc_e1_relief_running
+			}
+			clr_country_flag = SOA_wc_e1_relief_running
+			set_country_flag = SOA_wc_e1_relief_failed
+		}
+		}
+		cancel_trigger = {
+			ac_wc_soa_active = no
+		}
+		cancel_effect = {
+			clr_country_flag = SOA_wc_e1_relief_running
+			set_country_flag = SOA_wc_e1_relief_failed
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	SOA_wc_e1_relief_renew = {
+		icon = SOA_wc_civil
+		visible = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_relief_completed
+		}
+		available = {
+			ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_relief_service_term }
+		}
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+		complete_effect = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes ac_wc_can_pay = yes NOT = { has_country_flag = SOA_wc_e1_relief_service_term }
+				}
+				ac_wc_pay = yes
+				if = {
+					limit = {
+						has_country_flag = ac_wc_paid
+					}
+					set_country_flag = { flag = SOA_wc_e1_relief_service_term days = 365 }
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_relief_choice_0
+						}
+						remove_ideas = SOA_wc_diplomacy_0
+						remove_ideas = SOA_wc_diplomacy_1
+						remove_ideas = SOA_wc_diplomacy_2
+						add_timed_idea = { idea = SOA_wc_diplomacy_0 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_relief_choice_1
+						}
+						remove_ideas = SOA_wc_diplomacy_0
+						remove_ideas = SOA_wc_diplomacy_1
+						remove_ideas = SOA_wc_diplomacy_2
+						add_timed_idea = { idea = SOA_wc_diplomacy_1 days = 365 }
+					}
+					if = {
+						limit = {
+							has_country_flag = SOA_wc_e1_relief_choice_2
+						}
+						remove_ideas = SOA_wc_diplomacy_0
+						remove_ideas = SOA_wc_diplomacy_1
+						remove_ideas = SOA_wc_diplomacy_2
+						add_timed_idea = { idea = SOA_wc_diplomacy_2 days = 365 }
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+SOA_wc_contact_cso = {
+	icon = SOA_wc_civil
+	visible = {
+		ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_central_p0_1 has_completed_focus = SOA_wc_e1_central_p1_1 has_completed_focus = SOA_wc_e1_central_p2_1 }
+	}
+	available = {
+		is_subject = no NOT = { has_country_flag = SOA_wc_contact_cso_pending }
+		CSO = {
+			tag = CSO original_tag = CSO is_subject = no has_capitulated = no any_owned_state = { is_controlled_by = PREV } NOT = { has_war_with = SOA } exists = yes
+		}
+	}
+	cost = 25
+	fire_only_once = no
+	days_re_enable = 365
+	complete_effect = {
+		if = {
+			limit = {
+				is_subject = no NOT = { has_country_flag = SOA_wc_contact_cso_pending }
+				CSO = {
+					tag = CSO original_tag = CSO is_subject = no has_capitulated = no any_owned_state = { is_controlled_by = PREV } NOT = { has_war_with = SOA } exists = yes
+				}
+			}
+			clr_country_flag = SOA_wc_contact_cso_answered
+			clr_country_flag = SOA_wc_contact_cso_accepted
+			clr_country_flag = SOA_wc_contact_cso_refused
+			set_country_flag = { flag = SOA_wc_contact_cso_pending days = 45 }
+			CSO = {
+				country_event = { id = ac_wc_relations.1 days = 1 }
+			}
+		}
+	}
+	ai_will_do = {
+		base = 1
+	}
+}
+SOA_wc_contact_fcu = {
+	icon = SOA_wc_civil
+	visible = {
+		ac_wc_soa_active = yes OR = { has_completed_focus = SOA_wc_e1_fcu_p0_1 has_completed_focus = SOA_wc_e1_fcu_p1_1 has_completed_focus = SOA_wc_e1_fcu_p2_1 }
+	}
+	available = {
+		is_subject = no NOT = { has_country_flag = SOA_wc_contact_fcu_pending }
+		FCU = {
+			tag = FCU original_tag = FCU is_subject = no has_capitulated = no any_owned_state = { is_controlled_by = PREV } NOT = { has_war_with = SOA } exists = yes
+		}
+	}
+	cost = 25
+	fire_only_once = no
+	days_re_enable = 365
+	complete_effect = {
+		if = {
+			limit = {
+				is_subject = no NOT = { has_country_flag = SOA_wc_contact_fcu_pending }
+				FCU = {
+					tag = FCU original_tag = FCU is_subject = no has_capitulated = no any_owned_state = { is_controlled_by = PREV } NOT = { has_war_with = SOA } exists = yes
+				}
+			}
+			clr_country_flag = SOA_wc_contact_fcu_answered
+			clr_country_flag = SOA_wc_contact_fcu_accepted
+			clr_country_flag = SOA_wc_contact_fcu_refused
+			set_country_flag = { flag = SOA_wc_contact_fcu_pending days = 45 }
+			FCU = {
+				country_event = { id = ac_wc_relations.2 days = 1 }
+			}
+		}
+	}
+	ai_will_do = {
+		base = 1
+	}
+}
+SOA_wc_adopt = {
+	icon = SOA_wc_civil
+	visible = {
+		ac_wc_soa_active = yes OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation }
+	}
+	available = {
+		ac_pol_previous_tree_idle = yes
+	}
+	cost = 0
+	fire_only_once = no
+	days_re_enable = 30
+	complete_effect = {
+		if = {
+			limit = {
+				ac_pol_previous_tree_idle = yes
+			}
+			load_focus_tree = { tree = ac_wc_soa_tree keep_completed = yes }
+		}
+	}
+	ai_will_do = {
+		base = 1
+	}
+}
+}

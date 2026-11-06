@@ -28,6 +28,9 @@ def check(plan):
     depth = plan.get('approved_expansions', {}).get('usea_depth')
     if depth:
         problems.extend(check_addenda(depth))
+    world = plan.get('approved_expansions', {}).get('world_depth')
+    if world:
+        problems.extend(check_addenda(world, label='World Depth'))
     packages = {row["id"] for row in plan["packages"]}
     require(packages == set(range(6)), "Expected Packages 0 through 5")
     for row in countries:
@@ -77,8 +80,8 @@ def check(plan):
     return problems
 
 
-def check_addenda(depth, root=ROOT):
-    """Usea Depth packages record their own counts in tools/usea_depth/<pkg>/budget.json.
+def check_addenda(depth, root=ROOT, label='Usea Depth'):
+    """Depth packages record their own counts in <root>/<pkg>/budget.json (Usea Depth, World Depth).
 
     Each package's own test compares these numbers with its real definitions; this
     gate only keeps the addenda well formed and inside the approved package list.
@@ -89,11 +92,11 @@ def check_addenda(depth, root=ROOT):
         if not condition:
             problems.append(message)
 
-    require(depth.get('original_1028_budget_unchanged') is True, 'Usea Depth must preserve the original approval baseline')
-    require(depth.get('native_acceptance') is False, 'Usea Depth is not native-accepted')
+    require(depth.get('original_1028_budget_unchanged') is True, label + ' must preserve the original approval baseline')
+    require(depth.get('native_acceptance') is False, label + ' is not native-accepted')
     packages = depth.get('packages', {})
     owners = [tag for row in packages.values() for tag in row['tags']]
-    require(len(owners) == len(set(owners)), 'Usea Depth tags must belong to one package each')
+    require(len(owners) == len(set(owners)), label + ' tags must belong to one package each')
     seen = set()
     for path in sorted(root.glob(depth['addenda_glob'])):
         name = path.parent.name
@@ -104,8 +107,8 @@ def check_addenda(depth, root=ROOT):
             continue
         package = row.get('package')
         require(package == name, f'{path}: package must match its folder')
-        require(package in packages, f'{path}: unknown Usea Depth package {package}')
-        require(package not in seen, f'{path}: duplicate Usea Depth package {package}')
+        require(package in packages, f'{path}: unknown {label} package {package}')
+        require(package not in seen, f'{path}: duplicate {label} package {package}')
         seen.add(package)
         focuses, trees = row.get('focuses', {}), row.get('trees', {})
         allowed = set(packages.get(package, {}).get('tags', []))

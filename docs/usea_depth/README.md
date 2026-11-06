@@ -166,3 +166,30 @@ Everything else is provisional gameplay or mod provenance, and is labelled as su
 - This seams PR merges first.
 - The content PRs then merge one at a time. Each one is brought up to date with `main` just before it merges, after re-running the owner generators and `refresh_records.py`.
 - When another package's block sits at the same insertion point, keep both blocks and re-run the owner generators' `--check`.
+
+## Amendment, 6 November 2026: 150 focuses for every country
+
+You approved a larger goal: every country gets at least 150 focuses, each one
+visible. For Usea Depth this changes the following. The rest of this README
+still applies.
+
+- **Minors:**
+  - Each minor (minors A and B) gets a bespoke tree of at least 120
+    country-specific focuses, plus the 36 shared institutional focuses
+    (`tools/institutions` now emits them as `shared_focus`).
+  - One file per tree: `common/national_focus/ac_ud_minor_<tag>.txt`, tree
+    `ac_ud_<tag>_tree`.
+  - Other outputs are per country (`ac_ud_<tag>.*`), with event namespace
+    `ac_ud_<tag>`.
+  - Specs live at `tools/usea_depth/<pkg>/countries/<TAG>.py`.
+- **Compiler:** `tools/national_depth` serves every package, and
+  `tools/world_depth` holds the non-Usean countries. The writer rules are in
+  `tools/national_depth/BRIEF.md`.
+- **Budgets:** minors A and B rise to about 840 own focuses each, and the
+  partners to at least 350.
+- **Placement bands:** Usean minors stay within columns 0-23. The partner, NPT
+  and war-tree packages grow downward within each tree's current columns
+  rather than in the 28-94 or 44-94 bands, so new content stays visible next
+  to the native content.
+- **Visibility:** `tools/Test-FocusVisibility.py` checks every tree.
+

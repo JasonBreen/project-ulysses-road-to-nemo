@@ -27,5 +27,11 @@ jobs:
         run: python -B build.py --check
       - name: Check focus screen layout
         run: python -B tools/Test-FocusScreenRepairs.py
+      - name: Check the national-depth compiler (golden output, layout, validation, lint)
+        run: python -B tools/national_depth/test_compiler.py
+      - name: Check every bespoke country tree and its budgets
+        run: python -B tools/national_depth/package.py --check
+      - name: Check focus visibility and the 150-focus ratchet
+        run: python -B tools/Test-FocusVisibility.py
       - name: Check release accounting
         run: python -B tools/overhaul/check_release_plan.py

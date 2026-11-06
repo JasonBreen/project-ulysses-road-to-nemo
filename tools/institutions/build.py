@@ -226,10 +226,13 @@ def decisions_and_tree(profiles):
         if row.reward.startswith('ac_pol_adopt_'):body+=block('available','ac_pol_can_adopt = yes')
         body+=block('completion_reward','ac_pol_initialize = yes\n'+guarded('ac_pol_active = yes NOT = { has_country_flag = ac_pol_focus_'+row.suffix+' }',
             'set_country_flag = ac_pol_focus_'+row.suffix+'\n'+row.reward+'\nac_pol_bounds = yes'))
-        focuses.append(block('focus',body))
+        focuses.append(block('shared_focus',body))
     loc('ac_regional_foundation','Regional Foundation Programme')
     loc('ac_regional_foundation_desc','A persistent 36-focus administrative, productive and readiness framework for countries without a dedicated national campaign. National profiles and selected mandates provide context; this shared programme does not pretend to be a bespoke history.')
-    put('common/national_focus/ac_regional_foundation.txt',block('focus_tree','id = ac_regional_foundation\ncountry = { factor = 0 modifier = { add = 5 ac_pol_uses_regional_tree = yes } }\ndefault = no\nreset_on_civilwar = no\ncontinuous_focus_position = { x = 2400 y = 16 }\ninitial_show_position = { focus = ac_reg_register }\n'+'\n'.join(focuses)))
+    # Shared focuses (6 November 2026): the regional tree imports them unchanged, and every
+    # bespoke national tree (tools/national_depth) imports the same 36 institutional focuses.
+    imports=''.join('shared_focus = ac_reg_'+row.suffix+'\n' for row in FOCUSES)
+    put('common/national_focus/ac_regional_foundation.txt',block('focus_tree','id = ac_regional_foundation\ncountry = { factor = 0 modifier = { add = 5 ac_pol_uses_regional_tree = yes } }\ndefault = no\nreset_on_civilwar = no\ncontinuous_focus_position = { x = 2400 y = 16 }\ninitial_show_position = { focus = ac_reg_register }\n'+imports)+'\n'+'\n'.join(focuses))
 
 
 def localization_and_hooks(profiles):

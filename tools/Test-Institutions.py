@@ -55,7 +55,11 @@ class World(anea.World):
         self.effects['ac_macro_change_commitment']=owner['ac_macro_change_commitment']
         self.effects['ac_macro_quote']=[]
         self.events.update({mapping(n)['id']:(kind,n) for kind,_,n in load('events/ac_politics.txt') if kind=='country_event'})
-        self.focuses={mapping(n)['id']:n for kind,_,n in load('common/national_focus/ac_regional_foundation.txt')[0][2] if kind=='focus'}
+        # The 36 regional focuses are shared definitions (6 November 2026), imported by the regional
+        # tree and by every bespoke national tree; the tree itself lists them in order.
+        regional=load('common/national_focus/ac_regional_foundation.txt')
+        self.focuses={mapping(n)['id']:n for kind,_,n in regional if kind=='shared_focus'}
+        assert [v for k,_,v in regional[0][2] if k=='shared_focus']==list(self.focuses)
         self.decisions={ident:n for _,_,category in load('common/decisions/ac_politics.txt') for ident,_,n in category}
 
     def trigger(self,nodes,country):

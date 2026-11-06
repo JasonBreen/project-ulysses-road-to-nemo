@@ -89,6 +89,7 @@ class World:
             elif key in ('OR','AND','NOT'):
                 values=[self.trigger([row],context,temp,root,previous) for row in value]
                 answer=any(values) if key=='OR' else all(values) if key=='AND' else not all(values)
+            elif key=='custom_trigger_tooltip':answer=self.trigger([row for row in value if row[0]!='tooltip'],context,temp,root,previous)
             elif key=='always':answer=value=='yes'
             elif key=='date':
                 b=date(*map(int,value.split('.'))).toordinal()

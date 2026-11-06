@@ -41,7 +41,7 @@ def validate():
     except (ValueError, OSError, KeyError) as error:
         check(False, 'Country history scrolling contract: '+str(error))
     else:
-        check(layout(historical_gui) == (HERE/'layout.sha256').read_text().strip(), 'Original frontend layout or control contract changed outside the country history repair')
+        check(layout(historical_gui) == (HERE/'layout.sha256').read_text().strip(), 'Unmanaged frontend controls changed outside the reviewed responsive repair')
     check(not re.search(r'(?:font|buttonFont)\s*=\s*"Aces\d+_black"',gui), 'Dark briefing panel uses black text')
     check('name = "ac_briefing_map_statistics"' not in gui, 'Unbound legacy statistics layer is still visible')
     check('name = "ac_overhaul_world_overview"' in gui, 'Independent campaign overview is missing')
@@ -89,7 +89,7 @@ def validate():
         check(re.search(pattern,text), 'Bookmark lost its artwork binding: '+record['id'])
     for error in errors:print('FAIL:',error)
     if errors:return 1
-    print(f'Briefing UI: {len(specs)} BGRA textures, {len(sprites)} sprites, 30 bookmark bindings; bounded scrolling country history; all other original geometry and controls preserved.')
+    print(f'Briefing UI: {len(specs)} BGRA textures, {len(sprites)} sprites, 30 bookmark bindings; reviewed responsive selection geometry; unmanaged controls preserved.')
     return 0
 
 

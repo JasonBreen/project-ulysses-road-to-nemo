@@ -128,6 +128,12 @@ def remove_overview(text, required=False):
 
 
 def validate_bounds(text, contract):
+    if 'maxWidth = 520' in text:
+        from tools_responsive_import import responsive
+        errors = responsive.validate(text)
+        if errors:
+            raise ValueError('; '.join(errors))
+        return control_span(text)
     window, controls = country_window(text)
     start, end = control_span(text)
     actual = parse(text[start:end])[0]
@@ -154,6 +160,9 @@ def validate_bounds(text, contract):
 
 def normalize_for_fingerprint(text):
     """Restore only the known repair after validating its complete effective node."""
+    if 'maxWidth = 520' in text:
+        from tools_responsive_import import responsive
+        text = responsive.restore_historical(text)
     contract = json.loads(CONTRACT.read_text())
     start, end = validate_bounds(text, contract)
     text = text[:start] + contract['original_raw'] + text[end:]
@@ -161,6 +170,12 @@ def normalize_for_fingerprint(text):
 
 
 def build(text):
+    if 'maxWidth = 520' in text:
+        from tools_responsive_import import responsive
+        result = responsive.build(text)
+        if responsive.validate(result):
+            raise ValueError('Responsive country-selection contract failed')
+        return result
     contract = json.loads(CONTRACT.read_text())
     country_window(text)
     start, end = control_span(text)
@@ -227,7 +242,7 @@ def main():
             raise SystemExit('Country-selection brief GUI differs from authoring source')
     else:
         TARGET.write_text(result, encoding='utf-8')
-    print('Country-selection briefs: 380×145 scrolling area, y485–630; heading and navigation remain clear.')
+    print('Country-selection briefs: scrolling prose, clear heading/navigation; reviewed responsive layout when installed.')
 
 
 if __name__ == '__main__':

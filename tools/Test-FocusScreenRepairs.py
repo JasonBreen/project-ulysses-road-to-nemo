@@ -177,8 +177,9 @@ class FocusScreen(unittest.TestCase):
             self.assertFalse([pair for pair in actual if pair[0]==tree])
         self.assertEqual((15.,2.),trees['belka_start']['ac_belkan_industrial_mobilization'])
         self.assertEqual((15.,2.),trees['belka_dlp_pre_war']['ac_belkan_industrial_mobilization'])
+        # The postwar root moved 4 columns right on 6 November 2026, so no node sits left of x = 0.
         for suffix,y in (('settlement',3.),('legacy',4.)):
-            self.assertEqual((4.,y),trees['ac_belkan_postwar']['ac_postwar_unclassified_'+suffix])
+            self.assertEqual((8.,y),trees['ac_belkan_postwar']['ac_postwar_unclassified_'+suffix])
         for suffix in ('brief','costs','demobilize','loyalty','commitments','legacy'):
             self.assertEqual(70.,trees['sap_focus']['SAP_pwi_'+suffix][0])
 

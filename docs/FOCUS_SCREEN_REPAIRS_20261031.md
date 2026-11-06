@@ -82,6 +82,43 @@ geometry only; native placement is still to be confirmed (#8).
 uses delivered textures and the actual bitmap-font glyphs. It is a review aid,
 not an engine screenshot or evidence of runtime interaction.
 
+## Every focus visible; the 150-focus floor (6 November 2026)
+
+`tools/Test-FocusVisibility.py` is the definition of done for the programme that
+gives every country at least 150 focuses (the national-depth programme; its
+compiler, `tools/national_depth/`, is the next step).
+It runs in CI after the layout review. For every tree it requires:
+
+- every resolved node at x, y >= 0;
+- no two captions closer than two columns on a row;
+- a localised title and description for every focus outside the base game's generic tree;
+- an icon sprite defined in the mod with an existing texture;
+- no `allow_branch` other than tag-only gates on shared imports and three reviewed
+  Belkan chain gates (`BLK_party_disagreements`, `BLK_nationalism_unleashed`,
+  `BLK_taking_off_the_kid_gloves`);
+- `initial_show_position` naming a focus in its tree.
+
+Size is a ratchet. For 68 countries (61 that own land on 1 January 1991 except
+`PLH`, plus the release tags REC, SBK, AWW, SHI, REL, SER, TER), the test
+evaluates each tree's `country` weights on the start date and counts every tree
+the country can be on, with imports.
+[`baseline.json`](evidence/focus-visibility/baseline.json) records each tree's
+floor. A floor never falls (`--record` refuses), waves raise it, and the target
+is 150 (`--report` prints progress).
+
+**Repairs made with the test:**
+
+| Defect | Repair (mod provenance) |
+| --- | --- |
+| 18 nodes of `ustio_democracy` and 10 of `ustio_non_ali` resolved left of x = 0 | The four absolute Ustio roots in `UST_shared.txt` moved 8 columns right (`UST_start`, `UST_deal`, `UST_army_debate`, `UST_no_step_on_our_land`, whose relative anchor is commented out). Relative coordinates are unchanged, so the repaired `x = -1` pin in `Test-UstioContinuity.py` still holds |
+| 4 nodes of `ac_belkan_postwar` left of x = 0 | `ac_postwar_reconstruction` moved 4 columns right; the unclassified-outcome pins became (8,3) and (8,4) |
+| `BLK_party_disagreements` named an undefined sprite (`...won_elections-convene_the_parliament`) | Points to the defined `GFX_goal_BLK_dlp_won_elections` |
+| 15 inherited AWW focuses had no title or description | `ac_focus_text_repairs_l_english.yml` states what each focus does, read from its script; no history added |
+
+The baseline recorded at this point (`--report`): 68 countries and 35 trees,
+2 of them at 150. That leaves 2,802 focuses to add to existing trees, and 46
+countries still start on the generic or regional tree.
+
 ## Reproduction and validation
 
 ```powershell
@@ -92,6 +129,7 @@ python -B tools/build_peace_we_inherit.py
 python -B tools/usea_expansion/preview_focus_repairs.py
 python -B tools/usea_expansion/preview_focus_repairs.py --check
 python -B tools/Test-FocusScreenRepairs.py
+python -B tools/Test-FocusVisibility.py
 python -B tools/Test-UseaExpansion.py
 ```
 

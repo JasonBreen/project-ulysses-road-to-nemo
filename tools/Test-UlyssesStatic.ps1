@@ -169,6 +169,9 @@ if ($continentalExitCode -ne 0) {
     exit $continentalExitCode
 }
 
+Write-Output 'Expanded AC04/AC5 campaigns: actual-script offline contracts'
+& $pythonHost (Join-Path $PSScriptRoot 'ac_campaigns\test_campaigns.py')
+if ($LASTEXITCODE -ne 0) { Write-Error 'Expanded AC04/AC5 contract checks failed.'; exit $LASTEXITCODE }
 Write-Output 'Usean rebellion: offline contract checks'
 & $pythonHost (Join-Path $PSScriptRoot 'Test-UseanRebellion.py') --mod-root $ModRoot
 if ($LASTEXITCODE -ne 0) {

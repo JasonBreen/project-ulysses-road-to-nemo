@@ -10,6 +10,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 import unittest
 
 from economy_script import parse, fields
@@ -758,6 +759,45 @@ class ContinentalWarTests(unittest.TestCase):
             self.assertIn('"%s"' % mapping(nodes)["picture"], gfx, ident)
         for _, _, body in load("common/ideas/ac_ucw.txt")[0][2][0][2]:
             self.assertIn('"GFX_idea_%s"' % mapping(body)["picture"], gfx)
+
+    def test_owner_effect_check_is_read_only_and_independent_of_artwork(self):
+        scratch_root = (ROOT / "runtime-output").resolve()
+        scratch_root.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="ucw-owner-check-", dir=scratch_root) as scratch:
+            target = Path(scratch).resolve()
+            self.assertTrue(target.is_relative_to(scratch_root))
+            relative = Path("common/scripted_effects/ac_ucw.txt")
+            owner = target / relative
+            owner.parent.mkdir(parents=True)
+            original = (MOD / relative).read_bytes()
+            owner.write_bytes(original)
+            invocation = (
+                "import sys; from pathlib import Path; "
+                "sys.path.insert(0, 'tools'); import build_continental_war as builder; "
+                "builder.MOD = Path(sys.argv[1]); "
+                "sys.argv = ['build_continental_war.py', *sys.argv[2:]]; builder.main()"
+            )
+            command = [sys.executable, "-B", "-c", invocation, str(target)]
+            checked = subprocess.run(command + ["--check", "--check-owner-effects"],
+                                     cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(0, checked.returncode, checked.stdout + checked.stderr)
+            self.assertEqual(original, owner.read_bytes())
+            self.assertEqual([owner], [path for path in target.rglob("*") if path.is_file()])
+
+            changed = original + b"\nac_unreviewed_owner_change = { add_political_power = 100 }\n"
+            owner.write_bytes(changed)
+            rejected = subprocess.run(command + ["--check", "--check-owner-effects"],
+                                      cwd=ROOT, capture_output=True, text=True)
+            self.assertNotEqual(0, rejected.returncode)
+            self.assertIn("Generated content differs: " + relative.as_posix(), rejected.stderr)
+            self.assertEqual(changed, owner.read_bytes())
+
+            write_rejected = subprocess.run(command + ["--check-owner-effects"],
+                                            cwd=ROOT, capture_output=True, text=True)
+            self.assertNotEqual(0, write_rejected.returncode)
+            self.assertIn("--check-owner-effects requires --check", write_rejected.stderr)
+            self.assertEqual(changed, owner.read_bytes())
+            self.assertEqual([owner], [path for path in target.rglob("*") if path.is_file()])
 
     def test_generated_files_match_authoring_source(self):
         subprocess.run([sys.executable, str(ROOT / "tools/build_continental_war.py"), "--check"], check=True)

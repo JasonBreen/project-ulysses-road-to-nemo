@@ -385,9 +385,9 @@ class Package(unittest.TestCase):
         effects = mapping(load("common/scripted_effects/ac_ud_eru.txt"))
         flags = lowering(effects["ac_ud_eru_carry_over"])
         self.assertEqual(set(), lowering(effects["ac_ud_eru_weekly"]))
-        self.assertEqual({"ERU_ud_stonehenge_accepted", "ERU_ud_refugees_received", "ERU_ud_course_constitution"}, flags)
+        self.assertEqual({"ERU_ud_stonehenge_accepted", "ERU_ud_refugees_received", "ERU_ud_first_assembly_elections_done"}, flags)
         for flag in flags:
-            setters = [row for row in C.FOCUSES if "set_country_flag = " + flag in row.reward]
+            setters = [row for row in C.FOCUSES if "set_country_flag = " + flag in row.reward or flag == row.id + "_done"]
             self.assertTrue(setters, flag)
             self.assertEqual([0] * len(setters), [row.ai for row in setters], flag)
             for event in N.EVENTS.values():
@@ -498,12 +498,82 @@ class Package(unittest.TestCase):
             eru = world.countries["ERU"]
             eru.ai = False
             eru.flags["ERU_ud_course_regency"] = None
+            eru.flags["ERU_ud_regency_ordinance_done"] = None
             if returned:
                 eru.flags["ERU_ud_return_the_seals_done"] = None
             world.tick()
             world.drain()
             self.assertTrue(world.flag(eru, expected), expected)
             self.assertEqual(45 if returned else 50, eru.variables["ac_ucw_grievance"])
+
+    def test_unfinished_government_paths_fall_back_to_crown(self):
+        for path in ("constitution", "regency"):
+            for own_weekly_first in (False, True):
+                with self.subTest(path=path, own_weekly_first=own_weekly_first):
+                    world = Sim("1999.12.8", own_weekly_first=own_weekly_first)
+                    eru = world.countries["ERU"]
+                    eru.ai = False
+                    eru.flags["ERU_ud_course_" + path] = None
+                    world.tick()
+                    world.tick()
+                    self.assertTrue(world.flag(eru, "ERU_ud_war_crown"))
+                    self.assertFalse(world.flag(eru, "ERU_ud_war_assembly"))
+                    self.assertFalse(world.flag(eru, "ERU_ud_war_regency"))
+                    self.assertEqual(45, eru.variables["ac_ucw_grievance"])
+                    self.assertEqual([], world.regime_calls)
+
+    def test_battery_umbrella_requires_live_control_and_ends_when_lost(self):
+        ident = "ERU_ud_battery_umbrella_doctrine"
+        spirit = "ERU_ud_battery_umbrella"
+        ideas = mapping(mapping(load("common/ideas/ac_ud_eru.txt"))["ideas"])
+        cancel = mapping(mapping(ideas["country"])[spirit])["cancel"]
+        for state in ("pre_seizure", "not_operational", "live", "lost", "destroyed"):
+            with self.subTest(state=state):
+                world = Sim("2000.1.8")
+                eru = world.countries["ERU"]
+                world.tick()
+                eru.flags["ERU_ucw_air_arm_done"] = None
+                eru.focuses.add("ERU_ud_air_doctrine_board")
+                world.controllers[310] = "ERU"
+                world.globals.update(("ac_ucw_stonehenge_seized", "ac_ucw_stonehenge_operational"))
+                if state == "pre_seizure":
+                    world.globals.remove("ac_ucw_stonehenge_seized")
+                elif state == "not_operational":
+                    world.globals.remove("ac_ucw_stonehenge_operational")
+                elif state == "lost":
+                    world.controllers[310] = "SNS"
+                elif state == "destroyed":
+                    world.execute(world.effects["ac_ucw_destroy_stonehenge"], eru)
+                self.assertEqual(state == "live", world.focus_available(ident, "ERU"))
+                # Direct reward execution also tests conditions changing during completion.
+                world.execute(mapping(world.focuses[ident])["completion_reward"], eru)
+                self.assertEqual(state == "live", spirit in eru.ideas)
+                self.assertEqual(state != "live", world.trigger(cancel, eru))
+                # Old saves or already-completed focuses must lose an invalid bonus.
+                eru.ideas[spirit] = None
+                world.execute(world.own_weekly, eru)
+                self.assertEqual(state == "live", spirit in eru.ideas)
+
+    def test_earned_battery_umbrella_is_removed_on_recapture_or_destruction(self):
+        for loss in ("recapture", "destruction", "inoperative"):
+            with self.subTest(loss=loss):
+                world = Sim("2000.1.8")
+                eru = world.countries["ERU"]
+                world.tick()
+                eru.flags["ERU_ucw_air_arm_done"] = None
+                eru.focuses.add("ERU_ud_air_doctrine_board")
+                world.controllers[310] = "ERU"
+                world.execute(world.effects["ac_ucw_seize_stonehenge"], eru)
+                world.complete("ERU_ud_battery_umbrella_doctrine", "ERU")
+                self.assertIn("ERU_ud_battery_umbrella", eru.ideas)
+                if loss == "recapture":
+                    world.controllers[310] = "SNS"
+                elif loss == "destruction":
+                    world.execute(world.effects["ac_ucw_destroy_stonehenge"], eru)
+                else:
+                    world.globals.remove("ac_ucw_stonehenge_operational")
+                world.execute(world.own_weekly, eru)
+                self.assertNotIn("ERU_ud_battery_umbrella", eru.ideas)
 
     def test_fiscal_prototype_runs_every_guarded_call(self):
         world = Sim("1993.6.1", fiscal=True)

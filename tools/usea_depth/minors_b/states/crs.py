@@ -190,9 +190,15 @@ FOCUSES = [
       parents=("imperator_reserve",), reward=("build:174:radar_station:1",)),
 
     # The political settlement
+    # A later conference must not undo either completed political settlement.
     F("inter_island_conference", "The Strait Conference", 11, 5, ("bridge", "scales"),
       "Both claims are on the table. A conference of delegates from West and East will meet on neutral ground, in the ferry hall, to agree on how the islands will disagree.",
-      parents=("western_claim", "eastern_claim"), reward=("swap:strait_divide:strait_accord",), event="conference"),
+      parents=("western_claim", "eastern_claim"), reward=("raw:if = {\n\tlimit = {\n"
+              "\t\tNOT = { has_completed_focus = CRS_ud_western_executive }\n"
+              "\t\tNOT = { has_completed_focus = CRS_ud_harbour_commons }\n\t}\n"
+              "\tremove_ideas = CRS_ud_strait_divide_spirit\n"
+              "\tadd_ideas = CRS_ud_strait_accord_spirit\n}",),
+      event="conference"),
     F("western_executive", "The Western Executive", 3, 5, ("command", "security"),
       "The West will not wait for a conference. The executive office in the western capital takes authority over both islands and promises order before argument.",
       parents=("western_claim",), excludes=("harbour_commons", "two_island_compact"), cost=10, ai=0,

@@ -86,6 +86,92 @@ def sprites():
     return found
 
 
+class ReviewRegressions(unittest.TestCase):
+    """Small offline models of the generated guards and political idea rewards."""
+
+    @staticmethod
+    def capacity_available(available, capacity):
+        # Other prerequisites are assumed satisfied; inspect the generated AND guard.
+        checks = [body for key, _, body in available if key == "check_variable"]
+        for check in checks:
+            for variable, op, value in check:
+                if variable != "ac_pol_capacity" or op != ">=":
+                    raise AssertionError("Unexpected capacity condition")
+                if capacity < float(value):
+                    return False
+        return True
+
+    def test_every_programme_requires_full_capacity_cost(self):
+        decisions = get(nodes(FILES["decisions"]), "ac_ud_minors_b_programmes")
+        programmes = [(ident, body) for ident, _, body in decisions
+                      if get(get(body, "complete_effect", []), "ac_ud_minors_b_pay_programme") == "yes"]
+        self.assertEqual(sum(len(state.DECISIONS) for state in build.all_states()), len(programmes))
+        self.assertGreater(len(programmes), 0)
+        pay = get(nodes(FILES["effects"]), "ac_ud_minors_b_pay_programme")
+        self.assertEqual("-2", get(get(pay, "set_temp_variable"), "ac_pol_capacity_delta"))
+        for ident, body in programmes:
+            available = get(body, "available")
+            for capacity in (0, 1, 1.99, 2, 3):
+                with self.subTest(decision=ident, capacity=capacity):
+                    self.assertEqual(capacity >= 2, self.capacity_available(available, capacity))
+            # Removing the affordability check recreates the reviewed exploit.
+            broken = [node for node in available if node[0] != "check_variable"]
+            self.assertTrue(self.capacity_available(broken, 0))
+
+    @staticmethod
+    def political_ideas(rewards, order):
+        ideas = {"CRS_ud_strait_divide_spirit"}
+        completed = set()
+
+        def matches(limit):
+            results = []
+            for key, _, value in limit:
+                if key == "NOT":
+                    results.append(not matches(value))
+                elif key == "has_completed_focus":
+                    results.append(value in completed)
+                elif key == "has_idea":
+                    results.append(value in ideas)
+                else:
+                    raise AssertionError("Unexpected idea condition: " + key)
+            return all(results)
+
+        def apply(effect):
+            for key, _, value in effect:
+                if key == "if":
+                    if matches(get(value, "limit")):
+                        apply([node for node in value if node[0] != "limit"])
+                elif key == "add_ideas":
+                    ideas.add(value)
+                elif key == "remove_ideas":
+                    ideas.discard(value)
+                # Regime calls and scheduled narrative events do not change these ideas.
+                elif key != "country_event" and not key.startswith("ac_ud_minors_b_regime_"):
+                    raise AssertionError("Unexpected political effect: " + key)
+
+        for focus in order:
+            apply(rewards[focus])
+            completed.add(focus)
+        return ideas
+
+    def test_conference_does_not_restore_replaced_spirit(self):
+        _, focuses = focus_nodes("CRS")
+        rewards = {get(focus, "id"): get(focus, "completion_reward") for focus in focuses}
+        conference = "CRS_ud_inter_island_conference"
+        accord = "CRS_ud_strait_accord_spirit"
+        self.assertEqual({accord}, self.political_ideas(rewards, (conference,)))
+        for path, spirit in (("western_executive", "western_order"), ("harbour_commons", "harbour_commons")):
+            political = "CRS_ud_" + path
+            expected = {"CRS_ud_" + spirit + "_spirit"}
+            for order in ((conference, political), (political, conference)):
+                with self.subTest(order=order):
+                    self.assertEqual(expected, self.political_ideas(rewards, order))
+            broken = dict(rewards, **{conference: parse("remove_ideas = CRS_ud_strait_divide_spirit add_ideas = " + accord)})
+            self.assertNotEqual(expected, self.political_ideas(broken, (political, conference)))
+        self.assertEqual({"CRS_ud_federal_compact_spirit"},
+                         self.political_ideas(rewards, (conference, "CRS_ud_two_island_compact")))
+
+
 class Package(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

@@ -585,7 +585,7 @@ E(57, "The Order of 2005", [
 ), picture="postwar")
 
 E(58, "The Federal Question Answered", [
-    "The question the cabinet asked in 1991, how the Federation should govern itself in an emergency, has now been answered by events. The Federation has lived through a rebellion, an announcement, a coup, an impact and a war. Whatever government it chose, it has seen that government tested in every way a government can be.",
+    "The question the cabinet asked in 1991, how the Federation should govern itself in an emergency, has now been answered by events. The Federation has lived through a rebellion, an announcement, a coup, an impact and a continental crisis. Whether war followed or was averted, the government it chose has had to answer for its decisions.",
     "Now that government must give an account. Not to history, which will take its time, but to the Assembly and to the voters, who will not. The account must say what the government did, what it promised and what it delivered. It must say what it would do differently. And it must say what it intends to do now that the emergencies are, for the moment, over.",
     "If the presidency and the Assembly held their course, the account is a defence of ordinary government under extraordinary pressure. If a directorate governed, it is an explanation of why emergency rule was needed and whether it has ended. If a unity government governed, it is the open review its own mandate demanded.",
     "The Assembly receives the account in silence and debates it for a week. Then it votes, and the Federation's government is either renewed or replaced by the means the constitution provides.",

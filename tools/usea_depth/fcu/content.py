@@ -1136,9 +1136,9 @@ F("veterans_charter", 89, 16, "The Veterans' Charter",
 F("order_of_2005", 89, 17, "The Order of 2005",
   "The Federation records the settlement it helped to build. The authored chronology of this campaign ends here.",
   R(stab(0.03), pp(40), ev(57)), pre="veterans_charter", ai=30, subj="document peace")
-F("federal_question_answered", 55, 7, "The Federal Question Answered",
-  "The government that led the Federation through Ulysses and the war gives its account to the Assembly and the voters.",
-  R(stab(0.03), pp(30), ev(58)), pre="postwar_elections_pledge|emergency_continuity", gate=WAR_ENDED, ai=30, subj="ballot assembly")
+F("federal_question_answered", 55, 18, "The Federal Question Answered",
+  "The government that led the Federation through Ulysses and the continental crisis gives its account to the Assembly and the voters.",
+  R(stab(0.03), pp(30), ev(58)), pre="postwar_elections_pledge|emergency_continuity|long_peace", gate=WAR_ENDED, ai=30, subj="ballot assembly")
 
 
 # =================================================================== IDEAS

@@ -368,6 +368,130 @@ class CentralUsea(unittest.TestCase):
         self.assertIn("FCU_ud_unity_office", world.characters["FCU"])
         self.assertFalse(world.focus_available("FCU_ud_emergency_threshold", "FCU"))
 
+    def political_world(self, government):
+        """Reach each government through its actual focus effects, then start the UCW calendar."""
+        world = DepthWorld("1996.5.1")
+        world.countries["FCU"].ai = False
+        paths = {
+            "federal": ("hold_course",),
+            "unity": ("unity_talks", "cross_bench_compact", "coalition_arithmetic", "regional_ministers",
+                      "form_unity_government"),
+            "directorate": ("emergency_powers", "emergency_statute", "command_liaison", "civil_military_board",
+                            "emergency_threshold", "proclaim_directorate"),
+        }
+        for step in ("federal_question",) + paths["directorate" if government == "restored" else government]:
+            world.complete("FCU_ud_" + step, "FCU")
+        world.today = ucw.day("1999.12.8")
+        world.tick()
+        world.drain()
+        paths = {
+            "federal": ("presidential_continuity", "federal_war_cabinet"),
+            "unity": ("unity_renewal", "unity_war_cabinet"),
+            "directorate": ("directorate_second_term", "directorate_war_footing"),
+            "restored": ("directorate_second_term", "restore_before_the_charter"),
+        }
+        for step in ("federal_question_returns",) + paths[government]:
+            world.complete("FCU_ud_" + step, "FCU")
+        return world
+
+    def peaceful_closing_world(self, government, choice="accord_guarantees"):
+        """Avert war using the owner's decision, never seed ISAF or any completed prerequisite."""
+        world = self.political_world(government)
+        fcu, eru = world.countries["FCU"], world.countries["ERU"]
+        self.assertFalse(world.focus_available("FCU_ud_federal_question_answered", "FCU"))
+        self.assertFalse(world.focus_available("FCU_ud_war_that_was_not", "FCU"))
+        politics = list(world.politics)
+        eru.ai = False
+        eru.variables["ac_ucw_grievance"] = 20
+        world.today = ucw.day("2002.6.1")
+        world.take("ac_ucw_eru_continental_accord", "ERU")
+        self.assertIn("ac_ucw_war_averted", world.globals)
+        eru.ai = True
+        world.today = ucw.day("2003.7.1")
+        world.weeks(4)
+        world.execute([("ac_ucw_form_isaf", "=", "yes")], fcu)
+        for step in ("war_that_was_not", choice):
+            world.complete("FCU_ud_" + step, "FCU")
+        self.assertFalse(world.focus_available("FCU_ud_federal_question_answered", "FCU"))
+        world.complete("FCU_ud_long_peace", "FCU")
+        self.assertNotIn("ac_ucw_war_started", world.globals)
+        self.assertNotIn("ac_ucw_isaf_formed", world.globals)
+        self.assertEqual(set(), world.wars)
+        self.assertEqual(politics, world.politics, "Peace must not change the selected government")
+        return world
+
+    def test_peaceful_outcome_reaches_political_closing_without_isaf(self):
+        for government in ("federal", "unity", "directorate", "restored"):
+            for choice in ("accord_guarantees", "continental_market"):
+                with self.subTest(government=government, choice=choice):
+                    world = self.peaceful_closing_world(government, choice)
+                    fcu = world.countries["FCU"]
+                    world.complete("FCU_ud_federal_question_answered", "FCU")
+                    self.assertIn("FCU_ud_federal_question_answered_done", fcu.flags)
+                    self.assertEqual(1, [item[2] for item in world.queue].count("ac_ud_fcu.58"))
+                    self.assertTrue({"FCU_ud_wartime_constitution", "FCU_ud_postwar_elections_pledge",
+                                     "FCU_ud_emergency_continuity", "FCU_ud_presidents_coalition",
+                                     "FCU_ud_unity_charter_vote"}.isdisjoint(fcu.focuses))
+                    self.assertFalse(world.focus_available("FCU_ud_presidents_coalition", "FCU"))
+                    self.assertFalse(world.focus_available("FCU_ud_unity_charter_vote", "FCU"))
+
+    def test_removing_peaceful_link_blocks_federal_and_unity_closing(self):
+        for government in ("federal", "unity"):
+            with self.subTest(government=government):
+                world = self.peaceful_closing_world(government)
+                ident = "FCU_ud_federal_question_answered"
+                original = world.focuses[ident]
+                self.assertTrue(world.focus_available(ident, "FCU"))
+                # Reproduce the reviewed graph defect in memory, using the parsed generated script.
+                world.focuses[ident] = [
+                    (key, op, [node for node in value if node[2] != "FCU_ud_long_peace"])
+                    if key == "prerequisite" else (key, op, value)
+                    for key, op, value in original
+                ]
+                self.assertFalse(world.focus_available(ident, "FCU"))
+                world.focuses[ident] = original
+                self.assertTrue(world.focus_available(ident, "FCU"))
+
+    def test_wartime_political_closing_preserves_governments_choices_and_outcomes(self):
+        for government in ("federal", "unity", "directorate", "restored"):
+            for choice in ("postwar_elections_pledge", "emergency_continuity"):
+                for outcome in ("isaf_victory", "erusean_victory", "stalemate"):
+                    with self.subTest(government=government, choice=choice, outcome=outcome):
+                        world = self.political_world(government)
+                        fcu = world.countries["FCU"]
+                        world.today = ucw.day("2003.6.22") - 7
+                        world.weeks(15)
+                        self.assertIn("ac_ucw_war_started", world.globals)
+                        self.assertIn("ac_ucw_isaf_formed", world.globals)
+                        paths = {"federal": ("presidents_coalition", "assembly_war_powers"),
+                                 "unity": ("unity_charter_vote",), "directorate": ("directorate_accounting",),
+                                 "restored": ("directorate_accounting",)}
+                        for step in paths[government] + ("wartime_constitution", choice):
+                            world.complete("FCU_ud_" + step, "FCU")
+                        self.assertFalse(world.focus_available("FCU_ud_federal_question_answered", "FCU"))
+                        other = "emergency_continuity" if choice == "postwar_elections_pledge" else "postwar_elections_pledge"
+                        self.assertFalse(world.focus_available("FCU_ud_" + other, "FCU"))
+                        if outcome == "stalemate":
+                            world.countries["ERU"].ai = False
+                            world.take("ac_ucw_order_los_canas", "FCU")
+                            world.take("ac_ucw_fcu_offer_armistice", "FCU")
+                            world.choose("ac_ucw.46", 0, "ERU")
+                        else:
+                            defeated = "ERU" if outcome == "isaf_victory" else "FCU"
+                            world.countries[defeated].capitulated = True
+                            world.weeks(1)
+                            if defeated == "FCU":
+                                self.assertFalse(world.focus_available("FCU_ud_federal_question_answered", "FCU"))
+                                # The survivor can take the closing after recovering from capitulation.
+                                fcu.capitulated = False
+                        self.assertIn("ac_ucw_outcome_" + outcome, world.globals)
+                        self.assertNotIn("ac_ucw_war_averted", world.globals)
+                        self.assertFalse(world.focus_available("FCU_ud_war_that_was_not", "FCU"))
+                        self.assertNotIn("FCU_ud_long_peace", fcu.focuses)
+                        world.complete("FCU_ud_federal_question_answered", "FCU")
+                        self.assertIn("FCU_ud_federal_question_answered_done", fcu.flags)
+                        self.assertEqual(1, [item[2] for item in world.queue].count("ac_ud_fcu.58"))
+
     def test_impact_tally_and_carryover_run_once(self):
         for readiness, flag in ((70, "FCU_ud_impact_prepared"), (40, "FCU_ud_impact_strained"), (5, "FCU_ud_impact_overwhelmed")):
             world = DepthWorld("1999.7.10")

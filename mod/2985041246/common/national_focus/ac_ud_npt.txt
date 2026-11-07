@@ -1166,7 +1166,7 @@ shared_focus = {
 		factor = 90
 	}
 	completion_reward = {
-		set_variable = { NPT_ud_shelter_readiness = 1 }
+		ac_ud_npt_shelter_progress = yes
 		set_country_flag = NPT_ud_ulysses_brief
 		add_ideas = NPT_ud_shelter_programme_spirit
 		country_event = { id = ac_ud_npt.12 }
@@ -1631,13 +1631,12 @@ shared_focus = {
 	x = 70
 	y = 10
 	prerequisite = { focus = NPT_ud_continent_at_the_edge }
-	mutually_exclusive = { focus = NPT_ud_neutral_waters }
-	available = { OR = { has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } }
+	available = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } }
 	ai_will_do = {
 		factor = 100
 	}
 	completion_reward = {
-		set_country_flag = NPT_ud_lane_allied
+		ac_ud_npt_accept_hosting = yes
 		add_ideas = NPT_ud_allied_rear_services_spirit
 		ac_ud_npt_war_recovery = yes
 	}
@@ -1651,15 +1650,22 @@ shared_focus = {
 	x = 78
 	y = 10
 	prerequisite = { focus = NPT_ud_continent_at_the_edge }
-	mutually_exclusive = { focus = NPT_ud_allied_rear }
-	available = { NOT = { OR = { has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } } }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	available = { NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } } }
 	ai_will_do = {
 		factor = 10
 		modifier = { factor = 0 date < 2004.9.17 }
 	}
 	completion_reward = {
-		set_country_flag = NPT_ud_lane_neutral
-		add_ideas = NPT_ud_neutral_waters_spirit
+		if = {
+			limit = {
+				NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } }
+			}
+			set_country_flag = NPT_ud_lane_neutral
+			add_ideas = NPT_ud_neutral_waters_spirit
+		}
+
 	}
 	search_filters = { }
 }
@@ -1792,12 +1798,21 @@ shared_focus = {
 	x = 76
 	y = 11
 	prerequisite = { focus = NPT_ud_neutral_waters }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	available = { NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } } }
 	ai_will_do = {
 		factor = 60
 	}
 	completion_reward = {
-		army_experience = 10
-		add_stability = 0.02
+		if = {
+			limit = {
+				NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } }
+			}
+			army_experience = 10
+			add_stability = 0.02
+		}
+
 	}
 	search_filters = { }
 }
@@ -1809,12 +1824,21 @@ shared_focus = {
 	x = 80
 	y = 11
 	prerequisite = { focus = NPT_ud_neutral_waters }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	available = { NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } } }
 	ai_will_do = {
 		factor = 60
 	}
 	completion_reward = {
-		add_political_power = 30
-		add_stability = 0.02
+		if = {
+			limit = {
+				NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } }
+			}
+			add_political_power = 30
+			add_stability = 0.02
+		}
+
 	}
 	search_filters = { }
 }
@@ -1826,11 +1850,20 @@ shared_focus = {
 	x = 78
 	y = 12
 	prerequisite = { focus = NPT_ud_internment_convention focus = NPT_ud_neutral_hospital_berths }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	available = { NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } } }
 	ai_will_do = {
 		factor = 60
 	}
 	completion_reward = {
-		country_event = { id = ac_ud_npt.21 }
+		if = {
+			limit = {
+				NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } }
+			}
+			country_event = { id = ac_ud_npt.21 }
+		}
+
 	}
 	search_filters = { }
 }
@@ -1842,13 +1875,22 @@ shared_focus = {
 	x = 82
 	y = 12
 	prerequisite = { focus = NPT_ud_neutral_hospital_berths }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	available = { NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } } }
 	ai_will_do = {
 		factor = 60
 	}
 	completion_reward = {
-		air_experience = 15
-		navy_experience = 10
-		add_war_support = 0.03
+		if = {
+			limit = {
+				NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } }
+			}
+			air_experience = 15
+			navy_experience = 10
+			add_war_support = 0.03
+		}
+
 	}
 	search_filters = { }
 }
@@ -1861,13 +1903,21 @@ shared_focus = {
 	y = 13
 	prerequisite = { focus = NPT_ud_neutral_ground }
 	prerequisite = { focus = NPT_ud_armed_watch }
-	available = { date > 2004.12.31 }
+	cancel_if_invalid = yes
+	continue_if_invalid = no
+	available = { date > 2004.12.31 NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } } }
 	ai_will_do = {
 		factor = 60
 	}
 	completion_reward = {
-		add_stability = 0.05
-		add_political_power = 50
+		if = {
+			limit = {
+				NOT = { OR = { has_country_flag = NPT_ud_hosting_accepted has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base } }
+			}
+			add_stability = 0.05
+			add_political_power = 50
+		}
+
 	}
 	search_filters = { }
 }

@@ -176,6 +176,45 @@ class Layout(unittest.TestCase):
                 self.assertIn("NOT = { has_global_flag = ac_ucw_calendar_started }", f.available, f.slug)
 
 
+class ShelterReadiness(unittest.TestCase):
+    """Evaluate only readiness effects, not the HOI4 runtime or other rewards."""
+
+    def readiness(self, rewards, initial=0):
+        effects = mapping(parse(text("effects")))
+        value = initial
+
+        def apply(nodes):
+            nonlocal value
+            for key, _, body in nodes:
+                if key in effects:
+                    apply(effects[key])
+                elif key in ("set_variable", "add_to_variable"):
+                    amount = get(body, "NPT_ud_shelter_readiness")
+                    if amount is not None:
+                        value = int(amount) if key == "set_variable" else value + int(amount)
+                elif key == "clamp_variable" and get(body, "var") == "NPT_ud_shelter_readiness":
+                    value = max(int(get(body, "min")), min(int(get(body, "max")), value))
+
+        for reward in rewards:
+            apply(reward)
+        return value
+
+    def test_both_completion_orders_preserve_readiness(self):
+        focuses = shared_focuses()
+        sky = get(focuses["NPT_ud_sky_announcement"], "completion_reward")
+        council = get(focuses["NPT_ud_council_emergency_powers"], "completion_reward")
+        for initial in (0, 3, 11, 12):
+            for order in ((sky, council), (council, sky)):
+                with self.subTest(initial=initial, order=order):
+                    self.assertEqual(min(initial + 2, 12), self.readiness(order, initial))
+
+    def test_detects_the_original_overwrite(self):
+        council = get(shared_focuses()["NPT_ud_council_emergency_powers"], "completion_reward")
+        broken_sky = parse("set_variable = { NPT_ud_shelter_readiness = 1 }")
+        self.assertEqual(2, self.readiness((broken_sky, council)))
+        self.assertNotEqual(2, self.readiness((council, broken_sky)))
+
+
 class Localisation(unittest.TestCase):
     def test_complete_with_bom_and_no_duplicates(self):
         data = LOC.read_bytes()
@@ -377,7 +416,7 @@ class Guards(unittest.TestCase):
                                 for p in (MOD / "common/scripted_effects").glob("*.txt")), name)
 
     def test_war_still_starts_by_default(self):
-        # The package never touches the war files, so the Track A simulation is unchanged.
+        # The hosting reconciliation must not alter the default war-start calendar.
         spec = importlib.util.spec_from_file_location("ucw_for_npt", ROOT / "tools/Test-ContinentalWar.py")
         ucw = importlib.util.module_from_spec(spec)
         sys.modules["ucw_for_npt"] = ucw

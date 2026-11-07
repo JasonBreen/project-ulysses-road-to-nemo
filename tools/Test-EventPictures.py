@@ -120,6 +120,26 @@ class EventPictures(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'Non-picture'):assert_picture_only(relative,nodes)
         nodes=copy.deepcopy(original);body=next(v for k,_,v in nodes if k=='news_event');next(r for r in body if r[0]=='picture')[2]='GFX_wrong'
         with self.assertRaisesRegex(ValueError,'picture contract'):assert_picture_only(relative,nodes)
+    def test_hosting_restoration_rejects_extra_or_relocated_gameplay_changes(self):
+        relative='events/ac_ucw.txt';original=parse((MOD/relative).read_text())
+        assert_picture_only(relative,original)
+        for mutation in ('missing','duplicate','moved','reward','decline','other_event'):
+            nodes=copy.deepcopy(original)
+            body=next(v for k,_,v in nodes if k=='country_event' and get(v,'id')=='ac_ucw.32')
+            accept=next(v for k,_,v in body if k=='option' and get(v,'name')=='ac_ucw.32.a')
+            if mutation=='missing':del accept[2]
+            elif mutation=='duplicate':accept.insert(2,copy.deepcopy(accept[2]))
+            elif mutation=='moved':accept.append(accept.pop(2))
+            elif mutation=='reward':accept.append(['add_stability','=','0.01'])
+            elif mutation=='decline':
+                decline=next(v for k,_,v in body if k=='option' and get(v,'name')=='ac_ucw.32.b')
+                decline.append(['ac_ud_npt_accept_hosting','=','yes'])
+            else:
+                other=next(v for k,_,v in nodes if k=='country_event' and get(v,'id')=='ac_ucw.33')
+                get(other,'option').append(['ac_ud_npt_accept_hosting','=','yes'])
+            with self.subTest(mutation=mutation),self.assertRaisesRegex(ValueError,'Non-picture'):
+                assert_picture_only(relative,nodes)
+
     def test_new_ucw_news_is_original_distinct_and_all21_scenes_are_explicit(self):
         manifest=json.loads((HERE/'ucw_assets.json').read_text());self.assertEqual(6,len(manifest['assets']));self.assertEqual(21,len(manifest['consumers']))
         self.assertEqual(6,len({r['sha256'] for r in manifest['assets']}))

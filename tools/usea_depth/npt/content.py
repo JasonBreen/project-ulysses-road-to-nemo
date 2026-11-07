@@ -51,7 +51,11 @@ PROGRAMME = "ac_ud_npt_fund_programme = yes"
 RECOVERY = "ac_ud_npt_war_recovery = yes"
 ANY_MANDATE = ("OR = { has_completed_focus = NPT_old_guard_mandate has_completed_focus = NPT_drp_mandate "
                "has_completed_focus = NPT_reformist_mandate }")
-HOSTING = "OR = { has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base }"
+HOSTING = ("OR = { has_country_flag = NPT_ud_hosting_accepted "
+           "has_completed_focus = NPT_host_isaf has_idea = ac_ucw_npt_isaf_rear_base }")
+NOT_HOSTING = "NOT = { " + HOSTING + " }"
+NEUTRAL_FOCUSES = {"neutral_waters", "internment_convention", "neutral_hospital_berths",
+                   "neutral_ground", "armed_watch", "neutral_to_the_end"}
 BEFORE_IMPACT = "date > 1996.4.19 date < 1999.7.8 NOT = { has_global_flag = ac_ucw_calendar_started }"
 
 
@@ -482,7 +486,7 @@ F("command_of_waters", "Command of the Island Waters", 80, 6, [
 F("sky_announcement", "A Date Written in the Sky", 90, 0, [
     "Central Usea has announced that the asteroid Ulysses will strike the Earth. The broadcast is repeated on the islands' radio in full, twice, and followed by a long silence while the station decides what to play next.",
     "The government and the subdivision councils meet the same evening. The astronomers cannot yet say where the fragments will fall. North Point has to prepare for a disaster nobody can map."],
-  "set_variable = { NPT_ud_shelter_readiness = 1 }\nset_country_flag = NPT_ud_ulysses_brief\nadd_ideas = NPT_ud_shelter_programme_spirit\n"
+  SHELTER + "\nset_country_flag = NPT_ud_ulysses_brief\nadd_ideas = NPT_ud_shelter_programme_spirit\n"
   "country_event = { id = ac_ud_npt.12 }", ("meteor", "communications"), "shelters",
   available="date > 1996.4.19 date < 1999.7.8", ai="factor = 90", layer="official", cite="1996 / 04.20", event=12)
 
@@ -650,15 +654,15 @@ F("continent_at_the_edge", "The Continent at the Edge", 74, 9, [
 F("allied_rear", "Open the Islands to the Allies", 70, 10, [
     "North Point has agreed to host the Independent State Allied Forces, and the agreement is now a fact on the ground: aircraft on the runways, staff officers in the schools and allied ships in the harbours. The government must decide how far the islands will go.",
     "The answer is as far as the islands can bear. North Point will be the allies' rear base in earnest, with its yards, workshops and hospitals at their disposal, and in return it will ask to be consulted on everything done from its soil."],
-  "set_country_flag = NPT_ud_lane_allied\nadd_ideas = NPT_ud_allied_rear_services_spirit\n" + RECOVERY, ("runway", "diplomacy"),
-  "late", pre=[["continent_at_the_edge"]], excl=["neutral_waters"], available=HOSTING, ai="factor = 100",
+  "ac_ud_npt_accept_hosting = yes\nadd_ideas = NPT_ud_allied_rear_services_spirit\n" + RECOVERY, ("runway", "diplomacy"),
+  "late", pre=[["continent_at_the_edge"]], available=HOSTING, ai="factor = 100",
   layer="official", cite="2004 / 09.16")
 
 F("neutral_waters", "Keep the Waters Neutral", 78, 10, [
     "North Point will be nobody's base. Whatever coalitions form on the continent, the islands' airfields, harbours and yards will stay under the islands' own flag, open to ships in distress and closed to fleets at war.",
-    "The decision costs the islands friends on the mainland and earns them a different kind of respect. A neutral harbour in a crisis is a rare and valuable thing, and the government intends to keep it that way."],
+    "The decision costs the islands friends on the mainland and earns them a different kind of respect. A neutral harbour in a crisis is a rare and valuable thing, and the government intends to keep it that way. Accepting ISAF hosting later ends this policy and opens the allied rear-base programme."],
   "set_country_flag = NPT_ud_lane_neutral\nadd_ideas = NPT_ud_neutral_waters_spirit", ("peace", "navy"), "late",
-  pre=[["continent_at_the_edge"]], excl=["allied_rear"], available="NOT = { " + HOSTING + " }",
+  pre=[["continent_at_the_edge"]], available=NOT_HOSTING,
   ai="factor = 10\nmodifier = { factor = 0 date < 2004.9.17 }")
 
 F("schools_returned", "Give the Schools Back", 66, 11, [
@@ -846,6 +850,7 @@ LABELS = {
     "NPT_ud_harbours_open": "The harbours are open to refugees",
     "NPT_ud_harbours_quota": "The harbours admit refugees by quota",
     "NPT_ud_lane_allied": "North Point serves as the allied rear base",
+    "NPT_ud_hosting_accepted": "North Point has accepted ISAF hosting",
     "NPT_ud_lane_neutral": "North Point keeps its waters neutral",
     "NPT_ud_shelter_readiness": "Shelter readiness",
     "ac_ucw_calendar_started": "The Continental War calendar has begun",
@@ -853,6 +858,12 @@ LABELS = {
 
 # Scripted effects owned by this package (besides the regime effects).
 EFFECTS = {
+    # Called by every existing hosting route; no fiscal rewards or war-owner writes.
+    "ac_ud_npt_accept_hosting": (
+        "set_country_flag = NPT_ud_hosting_accepted\n"
+        "clr_country_flag = NPT_ud_lane_neutral\n"
+        "remove_ideas = NPT_ud_neutral_waters_spirit\n"
+        "set_country_flag = NPT_ud_lane_allied"),
     "ac_ud_npt_shelter_progress": (
         "add_to_variable = { NPT_ud_shelter_readiness = 1 }\n"
         "clamp_variable = { var = NPT_ud_shelter_readiness min = 0 max = 12 }"),

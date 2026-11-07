@@ -25,7 +25,8 @@ def restore(relative,nodes):
     result=copy.deepcopy(nodes);allowed=reviewed(relative);seen=set()
     if relative=='events/ac_ucw.txt':
         from ac_campaigns.event_migration import restore_reviewed
-        result=restore_reviewed(result)
+        from usea_depth.npt.event_migration import restore_hosting
+        result=restore_hosting(restore_reviewed(result))
     for kind,_,body in result:
         if kind not in ('country_event','news_event'):continue
         ident=get(body,'id')
@@ -73,7 +74,7 @@ def report():
             restored_ast_sha256=ast_hash(restored),whole_ast_preserved=original==restored,
             reviewed_bindings={key:dict(old=old,new=new) for key,(old,new) in reviewed(relative).items()})
     from ac_campaigns.event_migration import MIGRATIONS
-    return dict(schema=1,scope='Enumerated news-picture assignments and two registered Megalith gameplay edits restore to the complete unchanged historical capture; all other gameplay/options/text/IDs remain preserved',
-        reviewed_gameplay_migrations=[dict(event=row['event'],owner='tools/ac_campaigns/event_migration.py',approval='Private AC04/AC5 campaign plan, 2026-11-05') for row in MIGRATIONS],
+    return dict(schema=1,scope='Enumerated news-picture assignments, two registered Megalith edits and the North Point hosting hook restore to the complete unchanged historical capture; all other gameplay/options/text/IDs remain preserved',
+        reviewed_gameplay_migrations=[dict(event=row['event'],owner='tools/ac_campaigns/event_migration.py',approval='Private AC04/AC5 campaign plan, 2026-11-05') for row in MIGRATIONS]+[dict(event='ac_ucw.32',owner='tools/usea_depth/npt/event_migration.py',approval='PR #79 review discussion_r4498543648, 2026-11-06')],
         files=files,protected_original_files=len(c['protected_sources']),unchanged_anea_focus_DDS=len(c['original_anea_focus_sha256']),
         original_military_captures=c['military_captures'],native='No native or save-serialization acceptance')

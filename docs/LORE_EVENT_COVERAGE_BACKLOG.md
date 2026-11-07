@@ -38,6 +38,7 @@ This is a source-traceable coverage backlog for the private continuation. It is 
 | Technology/equipment | 1991–2005 markers and inherited engine IDs | Provenance, localization, era gates, and later-war source audit | Open; issue #5 |
 | Geography | 11,352 provinces, 612 states, 326 regions | Resolve state 171 and 203 XXX regions; source every later border | Open geography decisions |
 | 2065 horizon | Engine cutoff contract through 2065-12-31 | Authored, source-backed content is not established for every year; do not fill with invented history | Engineering target only |
+| Usea Depth minors B: Spayca, Calladen, Roca Roja, Rohden, Voslage, Corscae and a dormant Shilage release tree | Seven national trees in `common/national_focus/ac_ud_minor_<tag>.txt` (394 focuses), `ac_ud_minb` events, ideas, programme and adopt decisions, unnamed office cards; ledger [usea_depth/MINORS_B.md](usea_depth/MINORS_B.md); generator `tools/usea_depth/minors_b/` | Native reachability, AI pacing and balance. Shilage exists in 1991–2005 only through the engine's own release mechanics; no release is authored | Provisional gameplay on mod-provenance geography; official Chronicle dates are used only as gates and news. Static-validated; native untested (#8) |
 
 ## Campaign arc implementation record
 

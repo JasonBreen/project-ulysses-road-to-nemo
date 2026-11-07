@@ -48,7 +48,7 @@ def triggers(profiles):
     # A custom tooltip preserves the full condition but suppresses all tag rows.
     rows=[block('ac_pol_profiled',block('custom_trigger_tooltip','tooltip = ac_pol_profiled_tt\n'+block('OR',tags))),
           block('ac_pol_active','ac_pol_profiled = yes has_country_flag = ac_pol_initialized has_capitulated = no any_owned_state = { always = yes }'),
-          block('ac_pol_uses_regional_tree',block('OR','\n'.join('original_tag = '+r['tag'] for r in profiles if r['regional_tree']))),
+          block('ac_pol_uses_regional_tree',block('custom_trigger_tooltip','tooltip = ac_pol_regional_tt\n'+block('OR','\n'.join('original_tag = '+r['tag'] for r in profiles if r['regional_tree'])))),
           block('ac_pol_can_adopt','ac_pol_active = yes political_power >= 30 check_variable = { ac_pol_capacity >= 15 } NOT = { has_country_flag = ac_pol_policy_cooldown }'),
           block('ac_pol_can_work','ac_pol_active = yes political_power >= 25 NOT = { has_country_flag = ac_pol_work_cooldown } check_variable = { ac_pol_capacity < 100 }')]
     ids=[]
@@ -57,12 +57,12 @@ def triggers(profiles):
     # Use the established shipped focus-progress syntax. Completed focuses cannot
     # block a handoff; active normal or continuous focuses must block it.
     idle='\n'.join('NOT = { AND = { NOT = { has_completed_focus = '+ident+' } OR = { has_shine_effect_on_focus = '+ident+' focus_progress = { focus = '+ident+' progress > 0 } } } }' for ident in dict.fromkeys(ids))
-    rows.append(block('ac_pol_legacy_idle',idle))
+    rows.append(block('ac_pol_legacy_idle',block('custom_trigger_tooltip','tooltip = ac_pol_idle_tt\n'+idle)))
     regional='\n'.join('NOT = { AND = { NOT = { has_completed_focus = ac_reg_'+row.suffix+' } OR = { has_shine_effect_on_focus = ac_reg_'+row.suffix+' focus_progress = { focus = ac_reg_'+row.suffix+' progress > 0 } } } }' for row in FOCUSES)
     # Additive public adoption seam: unknown/bespoke previous trees fail closed.
     # The original generic-to-regional owner keeps its narrower helper above.
-    rows.append(block('ac_pol_previous_tree_idle',
-        'OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation }\nac_pol_legacy_idle = yes\n'+regional))
+    rows.append(block('ac_pol_previous_tree_idle',block('custom_trigger_tooltip','tooltip = ac_pol_previous_idle_tt\n'+
+        'OR = { has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation }\nac_pol_legacy_idle = yes\n'+regional)))
     put('common/scripted_triggers/ac_politics.txt','\n'.join(rows))
     return ids
 
@@ -235,6 +235,9 @@ def decisions_and_tree(profiles):
 
 def localization_and_hooks(profiles):
     loc('ac_pol_profiled_tt','This country has a national institutional profile')
+    loc('ac_pol_regional_tt','This country uses the regional national programme')
+    loc('ac_pol_idle_tt','No normal or continuous focus is currently in progress')
+    loc('ac_pol_previous_idle_tt','The previous generic or regional tree has no normal or continuous focus in progress')
     names={'civil_administration':'Civil administration','party_secretariat':'Party and service secretariats','command_administration':'Command administration','executive_office':'Executive service offices','crown_office':'Crown and service offices','council_office':'Council administration'}
     text=''
     for form,title in names.items():

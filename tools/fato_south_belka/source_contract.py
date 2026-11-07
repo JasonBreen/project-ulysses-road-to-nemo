@@ -101,6 +101,24 @@ def validate_protected(path,expected,data):
                 and actual==update['reviewed_sha256']):return disposition
     raise ValueError('Inherited owner changed: '+path)
 
+# PR #84 commit 5daf9cafdb17fb39b489ba6ec90153cbbbf46fe3 assigns only
+# these two countries to their actual dedicated campaign trees. Preserve the
+# frozen engine_contract profile hashes and admit only regional_tree=False;
+# every other field must still reconstruct the original captured row exactly.
+REVIEWED_SOTOAN_TREES = {'SOA': 'ac_wc_soa_tree', 'CSO': 'ac_wc_cso_tree'}
+
+
+def validate_institution_profile(row, expected):
+    tag = row['tag']
+    original = row
+    if tag in ('FAT', 'SBK') or tag in REVIEWED_SOTOAN_TREES:
+        if row.get('regional_tree') is not False:
+            raise ValueError('Dedicated institution tree disposition changed: ' + tag)
+        original = dict(row, regional_tree=True)
+    if digest(json.dumps(original, sort_keys=True).encode()) != expected:
+        raise ValueError('Inherited institution profile changed: ' + tag)
+
+
 def capture(reference):
     protected={}
     for relative in PROTECTED:

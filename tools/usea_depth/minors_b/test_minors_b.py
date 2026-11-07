@@ -319,8 +319,9 @@ class Package(unittest.TestCase):
             self.assertNotRegex(body, r"\bset_variable\s*=\s*\{\s*ac_pol_capacity\b|add_to_variable\s*=\s*\{\s*ac_pol_capacity\s*=", name)
         # The Continental War owner is untouched: no package file hooks its on-actions or start effect.
         self.assertFalse((MOD / "common/on_actions/ac_ud_minors_b.txt").exists())
-        self.assertNotIn("ac_ud_", text("common/on_actions/ac_ucw.txt"))
-        self.assertNotIn("ac_ud_", text("common/scripted_effects/ac_ucw.txt"))
+        # Other Usea Depth packages may own hooks there (North Point's hosting); minors B owns none.
+        for owner in ("common/on_actions/ac_ucw.txt", "common/scripted_effects/ac_ucw.txt"):
+            self.assertNotRegex(text(owner), r"ac_ud_minors_b|ac_ud_minb|\b(%s)_ud_" % "|".join(TAGS), owner)
 
     def test_institution_gains_go_through_the_capacity_effect(self):
         for name, body in all_script().items():

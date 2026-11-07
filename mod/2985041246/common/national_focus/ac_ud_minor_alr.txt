@@ -1,0 +1,1147 @@
+# Usea Depth minor states A: provisional gameplay; source tools/usea_depth/minors_a (owner: build.py).
+focus_tree = {
+	id = ac_ud_alr_tree
+	country = { factor = 0 modifier = { add = 45 tag = ALR original_tag = ALR } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 2496 y = 16 }
+	initial_show_position = { focus = ALR_ud_harbour_ledger }
+	focus = {
+		id = ALR_ud_harbour_ledger
+		icon = GFX_ac_ud_focus_ALR_ud_harbour_ledger
+		x = 11
+		y = 0
+		cost = 5
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.401 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_mill_town_census
+		icon = GFX_ac_ud_focus_ALR_ud_mill_town_census
+		x = 2
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_harbour_ledger
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = ALR_ud_blast_furnace_renewal
+		icon = GFX_ac_ud_focus_ALR_ud_blast_furnace_renewal
+		x = 1
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_mill_town_census
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_tech_bonus = { name = ALR_ud_blast_furnace_renewal bonus = 0.5 uses = 1 category = industry }
+			if = { limit = { 466 = { is_owned_by = ROOT } } add_resource = { type = steel amount = 3 state = 466 } }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_rolling_mill_contracts
+		icon = GFX_ac_ud_focus_ALR_ud_rolling_mill_contracts
+		x = 3
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_mill_town_census
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_ideas = ALR_ud_rolling_mills_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_steel_export_quota
+		icon = GFX_ac_ud_focus_ALR_ud_steel_export_quota
+		x = 2
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_blast_furnace_renewal
+		}
+		prerequisite = {
+			focus = ALR_ud_rolling_mill_contracts
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_ideas = ALR_ud_steel_exports_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_oil_field_survey
+		icon = GFX_ac_ud_focus_ALR_ud_oil_field_survey
+		x = 6
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_harbour_ledger
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			if = { limit = { 420 = { is_owned_by = ROOT } } add_resource = { type = oil amount = 3 state = 420 } }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_public_oil_company
+		icon = GFX_ac_ud_focus_ALR_ud_public_oil_company
+		x = 5
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_oil_field_survey
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_oil_leases
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = ALR_ud_public_oil_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_oil_leases
+		icon = GFX_ac_ud_focus_ALR_ud_oil_leases
+		x = 7
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_oil_field_survey
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_public_oil_company
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = ALR_ud_oil_leases_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_peninsula_refinery
+		icon = GFX_ac_ud_focus_ALR_ud_peninsula_refinery
+		x = 6
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_public_oil_company
+			focus = ALR_ud_oil_leases
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			if = { limit = { 560 = { is_owned_by = ROOT } } 560 = { add_building_construction = { type = fuel_silo level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = ALR_ud_peninsula_refinery bonus = 0.5 uses = 1 category = synth_resources }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_three_yards
+		icon = GFX_ac_ud_focus_ALR_ud_three_yards
+		x = 12
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_harbour_ledger
+		}
+		ai_will_do = { factor = 9 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.402 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_merchant_yards
+		icon = GFX_ac_ud_focus_ALR_ud_merchant_yards
+		x = 10
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_three_yards
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_naval_yards
+			focus = ALR_ud_repair_yards
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = ALR_ud_merchant_yards_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_naval_yards
+		icon = GFX_ac_ud_focus_ALR_ud_naval_yards
+		x = 12
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_three_yards
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_merchant_yards
+			focus = ALR_ud_repair_yards
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = ALR_ud_naval_yards_spirit
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = ALR_ud_repair_yards
+		icon = GFX_ac_ud_focus_ALR_ud_repair_yards
+		x = 14
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_three_yards
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_merchant_yards
+			focus = ALR_ud_naval_yards
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_repair_yards_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_tanker_slips
+		icon = GFX_ac_ud_focus_ALR_ud_tanker_slips
+		x = 10
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_merchant_yards
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 560 = { is_owned_by = ROOT } } 560 = { add_building_construction = { type = dockyard level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = ALR_ud_tanker_slips bonus = 0.5 uses = 1 category = naval_equipment }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_escort_programme
+		icon = GFX_ac_ud_focus_ALR_ud_escort_programme
+		x = 12
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_naval_yards
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			navy_experience = 20
+			add_tech_bonus = { name = ALR_ud_escort_programme bonus = 0.5 uses = 2 category = naval_equipment }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_drydock_compact
+		icon = GFX_ac_ud_focus_ALR_ud_drydock_compact
+		x = 14
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_repair_yards
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 420 = { is_owned_by = ROOT } } 420 = { add_building_construction = { type = dockyard level = 1 instant_build = yes } } }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = ALR_ud_launch_day
+		icon = GFX_ac_ud_focus_ALR_ud_launch_day
+		x = 12
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_tanker_slips
+			focus = ALR_ud_escort_programme
+			focus = ALR_ud_drydock_compact
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_stability = 0.03
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = ALR_ud_labour_question
+		icon = GFX_ac_ud_focus_ALR_ud_labour_question
+		x = 17
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_harbour_ledger
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.403 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_wage_board
+		icon = GFX_ac_ud_focus_ALR_ud_wage_board
+		x = 16
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_labour_question
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_open_shop
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = ALR_ud_wage_board_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_open_shop
+		icon = GFX_ac_ud_focus_ALR_ud_open_shop
+		x = 18
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_labour_question
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_wage_board
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = ALR_ud_open_shop_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_apprentice_halls
+		icon = GFX_ac_ud_focus_ALR_ud_apprentice_halls
+		x = 17
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_wage_board
+			focus = ALR_ud_open_shop
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_tech_bonus = { name = ALR_ud_apprentice_halls bonus = 0.5 uses = 1 category = construction_tech }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = ALR_ud_arms_ledger
+		icon = GFX_ac_ud_focus_ALR_ud_arms_ledger
+		x = 21
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_harbour_ledger
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			custom_effect_tooltip = ALR_ud_arms_ledger_tt
+			country_event = { id = ac_ud_mina.404 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_sell_to_neighbours
+		icon = GFX_ac_ud_focus_ALR_ud_sell_to_neighbours
+		x = 20
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_arms_ledger
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_export_embargo
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_arms_exports_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_export_embargo
+		icon = GFX_ac_ud_focus_ALR_ud_export_embargo
+		x = 22
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_arms_ledger
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_sell_to_neighbours
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_arms_embargo_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_valley_arsenals
+		icon = GFX_ac_ud_focus_ALR_ud_valley_arsenals
+		x = 20
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_sell_to_neighbours
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 462 = { is_owned_by = ROOT } } 462 = { add_building_construction = { type = arms_factory level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = ALR_ud_valley_arsenals bonus = 0.5 uses = 1 category = artillery }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_harbour_batteries
+		icon = GFX_ac_ud_focus_ALR_ud_harbour_batteries
+		x = 22
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_export_embargo
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 466 = { is_owned_by = ROOT } } 466 = { add_building_construction = { type = anti_air_building level = 1 instant_build = yes } } }
+			if = { limit = { 560 = { is_owned_by = ROOT } } 560 = { add_building_construction = { type = anti_air_building level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_treaty_chair
+		icon = GFX_ac_ud_focus_ALR_ud_treaty_chair
+		x = 5
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_steel_export_quota
+			focus = ALR_ud_peninsula_refinery
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.405 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_treaty_paymaster
+		icon = GFX_ac_ud_focus_ALR_ud_treaty_paymaster
+		x = 4
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_treaty_chair
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_treaty_auditor
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_treaty_paymaster_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_treaty_auditor
+		icon = GFX_ac_ud_focus_ALR_ud_treaty_auditor
+		x = 6
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_treaty_chair
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_treaty_paymaster
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_treaty_auditor_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_council_transit_rules
+		icon = GFX_ac_ud_focus_ALR_ud_council_transit_rules
+		x = 5
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_treaty_paymaster
+			focus = ALR_ud_treaty_auditor
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = ALR_ud_council_transit_rules bonus = 0.5 uses = 1 category = logistics_tech }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = ALR_ud_who_owns_albard
+		icon = GFX_ac_ud_focus_ALR_ud_who_owns_albard
+		x = 14
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_launch_day
+			focus = ALR_ud_apprentice_halls
+		}
+		available = {
+			date > 1992.12.31
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_stability = -0.02
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.406 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_steel_board
+		icon = GFX_ac_ud_focus_ALR_ud_steel_board
+		x = 9
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_who_owns_albard
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_charter_republic
+			focus = ALR_ud_labour_commonwealth
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_alr_steel_board = yes
+			country_event = { id = ac_ud_mina.407 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_board_charter
+		icon = GFX_ac_ud_focus_ALR_ud_board_charter
+		x = 9
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_steel_board
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_board_charter_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_furnace_dividends
+		icon = GFX_ac_ud_focus_ALR_ud_furnace_dividends
+		x = 8
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_board_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { 560 = { is_owned_by = ROOT } } add_resource = { type = steel amount = 3 state = 560 } }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_shipping_houses
+		icon = GFX_ac_ud_focus_ALR_ud_shipping_houses
+		x = 10
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_board_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_shipping_houses_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_board_mandate
+		icon = GFX_ac_ud_focus_ALR_ud_board_mandate
+		x = 9
+		y = 9
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_furnace_dividends
+		}
+		prerequisite = {
+			focus = ALR_ud_shipping_houses
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = ALR_ud_board_charter_spirit } remove_ideas = ALR_ud_board_charter_spirit }
+			add_ideas = ALR_ud_board_mandate_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_labour_commonwealth
+		icon = GFX_ac_ud_focus_ALR_ud_labour_commonwealth
+		x = 14
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_who_owns_albard
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_charter_republic
+			focus = ALR_ud_steel_board
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_alr_commonwealth = yes
+			country_event = { id = ac_ud_mina.408 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_commonwealth_charter
+		icon = GFX_ac_ud_focus_ALR_ud_commonwealth_charter
+		x = 14
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_labour_commonwealth
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_commonwealth_charter_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_yard_committees
+		icon = GFX_ac_ud_focus_ALR_ud_yard_committees
+		x = 13
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_commonwealth_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = ALR_ud_mill_cooperatives
+		icon = GFX_ac_ud_focus_ALR_ud_mill_cooperatives
+		x = 15
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_commonwealth_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { 485 = { is_owned_by = ROOT } } 485 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = ALR_ud_mill_cooperatives bonus = 0.5 uses = 1 category = industry }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_commonwealth_congress
+		icon = GFX_ac_ud_focus_ALR_ud_commonwealth_congress
+		x = 14
+		y = 9
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_yard_committees
+		}
+		prerequisite = {
+			focus = ALR_ud_mill_cooperatives
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = ALR_ud_commonwealth_charter_spirit } remove_ideas = ALR_ud_commonwealth_charter_spirit }
+			add_ideas = ALR_ud_commonwealth_congress_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_charter_republic
+		icon = GFX_ac_ud_focus_ALR_ud_charter_republic
+		x = 19
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_who_owns_albard
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_labour_commonwealth
+			focus = ALR_ud_steel_board
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_alr_charter = yes
+			country_event = { id = ac_ud_mina.409 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_charter_assembly
+		icon = GFX_ac_ud_focus_ALR_ud_charter_assembly
+		x = 19
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_charter_republic
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_charter_assembly_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_harbour_courts
+		icon = GFX_ac_ud_focus_ALR_ud_harbour_courts
+		x = 18
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_charter_assembly
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_stability = 0.02
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = ALR_ud_open_company_ledgers
+		icon = GFX_ac_ud_focus_ALR_ud_open_company_ledgers
+		x = 20
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_charter_assembly
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_open_ledgers_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_charter_ratified
+		icon = GFX_ac_ud_focus_ALR_ud_charter_ratified
+		x = 19
+		y = 9
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_harbour_courts
+		}
+		prerequisite = {
+			focus = ALR_ud_open_company_ledgers
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = ALR_ud_charter_assembly_spirit } remove_ideas = ALR_ud_charter_assembly_spirit }
+			add_ideas = ALR_ud_ratified_charter_spirit
+			add_stability = 0.03
+		}
+	}
+
+	focus = {
+		id = ALR_ud_ulysses_announcement
+		icon = GFX_ac_ud_focus_ALR_ud_ulysses_announcement
+		x = 3
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_treaty_chair
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 9 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_war_support = 0.02
+			country_event = { id = ac_ud_mina.410 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_steel_reserve
+		icon = GFX_ac_ud_focus_ALR_ud_steel_reserve
+		x = 0
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_ulysses_announcement
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = ALR_ud_steel_reserve bonus = 0.5 uses = 1 category = engineers_tech }
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_shelter_steel
+		icon = GFX_ac_ud_focus_ALR_ud_shelter_steel
+		x = 2
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_ulysses_announcement
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_evacuation_fleet
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = ALR_ud_steel_shelters_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_evacuation_fleet
+		icon = GFX_ac_ud_focus_ALR_ud_evacuation_fleet
+		x = 4
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = ALR_ud_ulysses_announcement
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_shelter_steel
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = ALR_ud_evacuation_fleet_spirit
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = ALR_ud_coup_harbour_watch
+		icon = GFX_ac_ud_focus_ALR_ud_coup_harbour_watch
+		x = 6
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_ulysses_announcement
+		}
+		available = {
+			date > 1997.5.29
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			navy_experience = 10
+			add_war_support = 0.02
+		}
+	}
+
+	focus = {
+		id = ALR_ud_impact_harbour
+		icon = GFX_ac_ud_focus_ALR_ud_impact_harbour
+		x = 3
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_shelter_steel
+			focus = ALR_ud_evacuation_fleet
+		}
+		available = {
+			date > 1999.7.7
+		}
+		ai_will_do = { factor = 9 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = -4 }
+			ac_pol_change_capacity = yes
+			add_stability = -0.03
+			country_event = { id = ac_ud_mina.411 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_relief_convoys
+		icon = GFX_ac_ud_focus_ALR_ud_relief_convoys
+		x = 1
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_impact_harbour
+		}
+		available = {
+			date > 1999.7.7
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_timed_idea = { idea = ALR_ud_relief_convoys_spirit days = 365 }
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_open_harbour
+		icon = GFX_ac_ud_focus_ALR_ud_open_harbour
+		x = 3
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_impact_harbour
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_harbour_quarantine
+		}
+		available = {
+			date > 2000.4.20
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_open_harbour_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_harbour_quarantine
+		icon = GFX_ac_ud_focus_ALR_ud_harbour_quarantine
+		x = 5
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_impact_harbour
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_open_harbour
+		}
+		available = {
+			date > 2000.4.20
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = ALR_ud_harbour_quarantine_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_neutral_harbour
+		icon = GFX_ac_ud_focus_ALR_ud_neutral_harbour
+		x = 3
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_open_harbour
+			focus = ALR_ud_harbour_quarantine
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_war_support = 0.03
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.412 }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_averted_dividend
+		icon = GFX_ac_ud_focus_ALR_ud_averted_dividend
+		x = 6
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_open_harbour
+			focus = ALR_ud_harbour_quarantine
+		}
+		available = {
+			has_global_flag = ac_ucw_war_averted
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_stability = 0.05
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = ALR_ud_armed_harbour
+		icon = GFX_ac_ud_focus_ALR_ud_armed_harbour
+		x = 2
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_neutral_harbour
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_isaf_supply_contracts
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = ALR_ud_armed_harbour_spirit
+			if = { limit = { 420 = { is_owned_by = ROOT } } 420 = { add_building_construction = { type = anti_air_building level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_isaf_supply_contracts
+		icon = GFX_ac_ud_focus_ALR_ud_isaf_supply_contracts
+		x = 4
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_neutral_harbour
+		}
+		mutually_exclusive = {
+			focus = ALR_ud_armed_harbour
+		}
+		available = {
+			has_global_flag = ac_ucw_isaf_formed
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = ALR_ud_isaf_contracts_spirit
+		}
+	}
+
+	focus = {
+		id = ALR_ud_yards_double_shifts
+		icon = GFX_ac_ud_focus_ALR_ud_yards_double_shifts
+		x = 6
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_neutral_harbour
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_timed_idea = { idea = ALR_ud_double_shifts_spirit days = 365 }
+			add_tech_bonus = { name = ALR_ud_yards_double_shifts bonus = 0.5 uses = 1 category = naval_equipment }
+		}
+	}
+
+	focus = {
+		id = ALR_ud_albard_after_the_war
+		icon = GFX_ac_ud_focus_ALR_ud_albard_after_the_war
+		x = 3
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = ALR_ud_armed_harbour
+			focus = ALR_ud_isaf_supply_contracts
+			focus = ALR_ud_yards_double_shifts
+		}
+		available = {
+			OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate }
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 6 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.04
+			country_event = { id = ac_ud_mina.413 }
+		}
+	}
+}

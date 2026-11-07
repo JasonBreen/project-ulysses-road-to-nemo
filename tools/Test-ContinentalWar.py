@@ -66,6 +66,9 @@ class World:
         self.rule = rule
         self.fiscal = fiscal
         self.effects = mapping(load("common/scripted_effects/ac_ucw.txt"))
+        # Hosting delegates only its North Point lane reconciliation to that owner.
+        npt_effects = mapping(load("common/scripted_effects/ac_ud_npt.txt"))
+        self.effects["ac_ud_npt_accept_hosting"] = npt_effects["ac_ud_npt_accept_hosting"]
         self.triggers = mapping(load("common/scripted_triggers/ac_ucw.txt"))
         self.events = {mapping(v)["id"]: (k, v) for k, _, v in load("events/ac_ucw.txt") if k in ("country_event", "news_event")}
         self.focuses = {}

@@ -118,3 +118,39 @@ only after validating the G: candidate.
 - Post-reproduction audit at18:55:52 UTC again passed:838 unchanged, zero additions.
   The old opening save is retained under the explicit before-doctrine-repair name
   in the same disposable save directory, preventing accidental overwrite.
+
+## Repaired opening and first human-play attempt
+
+- Full aggregate static wrapper passed on c159a742 using the installed reference
+  and preserved baseline; log N002-N003-static-retest.log. Native fresh start
+  assigns Mobile Warfare, Fleet in Being and Strategic Destruction. Saved and
+  reloaded the repaired opening normally; all three assignments persist. N002
+  special-project localization and N003 doctrine errors are absent from logs.
+- Post-launch audit at19:02:48 UTC passed:838 unchanged, zero additions.
+- Human decisions from the reloaded opening: The Crisis Continues; research New
+  Line Of Construction Vehicles, Charles Fort's Industrial Theory, Improved
+  Infantry Equipment I with Heckler & Koch, and Radio; civilian factories in
+  Dinsmark then Zentrum Belka; support equipment increased from one to two
+  factories;24 rubber imported from Chopinburg for three civilian factories.
+  Recorded N005 interface problems and O001 coal/O002 technology-date observations.
+- Clock advanced through1 January, then crashed at1991.1.2.1. No console, edited
+  save, tag switching or observer mode used. Unsaved opening decisions are lost;
+  the repaired pre-decision save is intact. N006 retains the access-violation
+  bundle and raw logs locally. Last visible observation was1991.1.1.18; the crash
+  log reaches1991.1.2.1. The primary-through2000 case is blocked pending repair.
+- Post-crash audit at19:12:57 UTC passed:838 unchanged, zero additions. Archived
+  logs before relaunch. Exact unchanged c159a742 payload revalidated11615 files;
+  relaunch PID27124 is an explicitly labeled reproduction run, not campaign progress.
+
+## Event isolation retest and fiscal initialization blocker
+
+-8072d3fa isolates the authored event directory. Full static wrapper passed.
+  Loaded the same opening, advanced to6 January, saved/reloaded, and continued
+  through13 January19:00 without the first-day crash. This was a diagnostic,
+  without focus/research/build decisions. N006 native repair retest passed.
+- Preservation audit20261108T192153Z:838 unchanged, zero additions.
+- Fiscal dashboard showed zero GDP/output and no public funds. Refresh did not
+  change it. A new8072d3fa Belka start reproduces zero GDP before any save/reload.
+  N007 recorded; the main human campaign remains at its opening checkpoint.
+- Closed the exact isolated engine through native Exit Game. Archived logs under
+ 8072d3fa-N006-pass-N007-before before generator repairs.

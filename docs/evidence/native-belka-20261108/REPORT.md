@@ -76,3 +76,23 @@ HOI4 process or target window remained. The post-exit audit at 18:23:53 UTC pass
 838 unchanged, zero additions. globe-restoration.json records the repair revision,
 native observations, screenshot hashes, static command/result and this audit.
 The original workspace still has exactly its four pre-existing modified paths.
+
+## Native opening repair results
+
+N002 malformed special-project localization and N003 missing starting doctrines
+passed fresh-start and normal save/reload tests on c159a742. Belka now has Mobile
+Warfare, Fleet in Being and Strategic Destruction. Full static wrapper passed.
+
+The first human-play attempt crashed at1991.1.2.1. An unchanged opening replay
+reproduced the same access violation.8072d3fa isolates the mod's authored event
+directory from inherited Earth-specific event polling. The same saved opening
+then advanced to6 January, saved/reloaded, and continued to13 January19:00. This
+was a separate diagnostic without management decisions; it is not the main
+campaign's progress. Full static wrapper passed. Individual event causality is
+not isolated, and no-mod first-day control remains outstanding.
+
+N007 now blocks the human campaign: zero GDP/output and funds appear both in
+the diagnostic and in a fresh8072d3fa start. Generator repairs are underway;
+fresh initialization and the first monthly/reload test remain required. N004
+scenario layout and N005 placeholder/interface graphics remain open. No new
+artwork or geography was introduced.

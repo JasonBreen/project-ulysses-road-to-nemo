@@ -29,13 +29,15 @@ unkeyed prose after otherwise complete quoted definitions. Reproduced on the
 resumed 6636c641 launch, before advancing the clock. Removed exactly 14 orphan
 rows; all 107 keyed definitions and the UTF-8 BOM remain. Added row-format
 validation to the existing special-project check; the corrected source passes.
-Native relaunch retest pending. No localization wording or project effects changed.
+Repair d7cedf5c. Fresh c159a742 startup and opening reload produce zero invalid-key
+or special-project localization errors. Native retest passed. No localization
+wording or project effects changed.
 
 ## N003 — Major: starting grand-doctrine assignment failures
 
 The first native mod startup repeatedly reports "set_grand_doctrine: Missing
 grand doctrine or folder." Requires inspection against the installed 1.19.4.2
-schema and native replay of corrected initialization. Not repaired yet.
+schema and native replay of corrected initialization.
 
 Installed primary definitions are mixed, so a blanket addition/removal of new_
 would be incorrect. The installed land definitions include new_mobile_warfare,
@@ -51,7 +53,14 @@ anea/foundation.py, plus world_legacy/build.py. Source repaired through a shared
 whole-token effect mapper, all four owners regenerated, and immutable captures
 retained. Regression checks verify valid IDs, idempotence and preservation of
 comments/strings and non-doctrine history data. Installed definition headers and
-their actual folders were checked read-only. Fresh-start native retest pending.
+their actual folders were checked read-only. Repairs ba90080d and c159a742.
+Fresh c159a742 Belka native start assigns Mobile Warfare, Fleet in Being and
+Strategic Destruction. All three persist after native save/reload; zero missing
+grand-doctrine assignment errors remain. Screenshots N003-land-doctrine-Mobile-
+Warfare-after.png, N003-naval-doctrine-Fleet-in-Being-after.png,
+N003-air-doctrine-Strategic-Destruction-after.png and
+N003-doctrines-persist-after-reload.png. Initialization and reload retest passed;
+longer continuity is blocked by the separate first-daily-rollover crash N006.
 
 ## N004 — Minor: overlapping scenario-selection panels
 
@@ -63,5 +72,67 @@ Evidence: primary-scenario-overlap-before.png. Owning responsive frontend geomet
 and bindings require investigation. Artwork replacement is not an authorized
 remedy for this finding. Open, no repair or native retest claimed.
 
-Each entry will record severity, scenario/date/revision, reproduction, expected and
-observed behavior, owning IDs, evidence, repair commit and native retest status.
+## N005 — Major presentation: placeholder panels and incorrect interface icons
+
+Observed at1991.1.1.12 on c159a742, 3440x1440/scale1.0. Open infantry or industry
+research and the land/naval/air doctrine screens. Large MOD PLACEHOLDER text
+overlaps research trees and clips inside doctrine cards. Numerous construction
+buttons and technology connectors show repeated shield icons instead of distinct
+functional symbols. Expected readable panels and recognizable controls using
+existing project artwork and appropriate functional graphics. Controls remain
+usable through tooltips. Evidence: N005-infantry-research-presentation-before.png,
+N005-industry-research-presentation-before.png and N003 doctrine after screenshots.
+Owning visual-scrub bindings and generated artwork require inspection. Open;
+no broad art replacement authorized and no native fix claimed.
+
+## N006 — Critical: crash at first daily rollover
+
+Primary human campaign, c159a742, observed1991.1.2.1 after advancing from the
+preserved repaired opening. Before advancement: selected The Crisis Continues,
+four research projects, two civilian-factory builds, one additional support-
+equipment factory and24 rubber imports from Chopinburg. These choices were not
+saved before the crash; the unmodified repaired opening remains available.
+Expected ordinary progression through the first day. Observed process exit and
+EXCEPTION_ACCESS_VIOLATION C0000005 at0x00007FF64C87CE38. Local crash bundle:
+profiles/primary/crashes/hoi4_20261108_141037; raw logs archived under
+evidence/logs/c159a742-first-daily-crash. Last error messages reference inherited
+SEA_japan_news_events.03's invalid state995 controller and a base-game controller
+trigger. Unchanged replay without management choices reproduced the same date and stack
+offsets (second bundle hoi4_20261108_141440). Repair candidate8072d3fa adds events
+directory isolation to all three descriptors and checks that all mod event calls
+resolve inside its authored collection. Native repair retest passed: the same opening progressed to1991.1.6.7, was
+saved/reloaded normally, and continued to1991.1.13.19 without a crash. The
+previous SEA event/controller errors are absent. Screenshots N006-repair-through-
+January-6.png and N006-repair-reload-through-January-13.png. This diagnostic did
+not make campaign decisions. Individual event causality was not isolated;
+no-mod first-day control remains outstanding. Full static wrapper passed8072d3fa.
+
+## O001 — Observation: coal unavailable in the opening trade list
+
+At1991.1.1.12, c159a742, Belka has a27 coal shortage and the coal supplier list is
+empty. A separate construction coal shortage is also displayed. First daily
+initialization has not completed because of N006. Inspect compatibility and
+initialization before classifying this as a defect or changing resource geography.
+
+## O002 — Observation: infantry upgrade reports1938
+
+Improved Infantry Equipment I appears on the mod's1991 tree position but shows
+1938 in its active research card, c159a742 at1991.1.1.12. Inspect the owning
+technology declaration and chronology contract before changing dates. Open.
+
+## N007 — Critical economy: fresh full-mode start has no state output
+
+Fresh8072d3fa Belka at1991.1.1.12 and the separate unchanged-opening diagnostic
+through1991.1.13.19 both show zero real/nominal GDP, treasury, debt and revenue,
+with3.135 monthly obligations. Forecast refresh has no effect. Saved country
+has initialized/schema flags and4200 seed GDP but no state real-output variables
+or world-started flag. Expected existing fictional opening calibration to seed
+state output once and create the opening account. Evidence: N007-zero-GDP-fresh-
+start-8072d3fa.png and N007-zero-GDP-after-daily-init-and-refresh.png.
+
+Investigation: the seed gate negates a scripted trigger using '= no', whereas
+explicit NOT is required for reliable native inversion. Native logs also reject
+'>='/'<=' shorthand in fiscal check_variable blocks. Repair in generator source
+is in progress; fresh initialization, transactions and monthly/reload checks are
+required before claiming fixed. Previously initialized zero-output saves cannot
+validate a one-time seed repair. No creative GDP calibration changes.

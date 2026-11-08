@@ -28,7 +28,7 @@ def ids(nodes):return {k for k,_,_ in nodes}
 def read(path):return parse(path.read_text(encoding='utf-8-sig'))
 def digest(path):return hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
 sys.path.append(str(ROOT/'tools/air_program'))
-from reviewed_sources import reviewed_updates,validate_outcome,reviewed_ucw_updates,validate_hosting
+from reviewed_sources import reviewed_updates,validate_outcome,reviewed_ucw_updates,validate_hosting,validate_pwi_layout,PWI
 
 
 class Captured(unittest.TestCase):
@@ -176,6 +176,24 @@ class Definitions(Captured):
             if continuation:self.assertEqual(expected,continuation['old_sha256'],path)
             current=update['new_sha256'] if update else repair['new_normalized_sha256'] if repair else continuation['new_sha256'] if continuation else expected
             self.assertEqual(current,digest(ROOT/path),path)
+
+    def test_pwi_layout_receipt_rejects_unreviewed_owner_changes(self):
+        source=(ROOT/PWI).read_text(encoding='utf-8-sig')
+        row=validate_pwi_layout(source)
+        self.assertEqual(row,reviewed_updates()[PWI])
+        self.assertEqual(row,validate_pwi_layout(source.replace('\n','\r\n')))
+        mutations=[
+            source.replace('mark_focus_tree_layout_dirty = yes','mark_focus_tree_layout_dirty = no'),
+            source.replace('mark_focus_tree_layout_dirty = yes','mark_focus_tree_layout_dirty = yes\n\t\tmark_focus_tree_layout_dirty = yes'),
+            source.replace('country_event = { id = ac_pwi.1 days = 1 }','country_event = { id = ac_pwi.1 days = 2 }'),
+            source+'\nunreviewed_owner = { }\n',
+            source.replace('ac_pwi_bound_pressures = yes','ac_pwi_bound_pressures = no'),
+        ]
+        for mutated in mutations:
+            with self.subTest(source=mutated[-80:]):
+                with self.assertRaises(ValueError):validate_pwi_layout(mutated)
+        result=subprocess.run([sys.executable,'-B','tools/build_peace_we_inherit.py','--check'],cwd=ROOT,capture_output=True,text=True)
+        self.assertEqual(0,result.returncode,result.stdout+result.stderr)
 
     def test_campaign_owner_delta_preserves_all_other_functions_and_canonical_output(self):
         files=reviewed_ucw_updates()

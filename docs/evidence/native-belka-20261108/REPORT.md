@@ -1,6 +1,8 @@
 # Belka human-played native test, 8 November 2026
 
-Status: isolated startup exercised; restoring original globe before campaign.
+Status: isolated startup and original animated globe restoration verified;
+Belka opening saved at 1 January 1991, 12:00. The January 2000 campaign and additional
+scenarios are incomplete; no full acceptance claim is made.
 
 Authorized scope: 1991 through January 2000 as human-controlled Belka, checkpoint
 repairs, separate alternate outcomes, AI Belka, economy-disabled and no-DLC checks.
@@ -22,13 +24,21 @@ publication, automatic merge or release is authorized by this test.
 
 The no-mod control and initial mod frontend reached their native menus. The
 control has zero active mods. Both launch audits and the control-exit audit
-verified 838 protected files unchanged with no additions. No campaign save or
-in-game progression has been created yet. Static results remain separate from
-natural native play, AI observation and forced diagnostics in COVERAGE.csv.
+verified 838 protected files unchanged with no additions. The first natural BLK
+opening was saved locally at 1991.1.1.12 on 6636c641 before advancing the clock.
+The sanitized primary-opening.json records that state; it does not establish
+gameplay or monthly progression. The engine omits default game rules in this
+opening save, so the extractor reports ac_economy as unknown; the checksum-only
+version difference is retained as an extractor warning. Static results remain
+separate from natural native play, AI observation and forced diagnostics in
+COVERAGE.csv.
 
 The owner identified the original globe replacement as unacceptable. Recovered
 the original archive globe fallback and animated layout; preservation and
-generator regressions are in place. Native restoration verification is pending.
+generator regressions are in place. Native restoration verification passed at
+6636c641: original artwork, rotating globe across separate frames, and no missing
+background lookup warning. The final repair's aggregate static wrapper also
+passed (local log globe-final-static.log). No replacement artwork was created.
 See BUGS.md for malformed localization, starting doctrine failures and frontend
 presentation findings. The generic buffer-allocation message also occurs in the
 no-mod control and is not attributed to the mod from these observations.
@@ -55,5 +65,14 @@ findings and their geography is not changed by this playtest.
 ## Preservation
 
 Preparation records protected normal configuration, save and log hashes and backs
-up normal configuration/log contents. Runtime isolation and final preservation
-remain unverified until their audits run.
+up normal configuration/log contents. Control, initial mod, profile transitions
+and globe-retest audits all passed. The globe audit at 18:11:32 UTC found all 838
+protected files unchanged with zero additions. The post-save audit at 18:21:32 UTC
+also passed with 838 unchanged and zero additions. Completion still requires a final
+audit after all remaining campaign and compatibility work.
+
+Closed the exact isolated game through its native Quit control and confirmed no
+HOI4 process or target window remained. The post-exit audit at 18:23:53 UTC passed:
+838 unchanged, zero additions. globe-restoration.json records the repair revision,
+native observations, screenshot hashes, static command/result and this audit.
+The original workspace still has exactly its four pre-existing modified paths.

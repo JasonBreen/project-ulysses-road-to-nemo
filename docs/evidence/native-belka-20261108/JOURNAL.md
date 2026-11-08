@@ -69,4 +69,22 @@ only after validating the G: candidate.
 - Alt+F4 left the old setup rendering without controls. Closed only owned test
   PID52132 after checking its exact copied-engine path; no campaign/save existed.
   Archived the initial native logs before resynchronizing the repaired payload.
-- Native confirmation of the restored animation is next; campaign still unstarted.
+- Native confirmation passed at6636c641: original globe visibly rotates across
+  separate screenshots, and the 1.19 background lookup warning is gone. Full
+  static wrapper passed again. Latest preservation audit: 838 unchanged, zero
+  additions at18:11:32 UTC.
+- Selected Belka in the first 1991 bookmark, Regular difficulty, Ironman off,
+  Canon AI Focuses checked. Inspected default rules and zero nation buffs without
+  changing them. Started and read the welcome screen. Preserved the paused
+  opening via the native Local save dialog as BLK_1991_01_01_12.hoi4. Extracted
+  primary-opening.json without editing the save; date1991.1.1.12, playerBLK,
+  difficulty normal, speed0. No first tick/monthly progression is claimed.
+- Returned through the native exit-to-menu flow. The original globe still renders
+  after leaving the campaign; evidence restored-globe-after-campaign-exit.png.
+- Post-save preservation audit at18:21:32 UTC: all838 protected files unchanged,
+  zero additions. Original workspace retains exactly its four pre-existing dirty
+  paths. The full campaign and additional cases remain outstanding.
+- Closed the isolated game using its native Quit button; confirmed the process
+  and target window are absent. Post-exit audit at18:23:53 UTC passed: 838 unchanged,
+  zero additions. Recorded the sanitized globe-restoration.json receipt. The art
+  repair is complete; the broader 1991-2000 test remains at its saved opening.

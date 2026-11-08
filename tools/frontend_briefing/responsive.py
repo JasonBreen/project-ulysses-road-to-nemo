@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT / 'tools/usea_expansion'))
 from script import get, parse, render, setv, walk, xy
 
 CONTRACT = HERE / 'responsive_original.json'
-MANAGED = ('bookmark_entry', 'country_entry', 'country_entry_medium',
+MANAGED = ('bookmark_entry', 'focus_entry', 'country_entry', 'country_entry_medium',
            'country_entry_mini', 'gamesetup_scenario_window',
            'gamesetup_interesting_countries_window', 'gamesetup_country_details')
 VIEWPORTS = [(3440, 1440, s) for s in (1, 1.25, 1.5)] + [
@@ -70,6 +70,9 @@ def repair(name, node):
     if name == 'bookmark_entry':
         size(node, 232, 211)
         text(named(node, 'date'), 16, 170, 200, 24)
+    elif name == 'focus_entry':
+        # The 95/96px bookmark art must fit the 60px entry and 70px grid slot.
+        setv(named(node, 'icon'), 'scale', '0.60')
     elif name == 'country_entry':
         size(node, 138, 108)
         leader = named(node, 'country_leader')

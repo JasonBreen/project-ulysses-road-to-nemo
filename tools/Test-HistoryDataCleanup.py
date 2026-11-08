@@ -6,6 +6,8 @@ docs/NEXT_TASKS.md: ideology popularities summing to 100, placeholder
 ``xxx`` values in starting equipment/portrait/division-name data, the
 Shilage/Delarus shared-leader conflict, and ship/division name groups for
 countries whose starting fleets and templates reference them.
+The N003 native-playtest repair additionally corrects only grand-doctrine IDs
+in the explicitly listed histories, retaining all three protected source captures.
 """
 import argparse
 import hashlib
@@ -43,6 +45,15 @@ class HistoryDataCleanupTests(unittest.TestCase):
             "mod/2985041246/history/units/SYC_ws_land.txt",
             "mod/2985041246/history/units/UST_mercs_1.txt",
         }
+        doctrine_tags = set('''AEM ALR AMB AQU ARK AUR AZB BAL BLD BLK CAL CHO
+            CRS CSO DAK DEL DOR ECH EHE EMM ERU ESN EVA FAT FCU FRU GEB GIB GLA
+            KLG LEA LUR MAY MST NEC NIH NPT NRL OSE PBL PLA RAT RJR RMN ROH SCA
+            SET SFA SLA SNS SOA SYC UGE UST VER VLK VOS WEL WIE YUK'''.split())
+        doctrine_paths = [p for p in (MOD / 'history/countries').glob('*.txt')
+                          if p.name[:3] in doctrine_tags]
+        self.assertEqual(60, len(doctrine_paths))
+        self.assertEqual(doctrine_tags, {p.name[:3] for p in doctrine_paths})
+        expected.update(p.relative_to(ROOT).as_posix() for p in doctrine_paths)
         self.assertEqual(expected, set(updates))
 
         protected = []

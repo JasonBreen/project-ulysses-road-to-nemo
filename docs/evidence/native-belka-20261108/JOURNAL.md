@@ -110,3 +110,11 @@ only after validating the G: candidate.
   gate pass. Full static wrapper is in progress; native after evidence pending.
 - Closed the exact test process through native Exit Game. Retained reproduction
   logs locally under evidence/logs/6636c641-N003-reproduction before payload sync.
+- First aggregate rerun stopped at the cleanup receipt check's seven-file
+  whitelist. Extended that explicit list to the60 N003 histories, retaining exact
+  old hashes from all three preserved manifests and exact current hashes. The
+  eight cleanup checks and the1050-input preservation/font checks now pass.
+  This is validation metadata for the same doctrine-only source change.
+- Post-reproduction audit at18:55:52 UTC again passed:838 unchanged, zero additions.
+  The old opening save is retained under the explicit before-doctrine-repair name
+  in the same disposable save directory, preventing accidental overwrite.

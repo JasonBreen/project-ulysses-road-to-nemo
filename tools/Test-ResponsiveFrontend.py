@@ -111,6 +111,65 @@ class ResponsiveFrontend(unittest.TestCase):
                 with self.assertRaises(AssertionError):
                     self.assert_focus_previews_fit(changed)
 
+    def assert_portrait_clear_of_selectors_and_ideas(self, gui):
+        country = named(parse(gui), 'gamesetup_interesting_countries_window')
+        mini = named(country, 'countries_mini')
+        def position(node):
+            return [float(get(get(node, 'position'), axis, '0')) for axis in ('x', 'y')]
+        def dimensions(node):
+            return [float(get(get(node, 'size'), axis)) for axis in ('width', 'height')]
+        mini_x, mini_y = position(mini)
+        mini_w, mini_h = dimensions(mini)
+        # Exercise the second row, not only the first visible country selectors.
+        mini_grid = named(mini, 'countries_grid')
+        self.assertEqual(2 * float(get(get(mini_grid, 'slotsize'), 'height')), mini_h)
+        spirit = named(country, 'spirit')
+        ideas = named(spirit, 'ideas')
+        spirit_x, spirit_y = position(spirit)
+        ideas_x, ideas_y = position(ideas)
+        ideas_w, ideas_h = dimensions(ideas)
+        ideas_box = (spirit_x + ideas_x, spirit_y + ideas_y,
+                     spirit_x + ideas_x + ideas_w, spirit_y + ideas_y + ideas_h)
+        boxes = {}
+        for control, gfx_file in [('minor_portrait_overlay', 'ac_frontend_briefing.gfx'),
+                                  ('minor_country_leader', 'zz_ac_visual_scrub.gfx')]:
+            node = named(country, control)
+            sprite = get(node, 'spriteType', get(node, 'quadTextureSprite')).strip('"')
+            binding = named(parse((MOD / 'interface' / gfx_file).read_text()), sprite)
+            data = (MOD / get(binding, 'texturefile').strip('"')).read_bytes()
+            self.assertEqual(b'DDS ', data[:4])
+            h, w = struct.unpack_from('<II', data, 12)
+            scale = float(get(node, 'scale', '1'))
+            x, y = position(node)
+            self.assertEqual(0, float(get(node, 'rotation', '0')))
+            box = (x, y, x + w * scale, y + h * scale)
+            self.assertGreaterEqual(box[1], mini_y + mini_h, control)
+            self.assertTrue(box[2] <= ideas_box[0] or box[0] >= ideas_box[2] or
+                            box[3] <= ideas_box[1] or box[1] >= ideas_box[3], control)
+            country_w, country_h = dimensions(country)
+            self.assertGreaterEqual(box[0], 0)
+            self.assertLessEqual(box[2], country_w)
+            self.assertLessEqual(box[3], country_h)
+            boxes[control] = box
+        frame, leader = boxes['minor_portrait_overlay'], boxes['minor_country_leader']
+        self.assertTrue(frame[0] <= leader[0] < leader[2] <= frame[2])
+        self.assertTrue(frame[1] <= leader[1] < leader[3] <= frame[3])
+
+    def test_portrait_fits_between_two_row_selector_and_idea_strip(self):
+        self.assert_portrait_clear_of_selectors_and_ideas(self.gui)
+
+    def test_portrait_old_position_or_unscaled_downshift_fails_geometry(self):
+        for replacements in [(('y = 364', 'y = 345'), ('y = 369', 'y = 350')),
+                             (('scale = 0.44', 'scale = 0.50'),)]:
+            with self.subTest(replacements=replacements):
+                changed = self.gui
+                for old, new in replacements:
+                    changed = changed.replace(old, new, 1)
+                self.assertNotEqual(self.gui, changed)
+                self.assertTrue(validate(changed))
+                with self.assertRaises(AssertionError):
+                    self.assert_portrait_clear_of_selectors_and_ideas(changed)
+
     def test_background_uses_installed_engine_percentage_and_cover_constraints(self):
         node = named(parse((MOD / 'interface/frontendmainview.gui').read_text()), 'frontend_background')
         box = get(node, 'size')

@@ -1,0 +1,1453 @@
+# Usea Depth minors B: provisional gameplay; owner: tools/usea_depth/minors_b/build.py.
+focus_tree = {
+	id = ac_ud_roh_tree
+	country = { factor = 0 modifier = { add = 45 tag = ROH original_tag = ROH } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 2496 y = 16 }
+	initial_show_position = { focus = ROH_ud_northern_works_inventory }
+	focus = {
+		id = ROH_ud_northern_works_inventory
+		icon = GFX_ac_ud_focus_ROH_ud_northern_works_inventory
+		x = 11
+		y = 0
+		cost = 5
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = ROH_ud_northern_works_inventory bonus = 0.5 uses = 1 category = industry }
+			country_event = { id = ac_ud_minb.401 days = 1 }
+		}
+	}
+	focus = {
+		id = ROH_ud_public_works_trust
+		icon = GFX_ac_ud_focus_ROH_ud_public_works_trust
+		x = 8
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_northern_works_inventory
+		}
+		mutually_exclusive = {
+			focus = ROH_ud_licensed_syndicates
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_public_trust_spirit
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = ROH_ud_licensed_syndicates
+		icon = GFX_ac_ud_focus_ROH_ud_licensed_syndicates
+		x = 14
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_northern_works_inventory
+		}
+		mutually_exclusive = {
+			focus = ROH_ud_public_works_trust
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_yard_syndicates_spirit
+			add_political_power = 30
+		}
+	}
+	focus = {
+		id = ROH_ud_capital_slipways
+		icon = GFX_ac_ud_focus_ROH_ud_capital_slipways
+		x = 6
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_public_works_trust focus = ROH_ud_licensed_syndicates
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					214 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = dockyard size > 0 include_locked = no } }
+				}
+				214 = {
+					add_building_construction = { type = dockyard level = 1 instant_build = yes }
+				}
+			}
+
+			country_event = { id = ac_ud_minb.406 days = 1 }
+		}
+	}
+	focus = {
+		id = ROH_ud_crude_survey
+		icon = GFX_ac_ud_focus_ROH_ud_crude_survey
+		x = 10
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_public_works_trust focus = ROH_ud_licensed_syndicates
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					559 = { is_owned_by = ROOT }
+				}
+				add_resource = { type = oil amount = 3 state = 559 }
+			}
+
+			country_event = { id = ac_ud_minb.407 days = 1 }
+		}
+	}
+	focus = {
+		id = ROH_ud_rolling_mills
+		icon = GFX_ac_ud_focus_ROH_ud_rolling_mills
+		x = 14
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_public_works_trust focus = ROH_ud_licensed_syndicates
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = ROH_ud_rolling_mills bonus = 0.5 uses = 1 category = industry }
+			if = {
+				limit = {
+					214 = { is_owned_by = ROOT }
+				}
+				add_resource = { type = steel amount = 2 state = 214 }
+			}
+		}
+	}
+	focus = {
+		id = ROH_ud_white_valley_dry_dock
+		icon = GFX_ac_ud_focus_ROH_ud_white_valley_dry_dock
+		x = 6
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_capital_slipways
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					559 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = dockyard size > 0 include_locked = no } }
+				}
+				559 = {
+					add_building_construction = { type = dockyard level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = ROH_ud_white_valley_refinery
+		icon = GFX_ac_ud_focus_ROH_ud_white_valley_refinery
+		x = 10
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_crude_survey
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					559 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = synthetic_refinery size > 0 include_locked = no } }
+				}
+				559 = {
+					add_building_construction = { type = synthetic_refinery level = 1 instant_build = yes }
+				}
+			}
+
+			add_tech_bonus = { name = ROH_ud_white_valley_refinery bonus = 0.5 uses = 1 category = synth_resources }
+		}
+	}
+	focus = {
+		id = ROH_ud_alloy_works
+		icon = GFX_ac_ud_focus_ROH_ud_alloy_works
+		x = 14
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_rolling_mills
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					503 = { is_owned_by = ROOT }
+				}
+				add_resource = { type = aluminium amount = 2 state = 503 }
+			}
+
+			if = {
+				limit = {
+					503 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = industrial_complex size > 0 include_locked = no } }
+				}
+				503 = {
+					add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = ROH_ud_coastal_freighter_class
+		icon = GFX_ac_ud_focus_ROH_ud_coastal_freighter_class
+		x = 6
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_white_valley_dry_dock
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = ROH_ud_coastal_freighter_class bonus = 0.75 uses = 1 category = naval_equipment }
+			navy_experience = 10
+		}
+	}
+	focus = {
+		id = ROH_ud_shore_fuel_line
+		icon = GFX_ac_ud_focus_ROH_ud_shore_fuel_line
+		x = 10
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_white_valley_refinery
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					503 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = fuel_silo size > 0 include_locked = no } }
+				}
+				503 = {
+					add_building_construction = { type = fuel_silo level = 1 instant_build = yes }
+				}
+			}
+
+			if = {
+				limit = {
+					503 = { is_owned_and_controlled_by = ROOT }
+				}
+				503 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = ROH_ud_heavy_plate_contracts
+		icon = GFX_ac_ud_focus_ROH_ud_heavy_plate_contracts
+		x = 14
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_alloy_works
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_heavy_plate_spirit
+		}
+	}
+	focus = {
+		id = ROH_ud_repair_yard_contracts
+		icon = GFX_ac_ud_focus_ROH_ud_repair_yard_contracts
+		x = 6
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_coastal_freighter_class
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					503 = { is_owned_by = ROOT }
+				}
+				503 = { add_extra_state_shared_building_slots = 1 }
+			}
+
+			if = {
+				limit = {
+					503 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = dockyard size > 0 include_locked = no } }
+				}
+				503 = {
+					add_building_construction = { type = dockyard level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = ROH_ud_refined_fuel_exports
+		icon = GFX_ac_ud_focus_ROH_ud_refined_fuel_exports
+		x = 10
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_shore_fuel_line
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_fuel_exports_spirit
+		}
+	}
+	focus = {
+		id = ROH_ud_structural_steel
+		icon = GFX_ac_ud_focus_ROH_ud_structural_steel
+		x = 14
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_heavy_plate_contracts
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					559 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = industrial_complex size > 0 include_locked = no } }
+				}
+				559 = {
+					add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+				}
+			}
+
+			add_tech_bonus = { name = ROH_ud_structural_steel bonus = 0.5 uses = 1 category = construction_tech }
+		}
+	}
+	focus = {
+		id = ROH_ud_northern_industrial_plan
+		icon = GFX_ac_ud_focus_ROH_ud_northern_industrial_plan
+		x = 10
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = ROH_ud_repair_yard_contracts focus = ROH_ud_refined_fuel_exports focus = ROH_ud_structural_steel
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_northern_plan_spirit
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = ROH_ud_delarus_desk
+		icon = GFX_ac_ud_focus_ROH_ud_delarus_desk
+		x = 2
+		y = 0
+		cost = 5
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.405 days = 1 }
+		}
+	}
+	focus = {
+		id = ROH_ud_border_rail_link
+		icon = GFX_ac_ud_focus_ROH_ud_border_rail_link
+		x = 0
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_delarus_desk
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					559 = { is_owned_and_controlled_by = ROOT }
+				}
+				559 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = ROH_ud_council_seat_review
+		icon = GFX_ac_ud_focus_ROH_ud_council_seat_review
+		x = 4
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_delarus_desk
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.01
+		}
+	}
+	focus = {
+		id = ROH_ud_delarus_compact
+		icon = GFX_ac_ud_focus_ROH_ud_delarus_compact
+		x = 0
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_border_rail_link focus = ROH_ud_council_seat_review
+		}
+		mutually_exclusive = {
+			focus = ROH_ud_council_first
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_delarus_compact_spirit
+			set_country_flag = ROH_ud_delarus_bilateral
+		}
+	}
+	focus = {
+		id = ROH_ud_council_first
+		icon = GFX_ac_ud_focus_ROH_ud_council_first
+		x = 4
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_border_rail_link focus = ROH_ud_council_seat_review
+		}
+		mutually_exclusive = {
+			focus = ROH_ud_delarus_compact
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_council_standards_spirit
+			set_country_flag = ROH_ud_council_route
+		}
+	}
+	focus = {
+		id = ROH_ud_delarus_exchange
+		icon = GFX_ac_ud_focus_ROH_ud_delarus_exchange
+		x = 0
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_delarus_compact
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = ROH_ud_delarus_compact_spirit
+				}
+				remove_ideas = ROH_ud_delarus_compact_spirit
+			}
+			add_ideas = ROH_ud_delarus_exchange_spirit
+		}
+	}
+	focus = {
+		id = ROH_ud_council_hull_standards
+		icon = GFX_ac_ud_focus_ROH_ud_council_hull_standards
+		x = 4
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_council_first
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = ROH_ud_council_hull_standards bonus = 0.5 uses = 1 category = naval_equipment }
+			navy_experience = 5
+		}
+	}
+	focus = {
+		id = ROH_ud_dorondo_frontier_market
+		icon = GFX_ac_ud_focus_ROH_ud_dorondo_frontier_market
+		x = 2
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_delarus_exchange focus = ROH_ud_council_hull_standards
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_frontier_market_spirit
+			if = {
+				limit = {
+					559 = { is_owned_and_controlled_by = ROOT }
+				}
+				559 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = ROH_ud_administration_ledger
+		icon = GFX_ac_ud_focus_ROH_ud_administration_ledger
+		x = 20
+		y = 0
+		cost = 5
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = ROH_ud_works_councils_hearing
+		icon = GFX_ac_ud_focus_ROH_ud_works_councils_hearing
+		x = 18
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_administration_ledger
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = ROH_ud_employers_federation
+		icon = GFX_ac_ud_focus_ROH_ud_employers_federation
+		x = 22
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_administration_ledger
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_political_power = 20
+		}
+	}
+	focus = {
+		id = ROH_ud_northern_charter
+		icon = GFX_ac_ud_focus_ROH_ud_northern_charter
+		x = 18
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = ROH_ud_works_councils_hearing
+		}
+		prerequisite = {
+			focus = ROH_ud_employers_federation
+		}
+		mutually_exclusive = {
+			focus = ROH_ud_industrial_concordat focus = ROH_ud_shipyard_council
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_charter_rule_spirit
+			ac_ud_minors_b_regime_roh_northern_charter = yes
+			country_event = { id = ac_ud_minb.402 days = 1 }
+		}
+	}
+	focus = {
+		id = ROH_ud_industrial_concordat
+		icon = GFX_ac_ud_focus_ROH_ud_industrial_concordat
+		x = 20
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = ROH_ud_works_councils_hearing
+		}
+		prerequisite = {
+			focus = ROH_ud_employers_federation
+		}
+		mutually_exclusive = {
+			focus = ROH_ud_northern_charter focus = ROH_ud_shipyard_council
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_concordat_rule_spirit
+			ac_ud_minors_b_regime_roh_industrial_concordat = yes
+			country_event = { id = ac_ud_minb.403 days = 1 }
+		}
+	}
+	focus = {
+		id = ROH_ud_shipyard_council
+		icon = GFX_ac_ud_focus_ROH_ud_shipyard_council
+		x = 22
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = ROH_ud_works_councils_hearing
+		}
+		prerequisite = {
+			focus = ROH_ud_employers_federation
+		}
+		mutually_exclusive = {
+			focus = ROH_ud_industrial_concordat focus = ROH_ud_northern_charter
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_yard_committee_rule_spirit
+			ac_ud_minors_b_regime_roh_shipyard_council = yes
+			country_event = { id = ac_ud_minb.404 days = 1 }
+		}
+	}
+	focus = {
+		id = ROH_ud_codetermination_law
+		icon = GFX_ac_ud_focus_ROH_ud_codetermination_law
+		x = 18
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_northern_charter
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.03
+		}
+	}
+	focus = {
+		id = ROH_ud_northern_elections
+		icon = GFX_ac_ud_focus_ROH_ud_northern_elections
+		x = 18
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = ROH_ud_codetermination_law
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.05
+			add_popularity = { ideology = democratic popularity = 0.05 }
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = ROH_ud_social_insurance_fund
+		icon = GFX_ac_ud_focus_ROH_ud_social_insurance_fund
+		x = 18
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_northern_elections
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = ROH_ud_charter_rule_spirit
+				}
+				remove_ideas = ROH_ud_charter_rule_spirit
+			}
+			add_ideas = ROH_ud_social_insurance_spirit
+		}
+	}
+	focus = {
+		id = ROH_ud_wage_and_price_board
+		icon = GFX_ac_ud_focus_ROH_ud_wage_and_price_board
+		x = 20
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_industrial_concordat
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					214 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = industrial_complex size > 0 include_locked = no } }
+				}
+				214 = {
+					add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+				}
+			}
+
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = ROH_ud_concordat_chambers
+		icon = GFX_ac_ud_focus_ROH_ud_concordat_chambers
+		x = 20
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = ROH_ud_wage_and_price_board
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					559 = { is_owned_by = ROOT }
+				}
+				559 = { add_extra_state_shared_building_slots = 1 }
+			}
+
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = ROH_ud_works_police_ordinance
+		icon = GFX_ac_ud_focus_ROH_ud_works_police_ordinance
+		x = 20
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_concordat_chambers
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = ROH_ud_concordat_rule_spirit
+				}
+				remove_ideas = ROH_ud_concordat_rule_spirit
+			}
+			add_ideas = ROH_ud_works_police_spirit
+			add_stability = 0.03
+		}
+	}
+	focus = {
+		id = ROH_ud_yard_committees
+		icon = GFX_ac_ud_focus_ROH_ud_yard_committees
+		x = 22
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_shipyard_council
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.02
+			add_popularity = { ideology = communism popularity = 0.05 }
+		}
+	}
+	focus = {
+		id = ROH_ud_first_output_plan
+		icon = GFX_ac_ud_focus_ROH_ud_first_output_plan
+		x = 22
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = ROH_ud_yard_committees
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = ROH_ud_yard_committee_rule_spirit
+				}
+				remove_ideas = ROH_ud_yard_committee_rule_spirit
+			}
+			add_ideas = ROH_ud_output_plan_spirit
+		}
+	}
+	focus = {
+		id = ROH_ud_shipyard_workers_guard
+		icon = GFX_ac_ud_focus_ROH_ud_shipyard_workers_guard
+		x = 22
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_first_output_plan
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			army_experience = 10
+			add_manpower = 4000
+		}
+	}
+	focus = {
+		id = ROH_ud_ulysses_notice
+		icon = GFX_ac_ud_focus_ROH_ud_ulysses_notice
+		x = 10
+		y = 7
+		cost = 5
+		available = {
+			original_tag = ROH
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.408 days = 1 }
+		}
+	}
+	focus = {
+		id = ROH_ud_works_shelters
+		icon = GFX_ac_ud_focus_ROH_ud_works_shelters
+		x = 6
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = ROH_ud_ulysses_notice
+		}
+		available = {
+			original_tag = ROH
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_works_shelters_spirit
+		}
+	}
+	focus = {
+		id = ROH_ud_fuel_reserve_tanks
+		icon = GFX_ac_ud_focus_ROH_ud_fuel_reserve_tanks
+		x = 10
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_ulysses_notice
+		}
+		available = {
+			original_tag = ROH
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					214 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = fuel_silo size > 0 include_locked = no } }
+				}
+				214 = {
+					add_building_construction = { type = fuel_silo level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = ROH_ud_yard_contingency_orders
+		icon = GFX_ac_ud_focus_ROH_ud_yard_contingency_orders
+		x = 14
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_ulysses_notice
+		}
+		available = {
+			original_tag = ROH
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_yard_contingency_spirit
+		}
+	}
+	focus = {
+		id = ROH_ud_shift_registers
+		icon = GFX_ac_ud_focus_ROH_ud_shift_registers
+		x = 6
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_works_shelters
+		}
+		available = {
+			original_tag = ROH
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = ROH_ud_readiness_inspection
+		icon = GFX_ac_ud_focus_ROH_ud_readiness_inspection
+		x = 10
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_shift_registers focus = ROH_ud_fuel_reserve_tanks focus = ROH_ud_yard_contingency_orders
+		}
+		available = {
+			original_tag = ROH
+			date > 1998.6.18
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = ROH_ud_harbour_guard
+		icon = GFX_ac_ud_focus_ROH_ud_harbour_guard
+		x = 20
+		y = 7
+		cost = 5
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			army_experience = 5
+			navy_experience = 5
+		}
+	}
+	focus = {
+		id = ROH_ud_capital_air_station
+		icon = GFX_ac_ud_focus_ROH_ud_capital_air_station
+		x = 18
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_harbour_guard
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					214 = { is_owned_and_controlled_by = ROOT }
+				}
+				214 = {
+					add_building_construction = { type = air_base level = 2 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = ROH_ud_shore_batteries
+		icon = GFX_ac_ud_focus_ROH_ud_shore_batteries
+		x = 22
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_harbour_guard
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					214 = { is_owned_and_controlled_by = ROOT }
+				}
+				214 = {
+					add_building_construction = { type = anti_air_building level = 1 instant_build = yes }
+				}
+			}
+
+			if = {
+				limit = {
+					559 = { is_owned_and_controlled_by = ROOT }
+				}
+				559 = {
+					add_building_construction = { type = anti_air_building level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = ROH_ud_northern_coast_command
+		icon = GFX_ac_ud_focus_ROH_ud_northern_coast_command
+		x = 20
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_capital_air_station focus = ROH_ud_shore_batteries
+		}
+		available = {
+			original_tag = ROH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_coast_command_spirit
+			if = {
+				limit = {
+					559 = { is_owned_and_controlled_by = ROOT }
+				}
+				559 = {
+					add_building_construction = { type = radar_station level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = ROH_ud_impact_watch
+		icon = GFX_ac_ud_focus_ROH_ud_impact_watch
+		x = 10
+		y = 11
+		cost = 5
+		available = {
+			original_tag = ROH
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.409 days = 1 }
+		}
+	}
+	focus = {
+		id = ROH_ud_repair_crews
+		icon = GFX_ac_ud_focus_ROH_ud_repair_crews
+		x = 8
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_impact_watch
+		}
+		available = {
+			original_tag = ROH
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					214 = { is_owned_and_controlled_by = ROOT }
+				}
+				214 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = ROH_ud_relief_fuel
+		icon = GFX_ac_ud_focus_ROH_ud_relief_fuel
+		x = 12
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_impact_watch
+		}
+		available = {
+			original_tag = ROH
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = { idea = ROH_ud_relief_fuel_spirit days = 180 }
+			add_political_power = -15
+		}
+	}
+	focus = {
+		id = ROH_ud_arrivals_from_the_south
+		icon = GFX_ac_ud_focus_ROH_ud_arrivals_from_the_south
+		x = 10
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_repair_crews focus = ROH_ud_relief_fuel
+		}
+		available = {
+			original_tag = ROH
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = { id = ac_ud_minb.410 days = 1 }
+		}
+	}
+	focus = {
+		id = ROH_ud_white_valley_hostels
+		icon = GFX_ac_ud_focus_ROH_ud_white_valley_hostels
+		x = 8
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_arrivals_from_the_south
+		}
+		mutually_exclusive = {
+			focus = ROH_ud_arrivals_labour_register
+		}
+		available = {
+			original_tag = ROH
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_hostels_spirit
+			set_country_flag = ROH_ud_hostels_open
+			add_manpower = 3000
+		}
+	}
+	focus = {
+		id = ROH_ud_arrivals_labour_register
+		icon = GFX_ac_ud_focus_ROH_ud_arrivals_labour_register
+		x = 12
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_arrivals_from_the_south
+		}
+		mutually_exclusive = {
+			focus = ROH_ud_white_valley_hostels
+		}
+		available = {
+			original_tag = ROH
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_labour_register_spirit
+			set_country_flag = ROH_ud_labour_registered
+		}
+	}
+	focus = {
+		id = ROH_ud_wartime_orders
+		icon = GFX_ac_ud_focus_ROH_ud_wartime_orders
+		x = 10
+		y = 15
+		cost = 5
+		available = {
+			original_tag = ROH
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.411 days = 1 }
+		}
+	}
+	focus = {
+		id = ROH_ud_isaf_repair_contracts
+		icon = GFX_ac_ud_focus_ROH_ud_isaf_repair_contracts
+		x = 8
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_wartime_orders
+		}
+		mutually_exclusive = {
+			focus = ROH_ud_civilian_orders_first
+		}
+		available = {
+			original_tag = ROH
+			has_global_flag = ac_ucw_isaf_formed
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_isaf_repairs_spirit
+			set_country_flag = ROH_ud_isaf_repairs
+		}
+	}
+	focus = {
+		id = ROH_ud_civilian_orders_first
+		icon = GFX_ac_ud_focus_ROH_ud_civilian_orders_first
+		x = 12
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_wartime_orders
+		}
+		mutually_exclusive = {
+			focus = ROH_ud_isaf_repair_contracts
+		}
+		available = {
+			original_tag = ROH
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_civilian_first_spirit
+			set_country_flag = ROH_ud_civilian_first
+		}
+	}
+	focus = {
+		id = ROH_ud_wartime_fuel_allocation
+		icon = GFX_ac_ud_focus_ROH_ud_wartime_fuel_allocation
+		x = 10
+		y = 17
+		cost = 5
+		prerequisite = {
+			focus = ROH_ud_isaf_repair_contracts focus = ROH_ud_civilian_orders_first
+		}
+		available = {
+			original_tag = ROH
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ROH_ud_fuel_allocation_spirit
+		}
+	}
+	focus = {
+		id = ROH_ud_orders_after_the_accord
+		icon = GFX_ac_ud_focus_ROH_ud_orders_after_the_accord
+		x = 14
+		y = 15
+		cost = 5
+		available = {
+			original_tag = ROH
+			has_global_flag = ac_ucw_war_averted
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = ROH_ud_orders_after_the_accord bonus = 0.5 uses = 1 category = industry }
+			add_stability = 0.03
+		}
+	}
+	focus = {
+		id = ROH_ud_works_after_the_war
+		icon = GFX_ac_ud_focus_ROH_ud_works_after_the_war
+		x = 10
+		y = 18
+		cost = 10
+		prerequisite = {
+			focus = ROH_ud_wartime_fuel_allocation focus = ROH_ud_orders_after_the_accord
+		}
+		available = {
+			original_tag = ROH
+			OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate has_global_flag = ac_ucw_war_averted }
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.412 days = 1 }
+		}
+	}
+}

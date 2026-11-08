@@ -38,6 +38,11 @@ Belka, 1 Jan 1991 bookmark: menu → scenario → country select → campaign st
   - `load_N_small.dds` thumbnails are generated.
 - **Undefined GUI types** (`mainmenu_dlc_ownership`, `owned_dlc_item`, `change_background`, `country_filter`, …) are added as hidden stubs. See `restore_original_gui.py`.
 - **Tech tree tabs not switching.** `nsb_armour_folder` is defined in `technology_tags` again (with `available = { always = no }`). The 1.19 engine and scripts expect it, and the folder never shows.
+- **New 1991 game crashed on its first daily tick (1.19.4.2, crash log 2026-11-06 16:10).** This is a static fix; it has not been confirmed in game.
+  - The 1.19.4 vanilla `common/on_actions/14_sea_on_actions.txt` runs Earth-only China, Japan and Southeast Asia setup in `on_startup`.
+  - Its "Great Wall" block adds province modifiers to hard-coded Earth province IDs. In the Strangereal map, states 328 and 607–610 exist but hold unrelated provinces, and provinces 11822, 11855 and 11886 do not exist (the map ends at 11351).
+  - The mod now overrides the file with an empty `on_actions` block, like the older DLC files in that folder.
+  - `tools/Test-VanillaStartupHazards.py` checks the override. With `--reference-game-root`, it also scans every vanilla on_actions file the mod still loads for province modifiers and for province IDs beyond the mod map, so a future patch that adds one fails the static suite.
 - **Music player:** `superevent_station` (from `music/superevent_music.txt`) had no `<station>_faceplate` / `_stations_entry` GUI. Added `interface/pu_superevent_music_station.gui`, hidden, with album art built from the mod's Belkan War superevent picture.
 
 ### Map: "Failed to load the map"

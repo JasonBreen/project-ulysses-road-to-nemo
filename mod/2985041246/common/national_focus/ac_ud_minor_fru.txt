@@ -1,0 +1,1179 @@
+# Usea Depth minor states A: provisional gameplay; source tools/usea_depth/minors_a (owner: build.py).
+focus_tree = {
+	id = ac_ud_fru_tree
+	country = { factor = 0 modifier = { add = 45 tag = FRU original_tag = FRU } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 2592 y = 16 }
+	initial_show_position = { focus = FRU_ud_state_inventory }
+	focus = {
+		id = FRU_ud_state_inventory
+		icon = GFX_ac_ud_focus_FRU_ud_state_inventory
+		x = 11
+		y = 0
+		cost = 5
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.301 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_count_the_works
+		icon = GFX_ac_ud_focus_FRU_ud_count_the_works
+		x = 2
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_state_inventory
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = FRU_ud_plains_works
+		icon = GFX_ac_ud_focus_FRU_ud_plains_works
+		x = 1
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_count_the_works
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_rubber_concessions
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = FRU_ud_plains_works_board_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_rubber_concessions
+		icon = GFX_ac_ud_focus_FRU_ud_rubber_concessions
+		x = 3
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_count_the_works
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_plains_works
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = FRU_ud_rubber_concessions_spirit
+			add_stability = -0.02
+		}
+	}
+
+	focus = {
+		id = FRU_ud_ganzir_foundries
+		icon = GFX_ac_ud_focus_FRU_ud_ganzir_foundries
+		x = 1
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_plains_works
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = FRU_ud_ganzir_foundries bonus = 0.5 uses = 1 category = industry }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = FRU_ud_plantation_charters
+		icon = GFX_ac_ud_focus_FRU_ud_plantation_charters
+		x = 3
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_rubber_concessions
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 285 = { is_owned_by = ROOT } } add_resource = { type = rubber amount = 4 state = 285 } }
+			if = { limit = { 139 = { is_owned_by = ROOT } } add_resource = { type = rubber amount = 4 state = 139 } }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_ilsede_machine_shops
+		icon = GFX_ac_ud_focus_FRU_ud_ilsede_machine_shops
+		x = 1
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_ganzir_foundries
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 285 = { is_owned_by = ROOT } } 285 = { add_building_construction = { type = industrial_complex level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = FRU_ud_ilsede_machine_shops bonus = 0.5 uses = 1 category = construction_tech }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_rubber_export_contracts
+		icon = GFX_ac_ud_focus_FRU_ud_rubber_export_contracts
+		x = 3
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_plantation_charters
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { has_idea = FRU_ud_rubber_concessions_spirit } remove_ideas = FRU_ud_rubber_concessions_spirit }
+			add_ideas = FRU_ud_rubber_export_houses_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_mend_the_sector
+		icon = GFX_ac_ud_focus_FRU_ud_mend_the_sector
+		x = 2
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_ilsede_machine_shops
+			focus = FRU_ud_rubber_export_contracts
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			if = { limit = { has_idea = FRU_industry_stolen } remove_ideas = FRU_industry_stolen }
+			add_ideas = FRU_ud_mending_sector_spirit
+			custom_effect_tooltip = FRU_ud_mend_the_sector_tt
+			country_event = { id = ac_ud_mina.302 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_close_the_ledger
+		icon = GFX_ac_ud_focus_FRU_ud_close_the_ledger
+		x = 2
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_mend_the_sector
+		}
+		available = {
+			date > 1992.12.31
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			if = { limit = { has_idea = FRU_ud_mending_sector_spirit } remove_ideas = FRU_ud_mending_sector_spirit }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.03
+		}
+	}
+
+	focus = {
+		id = FRU_ud_pass_survey
+		icon = GFX_ac_ud_focus_FRU_ud_pass_survey
+		x = 6
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_state_inventory
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			if = { limit = { 144 = { is_owned_by = ROOT } } 144 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+			if = { limit = { 139 = { is_owned_by = ROOT } } 139 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_waia_rail
+		icon = GFX_ac_ud_focus_FRU_ud_waia_rail
+		x = 6
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_pass_survey
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_tech_bonus = { name = FRU_ud_waia_rail bonus = 0.5 uses = 1 category = train_tech }
+			add_ideas = FRU_ud_pass_railway_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_northern_transit
+		icon = GFX_ac_ud_focus_FRU_ud_northern_transit
+		x = 5
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_waia_rail
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_southern_transit
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = FRU_ud_northern_corridor_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_southern_transit
+		icon = GFX_ac_ud_focus_FRU_ud_southern_transit
+		x = 7
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_waia_rail
+		}
+		prerequisite = {
+			focus = FRU_ud_border_commission
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_northern_transit
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = FRU_ud_southern_corridor_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_ganzir_airfield
+		icon = GFX_ac_ud_focus_FRU_ud_ganzir_airfield
+		x = 6
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_northern_transit
+			focus = FRU_ud_southern_transit
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 494 = { is_owned_by = ROOT } } 494 = { add_building_construction = { type = air_base level = 2 instant_build = yes } } }
+			air_experience = 10
+		}
+	}
+
+	focus = {
+		id = FRU_ud_iggingen_file
+		icon = GFX_ac_ud_focus_FRU_ud_iggingen_file
+		x = 10
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_state_inventory
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			custom_effect_tooltip = FRU_ud_iggingen_file_tt
+			country_event = { id = ac_ud_mina.303 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_border_commission
+		icon = GFX_ac_ud_focus_FRU_ud_border_commission
+		x = 9
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_iggingen_file
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_long_grievance
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = FRU_ud_border_commission_spirit
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = -3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = FRU_ud_long_grievance
+		icon = GFX_ac_ud_focus_FRU_ud_long_grievance
+		x = 11
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_iggingen_file
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_border_commission
+		}
+		ai_will_do = { factor = 3 }
+		completion_reward = {
+			add_ideas = FRU_ud_grievance_posts_spirit
+			add_war_support = 0.02
+		}
+	}
+
+	focus = {
+		id = FRU_ud_commission_hearings
+		icon = GFX_ac_ud_focus_FRU_ud_commission_hearings
+		x = 9
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_border_commission
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_stability = 0.03
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = FRU_ud_desert_road_watch
+		icon = GFX_ac_ud_focus_FRU_ud_desert_road_watch
+		x = 11
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_long_grievance
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 299 = { is_owned_by = ROOT } } 299 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+			army_experience = 10
+		}
+	}
+
+	focus = {
+		id = FRU_ud_retire_the_rebellion
+		icon = GFX_ac_ud_focus_FRU_ud_retire_the_rebellion
+		x = 9
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_commission_hearings
+		}
+		available = {
+			date > 1992.12.31
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { has_idea = FRU_dorondian_rebelion } remove_ideas = FRU_dorondian_rebelion }
+			add_stability = 0.05
+			custom_effect_tooltip = FRU_ud_retire_the_rebellion_tt
+		}
+	}
+
+	focus = {
+		id = FRU_ud_armed_watch
+		icon = GFX_ac_ud_focus_FRU_ud_armed_watch
+		x = 11
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_desert_road_watch
+		}
+		available = {
+			date > 1992.12.31
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { has_idea = FRU_dorondian_rebelion } remove_ideas = FRU_dorondian_rebelion }
+			add_ideas = FRU_ud_armed_watch_spirit
+			custom_effect_tooltip = FRU_ud_armed_watch_tt
+		}
+	}
+
+	focus = {
+		id = FRU_ud_garrison_and_citizen
+		icon = GFX_ac_ud_focus_FRU_ud_garrison_and_citizen
+		x = 14
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_state_inventory
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.304 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_citizen_reserve
+		icon = GFX_ac_ud_focus_FRU_ud_citizen_reserve
+		x = 13
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_garrison_and_citizen
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_mountain_corps
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			if = { limit = { has_idea = FRU_martial_society } remove_ideas = FRU_martial_society }
+			add_ideas = FRU_ud_citizen_reserve_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_mountain_corps
+		icon = GFX_ac_ud_focus_FRU_ud_mountain_corps
+		x = 15
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_garrison_and_citizen
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_citizen_reserve
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = FRU_ud_mountain_corps_spirit
+			army_experience = 15
+		}
+	}
+
+	focus = {
+		id = FRU_ud_civil_defence_wardens
+		icon = GFX_ac_ud_focus_FRU_ud_civil_defence_wardens
+		x = 13
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_citizen_reserve
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = FRU_ud_civil_defence_wardens bonus = 0.5 uses = 1 category = engineers_tech }
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = FRU_ud_high_pass_battalions
+		icon = GFX_ac_ud_focus_FRU_ud_high_pass_battalions
+		x = 15
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_mountain_corps
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			army_experience = 20
+			add_tech_bonus = { name = FRU_ud_high_pass_battalions bonus = 0.5 uses = 1 category = support_tech }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_treaty_council_watch
+		icon = GFX_ac_ud_focus_FRU_ud_treaty_council_watch
+		x = 18
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_state_inventory
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.305 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_observer_seat
+		icon = GFX_ac_ud_focus_FRU_ud_observer_seat
+		x = 17
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_treaty_council_watch
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_stand_apart
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = FRU_ud_treaty_observer_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_stand_apart
+		icon = GFX_ac_ud_focus_FRU_ud_stand_apart
+		x = 19
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_treaty_council_watch
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_observer_seat
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = FRU_ud_self_reliance_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_observer_reports
+		icon = GFX_ac_ud_focus_FRU_ud_observer_reports
+		x = 17
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_observer_seat
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = FRU_ud_observer_reports bonus = 0.5 uses = 1 category = electronics }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = FRU_ud_self_reliant_trade
+		icon = GFX_ac_ud_focus_FRU_ud_self_reliant_trade
+		x = 19
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_stand_apart
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = FRU_ud_self_reliant_trade bonus = 0.5 uses = 1 category = synth_resources }
+			if = { limit = { 494 = { is_owned_by = ROOT } } 494 = { add_building_construction = { type = fuel_silo level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_question_of_the_executive
+		icon = GFX_ac_ud_focus_FRU_ud_question_of_the_executive
+		x = 18
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_observer_reports
+			focus = FRU_ud_self_reliant_trade
+			focus = FRU_ud_civil_defence_wardens
+			focus = FRU_ud_high_pass_battalions
+		}
+		available = {
+			date > 1992.12.31
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_stability = -0.02
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.306 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_constitutional_convention
+		icon = GFX_ac_ud_focus_FRU_ud_constitutional_convention
+		x = 14
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_question_of_the_executive
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_ganzir_commune
+			focus = FRU_ud_garrison_council
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_fru_convention = yes
+			country_event = { id = ac_ud_mina.307 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_convention_charter
+		icon = GFX_ac_ud_focus_FRU_ud_convention_charter
+		x = 14
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_constitutional_convention
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = FRU_ud_convention_charter_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_provincial_seats
+		icon = GFX_ac_ud_focus_FRU_ud_provincial_seats
+		x = 13
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_convention_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = FRU_ud_ganzir_free_press
+		icon = GFX_ac_ud_focus_FRU_ud_ganzir_free_press
+		x = 15
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_convention_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = FRU_ud_open_press_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_first_republic_ballot
+		icon = GFX_ac_ud_focus_FRU_ud_first_republic_ballot
+		x = 14
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_provincial_seats
+		}
+		prerequisite = {
+			focus = FRU_ud_ganzir_free_press
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = FRU_ud_convention_charter_spirit } remove_ideas = FRU_ud_convention_charter_spirit }
+			add_ideas = FRU_ud_republic_charter_spirit
+			add_stability = 0.03
+		}
+	}
+
+	focus = {
+		id = FRU_ud_garrison_council
+		icon = GFX_ac_ud_focus_FRU_ud_garrison_council
+		x = 18
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_question_of_the_executive
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_constitutional_convention
+			focus = FRU_ud_ganzir_commune
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_fru_garrison = yes
+			country_event = { id = ac_ud_mina.308 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_garrison_ordinances
+		icon = GFX_ac_ud_focus_FRU_ud_garrison_ordinances
+		x = 18
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_garrison_council
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = FRU_ud_garrison_ordinances_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_pass_commanders
+		icon = GFX_ac_ud_focus_FRU_ud_pass_commanders
+		x = 17
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_garrison_ordinances
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			army_experience = 20
+			add_tech_bonus = { name = FRU_ud_pass_commanders bonus = 0.5 uses = 1 category = infantry_weapons }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_ration_boards
+		icon = GFX_ac_ud_focus_FRU_ud_ration_boards
+		x = 19
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_garrison_ordinances
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = FRU_ud_ration_boards_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_order_of_the_plains
+		icon = GFX_ac_ud_focus_FRU_ud_order_of_the_plains
+		x = 18
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_pass_commanders
+		}
+		prerequisite = {
+			focus = FRU_ud_ration_boards
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = FRU_ud_garrison_ordinances_spirit } remove_ideas = FRU_ud_garrison_ordinances_spirit }
+			add_ideas = FRU_ud_standing_order_spirit
+			if = { limit = { has_idea = FRU_ud_ration_boards_spirit } remove_ideas = FRU_ud_ration_boards_spirit }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_ganzir_commune
+		icon = GFX_ac_ud_focus_FRU_ud_ganzir_commune
+		x = 22
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_question_of_the_executive
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_constitutional_convention
+			focus = FRU_ud_garrison_council
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_fru_commune = yes
+			country_event = { id = ac_ud_mina.309 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_commune_assemblies
+		icon = GFX_ac_ud_focus_FRU_ud_commune_assemblies
+		x = 22
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_ganzir_commune
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = FRU_ud_commune_assemblies_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_factory_councils
+		icon = GFX_ac_ud_focus_FRU_ud_factory_councils
+		x = 21
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_commune_assemblies
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_tech_bonus = { name = FRU_ud_factory_councils bonus = 0.5 uses = 1 category = industry }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = FRU_ud_rubber_cooperatives
+		icon = GFX_ac_ud_focus_FRU_ud_rubber_cooperatives
+		x = 23
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_commune_assemblies
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { 494 = { is_owned_by = ROOT } } add_resource = { type = rubber amount = 4 state = 494 } }
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = FRU_ud_commune_congress
+		icon = GFX_ac_ud_focus_FRU_ud_commune_congress
+		x = 22
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_factory_councils
+		}
+		prerequisite = {
+			focus = FRU_ud_rubber_cooperatives
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = FRU_ud_commune_assemblies_spirit } remove_ideas = FRU_ud_commune_assemblies_spirit }
+			add_ideas = FRU_ud_commune_congress_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_sky_announcement
+		icon = GFX_ac_ud_focus_FRU_ud_sky_announcement
+		x = 6
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_state_inventory
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 9 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_war_support = 0.03
+			country_event = { id = ac_ud_mina.310 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_mountain_shelters
+		icon = GFX_ac_ud_focus_FRU_ud_mountain_shelters
+		x = 5
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_sky_announcement
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_plains_dispersal
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = FRU_ud_mountain_shelters_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_plains_dispersal
+		icon = GFX_ac_ud_focus_FRU_ud_plains_dispersal
+		x = 7
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = FRU_ud_sky_announcement
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_mountain_shelters
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = FRU_ud_plains_dispersal_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_after_the_coup
+		icon = GFX_ac_ud_focus_FRU_ud_after_the_coup
+		x = 9
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_sky_announcement
+		}
+		available = {
+			date > 1997.5.29
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			army_experience = 10
+			add_war_support = 0.02
+			add_stability = -0.01
+		}
+	}
+
+	focus = {
+		id = FRU_ud_impact_night
+		icon = GFX_ac_ud_focus_FRU_ud_impact_night
+		x = 6
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_mountain_shelters
+			focus = FRU_ud_plains_dispersal
+		}
+		available = {
+			date > 1999.7.7
+		}
+		ai_will_do = { factor = 9 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = -4 }
+			ac_pol_change_capacity = yes
+			add_stability = -0.03
+			country_event = { id = ac_ud_mina.311 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_relief_trains
+		icon = GFX_ac_ud_focus_FRU_ud_relief_trains
+		x = 4
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_impact_night
+		}
+		available = {
+			date > 1999.7.7
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_timed_idea = { idea = FRU_ud_relief_trains_spirit days = 365 }
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_open_the_plains
+		icon = GFX_ac_ud_focus_FRU_ud_open_the_plains
+		x = 6
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_impact_night
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_controlled_passage
+		}
+		available = {
+			date > 2000.4.20
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = FRU_ud_open_plains_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_controlled_passage
+		icon = GFX_ac_ud_focus_FRU_ud_controlled_passage
+		x = 8
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_impact_night
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_open_the_plains
+		}
+		available = {
+			date > 2000.4.20
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = FRU_ud_controlled_passage_spirit
+		}
+	}
+
+	focus = {
+		id = FRU_ud_between_the_fronts
+		icon = GFX_ac_ud_focus_FRU_ud_between_the_fronts
+		x = 6
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_open_the_plains
+			focus = FRU_ud_controlled_passage
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_war_support = 0.03
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.312 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_war_that_did_not_come
+		icon = GFX_ac_ud_focus_FRU_ud_war_that_did_not_come
+		x = 9
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_open_the_plains
+			focus = FRU_ud_controlled_passage
+		}
+		available = {
+			has_global_flag = ac_ucw_war_averted
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_stability = 0.05
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = FRU_ud_armed_passes
+		icon = GFX_ac_ud_focus_FRU_ud_armed_passes
+		x = 5
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_between_the_fronts
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_isaf_overflight
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = FRU_ud_armed_passes_spirit
+			if = { limit = { 494 = { is_owned_by = ROOT } } 494 = { add_building_construction = { type = anti_air_building level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_isaf_overflight
+		icon = GFX_ac_ud_focus_FRU_ud_isaf_overflight
+		x = 7
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_between_the_fronts
+		}
+		mutually_exclusive = {
+			focus = FRU_ud_armed_passes
+		}
+		available = {
+			has_global_flag = ac_ucw_isaf_formed
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = FRU_ud_overflight_arrangement_spirit
+			air_experience = 10
+		}
+	}
+
+	focus = {
+		id = FRU_ud_field_hospitals
+		icon = GFX_ac_ud_focus_FRU_ud_field_hospitals
+		x = 3
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_between_the_fronts
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_stability = 0.03
+			add_timed_idea = { idea = FRU_ud_field_hospitals_spirit days = 365 }
+		}
+	}
+
+	focus = {
+		id = FRU_ud_after_the_war
+		icon = GFX_ac_ud_focus_FRU_ud_after_the_war
+		x = 6
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = FRU_ud_armed_passes
+			focus = FRU_ud_isaf_overflight
+			focus = FRU_ud_field_hospitals
+		}
+		available = {
+			OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate }
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 6 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.04
+			country_event = { id = ac_ud_mina.313 }
+		}
+	}
+}

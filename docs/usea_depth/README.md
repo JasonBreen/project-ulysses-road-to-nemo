@@ -32,6 +32,27 @@ Planned counts are approximate. Each package records its real counts in its own 
 
 The `trees` totals must equal the `focuses` totals, because every new focus is imported by exactly one tree.
 
+## Delivered
+
+All six packages are merged (#77–#82): 1,814 new focuses and 370 long-form events. Nothing has been tested natively in HOI4; native acceptance remains under #8.
+
+| Package | PR | Focuses | Events | Ledger |
+| --- | --- | --- | --- | --- |
+| Erusea | #82 | 322 (200 opening, 122 war) | 60 | [ERU.md](ERU.md) |
+| Central Usea | #81 | 294 | 60 | [FCU.md](FCU.md) |
+| North Point | #79 | 107 | 23 | [NPT.md](NPT.md) |
+| Partners | #78 | 260 (SNS 80, AMB 60, UGE 60, DEL 60) | 52 | [PARTNERS.md](PARTNERS.md) |
+| Minors A | #77 | 437 (about 62 per state) | 94 | [MINORS_A.md](MINORS_A.md) |
+| Minors B | #80 | 394 (about 61 per state, Shilage 30) | 81 | [MINORS_B.md](MINORS_B.md) |
+
+The merged totals are recorded under `approved_expansions.usea_depth.delivered` in `tools/overhaul/release_plan.json`. `tools/usea_depth/integration/test_integration.py` runs from `run_checks.py` and checks what only shows up once the packages are together:
+
+- those totals match the packages' own budgets;
+- scripted effects, triggers, ideas, characters, decisions, events, sprites and localisation keys are defined once across the whole mod;
+- every flag a package checks is set somewhere, and every scripted call resolves;
+- each new focus is imported exactly once;
+- every marker block survives in every wrapper.
+
 ## Ownership
 
 **Files a package owns.** Each package creates only new files:

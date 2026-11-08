@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT / 'tools/usea_expansion'))
 from script import get, parse, render, setv, walk, xy
 
 CONTRACT = HERE / 'responsive_original.json'
-MANAGED = ('bookmark_entry', 'country_entry', 'country_entry_medium',
+MANAGED = ('bookmark_entry', 'focus_entry', 'country_entry', 'country_entry_medium',
            'country_entry_mini', 'gamesetup_scenario_window',
            'gamesetup_interesting_countries_window', 'gamesetup_country_details')
 VIEWPORTS = [(3440, 1440, s) for s in (1, 1.25, 1.5)] + [
@@ -70,6 +70,9 @@ def repair(name, node):
     if name == 'bookmark_entry':
         size(node, 232, 211)
         text(named(node, 'date'), 16, 170, 200, 24)
+    elif name == 'focus_entry':
+        # The 95/96px bookmark art must fit the 60px entry and 70px grid slot.
+        setv(named(node, 'icon'), 'scale', '0.60')
     elif name == 'country_entry':
         size(node, 138, 108)
         leader = named(node, 'country_leader')
@@ -145,12 +148,13 @@ def repair(name, node):
                 setv(child, 'maxWidth', '280')
                 setv(child, 'maxHeight', '20')
         leader = named(node, 'minor_country_leader')
-        move(leader, 1080, 350)
-        setv(leader, 'scale', '0.35')
+        # Fit the portrait between the two-row country list and the idea strip.
+        move(leader, 1080, 369)
+        setv(leader, 'scale', '0.30')
         setv(leader, 'rotation', '0')
         frame = named(node, 'minor_portrait_overlay')
-        move(frame, 1075, 345)
-        setv(frame, 'scale', '0.50')
+        move(frame, 1075, 364)
+        setv(frame, 'scale', '0.44')
         spirit = named(node, 'spirit')
         move(spirit, 890, 438)
         setv(named(spirit, 'pol_faction_icon'), 'scale', '0.65')

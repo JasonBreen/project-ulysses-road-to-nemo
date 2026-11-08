@@ -24,7 +24,7 @@ ENGINE=None
 def digest(path):return hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
 def read(path):return parse(path.read_text(encoding='utf-8-sig'))
 sys.path.append(str(ROOT/'tools/air_program'))
-from reviewed_sources import reviewed_updates,validate_outcome
+from reviewed_sources import reviewed_updates,validate_outcome,reviewed_ucw_updates
 
 
 class Sources(unittest.TestCase):
@@ -140,7 +140,7 @@ class Sources(unittest.TestCase):
         manifest=json.loads((HERE/'preserved_sources.json').read_text());self.assertEqual(1110,len(manifest['sources']))
         updates=reviewed_updates()
         cleanup=json.loads((ROOT/'tools/history_data_cleanup_updates.json').read_text())['files']
-        campaign=json.loads((ROOT/'tools/ac_campaigns/reviewed_owner_updates.json').read_text())['files']
+        campaign=reviewed_ucw_updates()
         for path,expected in manifest['sources'].items():
             update=updates.get(path)
             repair=cleanup.get(path)
@@ -156,14 +156,14 @@ class Sources(unittest.TestCase):
             nodes=read(path);self.assertFalse(forbidden&{k for b in [nodes]+[v for _,v in walk(nodes)] for k,_,v in b})
 
     def test_registered_campaign_owner_keeps_all_other_functions_and_canonical_source(self):
-        files=json.loads((ROOT/'tools/ac_campaigns/reviewed_owner_updates.json').read_text())['files']
+        files=reviewed_ucw_updates()
         relative='mod/2985041246/common/scripted_effects/ac_ucw.txt'
         self.assertEqual({relative},set(files));row=files[relative]
         self.assertEqual([],row['added']);self.assertEqual([],row['removed'])
-        changed={'ac_ucw_eru_war_tick','ac_ucw_destroy_megalith'}
+        changed={'ac_ucw_eru_war_tick','ac_ucw_destroy_megalith','ac_ucw_stage_north_point'}
         self.assertEqual(changed,set(row['changed']))
         self.assertEqual(changed,set(row['reviewed_function_ast_sha256']))
-        old=row['unchanged_function_ast_sha256'];self.assertEqual(25,len(old))
+        old=row['unchanged_function_ast_sha256'];self.assertEqual(24,len(old))
         self.assertFalse(set(old)&changed)
         current={key:body for key,_,body in read(ROOT/relative)}
         self.assertEqual(set(old)|changed,set(current))

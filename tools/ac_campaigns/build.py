@@ -123,7 +123,8 @@ def compile_content():
                     'Turn the selected mandate into a standing account without replaying its operations.')[i]
                 text(ident+'_desc', title+'. '+purpose+'\n\n'+national_description(n,lane))
                 body=f'id = {ident}\nicon = GFX_{ident}\nx = {100+lane*9+(-2 if i==1 else 2 if i==2 else 0)}\ny = {0 if i==0 else 1 if i<3 else i-1}\ncost = {1 if i in (3,4) else 5}\n'
-                body+=block('allow_branch',f'tag = {n.tag} original_tag = {n.tag}')
+                # Hidden until the lane's opening date; the weekly tick refreshes the layout.
+                body+=block('allow_branch',f'tag = {n.tag} original_tag = {n.tag} OR = {{ date > {n.after} has_completed_focus = {stem}_register }}')
                 gate=f'{P}_eligible = yes date > {n.after}'
                 if i:
                     req = 'register' if i in (1,2) else 'prepared' if i==4 else 'review' if i==5 else None
@@ -272,6 +273,7 @@ def compile_content():
         tick+=P+'_character_tick = yes\n'+guard(P+'_eligible = yes','\n'.join(f'{P}_{o.key}_tick = yes' for o in OPERATIONS if o.tag==n.tag)+'\n'+
             '\n'.join(f'{P}_scene_{s["id"]}_expire = yes\n{P}_scene_{s["id"]}_dispatch = yes' for s in sorted(scene_rows,key=lambda s:(0 if 100<=s['id']<=115 else 1,s['id'])) if s['tag']==n.tag)+'\n'+
             guard('is_ai = yes','\n'.join(guard(f'{P}_{o.key}_can_start = yes',f'{P}_{o.key}_start = yes') for o in OPERATIONS if o.tag==n.tag)))
+        tick+=guard(f'date > {n.after} NOT = {{ has_country_flag = {P}_lanes_revealed }}',f'set_country_flag = {P}_lanes_revealed\nmark_focus_tree_layout_dirty = yes')
         effects[f'{P}_weekly_{n.tag.lower()}']=guard(f'tag = {n.tag} original_tag = {n.tag}',tick)
         hooks.append(block('on_weekly_'+n.tag,block('effect',f'{P}_weekly_{n.tag.lower()} = yes')))
     hooks.append(block('on_startup',block('effect',f'set_global_flag = {P}_enabled\n'+''.join(f'{n.tag} = {{ {P}_initialize = yes }}\n' for n in NATIONS))))

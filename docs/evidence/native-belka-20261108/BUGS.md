@@ -134,5 +134,28 @@ Investigation: the seed gate negates a scripted trigger using '= no', whereas
 explicit NOT is required for reliable native inversion. Native logs also reject
 '>='/'<=' shorthand in fiscal check_variable blocks. Repair in generator source
 is in progress; fresh initialization, transactions and monthly/reload checks are
-required before claiming fixed. Previously initialized zero-output saves cannot
+required before claiming the complete economy path fixed. Native6b350f17 fresh
+initialization passed: real GDP4361.99998, cash87.23999 and debt1308.59999 in the
+saved opening. Screenshot N007-opening-balances-after-6b350f17.png. Monthly
+progression exposed the separate N008 guard failure. Previously initialized zero-output saves cannot
 validate a one-time seed repair. No creative GDP calibration changes.
+
+## N008 — Critical economy: monthly settlement guard reads the wrong scope
+
+Primary human campaign6b350f17,1991.2.3.5: balances remain at their opening
+values; last revenue, last bill, last settlement and settlement count are zero.
+Native ledger explicitly shows no recorded accounts despite February arriving.
+Reproduction: start full-mode Belka, advance normally across February1 and open
+the fiscal overview/ledger. Save BLK_1991_02_03_05.hoi4 and screenshots
+N008-first-month-without-settlement-6b350f17.png and
+N008-ledger-empty-February-3-6b350f17.png remain in the disposable session.
+
+The generator reads bare numeric `date` in country/state variable operations.
+The installed engine's documentation/dynamic_variables_documentation.md assigns
+date to global scope; events/BFTB_Bulgaria.txt uses global.date for a saved date.
+Bare date resolves to an unset variable, so the settlement guard compares zero
+with zero. Repair qualifies all settlement, state-cycle and allocation receipt
+dates as global.date. The offline interpreter now rejects bare numeric date;
+regression coverage checks generated syntax and duplicate settlement behavior.
+Three focused settlement tests and14 ledger tests pass. Native replay and
+save/reload acceptance remain pending. No financial calibration changes.

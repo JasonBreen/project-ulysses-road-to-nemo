@@ -328,9 +328,9 @@ set_variable = { ac_econ_balance = ac_macro_balance }
 if = { limit = { NOT = { has_dynamic_modifier = { modifier = ac_macro_economy_modifier } } } add_dynamic_modifier = { modifier = ac_macro_economy_modifier } }
 '''
     effect('ac_macro_quote',guard(quote))
-    settle = '''limit = { ac_macro_ready = yes date > 1991.1.31 has_country_flag = ac_macro_monthly_authorized check_variable = { ac_macro_last_settlement < date } }
+    settle = '''limit = { ac_macro_ready = yes date > 1991.1.31 has_country_flag = ac_macro_monthly_authorized check_variable = { ac_macro_last_settlement < global.date } }
 clr_country_flag = ac_macro_monthly_authorized
-set_variable = { ac_macro_last_settlement = date }
+set_variable = { ac_macro_last_settlement = global.date }
 ac_macro_quote = yes
 ''' + money.settle() + '''set_variable = { ac_macro_last_borrowed = 0 }
 set_variable = { ac_macro_last_arrears_added = 0 }
@@ -403,10 +403,10 @@ set_temp_variable = { ac_macro_growth_factor = ac_macro_growth }
 divide_temp_variable = { ac_macro_growth_factor = 1200 }
 add_to_temp_variable = { ac_macro_growth_factor = 1 }
 every_controlled_state = {
- if = { limit = { has_variable = ac_macro_real_output OR = { NOT = { has_variable = ac_macro_state_last_cycle } check_variable = { ac_macro_state_last_cycle < date } } }
+ if = { limit = { has_variable = ac_macro_real_output OR = { NOT = { has_variable = ac_macro_state_last_cycle } check_variable = { ac_macro_state_last_cycle < global.date } } }
   # Productive growth/repair belongs to the state and this accounting boundary.
   # A controller change between country callbacks must not apply it twice.
-  set_variable = { ac_macro_state_last_cycle = date }
+  set_variable = { ac_macro_state_last_cycle = global.date }
   set_temp_variable = { ac_macro_state_growth_factor = PREV.ac_macro_growth }
   divide_temp_variable = { ac_macro_state_growth_factor = 1200 }
   add_to_temp_variable = { ac_macro_state_growth_factor = 1 }

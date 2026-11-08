@@ -154,3 +154,21 @@ only after validating the G: candidate.
   N007 recorded; the main human campaign remains at its opening checkpoint.
 - Closed the exact isolated engine through native Exit Game. Archived logs under
  8072d3fa-N006-pass-N007-before before generator repairs.
+
+## Healthy opening and first monthly boundary
+
+-6b350f17 fresh full-mode Belka initializes GDP4361.99998 and positive public
+  funds. Native opening screenshot and Jan1.16 save preserved. The full static
+  wrapper passed before this launch; explicit native trigger inversion and
+  comparison parser errors are absent. Preservation audit193627Z passed.
+- Replayed the human opening choices above, added two parallel infantry divisions
+  for one cycle each at Dinsmark, and advanced on speed3 with observation. The
+  Crisis Continues completed January31; read Nation In Pieces and chose its
+  sole God Save Belka response. No second focus selected before the fiscal check.
+- February3.5: first monthly settlement is absent (N008), with the opening
+  balances unchanged and an empty ledger. Paused and saved this state. No console,
+  tag switch, observer mode or edited save used in the primary campaign.
+- Engine closed normally. Archived6b350f17 logs. Preservation audit195128Z passed:
+  all838 protected files unchanged, zero additions. Repair qualifies numeric date
+  references as global.date per installed engine documentation and usage; native
+  replay from the healthy pre-boundary opening remains required.

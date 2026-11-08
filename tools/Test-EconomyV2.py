@@ -58,6 +58,20 @@ class Macro(unittest.TestCase):
             self.assertEqual(owned,'ac_macro_initialized' in c.flags,tag)
             if not owned:self.assertFalse(c.variables,tag)
 
+    def test_monthly_dates_use_the_native_global_scope(self):
+        # N008: treating bare 'date' as today's numeric date in the interpreter
+        # hid a native zero-versus-zero settlement guard. The engine documents
+        # date under GLOBAL, also used by BFTB_Bulgaria's saved death date.
+        for path,text in build().items():
+            if path.startswith('common/') and isinstance(text,str):
+                self.assertNotRegex(text,r'\bac_macro_\w+\s*[=<>]+\s*date\b',path)
+        w,c=self.world()
+        with self.assertRaisesRegex(ValueError,'Unknown numeric observable date'):
+            w.number('date',c,{},c,None)
+        self.assertEqual(D(w.today),w.number('global.date',c,{},c,None))
+        w.month('SNS');self.assertEqual(D(w.today),c.variables['ac_macro_last_settlement'])
+        self.assertGreater(c.variables['ac_macro_last_revenue'],0)
+
     def test_refresh_startup_and_reload_never_reseed_cash_or_settle(self):
         w,c=self.world();before=copy.deepcopy(c.variables)
         for _ in range(4):w.run('ac_macro_initialize','SNS');w.run('ac_macro_quote','SNS')

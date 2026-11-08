@@ -25,7 +25,11 @@ restored-globe-final-native.png. Scenario overlap remains a separate open findin
 
 The first native mod startup reports an invalid key at line5 of
 localisation/english/ac_special_projects_l_english.yml. Source contains orphaned
-unkeyed prose after otherwise complete quoted definitions. Not repaired yet.
+unkeyed prose after otherwise complete quoted definitions. Reproduced on the
+resumed 6636c641 launch, before advancing the clock. Removed exactly 14 orphan
+rows; all 107 keyed definitions and the UTF-8 BOM remain. Added row-format
+validation to the existing special-project check; the corrected source passes.
+Native relaunch retest pending. No localization wording or project effects changed.
 
 ## N003 — Major: starting grand-doctrine assignment failures
 
@@ -38,10 +42,16 @@ would be incorrect. The installed land definitions include new_mobile_warfare,
 superior_firepower, grand_battleplan and mass_assault. Naval definitions are
 new_fleet_in_being, new_convoy_raiding and new_base_strike; air definitions are
 new_strategic_destruction, new_battlefield_support and new_operational_integrity.
-The native errors establish failed assignments; the doctrine UI still needs
-inspection before claiming the extent of missing starting bonuses. Generator
+Native replay of the saved 1991 opening at6636c641 confirms that land, naval and
+air doctrine screens each show "No Grand Doctrine assigned". Before screenshots:
+N003-land-doctrine-unassigned-before.png, N003-naval-doctrine-unassigned-before.png
+and N003-air-doctrine-unassigned-before.png. Generator
 owners include world_starts/compile.py, world_foundation/build.py and
-anea/foundation.py; preserve their source captures and provenance receipts.
+anea/foundation.py, plus world_legacy/build.py. Source repaired through a shared
+whole-token effect mapper, all four owners regenerated, and immutable captures
+retained. Regression checks verify valid IDs, idempotence and preservation of
+comments/strings and non-doctrine history data. Installed definition headers and
+their actual folders were checked read-only. Fresh-start native retest pending.
 
 ## N004 — Minor: overlapping scenario-selection panels
 

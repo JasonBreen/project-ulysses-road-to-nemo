@@ -88,3 +88,25 @@ only after validating the G: candidate.
   and target window are absent. Post-exit audit at18:23:53 UTC passed: 838 unchanged,
   zero additions. Recorded the sanitized globe-restoration.json receipt. The art
   repair is complete; the broader 1991-2000 test remains at its saved opening.
+
+## Resumed test and initialization repairs
+
+- Resume audit at18:45:29 UTC: 838 protected files unchanged, zero additions.
+  Revalidated the single enabled descriptor and exact 6636c641 payload parity,
+  then launched the copied engine and reloaded the preserved opening normally.
+- Land, naval and air doctrine screens all show no grand doctrine assigned.
+  Captured N003 before evidence for all three; no console or save edits used.
+- N002 source repair d7cedf5c removes14 malformed orphan lines while preserving
+  all107 localization definitions and the BOM. Existing special-project checker
+  now rejects malformed/unkeyed rows; native relaunch retest is pending.
+- N003: verified12 installed grand-doctrine ID/folder headers read-only, repaired
+  only invalid effect values across60 histories, and regenerated all four owning
+  generators. Frozen source snapshots and baseline inventories are unchanged.
+  Preserved whole-file fingerprints by projecting only reviewed doctrine effects;
+  updated current-source registry and explicit repair receipts.
+- Focused offline checks pass: Legacy17, World Foundation20 (one reference-only
+  skip), Active Starts25 (three reference-only skips), native compatibility and
+  special projects. All four generated-output checks and the exact legacy binding
+  gate pass. Full static wrapper is in progress; native after evidence pending.
+- Closed the exact test process through native Exit Game. Retained reproduction
+  logs locally under evidence/logs/6636c641-N003-reproduction before payload sync.

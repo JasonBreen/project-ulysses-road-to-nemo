@@ -50,6 +50,7 @@ def reviewed_updates():
     row=validate_outcome(previous,receipt,(ROOT/CAMPAIGN).read_text(encoding='utf-8-sig'))
     # The original preserved hash is retained; only the explicitly chained tip changes.
     files[CAMPAIGN]={**previous,'new_sha256':row['new_sha256']}
+    files[PWI] = validate_pwi_layout((ROOT/PWI).read_text(encoding='utf-8-sig'))
     return files
 
 
@@ -108,3 +109,27 @@ def reviewed_ucw_updates():
                   'unchanged_function_ast_sha256': {k: v for k, v in previous['unchanged_function_ast_sha256'].items()
                                                    if k != HOSTING}}
     return files
+
+
+# PR #89, f70dc7b5e7b4bf5649cbaad815388a00c9a974b7, based on d3c17cc9.
+# Retain the original air/naval capture and admit only the reviewed layout hook.
+PWI = 'mod/2985041246/common/scripted_effects/ac_pwi.txt'
+PWI_LAYOUT_UPDATE = {
+    'old_sha256': '06449b2ad9a9a02924fab2066e9ea73bc808b73ab1e500ef91c1e705ce2a84e3',
+    'new_sha256': 'e64c3c2004a6391ef88286552a7fba3073c67afdd196531684327430ee0566d4',
+}
+
+
+def validate_pwi_layout(text):
+    """Prove every byte outside the reviewed one-time layout refresh is preserved."""
+    source = text.replace('\r\n', '\n')
+    hook = ('\t\t# Reveal the hidden aftermath branches now that allow_branch passes.\n'
+            '\t\tmark_focus_tree_layout_dirty = yes\n')
+    anchor = '\t\tcountry_event = { id = ac_pwi.1 days = 1 }\n'
+    if source.count(hook) != 1 or source.count(anchor + hook) != 1:
+        raise ValueError('PWI layout hook must follow the opening event exactly once')
+    if hashlib.sha256(source.replace(hook, '').encode()).hexdigest() != PWI_LAYOUT_UPDATE['old_sha256']:
+        raise ValueError('PWI source differs beyond the reviewed layout hook')
+    if hashlib.sha256(source.encode()).hexdigest() != PWI_LAYOUT_UPDATE['new_sha256']:
+        raise ValueError('PWI layout source digest changed')
+    return dict(PWI_LAYOUT_UPDATE)

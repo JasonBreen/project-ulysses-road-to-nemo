@@ -86,6 +86,10 @@ def focus(tag, suffix, title, desc, x, y, prerequisite=None, available="", rewar
     body = "id = %s\nicon = %s\nx = %s\ny = %s\ncost = %s\nai_will_do = { factor = 20 }\n" % (ident, icon, x, y, cost)
     if prerequisite:
         body += "prerequisite = { %s }\n" % " ".join("focus = " + item for item in prerequisite)
+    else:
+        # Keep the aftermath branch out of the opening tree until the
+        # aftermath starts; ac_pwi_start refreshes the layout.
+        body += "allow_branch = { OR = { has_country_flag = ac_pwi_started has_completed_focus = %s } }\n" % ident
     if excludes:
         body += "mutually_exclusive = { %s }\n" % " ".join("focus = " + item for item in excludes)
     body += "available = { original_tag = %s ac_pwi_active = yes %s }\ncancel_if_invalid = yes\ncontinue_if_invalid = no\n" % (tag, available)
@@ -126,7 +130,9 @@ if = {
     else_if = { limit = { has_global_flag = ac_postwar_wacht_am_wal } set_variable = { ac_pwi_recovery = 35 } set_variable = { ac_pwi_confidence = 45 } set_variable = { ac_pwi_tension = 40 } }
     else = { set_variable = { ac_pwi_recovery = 30 } set_variable = { ac_pwi_confidence = 35 } }
 }
-country_event = { id = ac_pwi.1 days = 1 }""", """ac_pwi_participant = yes
+country_event = { id = ac_pwi.1 days = 1 }
+# Reveal the hidden aftermath branches now that allow_branch passes.
+mark_focus_tree_layout_dirty = yes""", """ac_pwi_participant = yes
 has_global_flag = ac_postwar_contract_started
 has_war = no
 has_capitulated = no

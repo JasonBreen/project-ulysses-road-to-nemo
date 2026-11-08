@@ -1,6 +1,6 @@
 # Belka human-played native test, 8 November 2026
 
-Status: preparation in progress; no native acceptance claimed.
+Status: isolated startup exercised; restoring original globe before campaign.
 
 Authorized scope: 1991 through January 2000 as human-controlled Belka, checkpoint
 repairs, separate alternate outcomes, AI Belka, economy-disabled and no-DLC checks.
@@ -10,7 +10,8 @@ and [#8](https://github.com/JasonBreen/project-ulysses-road-to-nemo/issues/8).
 Frozen base: `385d01a74b71227fa58140abc1496d81455ebd5d`.
 Branch: `codex/native-belka-1991-2000-20261108`.
 Installed reference: Operation Postern 1.19.4.2.2da5 (0bdb), Steam build 26409260.
-Runtime version and active DLC remain to be confirmed.
+Runtime confirmed: 1.19.4.2.2da5, control checksum0bdb, initial mod checksum7918,
+35 active DLC. Primary startup reports exactly one active mod.
 
 The original workspace and its four pre-existing uncommitted changes are excluded.
 Large native evidence, profiles, saves and the physical engine copy remain under
@@ -19,8 +20,18 @@ publication, automatic merge or release is authorized by this test.
 
 ## Results
 
-No native scenarios exercised yet. Static results are recorded separately from
+The no-mod control and initial mod frontend reached their native menus. The
+control has zero active mods. Both launch audits and the control-exit audit
+verified 838 protected files unchanged with no additions. No campaign save or
+in-game progression has been created yet. Static results remain separate from
 natural native play, AI observation and forced diagnostics in COVERAGE.csv.
+
+The owner identified the original globe replacement as unacceptable. Recovered
+the original archive globe fallback and animated layout; preservation and
+generator regressions are in place. Native restoration verification is pending.
+See BUGS.md for malformed localization, starting doctrine failures and frontend
+presentation findings. The generic buffer-allocation message also occurs in the
+no-mod control and is not attributed to the mod from these observations.
 
 ### Initial offline preflight
 

@@ -260,6 +260,11 @@ def check(mod: Path) -> list[str]:
     for path in (mod / "localisation/english/ac_special_projects_l_english.yml",
                  mod / "localisation/english/replace/ac_special_projects_replace_l_english.yml"):
         require(path.read_bytes().startswith(b"\xef\xbb\xbf"), f"{path.name} lacks a UTF-8 BOM")
+        for number, line in enumerate(read(path).splitlines(), 1):
+            if not line.strip() or line.lstrip().startswith('#') or line.strip() == 'l_english:':
+                continue
+            require(bool(re.fullmatch(r'\s+[\w.\-]+:\d+\s+"(?:\\.|[^"\\])*"\s*(?:#.*)?', line)),
+                    f'{path.name}:{number}: malformed or unkeyed localisation row')
 
     # Shared flag contract: this track sets only its six completion flags.
     for relative in CONTENT_FILES:

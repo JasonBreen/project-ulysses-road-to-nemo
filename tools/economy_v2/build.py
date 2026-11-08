@@ -90,7 +90,7 @@ def legacy_and_adapters():
             wrappers += block(name, block('if','limit = { ac_macro_mode = yes }\n'+target+' = yes')+
                               block('else',renamed[name]+' = yes'))
         else:
-            wrappers += block(name,block('if','limit = { ac_macro_mode = no }\n'+renamed[name]+' = yes'))
+            wrappers += block(name,block('if','limit = { NOT = { ac_macro_mode = yes } }\n'+renamed[name]+' = yes'))
     wrappers += block('ac_econ_adopt_release_account',block('if','limit = { ac_econ_release_history = yes }\n'+
         block('if','limit = { ac_macro_mode = yes }\nac_macro_initialize = yes')+
         block('else_if','limit = { ac_econ_legacy_enabled = yes }\n'+
@@ -99,13 +99,13 @@ def legacy_and_adapters():
                 block('if','limit = { NOT = { has_variable = ac_econ_civilian_level } }\nset_variable = { ac_econ_civilian_level = 0 }'))+
             'ac_econ_legacy_refresh_budget = yes')))
     wrappers += block('ac_econ_pay_programme',block('if','limit = { ac_macro_ready = yes }\nset_temp_variable = { ac_macro_transaction_amount = 0.002 }\nac_macro_try_spend = yes')+
-                      block('else_if','limit = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 2 } }\nsubtract_from_variable = { ac_econ_treasury = 2 }'))
+                      block('else_if','limit = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { var = ac_econ_treasury value = 2 compare = greater_than_or_equals } }\nsubtract_from_variable = { ac_econ_treasury = 2 }'))
     out['common/scripted_effects/ac_economy_compat.txt'] = wrappers
     mapping = dict(ac_econ_enabled='ac_macro_mode',ac_econ_ready='ac_macro_ready',ac_econ_can_borrow='ac_macro_can_borrow',
                    ac_econ_can_repay='ac_macro_can_repay',ac_econ_can_produce='ac_macro_can_produce',ac_econ_can_order='ac_macro_can_fund_replacements')
     out['common/scripted_triggers/ac_economy_compat.txt'] = '\n'.join(block(name,'OR = { '+renamed[name]+' = yes '+mapping[name]+' = yes }') for name in sorted(triggers))
     out['common/scripted_triggers/ac_economy_compat.txt'] += block('ac_econ_can_pay_programme',
-             'OR = { AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= 0.002 } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 2 } } }')
+             'OR = { AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { var = ac_macro_cash value = 0.002 compare = greater_than_or_equals } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { var = ac_econ_treasury value = 2 compare = greater_than_or_equals } } }')
     out['common/scripted_triggers/ac_economy_compat.txt'] += block('ac_econ_release_history',
         block('OR','\n'.join('tag = '+tag+'\noriginal_tag = '+tag for tag in RELEASE_HISTORY_TAGS)))
     # Public release-development transaction: the caller never writes money.
@@ -114,11 +114,11 @@ def legacy_and_adapters():
         'clr_country_flag = ac_econ_release_project_funded\n'+block('if','limit = { ac_econ_release_history = yes }\n'+
             block('if','limit = { ac_macro_ready = yes }\nset_temp_variable = { ac_macro_transaction_amount = 0.02 }\nac_macro_try_spend = yes\n'+
                 block('if','limit = { has_country_flag = ac_macro_transaction_succeeded }\nset_country_flag = ac_econ_release_project_funded'))+
-            block('else_if','limit = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 20 } }\nsubtract_from_variable = { ac_econ_treasury = 20 }\nset_country_flag = ac_econ_release_project_funded')+
-            block('else_if','limit = { ac_econ_enabled = no }\nset_country_flag = ac_econ_release_project_funded')))
+            block('else_if','limit = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { var = ac_econ_treasury value = 20 compare = greater_than_or_equals } }\nsubtract_from_variable = { ac_econ_treasury = 20 }\nset_country_flag = ac_econ_release_project_funded')+
+            block('else_if','limit = { NOT = { ac_econ_enabled = yes } }\nset_country_flag = ac_econ_release_project_funded')))
     out['common/scripted_effects/ac_economy_compat.txt'] = wrappers
     out['common/scripted_triggers/ac_economy_compat.txt'] += block('ac_econ_can_fund_release_project',
-        'ac_econ_release_history = yes\nOR = { ac_econ_enabled = no AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= 0.02 } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 20 } } }')
+        'ac_econ_release_history = yes\nOR = { NOT = { ac_econ_enabled = yes } AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { var = ac_macro_cash value = 0.02 compare = greater_than_or_equals } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { var = ac_econ_treasury value = 20 compare = greater_than_or_equals } } }')
     return out
 
 
@@ -149,11 +149,11 @@ check_variable = { ac_macro_schema = 2 }
 '''+ '\n'.join('has_variable = ac_macro_'+field for field in RELEASE_ACCOUNT_REQUIRED))
     return presence+complete+'''# Full mode is default for new histories. Saved legacy rule values remain valid.
 ac_macro_mode = { has_game_rule = { rule = ac_economy option = full } }
-ac_macro_ready = { ac_macro_mode = yes has_country_flag = ac_macro_initialized check_variable = { var = ac_macro_identity value = THIS.id compare = equals } any_owned_state = { always = yes } OR = { ac_econ_release_history = no AND = { ac_macro_release_account_complete = yes NOT = { has_country_flag = ac_release_financial_identity_review } } } }
-ac_macro_can_borrow = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_credit_room >= ac_macro_loan_size } }
+ac_macro_ready = { ac_macro_mode = yes has_country_flag = ac_macro_initialized check_variable = { var = ac_macro_identity value = THIS.id compare = equals } any_owned_state = { always = yes } OR = { NOT = { ac_econ_release_history = yes } AND = { ac_macro_release_account_complete = yes NOT = { has_country_flag = ac_release_financial_identity_review } } } }
+ac_macro_can_borrow = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { var = ac_macro_credit_room value = ac_macro_loan_size compare = greater_than_or_equals } }
 ac_macro_can_repay = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash > 0 } check_variable = { ac_macro_debt > 0 } }
 ac_macro_can_produce = { ac_macro_ready = yes has_capitulated = no num_of_military_factories > 0 }
-ac_macro_can_fund_replacements = { ac_macro_can_produce = yes has_tech = infantry_weapons check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_replacement_escrow = 0 } check_variable = { ac_macro_cash >= 0.005 } }
+ac_macro_can_fund_replacements = { ac_macro_can_produce = yes has_tech = infantry_weapons check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_replacement_escrow = 0 } check_variable = { var = ac_macro_cash value = 0.005 compare = greater_than_or_equals } }
 ac_macro_can_change_policy = { ac_macro_ready = yes NOT = { has_country_flag = ac_macro_policy_cooldown } }
 '''
 
@@ -231,8 +231,10 @@ set_variable = { ac_macro_last_factories = num_of_controlled_factories }
 '''
     init += ledger.initialize() + money.initialize()
     init += '\n'.join('set_variable = { ac_macro_budget_'+c+' = 1 }' for c in CATEGORIES)+'\n'
+    # Scripted triggers are invoked with yes; negate their expanded condition
+    # explicitly. N007 native startup skipped this gate when invoked with no.
     init += '''ac_macro_profile = yes
-if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 ac_econ_release_history = no }
+if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 NOT = { ac_econ_release_history = yes } }
  ac_macro_seed_states = yes
  set_global_flag = ac_macro_world_started
  ac_macro_quote = yes
@@ -502,7 +504,7 @@ subtract_from_variable = { ac_macro_debt = ac_macro_payment }
 ac_macro_quote = yes'''))
     # A result flag is per-call diagnostic state, not an inactive fiscal write.
     # Always clear it before readiness so a previous success cannot be reused.
-    effect('ac_macro_try_spend','clr_country_flag = ac_macro_transaction_succeeded\n'+guard('''if = { limit = { check_variable = { ac_macro_transaction_amount >= 0.001 } check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= ac_macro_transaction_amount } }
+    effect('ac_macro_try_spend','clr_country_flag = ac_macro_transaction_succeeded\n'+guard('''if = { limit = { check_variable = { var = ac_macro_transaction_amount value = 0.001 compare = greater_than_or_equals } check_variable = { ac_macro_arrears = 0 } check_variable = { var = ac_macro_cash value = ac_macro_transaction_amount compare = greater_than_or_equals } }
  subtract_from_variable = { ac_macro_cash = ac_macro_transaction_amount }
  set_country_flag = ac_macro_transaction_succeeded
 }
@@ -534,7 +536,7 @@ ac_macro_quote = yes'''))
  set_variable = { ac_macro_replacement_escrow = 0 }
 }
 ac_macro_quote = yes'''))
-    effect('ac_macro_replacement_cycle',block('if','''limit = { ac_macro_can_produce = yes check_variable = { ac_macro_replacement_escrow > 0 } check_variable = { ac_macro_replacement_target <= total_equipment_produced_infantry } }
+    effect('ac_macro_replacement_cycle',block('if','''limit = { ac_macro_can_produce = yes check_variable = { ac_macro_replacement_escrow > 0 } check_variable = { var = ac_macro_replacement_target value = total_equipment_produced_infantry compare = less_than_or_equals } }
 set_variable = { ac_macro_replacement_escrow = 0 }
 add_to_variable = { ac_macro_readiness = 2 }
 clamp_variable = { var = ac_macro_readiness min = 0 max = 100 }

@@ -367,7 +367,7 @@ ac_macro_initialize = {
 		set_variable = { ac_macro_budget_development = 1 }
 		set_variable = { ac_macro_budget_defense = 1 }
 		ac_macro_profile = yes
-		if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 ac_econ_release_history = no }
+		if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 NOT = { ac_econ_release_history = yes } }
 		 ac_macro_seed_states = yes
 		 set_global_flag = ac_macro_world_started
 		 ac_macro_quote = yes
@@ -1506,7 +1506,7 @@ ac_macro_try_spend = {
 	clr_country_flag = ac_macro_transaction_succeeded
 	if = {
 		limit = { ac_macro_ready = yes }
-		if = { limit = { check_variable = { ac_macro_transaction_amount >= 0.001 } check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= ac_macro_transaction_amount } }
+		if = { limit = { check_variable = { var = ac_macro_transaction_amount value = 0.001 compare = greater_than_or_equals } check_variable = { ac_macro_arrears = 0 } check_variable = { var = ac_macro_cash value = ac_macro_transaction_amount compare = greater_than_or_equals } }
 		 subtract_from_variable = { ac_macro_cash = ac_macro_transaction_amount }
 		 set_country_flag = ac_macro_transaction_succeeded
 		}
@@ -1566,7 +1566,7 @@ ac_macro_cancel_replacements = {
 }
 ac_macro_replacement_cycle = {
 	if = {
-		limit = { ac_macro_can_produce = yes check_variable = { ac_macro_replacement_escrow > 0 } check_variable = { ac_macro_replacement_target <= total_equipment_produced_infantry } }
+		limit = { ac_macro_can_produce = yes check_variable = { ac_macro_replacement_escrow > 0 } check_variable = { var = ac_macro_replacement_target value = total_equipment_produced_infantry compare = less_than_or_equals } }
 		set_variable = { ac_macro_replacement_escrow = 0 }
 		add_to_variable = { ac_macro_readiness = 2 }
 		clamp_variable = { var = ac_macro_readiness min = 0 max = 100 }

@@ -1,8 +1,12 @@
 # Belka human-played native test, 8 November 2026
 
-Status: isolated startup and original animated globe restoration verified;
-Belka opening saved at 1 January 1991, 12:00. The January 2000 campaign and additional
-scenarios are incomplete; no full acceptance claim is made.
+Status: paused at the user's request while they play AC8. No HOI4 process remains.
+Original animated globe restoration is verified. Healthy economy initialization
+passed on6b350f17; the monthly date-scope repair e7fd76f2 passes the full static
+wrapper but still needs native settlement acceptance. Human play reachedJan20.2
+before a reproducible naval-exercise crash (N009); latest managed save isJan3.5
+on e7fd76f2. The January2000 campaign and additional scenarios are incomplete;
+no full acceptance claim is made.
 
 Authorized scope: 1991 through January 2000 as human-controlled Belka, checkpoint
 repairs, separate alternate outcomes, AI Belka, economy-disabled and no-DLC checks.
@@ -91,8 +95,16 @@ was a separate diagnostic without management decisions; it is not the main
 campaign's progress. Full static wrapper passed. Individual event causality is
 not isolated, and no-mod first-day control remains outstanding.
 
-N007 now blocks the human campaign: zero GDP/output and funds appear both in
-the diagnostic and in a fresh8072d3fa start. Generator repairs are underway;
-fresh initialization and the first monthly/reload test remain required. N004
-scenario layout and N005 placeholder/interface graphics remain open. No new
-artwork or geography was introduced.
+N007's initialization repair6b350f17 passed a fresh native start: GDP4361.99998,
+cash87.23999 and debt1308.59999. The first monthly boundary exposed N008, a numeric
+date scope error. e7fd76f2 qualifies those operations with global.date and passes
+29 economy tests,14 ledger tests and the full static wrapper. Its native replay
+was interrupted by N009: fleet exercises followed by unpausing reproduce the
+same C++ exception atJan20.2 andJan3.5. Missing sea-terrain dominance values are
+the next candidate repair; they have not been changed. N004 scenario layout and
+N005 placeholder/interface graphics remain open. No new artwork or geography
+was introduced. See RESUME.json for the preserved checkpoint.
+
+The final audit for this paused session,20261108T201339Z, passes all838 protected
+files unchanged with zero additions. The main workspace still retains its
+pre-existing work. Large crash bundles and logs remain local; no publication.

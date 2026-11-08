@@ -172,3 +172,28 @@ only after validating the G: candidate.
   all838 protected files unchanged, zero additions. Repair qualifies numeric date
   references as global.date per installed engine documentation and usage; native
   replay from the healthy pre-boundary opening remains required.
+
+## Global-date repair replay and new crash
+
+- e7fd76f2 full static wrapper passed (N008-static.log), including29 economy and
+ 14 settled-ledger tests in focused runs. Exact11615-file payload validated.
+- Loaded the healthy Jan1.16 save and replayed all opening decisions normally;
+  saved the managed opening atJan3.5. Continued toJan20.2 on speed3. Assigned
+  Aayden Kreutzberg to Hochseeflotte and ordered Naval Exercises. No army orders
+  yet: injected keyboard chords and drag selection have not worked reliably;
+  mouse controls remain usable. This is a control limitation under investigation.
+- Resuming the clock was followed by a distinct C++ exception (N009), bundle
+  hoi4_20261108_150749. Causality is unconfirmed. Preserved logs and Jan3.5 save.
+  February native settlement acceptance is still pending. Relaunching unchanged
+  e7fd76f2 for reproduction, with ordinary controls and no edited saves.
+- Post-crash audit20261108T200917Z passed:838 unchanged, zero additions.
+- Unchanged managed-opening replay assigned the same admiral and exercised the
+  same fleet atJan3.5; resuming reproduced the exact exception stack. Bundle
+  hoi4_20261108_151209 retained. Dump type is std::bad_optional_access. Missing
+  sea-terrain minimum_seazone_dominance values identified against installed
+  definitions; repair is not yet applied or natively tested.
+- User explicitly paused playtesting to play AC8. Confirmed no HOI4 process is
+  running. No further native inputs, launches or profile changes. Last audit
+  20261108T201339Z passes838 unchanged, zero additions. Resume only when the
+  user asks; begin with N009 repair/retest from the Jan3.5 managed save, then
+  finish the N008 monthly-settlement replay. No campaign acceptance claimed.

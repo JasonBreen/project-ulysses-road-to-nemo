@@ -159,3 +159,24 @@ dates as global.date. The offline interpreter now rejects bare numeric date;
 regression coverage checks generated syntax and duplicate settlement behavior.
 Three focused settlement tests and14 ledger tests pass. Native replay and
 save/reload acceptance remain pending. No financial calibration changes.
+
+## N009 — Critical: crash while resuming after naval management
+
+Primary human replay e7fd76f2, paused1991.1.20.2. Assigned Aayden Kreutzberg to
+Hochseeflotte and ordered Naval Exercises through the mission button. Clicking
+the clock to resume was followed by process exit. Crash bundle
+hoi4_20261108_150749 reports E06D7363 at KERNELBASE RaiseException, distinct
+from N006's access violation. Last error lines mention a missing
+unit_imv_icon_small text icon and a non-44.1kHz blk_idle_008 sound; these are
+observations, not an established cause. Logs archived locally under
+evidence/logs/e7fd76f2-January20-fleet-crash. Managed January3.5 save remains
+intact. An unchanged replay fromJan3.5, assigning the same admiral and exercise
+mission, crashes immediately on resuming atJan3.5 (hoi4_20261108_151209), with
+the same stack. The exception's catchable type in the local dump is
+std::bad_optional_access. The mod's ocean, water_fjords, water_shallow_sea and
+water_deep_ocean definitions lack minimum_seazone_dominance. The read-only
+installed1.19.4.2 definitions contain250,100,100,250 respectively. This is the
+next repair candidate, not a proven fix. A comparable case is documented by
+[TNO's own tracker](https://github.com/TNODevs/TNO-Bug-Tracker/issues/5636);
+that report is supporting context, not Ulysses runtime acceptance. The user
+paused playtesting before any terrain changes were applied. No repair claimed.

@@ -14,6 +14,7 @@ Run from the repository root:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -65,6 +66,7 @@ PORTRAIT = "gfx/interface/ac_visual_scrub/portrait_placeholder.dds"
 AGENCY = "gfx/interface/ac_visual_scrub/agency_placeholder.dds"
 MENU_FALLBACK = "gfx/animated_textures/frontend_background/menu_fallback.dds"
 MENU = MENU_FALLBACK
+GLOBE_MANIFEST = ROOT / 'tools/usea_expansion/frontend_globe_original.json'
 LOGO = "gfx/interface/logo_game.dds"
 SELECT_DATE = "gfx/interface/ac_briefing/select_date.dds"
 ARTILLERY_BG = "gfx/interface/techtree/artillery_techtree_bg.dds"
@@ -217,7 +219,7 @@ def choose(name: str) -> tuple[str, int, str]:
     if name == "GFX_intelligence_agency_logo_ger":
         return AGENCY, 2, "Belka was still using the German agency logo sprite."
     if name == "GFX_frontend_bg":
-        return MENU, 1, "Main-menu background was an undefined engine sprite, so the vanilla menu showed through."
+        return MENU, 1, "Original archived globe fallback; the animated Ulysses tile assets are preserved."
     if name == "GFX_frontend_game_logo":
         return LOGO, 1, "Main-menu logo rebound to the existing Project Ulysses wordmark."
     if name == "GFX_select_date_1936":
@@ -412,7 +414,6 @@ def content_sprite_names() -> set[str]:
 
 def write_placeholders() -> None:
     save_dds(MOD / PANEL, panel(959, 715, "DOCTRINE / BUILDING"))
-    save_dds(MOD / MENU, panel(1920, 1080, "MAIN MENU"))
     save_dds(MOD / PORTRAIT, panel(156, 210, "PORTRAIT"))
     agency = Image.new("RGBA", (234, 119), (0, 0, 0, 0))
     agency.paste(panel(117, 119, "AGENCY"), (0, 0))
@@ -445,7 +446,17 @@ def validate_bindings(text: str, rows: list[dict]) -> None:
                     raise SystemExit("Invalid news picture dimensions: " + row["name"])
 
 
+def validate_globe_assets() -> None:
+    """Never classify the owner's archived globe as replaceable placeholder art."""
+    original = json.loads(GLOBE_MANIFEST.read_text(encoding='utf-8'))
+    for relative, expected in original['assets'].items():
+        path = MOD / relative
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+            raise SystemExit('Archived Ulysses globe asset changed: ' + relative)
+
+
 def build(check_only: bool) -> int:
+    validate_globe_assets()
     if not check_only:
         write_placeholders()
     defined = defined_sprites()
@@ -486,7 +497,7 @@ def build(check_only: bool) -> int:
         if overlap:
             raise SystemExit("Scrub gfx overrides sprites the mod already defines:\n" + "\n".join(overlap[:20]))
         navy = (7, 20, 34, 255)
-        for relative in list(EARTH_BACKGROUNDS) + [MENU_FALLBACK, MENU]:
+        for relative in EARTH_BACKGROUNDS:
             with Image.open(MOD / relative) as image:
                 if image.getpixel((40, 40)) != navy:
                     raise SystemExit(f"{relative} is not the marked placeholder")

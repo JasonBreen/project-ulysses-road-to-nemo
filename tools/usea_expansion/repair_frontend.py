@@ -1,9 +1,10 @@
-"""Restore the engine background canvas/picker while retaining Ulysses menu layout."""
+"""Preserve the archived animated Ulysses globe and compatible background picker."""
 from pathlib import Path
 import re
 from script import parse,render,get,setv,walk,xy
 ROOT=Path(__file__).resolve().parents[2]
 TARGET=ROOT/'mod/2985041246/interface/frontendmainview.gui'
+BACKGROUND=Path(__file__).resolve().parent/'frontend_background_original.gui'
 
 def span(text,name):
     found=re.search(r'\bname\s*=\s*"'+name+'"',text)
@@ -17,24 +18,7 @@ def span(text,name):
 
 def build(text):
     a,b=span(text,'frontend_background')
-    text=text[:a]+'''containerWindowType = {
-        name = "frontend_background"
-        position = { x=0 y=0 }
-        size = {
-            width = 1920 height = 1080
-            min = { width=100% height=100% }
-            max = { width=100% height=10000 }
-            preserve_aspect_ratio = yes
-        }
-        orientation = center
-        origo = center
-        clipping = no
-        background = {
-            name = "Background"
-            quadTextureSprite = "GFX_frontend_bg"
-            alwaysTransparent = yes
-        }
-    }'''+text[b:]
+    text=text[:a]+BACKGROUND.read_text(encoding='utf-8').strip()+text[b:]
     a,b=span(text,'change_background');tree=parse(text[a:b])
     setv(tree[0][2],'position',xy(-20,-20))
     aliases={'GFX_button_238x38':'GFX_ac_ui_button_238x38',
@@ -52,4 +36,4 @@ def build(text):
 
 if __name__=='__main__':
     text=TARGET.read_text(encoding='utf-8-sig');TARGET.write_text(build(text),encoding='utf-8')
-    print('Full-viewport briefing background and selectable original/official artwork restored.')
+    print('Original 35-tile animated Ulysses globe and compatible picker preserved.')

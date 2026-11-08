@@ -1,0 +1,1207 @@
+# Usea Depth minor states A: provisional gameplay; source tools/usea_depth/minors_a (owner: build.py).
+focus_tree = {
+	id = ac_ud_dor_tree
+	country = { factor = 0 modifier = { add = 45 tag = DOR original_tag = DOR } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 2496 y = 16 }
+	initial_show_position = { focus = DOR_ud_harbour_ledger }
+	focus = {
+		id = DOR_ud_harbour_ledger
+		icon = GFX_ac_ud_focus_DOR_ud_harbour_ledger
+		x = 11
+		y = 0
+		cost = 5
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.501 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_great_anchorage
+		icon = GFX_ac_ud_focus_DOR_ud_great_anchorage
+		x = 3
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_harbour_ledger
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			if = { limit = { 149 = { is_owned_by = ROOT } } 149 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.502 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_merchant_registry
+		icon = GFX_ac_ud_focus_DOR_ud_merchant_registry
+		x = 1
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_great_anchorage
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_anchorage_yards
+			focus = DOR_ud_pilots_service
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = DOR_ud_open_registry_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_anchorage_yards
+		icon = GFX_ac_ud_focus_DOR_ud_anchorage_yards
+		x = 3
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_great_anchorage
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_merchant_registry
+			focus = DOR_ud_pilots_service
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = DOR_ud_anchorage_yards_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_pilots_service
+		icon = GFX_ac_ud_focus_DOR_ud_pilots_service
+		x = 5
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_great_anchorage
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_anchorage_yards
+			focus = DOR_ud_merchant_registry
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = DOR_ud_pilots_service_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_coastal_lines
+		icon = GFX_ac_ud_focus_DOR_ud_coastal_lines
+		x = 1
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_merchant_registry
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_tech_bonus = { name = DOR_ud_coastal_lines bonus = 0.5 uses = 1 category = logistics_tech }
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = DOR_ud_merchant_insurance
+		icon = GFX_ac_ud_focus_DOR_ud_merchant_insurance
+		x = 1
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_coastal_lines
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = DOR_ud_open_registry_spirit } remove_ideas = DOR_ud_open_registry_spirit }
+			add_ideas = DOR_ud_insured_fleet_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_lowlands_slipways
+		icon = GFX_ac_ud_focus_DOR_ud_lowlands_slipways
+		x = 3
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_anchorage_yards
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { 475 = { is_owned_by = ROOT } } 475 = { add_building_construction = { type = dockyard level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = DOR_ud_lowlands_slipways bonus = 0.5 uses = 1 category = naval_equipment }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_aurich_basin
+		icon = GFX_ac_ud_focus_DOR_ud_aurich_basin
+		x = 3
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_lowlands_slipways
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { 409 = { is_owned_by = ROOT } } 409 = { add_building_construction = { type = dockyard level = 1 instant_build = yes } } }
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = DOR_ud_harbour_radar
+		icon = GFX_ac_ud_focus_DOR_ud_harbour_radar
+		x = 5
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_pilots_service
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_tech_bonus = { name = DOR_ud_harbour_radar bonus = 0.5 uses = 1 category = radar_tech }
+			navy_experience = 5
+		}
+	}
+
+	focus = {
+		id = DOR_ud_night_pilots
+		icon = GFX_ac_ud_focus_DOR_ud_night_pilots
+		x = 5
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_harbour_radar
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			navy_experience = 15
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = DOR_ud_harbour_of_the_republic
+		icon = GFX_ac_ud_focus_DOR_ud_harbour_of_the_republic
+		x = 3
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_merchant_insurance
+			focus = DOR_ud_aurich_basin
+			focus = DOR_ud_night_pilots
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			add_ideas = DOR_ud_harbour_of_the_republic_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_dock_unions
+		icon = GFX_ac_ud_focus_DOR_ud_dock_unions
+		x = 8
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_harbour_ledger
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.503 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_wage_tribunal
+		icon = GFX_ac_ud_focus_DOR_ud_wage_tribunal
+		x = 7
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_dock_unions
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_open_shop
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = DOR_ud_wage_tribunal_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_open_shop
+		icon = GFX_ac_ud_focus_DOR_ud_open_shop
+		x = 9
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_dock_unions
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_wage_tribunal
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = DOR_ud_open_shop_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_tribunal_awards
+		icon = GFX_ac_ud_focus_DOR_ud_tribunal_awards
+		x = 7
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_wage_tribunal
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_stability = 0.02
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = DOR_ud_harbour_police
+		icon = GFX_ac_ud_focus_DOR_ud_harbour_police
+		x = 9
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_open_shop
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = DOR_ud_harbour_police bonus = 0.5 uses = 1 category = infantry_weapons }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = DOR_ud_iggingen_administration
+		icon = GFX_ac_ud_focus_DOR_ud_iggingen_administration
+		x = 14
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_harbour_ledger
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			custom_effect_tooltip = DOR_ud_iggingen_administration_tt
+			country_event = { id = ac_ud_mina.504 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_district_council
+		icon = GFX_ac_ud_focus_DOR_ud_district_council
+		x = 13
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_iggingen_administration
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_district_prefecture
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = DOR_ud_iggingen_council_spirit
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = -2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = DOR_ud_district_prefecture
+		icon = GFX_ac_ud_focus_DOR_ud_district_prefecture
+		x = 15
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_iggingen_administration
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_district_council
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = DOR_ud_iggingen_prefecture_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_civilian_contracts
+		icon = GFX_ac_ud_focus_DOR_ud_civilian_contracts
+		x = 13
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_district_council
+			focus = DOR_ud_district_prefecture
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_arsenal_orders
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = DOR_ud_civilian_contracts_spirit
+			if = { limit = { 487 = { is_owned_by = ROOT } } 487 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_arsenal_orders
+		icon = GFX_ac_ud_focus_DOR_ud_arsenal_orders
+		x = 15
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_district_council
+			focus = DOR_ud_district_prefecture
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_civilian_contracts
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = DOR_ud_iggingen_arsenals_spirit
+			add_tech_bonus = { name = DOR_ud_arsenal_orders bonus = 0.5 uses = 1 category = artillery }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_families_across
+		icon = GFX_ac_ud_focus_DOR_ud_families_across
+		x = 14
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_civilian_contracts
+			focus = DOR_ud_arsenal_orders
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_stability = 0.02
+			country_event = { id = ac_ud_mina.505 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_crossing_commission
+		icon = GFX_ac_ud_focus_DOR_ud_crossing_commission
+		x = 13
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_families_across
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_desert_line
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = DOR_ud_crossing_commission_spirit
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = -2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = DOR_ud_desert_line
+		icon = GFX_ac_ud_focus_DOR_ud_desert_line
+		x = 15
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_families_across
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_crossing_commission
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = DOR_ud_desert_line_spirit
+			if = { limit = { 320 = { is_owned_by = ROOT } } 320 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+			custom_effect_tooltip = DOR_ud_desert_line_tt
+		}
+	}
+
+	focus = {
+		id = DOR_ud_crossing_houses
+		icon = GFX_ac_ud_focus_DOR_ud_crossing_houses
+		x = 13
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_crossing_commission
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { has_idea = DOR_ud_crossing_commission_spirit } remove_ideas = DOR_ud_crossing_commission_spirit }
+			add_ideas = DOR_ud_open_crossings_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_line_garrisons
+		icon = GFX_ac_ud_focus_DOR_ud_line_garrisons
+		x = 15
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_desert_line
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = DOR_ud_line_garrisons bonus = 0.5 uses = 1 category = engineers_tech }
+			army_experience = 10
+		}
+	}
+
+	focus = {
+		id = DOR_ud_treaty_guarantee
+		icon = GFX_ac_ud_focus_DOR_ud_treaty_guarantee
+		x = 19
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_harbour_ledger
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.506 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_council_delegation
+		icon = GFX_ac_ud_focus_DOR_ud_council_delegation
+		x = 18
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_treaty_guarantee
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_quiet_member
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = DOR_ud_council_delegation_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_quiet_member
+		icon = GFX_ac_ud_focus_DOR_ud_quiet_member
+		x = 20
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_treaty_guarantee
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_council_delegation
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = DOR_ud_quiet_member_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_transit_clauses
+		icon = GFX_ac_ud_focus_DOR_ud_transit_clauses
+		x = 18
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_council_delegation
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_tech_bonus = { name = DOR_ud_transit_clauses bonus = 0.5 uses = 1 category = logistics_tech }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = DOR_ud_bilateral_desks
+		icon = GFX_ac_ud_focus_DOR_ud_bilateral_desks
+		x = 20
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_quiet_member
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_stability = 0.02
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = DOR_ud_neighbour_shipping
+		icon = GFX_ac_ud_focus_DOR_ud_neighbour_shipping
+		x = 19
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_transit_clauses
+			focus = DOR_ud_bilateral_desks
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = DOR_ud_neighbour_shipping_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_western_interior
+		icon = GFX_ac_ud_focus_DOR_ud_western_interior
+		x = 22
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_harbour_ledger
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 320 = { is_owned_by = ROOT } } add_resource = { type = steel amount = 3 state = 320 } }
+			if = { limit = { 320 = { is_owned_by = ROOT } } add_resource = { type = aluminium amount = 2 state = 320 } }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_interior_rail
+		icon = GFX_ac_ud_focus_DOR_ud_interior_rail
+		x = 22
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_western_interior
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			if = { limit = { 320 = { is_owned_by = ROOT } } 320 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } } }
+			add_tech_bonus = { name = DOR_ud_interior_rail bonus = 0.5 uses = 1 category = train_tech }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_republic_at_the_crossroads
+		icon = GFX_ac_ud_focus_DOR_ud_republic_at_the_crossroads
+		x = 6
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_tribunal_awards
+			focus = DOR_ud_harbour_police
+		}
+		available = {
+			date > 1992.12.31
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_stability = -0.02
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.507 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_social_compact
+		icon = GFX_ac_ud_focus_DOR_ud_social_compact
+		x = 2
+		y = 7
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_republic_at_the_crossroads
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_emergency_cabinet
+			focus = DOR_ud_workers_federation
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_dor_compact = yes
+			country_event = { id = ac_ud_mina.508 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_compact_charter
+		icon = GFX_ac_ud_focus_DOR_ud_compact_charter
+		x = 2
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_social_compact
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = DOR_ud_compact_charter_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_harbour_pensions
+		icon = GFX_ac_ud_focus_DOR_ud_harbour_pensions
+		x = 1
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_compact_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_stability = 0.03
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = DOR_ud_port_boards
+		icon = GFX_ac_ud_focus_DOR_ud_port_boards
+		x = 3
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_compact_charter
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = DOR_ud_port_boards_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_compact_ratified
+		icon = GFX_ac_ud_focus_DOR_ud_compact_ratified
+		x = 2
+		y = 10
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_harbour_pensions
+		}
+		prerequisite = {
+			focus = DOR_ud_port_boards
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = DOR_ud_compact_charter_spirit } remove_ideas = DOR_ud_compact_charter_spirit }
+			add_ideas = DOR_ud_compact_ratified_spirit
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = DOR_ud_workers_federation
+		icon = GFX_ac_ud_focus_DOR_ud_workers_federation
+		x = 6
+		y = 7
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_republic_at_the_crossroads
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_emergency_cabinet
+			focus = DOR_ud_social_compact
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_dor_federation = yes
+			country_event = { id = ac_ud_mina.509 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_federation_councils
+		icon = GFX_ac_ud_focus_DOR_ud_federation_councils
+		x = 6
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_workers_federation
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = DOR_ud_federation_councils_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_dock_collectives
+		icon = GFX_ac_ud_focus_DOR_ud_dock_collectives
+		x = 5
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_federation_councils
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { 149 = { is_owned_by = ROOT } } 149 = { add_building_construction = { type = dockyard level = 1 instant_build = yes } } }
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = DOR_ud_fleet_cooperative
+		icon = GFX_ac_ud_focus_DOR_ud_fleet_cooperative
+		x = 7
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_federation_councils
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			navy_experience = 10
+			add_tech_bonus = { name = DOR_ud_fleet_cooperative bonus = 0.5 uses = 1 category = naval_equipment }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_federation_congress
+		icon = GFX_ac_ud_focus_DOR_ud_federation_congress
+		x = 6
+		y = 10
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_dock_collectives
+		}
+		prerequisite = {
+			focus = DOR_ud_fleet_cooperative
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = DOR_ud_federation_councils_spirit } remove_ideas = DOR_ud_federation_councils_spirit }
+			add_ideas = DOR_ud_federation_congress_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_emergency_cabinet
+		icon = GFX_ac_ud_focus_DOR_ud_emergency_cabinet
+		x = 10
+		y = 7
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_republic_at_the_crossroads
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_social_compact
+			focus = DOR_ud_workers_federation
+		}
+		available = {
+			has_capitulated = no
+		}
+		ai_will_do = { factor = 0 }
+		completion_reward = {
+			ac_ud_minors_a_regime_dor_cabinet = yes
+			country_event = { id = ac_ud_mina.510 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_cabinet_decrees
+		icon = GFX_ac_ud_focus_DOR_ud_cabinet_decrees
+		x = 10
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_emergency_cabinet
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = DOR_ud_cabinet_decrees_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_port_authority
+		icon = GFX_ac_ud_focus_DOR_ud_port_authority
+		x = 9
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_cabinet_decrees
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_tech_bonus = { name = DOR_ud_port_authority bonus = 0.5 uses = 1 category = construction_tech }
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = DOR_ud_reserve_fund
+		icon = GFX_ac_ud_focus_DOR_ud_reserve_fund
+		x = 11
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_cabinet_decrees
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = DOR_ud_reserve_fund_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_cabinet_mandate
+		icon = GFX_ac_ud_focus_DOR_ud_cabinet_mandate
+		x = 10
+		y = 10
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_port_authority
+		}
+		prerequisite = {
+			focus = DOR_ud_reserve_fund
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			if = { limit = { has_idea = DOR_ud_cabinet_decrees_spirit } remove_ideas = DOR_ud_cabinet_decrees_spirit }
+			add_ideas = DOR_ud_cabinet_mandate_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_ulysses_warning
+		icon = GFX_ac_ud_focus_DOR_ud_ulysses_warning
+		x = 18
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_harbour_ledger
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 9 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_war_support = 0.02
+			country_event = { id = ac_ud_mina.511 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_evacuation_fleet
+		icon = GFX_ac_ud_focus_DOR_ud_evacuation_fleet
+		x = 17
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_ulysses_warning
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_quay_bunkers
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = DOR_ud_evacuation_fleet_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_quay_bunkers
+		icon = GFX_ac_ud_focus_DOR_ud_quay_bunkers
+		x = 19
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = DOR_ud_ulysses_warning
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_evacuation_fleet
+		}
+		available = {
+			date > 1996.4.19
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = DOR_ud_quay_bunkers_spirit
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_coup_season
+		icon = GFX_ac_ud_focus_DOR_ud_coup_season
+		x = 21
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_ulysses_warning
+		}
+		available = {
+			date > 1997.5.29
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			navy_experience = 10
+			add_war_support = 0.02
+			add_stability = -0.01
+		}
+	}
+
+	focus = {
+		id = DOR_ud_impact_landings
+		icon = GFX_ac_ud_focus_DOR_ud_impact_landings
+		x = 18
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_evacuation_fleet
+			focus = DOR_ud_quay_bunkers
+		}
+		available = {
+			date > 1999.7.7
+		}
+		ai_will_do = { factor = 9 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = -4 }
+			ac_pol_change_capacity = yes
+			add_stability = -0.03
+			country_event = { id = ac_ud_mina.512 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_hospital_ships
+		icon = GFX_ac_ud_focus_DOR_ud_hospital_ships
+		x = 16
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_impact_landings
+		}
+		available = {
+			date > 1999.7.7
+		}
+		ai_will_do = { factor = 7 }
+		completion_reward = {
+			add_timed_idea = { idea = DOR_ud_hospital_ships_spirit days = 365 }
+			if = { limit = { ac_econ_ready = yes } ac_econ_pay_programme = yes }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_open_anchorage
+		icon = GFX_ac_ud_focus_DOR_ud_open_anchorage
+		x = 18
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_impact_landings
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_sorted_landings
+		}
+		available = {
+			date > 2000.4.20
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = DOR_ud_open_anchorage_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_sorted_landings
+		icon = GFX_ac_ud_focus_DOR_ud_sorted_landings
+		x = 20
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_impact_landings
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_open_anchorage
+		}
+		available = {
+			date > 2000.4.20
+		}
+		ai_will_do = { factor = 5 }
+		completion_reward = {
+			add_ideas = DOR_ud_sorted_landings_spirit
+		}
+	}
+
+	focus = {
+		id = DOR_ud_neutral_anchorage
+		icon = GFX_ac_ud_focus_DOR_ud_neutral_anchorage
+		x = 18
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_open_anchorage
+			focus = DOR_ud_sorted_landings
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_war_support = 0.03
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_mina.513 }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_peace_holds
+		icon = GFX_ac_ud_focus_DOR_ud_peace_holds
+		x = 21
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_open_anchorage
+			focus = DOR_ud_sorted_landings
+		}
+		available = {
+			has_global_flag = ac_ucw_war_averted
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			add_stability = 0.05
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+		}
+	}
+
+	focus = {
+		id = DOR_ud_closed_to_warships
+		icon = GFX_ac_ud_focus_DOR_ud_closed_to_warships
+		x = 17
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_neutral_anchorage
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_isaf_berths
+		}
+		available = {
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = { factor = 6 }
+		completion_reward = {
+			add_ideas = DOR_ud_closed_to_warships_spirit
+			if = { limit = { 149 = { is_owned_by = ROOT } } 149 = { add_building_construction = { type = anti_air_building level = 1 instant_build = yes } } }
+		}
+	}
+
+	focus = {
+		id = DOR_ud_isaf_berths
+		icon = GFX_ac_ud_focus_DOR_ud_isaf_berths
+		x = 19
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_neutral_anchorage
+		}
+		mutually_exclusive = {
+			focus = DOR_ud_closed_to_warships
+		}
+		available = {
+			has_global_flag = ac_ucw_isaf_formed
+		}
+		ai_will_do = { factor = 4 }
+		completion_reward = {
+			add_ideas = DOR_ud_isaf_berths_spirit
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = DOR_ud_ledger_after_the_war
+		icon = GFX_ac_ud_focus_DOR_ud_ledger_after_the_war
+		x = 18
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DOR_ud_closed_to_warships
+			focus = DOR_ud_isaf_berths
+			focus = DOR_ud_hospital_ships
+		}
+		available = {
+			OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate }
+		}
+		ai_will_do = { factor = 8 }
+		completion_reward = {
+			ac_pol_initialize = yes
+			set_temp_variable = { ac_pol_capacity_delta = 6 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.04
+			country_event = { id = ac_ud_mina.514 }
+		}
+	}
+}

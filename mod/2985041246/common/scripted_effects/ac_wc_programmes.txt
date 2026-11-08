@@ -1,0 +1,23 @@
+# Original fiction/provisional gameplay; owner: tools/world_campaigns/build.py
+ac_wc_pay = {
+	clr_country_flag = ac_wc_paid
+	if = {
+		limit = {
+			ac_macro_ready = yes
+		}
+		set_temp_variable = { ac_macro_transaction_amount = 0.02 }
+		ac_macro_try_spend = yes
+		if = {
+			limit = {
+				has_country_flag = ac_macro_transaction_succeeded
+			}
+			set_country_flag = ac_wc_paid
+		}
+	}
+	if = {
+		limit = {
+			OR = { has_game_rule = { rule = ac_economy option = disabled } has_game_rule = { rule = ac_economy option = experimental } }
+		}
+		set_country_flag = ac_wc_paid
+	}
+}

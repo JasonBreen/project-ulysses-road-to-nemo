@@ -1,5 +1,6 @@
 """Source topology, provenance, binding and reproducible-asset gates."""
 from collections import Counter
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -14,7 +15,8 @@ sys.path.insert(0,str(HERE))
 from content import FOCUSES,COUNTRIES
 import build
 import build_art
-from source_contract import (validate,validate_protected,REVIEWED_RELEASE_UPDATE,
+from source_contract import (validate,validate_protected,validate_institution_profile,
+                             REVIEWED_SOTOAN_TREES,REVIEWED_RELEASE_UPDATE,
                              REVIEWED_FAT_CHARACTER_UPDATE,
                              REVIEWED_FAT_DOCTRINE_UPDATE,
                              REVIEWED_STARTING_GOVERNMENT_UPDATE,
@@ -178,14 +180,45 @@ class SourceAndArt(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,'Protected ordered'):
                     validate_protected(update['path'],expected,changed)
 
-    def test_dedicated_tree_disposition_preserves_other_67_institution_profiles(self):
+    def test_dedicated_tree_disposition_preserves_frozen_institution_profiles(self):
         profiles=json.loads((ROOT/'tools/institutions/profiles.json').read_text());self.assertEqual(69,len(profiles))
         for r in profiles:
             if r['tag']in COUNTRIES:self.assertFalse(r['regional_tree'])
         expected=validate()['institution_profile_rows_sha256']
         for r in profiles:
-            original=dict(r,regional_tree=True) if r['tag']in COUNTRIES else r
-            self.assertEqual(expected[r['tag']],hashlib.sha256(json.dumps(original,sort_keys=True).encode()).hexdigest(),r['tag'])
+            validate_institution_profile(r, expected[r['tag']])
+        self.assertEqual({'SOA':'ac_wc_soa_tree','CSO':'ac_wc_cso_tree'},REVIEWED_SOTOAN_TREES)
+        for tag, tree_id in REVIEWED_SOTOAN_TREES.items():
+            path=MOD/('common/national_focus/ac_wc_'+tag.lower()+'.txt')
+            tree=next(body for key,_,body in parse(path.read_text()) if key=='focus_tree')
+            self.assertEqual(tree_id,get(tree,'id'))
+            selector=get(get(tree,'country'),'modifier')
+            self.assertEqual(tag,get(selector,'tag'))
+            self.assertEqual(tag,get(selector,'original_tag'))
+            self.assertEqual('0',get(get(tree,'country'),'factor'))
+            self.assertEqual('80',get(selector,'add'))
+            self.assertEqual('no',get(tree,'default'))
+
+    def test_reviewed_tree_disposition_rejects_other_profile_mutations(self):
+        profiles=json.loads((ROOT/'tools/institutions/profiles.json').read_text())
+        expected=validate()['institution_profile_rows_sha256']
+        for tag in ('SOA','CSO','FAT','SBK'):
+            row=next(r for r in profiles if r['tag']==tag)
+            for value in (True,0,None):
+                with self.subTest(tag=tag,regional_tree=value),self.assertRaises(ValueError):
+                    validate_institution_profile(dict(row,regional_tree=value),expected[tag])
+            for field in row:
+                changed=copy.deepcopy(row)
+                changed[field]='unreviewed mutation'
+                with self.subTest(tag=tag,field=field),self.assertRaises(ValueError):
+                    validate_institution_profile(changed,expected[tag])
+            with self.subTest(tag=tag,extra_field=True),self.assertRaises(ValueError):
+                validate_institution_profile(dict(row,unreviewed=True),expected[tag])
+        for row in profiles:
+            if row['tag']in ('SOA','CSO','FAT','SBK'):continue
+            changed=dict(row,regional_tree=not row['regional_tree'])
+            with self.subTest(other_country=row['tag']),self.assertRaises(ValueError):
+                validate_institution_profile(changed,expected[row['tag']])
 
     def test_text_and_art_outputs_match_reproducible_generators(self):
         for path,data in self.outputs.items():self.assertEqual(data,path.read_bytes(),str(path))

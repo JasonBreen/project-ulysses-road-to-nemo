@@ -1,5 +1,15 @@
 # Canon and provenance ledger
 
+## 6 November world-campaign approval and Sotoan opening
+
+The [national campaign ledger](WORLD_CAMPAIGNS_2040.md#source-layers) records
+the exact private approval for original national fiction, the inherited SOA/CSO
+source context, affected `*_wc_*` IDs, original staff, programme coefficients,
+bilateral offers and procedural artwork. These are provisional gameplay and
+authored fiction, not official 1991 history. The later 2029 and Electrosphere
+owners remain pending; no corporate territory, government biography or Joker 1
+detail is inferred. Source/offline evidence is distinct from native acceptance.
+
 This ledger is a work queue, not a claim that the entries below are settled. Official-source links are preferred for official-canon claims; the mod archive is retained as provenance only.
 
 | Claim or content family | Source layer | Current evidence | Status / required action |

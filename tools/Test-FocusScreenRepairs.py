@@ -289,6 +289,36 @@ class FocusScreen(unittest.TestCase):
         self.assertIn('verticalScrollbar',[key for key,_,_ in canvas])
         self.assertEqual({'left','middle'},{key for key,_,_ in get(canvas,'drag_scroll')})
 
+    def test_belkan_continuous_panels_clear_tree(self):
+        # The 1991 Belka screenshot showed the panel covering the pre-war
+        # briefing branch. Campaign lanes (x >= 100) sit right of the panel.
+        pitch_x,_=point(named(self.gui,'focus_spacing'))
+        shared={}
+        for path in (MOD/'common/national_focus').glob('*.txt'):
+            for kind,_,node in parse(path.read_text(encoding='utf-8-sig')):
+                if kind=='shared_focus':shared[get(node,'id')]=node
+        def column(node,seen=()):
+            x=int(get(node,'x'));anchor=get(node,'relative_position_id')
+            if anchor in shared and anchor not in seen:x+=column(shared[anchor],seen+(anchor,))
+            return x
+        trees=[]
+        for name in ('BLK.txt','ac_belkan_campaign.txt'):
+            trees.extend(node for kind,_,node in read('common/national_focus/'+name) if kind=='focus_tree')
+        self.assertEqual(7,len(trees))
+        for tree in trees:
+            position=get(tree,'continuous_focus_position');px=int(get(position,'x'))
+            ids=[value for kind,_,value in tree if kind=='shared_focus' and isinstance(value,str)]
+            members={i for i in ids if i in shared and '_camp_' not in i};grown=True
+            while grown:
+                grown=False
+                for key,node in shared.items():
+                    if key in members or '_camp_' in key:continue
+                    required={value for kind,_,block in node if kind=='prerequisite' for k,_,value in block if k=='focus'}
+                    if required&members:members.add(key);grown=True
+            nodes=[shared[i] for i in members]
+            right=max(column(node)*pitch_x+169 for node in nodes)
+            self.assertGreater(px,right+32,get(tree,'id'))
+
     def test_sources_reproduce_without_rewriting_other_surfaces(self):
         for args in (['tools/usea_expansion/build_ui.py','--check'],
                      ['tools/usea_expansion/build_art.py','--focus-ui-only','--check'],

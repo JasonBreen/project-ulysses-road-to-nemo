@@ -26,6 +26,70 @@ class NewsBindingsTests(unittest.TestCase):
         self.assertNotIn(scrub.MOD / scrub.MENU_FALLBACK,
                          [call.args[0] for call in saved.call_args_list])
 
+    def inventory(self):
+        return json.loads(scrub.INVENTORY.read_text(encoding="utf-8"))["sprites"]
+
+    def test_bookmark_picture_fits_the_bookmark_entry(self):
+        # Native N004: the 780 x 620 briefing window background was bound to the
+        # 232 x 211 bookmark entry and covered the scenario screen.
+        texture, frames, _ = scrub.choose("GFX_select_date_1936")
+        self.assertEqual((texture, frames), (scrub.BOOKMARK_PICTURE, 1))
+        with scrub.Image.open(scrub.MOD / texture) as image:
+            self.assertEqual(image.size, (180, 104))
+        gui = (scrub.MOD / "interface/frontendgamesetupview.gui").read_text(encoding="utf-8")
+        entry = gui[gui.index('name = "bookmark_entry"'):gui.index('name = "spirit_idea_entry"')]
+        self.assertEqual(tuple(map(int, re.search(r"width = (\d+)\s+height = (\d+)", entry).groups())), scrub.BOOKMARK_ENTRY_SIZE)
+        icon = entry[entry.index('spriteType = "GFX_select_date_1936"'):]
+        self.assertEqual(tuple(map(int, re.search(r"x = (\d+)\s+y = (\d+)", icon).groups())), scrub.BOOKMARK_ICON_OFFSET)
+        scrub.validate_presentation(self.inventory())
+
+    def test_window_sized_bookmark_picture_is_rejected(self):
+        row = {"name": "GFX_select_date_1936", "texture": "gfx/interface/ac_briefing/select_date.dds", "frames": 1}
+        with self.assertRaisesRegex(SystemExit, "Bookmark picture overflows"):
+            scrub.validate_presentation([row])
+
+    def test_backdrops_behind_controls_carry_no_label(self):
+        # Native N005: labelled panels were drawn over research trees and doctrine cards.
+        paths = scrub.backdrop_paths()
+        self.assertIn(scrub.PANEL, paths)
+        self.assertTrue(set(scrub.EARTH_BACKGROUNDS) <= set(paths))
+        for relative in paths:
+            with self.subTest(path=relative), scrub.Image.open(scrub.MOD / relative) as image:
+                self.assertEqual(image.convert("RGBA").getcolors(maxcolors=2), [(image.width * image.height, scrub.NAVY)])
+
+    def test_labelled_backdrop_is_rejected(self):
+        labelled = scrub.panel(959, 715, "INFANTRY TAB")
+        opened = mock.MagicMock()
+        opened.__enter__.return_value = labelled
+        with mock.patch.object(scrub.Image, "open", return_value=opened):
+            with self.assertRaisesRegex(SystemExit, "unlabelled navy backdrop"):
+                scrub.validate_presentation([])
+
+    def test_every_installed_doctrine_sprite_resolves_inside_the_mod(self):
+        bound = {row["name"]: row for row in self.inventory()}
+        defined = {name.lower() for name in scrub.defined_sprites()}
+        text = scrub.GFX_OUT.read_text(encoding="utf-8-sig")
+        self.assertGreaterEqual(len(scrub.DOCTRINE_SPRITES), 134)
+        for name, expected in scrub.DOCTRINE_SPRITES.items():
+            with self.subTest(name=name):
+                if name.lower() in defined:
+                    self.assertNotIn(name, bound)
+                    continue
+                row = bound[name]
+                self.assertEqual(row["frames"], expected["frames"])
+                self.assertIn(scrub.sprite_block(name, row["texture"], row["frames"]), text)
+                with scrub.Image.open(scrub.MOD / row["texture"]) as image:
+                    if expected["role"] == "icon" and expected["frames"] == 1:
+                        self.assertLessEqual(image.size, (expected["width"], expected["height"]))
+                    else:
+                        self.assertEqual(image.size, (expected["width"], expected["height"]))
+
+    def test_doctrine_frame_mismatch_is_rejected(self):
+        name = "GFX_doctrine_decor_land"
+        row = {"name": name, "texture": scrub.DOCTRINE_DECOR, "frames": 1}
+        with self.assertRaisesRegex(SystemExit, "frame count differs"):
+            scrub.validate_presentation([row])
+
     def test_news_variants_use_news_format(self):
         for name in ("GFX_news_event_009", "GFX_news_event_civil_war", "GFX_news_event_election"):
             with self.subTest(name=name):

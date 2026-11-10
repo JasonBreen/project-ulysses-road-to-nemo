@@ -197,3 +197,15 @@ only after validating the G: candidate.
   20261108T201339Z passes838 unchanged, zero additions. Resume only when the
   user asks; begin with N009 repair/retest from the Jan3.5 managed save, then
   finish the N008 monthly-settlement replay. No campaign acceptance claimed.
+
+## Static follow-up on a separate branch, 9 November 2026
+
+- No native input. HOI4 not launched; the session directory, profiles and saves
+  were read only for screenshots.
+- Merged this branch onto current main in `claude/codex-work-fixes-ed7947`; the
+  only conflict was the generated country registry, which was regenerated.
+- Applied the N009 terrain candidate, repaired the N004 bookmark binding and the
+  N005 labelled backdrops, and bound the installed doctrine sprite names. Causes
+  of O001 and O002 recorded. Details are in BUGS.md under the same date.
+- Native retests owed: N009 fleet exercise from the Jan 3.5 save, N004 scenario
+  screen, N005 research and doctrine screens, then the N008 February settlement.

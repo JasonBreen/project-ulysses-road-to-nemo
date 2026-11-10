@@ -180,3 +180,57 @@ next repair candidate, not a proven fix. A comparable case is documented by
 [TNO's own tracker](https://github.com/TNODevs/TNO-Bug-Tracker/issues/5636);
 that report is supporting context, not Ulysses runtime acceptance. The user
 paused playtesting before any terrain changes were applied. No repair claimed.
+
+## Static follow-up, 9 November 2026
+
+Offline work on a separate branch (`claude/codex-work-fixes-ed7947`), with this
+playtest branch merged onto current `main` (2b6610ac). HOI4 was not launched.
+Every item below is a static repair or a static finding. None is a native
+retest, and none changes the native status recorded above.
+
+- **N009, repair applied, native retest pending.** Added
+  `minimum_seazone_dominance` to the four sea terrains in
+  `common/terrain/00_terrain.txt` with the installed 1.19.4.2 values: ocean 250,
+  water_fjords 100, water_shallow_sea 100, water_deep_ocean 250. No other
+  terrain value changed. `tools/Test-NativeCompatibilityContracts.py` now fails
+  if a sea terrain, or a `naval_terrain` used by a strategic region, lacks the
+  value. This is still the candidate named above, not a proven fix. Replay the
+  fleet exercise from the Jan 3.5 managed save to confirm it.
+- **N004, root cause found and repaired, native retest pending.** The visual
+  scrub bound `GFX_select_date_1936` to `gfx/interface/ac_briefing/select_date.dds`,
+  the 780x620 scenario-window background. The bookmark entry that draws it is
+  232x211 with the picture at offset 27,28, so each of the two bookmarks drew a
+  window-sized navy panel over the screen. The sprite now points at the
+  archive's own 180x104 bookmark picture, `gfx/interface/select_date_1936.dds`.
+  No artwork was created or replaced. The scrub check rejects a picture that
+  overflows the entry.
+- **N005, partly repaired, native retest pending.** Two causes were repaired.
+  (1) Textures the engine draws behind controls (six technology-tab backgrounds
+  and the doctrine/building panel) carried "MOD PLACEHOLDER" text and an
+  outline. They are now plain navy. (2) The installed doctrine files request 134
+  sprites and the scrub had bound only guessed grand-doctrine names, so 119
+  still resolved to engine art; the Operations card photograph in the N003
+  screenshots is one of them. All 134 now resolve inside the mod. See
+  `docs/VANILLA_VISUAL_SCRUB.md` and `tools/visual_scrub/doctrine_sprites.json`.
+  Not repaired: the repeated emblem tiles used as technology-tree connectors
+  and the tab icons, which come from the earlier interface rebuild
+  (`gfx/interface/ac_expansion/ui/GFX_techtree_line_*.dds`), and the doctrine
+  window frame, which is engine chrome.
+- **O001, cause identified, no change made.** 1.19 has a factory energy system:
+  `ENERGY_RESOURCE = "coal"` in the installed defines, with a per-factory energy
+  cost. The mod defines no coal anywhere in `common` or `history`, so every
+  country starts with an energy deficit and nobody can export coal. The two
+  ways out are a design decision for the owner: switch the energy cost off in
+  mod defines (provisional gameplay), or place coal in states (resource
+  geography, which needs a source decision under `docs/CANON_POLICY.md`).
+- **O002, cause identified, no change made.** `infantry_weapons2` is no longer
+  defined by the mod. The archive's `common/technologies/infantry.txt`,
+  `armor.txt` and `artillery.txt` were removed in ee82591b (18 October 2026), so
+  the installed files of those names load and bring their own years. The 1938
+  shown on the card is the engine's value. Restoring mod-owned definitions for
+  those three files belongs to issue #5 (technology naming) and issue #4 (1.19
+  parity).
+- **Review of the repairs recorded above.** `replace_path="events"` (N006), the
+  `new_*` doctrine identifiers (N003), the `NOT`/`compare` trigger forms (N007)
+  and `global.date` (N008) were read against the installed 1.19.4.2 files and
+  merged unchanged. The full static wrapper passes on the merged tree.

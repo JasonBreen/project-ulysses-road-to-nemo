@@ -328,6 +328,23 @@ def main() -> int:
     missing_variants = sorted(referenced - defined)
     require(not missing_variants, f"OOBs reference undefined equipment variants: {missing_variants[:5]}")
 
+    # Native N009: 1.19 naval dominance reads minimum_seazone_dominance from the terrain of
+    # every sea zone. The archive terrain predates that key; a fleet exercise then raised
+    # std::bad_optional_access. Static presence check only, not native acceptance.
+    terrain = re.sub(r"#[^\n]*", "", read(mod_root / "common" / "terrain" / "00_terrain.txt"))
+    sea_terrains = {}
+    for match in re.finditer(r"(?m)^\t(\w+)\s*=\s*\{", terrain):
+        block = braced_block(terrain, match.start())
+        if re.search(r"\bis_water\s*=\s*yes", block) and (match.group(1) == "ocean" or re.search(r"\bnaval_terrain\s*=\s*yes", block)):
+            sea_terrains[match.group(1)] = re.search(r"\bminimum_seazone_dominance\s*=\s*(\d+)", block)
+    require({"ocean", "water_fjords", "water_shallow_sea", "water_deep_ocean"} <= set(sea_terrains), f"sea terrain categories changed: {sorted(sea_terrains)}")
+    undefined_dominance = sorted(name for name, value in sea_terrains.items() if value is None or int(value.group(1)) <= 0)
+    require(not undefined_dominance, f"sea terrains lack minimum_seazone_dominance: {undefined_dominance}")
+    region_terrains: set[str] = set()
+    for path in (mod_root / "map" / "strategicregions").glob("*.txt"):
+        region_terrains.update(re.findall(r"\bnaval_terrain\s*=\s*(\w+)", read(path)))
+    require(region_terrains <= set(sea_terrains), f"strategic regions use sea terrains without a dominance value: {sorted(region_terrains - set(sea_terrains))}")
+
     print(
         "Native compatibility contracts passed: mapper IDs, Osea division names, tech rows, Sapin bonus, "
         "MANPATS rewards, tech localization, regent guards, Sapin decision structure, infantry grants, "

@@ -234,3 +234,27 @@ retest, and none changes the native status recorded above.
   `new_*` doctrine identifiers (N003), the `NOT`/`compare` trigger forms (N007)
   and `global.date` (N008) were read against the installed 1.19.4.2 files and
   merged unchanged. The full static wrapper passes on the merged tree.
+- **N008, repair carried to the other date readers.** The session repaired the
+  bare `date` operand only in the economy generator. Four other generators
+  wrote the same form: `tools/reconstruction/build.py`,
+  `tools/superpowers/build.py`, `tools/pacific_nations/build.py` and
+  `tools/content_waves/framework.py` (372 operands in twelve generated files,
+  for service start, elapsed and due dates). All now write `global.date`; the
+  regenerated files differ from the previous ones by that qualifier and nothing
+  else. Date triggers such as `date > 1990.12.31` are a different construct and
+  are unchanged. Static only: none of these services has been run natively.
+- **N003 and N007/N008, preserved-source receipts.** Checks outside the session
+  still pinned the pre-repair text. `tools/air_program/reviewed_native_syntax_updates.json`
+  now admits the respelled economy and reconstruction effects, and its
+  validator proves that undoing the three respellings reproduces the previously
+  admitted bytes. The replacement check follows the N003 history receipts in
+  `tools/history_data_cleanup_updates.json`. The FATO check had admitted an
+  earlier static change to unprefixed doctrine identifiers, which N003 showed
+  assign nothing; that admission is retired and the history is back at its
+  original capture.
+- **N007, same form still present elsewhere, not changed.** The `>=` and `<=`
+  `check_variable` shorthand that the native log rejected in the fiscal blocks
+  is still written on 533 lines in 28 other files (FATO and South Belka, Anea,
+  superpower programmes, factions, politics, minors). Whether the engine
+  rejects it there too has not been observed, and the generators and
+  hand-written files involved each have their own pinned receipts. Open.

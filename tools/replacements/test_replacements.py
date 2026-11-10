@@ -37,8 +37,17 @@ class Replacements(unittest.TestCase):
     def test_exact_histories_politics_leaders_and_force_payloads_preserved(self):
         import hashlib
         def force_sha(tree):return hashlib.sha256(json.dumps([n for n in tree if n[0]!='instant_effect'],separators=(',',':')).encode()).hexdigest()
+        # baseline.json is never refreshed. A history may differ from its capture
+        # only through a reviewed repair receipt that continues that exact capture
+        # (native N003 respelled the grand-doctrine identifiers and nothing else).
+        repairs=json.loads((ROOT/'tools/history_data_cleanup_updates.json').read_text())['files']
         for tag,row in BASE['countries'].items():
-            self.assertEqual(row['history_sha256'],digest((ROOT/row['history']).read_bytes()),tag)
+            expected=row['history_sha256'];repair=repairs.get(row['history'])
+            if repair:
+                self.assertEqual(expected,repair['old_normalized_sha256'],tag)
+                self.assertTrue(repair['reason'].startswith('N003: repair only grand-doctrine effect values'),tag)
+                expected=repair['new_normalized_sha256']
+            self.assertEqual(expected,digest((ROOT/row['history']).read_bytes()),tag)
             for name,before in row['rosters'].items():
                 self.assertEqual(before['force_sha256'],force_sha(load(ROOT/name)),name)
                 if tag=='ERU':self.assertEqual(before['source_sha256'],digest((ROOT/name).read_bytes()),name)

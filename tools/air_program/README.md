@@ -35,7 +35,7 @@ The first command is an explicit primary recapture, appropriate only after revie
 | `air_ui.py`, `build_ui.py` | Pure common-screen extension, engine-bound card templates and actual designer blueprint controls |
 | `build_art.py`, `source/art/*.svg` | Original geometric masters, DDS packaging, sprite aliases, dimensions, alpha and hashes |
 | `presentation.py`, `render_review.py` | Actual blueprint consumer bounds and page reconstruction from shipped controls, localization, DDS and BMFont glyph metrics |
-| `preserved_sources.json` | 1,107 original inherited source hashes, never recaptured; two separately reviewed financial-owner changes have exact version/function proofs in `reviewed_owner_updates.json` |
+| `preserved_sources.json` | 1,107 original inherited source hashes, never recaptured; two separately reviewed financial-owner changes have exact version/function proofs in `reviewed_owner_updates.json`; `reviewed_native_syntax_updates.json` admits only the native N007/N008 respellings of the economy and reconstruction effects, proven by undoing them |
 
 The reviewed release owner changes only two captured financial files. Its old/new
 hashes and all unchanged function AST hashes are recorded separately; all other

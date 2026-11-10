@@ -209,3 +209,9 @@ only after validating the G: candidate.
   of O001 and O002 recorded. Details are in BUGS.md under the same date.
 - Native retests owed: N009 fleet exercise from the Jan 3.5 save, N004 scenario
   screen, N005 research and doctrine screens, then the N008 February settlement.
+- Pull-request checks then failed on five jobs. All five traced to session
+  repairs that other generators and preserved-source receipts had not
+  followed: bare `date` in four more generators (N008), and pins on the
+  pre-repair economy, reconstruction and country-history text (N003, N007,
+  N008). Repaired statically and recorded in BUGS.md. The remaining `>=`/`<=`
+  shorthand outside the fiscal blocks is listed there as open.

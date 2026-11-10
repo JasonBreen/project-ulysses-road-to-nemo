@@ -11,6 +11,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]; MOD = ROOT / 'mod/2985041246'
 sys.path[:0] = [str(ROOT / 'tools/usea_expansion'), str(ROOT / 'tools')]
 from script import parse, get, setv, render
+from native_doctrines import normalize as normalize_doctrines, DEFAULTS as DOCTRINES
 from shared_logistics import compose
 from capabilities import AIR, NAVY, LAND, COMMON_TECH, equipment_for, design_for, supports, retained_tree, template_plans, ARMOR, case_key
 from technical import Engine
@@ -131,8 +132,7 @@ def country_output(tag, row, profile, engine=None):
     prefix += '# END ACTIVE WORLD UNLOCKS\n\n'
     body = f'set_country_flag = {tag}_ws_foundation\nset_convoys = {profile["convoys"]}\nstarting_train_buffer = 1\nset_fuel_ratio = 1.0\n'
     if not any(k == 'set_grand_doctrine' for k, _, _ in parse(source)):
-        # 1.17+ grand-doctrine ids. new_* are pre-1.17 technology ids and do not resolve.
-        body += 'set_grand_doctrine = superior_firepower\nset_grand_doctrine = fleet_in_being\nset_grand_doctrine = operational_integrity\n'
+        body += DOCTRINES
     armour_roles = sorted(set(profile['production']) & set(ARMOR))
     if armour_roles:
         modern = ''.join(variant(tag, ARMOR[role]) for role in armour_roles)
@@ -157,7 +157,7 @@ def country_output(tag, row, profile, engine=None):
         body += block('if', 'limit = { has_dlc = "Man the Guns" }\n' + modern + block('else', f'set_naval_oob = "{tag}_ws_navy"'))
     body += f'set_oob = "{tag}_ws_land"\n'
     body += ''.join(block('add_equipment_to_stockpile', f'type = {kind}\namount = {count}\nproducer = {tag}') for kind, count in profile['stocks'].items() if kind not in armour_roles)
-    return prefix + source.rstrip() + '\n\n' + MARKER + '\n' + NOTE + body + END + '\n'
+    return normalize_doctrines(prefix + source.rstrip() + '\n\n' + MARKER + '\n' + NOTE + body + END + '\n')
 
 
 def land_output(tag, row, profile):

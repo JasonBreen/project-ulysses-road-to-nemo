@@ -7,10 +7,13 @@ import argparse
 import importlib.util
 import json
 import re
+import sys
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'tools/usea_expansion'))
+from native_doctrines import normalize as normalize_doctrines, invalid_references
 TECH_FOLDER_ROW_LIMIT = 40
 # Modules defined only by the quarantined 1.14 module files (inventory/inherited-legacy/
 # common/units/equipment/modules), i.e. absent from the installed 1.19 game and the mod.
@@ -73,6 +76,24 @@ def main() -> int:
     parser.add_argument("--mod-root", type=Path, default=ROOT / "mod" / "2985041246")
     args = parser.parse_args()
     mod_root = args.mod_root.resolve()
+
+    # Native N003: only effect values are normalized, and repeated generation
+    # preserves comments, quoted text, and already valid mixed-prefix IDs.
+    sample = ('# set_grand_doctrine = mobile_warfare\n'
+              'name = "set_grand_doctrine = fleet_in_being"\n'
+              'set_grand_doctrine = mobile_warfare\n'
+              'set_grand_doctrine = superior_firepower\n'
+              'set_grand_doctrine = trade_interdiction\n')
+    expected = sample.replace('\nset_grand_doctrine = mobile_warfare',
+                              '\nset_grand_doctrine = new_mobile_warfare')
+    expected = expected.replace('\nset_grand_doctrine = trade_interdiction',
+                                '\nset_grand_doctrine = new_convoy_raiding')
+    require(normalize_doctrines(sample) == expected, 'doctrine port altered unrelated text or a valid doctrine')
+    require(normalize_doctrines(expected) == expected, 'doctrine port is not idempotent')
+    require(normalize_doctrines('set_grand_doctrine = mobile_warfare_extra') ==
+            'set_grand_doctrine = mobile_warfare_extra', 'doctrine port rewrote a token substring')
+    doctrine_errors = invalid_references(mod_root)
+    require(not doctrine_errors, '\n'.join(doctrine_errors))
 
     # The mapper must not rewrite IDs the active technology overrides still define.
     mapper = load_mapper()

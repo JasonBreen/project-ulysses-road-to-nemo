@@ -367,7 +367,7 @@ ac_macro_initialize = {
 		set_variable = { ac_macro_budget_development = 1 }
 		set_variable = { ac_macro_budget_defense = 1 }
 		ac_macro_profile = yes
-		if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 ac_econ_release_history = no }
+		if = { limit = { has_country_flag = ac_macro_history_eligible date < 1991.1.2 NOT = { ac_econ_release_history = yes } }
 		 ac_macro_seed_states = yes
 		 set_global_flag = ac_macro_world_started
 		 ac_macro_quote = yes
@@ -1040,17 +1040,17 @@ ac_macro_quote = {
 }
 ac_macro_settle_month = {
 	if = {
-		limit = { ac_macro_ready = yes date > 1991.1.31 has_country_flag = ac_macro_monthly_authorized check_variable = { ac_macro_last_settlement < date } }
+		limit = { ac_macro_ready = yes date > 1991.1.31 has_country_flag = ac_macro_monthly_authorized check_variable = { ac_macro_last_settlement < global.date } }
 		clr_country_flag = ac_macro_monthly_authorized
-		set_variable = { ac_macro_last_settlement = date }
+		set_variable = { ac_macro_last_settlement = global.date }
 		ac_macro_quote = yes
 		# Private settlement allocation. UI/quote paths never execute this.
 		set_variable = { ac_macro_settled_real_gdp = 0 }
 		set_variable = { ac_macro_settled_tax_base = 0 }
 		every_controlled_state = {
 		 if = { limit = { has_variable = ac_macro_real_output }
-		  if = { limit = { OR = { NOT = { has_variable = ac_macro_claim_date } check_variable = { ac_macro_claim_date < date } } }
-		   set_variable = { ac_macro_claim_date = date }
+		  if = { limit = { OR = { NOT = { has_variable = ac_macro_claim_date } check_variable = { ac_macro_claim_date < global.date } } }
+		   set_variable = { ac_macro_claim_date = global.date }
 		   set_variable = { ac_macro_claim_receiver = PREV.id }
 		   set_variable = { ac_macro_claim_output = ac_macro_real_output }
 		   set_temp_variable = { ac_macro_claim_factor = 1 }
@@ -1059,7 +1059,7 @@ ac_macro_settle_month = {
 		   set_variable = { ac_macro_claim_tax_base = ac_macro_claim_output }
 		   if = { limit = { NOT = { is_owned_by = PREV } } multiply_variable = { ac_macro_claim_tax_base = 0.35 } }
 		  }
-		  if = { limit = { check_variable = { ac_macro_claim_date = date } check_variable = { var = ac_macro_claim_receiver value = PREV.id compare = equals } }
+		  if = { limit = { check_variable = { ac_macro_claim_date = global.date } check_variable = { var = ac_macro_claim_receiver value = PREV.id compare = equals } }
 		   add_to_variable = { PREV.ac_macro_settled_real_gdp = ac_macro_claim_output }
 		   add_to_variable = { PREV.ac_macro_settled_tax_base = ac_macro_claim_tax_base }
 		  }
@@ -1388,10 +1388,10 @@ ac_macro_real_cycle = {
 		divide_temp_variable = { ac_macro_growth_factor = 1200 }
 		add_to_temp_variable = { ac_macro_growth_factor = 1 }
 		every_controlled_state = {
-		 if = { limit = { has_variable = ac_macro_real_output OR = { NOT = { has_variable = ac_macro_state_last_cycle } check_variable = { ac_macro_state_last_cycle < date } } }
+		 if = { limit = { has_variable = ac_macro_real_output OR = { NOT = { has_variable = ac_macro_state_last_cycle } check_variable = { ac_macro_state_last_cycle < global.date } } }
 		  # Productive growth/repair belongs to the state and this accounting boundary.
 		  # A controller change between country callbacks must not apply it twice.
-		  set_variable = { ac_macro_state_last_cycle = date }
+		  set_variable = { ac_macro_state_last_cycle = global.date }
 		  set_temp_variable = { ac_macro_state_growth_factor = PREV.ac_macro_growth }
 		  divide_temp_variable = { ac_macro_state_growth_factor = 1200 }
 		  add_to_temp_variable = { ac_macro_state_growth_factor = 1 }
@@ -1506,7 +1506,7 @@ ac_macro_try_spend = {
 	clr_country_flag = ac_macro_transaction_succeeded
 	if = {
 		limit = { ac_macro_ready = yes }
-		if = { limit = { check_variable = { ac_macro_transaction_amount >= 0.001 } check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= ac_macro_transaction_amount } }
+		if = { limit = { check_variable = { var = ac_macro_transaction_amount value = 0.001 compare = greater_than_or_equals } check_variable = { ac_macro_arrears = 0 } check_variable = { var = ac_macro_cash value = ac_macro_transaction_amount compare = greater_than_or_equals } }
 		 subtract_from_variable = { ac_macro_cash = ac_macro_transaction_amount }
 		 set_country_flag = ac_macro_transaction_succeeded
 		}
@@ -1566,7 +1566,7 @@ ac_macro_cancel_replacements = {
 }
 ac_macro_replacement_cycle = {
 	if = {
-		limit = { ac_macro_can_produce = yes check_variable = { ac_macro_replacement_escrow > 0 } check_variable = { ac_macro_replacement_target <= total_equipment_produced_infantry } }
+		limit = { ac_macro_can_produce = yes check_variable = { ac_macro_replacement_escrow > 0 } check_variable = { var = ac_macro_replacement_target value = total_equipment_produced_infantry compare = less_than_or_equals } }
 		set_variable = { ac_macro_replacement_escrow = 0 }
 		add_to_variable = { ac_macro_readiness = 2 }
 		clamp_variable = { var = ac_macro_readiness min = 0 max = 100 }

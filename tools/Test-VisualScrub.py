@@ -1,10 +1,31 @@
 """Static regressions for generated visual-scrub news bindings."""
 import json
+import hashlib
+import re
 import unittest
+from unittest import mock
 from visual_scrub import build_fallthroughs as scrub
 
 
 class NewsBindingsTests(unittest.TestCase):
+    def test_archived_globe_assets_are_preserved(self):
+        scrub.validate_globe_assets()
+
+    def test_frontend_keeps_all_original_animation_tiles(self):
+        source = scrub.ROOT / 'tools/usea_expansion/frontend_background_original.gui'
+        manifest = json.loads(scrub.GLOBE_MANIFEST.read_text(encoding='utf-8'))
+        self.assertEqual(hashlib.sha256(source.read_text(encoding='utf-8').encode('utf-8')).hexdigest(), manifest['layout_sha256'])
+        gui = (scrub.MOD / 'interface/frontendmainview.gui').read_text(encoding='utf-8')
+        self.assertIn(source.read_text(encoding='utf-8').strip(), gui)
+        tiles = re.findall(r'quadTextureSprite\s*=\s*"GFX_frontend_bg_tile_(\d+)"', gui)
+        self.assertCountEqual(tiles, [f'{index:02}' for index in range(1, 36)])
+
+    def test_placeholder_generation_never_overwrites_the_globe(self):
+        with mock.patch.object(scrub, 'save_dds') as saved, mock.patch.object(scrub, 'EARTH_BACKGROUNDS', {}):
+            scrub.write_placeholders()
+        self.assertNotIn(scrub.MOD / scrub.MENU_FALLBACK,
+                         [call.args[0] for call in saved.call_args_list])
+
     def test_news_variants_use_news_format(self):
         for name in ("GFX_news_event_009", "GFX_news_event_civil_war", "GFX_news_event_election"):
             with self.subTest(name=name):

@@ -10,6 +10,7 @@ from unittest.mock import patch
 from build import HERE,ROOT,MOD,TAGS,FLAG,ARMOR,parse,get,walk,selected,read_source,normalized_hash,reviewed_history_presentation
 from audit import report,actual_case
 from primary import Primary
+from native_doctrines import REPLACEMENTS as DOCTRINE_REPAIR
 
 
 DLC_PROFILES=[set(name for name,on in zip(('By Blood Alone','Man the Guns','No Step Back'),(b,m,n)) if on)
@@ -67,18 +68,8 @@ class Legacy(unittest.TestCase):
 
     def test_politics_leaders_and_existing_shared_history_flags_unchanged(self):
         military={'set_technology','create_equipment_variant','set_oob','set_air_oob','set_naval_oob','add_equipment_to_stockpile'}
-        # Baseline snapshots keep pre-1.17 new_* technology ids. Live histories
-        # use the 1.17+ grand-doctrine ids. The map is the approved repair.
-        doctrine_repair={
-            'new_mobile_warfare':'mobile_warfare',
-            'new_superior_firepower':'superior_firepower',
-            'new_fleet_in_being':'fleet_in_being',
-            'new_base_strike':'base_strike',
-            'new_operational_integrity':'operational_integrity',
-            'new_strategic_destruction':'strategic_destruction',
-            'new_battlefield_support':'battlefield_support',
-            'new_convoy_raiding':'trade_interdiction',
-        }
+        # Preserve baseline captures; only explicit native-ID repairs are allowed.
+        doctrine_repair=DOCTRINE_REPAIR
         def repair(node):
             if node[0]=='set_grand_doctrine' and node[2] in doctrine_repair:
                 return (node[0], node[1], doctrine_repair[node[2]])

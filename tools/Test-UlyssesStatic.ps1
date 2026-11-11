@@ -198,6 +198,13 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
+Write-Output 'Mod wiring: reads have writers, fired events exist, references resolve'
+& $pythonHost (Join-Path $PSScriptRoot 'Test-Wiring.py')
+if ($LASTEXITCODE -ne 0) {
+    Write-Error 'Mod wiring ratchet failed.'
+    exit 1
+}
+
 Write-Output 'Focus art and Economy Dashboard visual contract audit'
 & $pythonHost (Join-Path $PSScriptRoot 'audit_visual_dependencies.py') --mod-root $ModRoot
 if ($LASTEXITCODE -ne 0) {

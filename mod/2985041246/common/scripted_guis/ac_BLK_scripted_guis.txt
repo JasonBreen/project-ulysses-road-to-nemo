@@ -33,6 +33,15 @@ scripted_gui = {
 					str_damage = 0.2
                     army = yes
                 }
+				# Wiring repair: the es_gibt_keine_hoffnung achievement reads this flag (Hoffnung is
+				# state 602; the last offensive is Wacht am Wal). Nothing set it before.
+				if = {
+					limit = {
+						FROM = { state = 602 }
+						has_global_flag = wacht_am_wal_is_happening
+					}
+					set_global_flag = used_excalibur_on_hoffnung_achievement
+				}
 				ROOT = {
 					activate_mission = BLK_excalibur_cooling_after_bombing
 					add_to_variable = {

@@ -108,3 +108,32 @@ exceptions, 28 defects and 25 warnings remained:
 - **Text.** 25 event text keys are missing.
 
 These are fixed in batches (plan Part A2). Each fix lowers the baseline.
+
+## Repairs (11 November 2026)
+
+The baseline is now **0 defects and 0 warnings**. Each fix below is mod
+provenance: it makes inherited content do what it plainly intends. Nothing new
+is invented.
+
+| Finding | Repair |
+| --- | --- |
+| AWW and SER network repair: decision visible but never available; empty finish block | `tools/release_foundations/network.py`: a release whose recorded footprints are already fully connected gets a hidden decision, an `always = no` availability and no done flag. The empty block is no longer emitted. Outputs and the dormant-release inventory are regenerated. |
+| `SAP_has_mobilized` never set, so `SAP_demobilize` never appears | National-guard mobilisation sets it (`SAP_decisions.txt`). |
+| `sap_political_crisis_over` never set, so the `sapin_politics.3`–`.13` chain re-arms forever | Set when either civil war starts (`sapin_civil_war.1`/`.2`). |
+| The Sapin civil-war category opens only on a flag nothing sets, so its recruitment decision (which needs `has_civil_war`) is unreachable | The category also opens during a civil war. |
+| `used_excalibur_on_hoffnung_achievement` never set | The Excalibur land-strike button sets it when the target is Hoffnung (state 602) during Wacht am Wal, matching the achievement text. |
+| `BLK_excalibur_fire_during_aa` activation read an unset flag | `always = no`; the decision activates the mission directly. |
+| `BLK_grunder_air_designer`, `sap_improved_laser_guidance_systems` undefined | Removed the dead references. The Gruender MIO replaced the designer, and the laser focus grants no idea. No change to the outcome. |
+| Six live events showed raw keys (`belka.8`, `belka.9`, `belka_dlp.5`, `belka_dlp_coup.8`, `osea.80`, `ustio.19`) | `localisation/english/ac_wiring_repairs_l_english.yml` states what each effect does. |
+
+**What remains in the allowlist, each with a reason:**
+- uncalled archive stubs and debug events;
+- the `owner-decision` items, which wait for a content choice:
+  - `belka_l_monarchy.1`, `gebet_election.2`, `sapin.1` and `ustio.21`;
+  - the Sapin imminent-revolt mission and `SAP_politics_calmed`;
+  - the `glrdc_good_flag` branch.
+
+**Belkan defeat flag:** `belka_lost_belkan_war` is set by `belka_dlp_war.103`
+and `belka_dlp_lost.7`. It is read by `ac_dispatch_belkan_war_outcome`,
+`ac_continuation.1` and the campaign decisions. `tools/validate_campaign.py`
+reports 0 errors.

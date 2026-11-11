@@ -1,0 +1,4443 @@
+# Bespoke national tree; source: tools/national_depth (Nordlands). Provisional gameplay unless a ledger row says otherwise. Native acceptance pending.
+focus_tree = {
+	id = ac_wd_nrl_tree
+	country = { factor = 0 modifier = { add = 50 tag = NRL original_tag = NRL } }
+	default = no
+	reset_on_civilwar = no
+	initial_show_position = { focus = NRL_wd_crown_sits }
+	continuous_focus_position = { x = 2208 y = 16 }
+	# The shared institutional programme (tools/institutions), unchanged.
+	shared_focus = ac_reg_register
+	shared_focus = ac_reg_audit
+	shared_focus = ac_reg_executive
+	shared_focus = ac_reg_districts
+	shared_focus = ac_reg_records
+	shared_focus = ac_reg_service_review
+	shared_focus = ac_reg_survey
+	shared_focus = ac_reg_civilian_contracts
+	shared_focus = ac_reg_protected_orders
+	shared_focus = ac_reg_spares
+	shared_focus = ac_reg_freight
+	shared_focus = ac_reg_productive_review
+	shared_focus = ac_reg_emergency_register
+	shared_focus = ac_reg_civil_protection
+	shared_focus = ac_reg_uniformed_reserve
+	shared_focus = ac_reg_stock_records
+	shared_focus = ac_reg_rehearsals
+	shared_focus = ac_reg_resilience_review
+	shared_focus = ac_reg_defense_register
+	shared_focus = ac_reg_staff_schools
+	shared_focus = ac_reg_field_priority
+	shared_focus = ac_reg_replacement_office
+	shared_focus = ac_reg_readiness_reports
+	shared_focus = ac_reg_defense_review
+	shared_focus = ac_reg_external_register
+	shared_focus = ac_reg_guarded_contacts
+	shared_focus = ac_reg_technical_contacts
+	shared_focus = ac_reg_domestic_contingency
+	shared_focus = ac_reg_bounded_commitments
+	shared_focus = ac_reg_external_review
+	shared_focus = ac_reg_institution_review
+	shared_focus = ac_reg_delegation
+	shared_focus = ac_reg_central_register
+	shared_focus = ac_reg_inspectors
+	shared_focus = ac_reg_succession_rules
+	shared_focus = ac_reg_institutional_settlement
+	focus = {
+		id = NRL_wd_crown_sits
+		icon = GFX_ac_wd_focus_NRL_wd_crown_sits
+		x = 3
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_office_review
+			country_event = {
+				id = ac_wd_nrl.1
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_crown_civil_list
+		icon = GFX_ac_wd_focus_NRL_wd_crown_civil_list
+		x = 2
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_crown_sits
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = NRL_wd_civil_list_published
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = NRL_wd_crown_diet_recalled
+		icon = GFX_ac_wd_focus_NRL_wd_crown_diet_recalled
+		x = 4
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_crown_sits
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = NRL_wd_diet_summoned
+			add_political_power = -20
+		}
+	}
+
+	focus = {
+		id = NRL_wd_crown_cabinet_path
+		icon = GFX_ac_wd_focus_NRL_wd_crown_cabinet_path
+		x = 0
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_crown_civil_list
+		}
+		prerequisite = {
+			focus = NRL_wd_crown_diet_recalled
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_crown_diet_path
+			focus = NRL_wd_crown_houses_path
+			focus = NRL_wd_crown_privy_path
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_office_review
+				add_idea = NRL_wd_cabinet_charter
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_crown_privy_path
+		icon = GFX_ac_wd_focus_NRL_wd_crown_privy_path
+		x = 2
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_crown_civil_list
+		}
+		prerequisite = {
+			focus = NRL_wd_crown_diet_recalled
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_crown_cabinet_path
+			focus = NRL_wd_crown_diet_path
+			focus = NRL_wd_crown_houses_path
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_office_review
+				add_idea = NRL_wd_privy_seals
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_crown_diet_path
+		icon = GFX_ac_wd_focus_NRL_wd_crown_diet_path
+		x = 4
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_crown_civil_list
+		}
+		prerequisite = {
+			focus = NRL_wd_crown_diet_recalled
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_crown_cabinet_path
+			focus = NRL_wd_crown_houses_path
+			focus = NRL_wd_crown_privy_path
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_office_review
+				add_idea = NRL_wd_diet_mandate
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_crown_houses_path
+		icon = GFX_ac_wd_focus_NRL_wd_crown_houses_path
+		x = 6
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_crown_civil_list
+		}
+		prerequisite = {
+			focus = NRL_wd_crown_diet_recalled
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_crown_cabinet_path
+			focus = NRL_wd_crown_diet_path
+			focus = NRL_wd_crown_privy_path
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_office_review
+				add_idea = NRL_wd_harbour_houses
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_crown_seat_cabinet
+		icon = GFX_ac_wd_focus_NRL_wd_crown_seat_cabinet
+		x = 0
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_crown_cabinet_path
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_crown_seat_diet
+			focus = NRL_wd_crown_seat_houses
+			focus = NRL_wd_crown_seat_privy
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_nrl_regime_crown_cabinet = yes
+			set_country_flag = NRL_wd_path_cabinet
+		}
+	}
+
+	focus = {
+		id = NRL_wd_crown_seat_privy
+		icon = GFX_ac_wd_focus_NRL_wd_crown_seat_privy
+		x = 2
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_crown_privy_path
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_crown_seat_cabinet
+			focus = NRL_wd_crown_seat_diet
+			focus = NRL_wd_crown_seat_houses
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_nrl_regime_privy_office = yes
+			set_country_flag = NRL_wd_path_privy
+		}
+	}
+
+	focus = {
+		id = NRL_wd_crown_seat_diet
+		icon = GFX_ac_wd_focus_NRL_wd_crown_seat_diet
+		x = 4
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_crown_diet_path
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_crown_seat_cabinet
+			focus = NRL_wd_crown_seat_houses
+			focus = NRL_wd_crown_seat_privy
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_nrl_regime_diet_government = yes
+			set_country_flag = NRL_wd_path_diet
+		}
+	}
+
+	focus = {
+		id = NRL_wd_crown_seat_houses
+		icon = GFX_ac_wd_focus_NRL_wd_crown_seat_houses
+		x = 6
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_crown_houses_path
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_crown_seat_cabinet
+			focus = NRL_wd_crown_seat_diet
+			focus = NRL_wd_crown_seat_privy
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_nrl_regime_harbour_council = yes
+			set_country_flag = NRL_wd_path_houses
+		}
+	}
+
+	focus = {
+		id = NRL_wd_crown_new_oath
+		icon = GFX_ac_wd_focus_NRL_wd_crown_new_oath
+		x = 3
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_crown_seat_cabinet
+			focus = NRL_wd_crown_seat_privy
+			focus = NRL_wd_crown_seat_diet
+			focus = NRL_wd_crown_seat_houses
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = NRL_wd_oath_sworn
+			add_stability = 0.03
+		}
+	}
+
+	focus = {
+		id = NRL_wd_yards_census
+		icon = GFX_ac_wd_focus_NRL_wd_yards_census
+		x = 11
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_slipway_census
+			country_event = {
+				id = ac_wd_nrl.2
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_yards_lundegaard
+		icon = GFX_ac_wd_focus_NRL_wd_yards_lundegaard
+		x = 9
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_yards_census
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 277
+				}
+				277 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_yards_nyboholm
+		icon = GFX_ac_wd_focus_NRL_wd_yards_nyboholm
+		x = 11
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_yards_census
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 368
+				}
+				368 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			navy_experience = 5
+		}
+	}
+
+	focus = {
+		id = NRL_wd_yards_djurseryd
+		icon = GFX_ac_wd_focus_NRL_wd_yards_djurseryd
+		x = 13
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_yards_census
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 342
+				}
+				342 = {
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_yards_merchant
+		icon = GFX_ac_wd_focus_NRL_wd_yards_merchant
+		x = 9
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_yards_lundegaard
+			focus = NRL_wd_yards_nyboholm
+			focus = NRL_wd_yards_djurseryd
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_yards_navy
+			focus = NRL_wd_yards_repair
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_slipway_census
+				add_idea = NRL_wd_merchant_books
+			}
+			set_country_flag = NRL_wd_yard_model_merchant
+		}
+	}
+
+	focus = {
+		id = NRL_wd_yards_navy
+		icon = GFX_ac_wd_focus_NRL_wd_yards_navy
+		x = 11
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_yards_lundegaard
+			focus = NRL_wd_yards_nyboholm
+			focus = NRL_wd_yards_djurseryd
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_yards_merchant
+			focus = NRL_wd_yards_repair
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_slipway_census
+				add_idea = NRL_wd_home_hulls
+			}
+			set_country_flag = NRL_wd_yard_model_navy
+		}
+	}
+
+	focus = {
+		id = NRL_wd_yards_repair
+		icon = GFX_ac_wd_focus_NRL_wd_yards_repair
+		x = 13
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_yards_lundegaard
+			focus = NRL_wd_yards_nyboholm
+			focus = NRL_wd_yards_djurseryd
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_yards_merchant
+			focus = NRL_wd_yards_navy
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_slipway_census
+				add_idea = NRL_wd_repair_basins
+			}
+			set_country_flag = NRL_wd_yard_model_repair
+		}
+	}
+
+	focus = {
+		id = NRL_wd_yards_skogaholm
+		icon = GFX_ac_wd_focus_NRL_wd_yards_skogaholm
+		x = 9
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_yards_merchant
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 385
+				}
+				385 = {
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_tech_bonus = {
+				name = NRL_wd_yards_skogaholm
+				bonus = 0.5
+				uses = 1
+				category = naval_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_yards_escort_series
+		icon = GFX_ac_wd_focus_NRL_wd_yards_escort_series
+		x = 11
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_yards_navy
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			navy_experience = 15
+			add_tech_bonus = {
+				name = NRL_wd_yards_escort_series
+				bonus = 0.5
+				uses = 1
+				category = naval_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_yards_floating_dock
+		icon = GFX_ac_wd_focus_NRL_wd_yards_floating_dock
+		x = 13
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_yards_repair
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 385
+				}
+				385 = {
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_political_power = -15
+		}
+	}
+
+	focus = {
+		id = NRL_wd_yards_apprentices
+		icon = GFX_ac_wd_focus_NRL_wd_yards_apprentices
+		x = 11
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_yards_skogaholm
+			focus = NRL_wd_yards_escort_series
+			focus = NRL_wd_yards_floating_dock
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_yard_schools
+		}
+	}
+
+	focus = {
+		id = NRL_wd_oil_survey
+		icon = GFX_ac_wd_focus_NRL_wd_oil_survey
+		x = 19
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_peninsula_survey
+			country_event = {
+				id = ac_wd_nrl.3
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_oil_peninsula_road
+		icon = GFX_ac_wd_focus_NRL_wd_oil_peninsula_road
+		x = 17
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_oil_survey
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 254
+				}
+				254 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_oil_granley_wells
+		icon = GFX_ac_wd_focus_NRL_wd_oil_granley_wells
+		x = 19
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_oil_survey
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 257
+				}
+				257 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_oil_geology_school
+		icon = GFX_ac_wd_focus_NRL_wd_oil_geology_school
+		x = 21
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_oil_survey
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = NRL_wd_oil_geology_school
+				bonus = 0.5
+				uses = 1
+				category = excavation_tech
+			}
+			add_tech_bonus = {
+				name = NRL_wd_oil_geology_school
+				bonus = 0.5
+				uses = 1
+				category = synth_resources
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_oil_crown_company
+		icon = GFX_ac_wd_focus_NRL_wd_oil_crown_company
+		x = 16
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_oil_peninsula_road
+			focus = NRL_wd_oil_granley_wells
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_oil_licences
+			focus = NRL_wd_oil_slow_fund
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_crown_wells
+			set_country_flag = NRL_wd_oil_model_crown
+		}
+	}
+
+	focus = {
+		id = NRL_wd_oil_licences
+		icon = GFX_ac_wd_focus_NRL_wd_oil_licences
+		x = 18
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_oil_peninsula_road
+			focus = NRL_wd_oil_granley_wells
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_oil_crown_company
+			focus = NRL_wd_oil_slow_fund
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_licensed_fields
+			set_country_flag = NRL_wd_oil_model_licensed
+		}
+	}
+
+	focus = {
+		id = NRL_wd_oil_slow_fund
+		icon = GFX_ac_wd_focus_NRL_wd_oil_slow_fund
+		x = 20
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_oil_peninsula_road
+			focus = NRL_wd_oil_granley_wells
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_oil_crown_company
+			focus = NRL_wd_oil_licences
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_oil_fund
+			set_country_flag = NRL_wd_oil_model_fund
+		}
+	}
+
+	focus = {
+		id = NRL_wd_oil_refinery
+		icon = GFX_ac_wd_focus_NRL_wd_oil_refinery
+		x = 18
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_oil_crown_company
+			focus = NRL_wd_oil_licences
+			focus = NRL_wd_oil_slow_fund
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 254
+				}
+				254 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_oil_smelter
+		icon = GFX_ac_wd_focus_NRL_wd_oil_smelter
+		x = 22
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_oil_granley_wells
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 257
+				}
+				257 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_tech_bonus = {
+				name = NRL_wd_oil_smelter
+				bonus = 0.5
+				uses = 1
+				category = excavation_tech
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_oil_eyrarbakki
+		icon = GFX_ac_wd_focus_NRL_wd_oil_eyrarbakki
+		x = 20
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_oil_smelter
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 257
+				}
+				257 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			navy_experience = 5
+		}
+	}
+
+	focus = {
+		id = NRL_wd_oil_fuel_reserve
+		icon = GFX_ac_wd_focus_NRL_wd_oil_fuel_reserve
+		x = 19
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_oil_refinery
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = NRL_wd_fuel_reserve
+			add_political_power = -25
+		}
+	}
+
+	focus = {
+		id = NRL_wd_serv_footing
+		icon = GFX_ac_wd_focus_NRL_wd_serv_footing
+		x = 29
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_disarmed_footing
+			country_event = {
+				id = ac_wd_nrl.4
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_serv_armour_store
+		icon = GFX_ac_wd_focus_NRL_wd_serv_armour_store
+		x = 28
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_serv_footing
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_armour_custodians
+		}
+	}
+
+	focus = {
+		id = NRL_wd_serv_hait_ranges
+		icon = GFX_ac_wd_focus_NRL_wd_serv_hait_ranges
+		x = 30
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_serv_footing
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 318
+				}
+				318 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			army_experience = 10
+		}
+	}
+
+	focus = {
+		id = NRL_wd_serv_home_guard
+		icon = GFX_ac_wd_focus_NRL_wd_serv_home_guard
+		x = 27
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_serv_armour_store
+			focus = NRL_wd_serv_hait_ranges
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_serv_declared
+			focus = NRL_wd_serv_volunteers
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_disarmed_footing
+				add_idea = NRL_wd_home_guard
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_serv_volunteers
+		icon = GFX_ac_wd_focus_NRL_wd_serv_volunteers
+		x = 29
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_serv_armour_store
+			focus = NRL_wd_serv_hait_ranges
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_serv_declared
+			focus = NRL_wd_serv_home_guard
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_disarmed_footing
+				add_idea = NRL_wd_coast_brigades
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_serv_declared
+		icon = GFX_ac_wd_focus_NRL_wd_serv_declared
+		x = 31
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_serv_armour_store
+			focus = NRL_wd_serv_hait_ranges
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_serv_home_guard
+			focus = NRL_wd_serv_volunteers
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_disarmed_footing
+				add_idea = NRL_wd_declared_disarmament
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_serv_firepower
+		icon = GFX_ac_wd_focus_NRL_wd_serv_firepower
+		x = 25
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_serv_armour_store
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_firepower_school
+		}
+	}
+
+	focus = {
+		id = NRL_wd_serv_arsenal
+		icon = GFX_ac_wd_focus_NRL_wd_serv_arsenal
+		x = 27
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_serv_home_guard
+			focus = NRL_wd_serv_volunteers
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 373
+				}
+				373 = {
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_serv_mountain_companies
+		icon = GFX_ac_wd_focus_NRL_wd_serv_mountain_companies
+		x = 33
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_serv_hait_ranges
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			army_experience = 15
+			add_tech_bonus = {
+				name = NRL_wd_serv_mountain_companies
+				bonus = 0.5
+				uses = 1
+				category = infantry_weapons
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_serv_depots
+		icon = GFX_ac_wd_focus_NRL_wd_serv_depots
+		x = 29
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_serv_home_guard
+			focus = NRL_wd_serv_volunteers
+			focus = NRL_wd_serv_declared
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 385
+				}
+				385 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_tech_bonus = {
+				name = NRL_wd_serv_depots
+				bonus = 0.5
+				uses = 1
+				category = logistics_tech
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_serv_civil_defence
+		icon = GFX_ac_wd_focus_NRL_wd_serv_civil_defence
+		x = 31
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_serv_declared
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_civil_defence_corps
+		}
+	}
+
+	focus = {
+		id = NRL_wd_fleet_doctrine
+		icon = GFX_ac_wd_focus_NRL_wd_fleet_doctrine
+		x = 2
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_fleet_waits
+			country_event = {
+				id = ac_wd_nrl.5
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_fleet_approach_radar
+		icon = GFX_ac_wd_focus_NRL_wd_fleet_approach_radar
+		x = 0
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_fleet_doctrine
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 277
+				}
+				277 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_fleet_merchant_register
+		icon = GFX_ac_wd_focus_NRL_wd_fleet_merchant_register
+		x = 2
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_fleet_doctrine
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = NRL_wd_merchant_register
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = NRL_wd_fleet_nyboholm
+		icon = GFX_ac_wd_focus_NRL_wd_fleet_nyboholm
+		x = 4
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_fleet_doctrine
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 368
+				}
+				368 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = NRL_wd_fleet_submarines
+		icon = GFX_ac_wd_focus_NRL_wd_fleet_submarines
+		x = 0
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_fleet_approach_radar
+			focus = NRL_wd_fleet_merchant_register
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_fleet_escorts
+			focus = NRL_wd_fleet_mines
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_sub_screen
+		}
+	}
+
+	focus = {
+		id = NRL_wd_fleet_escorts
+		icon = GFX_ac_wd_focus_NRL_wd_fleet_escorts
+		x = 2
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_fleet_approach_radar
+			focus = NRL_wd_fleet_merchant_register
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_fleet_mines
+			focus = NRL_wd_fleet_submarines
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_escort_groups
+		}
+	}
+
+	focus = {
+		id = NRL_wd_fleet_mines
+		icon = GFX_ac_wd_focus_NRL_wd_fleet_mines
+		x = 4
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_fleet_approach_radar
+			focus = NRL_wd_fleet_merchant_register
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_fleet_escorts
+			focus = NRL_wd_fleet_submarines
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_mine_belts
+		}
+	}
+
+	focus = {
+		id = NRL_wd_fleet_boat_school
+		icon = GFX_ac_wd_focus_NRL_wd_fleet_boat_school
+		x = 0
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_fleet_submarines
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			navy_experience = 20
+			add_tech_bonus = {
+				name = NRL_wd_fleet_boat_school
+				bonus = 0.5
+				uses = 1
+				category = naval_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_fleet_convoy_office
+		icon = GFX_ac_wd_focus_NRL_wd_fleet_convoy_office
+		x = 2
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_fleet_escorts
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_convoy_office
+		}
+	}
+
+	focus = {
+		id = NRL_wd_fleet_shore_stations
+		icon = GFX_ac_wd_focus_NRL_wd_fleet_shore_stations
+		x = 4
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_fleet_mines
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 385
+				}
+				385 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_political_power = -10
+		}
+	}
+
+	focus = {
+		id = NRL_wd_fleet_puts_to_sea
+		icon = GFX_ac_wd_focus_NRL_wd_fleet_puts_to_sea
+		x = 2
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_fleet_boat_school
+			focus = NRL_wd_fleet_convoy_office
+			focus = NRL_wd_fleet_shore_stations
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			navy_experience = 25
+			add_timed_idea = {
+				idea = NRL_wd_fleet_review_year
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_bord_capital_frontier
+		icon = GFX_ac_wd_focus_NRL_wd_bord_capital_frontier
+		x = 10
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_frontier_desks
+			country_event = {
+				id = ac_wd_nrl.6
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_bord_fato_desk
+		icon = GFX_ac_wd_focus_NRL_wd_bord_fato_desk
+		x = 9
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_bord_capital_frontier
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_fato_transit
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_bord_wie_desk
+		icon = GFX_ac_wd_focus_NRL_wd_bord_wie_desk
+		x = 11
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_bord_capital_frontier
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_wielvakian_transit
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_bord_belkan_sale
+		icon = GFX_ac_wd_focus_NRL_wd_bord_belkan_sale
+		x = 8
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_bord_fato_desk
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			date > 1991.8.29
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 257
+				}
+				257 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			custom_effect_tooltip = NRL_wd_bord_belkan_sale_tt_1
+		}
+	}
+
+	focus = {
+		id = NRL_wd_bord_open
+		icon = GFX_ac_wd_focus_NRL_wd_bord_open
+		x = 10
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_bord_fato_desk
+			focus = NRL_wd_bord_wie_desk
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_bord_guarded
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_frontier_desks
+				add_idea = NRL_wd_open_crossings
+			}
+			set_country_flag = NRL_wd_frontier_open
+		}
+	}
+
+	focus = {
+		id = NRL_wd_bord_guarded
+		icon = GFX_ac_wd_focus_NRL_wd_bord_guarded
+		x = 12
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_bord_fato_desk
+			focus = NRL_wd_bord_wie_desk
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_bord_open
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_frontier_desks
+				add_idea = NRL_wd_guarded_crossings
+			}
+			set_country_flag = NRL_wd_frontier_guarded
+		}
+	}
+
+	focus = {
+		id = NRL_wd_bord_through_trains
+		icon = GFX_ac_wd_focus_NRL_wd_bord_through_trains
+		x = 7
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_bord_open
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 292
+				}
+				292 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_tech_bonus = {
+				name = NRL_wd_bord_through_trains
+				bonus = 0.5
+				uses = 1
+				category = train_tech
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_bord_market_days
+		icon = GFX_ac_wd_focus_NRL_wd_bord_market_days
+		x = 9
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_bord_open
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_frontier_markets
+				days = 730
+			}
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = NRL_wd_bord_vakia_posts
+		icon = GFX_ac_wd_focus_NRL_wd_bord_vakia_posts
+		x = 11
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_bord_guarded
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 318
+				}
+				318 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_war_support = 0.02
+		}
+	}
+
+	focus = {
+		id = NRL_wd_bord_tariff_courts
+		icon = GFX_ac_wd_focus_NRL_wd_bord_tariff_courts
+		x = 13
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_bord_guarded
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_tariff_courts
+		}
+	}
+
+	focus = {
+		id = NRL_wd_bord_quiet_word
+		icon = GFX_ac_wd_focus_NRL_wd_bord_quiet_word
+		x = 10
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_bord_through_trains
+			focus = NRL_wd_bord_market_days
+			focus = NRL_wd_bord_vakia_posts
+			focus = NRL_wd_bord_tariff_courts
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = NRL_wd_neighbour_statement
+			add_stability = 0.03
+			custom_effect_tooltip = NRL_wd_bord_quiet_word_tt_2
+		}
+	}
+
+	focus = {
+		id = NRL_wd_lands_ledger
+		icon = GFX_ac_wd_focus_NRL_wd_lands_ledger
+		x = 19
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_district_ledger
+			country_event = {
+				id = ac_wd_nrl.12
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_lands_forest_lines
+		icon = GFX_ac_wd_focus_NRL_wd_lands_forest_lines
+		x = 16
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_lands_ledger
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 277
+				}
+				277 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = NRL_wd_lands_peninsula_ferries
+		icon = GFX_ac_wd_focus_NRL_wd_lands_peninsula_ferries
+		x = 18
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_lands_ledger
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 254
+				}
+				254 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_lands_twin_harbours
+		icon = GFX_ac_wd_focus_NRL_wd_lands_twin_harbours
+		x = 20
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_lands_ledger
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 342
+				}
+				342 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_lands_hait_works
+		icon = GFX_ac_wd_focus_NRL_wd_lands_hait_works
+		x = 22
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_lands_ledger
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 318
+				}
+				318 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_lands_councils
+		icon = GFX_ac_wd_focus_NRL_wd_lands_councils
+		x = 18
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_lands_forest_lines
+			focus = NRL_wd_lands_peninsula_ferries
+			focus = NRL_wd_lands_twin_harbours
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_lands_works
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_district_ledger
+				add_idea = NRL_wd_district_councils
+			}
+			set_country_flag = NRL_wd_districts_devolved
+		}
+	}
+
+	focus = {
+		id = NRL_wd_lands_works
+		icon = GFX_ac_wd_focus_NRL_wd_lands_works
+		x = 20
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_lands_forest_lines
+			focus = NRL_wd_lands_peninsula_ferries
+			focus = NRL_wd_lands_twin_harbours
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_lands_councils
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_district_ledger
+				add_idea = NRL_wd_works_ministry
+			}
+			set_country_flag = NRL_wd_districts_central
+		}
+	}
+
+	focus = {
+		id = NRL_wd_lands_skogaholm
+		icon = GFX_ac_wd_focus_NRL_wd_lands_skogaholm
+		x = 17
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_lands_councils
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 385
+				}
+				385 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_lands_haugaland_roads
+		icon = GFX_ac_wd_focus_NRL_wd_lands_haugaland_roads
+		x = 21
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_lands_works
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 373
+				}
+				373 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_tech_bonus = {
+				name = NRL_wd_lands_haugaland_roads
+				bonus = 0.5
+				uses = 1
+				category = construction_tech
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_lands_capital_housing
+		icon = GFX_ac_wd_focus_NRL_wd_lands_capital_housing
+		x = 19
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_lands_councils
+			focus = NRL_wd_lands_works
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_housing_drive
+				days = 730
+			}
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = NRL_wd_lands_accord
+		icon = GFX_ac_wd_focus_NRL_wd_lands_accord
+		x = 19
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_lands_skogaholm
+			focus = NRL_wd_lands_haugaland_roads
+			focus = NRL_wd_lands_capital_housing
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = NRL_wd_districts_accord
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sus_plan
+		icon = GFX_ac_wd_focus_NRL_wd_sus_plan
+		x = 28
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_sustainment_plan
+			add_tech_bonus = {
+				name = NRL_wd_sus_plan
+				bonus = 0.5
+				uses = 1
+				category = logistics_tech
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sus_polytechnic
+		icon = GFX_ac_wd_focus_NRL_wd_sus_polytechnic
+		x = 26
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sus_plan
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_polytechnic
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sus_rolling_stock
+		icon = GFX_ac_wd_focus_NRL_wd_sus_rolling_stock
+		x = 28
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sus_plan
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = NRL_wd_sus_rolling_stock
+				bonus = 0.75
+				uses = 1
+				category = train_tech
+			}
+			add_political_power = -10
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sus_truck_pools
+		icon = GFX_ac_wd_focus_NRL_wd_sus_truck_pools
+		x = 30
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sus_plan
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_truck_pools
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sus_licences
+		icon = GFX_ac_wd_focus_NRL_wd_sus_licences
+		x = 25
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_sus_polytechnic
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_sus_design
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_licensed_kits
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sus_design
+		icon = GFX_ac_wd_focus_NRL_wd_sus_design
+		x = 27
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_sus_polytechnic
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_sus_licences
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_home_designs
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sus_capital_works
+		icon = GFX_ac_wd_focus_NRL_wd_sus_capital_works
+		x = 31
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sus_rolling_stock
+			focus = NRL_wd_sus_truck_pools
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 292
+				}
+				292 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sus_field_engineers
+		icon = GFX_ac_wd_focus_NRL_wd_sus_field_engineers
+		x = 29
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sus_polytechnic
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = NRL_wd_sus_field_engineers
+				bonus = 0.5
+				uses = 1
+				category = engineers_tech
+			}
+			add_tech_bonus = {
+				name = NRL_wd_sus_field_engineers
+				bonus = 0.5
+				uses = 1
+				category = construction_tech
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sus_instrument_labs
+		icon = GFX_ac_wd_focus_NRL_wd_sus_instrument_labs
+		x = 28
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sus_licences
+			focus = NRL_wd_sus_design
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = NRL_wd_sus_instrument_labs
+				bonus = 0.5
+				uses = 2
+				category = electronics
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sus_fuel_chemistry
+		icon = GFX_ac_wd_focus_NRL_wd_sus_fuel_chemistry
+		x = 27
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sus_instrument_labs
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = NRL_wd_sus_fuel_chemistry
+				bonus = 0.5
+				uses = 1
+				category = synth_resources
+			}
+			add_tech_bonus = {
+				name = NRL_wd_sus_fuel_chemistry
+				bonus = 0.5
+				uses = 1
+				category = industry
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sus_spares
+		icon = GFX_ac_wd_focus_NRL_wd_sus_spares
+		x = 29
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sus_capital_works
+			focus = NRL_wd_sus_instrument_labs
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_sustainment_plan
+				add_idea = NRL_wd_spares_catalogue
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_air_eighteen
+		icon = GFX_ac_wd_focus_NRL_wd_air_eighteen
+		x = 1
+		y = 24
+		cost = 5
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_eighteen_fighters
+			air_experience = 10
+		}
+	}
+
+	focus = {
+		id = NRL_wd_air_peninsula_runway
+		icon = GFX_ac_wd_focus_NRL_wd_air_peninsula_runway
+		x = 0
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_air_eighteen
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 254
+				}
+				254 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_air_forest_field
+		icon = GFX_ac_wd_focus_NRL_wd_air_forest_field
+		x = 2
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_air_eighteen
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 277
+				}
+				277 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_air_interceptors
+		icon = GFX_ac_wd_focus_NRL_wd_air_interceptors
+		x = 0
+		y = 26
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_air_peninsula_runway
+			focus = NRL_wd_air_forest_field
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_air_sea_patrol
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_eighteen_fighters
+				add_idea = NRL_wd_interceptor_wing
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_air_sea_patrol
+		icon = GFX_ac_wd_focus_NRL_wd_air_sea_patrol
+		x = 2
+		y = 26
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_air_peninsula_runway
+			focus = NRL_wd_air_forest_field
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_air_interceptors
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_eighteen_fighters
+				add_idea = NRL_wd_sea_patrol_wing
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_air_radar_chain
+		icon = GFX_ac_wd_focus_NRL_wd_air_radar_chain
+		x = 0
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_air_interceptors
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 292
+				}
+				292 = {
+					add_building_construction = {
+						type = radar_station
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_air_strike_drill
+		icon = GFX_ac_wd_focus_NRL_wd_air_strike_drill
+		x = 2
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_air_sea_patrol
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			air_experience = 20
+			add_tech_bonus = {
+				name = NRL_wd_air_strike_drill
+				bonus = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_air_belkan_pilots
+		icon = GFX_ac_wd_focus_NRL_wd_air_belkan_pilots
+		x = 1
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_air_radar_chain
+			focus = NRL_wd_air_strike_drill
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+			date > 1998.6.19
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_nrl.10
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_air_hire_aggressors
+		icon = GFX_ac_wd_focus_NRL_wd_air_hire_aggressors
+		x = 0
+		y = 29
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_air_belkan_pilots
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_air_own_instructors
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_aggressor_school
+		}
+	}
+
+	focus = {
+		id = NRL_wd_air_own_instructors
+		icon = GFX_ac_wd_focus_NRL_wd_air_own_instructors
+		x = 2
+		y = 29
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_air_belkan_pilots
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_air_hire_aggressors
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_home_instructors
+		}
+	}
+
+	focus = {
+		id = NRL_wd_air_display
+		icon = GFX_ac_wd_focus_NRL_wd_air_display
+		x = 1
+		y = 30
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_air_hire_aggressors
+			focus = NRL_wd_air_own_instructors
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+			has_country_flag = NRL_wd_belkan_lessons
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			air_experience = 20
+			add_timed_idea = {
+				idea = NRL_wd_air_display_year
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_news
+		icon = GFX_ac_wd_focus_NRL_wd_war_news
+		x = 12
+		y = 24
+		cost = 5
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.3.25
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_war_watch
+			country_event = {
+				id = ac_wd_nrl.7
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_insurers
+		icon = GFX_ac_wd_focus_NRL_wd_war_insurers
+		x = 5
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_war_news
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_war_risk_premiums
+				days = 365
+			}
+			add_political_power = 10
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_closed
+		icon = GFX_ac_wd_focus_NRL_wd_war_closed
+		x = 7
+		y = 25
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_war_news
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_war_fuel
+			focus = NRL_wd_war_mercy
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_war_watch
+				add_idea = NRL_wd_closed_roadsteads
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_fuel
+		icon = GFX_ac_wd_focus_NRL_wd_war_fuel
+		x = 9
+		y = 25
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_war_news
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_war_closed
+			focus = NRL_wd_war_mercy
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_war_watch
+				add_idea = NRL_wd_fuel_for_all
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_mercy
+		icon = GFX_ac_wd_focus_NRL_wd_war_mercy
+		x = 11
+		y = 25
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_war_news
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_war_closed
+			focus = NRL_wd_war_fuel
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_war_watch
+				add_idea = NRL_wd_mercy_corridor
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_hull_routing
+		icon = GFX_ac_wd_focus_NRL_wd_war_hull_routing
+		x = 13
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_war_news
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_country_flag = NRL_wd_merchant_register
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 342
+				}
+				342 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_air_notices
+		icon = GFX_ac_wd_focus_NRL_wd_war_air_notices
+		x = 15
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_war_news
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_country_flag = NRL_wd_neighbour_statement
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_shared_air_notices
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_fallout
+		icon = GFX_ac_wd_focus_NRL_wd_war_fallout
+		x = 17
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_war_news
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_dropped_nukes
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_fallout_watch
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_bunker_fuel
+		icon = GFX_ac_wd_focus_NRL_wd_war_bunker_fuel
+		x = 14
+		y = 26
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_war_closed
+			focus = NRL_wd_war_fuel
+			focus = NRL_wd_war_mercy
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_country_flag = NRL_wd_fuel_reserve
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_reserve_bunkers
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_lumen
+		icon = GFX_ac_wd_focus_NRL_wd_war_lumen
+		x = 10
+		y = 26
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_war_insurers
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_war_belkan_terms
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_lost_belkan_war
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_allied_rebuilding
+				days = 730
+			}
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_belkan_terms
+		icon = GFX_ac_wd_focus_NRL_wd_war_belkan_terms
+		x = 12
+		y = 26
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_war_insurers
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_war_lumen
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_won_belkan_war
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_cautious_trade
+				days = 730
+			}
+			add_war_support = 0.03
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_coup
+		icon = GFX_ac_wd_focus_NRL_wd_war_coup
+		x = 19
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_war_news
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.12.25
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_nrl.9
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_war_report
+		icon = GFX_ac_wd_focus_NRL_wd_war_report
+		x = 12
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_war_lumen
+			focus = NRL_wd_war_belkan_terms
+			focus = NRL_wd_war_coup
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = NRL_wd_belkan_lessons
+			add_tech_bonus = {
+				name = NRL_wd_war_report
+				bonus = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_almanac
+		icon = GFX_ac_wd_focus_NRL_wd_sky_almanac
+		x = 25
+		y = 24
+		cost = 5
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_sky_watch
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_announced
+		icon = GFX_ac_wd_focus_NRL_wd_sky_announced
+		x = 24
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sky_almanac
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1996.4.20
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_nrl.11
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_hait_observatory
+		icon = GFX_ac_wd_focus_NRL_wd_sky_hait_observatory
+		x = 26
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sky_almanac
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 318
+				}
+				318 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_tech_bonus = {
+				name = NRL_wd_sky_hait_observatory
+				bonus = 0.5
+				uses = 1
+				category = electronics
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_shelters
+		icon = GFX_ac_wd_focus_NRL_wd_sky_shelters
+		x = 23
+		y = 26
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_sky_announced
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_sky_evacuation
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_rock_shelters
+			set_country_flag = NRL_wd_shelters_dug
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_evacuation
+		icon = GFX_ac_wd_focus_NRL_wd_sky_evacuation
+		x = 25
+		y = 26
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_sky_announced
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_sky_shelters
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_evacuation_timetable
+			set_country_flag = NRL_wd_evacuation_planned
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_stores
+		icon = GFX_ac_wd_focus_NRL_wd_sky_stores
+		x = 27
+		y = 26
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sky_announced
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_dark_year_stores
+				days = 1095
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_radio_wardens
+		icon = GFX_ac_wd_focus_NRL_wd_sky_radio_wardens
+		x = 24
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sky_shelters
+			focus = NRL_wd_sky_evacuation
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = NRL_wd_sky_radio_wardens
+				bonus = 0.5
+				uses = 1
+				category = radar_tech
+			}
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_roche
+		icon = GFX_ac_wd_focus_NRL_wd_sky_roche
+		x = 26
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sky_shelters
+			focus = NRL_wd_sky_evacuation
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1999.7.8
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			add_tech_bonus = {
+				name = NRL_wd_sky_roche
+				bonus = 0.5
+				uses = 1
+				category = construction_tech
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_relief
+		icon = GFX_ac_wd_focus_NRL_wd_sky_relief
+		x = 22
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sky_roche
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_relief_shipping
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_debris
+		icon = GFX_ac_wd_focus_NRL_wd_sky_debris
+		x = 24
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sky_roche
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1999.10.8
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = NRL_wd_sky_debris
+				bonus = 0.5
+				uses = 1
+				category = rocketry
+			}
+			add_tech_bonus = {
+				name = NRL_wd_sky_debris
+				bonus = 0.5
+				uses = 1
+				category = radar_tech
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_storehouses
+		icon = GFX_ac_wd_focus_NRL_wd_sky_storehouses
+		x = 26
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sky_roche
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_country_flag = NRL_wd_shelters_dug
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_rock_shelters
+				add_idea = NRL_wd_shelter_storehouses
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_sky_coast_roads
+		icon = GFX_ac_wd_focus_NRL_wd_sky_coast_roads
+		x = 28
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_sky_roche
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_country_flag = NRL_wd_evacuation_planned
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 385
+				}
+				385 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_review
+		icon = GFX_ac_wd_focus_NRL_wd_cent_review
+		x = 10
+		y = 32
+		cost = 5
+		available = {
+			NOT = { date < 2001.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_nrl.13
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_cabinet
+		icon = GFX_ac_wd_focus_NRL_wd_cent_cabinet
+		x = 0
+		y = 33
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_cent_review
+		}
+		available = {
+			NOT = { date < 2001.1.1 }
+			has_country_flag = NRL_wd_path_cabinet
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_cabinet_charter
+				add_idea = NRL_wd_written_constitution
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_privy
+		icon = GFX_ac_wd_focus_NRL_wd_cent_privy
+		x = 2
+		y = 33
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_cent_review
+		}
+		available = {
+			NOT = { date < 2001.1.1 }
+			has_country_flag = NRL_wd_path_privy
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_privy_seals
+				add_idea = NRL_wd_codified_office
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_diet
+		icon = GFX_ac_wd_focus_NRL_wd_cent_diet
+		x = 4
+		y = 33
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_cent_review
+		}
+		available = {
+			NOT = { date < 2001.1.1 }
+			has_country_flag = NRL_wd_path_diet
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_diet_mandate
+				add_idea = NRL_wd_district_diet
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_houses
+		icon = GFX_ac_wd_focus_NRL_wd_cent_houses
+		x = 6
+		y = 33
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_cent_review
+		}
+		available = {
+			NOT = { date < 2001.1.1 }
+			has_country_flag = NRL_wd_path_houses
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_harbour_houses
+				add_idea = NRL_wd_chartered_houses
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_oath
+		icon = GFX_ac_wd_focus_NRL_wd_cent_oath
+		x = 8
+		y = 33
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_cent_review
+		}
+		available = {
+			NOT = { date < 2001.1.1 }
+			has_country_flag = NRL_wd_oath_sworn
+			has_country_flag = NRL_wd_diet_summoned
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_jubilee_year
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_open_accounts
+		icon = GFX_ac_wd_focus_NRL_wd_cent_open_accounts
+		x = 10
+		y = 33
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_cent_review
+		}
+		available = {
+			NOT = { date < 2001.1.1 }
+			has_country_flag = NRL_wd_civil_list_published
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_open_accounts
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_district_budgets
+		icon = GFX_ac_wd_focus_NRL_wd_cent_district_budgets
+		x = 12
+		y = 33
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_cent_review
+		}
+		available = {
+			NOT = { date < 2001.1.1 }
+			has_country_flag = NRL_wd_districts_devolved
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 368
+				}
+				368 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_second_works
+		icon = GFX_ac_wd_focus_NRL_wd_cent_second_works
+		x = 14
+		y = 33
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_cent_review
+		}
+		available = {
+			NOT = { date < 2001.1.1 }
+			has_country_flag = NRL_wd_districts_central
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 368
+				}
+				368 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_political_power = 15
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_trade_zone
+		icon = GFX_ac_wd_focus_NRL_wd_cent_trade_zone
+		x = 16
+		y = 33
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_cent_review
+		}
+		available = {
+			NOT = { date < 2001.1.1 }
+			has_country_flag = NRL_wd_frontier_open
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_open_crossings
+				add_idea = NRL_wd_frontier_trade_zone
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_frontier_police
+		icon = GFX_ac_wd_focus_NRL_wd_cent_frontier_police
+		x = 18
+		y = 33
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_cent_review
+		}
+		available = {
+			NOT = { date < 2001.1.1 }
+			has_country_flag = NRL_wd_frontier_guarded
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_guarded_crossings
+				add_idea = NRL_wd_frontier_police
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_cent_accord_holds
+		icon = GFX_ac_wd_focus_NRL_wd_cent_accord_holds
+		x = 20
+		y = 33
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_cent_review
+		}
+		available = {
+			NOT = { date < 2001.1.1 }
+			has_country_flag = NRL_wd_districts_accord
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_accord_dividend
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_books
+		icon = GFX_ac_wd_focus_NRL_wd_dist_books
+		x = 7
+		y = 35
+		cost = 5
+		available = {
+			NOT = { date < 2002.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_export_drive
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_merchant
+		icon = GFX_ac_wd_focus_NRL_wd_dist_merchant
+		x = 0
+		y = 36
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_dist_books
+		}
+		available = {
+			NOT = { date < 2002.1.1 }
+			has_country_flag = NRL_wd_yard_model_merchant
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_merchant_books
+				add_idea = NRL_wd_tanker_yards
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_navy
+		icon = GFX_ac_wd_focus_NRL_wd_dist_navy
+		x = 2
+		y = 36
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_dist_books
+		}
+		available = {
+			NOT = { date < 2002.1.1 }
+			has_country_flag = NRL_wd_yard_model_navy
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_home_hulls
+				add_idea = NRL_wd_second_series
+			}
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_repair
+		icon = GFX_ac_wd_focus_NRL_wd_dist_repair
+		x = 4
+		y = 36
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_dist_books
+		}
+		available = {
+			NOT = { date < 2002.1.1 }
+			has_country_flag = NRL_wd_yard_model_repair
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_repair_basins
+				add_idea = NRL_wd_refit_contracts
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_crown_oil
+		icon = GFX_ac_wd_focus_NRL_wd_dist_crown_oil
+		x = 6
+		y = 36
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_dist_books
+		}
+		available = {
+			NOT = { date < 2002.1.1 }
+			has_country_flag = NRL_wd_oil_model_crown
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_crown_wells
+				add_idea = NRL_wd_listed_crown_oil
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_royalties
+		icon = GFX_ac_wd_focus_NRL_wd_dist_royalties
+		x = 8
+		y = 36
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_dist_books
+		}
+		available = {
+			NOT = { date < 2002.1.1 }
+			has_country_flag = NRL_wd_oil_model_licensed
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_licensed_fields
+				add_idea = NRL_wd_royalty_courts
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_fund
+		icon = GFX_ac_wd_focus_NRL_wd_dist_fund
+		x = 10
+		y = 36
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_dist_books
+		}
+		available = {
+			NOT = { date < 2002.1.1 }
+			has_country_flag = NRL_wd_oil_model_fund
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NRL_wd_oil_fund
+				add_idea = NRL_wd_fund_dividend
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_news
+		icon = GFX_ac_wd_focus_NRL_wd_dist_news
+		x = 12
+		y = 36
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_dist_books
+		}
+		available = {
+			NOT = { date < 2002.1.1 }
+			has_global_flag = ac_ucw_war_started
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_nrl.14
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_charter_abroad
+		icon = GFX_ac_wd_focus_NRL_wd_dist_charter_abroad
+		x = 6
+		y = 37
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_dist_news
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_dist_tankers_home
+		}
+		available = {
+			NOT = { date < 2002.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_tanker_boom
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_tankers_home
+		icon = GFX_ac_wd_focus_NRL_wd_dist_tankers_home
+		x = 8
+		y = 37
+		cost = 10
+		prerequisite = {
+			focus = NRL_wd_dist_news
+		}
+		mutually_exclusive = {
+			focus = NRL_wd_dist_charter_abroad
+		}
+		available = {
+			NOT = { date < 2002.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NRL_wd_home_bunkering
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_averted
+		icon = GFX_ac_wd_focus_NRL_wd_dist_averted
+		x = 14
+		y = 36
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_dist_books
+		}
+		available = {
+			NOT = { date < 2002.1.1 }
+			has_global_flag = ac_ucw_war_averted
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NRL_wd_calm_seas
+				days = 365
+			}
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = NRL_wd_dist_close_books
+		icon = GFX_ac_wd_focus_NRL_wd_dist_close_books
+		x = 7
+		y = 38
+		cost = 5
+		prerequisite = {
+			focus = NRL_wd_dist_charter_abroad
+			focus = NRL_wd_dist_tankers_home
+			focus = NRL_wd_dist_averted
+			focus = NRL_wd_dist_merchant
+			focus = NRL_wd_dist_navy
+			focus = NRL_wd_dist_repair
+		}
+		available = {
+			NOT = { date < 2002.1.1 }
+			date > 2005.1.1
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			custom_effect_tooltip = NRL_wd_dist_close_books_tt_1
+		}
+	}
+}

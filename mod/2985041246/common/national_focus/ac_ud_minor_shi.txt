@@ -1,0 +1,701 @@
+# Usea Depth minors B: provisional gameplay; owner: tools/usea_depth/minors_b/build.py.
+focus_tree = {
+	id = ac_ud_shi_tree
+	country = { factor = 0 modifier = { add = 45 tag = SHI original_tag = SHI } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 1728 y = 16 }
+	initial_show_position = { focus = SHI_ud_provisional_council }
+	focus = {
+		id = SHI_ud_provisional_council
+		icon = GFX_ac_ud_focus_SHI_ud_provisional_council
+		x = 6
+		y = 0
+		cost = 5
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = SHI_ud_provisional_state_spirit
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.701 days = 1 }
+		}
+	}
+	focus = {
+		id = SHI_ud_count_the_districts
+		icon = GFX_ac_ud_focus_SHI_ud_count_the_districts
+		x = 2
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_provisional_council
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = SHI_ud_district_registers_spirit
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = SHI_ud_recover_the_registers
+		icon = GFX_ac_ud_focus_SHI_ud_recover_the_registers
+		x = 6
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_provisional_council
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = SHI_ud_staff_the_border_posts
+		icon = GFX_ac_ud_focus_SHI_ud_staff_the_border_posts
+		x = 10
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_provisional_council
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				if = {
+					limit = {
+						is_controlled_by = ROOT
+					}
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = SHI_ud_border_constabulary
+		icon = GFX_ac_ud_focus_SHI_ud_border_constabulary
+		x = 14
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_provisional_council
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = SHI_ud_border_constabulary_spirit
+			add_manpower = 1500
+		}
+	}
+	focus = {
+		id = SHI_ud_national_treasury
+		icon = GFX_ac_ud_focus_SHI_ud_national_treasury
+		x = 0
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_count_the_districts
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = SHI_ud_national_treasury_spirit
+		}
+	}
+	focus = {
+		id = SHI_ud_national_assembly
+		icon = GFX_ac_ud_focus_SHI_ud_national_assembly
+		x = 4
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = SHI_ud_count_the_districts
+		}
+		prerequisite = {
+			focus = SHI_ud_recover_the_registers
+		}
+		mutually_exclusive = {
+			focus = SHI_ud_provisional_directorate
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = SHI_ud_provisional_state_spirit
+				}
+				remove_ideas = SHI_ud_provisional_state_spirit
+			}
+			add_ideas = SHI_ud_constituent_assembly_spirit
+			ac_ud_minors_b_regime_shi_assembly = yes
+			country_event = { id = ac_ud_minb.702 days = 1 }
+		}
+	}
+	focus = {
+		id = SHI_ud_provisional_directorate
+		icon = GFX_ac_ud_focus_SHI_ud_provisional_directorate
+		x = 8
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = SHI_ud_count_the_districts
+		}
+		prerequisite = {
+			focus = SHI_ud_recover_the_registers
+		}
+		mutually_exclusive = {
+			focus = SHI_ud_national_assembly
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = SHI_ud_provisional_state_spirit
+				}
+				remove_ideas = SHI_ud_provisional_state_spirit
+			}
+			add_ideas = SHI_ud_directorate_decrees_spirit
+			ac_ud_minors_b_regime_shi_directorate = yes
+			country_event = { id = ac_ud_minb.703 days = 1 }
+		}
+	}
+	focus = {
+		id = SHI_ud_former_administration
+		icon = GFX_ac_ud_focus_SHI_ud_former_administration
+		x = 12
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_staff_the_border_posts
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = { id = ac_ud_minb.704 days = 1 }
+		}
+	}
+	focus = {
+		id = SHI_ud_constabulary_training
+		icon = GFX_ac_ud_focus_SHI_ud_constabulary_training
+		x = 14
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_border_constabulary
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			army_experience = 5
+			capital_scope = {
+				if = {
+					limit = {
+						is_controlled_by = ROOT
+					}
+					add_building_construction = { type = anti_air_building level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = SHI_ud_shilagian_currency
+		icon = GFX_ac_ud_focus_SHI_ud_shilagian_currency
+		x = 0
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_national_treasury
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 25
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = SHI_ud_first_constituent_session
+		icon = GFX_ac_ud_focus_SHI_ud_first_constituent_session
+		x = 4
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_national_assembly
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			add_popularity = { ideology = democratic popularity = 0.05 }
+		}
+	}
+	focus = {
+		id = SHI_ud_directorate_numbered_decrees
+		icon = GFX_ac_ud_focus_SHI_ud_directorate_numbered_decrees
+		x = 8
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_provisional_directorate
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 40
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = SHI_ud_practical_terms
+		icon = GFX_ac_ud_focus_SHI_ud_practical_terms
+		x = 10
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_former_administration
+		}
+		mutually_exclusive = {
+			focus = SHI_ud_amber_road
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = SHI_ud_practical_terms_spirit
+			set_country_flag = SHI_ud_terms_with_erusea
+		}
+	}
+	focus = {
+		id = SHI_ud_amber_road
+		icon = GFX_ac_ud_focus_SHI_ud_amber_road
+		x = 14
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_former_administration
+		}
+		mutually_exclusive = {
+			focus = SHI_ud_practical_terms
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = SHI_ud_amber_road_spirit
+			set_country_flag = SHI_ud_amber_road_open
+		}
+	}
+	focus = {
+		id = SHI_ud_capital_works
+		icon = GFX_ac_ud_focus_SHI_ud_capital_works
+		x = 0
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = SHI_ud_shilagian_currency
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				if = {
+					limit = {
+						is_controlled_by = ROOT
+					}
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+
+			capital_scope = {
+				if = {
+					limit = {
+						is_controlled_by = ROOT free_building_slots = { building = industrial_complex size > 0 include_locked = no }
+					}
+					add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = SHI_ud_district_councils
+		icon = GFX_ac_ud_focus_SHI_ud_district_councils
+		x = 4
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_first_constituent_session
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = SHI_ud_directorate_works_office
+		icon = GFX_ac_ud_focus_SHI_ud_directorate_works_office
+		x = 8
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_directorate_numbered_decrees
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				if = {
+					limit = {
+						is_controlled_by = ROOT free_building_slots = { building = arms_factory size > 0 include_locked = no }
+					}
+					add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+				}
+			}
+
+			add_political_power = 15
+		}
+	}
+	focus = {
+		id = SHI_ud_customs_schedule
+		icon = GFX_ac_ud_focus_SHI_ud_customs_schedule
+		x = 10
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_practical_terms
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 30
+			add_tech_bonus = { name = SHI_ud_customs_schedule bonus = 0.5 uses = 1 category = logistics_tech }
+		}
+	}
+	focus = {
+		id = SHI_ud_amber_road_depots
+		icon = GFX_ac_ud_focus_SHI_ud_amber_road_depots
+		x = 14
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_amber_road
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				if = {
+					limit = {
+						is_controlled_by = ROOT free_building_slots = { building = fuel_silo size > 0 include_locked = no }
+					}
+					add_building_construction = { type = fuel_silo level = 1 instant_build = yes }
+				}
+			}
+
+			add_tech_bonus = { name = SHI_ud_amber_road_depots bonus = 0.5 uses = 1 category = logistics_tech }
+		}
+	}
+	focus = {
+		id = SHI_ud_shilagian_constitution
+		icon = GFX_ac_ud_focus_SHI_ud_shilagian_constitution
+		x = 4
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = SHI_ud_district_councils
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			remove_ideas = SHI_ud_constituent_assembly_spirit
+			add_stability = 0.05
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = SHI_ud_directorate_order
+		icon = GFX_ac_ud_focus_SHI_ud_directorate_order
+		x = 8
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_directorate_works_office
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.04
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = SHI_ud_seek_recognition
+		icon = GFX_ac_ud_focus_SHI_ud_seek_recognition
+		x = 12
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_customs_schedule focus = SHI_ud_amber_road_depots
+		}
+		available = {
+			original_tag = SHI
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 30
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = SHI_ud_shelter_registers
+		icon = GFX_ac_ud_focus_SHI_ud_shelter_registers
+		x = 6
+		y = 6
+		cost = 5
+		available = {
+			original_tag = SHI
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = SHI_ud_impact_relief
+		icon = GFX_ac_ud_focus_SHI_ud_impact_relief
+		x = 6
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_shelter_registers
+		}
+		available = {
+			original_tag = SHI
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.705 days = 1 }
+		}
+	}
+	focus = {
+		id = SHI_ud_refugee_columns
+		icon = GFX_ac_ud_focus_SHI_ud_refugee_columns
+		x = 4
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_impact_relief
+		}
+		available = {
+			original_tag = SHI
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_manpower = 2000
+			add_stability = -0.02
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = SHI_ud_district_clinics
+		icon = GFX_ac_ud_focus_SHI_ud_district_clinics
+		x = 8
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_impact_relief
+		}
+		available = {
+			original_tag = SHI
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = SHI_ud_relief_clinics_spirit
+		}
+	}
+	focus = {
+		id = SHI_ud_war_on_the_continent
+		icon = GFX_ac_ud_focus_SHI_ud_war_on_the_continent
+		x = 6
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_refugee_columns focus = SHI_ud_district_clinics
+		}
+		available = {
+			original_tag = SHI
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.706 days = 1 }
+		}
+	}
+	focus = {
+		id = SHI_ud_outside_the_war
+		icon = GFX_ac_ud_focus_SHI_ud_outside_the_war
+		x = 6
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = SHI_ud_war_on_the_continent
+		}
+		available = {
+			original_tag = SHI
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = SHI_ud_outside_the_war_spirit
+			set_country_flag = SHI_ud_war_neutrality
+		}
+	}
+	focus = {
+		id = SHI_ud_shilage_after_the_war
+		icon = GFX_ac_ud_focus_SHI_ud_shilage_after_the_war
+		x = 6
+		y = 11
+		cost = 10
+		prerequisite = {
+			focus = SHI_ud_outside_the_war focus = SHI_ud_seek_recognition
+		}
+		available = {
+			original_tag = SHI
+			OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate has_global_flag = ac_ucw_war_averted }
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.707 days = 1 }
+		}
+	}
+}

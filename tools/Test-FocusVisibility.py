@@ -44,6 +44,25 @@ VANILLA_TEXT_TREES = ('generic_focus',)
 ALLOWED_GATES = {'BLK_party_disagreements', 'BLK_nationalism_unleashed', 'BLK_taking_off_the_kid_gloves'}
 
 
+def opening_gate(gate):
+    """allow_branch that hides a branch only until its era opens: tag keys plus one OR of
+    an opening date or start flag and the branch's own progress (has_completed_focus)."""
+    rest = [(key, value) for key, _, value in gate if key not in ('tag', 'original_tag')]
+    if len(rest) != 1 or rest[0][0] != 'OR' or not isinstance(rest[0][1], list):
+        return False
+    kinds = set()
+    for key, op, value in rest[0][1]:
+        if key == 'date' and op == '>':
+            kinds.add('opening')
+        elif key == 'has_country_flag' and isinstance(value, str) and re.match(r'ac_\w+_started$', value):
+            kinds.add('opening')
+        elif key == 'has_completed_focus':
+            kinds.add('progress')
+        else:
+            return False
+    return kinds == {'opening', 'progress'}
+
+
 def trees_and_focuses(mod=MOD):
     trees, focuses = {}, {}
     for path in sorted((mod / 'common/national_focus').glob('*.txt'), key=lambda p: p.as_posix()):
@@ -109,18 +128,37 @@ def scope(mod=MOD):
     return sorted((owners | set(RELEASES)) - set(EXCLUDED))
 
 
+def script_loaded(mod=MOD):
+    """Trees a decision loads for exactly one country (Usea Depth adopt decisions, for example)."""
+    loaded = dict(LOADED)
+    for path in sorted((mod / 'common/decisions').glob('*.txt')):
+        for _, _, category in parse(path.read_text(encoding='utf-8-sig')):
+            for _, _, decision in category if isinstance(category, list) else ():
+                if not isinstance(decision, list):
+                    continue
+                text = repr(decision)
+                trees = set(re.findall(r"\['load_focus_tree', '=', \[\['tree', '=', '(\w+)'\]", text))
+                trees |= set(re.findall(r"\['load_focus_tree', '=', '(\w+)'\]", text))
+                tags = set(re.findall(r"\['original_tag', '=', '([A-Z0-9]{3})'\]", text))
+                if len(tags) == 1:
+                    for tree in trees:
+                        loaded.setdefault(tree, next(iter(tags)))
+    return loaded
+
+
 def census(mod=MOD):
     """Per tag: the start trees (all tied at the top weight) and every tree it can be on."""
     trees, _ = trees_and_focuses(mod)
     positions = focus_layout.resolved_tree_positions(mod)
     regional = regional_tags(mod)
+    loaded = script_loaded(mod)
     result = {}
     for tag in scope(mod):
         weights = {ident: weight(tree, tag, regional) for ident, tree in trees.items()}
         best = max(weights.values())
         start = sorted(ident for ident, w in weights.items() if w == best)
         reachable = sorted({ident for ident, w in weights.items() if w > 0} | set(start) |
-                           {ident for ident, owner in LOADED.items() if owner == tag})
+                           {ident for ident, owner in loaded.items() if owner == tag and ident in trees})
         result[tag] = {'start': start, 'trees': {ident: len(positions[ident]) for ident in reachable}}
     return result
 
@@ -196,9 +234,14 @@ class FocusVisibility(unittest.TestCase):
             if gate is None:
                 continue
             tag_only = all(key in ('tag', 'original_tag') for key, _, _ in gate)
-            if not tag_only and ident not in ALLOWED_GATES:
+            if not tag_only and ident not in ALLOWED_GATES and not opening_gate(gate):
                 hidden.append(ident)
         self.assertEqual([], hidden)
+        # Opening gates hide a branch only until its era opens; the owners must redraw the
+        # screen when it does (main f70dc7b5: weekly tick and ac_pwi_start refresh the layout).
+        effects = ''.join(p.read_text(encoding='utf-8-sig') for p in (MOD / 'common/scripted_effects').glob('*.txt'))
+        if any(opening_gate(get(n, 'allow_branch')) for n in self.focuses.values() if get(n, 'allow_branch') is not None):
+            self.assertIn('mark_focus_tree_layout_dirty', effects)
 
     def test_initial_show_positions_name_a_focus_in_their_tree(self):
         for ident, tree in self.trees.items():

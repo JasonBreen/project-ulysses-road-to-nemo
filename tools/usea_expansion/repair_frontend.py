@@ -23,7 +23,7 @@ def build(text):
         size = {
             width = 1920 height = 1080
             min = { width=100% height=100% }
-            max = { width=10000 height=10000 }
+            max = { width=100% height=10000 }
             preserve_aspect_ratio = yes
         }
         orientation = center

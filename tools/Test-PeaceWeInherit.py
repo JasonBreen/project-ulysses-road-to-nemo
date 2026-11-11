@@ -50,6 +50,7 @@ class Country:
     army_xp: float = 0
     air_xp: float = 0
     econ_requests: int = 0
+    layout_refreshes: int = 0
 
 
 class World:
@@ -183,6 +184,8 @@ class World:
             elif key in ("add_political_power", "add_stability", "add_war_support", "army_experience", "air_experience"):
                 attr = {"add_political_power": "pp", "add_stability": "stability", "add_war_support": "war_support", "army_experience": "army_xp", "air_experience": "air_xp"}[key]
                 setattr(country, attr, getattr(country, attr) + float(value))
+            elif key == "mark_focus_tree_layout_dirty":
+                country.layout_refreshes += 1
             elif key == "ac_econ_set_reconstruction":
                 assert self.fiscal, "Unguarded economy dependency"
                 country.econ_requests += 1
@@ -423,6 +426,8 @@ class AftermathTests(unittest.TestCase):
         self.assertEqual(0, c.variables["ac_pwi_relief_capacity"])
         self.assertFalse(any(item[2] in ("ac_pwi.70", "ac_pwi.71", "ac_pwi.72") for item in world.queue))
         self.assertTrue(world.flag(c, "ac_pwi_started"))
+        # The hidden aftermath branch is revealed exactly once.
+        self.assertEqual(1, c.layout_refreshes)
 
     def test_preparedness_and_recovery_and_partner_have_distinct_payoffs(self):
         for preparedness, recovery, partner, resilient in ((0, 20, False, False), (45, 20, False, False), (45, 70, True, True), (60, 20, False, True)):

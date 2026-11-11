@@ -3,7 +3,13 @@
 This is the programme that gives every country at least 150 focuses, each one
 visible. It was approved on 6 November 2026; the plan and its waves are in the
 session plan, and the build is described in `tools/national_depth/README.md`.
-`tools/Test-FocusVisibility.py` is the definition of done.
+`tools/Test-FocusVisibility.py` checks visibility.
+
+On 11 November 2026 you directed that new content follow main's national
+campaign era targets (`docs/WORLD_CAMPAIGNS_2040.md`; 1991–2005, 2006–2020,
+2021–2040), written with this compiler and its lints. `tools/world_campaigns/
+coverage.py` credits compiled trees by era. Mass production is still waiting on
+your review of the Perbla pilot.
 
 ## Source layers
 
@@ -23,20 +29,18 @@ country's own 1991 states.
 
 | Wave | Country | Spec | Own + shared focuses | Events | Review |
 | --- | --- | --- | ---: | ---: | --- |
-| W0c pilot | Chopinburg (CHO), Usean minor | `tools/usea_depth/minors_a/countries/CHO.py` | 161 + 36 = 197 | 13 | [image](evidence/national-depth/cho.png) |
 | W0c pilot | Perbla (PBL) | `tools/world_depth/pbl/content.py` | 143 + 36 = 179 | 13 | [image](evidence/national-depth/pbl.png) |
 
 The content page for all delivered trees is
 [evidence/national-depth/index.html](evidence/national-depth/index.html).
 
+**Chopinburg pilot retired (11 November 2026).** Merging main brought in Usea
+Depth minors A (PR #77). That package owns `ac_ud_minor_cho.txt` and the
+`CHO_ud_*` ids, so the 161-focus pilot spec, its compiled files and its art were
+removed in favour of main's tree. Chopinburg's remaining era targets are now
+tracked by `tools/world_campaigns/manifest.json`.
+
 **Pilot notes:**
-- **Chopinburg:**
-  - The 2019 Chronicle row about Chopinburg airspace is deliberately not used:
-    the ledger gives it no political status.
-  - Usean anchors (1996.4.20, 1997.5.30, 1998.6.19, 1999.7.8, 2003) gate eras
-    only.
-  - The three 1991 paths, the 1997 coup aftermath and the 2006 recovery change
-    government only through offices.
 - **Perbla:**
   - The inherited Perbla intervention events stay their own owner; the tree
     neither fires nor duplicates them.

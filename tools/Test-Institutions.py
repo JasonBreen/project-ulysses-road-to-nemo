@@ -65,7 +65,8 @@ class World(anea.World):
     def trigger(self,nodes,country):
         results=[]
         for key,op,value in nodes:
-            if key=='original_tag':results.append(country.original_tag==value)
+            if key=='custom_trigger_tooltip':results.append(self.trigger([r for r in value if r[0]!='tooltip'],country))
+            elif key=='original_tag':results.append(country.original_tag==value)
             elif key=='any_owned_state':results.append(country.exists and country.owned and self.trigger(value,country))
             elif key=='has_government':results.append(country.government==value)
             elif key=='focus_progress':

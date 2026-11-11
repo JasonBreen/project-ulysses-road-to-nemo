@@ -28,7 +28,7 @@ def ids(nodes):return {k for k,_,_ in nodes}
 def read(path):return parse(path.read_text(encoding='utf-8-sig'))
 def digest(path):return hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
 sys.path.append(str(ROOT/'tools/air_program'))
-from reviewed_sources import reviewed_updates,validate_outcome
+from reviewed_sources import reviewed_updates,validate_outcome,reviewed_ucw_updates,validate_hosting,validate_pwi_layout,PWI
 
 
 class Captured(unittest.TestCase):
@@ -165,7 +165,7 @@ class Definitions(Captured):
         baseline=json.loads((HERE/'preserved_sources.json').read_text())
         updates=reviewed_updates()
         cleanup=json.loads((ROOT/'tools/history_data_cleanup_updates.json').read_text())['files']
-        campaign=json.loads((ROOT/'tools/ac_campaigns/reviewed_owner_updates.json').read_text())['files']
+        campaign=reviewed_ucw_updates()
         for path,expected in baseline['sources'].items():
             update=updates.get(path)
             repair=cleanup.get(path)
@@ -177,16 +177,34 @@ class Definitions(Captured):
             current=update['new_sha256'] if update else repair['new_normalized_sha256'] if repair else continuation['new_sha256'] if continuation else expected
             self.assertEqual(current,digest(ROOT/path),path)
 
+    def test_pwi_layout_receipt_rejects_unreviewed_owner_changes(self):
+        source=(ROOT/PWI).read_text(encoding='utf-8-sig')
+        row=validate_pwi_layout(source)
+        self.assertEqual(row,reviewed_updates()[PWI])
+        self.assertEqual(row,validate_pwi_layout(source.replace('\n','\r\n')))
+        mutations=[
+            source.replace('mark_focus_tree_layout_dirty = yes','mark_focus_tree_layout_dirty = no'),
+            source.replace('mark_focus_tree_layout_dirty = yes','mark_focus_tree_layout_dirty = yes\n\t\tmark_focus_tree_layout_dirty = yes'),
+            source.replace('country_event = { id = ac_pwi.1 days = 1 }','country_event = { id = ac_pwi.1 days = 2 }'),
+            source+'\nunreviewed_owner = { }\n',
+            source.replace('ac_pwi_bound_pressures = yes','ac_pwi_bound_pressures = no'),
+        ]
+        for mutated in mutations:
+            with self.subTest(source=mutated[-80:]):
+                with self.assertRaises(ValueError):validate_pwi_layout(mutated)
+        result=subprocess.run([sys.executable,'-B','tools/build_peace_we_inherit.py','--check'],cwd=ROOT,capture_output=True,text=True)
+        self.assertEqual(0,result.returncode,result.stdout+result.stderr)
+
     def test_campaign_owner_delta_preserves_all_other_functions_and_canonical_output(self):
-        files=json.loads((ROOT/'tools/ac_campaigns/reviewed_owner_updates.json').read_text())['files']
+        files=reviewed_ucw_updates()
         relative='mod/2985041246/common/scripted_effects/ac_ucw.txt'
         self.assertEqual({relative},set(files));row=files[relative]
         self.assertEqual([],row['added']);self.assertEqual([],row['removed'])
-        changed={'ac_ucw_eru_war_tick','ac_ucw_destroy_megalith'}
+        changed={'ac_ucw_eru_war_tick','ac_ucw_destroy_megalith','ac_ucw_stage_north_point'}
         self.assertEqual(changed,set(row['changed']))
         self.assertEqual(changed,set(row['old_changed_function_ast_sha256']))
         self.assertEqual(changed,set(row['reviewed_function_ast_sha256']))
-        old=row['unchanged_function_ast_sha256'];self.assertEqual(25,len(old))
+        old=row['unchanged_function_ast_sha256'];self.assertEqual(24,len(old))
         self.assertFalse(set(old)&changed)
         current={key:body for key,_,body in read(ROOT/relative)}
         self.assertEqual(set(old)|changed,set(current))
@@ -195,6 +213,44 @@ class Definitions(Captured):
             self.assertEqual((row['reviewed_function_ast_sha256'] if name in changed else old)[name],actual,name)
         result=subprocess.run([sys.executable,'-B','tools/build_continental_war.py','--check','--check-owner-effects'],cwd=ROOT,capture_output=True,text=True)
         self.assertEqual(0,result.returncode,result.stdout+result.stderr)
+
+    def test_hosting_receipt_rejects_changes_to_every_other_function_and_owner(self):
+        relative='mod/2985041246/common/scripted_effects/ac_ucw.txt'
+        previous=json.loads((ROOT/'tools/ac_campaigns/reviewed_owner_updates.json').read_text())['files'][relative]
+        receipt=json.loads((ROOT/'tools/usea_depth/npt/reviewed_owner_updates.json').read_text())
+        source=(ROOT/relative).read_text()
+        self.assertEqual(previous['new_sha256'],'04aba438c6b2ec568e2319ff134034168a63385c82241252b86f214d6f387715')
+        validate_hosting(previous,receipt,source)
+        validate_hosting(previous,receipt,source.replace('\n','\r\n'))
+        # Even updating the tip checksum cannot bless any additional owner edit.
+        for name,_,_ in parse(source):
+            with self.subTest(function=name):
+                bad=source.replace(name+' = {\n',name+' = {\n\tadd_stability = 0.01\n',1)
+                self.assertNotEqual(source,bad)
+                recaptured=copy.deepcopy(receipt)
+                recaptured['files'][relative]['new_sha256']=hashlib.sha256(bad.encode()).hexdigest()
+                with self.assertRaisesRegex(ValueError,'differs beyond'):
+                    validate_hosting(previous,recaptured,bad)
+        extra=copy.deepcopy(receipt)
+        extra['files']['mod/2985041246/common/scripted_effects/ac_economy_compat.txt']={}
+        with self.assertRaisesRegex(ValueError,'scope'):
+            validate_hosting(previous,extra,source)
+        rewritten=copy.deepcopy(receipt)
+        rewritten['files'][relative]['unchanged_function_ast_sha256']['ac_ucw_weekly']='0'*64
+        with self.assertRaisesRegex(ValueError,'existing source contract'):
+            validate_hosting(previous,rewritten,source)
+
+    def test_hosting_receipt_requires_the_single_hook_at_the_reviewed_location(self):
+        relative='mod/2985041246/common/scripted_effects/ac_ucw.txt'
+        previous=json.loads((ROOT/'tools/ac_campaigns/reviewed_owner_updates.json').read_text())['files'][relative]
+        receipt=json.loads((ROOT/'tools/usea_depth/npt/reviewed_owner_updates.json').read_text())
+        source=(ROOT/relative).read_text()
+        hook='\t\t\t\t\tac_ud_npt_accept_hosting = yes\n'
+        anchor='\t\t\t\t\tadd_ideas = ac_ucw_npt_isaf_rear_base\n'
+        for bad in (source.replace(hook,''),source.replace(hook,hook+hook),
+                    source.replace(anchor+hook,hook+anchor)):
+            with self.assertRaisesRegex(ValueError,'exactly once'):
+                validate_hosting(previous,receipt,bad)
 
     def test_reviewed_release_owner_delta_matches_canonical_generator(self):
         updates=json.loads((HERE/'reviewed_owner_updates.json').read_text());files=updates['files']

@@ -130,18 +130,18 @@ failures. A bounded ownership pass is not whole-presentation or native acceptanc
 ## Current measurement
 
 Regenerated with `python -B tools/content_waves/refresh_records.py` (which runs
-`tools/event_style/review.py` with the Windows CI path ordering) on 5 November
-2026. `test_documented_figures_match_measurements` compares this table with
+`tools/event_style/review.py` with the Windows CI path ordering) on 11 November
+2026, after merging main's Usea Depth and national-campaign events. `test_documented_figures_match_measurements` compares this table with
 `docs/evidence/event-style/measurements.json`, so it cannot go stale silently.
 
 | Figure | Value |
 | --- | ---: |
-| Measured fields | 3,421 |
-| Country-event fields | 3,059 |
+| Measured fields | 4,207 |
+| Country-event fields | 3,845 |
 | News-event fields | 362 |
 | Static title clips | 0 |
 | Unscrollable static body clips | 0 |
-| Scroll-accessible long bodies | 563 |
+| Scroll-accessible long bodies | 922 |
 | Dynamic fields | 329 |
 | Missing-glyph fields | 0 |
 | Parent-clearance findings | 0 |

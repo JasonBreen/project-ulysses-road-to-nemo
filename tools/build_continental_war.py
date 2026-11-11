@@ -280,7 +280,7 @@ news_event = { id = ac_ucw.31 days = 1 }
         ("Found ISAF.", "ac_ucw_form_isaf = yes", "", 100)], trigger_text="ac_ucw_war_running = yes", picture="GFX_report_event_ose_war_committee")
     brief(31, "ISAF is founded", "Central Usea has founded the Independent State Allied Forces to drive Erusea out of San Salvacion. The official chronology dates its founding to 22 August 2003.", picture="GFX_report_event_treaty_1")
     event(32, "ISAF asks for North Point", "ISAF has invited North Point to join the allied command. In the official chronology ISAF's headquarters moves to North Point on 16 September 2004. Joining commits the island to the war; declining keeps its neutrality, which is a provisional alternative.", [
-        ("Join ISAF.", "if = { limit = { has_global_flag = ac_ucw_stage_north_point ac_ucw_war_running = yes } add_ideas = ac_ucw_npt_isaf_rear_base }\n" + scoped("FCU", "add_to_faction = NPT\ncountry_event = { id = ac_ucw.33 days = 1 }"), "", 80),
+        ("Join ISAF.", "ac_ud_npt_accept_hosting = yes\nif = { limit = { has_global_flag = ac_ucw_stage_north_point ac_ucw_war_running = yes } add_ideas = ac_ucw_npt_isaf_rear_base }\n" + scoped("FCU", "add_to_faction = NPT\ncountry_event = { id = ac_ucw.33 days = 1 }"), "", 80),
         ("Keep our neutrality.", scoped("FCU", "country_event = { id = ac_ucw.34 days = 1 }"), "", 20)], picture="GFX_report_event_treaty_2")
     event(33, "North Point joins ISAF", "North Point has joined the allied command. Its harbours and airfields are open to ISAF.", [("Welcome them.", "", "", 100)])
     event(34, "North Point declines", "North Point has declined to join ISAF for now. Its government is willing to talk again if the war turns.", [("Note the answer.", "", "", 100)], picture="GFX_report_event_bad_news_1")
@@ -379,7 +379,7 @@ STAGES = [
 ]
 STAGE_EFFECTS = {
     "los_canas": "add_ideas = ac_ucw_isaf_fallback\n" + scoped("ERU", "add_timed_idea = { idea = ac_ucw_eru_offensive days = 180 }"),
-    "north_point": "remove_ideas = ac_ucw_isaf_fallback\nadd_ideas = ac_ucw_isaf_north_point_hq\n" + scoped("NPT", block("if", "limit = { OR = { has_country_flag = ac_npt_hosts_isaf is_in_faction_with = FCU } }\nadd_ideas = ac_ucw_npt_isaf_rear_base") + block("else_if", "limit = { NOT = { has_war_with = FCU } has_capitulated = no }\ncountry_event = { id = ac_ucw.32 days = 2 }")),
+    "north_point": "remove_ideas = ac_ucw_isaf_fallback\nadd_ideas = ac_ucw_isaf_north_point_hq\n" + scoped("NPT", block("if", "limit = { OR = { has_country_flag = ac_npt_hosts_isaf is_in_faction_with = FCU } }\nadd_ideas = ac_ucw_npt_isaf_rear_base\nac_ud_npt_accept_hosting = yes") + block("else_if", "limit = { NOT = { has_war_with = FCU } has_capitulated = no }\ncountry_event = { id = ac_ucw.32 days = 2 }")),
     "counteroffensive": "remove_ideas = ac_ucw_isaf_north_point_hq\nadd_ideas = ac_ucw_isaf_counteroffensive\n" + scoped("ERU", "add_ideas = ac_ucw_eru_overstretched"),
     "stonehenge": "ac_ucw_destroy_stonehenge = yes",
 }

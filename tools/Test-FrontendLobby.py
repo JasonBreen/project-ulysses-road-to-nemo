@@ -25,7 +25,7 @@ class FrontendLobby(unittest.TestCase):
     def test_dispositions_cover_the_screen_and_counts(self):
         record = json.loads((ROOT / 'tools/frontend_briefing/lobby_sprites.json').read_text())['sprites']
         counts = {kind: sum(r['disposition'] == kind for r in record) for kind in ('restyle', 'hide', 'keep_engine', 'mod_override')}
-        self.assertEqual({'restyle': 8, 'hide': 4, 'keep_engine': 40, 'mod_override': 3}, counts)
+        self.assertEqual({'restyle': 8, 'hide': 4, 'keep_engine': 39, 'mod_override': 3}, counts)
         # Interactive controls wait for the engine capture; none is restyled blind.
         for row in record:
             if any(part in row['sprite'] for part in ('button', 'checkbox', 'slider', 'scroll')):

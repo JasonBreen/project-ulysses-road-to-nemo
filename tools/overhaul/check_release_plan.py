@@ -28,9 +28,20 @@ def check(plan):
     depth = plan.get('approved_expansions', {}).get('usea_depth')
     if depth:
         problems.extend(check_addenda(depth))
-    world = plan.get('approved_expansions', {}).get('world_depth')
+    world = plan.get('approved_expansions', {}).get('world_campaigns_2040')
     if world:
-        problems.extend(check_addenda(world, label='World Depth'))
+        import sys
+        sys.path.insert(0, str(ROOT / 'tools'))
+        from world_campaigns.coverage import report
+        current = report()
+        require(world['original_1028_budget_unchanged'], 'Global expansion must preserve the original approval baseline')
+        require(world['countries'] == current['summary']['countries'] == 68, 'Global country scope mismatch')
+        require(world['target_definitions_minimum'] == current['summary']['target'] == 22920, 'Global era target mismatch')
+        require(world['reservations_are_delivered'] is False, 'Unmerged reservations must not be counted as deliveries')
+        require(world['native_acceptance'] is False, 'Global expansion has no native acceptance')
+    depth_world = plan.get('approved_expansions', {}).get('world_depth')
+    if depth_world:
+        problems.extend(check_addenda(depth_world, label='World Depth'))
     packages = {row["id"] for row in plan["packages"]}
     require(packages == set(range(6)), "Expected Packages 0 through 5")
     for row in countries:

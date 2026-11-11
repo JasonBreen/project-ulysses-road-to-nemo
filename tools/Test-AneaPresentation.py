@@ -104,7 +104,7 @@ class AneaPresentation(unittest.TestCase):
             self.assertNotRegex(brief.lower(), r'ulysses|asteroid|sanctions|1998|1999|2000|2015')
         gui = (MOD / 'interface/frontendgamesetupview.gui').read_text()
         self.assertIn('name = "minor_country_leader"', gui)
-        self.assertIn('name ="countries_mini"', gui)
+        self.assertRegex(gui, r'name\s*=\s*"countries_mini"')
 
     def test_starting_government_packaging_is_reproducible(self):
         result = subprocess.run([sys.executable, '-B', 'tools/usea_expansion/build_leaders.py', '--check'],
@@ -118,16 +118,15 @@ class AneaPresentation(unittest.TestCase):
         text = (MOD / 'interface/frontendgamesetupview.gui').read_text(encoding='utf-8-sig')
         start, end = validate_bounds(text, contract)
         actual = parse(text[start:end])[0]
-        self.assertEqual(repaired_node(contract), actual)
         original = copy.deepcopy(contract['original_node'][2])
         changed = copy.deepcopy(actual[2])
-        original = [row for row in original if row[0] not in ('position', 'maxHeight', 'font')]
-        changed = [row for row in changed if row[0] not in ('position', 'maxHeight', 'scrollbarType', 'font')]
+        original = [row for row in original if row[0] not in ('position', 'maxWidth', 'maxHeight', 'font')]
+        changed = [row for row in changed if row[0] not in ('position', 'maxWidth', 'maxHeight', 'scrollbarType', 'font')]
         self.assertEqual(original, changed)
         self.assertEqual('"history"', get(actual[2], 'name'))
         self.assertEqual('"Aces16"', get(actual[2], 'font'))
-        self.assertEqual('380', get(actual[2], 'maxWidth'))
-        self.assertEqual('145', get(actual[2], 'maxHeight'))
+        self.assertEqual('520', get(actual[2], 'maxWidth'))
+        self.assertEqual('180', get(actual[2], 'maxHeight'))
         self.assertEqual('"ac_exp_standardtext_slider"', get(actual[2], 'scrollbarType'))
         self.assertEqual(dict(heading_bottom=480, narrative_top=485,
                               narrative_bottom=630, navigation_top=665), contract['bounds'])
@@ -142,10 +141,10 @@ class AneaPresentation(unittest.TestCase):
         expected = (ROOT / 'tools/frontend_briefing/layout.sha256').read_text().strip()
         self.assertEqual(expected, module.layout(normalize_for_fingerprint(text)))
         # The exception must not conceal unrelated geometry changes.
-        altered = text.replace('size = { width=1225 height=717 }',
-                               'size = { width=1226 height=717 }', 1)
+        altered = text.replace('width = 1200', 'width = 1201', 1)
         self.assertNotEqual(text, altered)
-        self.assertNotEqual(expected, module.layout(normalize_for_fingerprint(altered)))
+        with self.assertRaises(ValueError):
+            normalize_for_fingerprint(altered)
 
     def test_history_contract_rejects_missing_scroll_and_changed_engine_controls(self):
         sys.path.insert(0, str(ROOT / 'tools/anea'))

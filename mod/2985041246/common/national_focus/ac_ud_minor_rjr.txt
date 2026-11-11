@@ -1,0 +1,1414 @@
+# Usea Depth minors B: provisional gameplay; owner: tools/usea_depth/minors_b/build.py.
+focus_tree = {
+	id = ac_ud_rjr_tree
+	country = { factor = 0 modifier = { add = 45 tag = RJR original_tag = RJR } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 2496 y = 16 }
+	initial_show_position = { focus = RJR_ud_convene_three_districts }
+	focus = {
+		id = RJR_ud_convene_three_districts
+		icon = GFX_ac_ud_focus_RJR_ud_convene_three_districts
+		x = 10
+		y = 0
+		cost = 5
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.301 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_capital_harbour_board
+		icon = GFX_ac_ud_focus_RJR_ud_capital_harbour_board
+		x = 2
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_convene_three_districts
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_capital_harbour_spirit
+		}
+	}
+	focus = {
+		id = RJR_ud_frontier_office
+		icon = GFX_ac_ud_focus_RJR_ud_frontier_office
+		x = 10
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_convene_three_districts
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.302 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_scofield_pass_survey
+		icon = GFX_ac_ud_focus_RJR_ud_scofield_pass_survey
+		x = 18
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_convene_three_districts
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = RJR_ud_scofield_pass_survey bonus = 0.5 uses = 1 category = excavation_tech }
+			country_event = { id = ac_ud_minb.303 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_capital_docks
+		icon = GFX_ac_ud_focus_RJR_ud_capital_docks
+		x = 0
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_capital_harbour_board
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					416 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = dockyard size > 0 include_locked = no } }
+				}
+				416 = {
+					add_building_construction = { type = dockyard level = 1 instant_build = yes }
+				}
+			}
+
+			navy_experience = 5
+		}
+	}
+	focus = {
+		id = RJR_ud_capital_air_station
+		icon = GFX_ac_ud_focus_RJR_ud_capital_air_station
+		x = 4
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_capital_harbour_board
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					416 = { is_owned_and_controlled_by = ROOT }
+				}
+				416 = {
+					add_building_construction = { type = air_base level = 2 instant_build = yes }
+				}
+			}
+
+			air_experience = 5
+		}
+	}
+	focus = {
+		id = RJR_ud_associate_with_central_usea
+		icon = GFX_ac_ud_focus_RJR_ud_associate_with_central_usea
+		x = 8
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_frontier_office
+		}
+		mutually_exclusive = {
+			focus = RJR_ud_arms_length_frontier
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_frontier_association_spirit
+			set_country_flag = RJR_ud_associated
+		}
+	}
+	focus = {
+		id = RJR_ud_arms_length_frontier
+		icon = GFX_ac_ud_focus_RJR_ud_arms_length_frontier
+		x = 12
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_frontier_office
+		}
+		mutually_exclusive = {
+			focus = RJR_ud_associate_with_central_usea
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_arms_length_spirit
+			set_country_flag = RJR_ud_distance_kept
+		}
+	}
+	focus = {
+		id = RJR_ud_scofield_mine_roads
+		icon = GFX_ac_ud_focus_RJR_ud_scofield_mine_roads
+		x = 16
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_scofield_pass_survey
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					67 = { is_owned_and_controlled_by = ROOT }
+				}
+				67 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = RJR_ud_highland_mining_leases
+		icon = GFX_ac_ud_focus_RJR_ud_highland_mining_leases
+		x = 20
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_scofield_pass_survey
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					67 = { is_owned_by = ROOT }
+				}
+				add_resource = { type = steel amount = 3 state = 67 }
+			}
+
+			if = {
+				limit = {
+					67 = { is_owned_by = ROOT }
+				}
+				add_resource = { type = aluminium amount = 2 state = 67 }
+			}
+		}
+	}
+	focus = {
+		id = RJR_ud_capital_district_assembly
+		icon = GFX_ac_ud_focus_RJR_ud_capital_district_assembly
+		x = 2
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_capital_docks focus = RJR_ud_capital_air_station
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = RJR_ud_joint_frontier_commission
+		icon = GFX_ac_ud_focus_RJR_ud_joint_frontier_commission
+		x = 8
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_associate_with_central_usea
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = RJR_ud_frontier_association_spirit
+				}
+				remove_ideas = RJR_ud_frontier_association_spirit
+			}
+			add_ideas = RJR_ud_joint_commission_spirit
+			if = {
+				limit = {
+					465 = { is_owned_and_controlled_by = ROOT }
+				}
+				465 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = RJR_ud_interior_district_assembly
+		icon = GFX_ac_ud_focus_RJR_ud_interior_district_assembly
+		x = 10
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_associate_with_central_usea focus = RJR_ud_arms_length_frontier
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = RJR_ud_frontier_customs_posts
+		icon = GFX_ac_ud_focus_RJR_ud_frontier_customs_posts
+		x = 12
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_arms_length_frontier
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = RJR_ud_arms_length_spirit
+				}
+				remove_ideas = RJR_ud_arms_length_spirit
+			}
+			add_ideas = RJR_ud_customs_posts_spirit
+			add_political_power = 20
+		}
+	}
+	focus = {
+		id = RJR_ud_highland_district_assembly
+		icon = GFX_ac_ud_focus_RJR_ud_highland_district_assembly
+		x = 18
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_scofield_mine_roads focus = RJR_ud_highland_mining_leases
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = RJR_ud_council_delegation
+		icon = GFX_ac_ud_focus_RJR_ud_council_delegation
+		x = 2
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_capital_district_assembly
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			add_political_power = 20
+		}
+	}
+	focus = {
+		id = RJR_ud_mountain_transit_protocol
+		icon = GFX_ac_ud_focus_RJR_ud_mountain_transit_protocol
+		x = 0
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_council_delegation
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_transit_protocol_spirit
+			set_country_flag = RJR_ud_protocol_tabled
+		}
+	}
+	focus = {
+		id = RJR_ud_council_road_fund
+		icon = GFX_ac_ud_focus_RJR_ud_council_road_fund
+		x = 2
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_council_delegation
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					465 = { is_owned_and_controlled_by = ROOT }
+				}
+				465 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+
+			add_political_power = -15
+		}
+	}
+	focus = {
+		id = RJR_ud_capital_freight_terminal
+		icon = GFX_ac_ud_focus_RJR_ud_capital_freight_terminal
+		x = 2
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_mountain_transit_protocol focus = RJR_ud_council_road_fund
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					416 = { is_owned_and_controlled_by = ROOT }
+				}
+				416 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+
+			if = {
+				limit = {
+					416 = { is_owned_by = ROOT }
+				}
+				416 = { add_extra_state_shared_building_slots = 1 }
+			}
+		}
+	}
+	focus = {
+		id = RJR_ud_council_transport_committee
+		icon = GFX_ac_ud_focus_RJR_ud_council_transport_committee
+		x = 2
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_capital_freight_terminal
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 40
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = RJR_ud_constitution_debate
+		icon = GFX_ac_ud_focus_RJR_ud_constitution_debate
+		x = 10
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = RJR_ud_capital_district_assembly
+		}
+		prerequisite = {
+			focus = RJR_ud_interior_district_assembly
+		}
+		prerequisite = {
+			focus = RJR_ud_highland_district_assembly
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.304 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_federal_association
+		icon = GFX_ac_ud_focus_RJR_ud_federal_association
+		x = 6
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = RJR_ud_constitution_debate
+		}
+		mutually_exclusive = {
+			focus = RJR_ud_cantonal_league focus = RJR_ud_miners_commonwealth
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_federal_association_spirit
+			ac_ud_minors_b_regime_rjr_federal = yes
+			country_event = { id = ac_ud_minb.305 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_cantonal_league
+		icon = GFX_ac_ud_focus_RJR_ud_cantonal_league
+		x = 10
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = RJR_ud_constitution_debate
+		}
+		mutually_exclusive = {
+			focus = RJR_ud_federal_association focus = RJR_ud_miners_commonwealth
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_cantonal_league_spirit
+			ac_ud_minors_b_regime_rjr_cantonal = yes
+			country_event = { id = ac_ud_minb.306 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_miners_commonwealth
+		icon = GFX_ac_ud_focus_RJR_ud_miners_commonwealth
+		x = 14
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = RJR_ud_constitution_debate
+		}
+		mutually_exclusive = {
+			focus = RJR_ud_cantonal_league focus = RJR_ud_federal_association
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_miners_commonwealth_spirit
+			ac_ud_minors_b_regime_rjr_commonwealth = yes
+			country_event = { id = ac_ud_minb.307 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_federal_civil_service
+		icon = GFX_ac_ud_focus_RJR_ud_federal_civil_service
+		x = 6
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_federal_association
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = RJR_ud_federal_association_spirit
+				}
+				remove_ideas = RJR_ud_federal_association_spirit
+			}
+			add_ideas = RJR_ud_federal_civil_service_spirit
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = RJR_ud_federal_elections
+		icon = GFX_ac_ud_focus_RJR_ud_federal_elections
+		x = 6
+		y = 7
+		cost = 10
+		prerequisite = {
+			focus = RJR_ud_federal_civil_service
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.05
+			add_popularity = { ideology = democratic popularity = 0.05 }
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = RJR_ud_federal_standards_law
+		icon = GFX_ac_ud_focus_RJR_ud_federal_standards_law
+		x = 6
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_federal_elections
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = RJR_ud_federal_standards_law bonus = 0.5 uses = 1 category = industry }
+			if = {
+				limit = {
+					416 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = industrial_complex size > 0 include_locked = no } }
+				}
+				416 = {
+					add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = RJR_ud_canton_charters
+		icon = GFX_ac_ud_focus_RJR_ud_canton_charters
+		x = 10
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_cantonal_league
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.03
+		}
+	}
+	focus = {
+		id = RJR_ud_cantonal_militia
+		icon = GFX_ac_ud_focus_RJR_ud_cantonal_militia
+		x = 10
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_canton_charters
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_cantonal_militia_spirit
+			army_experience = 10
+		}
+	}
+	focus = {
+		id = RJR_ud_cantonal_treasuries
+		icon = GFX_ac_ud_focus_RJR_ud_cantonal_treasuries
+		x = 10
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_cantonal_militia
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 30
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = RJR_ud_highland_mine_councils
+		icon = GFX_ac_ud_focus_RJR_ud_highland_mine_councils
+		x = 14
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_miners_commonwealth
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					465 = { is_owned_by = ROOT }
+				}
+				add_resource = { type = steel amount = 2 state = 465 }
+			}
+
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = RJR_ud_commonwealth_land_law
+		icon = GFX_ac_ud_focus_RJR_ud_commonwealth_land_law
+		x = 14
+		y = 7
+		cost = 10
+		prerequisite = {
+			focus = RJR_ud_highland_mine_councils
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = RJR_ud_miners_commonwealth_spirit
+				}
+				remove_ideas = RJR_ud_miners_commonwealth_spirit
+			}
+			add_ideas = RJR_ud_land_law_spirit
+			add_popularity = { ideology = communism popularity = 0.05 }
+		}
+	}
+	focus = {
+		id = RJR_ud_workers_schools
+		icon = GFX_ac_ud_focus_RJR_ud_workers_schools
+		x = 14
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_commonwealth_land_law
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = RJR_ud_workers_schools bonus = 0.5 uses = 1 category = industry }
+			add_tech_bonus = { name = RJR_ud_workers_schools bonus = 0.5 uses = 1 category = engineers_tech }
+		}
+	}
+	focus = {
+		id = RJR_ud_mountain_brigades
+		icon = GFX_ac_ud_focus_RJR_ud_mountain_brigades
+		x = 18
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_highland_district_assembly
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			army_experience = 10
+			add_manpower = 2000
+		}
+	}
+	focus = {
+		id = RJR_ud_hold_the_passes
+		icon = GFX_ac_ud_focus_RJR_ud_hold_the_passes
+		x = 18
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_mountain_brigades
+		}
+		mutually_exclusive = {
+			focus = RJR_ud_mobile_mountain_reserve
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_hold_the_passes_spirit
+			add_tech_bonus = { name = RJR_ud_hold_the_passes bonus = 0.5 uses = 1 category = land_doctrine }
+		}
+	}
+	focus = {
+		id = RJR_ud_mobile_mountain_reserve
+		icon = GFX_ac_ud_focus_RJR_ud_mobile_mountain_reserve
+		x = 22
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_mountain_brigades
+		}
+		mutually_exclusive = {
+			focus = RJR_ud_hold_the_passes
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_mobile_reserve_spirit
+			add_tech_bonus = { name = RJR_ud_mobile_mountain_reserve bonus = 0.5 uses = 1 category = motorized_equipment }
+		}
+	}
+	focus = {
+		id = RJR_ud_signal_posts_on_the_heights
+		icon = GFX_ac_ud_focus_RJR_ud_signal_posts_on_the_heights
+		x = 18
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_hold_the_passes focus = RJR_ud_mobile_mountain_reserve
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					67 = { is_owned_and_controlled_by = ROOT }
+				}
+				67 = {
+					add_building_construction = { type = radar_station level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = RJR_ud_interior_rail_spurs
+		icon = GFX_ac_ud_focus_RJR_ud_interior_rail_spurs
+		x = 22
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_hold_the_passes focus = RJR_ud_mobile_mountain_reserve
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					465 = { is_owned_and_controlled_by = ROOT }
+				}
+				465 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+
+			if = {
+				limit = {
+					465 = { is_owned_by = ROOT }
+				}
+				465 = { add_extra_state_shared_building_slots = 1 }
+			}
+		}
+	}
+	focus = {
+		id = RJR_ud_highland_defence
+		icon = GFX_ac_ud_focus_RJR_ud_highland_defence
+		x = 20
+		y = 7
+		cost = 10
+		prerequisite = {
+			focus = RJR_ud_signal_posts_on_the_heights focus = RJR_ud_interior_rail_spurs
+		}
+		available = {
+			original_tag = RJR
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_highland_defence_spirit
+			if = {
+				limit = {
+					67 = { is_owned_and_controlled_by = ROOT }
+				}
+				67 = {
+					add_building_construction = { type = anti_air_building level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = RJR_ud_word_of_ulysses
+		icon = GFX_ac_ud_focus_RJR_ud_word_of_ulysses
+		x = 10
+		y = 9
+		cost = 5
+		available = {
+			original_tag = RJR
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.308 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_tunnel_census
+		icon = GFX_ac_ud_focus_RJR_ud_tunnel_census
+		x = 6
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_word_of_ulysses
+		}
+		available = {
+			original_tag = RJR
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			add_tech_bonus = { name = RJR_ud_tunnel_census bonus = 0.5 uses = 1 category = excavation_tech }
+		}
+	}
+	focus = {
+		id = RJR_ud_pass_road_plan
+		icon = GFX_ac_ud_focus_RJR_ud_pass_road_plan
+		x = 10
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_word_of_ulysses
+		}
+		available = {
+			original_tag = RJR
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					416 = { is_owned_and_controlled_by = ROOT }
+				}
+				416 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = RJR_ud_highland_grain_stores
+		icon = GFX_ac_ud_focus_RJR_ud_highland_grain_stores
+		x = 14
+		y = 10
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_word_of_ulysses
+		}
+		available = {
+			original_tag = RJR
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_grain_stores_spirit
+			add_political_power = -20
+		}
+	}
+	focus = {
+		id = RJR_ud_deep_galleries
+		icon = GFX_ac_ud_focus_RJR_ud_deep_galleries
+		x = 6
+		y = 11
+		cost = 10
+		prerequisite = {
+			focus = RJR_ud_tunnel_census
+		}
+		available = {
+			original_tag = RJR
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_gallery_shelters_spirit
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = RJR_ud_highland_relief_depots
+		icon = GFX_ac_ud_focus_RJR_ud_highland_relief_depots
+		x = 10
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_pass_road_plan
+		}
+		available = {
+			original_tag = RJR
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					465 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = fuel_silo size > 0 include_locked = no } }
+				}
+				465 = {
+					add_building_construction = { type = fuel_silo level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = RJR_ud_three_district_readiness
+		icon = GFX_ac_ud_focus_RJR_ud_three_district_readiness
+		x = 10
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_deep_galleries focus = RJR_ud_highland_relief_depots focus = RJR_ud_highland_grain_stores
+		}
+		available = {
+			original_tag = RJR
+			date > 1998.6.18
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = RJR_ud_coup_bulletins
+		icon = GFX_ac_ud_focus_RJR_ud_coup_bulletins
+		x = 18
+		y = 10
+		cost = 5
+		available = {
+			original_tag = RJR
+			date > 1997.5.29
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.309 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_chain_of_command_review
+		icon = GFX_ac_ud_focus_RJR_ud_chain_of_command_review
+		x = 18
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_coup_bulletins
+		}
+		available = {
+			original_tag = RJR
+			date > 1997.5.29
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			army_experience = 5
+		}
+	}
+	focus = {
+		id = RJR_ud_night_of_the_impact
+		icon = GFX_ac_ud_focus_RJR_ud_night_of_the_impact
+		x = 10
+		y = 13
+		cost = 5
+		available = {
+			original_tag = RJR
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.310 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_pass_field_hospitals
+		icon = GFX_ac_ud_focus_RJR_ud_pass_field_hospitals
+		x = 8
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_night_of_the_impact
+		}
+		available = {
+			original_tag = RJR
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			add_manpower = 1000
+		}
+	}
+	focus = {
+		id = RJR_ud_frontier_relief_corridor
+		icon = GFX_ac_ud_focus_RJR_ud_frontier_relief_corridor
+		x = 12
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_night_of_the_impact
+		}
+		available = {
+			original_tag = RJR
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = { idea = RJR_ud_relief_corridor_spirit days = 365 }
+			add_political_power = -15
+		}
+	}
+	focus = {
+		id = RJR_ud_refugees_on_the_mountain_roads
+		icon = GFX_ac_ud_focus_RJR_ud_refugees_on_the_mountain_roads
+		x = 10
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_pass_field_hospitals focus = RJR_ud_frontier_relief_corridor
+		}
+		available = {
+			original_tag = RJR
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = { id = ac_ud_minb.311 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_settle_the_interior
+		icon = GFX_ac_ud_focus_RJR_ud_settle_the_interior
+		x = 8
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_refugees_on_the_mountain_roads
+		}
+		mutually_exclusive = {
+			focus = RJR_ud_escort_through_the_passes
+		}
+		available = {
+			original_tag = RJR
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_interior_settlers_spirit
+			set_country_flag = RJR_ud_refugees_settled
+			add_manpower = 2500
+		}
+	}
+	focus = {
+		id = RJR_ud_escort_through_the_passes
+		icon = GFX_ac_ud_focus_RJR_ud_escort_through_the_passes
+		x = 12
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_refugees_on_the_mountain_roads
+		}
+		mutually_exclusive = {
+			focus = RJR_ud_settle_the_interior
+		}
+		available = {
+			original_tag = RJR
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_escorted_passage_spirit
+			set_country_flag = RJR_ud_refugees_escorted
+		}
+	}
+	focus = {
+		id = RJR_ud_war_on_the_frontier
+		icon = GFX_ac_ud_focus_RJR_ud_war_on_the_frontier
+		x = 10
+		y = 17
+		cost = 5
+		available = {
+			original_tag = RJR
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.312 days = 1 }
+		}
+	}
+	focus = {
+		id = RJR_ud_accord_on_the_frontier
+		icon = GFX_ac_ud_focus_RJR_ud_accord_on_the_frontier
+		x = 16
+		y = 17
+		cost = 5
+		available = {
+			original_tag = RJR
+			has_global_flag = ac_ucw_war_averted
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 40
+			add_stability = 0.03
+		}
+	}
+	focus = {
+		id = RJR_ud_rear_area_requests
+		icon = GFX_ac_ud_focus_RJR_ud_rear_area_requests
+		x = 8
+		y = 18
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_war_on_the_frontier
+		}
+		mutually_exclusive = {
+			focus = RJR_ud_neutral_roads_ordinance
+		}
+		available = {
+			original_tag = RJR
+			has_global_flag = ac_ucw_isaf_formed
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_rear_area_spirit
+			set_country_flag = RJR_ud_rear_area_services
+		}
+	}
+	focus = {
+		id = RJR_ud_neutral_roads_ordinance
+		icon = GFX_ac_ud_focus_RJR_ud_neutral_roads_ordinance
+		x = 12
+		y = 18
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_war_on_the_frontier
+		}
+		mutually_exclusive = {
+			focus = RJR_ud_rear_area_requests
+		}
+		available = {
+			original_tag = RJR
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RJR_ud_neutral_roads_spirit
+			set_country_flag = RJR_ud_roads_neutral
+		}
+	}
+	focus = {
+		id = RJR_ud_keep_the_passes_open
+		icon = GFX_ac_ud_focus_RJR_ud_keep_the_passes_open
+		x = 10
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = RJR_ud_rear_area_requests focus = RJR_ud_neutral_roads_ordinance
+		}
+		available = {
+			original_tag = RJR
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			army_experience = 10
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = RJR_ud_republic_after_the_war
+		icon = GFX_ac_ud_focus_RJR_ud_republic_after_the_war
+		x = 10
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = RJR_ud_keep_the_passes_open focus = RJR_ud_accord_on_the_frontier
+		}
+		available = {
+			original_tag = RJR
+			OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate has_global_flag = ac_ucw_war_averted }
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.313 days = 1 }
+		}
+	}
+}

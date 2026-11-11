@@ -1,0 +1,1385 @@
+# Usea Depth minors B: provisional gameplay; owner: tools/usea_depth/minors_b/build.py.
+focus_tree = {
+	id = ac_ud_vos_tree
+	country = { factor = 0 modifier = { add = 45 tag = VOS original_tag = VOS } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 2496 y = 16 }
+	initial_show_position = { focus = VOS_ud_administration_reports }
+	focus = {
+		id = VOS_ud_administration_reports
+		icon = GFX_ac_ud_focus_VOS_ud_administration_reports
+		x = 11
+		y = 0
+		cost = 5
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 5 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.501 days = 1 }
+		}
+	}
+	focus = {
+		id = VOS_ud_district_assembly
+		icon = GFX_ac_ud_focus_VOS_ud_district_assembly
+		x = 9
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_administration_reports
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = VOS_ud_frontier_budget
+		icon = GFX_ac_ud_focus_VOS_ud_frontier_budget
+		x = 13
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_administration_reports
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			add_political_power = -15
+			set_country_flag = VOS_ud_budget_published
+		}
+	}
+	focus = {
+		id = VOS_ud_armed_neutrality
+		icon = GFX_ac_ud_focus_VOS_ud_armed_neutrality
+		x = 8
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_district_assembly
+		}
+		prerequisite = {
+			focus = VOS_ud_frontier_budget
+		}
+		mutually_exclusive = {
+			focus = VOS_ud_continental_solidarity focus = VOS_ud_frontier_directorate
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_neutrality_act_spirit
+			ac_ud_minors_b_regime_vos_armed_neutrality = yes
+			country_event = { id = ac_ud_minb.502 days = 1 }
+		}
+	}
+	focus = {
+		id = VOS_ud_continental_solidarity
+		icon = GFX_ac_ud_focus_VOS_ud_continental_solidarity
+		x = 11
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_district_assembly
+		}
+		prerequisite = {
+			focus = VOS_ud_frontier_budget
+		}
+		mutually_exclusive = {
+			focus = VOS_ud_armed_neutrality focus = VOS_ud_frontier_directorate
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_full_delegation_spirit
+			set_country_flag = VOS_ud_full_delegation
+			ac_ud_minors_b_regime_vos_solidarity = yes
+			country_event = { id = ac_ud_minb.503 days = 1 }
+		}
+	}
+	focus = {
+		id = VOS_ud_frontier_directorate
+		icon = GFX_ac_ud_focus_VOS_ud_frontier_directorate
+		x = 14
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_district_assembly
+		}
+		prerequisite = {
+			focus = VOS_ud_frontier_budget
+		}
+		mutually_exclusive = {
+			focus = VOS_ud_armed_neutrality focus = VOS_ud_continental_solidarity
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_military_governors_spirit
+			ac_ud_minors_b_regime_vos_directorate = yes
+			country_event = { id = ac_ud_minb.504 days = 1 }
+		}
+	}
+	focus = {
+		id = VOS_ud_neutrality_courts_charter
+		icon = GFX_ac_ud_focus_VOS_ud_neutrality_courts_charter
+		x = 8
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_armed_neutrality
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_tech_bonus = { name = VOS_ud_neutrality_courts_charter bonus = 0.5 uses = 1 category = land_doctrine }
+		}
+	}
+	focus = {
+		id = VOS_ud_district_militia
+		icon = GFX_ac_ud_focus_VOS_ud_district_militia
+		x = 8
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_neutrality_courts_charter
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_district_militias_spirit
+			add_manpower = 6000
+			army_experience = 10
+		}
+	}
+	focus = {
+		id = VOS_ud_neutral_frontier_courts
+		icon = GFX_ac_ud_focus_VOS_ud_neutral_frontier_courts
+		x = 8
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_district_militia
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = VOS_ud_neutrality_act_spirit
+				}
+				remove_ideas = VOS_ud_neutrality_act_spirit
+			}
+			add_ideas = VOS_ud_frontier_courts_spirit
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = VOS_ud_council_delegation
+		icon = GFX_ac_ud_focus_VOS_ud_council_delegation
+		x = 11
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_continental_solidarity
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_political_power = 20
+		}
+	}
+	focus = {
+		id = VOS_ud_voslage_elections
+		icon = GFX_ac_ud_focus_VOS_ud_voslage_elections
+		x = 11
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_council_delegation
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.05
+			add_popularity = { ideology = democratic popularity = 0.05 }
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = VOS_ud_council_shipping_charter
+		icon = GFX_ac_ud_focus_VOS_ud_council_shipping_charter
+		x = 11
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_voslage_elections
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = VOS_ud_full_delegation_spirit
+				}
+				remove_ideas = VOS_ud_full_delegation_spirit
+			}
+			add_ideas = VOS_ud_council_shipping_spirit
+			if = {
+				limit = {
+					437 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = dockyard size > 0 include_locked = no } }
+				}
+				437 = {
+					add_building_construction = { type = dockyard level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = VOS_ud_directorate_districts
+		icon = GFX_ac_ud_focus_VOS_ud_directorate_districts
+		x = 14
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_frontier_directorate
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = VOS_ud_conscription_registers
+		icon = GFX_ac_ud_focus_VOS_ud_conscription_registers
+		x = 14
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_directorate_districts
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_conscription_registers_spirit
+			add_manpower = 10000
+		}
+	}
+	focus = {
+		id = VOS_ud_directorate_press_office
+		icon = GFX_ac_ud_focus_VOS_ud_directorate_press_office
+		x = 14
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_conscription_registers
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_directorate_press_spirit
+			add_popularity = { ideology = fascism popularity = 0.05 }
+		}
+	}
+	focus = {
+		id = VOS_ud_erusean_frontier_survey
+		icon = GFX_ac_ud_focus_VOS_ud_erusean_frontier_survey
+		x = 2
+		y = 0
+		cost = 5
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = VOS_ud_erusean_frontier_survey bonus = 0.5 uses = 1 category = engineers_tech }
+			country_event = { id = ac_ud_minb.505 days = 1 }
+		}
+	}
+	focus = {
+		id = VOS_ud_frontier_border_posts
+		icon = GFX_ac_ud_focus_VOS_ud_frontier_border_posts
+		x = 0
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_erusean_frontier_survey
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			army_experience = 5
+			if = {
+				limit = {
+					441 = { is_owned_and_controlled_by = ROOT }
+				}
+				441 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = VOS_ud_frontier_market_licences
+		icon = GFX_ac_ud_focus_VOS_ud_frontier_market_licences
+		x = 4
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_erusean_frontier_survey
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 25
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = VOS_ud_frontier_customs_houses
+		icon = GFX_ac_ud_focus_VOS_ud_frontier_customs_houses
+		x = 0
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_frontier_border_posts
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_frontier_customs_spirit
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = VOS_ud_sierraplata_roads
+		icon = GFX_ac_ud_focus_VOS_ud_sierraplata_roads
+		x = 4
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_frontier_market_licences
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					446 = { is_owned_and_controlled_by = ROOT }
+				}
+				446 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = VOS_ud_frontier_watch_towers
+		icon = GFX_ac_ud_focus_VOS_ud_frontier_watch_towers
+		x = 0
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_frontier_customs_houses
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					441 = { is_owned_and_controlled_by = ROOT }
+				}
+				441 = {
+					add_building_construction = { type = radar_station level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = VOS_ud_sierraplata_garrison
+		icon = GFX_ac_ud_focus_VOS_ud_sierraplata_garrison
+		x = 4
+		y = 3
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_sierraplata_roads
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			army_experience = 10
+			if = {
+				limit = {
+					446 = { is_owned_and_controlled_by = ROOT }
+				}
+				446 = {
+					add_building_construction = { type = anti_air_building level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = VOS_ud_erusean_frontier_plan
+		icon = GFX_ac_ud_focus_VOS_ud_erusean_frontier_plan
+		x = 2
+		y = 4
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_frontier_watch_towers focus = VOS_ud_sierraplata_garrison
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = VOS_ud_erusean_frontier_plan bonus = 0.5 uses = 1 category = land_doctrine }
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = VOS_ud_southern_crossings
+		icon = GFX_ac_ud_focus_VOS_ud_southern_crossings
+		x = 20
+		y = 0
+		cost = 5
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.506 days = 1 }
+		}
+	}
+	focus = {
+		id = VOS_ud_southern_road
+		icon = GFX_ac_ud_focus_VOS_ud_southern_road
+		x = 18
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_southern_crossings
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					437 = { is_owned_and_controlled_by = ROOT }
+				}
+				437 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = VOS_ud_southern_customs_desk
+		icon = GFX_ac_ud_focus_VOS_ud_southern_customs_desk
+		x = 22
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_southern_crossings
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 25
+		}
+	}
+	focus = {
+		id = VOS_ud_southern_labour_exchange
+		icon = GFX_ac_ud_focus_VOS_ud_southern_labour_exchange
+		x = 18
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_southern_road
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_southern_labour_spirit
+		}
+	}
+	focus = {
+		id = VOS_ud_southern_air_watch
+		icon = GFX_ac_ud_focus_VOS_ud_southern_air_watch
+		x = 22
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_southern_customs_desk
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					437 = { is_owned_and_controlled_by = ROOT }
+				}
+				437 = {
+					add_building_construction = { type = air_base level = 2 instant_build = yes }
+				}
+			}
+
+			air_experience = 5
+		}
+	}
+	focus = {
+		id = VOS_ud_southern_frontier_plan
+		icon = GFX_ac_ud_focus_VOS_ud_southern_frontier_plan
+		x = 20
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_southern_labour_exchange focus = VOS_ud_southern_air_watch
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.02
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = VOS_ud_battery_across_the_border
+		icon = GFX_ac_ud_focus_VOS_ud_battery_across_the_border
+		x = 16
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_southern_frontier_plan
+		}
+		available = {
+			original_tag = VOS
+			date > 1998.6.18
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = { id = ac_ud_minb.507 days = 1 }
+		}
+	}
+	focus = {
+		id = VOS_ud_defence_review
+		icon = GFX_ac_ud_focus_VOS_ud_defence_review
+		x = 20
+		y = 5
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_erusean_frontier_plan focus = VOS_ud_southern_frontier_plan
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = VOS_ud_defence_review bonus = 0.5 uses = 1 category = land_doctrine }
+			army_experience = 5
+		}
+	}
+	focus = {
+		id = VOS_ud_defence_in_depth
+		icon = GFX_ac_ud_focus_VOS_ud_defence_in_depth
+		x = 18
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_defence_review
+		}
+		mutually_exclusive = {
+			focus = VOS_ud_forward_defence
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_defence_in_depth_spirit
+		}
+	}
+	focus = {
+		id = VOS_ud_forward_defence
+		icon = GFX_ac_ud_focus_VOS_ud_forward_defence
+		x = 22
+		y = 6
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_defence_review
+		}
+		mutually_exclusive = {
+			focus = VOS_ud_defence_in_depth
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_forward_defence_spirit
+		}
+	}
+	focus = {
+		id = VOS_ud_district_reserve_divisions
+		icon = GFX_ac_ud_focus_VOS_ud_district_reserve_divisions
+		x = 18
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_defence_in_depth
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_manpower = 8000
+			army_experience = 10
+		}
+	}
+	focus = {
+		id = VOS_ud_rapid_response_battalions
+		icon = GFX_ac_ud_focus_VOS_ud_rapid_response_battalions
+		x = 22
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_forward_defence
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = VOS_ud_rapid_response_battalions bonus = 0.5 uses = 1 category = motorized_equipment }
+			army_experience = 10
+		}
+	}
+	focus = {
+		id = VOS_ud_national_defence_plan
+		icon = GFX_ac_ud_focus_VOS_ud_national_defence_plan
+		x = 20
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_district_reserve_divisions focus = VOS_ud_rapid_response_battalions
+		}
+		available = {
+			original_tag = VOS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_national_defence_plan_spirit
+			if = {
+				limit = {
+					437 = { is_owned_and_controlled_by = ROOT }
+				}
+				437 = {
+					add_building_construction = { type = anti_air_building level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = VOS_ud_ulysses_briefing
+		icon = GFX_ac_ud_focus_VOS_ud_ulysses_briefing
+		x = 6
+		y = 6
+		cost = 5
+		available = {
+			original_tag = VOS
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.508 days = 1 }
+		}
+	}
+	focus = {
+		id = VOS_ud_district_shelter_registers
+		icon = GFX_ac_ud_focus_VOS_ud_district_shelter_registers
+		x = 2
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_ulysses_briefing
+		}
+		available = {
+			original_tag = VOS
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = VOS_ud_indore_civil_defence
+		icon = GFX_ac_ud_focus_VOS_ud_indore_civil_defence
+		x = 6
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_ulysses_briefing
+		}
+		available = {
+			original_tag = VOS
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.02
+			add_tech_bonus = { name = VOS_ud_indore_civil_defence bonus = 0.5 uses = 1 category = radar_tech }
+		}
+	}
+	focus = {
+		id = VOS_ud_grain_and_fuel_stores
+		icon = GFX_ac_ud_focus_VOS_ud_grain_and_fuel_stores
+		x = 10
+		y = 7
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_ulysses_briefing
+		}
+		available = {
+			original_tag = VOS
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					437 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = fuel_silo size > 0 include_locked = no } }
+				}
+				437 = {
+					add_building_construction = { type = fuel_silo level = 1 instant_build = yes }
+				}
+			}
+
+			add_political_power = -20
+		}
+	}
+	focus = {
+		id = VOS_ud_shelter_works
+		icon = GFX_ac_ud_focus_VOS_ud_shelter_works
+		x = 2
+		y = 8
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_district_shelter_registers
+		}
+		available = {
+			original_tag = VOS
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_indore_shelters_spirit
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = VOS_ud_evacuation_routes
+		icon = GFX_ac_ud_focus_VOS_ud_evacuation_routes
+		x = 6
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_indore_civil_defence
+		}
+		available = {
+			original_tag = VOS
+			date > 1996.4.19
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					446 = { is_owned_and_controlled_by = ROOT }
+				}
+				446 = {
+					add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = VOS_ud_steady_districts
+		icon = GFX_ac_ud_focus_VOS_ud_steady_districts
+		x = 10
+		y = 8
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_grain_and_fuel_stores
+		}
+		available = {
+			original_tag = VOS
+			date > 1997.5.29
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = VOS_ud_readiness_audit
+		icon = GFX_ac_ud_focus_VOS_ud_readiness_audit
+		x = 6
+		y = 9
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_shelter_works focus = VOS_ud_evacuation_routes focus = VOS_ud_steady_districts
+		}
+		available = {
+			original_tag = VOS
+			date > 1998.6.18
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 3 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = VOS_ud_impact_night
+		icon = GFX_ac_ud_focus_VOS_ud_impact_night
+		x = 6
+		y = 10
+		cost = 5
+		available = {
+			original_tag = VOS
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.509 days = 1 }
+		}
+	}
+	focus = {
+		id = VOS_ud_field_hospitals
+		icon = GFX_ac_ud_focus_VOS_ud_field_hospitals
+		x = 4
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_impact_night
+		}
+		available = {
+			original_tag = VOS
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.02
+			add_political_power = -15
+		}
+	}
+	focus = {
+		id = VOS_ud_relief_columns
+		icon = GFX_ac_ud_focus_VOS_ud_relief_columns
+		x = 8
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_impact_night
+		}
+		available = {
+			original_tag = VOS
+			date > 1999.7.7
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			army_experience = 5
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = VOS_ud_refugees_at_the_frontier
+		icon = GFX_ac_ud_focus_VOS_ud_refugees_at_the_frontier
+		x = 6
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_field_hospitals focus = VOS_ud_relief_columns
+		}
+		available = {
+			original_tag = VOS
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = { id = ac_ud_minb.510 days = 1 }
+		}
+	}
+	focus = {
+		id = VOS_ud_reception_camps
+		icon = GFX_ac_ud_focus_VOS_ud_reception_camps
+		x = 2
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_refugees_at_the_frontier
+		}
+		mutually_exclusive = {
+			focus = VOS_ud_closed_frontier focus = VOS_ud_transit_corridor
+		}
+		available = {
+			original_tag = VOS
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_reception_camps_spirit
+			set_country_flag = VOS_ud_camps_open
+			add_manpower = 5000
+		}
+	}
+	focus = {
+		id = VOS_ud_transit_corridor
+		icon = GFX_ac_ud_focus_VOS_ud_transit_corridor
+		x = 6
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_refugees_at_the_frontier
+		}
+		mutually_exclusive = {
+			focus = VOS_ud_closed_frontier focus = VOS_ud_reception_camps
+		}
+		available = {
+			original_tag = VOS
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_transit_corridor_spirit
+			set_country_flag = VOS_ud_corridor_open
+		}
+	}
+	focus = {
+		id = VOS_ud_closed_frontier
+		icon = GFX_ac_ud_focus_VOS_ud_closed_frontier
+		x = 10
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_refugees_at_the_frontier
+		}
+		mutually_exclusive = {
+			focus = VOS_ud_reception_camps focus = VOS_ud_transit_corridor
+		}
+		available = {
+			original_tag = VOS
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_closed_frontier_spirit
+			set_country_flag = VOS_ud_frontier_closed
+			add_stability = 0.02
+		}
+	}
+	focus = {
+		id = VOS_ud_camp_schools
+		icon = GFX_ac_ud_focus_VOS_ud_camp_schools
+		x = 2
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_reception_camps
+		}
+		available = {
+			original_tag = VOS
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.02
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = VOS_ud_corridor_convoys
+		icon = GFX_ac_ud_focus_VOS_ud_corridor_convoys
+		x = 6
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_transit_corridor
+		}
+		available = {
+			original_tag = VOS
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = { name = VOS_ud_corridor_convoys bonus = 0.5 uses = 1 category = logistics_tech }
+			add_political_power = 15
+		}
+	}
+	focus = {
+		id = VOS_ud_pass_tribunals
+		icon = GFX_ac_ud_focus_VOS_ud_pass_tribunals
+		x = 10
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_closed_frontier
+		}
+		available = {
+			original_tag = VOS
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.02
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+		}
+	}
+	focus = {
+		id = VOS_ud_settlement_act
+		icon = GFX_ac_ud_focus_VOS_ud_settlement_act
+		x = 6
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_camp_schools focus = VOS_ud_corridor_convoys focus = VOS_ud_pass_tribunals
+		}
+		available = {
+			original_tag = VOS
+			date > 2000.4.20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_settlement_act_spirit
+			if = {
+				limit = {
+					441 = { is_owned_and_controlled_by = ROOT free_building_slots = { building = industrial_complex size > 0 include_locked = no } }
+				}
+				441 = {
+					add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = VOS_ud_accord_dividend
+		icon = GFX_ac_ud_focus_VOS_ud_accord_dividend
+		x = 16
+		y = 10
+		cost = 5
+		available = {
+			original_tag = VOS
+			has_global_flag = ac_ucw_war_averted
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			add_political_power = 30
+		}
+	}
+	focus = {
+		id = VOS_ud_war_on_the_border
+		icon = GFX_ac_ud_focus_VOS_ud_war_on_the_border
+		x = 20
+		y = 10
+		cost = 5
+		available = {
+			original_tag = VOS
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_temp_variable = { ac_pol_capacity_delta = 2 }
+			ac_pol_change_capacity = yes
+			set_country_flag = VOS_ud_war_mobilised
+			country_event = { id = ac_ud_minb.511 days = 1 }
+		}
+	}
+	focus = {
+		id = VOS_ud_border_watch_rotations
+		icon = GFX_ac_ud_focus_VOS_ud_border_watch_rotations
+		x = 18
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_war_on_the_border
+		}
+		available = {
+			original_tag = VOS
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VOS_ud_wartime_border_watch_spirit
+			army_experience = 10
+		}
+	}
+	focus = {
+		id = VOS_ud_civil_defence_alerts
+		icon = GFX_ac_ud_focus_VOS_ud_civil_defence_alerts
+		x = 22
+		y = 11
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_war_on_the_border
+		}
+		available = {
+			original_tag = VOS
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			if = {
+				limit = {
+					446 = { is_owned_and_controlled_by = ROOT }
+				}
+				446 = {
+					add_building_construction = { type = anti_air_building level = 1 instant_build = yes }
+				}
+			}
+		}
+	}
+	focus = {
+		id = VOS_ud_frontier_holds
+		icon = GFX_ac_ud_focus_VOS_ud_frontier_holds
+		x = 20
+		y = 12
+		cost = 5
+		prerequisite = {
+			focus = VOS_ud_border_watch_rotations focus = VOS_ud_civil_defence_alerts
+		}
+		available = {
+			original_tag = VOS
+			has_global_flag = ac_ucw_war_started
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			add_war_support = 0.03
+		}
+	}
+	focus = {
+		id = VOS_ud_voslage_after_the_war
+		icon = GFX_ac_ud_focus_VOS_ud_voslage_after_the_war
+		x = 20
+		y = 13
+		cost = 10
+		prerequisite = {
+			focus = VOS_ud_frontier_holds focus = VOS_ud_accord_dividend
+		}
+		available = {
+			original_tag = VOS
+			OR = { has_global_flag = ac_ucw_outcome_isaf_victory has_global_flag = ac_ucw_outcome_erusean_victory has_global_flag = ac_ucw_outcome_stalemate has_global_flag = ac_ucw_war_averted }
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			set_temp_variable = { ac_pol_capacity_delta = 4 }
+			ac_pol_change_capacity = yes
+			country_event = { id = ac_ud_minb.512 days = 1 }
+		}
+	}
+}

@@ -1,0 +1,6538 @@
+# Original fiction/provisional gameplay; owner: tools/world_campaigns/build.py
+focus_tree = {
+	id = ac_wc_soa_tree
+	country = { factor = 0 modifier = { add = 80 tag = SOA original_tag = SOA } }
+	default = no
+	reset_on_civilwar = no
+	continuous_focus_position = { x = 2600 y = 16 }
+	initial_show_position = { focus = SOA_wc_e1_authority_open }
+	focus = {
+		id = SOA_wc_e1_authority_open
+		icon = GFX_SOA_wc_civil
+		x = 2
+		y = 0
+		cost = 5
+		cancel_if_invalid = yes
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_authority_opened }
+				}
+				set_country_flag = SOA_wc_e1_authority_opened
+				set_country_flag = { flag = SOA_wc_e1_authority_pending days = 60 }
+				country_event = { id = ac_wc_soa.1 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_authority_p0_0
+		icon = GFX_SOA_wc_civil
+		x = 0
+		y = 1
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_authority_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_authority_p1_0
+			focus = SOA_wc_e1_authority_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_authority_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_authority_p0_0_receipt } has_country_flag = SOA_wc_e1_authority_choice_0
+				}
+				set_country_flag = SOA_wc_e1_authority_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_authority_p0_1
+		icon = GFX_SOA_wc_civil
+		x = 0
+		y = 2
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_authority_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_authority_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_authority_p0_1_receipt } has_country_flag = SOA_wc_e1_authority_choice_0
+				}
+				set_country_flag = SOA_wc_e1_authority_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_authority_p0_2
+		icon = GFX_SOA_wc_civil
+		x = 0
+		y = 3
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_authority_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_authority_choice_0 has_country_flag = SOA_wc_e1_authority_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_authority_p0_2_receipt } has_country_flag = SOA_wc_e1_authority_choice_0 has_country_flag = SOA_wc_e1_authority_done
+				}
+				set_country_flag = SOA_wc_e1_authority_p0_2_receipt
+				set_country_flag = SOA_wc_e1_authority_completed
+				set_country_flag = { flag = SOA_wc_e1_authority_service_term days = 365 }
+				remove_ideas = SOA_wc_civil_0
+				remove_ideas = SOA_wc_civil_1
+				remove_ideas = SOA_wc_civil_2
+				add_timed_idea = { idea = SOA_wc_civil_0 days = 365 }
+				set_country_flag = SOA_wc_route_0
+				add_ideas = SOA_wc_government_0
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_authority_p1_0
+		icon = GFX_SOA_wc_civil
+		x = 2
+		y = 1
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_authority_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_authority_p0_0
+			focus = SOA_wc_e1_authority_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_authority_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_authority_p1_0_receipt } has_country_flag = SOA_wc_e1_authority_choice_1
+				}
+				set_country_flag = SOA_wc_e1_authority_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_authority_p1_1
+		icon = GFX_SOA_wc_civil
+		x = 2
+		y = 2
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_authority_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_authority_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_authority_p1_1_receipt } has_country_flag = SOA_wc_e1_authority_choice_1
+				}
+				set_country_flag = SOA_wc_e1_authority_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_authority_p1_2
+		icon = GFX_SOA_wc_civil
+		x = 2
+		y = 3
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_authority_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_authority_choice_1 has_country_flag = SOA_wc_e1_authority_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_authority_p1_2_receipt } has_country_flag = SOA_wc_e1_authority_choice_1 has_country_flag = SOA_wc_e1_authority_done
+				}
+				set_country_flag = SOA_wc_e1_authority_p1_2_receipt
+				set_country_flag = SOA_wc_e1_authority_completed
+				set_country_flag = { flag = SOA_wc_e1_authority_service_term days = 365 }
+				remove_ideas = SOA_wc_civil_0
+				remove_ideas = SOA_wc_civil_1
+				remove_ideas = SOA_wc_civil_2
+				add_timed_idea = { idea = SOA_wc_civil_1 days = 365 }
+				set_country_flag = SOA_wc_route_1
+				add_ideas = SOA_wc_government_1
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_authority_p2_0
+		icon = GFX_SOA_wc_civil
+		x = 4
+		y = 1
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_authority_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_authority_p0_0
+			focus = SOA_wc_e1_authority_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_authority_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_authority_p2_0_receipt } has_country_flag = SOA_wc_e1_authority_choice_2
+				}
+				set_country_flag = SOA_wc_e1_authority_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_authority_p2_1
+		icon = GFX_SOA_wc_civil
+		x = 4
+		y = 2
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_authority_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_authority_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_authority_p2_1_receipt } has_country_flag = SOA_wc_e1_authority_choice_2
+				}
+				set_country_flag = SOA_wc_e1_authority_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_authority_p2_2
+		icon = GFX_SOA_wc_civil
+		x = 4
+		y = 3
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_authority_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_authority_choice_2 has_country_flag = SOA_wc_e1_authority_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_authority_p2_2_receipt } has_country_flag = SOA_wc_e1_authority_choice_2 has_country_flag = SOA_wc_e1_authority_done
+				}
+				set_country_flag = SOA_wc_e1_authority_p2_2_receipt
+				set_country_flag = SOA_wc_e1_authority_completed
+				set_country_flag = { flag = SOA_wc_e1_authority_service_term days = 365 }
+				remove_ideas = SOA_wc_civil_0
+				remove_ideas = SOA_wc_civil_1
+				remove_ideas = SOA_wc_civil_2
+				add_timed_idea = { idea = SOA_wc_civil_2 days = 365 }
+				set_country_flag = SOA_wc_route_2
+				add_ideas = SOA_wc_government_2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_courts_open
+		icon = GFX_SOA_wc_civil
+		x = 2
+		y = 6
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_courts_opened }
+				}
+				set_country_flag = SOA_wc_e1_courts_opened
+				set_country_flag = { flag = SOA_wc_e1_courts_pending days = 60 }
+				country_event = { id = ac_wc_soa.2 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_courts_p0_0
+		icon = GFX_SOA_wc_civil
+		x = 0
+		y = 7
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_courts_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_courts_p1_0
+			focus = SOA_wc_e1_courts_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_courts_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_courts_p0_0_receipt } has_country_flag = SOA_wc_e1_courts_choice_0
+				}
+				set_country_flag = SOA_wc_e1_courts_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_courts_p0_1
+		icon = GFX_SOA_wc_civil
+		x = 0
+		y = 8
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_courts_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_courts_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_courts_p0_1_receipt } has_country_flag = SOA_wc_e1_courts_choice_0
+				}
+				set_country_flag = SOA_wc_e1_courts_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_courts_p0_2
+		icon = GFX_SOA_wc_civil
+		x = 0
+		y = 9
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_courts_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_courts_choice_0 has_country_flag = SOA_wc_e1_courts_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_courts_p0_2_receipt } has_country_flag = SOA_wc_e1_courts_choice_0 has_country_flag = SOA_wc_e1_courts_done
+				}
+				set_country_flag = SOA_wc_e1_courts_p0_2_receipt
+				set_country_flag = SOA_wc_e1_courts_completed
+				set_country_flag = { flag = SOA_wc_e1_courts_service_term days = 365 }
+				remove_ideas = SOA_wc_civil_0
+				remove_ideas = SOA_wc_civil_1
+				remove_ideas = SOA_wc_civil_2
+				add_timed_idea = { idea = SOA_wc_civil_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_courts_p1_0
+		icon = GFX_SOA_wc_civil
+		x = 2
+		y = 7
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_courts_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_courts_p0_0
+			focus = SOA_wc_e1_courts_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_courts_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_courts_p1_0_receipt } has_country_flag = SOA_wc_e1_courts_choice_1
+				}
+				set_country_flag = SOA_wc_e1_courts_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_courts_p1_1
+		icon = GFX_SOA_wc_civil
+		x = 2
+		y = 8
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_courts_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_courts_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_courts_p1_1_receipt } has_country_flag = SOA_wc_e1_courts_choice_1
+				}
+				set_country_flag = SOA_wc_e1_courts_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_courts_p1_2
+		icon = GFX_SOA_wc_civil
+		x = 2
+		y = 9
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_courts_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_courts_choice_1 has_country_flag = SOA_wc_e1_courts_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_courts_p1_2_receipt } has_country_flag = SOA_wc_e1_courts_choice_1 has_country_flag = SOA_wc_e1_courts_done
+				}
+				set_country_flag = SOA_wc_e1_courts_p1_2_receipt
+				set_country_flag = SOA_wc_e1_courts_completed
+				set_country_flag = { flag = SOA_wc_e1_courts_service_term days = 365 }
+				remove_ideas = SOA_wc_civil_0
+				remove_ideas = SOA_wc_civil_1
+				remove_ideas = SOA_wc_civil_2
+				add_timed_idea = { idea = SOA_wc_civil_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_courts_p2_0
+		icon = GFX_SOA_wc_civil
+		x = 4
+		y = 7
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_courts_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_courts_p0_0
+			focus = SOA_wc_e1_courts_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_courts_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_courts_p2_0_receipt } has_country_flag = SOA_wc_e1_courts_choice_2
+				}
+				set_country_flag = SOA_wc_e1_courts_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_courts_p2_1
+		icon = GFX_SOA_wc_civil
+		x = 4
+		y = 8
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_courts_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_courts_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_courts_p2_1_receipt } has_country_flag = SOA_wc_e1_courts_choice_2
+				}
+				set_country_flag = SOA_wc_e1_courts_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_courts_p2_2
+		icon = GFX_SOA_wc_civil
+		x = 4
+		y = 9
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_courts_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_courts_choice_2 has_country_flag = SOA_wc_e1_courts_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_courts_p2_2_receipt } has_country_flag = SOA_wc_e1_courts_choice_2 has_country_flag = SOA_wc_e1_courts_done
+				}
+				set_country_flag = SOA_wc_e1_courts_p2_2_receipt
+				set_country_flag = SOA_wc_e1_courts_completed
+				set_country_flag = { flag = SOA_wc_e1_courts_service_term days = 365 }
+				remove_ideas = SOA_wc_civil_0
+				remove_ideas = SOA_wc_civil_1
+				remove_ideas = SOA_wc_civil_2
+				add_timed_idea = { idea = SOA_wc_civil_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_assembly_open
+		icon = GFX_SOA_wc_civil
+		x = 10
+		y = 6
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_assembly_opened }
+				}
+				set_country_flag = SOA_wc_e1_assembly_opened
+				set_country_flag = { flag = SOA_wc_e1_assembly_pending days = 60 }
+				country_event = { id = ac_wc_soa.3 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_assembly_p0_0
+		icon = GFX_SOA_wc_civil
+		x = 8
+		y = 7
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_assembly_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_assembly_p1_0
+			focus = SOA_wc_e1_assembly_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_assembly_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_assembly_p0_0_receipt } has_country_flag = SOA_wc_e1_assembly_choice_0
+				}
+				set_country_flag = SOA_wc_e1_assembly_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_assembly_p0_1
+		icon = GFX_SOA_wc_civil
+		x = 8
+		y = 8
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_assembly_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_assembly_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_assembly_p0_1_receipt } has_country_flag = SOA_wc_e1_assembly_choice_0
+				}
+				set_country_flag = SOA_wc_e1_assembly_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_assembly_p0_2
+		icon = GFX_SOA_wc_civil
+		x = 8
+		y = 9
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_assembly_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_assembly_choice_0 has_country_flag = SOA_wc_e1_assembly_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_assembly_p0_2_receipt } has_country_flag = SOA_wc_e1_assembly_choice_0 has_country_flag = SOA_wc_e1_assembly_done
+				}
+				set_country_flag = SOA_wc_e1_assembly_p0_2_receipt
+				set_country_flag = SOA_wc_e1_assembly_completed
+				set_country_flag = { flag = SOA_wc_e1_assembly_service_term days = 365 }
+				remove_ideas = SOA_wc_civil_0
+				remove_ideas = SOA_wc_civil_1
+				remove_ideas = SOA_wc_civil_2
+				add_timed_idea = { idea = SOA_wc_civil_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_assembly_p1_0
+		icon = GFX_SOA_wc_civil
+		x = 10
+		y = 7
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_assembly_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_assembly_p0_0
+			focus = SOA_wc_e1_assembly_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_assembly_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_assembly_p1_0_receipt } has_country_flag = SOA_wc_e1_assembly_choice_1
+				}
+				set_country_flag = SOA_wc_e1_assembly_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_assembly_p1_1
+		icon = GFX_SOA_wc_civil
+		x = 10
+		y = 8
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_assembly_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_assembly_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_assembly_p1_1_receipt } has_country_flag = SOA_wc_e1_assembly_choice_1
+				}
+				set_country_flag = SOA_wc_e1_assembly_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_assembly_p1_2
+		icon = GFX_SOA_wc_civil
+		x = 10
+		y = 9
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_assembly_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_assembly_choice_1 has_country_flag = SOA_wc_e1_assembly_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_assembly_p1_2_receipt } has_country_flag = SOA_wc_e1_assembly_choice_1 has_country_flag = SOA_wc_e1_assembly_done
+				}
+				set_country_flag = SOA_wc_e1_assembly_p1_2_receipt
+				set_country_flag = SOA_wc_e1_assembly_completed
+				set_country_flag = { flag = SOA_wc_e1_assembly_service_term days = 365 }
+				remove_ideas = SOA_wc_civil_0
+				remove_ideas = SOA_wc_civil_1
+				remove_ideas = SOA_wc_civil_2
+				add_timed_idea = { idea = SOA_wc_civil_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_assembly_p2_0
+		icon = GFX_SOA_wc_civil
+		x = 12
+		y = 7
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_assembly_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_assembly_p0_0
+			focus = SOA_wc_e1_assembly_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_assembly_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_assembly_p2_0_receipt } has_country_flag = SOA_wc_e1_assembly_choice_2
+				}
+				set_country_flag = SOA_wc_e1_assembly_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_assembly_p2_1
+		icon = GFX_SOA_wc_civil
+		x = 12
+		y = 8
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_assembly_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_assembly_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_assembly_p2_1_receipt } has_country_flag = SOA_wc_e1_assembly_choice_2
+				}
+				set_country_flag = SOA_wc_e1_assembly_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_assembly_p2_2
+		icon = GFX_SOA_wc_civil
+		x = 12
+		y = 9
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_assembly_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_assembly_choice_2 has_country_flag = SOA_wc_e1_assembly_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_assembly_p2_2_receipt } has_country_flag = SOA_wc_e1_assembly_choice_2 has_country_flag = SOA_wc_e1_assembly_done
+				}
+				set_country_flag = SOA_wc_e1_assembly_p2_2_receipt
+				set_country_flag = SOA_wc_e1_assembly_completed
+				set_country_flag = { flag = SOA_wc_e1_assembly_service_term days = 365 }
+				remove_ideas = SOA_wc_civil_0
+				remove_ideas = SOA_wc_civil_1
+				remove_ideas = SOA_wc_civil_2
+				add_timed_idea = { idea = SOA_wc_civil_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_foundries_open
+		icon = GFX_SOA_wc_industry
+		x = 18
+		y = 6
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_foundries_opened }
+				}
+				set_country_flag = SOA_wc_e1_foundries_opened
+				set_country_flag = { flag = SOA_wc_e1_foundries_pending days = 60 }
+				country_event = { id = ac_wc_soa.4 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_foundries_p0_0
+		icon = GFX_SOA_wc_industry
+		x = 16
+		y = 7
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_foundries_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_foundries_p1_0
+			focus = SOA_wc_e1_foundries_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_foundries_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_foundries_p0_0_receipt } has_country_flag = SOA_wc_e1_foundries_choice_0
+				}
+				set_country_flag = SOA_wc_e1_foundries_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_foundries_p0_1
+		icon = GFX_SOA_wc_industry
+		x = 16
+		y = 8
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_foundries_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_foundries_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_foundries_p0_1_receipt } has_country_flag = SOA_wc_e1_foundries_choice_0
+				}
+				set_country_flag = SOA_wc_e1_foundries_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_foundries_p0_2
+		icon = GFX_SOA_wc_industry
+		x = 16
+		y = 9
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_foundries_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_foundries_choice_0 has_country_flag = SOA_wc_e1_foundries_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_foundries_p0_2_receipt } has_country_flag = SOA_wc_e1_foundries_choice_0 has_country_flag = SOA_wc_e1_foundries_done
+				}
+				set_country_flag = SOA_wc_e1_foundries_p0_2_receipt
+				set_country_flag = SOA_wc_e1_foundries_completed
+				set_country_flag = { flag = SOA_wc_e1_foundries_service_term days = 365 }
+				remove_ideas = SOA_wc_industry_0
+				remove_ideas = SOA_wc_industry_1
+				remove_ideas = SOA_wc_industry_2
+				add_timed_idea = { idea = SOA_wc_industry_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_foundries_p1_0
+		icon = GFX_SOA_wc_industry
+		x = 18
+		y = 7
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_foundries_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_foundries_p0_0
+			focus = SOA_wc_e1_foundries_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_foundries_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_foundries_p1_0_receipt } has_country_flag = SOA_wc_e1_foundries_choice_1
+				}
+				set_country_flag = SOA_wc_e1_foundries_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_foundries_p1_1
+		icon = GFX_SOA_wc_industry
+		x = 18
+		y = 8
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_foundries_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_foundries_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_foundries_p1_1_receipt } has_country_flag = SOA_wc_e1_foundries_choice_1
+				}
+				set_country_flag = SOA_wc_e1_foundries_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_foundries_p1_2
+		icon = GFX_SOA_wc_industry
+		x = 18
+		y = 9
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_foundries_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_foundries_choice_1 has_country_flag = SOA_wc_e1_foundries_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_foundries_p1_2_receipt } has_country_flag = SOA_wc_e1_foundries_choice_1 has_country_flag = SOA_wc_e1_foundries_done
+				}
+				set_country_flag = SOA_wc_e1_foundries_p1_2_receipt
+				set_country_flag = SOA_wc_e1_foundries_completed
+				set_country_flag = { flag = SOA_wc_e1_foundries_service_term days = 365 }
+				remove_ideas = SOA_wc_industry_0
+				remove_ideas = SOA_wc_industry_1
+				remove_ideas = SOA_wc_industry_2
+				add_timed_idea = { idea = SOA_wc_industry_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_foundries_p2_0
+		icon = GFX_SOA_wc_industry
+		x = 20
+		y = 7
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_foundries_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_foundries_p0_0
+			focus = SOA_wc_e1_foundries_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_foundries_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_foundries_p2_0_receipt } has_country_flag = SOA_wc_e1_foundries_choice_2
+				}
+				set_country_flag = SOA_wc_e1_foundries_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_foundries_p2_1
+		icon = GFX_SOA_wc_industry
+		x = 20
+		y = 8
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_foundries_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_foundries_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_foundries_p2_1_receipt } has_country_flag = SOA_wc_e1_foundries_choice_2
+				}
+				set_country_flag = SOA_wc_e1_foundries_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_foundries_p2_2
+		icon = GFX_SOA_wc_industry
+		x = 20
+		y = 9
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_foundries_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_foundries_choice_2 has_country_flag = SOA_wc_e1_foundries_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_foundries_p2_2_receipt } has_country_flag = SOA_wc_e1_foundries_choice_2 has_country_flag = SOA_wc_e1_foundries_done
+				}
+				set_country_flag = SOA_wc_e1_foundries_p2_2_receipt
+				set_country_flag = SOA_wc_e1_foundries_completed
+				set_country_flag = { flag = SOA_wc_e1_foundries_service_term days = 365 }
+				remove_ideas = SOA_wc_industry_0
+				remove_ideas = SOA_wc_industry_1
+				remove_ideas = SOA_wc_industry_2
+				add_timed_idea = { idea = SOA_wc_industry_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_orders_open
+		icon = GFX_SOA_wc_industry
+		x = 2
+		y = 12
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_orders_opened }
+				}
+				set_country_flag = SOA_wc_e1_orders_opened
+				set_country_flag = { flag = SOA_wc_e1_orders_pending days = 60 }
+				country_event = { id = ac_wc_soa.5 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_orders_p0_0
+		icon = GFX_SOA_wc_industry
+		x = 0
+		y = 13
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_orders_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_orders_p1_0
+			focus = SOA_wc_e1_orders_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_orders_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_orders_p0_0_receipt } has_country_flag = SOA_wc_e1_orders_choice_0
+				}
+				set_country_flag = SOA_wc_e1_orders_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_orders_p0_1
+		icon = GFX_SOA_wc_industry
+		x = 0
+		y = 14
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_orders_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_orders_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_orders_p0_1_receipt } has_country_flag = SOA_wc_e1_orders_choice_0
+				}
+				set_country_flag = SOA_wc_e1_orders_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_orders_p0_2
+		icon = GFX_SOA_wc_industry
+		x = 0
+		y = 15
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_orders_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_orders_choice_0 has_country_flag = SOA_wc_e1_orders_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_orders_p0_2_receipt } has_country_flag = SOA_wc_e1_orders_choice_0 has_country_flag = SOA_wc_e1_orders_done
+				}
+				set_country_flag = SOA_wc_e1_orders_p0_2_receipt
+				set_country_flag = SOA_wc_e1_orders_completed
+				set_country_flag = { flag = SOA_wc_e1_orders_service_term days = 365 }
+				remove_ideas = SOA_wc_industry_0
+				remove_ideas = SOA_wc_industry_1
+				remove_ideas = SOA_wc_industry_2
+				add_timed_idea = { idea = SOA_wc_industry_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_orders_p1_0
+		icon = GFX_SOA_wc_industry
+		x = 2
+		y = 13
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_orders_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_orders_p0_0
+			focus = SOA_wc_e1_orders_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_orders_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_orders_p1_0_receipt } has_country_flag = SOA_wc_e1_orders_choice_1
+				}
+				set_country_flag = SOA_wc_e1_orders_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_orders_p1_1
+		icon = GFX_SOA_wc_industry
+		x = 2
+		y = 14
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_orders_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_orders_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_orders_p1_1_receipt } has_country_flag = SOA_wc_e1_orders_choice_1
+				}
+				set_country_flag = SOA_wc_e1_orders_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_orders_p1_2
+		icon = GFX_SOA_wc_industry
+		x = 2
+		y = 15
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_orders_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_orders_choice_1 has_country_flag = SOA_wc_e1_orders_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_orders_p1_2_receipt } has_country_flag = SOA_wc_e1_orders_choice_1 has_country_flag = SOA_wc_e1_orders_done
+				}
+				set_country_flag = SOA_wc_e1_orders_p1_2_receipt
+				set_country_flag = SOA_wc_e1_orders_completed
+				set_country_flag = { flag = SOA_wc_e1_orders_service_term days = 365 }
+				remove_ideas = SOA_wc_industry_0
+				remove_ideas = SOA_wc_industry_1
+				remove_ideas = SOA_wc_industry_2
+				add_timed_idea = { idea = SOA_wc_industry_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_orders_p2_0
+		icon = GFX_SOA_wc_industry
+		x = 4
+		y = 13
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_orders_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_orders_p0_0
+			focus = SOA_wc_e1_orders_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_orders_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_orders_p2_0_receipt } has_country_flag = SOA_wc_e1_orders_choice_2
+				}
+				set_country_flag = SOA_wc_e1_orders_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_orders_p2_1
+		icon = GFX_SOA_wc_industry
+		x = 4
+		y = 14
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_orders_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_orders_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_orders_p2_1_receipt } has_country_flag = SOA_wc_e1_orders_choice_2
+				}
+				set_country_flag = SOA_wc_e1_orders_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_orders_p2_2
+		icon = GFX_SOA_wc_industry
+		x = 4
+		y = 15
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_orders_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_orders_choice_2 has_country_flag = SOA_wc_e1_orders_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_orders_p2_2_receipt } has_country_flag = SOA_wc_e1_orders_choice_2 has_country_flag = SOA_wc_e1_orders_done
+				}
+				set_country_flag = SOA_wc_e1_orders_p2_2_receipt
+				set_country_flag = SOA_wc_e1_orders_completed
+				set_country_flag = { flag = SOA_wc_e1_orders_service_term days = 365 }
+				remove_ideas = SOA_wc_industry_0
+				remove_ideas = SOA_wc_industry_1
+				remove_ideas = SOA_wc_industry_2
+				add_timed_idea = { idea = SOA_wc_industry_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_competition_open
+		icon = GFX_SOA_wc_industry
+		x = 10
+		y = 12
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_competition_opened }
+				}
+				set_country_flag = SOA_wc_e1_competition_opened
+				set_country_flag = { flag = SOA_wc_e1_competition_pending days = 60 }
+				country_event = { id = ac_wc_soa.6 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_competition_p0_0
+		icon = GFX_SOA_wc_industry
+		x = 8
+		y = 13
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_competition_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_competition_p1_0
+			focus = SOA_wc_e1_competition_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_competition_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_competition_p0_0_receipt } has_country_flag = SOA_wc_e1_competition_choice_0
+				}
+				set_country_flag = SOA_wc_e1_competition_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_competition_p0_1
+		icon = GFX_SOA_wc_industry
+		x = 8
+		y = 14
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_competition_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_competition_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_competition_p0_1_receipt } has_country_flag = SOA_wc_e1_competition_choice_0
+				}
+				set_country_flag = SOA_wc_e1_competition_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_competition_p0_2
+		icon = GFX_SOA_wc_industry
+		x = 8
+		y = 15
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_competition_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_competition_choice_0 has_country_flag = SOA_wc_e1_competition_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_competition_p0_2_receipt } has_country_flag = SOA_wc_e1_competition_choice_0 has_country_flag = SOA_wc_e1_competition_done
+				}
+				set_country_flag = SOA_wc_e1_competition_p0_2_receipt
+				set_country_flag = SOA_wc_e1_competition_completed
+				set_country_flag = { flag = SOA_wc_e1_competition_service_term days = 365 }
+				remove_ideas = SOA_wc_industry_0
+				remove_ideas = SOA_wc_industry_1
+				remove_ideas = SOA_wc_industry_2
+				add_timed_idea = { idea = SOA_wc_industry_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_competition_p1_0
+		icon = GFX_SOA_wc_industry
+		x = 10
+		y = 13
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_competition_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_competition_p0_0
+			focus = SOA_wc_e1_competition_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_competition_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_competition_p1_0_receipt } has_country_flag = SOA_wc_e1_competition_choice_1
+				}
+				set_country_flag = SOA_wc_e1_competition_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_competition_p1_1
+		icon = GFX_SOA_wc_industry
+		x = 10
+		y = 14
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_competition_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_competition_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_competition_p1_1_receipt } has_country_flag = SOA_wc_e1_competition_choice_1
+				}
+				set_country_flag = SOA_wc_e1_competition_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_competition_p1_2
+		icon = GFX_SOA_wc_industry
+		x = 10
+		y = 15
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_competition_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_competition_choice_1 has_country_flag = SOA_wc_e1_competition_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_competition_p1_2_receipt } has_country_flag = SOA_wc_e1_competition_choice_1 has_country_flag = SOA_wc_e1_competition_done
+				}
+				set_country_flag = SOA_wc_e1_competition_p1_2_receipt
+				set_country_flag = SOA_wc_e1_competition_completed
+				set_country_flag = { flag = SOA_wc_e1_competition_service_term days = 365 }
+				remove_ideas = SOA_wc_industry_0
+				remove_ideas = SOA_wc_industry_1
+				remove_ideas = SOA_wc_industry_2
+				add_timed_idea = { idea = SOA_wc_industry_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_competition_p2_0
+		icon = GFX_SOA_wc_industry
+		x = 12
+		y = 13
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_competition_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_competition_p0_0
+			focus = SOA_wc_e1_competition_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_competition_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_competition_p2_0_receipt } has_country_flag = SOA_wc_e1_competition_choice_2
+				}
+				set_country_flag = SOA_wc_e1_competition_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_competition_p2_1
+		icon = GFX_SOA_wc_industry
+		x = 12
+		y = 14
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_competition_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_competition_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_competition_p2_1_receipt } has_country_flag = SOA_wc_e1_competition_choice_2
+				}
+				set_country_flag = SOA_wc_e1_competition_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_competition_p2_2
+		icon = GFX_SOA_wc_industry
+		x = 12
+		y = 15
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_competition_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_competition_choice_2 has_country_flag = SOA_wc_e1_competition_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_competition_p2_2_receipt } has_country_flag = SOA_wc_e1_competition_choice_2 has_country_flag = SOA_wc_e1_competition_done
+				}
+				set_country_flag = SOA_wc_e1_competition_p2_2_receipt
+				set_country_flag = SOA_wc_e1_competition_completed
+				set_country_flag = { flag = SOA_wc_e1_competition_service_term days = 365 }
+				remove_ideas = SOA_wc_industry_0
+				remove_ideas = SOA_wc_industry_1
+				remove_ideas = SOA_wc_industry_2
+				add_timed_idea = { idea = SOA_wc_industry_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_rail_open
+		icon = GFX_SOA_wc_logistics
+		x = 18
+		y = 12
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_rail_opened }
+				}
+				set_country_flag = SOA_wc_e1_rail_opened
+				set_country_flag = { flag = SOA_wc_e1_rail_pending days = 60 }
+				country_event = { id = ac_wc_soa.7 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_rail_p0_0
+		icon = GFX_SOA_wc_logistics
+		x = 16
+		y = 13
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_rail_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_rail_p1_0
+			focus = SOA_wc_e1_rail_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_rail_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_rail_p0_0_receipt } has_country_flag = SOA_wc_e1_rail_choice_0
+				}
+				set_country_flag = SOA_wc_e1_rail_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_rail_p0_1
+		icon = GFX_SOA_wc_logistics
+		x = 16
+		y = 14
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_rail_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_rail_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_rail_p0_1_receipt } has_country_flag = SOA_wc_e1_rail_choice_0
+				}
+				set_country_flag = SOA_wc_e1_rail_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_rail_p0_2
+		icon = GFX_SOA_wc_logistics
+		x = 16
+		y = 15
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_rail_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_rail_choice_0 has_country_flag = SOA_wc_e1_rail_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_rail_p0_2_receipt } has_country_flag = SOA_wc_e1_rail_choice_0 has_country_flag = SOA_wc_e1_rail_done
+				}
+				set_country_flag = SOA_wc_e1_rail_p0_2_receipt
+				set_country_flag = SOA_wc_e1_rail_completed
+				set_country_flag = { flag = SOA_wc_e1_rail_service_term days = 365 }
+				remove_ideas = SOA_wc_logistics_0
+				remove_ideas = SOA_wc_logistics_1
+				remove_ideas = SOA_wc_logistics_2
+				add_timed_idea = { idea = SOA_wc_logistics_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_rail_p1_0
+		icon = GFX_SOA_wc_logistics
+		x = 18
+		y = 13
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_rail_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_rail_p0_0
+			focus = SOA_wc_e1_rail_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_rail_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_rail_p1_0_receipt } has_country_flag = SOA_wc_e1_rail_choice_1
+				}
+				set_country_flag = SOA_wc_e1_rail_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_rail_p1_1
+		icon = GFX_SOA_wc_logistics
+		x = 18
+		y = 14
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_rail_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_rail_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_rail_p1_1_receipt } has_country_flag = SOA_wc_e1_rail_choice_1
+				}
+				set_country_flag = SOA_wc_e1_rail_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_rail_p1_2
+		icon = GFX_SOA_wc_logistics
+		x = 18
+		y = 15
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_rail_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_rail_choice_1 has_country_flag = SOA_wc_e1_rail_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_rail_p1_2_receipt } has_country_flag = SOA_wc_e1_rail_choice_1 has_country_flag = SOA_wc_e1_rail_done
+				}
+				set_country_flag = SOA_wc_e1_rail_p1_2_receipt
+				set_country_flag = SOA_wc_e1_rail_completed
+				set_country_flag = { flag = SOA_wc_e1_rail_service_term days = 365 }
+				remove_ideas = SOA_wc_logistics_0
+				remove_ideas = SOA_wc_logistics_1
+				remove_ideas = SOA_wc_logistics_2
+				add_timed_idea = { idea = SOA_wc_logistics_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_rail_p2_0
+		icon = GFX_SOA_wc_logistics
+		x = 20
+		y = 13
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_rail_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_rail_p0_0
+			focus = SOA_wc_e1_rail_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_rail_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_rail_p2_0_receipt } has_country_flag = SOA_wc_e1_rail_choice_2
+				}
+				set_country_flag = SOA_wc_e1_rail_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_rail_p2_1
+		icon = GFX_SOA_wc_logistics
+		x = 20
+		y = 14
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_rail_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_rail_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_rail_p2_1_receipt } has_country_flag = SOA_wc_e1_rail_choice_2
+				}
+				set_country_flag = SOA_wc_e1_rail_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_rail_p2_2
+		icon = GFX_SOA_wc_logistics
+		x = 20
+		y = 15
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_rail_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_rail_choice_2 has_country_flag = SOA_wc_e1_rail_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_rail_p2_2_receipt } has_country_flag = SOA_wc_e1_rail_choice_2 has_country_flag = SOA_wc_e1_rail_done
+				}
+				set_country_flag = SOA_wc_e1_rail_p2_2_receipt
+				set_country_flag = SOA_wc_e1_rail_completed
+				set_country_flag = { flag = SOA_wc_e1_rail_service_term days = 365 }
+				remove_ideas = SOA_wc_logistics_0
+				remove_ideas = SOA_wc_logistics_1
+				remove_ideas = SOA_wc_logistics_2
+				add_timed_idea = { idea = SOA_wc_logistics_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_distribution_open
+		icon = GFX_SOA_wc_logistics
+		x = 2
+		y = 18
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_distribution_opened }
+				}
+				set_country_flag = SOA_wc_e1_distribution_opened
+				set_country_flag = { flag = SOA_wc_e1_distribution_pending days = 60 }
+				country_event = { id = ac_wc_soa.8 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_distribution_p0_0
+		icon = GFX_SOA_wc_logistics
+		x = 0
+		y = 19
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_distribution_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_distribution_p1_0
+			focus = SOA_wc_e1_distribution_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_distribution_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_distribution_p0_0_receipt } has_country_flag = SOA_wc_e1_distribution_choice_0
+				}
+				set_country_flag = SOA_wc_e1_distribution_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_distribution_p0_1
+		icon = GFX_SOA_wc_logistics
+		x = 0
+		y = 20
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_distribution_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_distribution_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_distribution_p0_1_receipt } has_country_flag = SOA_wc_e1_distribution_choice_0
+				}
+				set_country_flag = SOA_wc_e1_distribution_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_distribution_p0_2
+		icon = GFX_SOA_wc_logistics
+		x = 0
+		y = 21
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_distribution_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_distribution_choice_0 has_country_flag = SOA_wc_e1_distribution_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_distribution_p0_2_receipt } has_country_flag = SOA_wc_e1_distribution_choice_0 has_country_flag = SOA_wc_e1_distribution_done
+				}
+				set_country_flag = SOA_wc_e1_distribution_p0_2_receipt
+				set_country_flag = SOA_wc_e1_distribution_completed
+				set_country_flag = { flag = SOA_wc_e1_distribution_service_term days = 365 }
+				remove_ideas = SOA_wc_logistics_0
+				remove_ideas = SOA_wc_logistics_1
+				remove_ideas = SOA_wc_logistics_2
+				add_timed_idea = { idea = SOA_wc_logistics_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_distribution_p1_0
+		icon = GFX_SOA_wc_logistics
+		x = 2
+		y = 19
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_distribution_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_distribution_p0_0
+			focus = SOA_wc_e1_distribution_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_distribution_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_distribution_p1_0_receipt } has_country_flag = SOA_wc_e1_distribution_choice_1
+				}
+				set_country_flag = SOA_wc_e1_distribution_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_distribution_p1_1
+		icon = GFX_SOA_wc_logistics
+		x = 2
+		y = 20
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_distribution_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_distribution_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_distribution_p1_1_receipt } has_country_flag = SOA_wc_e1_distribution_choice_1
+				}
+				set_country_flag = SOA_wc_e1_distribution_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_distribution_p1_2
+		icon = GFX_SOA_wc_logistics
+		x = 2
+		y = 21
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_distribution_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_distribution_choice_1 has_country_flag = SOA_wc_e1_distribution_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_distribution_p1_2_receipt } has_country_flag = SOA_wc_e1_distribution_choice_1 has_country_flag = SOA_wc_e1_distribution_done
+				}
+				set_country_flag = SOA_wc_e1_distribution_p1_2_receipt
+				set_country_flag = SOA_wc_e1_distribution_completed
+				set_country_flag = { flag = SOA_wc_e1_distribution_service_term days = 365 }
+				remove_ideas = SOA_wc_logistics_0
+				remove_ideas = SOA_wc_logistics_1
+				remove_ideas = SOA_wc_logistics_2
+				add_timed_idea = { idea = SOA_wc_logistics_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_distribution_p2_0
+		icon = GFX_SOA_wc_logistics
+		x = 4
+		y = 19
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_distribution_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_distribution_p0_0
+			focus = SOA_wc_e1_distribution_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_distribution_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_distribution_p2_0_receipt } has_country_flag = SOA_wc_e1_distribution_choice_2
+				}
+				set_country_flag = SOA_wc_e1_distribution_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_distribution_p2_1
+		icon = GFX_SOA_wc_logistics
+		x = 4
+		y = 20
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_distribution_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_distribution_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_distribution_p2_1_receipt } has_country_flag = SOA_wc_e1_distribution_choice_2
+				}
+				set_country_flag = SOA_wc_e1_distribution_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_distribution_p2_2
+		icon = GFX_SOA_wc_logistics
+		x = 4
+		y = 21
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_distribution_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_distribution_choice_2 has_country_flag = SOA_wc_e1_distribution_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_distribution_p2_2_receipt } has_country_flag = SOA_wc_e1_distribution_choice_2 has_country_flag = SOA_wc_e1_distribution_done
+				}
+				set_country_flag = SOA_wc_e1_distribution_p2_2_receipt
+				set_country_flag = SOA_wc_e1_distribution_completed
+				set_country_flag = { flag = SOA_wc_e1_distribution_service_term days = 365 }
+				remove_ideas = SOA_wc_logistics_0
+				remove_ideas = SOA_wc_logistics_1
+				remove_ideas = SOA_wc_logistics_2
+				add_timed_idea = { idea = SOA_wc_logistics_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fuel_open
+		icon = GFX_SOA_wc_logistics
+		x = 10
+		y = 18
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fuel_opened }
+				}
+				set_country_flag = SOA_wc_e1_fuel_opened
+				set_country_flag = { flag = SOA_wc_e1_fuel_pending days = 60 }
+				country_event = { id = ac_wc_soa.9 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fuel_p0_0
+		icon = GFX_SOA_wc_logistics
+		x = 8
+		y = 19
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fuel_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_fuel_p1_0
+			focus = SOA_wc_e1_fuel_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fuel_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fuel_p0_0_receipt } has_country_flag = SOA_wc_e1_fuel_choice_0
+				}
+				set_country_flag = SOA_wc_e1_fuel_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fuel_p0_1
+		icon = GFX_SOA_wc_logistics
+		x = 8
+		y = 20
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fuel_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fuel_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fuel_p0_1_receipt } has_country_flag = SOA_wc_e1_fuel_choice_0
+				}
+				set_country_flag = SOA_wc_e1_fuel_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fuel_p0_2
+		icon = GFX_SOA_wc_logistics
+		x = 8
+		y = 21
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fuel_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fuel_choice_0 has_country_flag = SOA_wc_e1_fuel_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fuel_p0_2_receipt } has_country_flag = SOA_wc_e1_fuel_choice_0 has_country_flag = SOA_wc_e1_fuel_done
+				}
+				set_country_flag = SOA_wc_e1_fuel_p0_2_receipt
+				set_country_flag = SOA_wc_e1_fuel_completed
+				set_country_flag = { flag = SOA_wc_e1_fuel_service_term days = 365 }
+				remove_ideas = SOA_wc_logistics_0
+				remove_ideas = SOA_wc_logistics_1
+				remove_ideas = SOA_wc_logistics_2
+				add_timed_idea = { idea = SOA_wc_logistics_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fuel_p1_0
+		icon = GFX_SOA_wc_logistics
+		x = 10
+		y = 19
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fuel_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_fuel_p0_0
+			focus = SOA_wc_e1_fuel_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fuel_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fuel_p1_0_receipt } has_country_flag = SOA_wc_e1_fuel_choice_1
+				}
+				set_country_flag = SOA_wc_e1_fuel_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fuel_p1_1
+		icon = GFX_SOA_wc_logistics
+		x = 10
+		y = 20
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fuel_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fuel_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fuel_p1_1_receipt } has_country_flag = SOA_wc_e1_fuel_choice_1
+				}
+				set_country_flag = SOA_wc_e1_fuel_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fuel_p1_2
+		icon = GFX_SOA_wc_logistics
+		x = 10
+		y = 21
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fuel_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fuel_choice_1 has_country_flag = SOA_wc_e1_fuel_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fuel_p1_2_receipt } has_country_flag = SOA_wc_e1_fuel_choice_1 has_country_flag = SOA_wc_e1_fuel_done
+				}
+				set_country_flag = SOA_wc_e1_fuel_p1_2_receipt
+				set_country_flag = SOA_wc_e1_fuel_completed
+				set_country_flag = { flag = SOA_wc_e1_fuel_service_term days = 365 }
+				remove_ideas = SOA_wc_logistics_0
+				remove_ideas = SOA_wc_logistics_1
+				remove_ideas = SOA_wc_logistics_2
+				add_timed_idea = { idea = SOA_wc_logistics_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fuel_p2_0
+		icon = GFX_SOA_wc_logistics
+		x = 12
+		y = 19
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fuel_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_fuel_p0_0
+			focus = SOA_wc_e1_fuel_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fuel_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fuel_p2_0_receipt } has_country_flag = SOA_wc_e1_fuel_choice_2
+				}
+				set_country_flag = SOA_wc_e1_fuel_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fuel_p2_1
+		icon = GFX_SOA_wc_logistics
+		x = 12
+		y = 20
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fuel_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fuel_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fuel_p2_1_receipt } has_country_flag = SOA_wc_e1_fuel_choice_2
+				}
+				set_country_flag = SOA_wc_e1_fuel_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fuel_p2_2
+		icon = GFX_SOA_wc_logistics
+		x = 12
+		y = 21
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fuel_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fuel_choice_2 has_country_flag = SOA_wc_e1_fuel_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fuel_p2_2_receipt } has_country_flag = SOA_wc_e1_fuel_choice_2 has_country_flag = SOA_wc_e1_fuel_done
+				}
+				set_country_flag = SOA_wc_e1_fuel_p2_2_receipt
+				set_country_flag = SOA_wc_e1_fuel_completed
+				set_country_flag = { flag = SOA_wc_e1_fuel_service_term days = 365 }
+				remove_ideas = SOA_wc_logistics_0
+				remove_ideas = SOA_wc_logistics_1
+				remove_ideas = SOA_wc_logistics_2
+				add_timed_idea = { idea = SOA_wc_logistics_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_pilots_open
+		icon = GFX_SOA_wc_air
+		x = 18
+		y = 18
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_pilots_opened }
+				}
+				set_country_flag = SOA_wc_e1_pilots_opened
+				set_country_flag = { flag = SOA_wc_e1_pilots_pending days = 60 }
+				country_event = { id = ac_wc_soa.10 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_pilots_p0_0
+		icon = GFX_SOA_wc_air
+		x = 16
+		y = 19
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_pilots_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_pilots_p1_0
+			focus = SOA_wc_e1_pilots_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_pilots_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_pilots_p0_0_receipt } has_country_flag = SOA_wc_e1_pilots_choice_0
+				}
+				set_country_flag = SOA_wc_e1_pilots_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_pilots_p0_1
+		icon = GFX_SOA_wc_air
+		x = 16
+		y = 20
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_pilots_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_pilots_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_pilots_p0_1_receipt } has_country_flag = SOA_wc_e1_pilots_choice_0
+				}
+				set_country_flag = SOA_wc_e1_pilots_p0_1_receipt
+				air_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_pilots_p0_2
+		icon = GFX_SOA_wc_air
+		x = 16
+		y = 21
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_pilots_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_pilots_choice_0 has_country_flag = SOA_wc_e1_pilots_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_pilots_p0_2_receipt } has_country_flag = SOA_wc_e1_pilots_choice_0 has_country_flag = SOA_wc_e1_pilots_done
+				}
+				set_country_flag = SOA_wc_e1_pilots_p0_2_receipt
+				set_country_flag = SOA_wc_e1_pilots_completed
+				set_country_flag = { flag = SOA_wc_e1_pilots_service_term days = 365 }
+				remove_ideas = SOA_wc_air_0
+				remove_ideas = SOA_wc_air_1
+				remove_ideas = SOA_wc_air_2
+				add_timed_idea = { idea = SOA_wc_air_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_pilots_p1_0
+		icon = GFX_SOA_wc_air
+		x = 18
+		y = 19
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_pilots_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_pilots_p0_0
+			focus = SOA_wc_e1_pilots_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_pilots_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_pilots_p1_0_receipt } has_country_flag = SOA_wc_e1_pilots_choice_1
+				}
+				set_country_flag = SOA_wc_e1_pilots_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_pilots_p1_1
+		icon = GFX_SOA_wc_air
+		x = 18
+		y = 20
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_pilots_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_pilots_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_pilots_p1_1_receipt } has_country_flag = SOA_wc_e1_pilots_choice_1
+				}
+				set_country_flag = SOA_wc_e1_pilots_p1_1_receipt
+				air_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_pilots_p1_2
+		icon = GFX_SOA_wc_air
+		x = 18
+		y = 21
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_pilots_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_pilots_choice_1 has_country_flag = SOA_wc_e1_pilots_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_pilots_p1_2_receipt } has_country_flag = SOA_wc_e1_pilots_choice_1 has_country_flag = SOA_wc_e1_pilots_done
+				}
+				set_country_flag = SOA_wc_e1_pilots_p1_2_receipt
+				set_country_flag = SOA_wc_e1_pilots_completed
+				set_country_flag = { flag = SOA_wc_e1_pilots_service_term days = 365 }
+				remove_ideas = SOA_wc_air_0
+				remove_ideas = SOA_wc_air_1
+				remove_ideas = SOA_wc_air_2
+				add_timed_idea = { idea = SOA_wc_air_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_pilots_p2_0
+		icon = GFX_SOA_wc_air
+		x = 20
+		y = 19
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_pilots_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_pilots_p0_0
+			focus = SOA_wc_e1_pilots_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_pilots_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_pilots_p2_0_receipt } has_country_flag = SOA_wc_e1_pilots_choice_2
+				}
+				set_country_flag = SOA_wc_e1_pilots_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_pilots_p2_1
+		icon = GFX_SOA_wc_air
+		x = 20
+		y = 20
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_pilots_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_pilots_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_pilots_p2_1_receipt } has_country_flag = SOA_wc_e1_pilots_choice_2
+				}
+				set_country_flag = SOA_wc_e1_pilots_p2_1_receipt
+				air_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_pilots_p2_2
+		icon = GFX_SOA_wc_air
+		x = 20
+		y = 21
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_pilots_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_pilots_choice_2 has_country_flag = SOA_wc_e1_pilots_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_pilots_p2_2_receipt } has_country_flag = SOA_wc_e1_pilots_choice_2 has_country_flag = SOA_wc_e1_pilots_done
+				}
+				set_country_flag = SOA_wc_e1_pilots_p2_2_receipt
+				set_country_flag = SOA_wc_e1_pilots_completed
+				set_country_flag = { flag = SOA_wc_e1_pilots_service_term days = 365 }
+				remove_ideas = SOA_wc_air_0
+				remove_ideas = SOA_wc_air_1
+				remove_ideas = SOA_wc_air_2
+				add_timed_idea = { idea = SOA_wc_air_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airmaintenance_open
+		icon = GFX_SOA_wc_air
+		x = 2
+		y = 24
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_opened }
+				}
+				set_country_flag = SOA_wc_e1_airmaintenance_opened
+				set_country_flag = { flag = SOA_wc_e1_airmaintenance_pending days = 60 }
+				country_event = { id = ac_wc_soa.11 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airmaintenance_p0_0
+		icon = GFX_SOA_wc_air
+		x = 0
+		y = 25
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airmaintenance_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_airmaintenance_p1_0
+			focus = SOA_wc_e1_airmaintenance_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airmaintenance_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_p0_0_receipt } has_country_flag = SOA_wc_e1_airmaintenance_choice_0
+				}
+				set_country_flag = SOA_wc_e1_airmaintenance_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airmaintenance_p0_1
+		icon = GFX_SOA_wc_air
+		x = 0
+		y = 26
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airmaintenance_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airmaintenance_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_p0_1_receipt } has_country_flag = SOA_wc_e1_airmaintenance_choice_0
+				}
+				set_country_flag = SOA_wc_e1_airmaintenance_p0_1_receipt
+				air_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airmaintenance_p0_2
+		icon = GFX_SOA_wc_air
+		x = 0
+		y = 27
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airmaintenance_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airmaintenance_choice_0 has_country_flag = SOA_wc_e1_airmaintenance_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_p0_2_receipt } has_country_flag = SOA_wc_e1_airmaintenance_choice_0 has_country_flag = SOA_wc_e1_airmaintenance_done
+				}
+				set_country_flag = SOA_wc_e1_airmaintenance_p0_2_receipt
+				set_country_flag = SOA_wc_e1_airmaintenance_completed
+				set_country_flag = { flag = SOA_wc_e1_airmaintenance_service_term days = 365 }
+				remove_ideas = SOA_wc_air_0
+				remove_ideas = SOA_wc_air_1
+				remove_ideas = SOA_wc_air_2
+				add_timed_idea = { idea = SOA_wc_air_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airmaintenance_p1_0
+		icon = GFX_SOA_wc_air
+		x = 2
+		y = 25
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airmaintenance_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_airmaintenance_p0_0
+			focus = SOA_wc_e1_airmaintenance_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airmaintenance_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_p1_0_receipt } has_country_flag = SOA_wc_e1_airmaintenance_choice_1
+				}
+				set_country_flag = SOA_wc_e1_airmaintenance_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airmaintenance_p1_1
+		icon = GFX_SOA_wc_air
+		x = 2
+		y = 26
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airmaintenance_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airmaintenance_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_p1_1_receipt } has_country_flag = SOA_wc_e1_airmaintenance_choice_1
+				}
+				set_country_flag = SOA_wc_e1_airmaintenance_p1_1_receipt
+				air_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airmaintenance_p1_2
+		icon = GFX_SOA_wc_air
+		x = 2
+		y = 27
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airmaintenance_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airmaintenance_choice_1 has_country_flag = SOA_wc_e1_airmaintenance_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_p1_2_receipt } has_country_flag = SOA_wc_e1_airmaintenance_choice_1 has_country_flag = SOA_wc_e1_airmaintenance_done
+				}
+				set_country_flag = SOA_wc_e1_airmaintenance_p1_2_receipt
+				set_country_flag = SOA_wc_e1_airmaintenance_completed
+				set_country_flag = { flag = SOA_wc_e1_airmaintenance_service_term days = 365 }
+				remove_ideas = SOA_wc_air_0
+				remove_ideas = SOA_wc_air_1
+				remove_ideas = SOA_wc_air_2
+				add_timed_idea = { idea = SOA_wc_air_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airmaintenance_p2_0
+		icon = GFX_SOA_wc_air
+		x = 4
+		y = 25
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airmaintenance_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_airmaintenance_p0_0
+			focus = SOA_wc_e1_airmaintenance_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airmaintenance_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_p2_0_receipt } has_country_flag = SOA_wc_e1_airmaintenance_choice_2
+				}
+				set_country_flag = SOA_wc_e1_airmaintenance_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airmaintenance_p2_1
+		icon = GFX_SOA_wc_air
+		x = 4
+		y = 26
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airmaintenance_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airmaintenance_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_p2_1_receipt } has_country_flag = SOA_wc_e1_airmaintenance_choice_2
+				}
+				set_country_flag = SOA_wc_e1_airmaintenance_p2_1_receipt
+				air_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airmaintenance_p2_2
+		icon = GFX_SOA_wc_air
+		x = 4
+		y = 27
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airmaintenance_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airmaintenance_choice_2 has_country_flag = SOA_wc_e1_airmaintenance_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airmaintenance_p2_2_receipt } has_country_flag = SOA_wc_e1_airmaintenance_choice_2 has_country_flag = SOA_wc_e1_airmaintenance_done
+				}
+				set_country_flag = SOA_wc_e1_airmaintenance_p2_2_receipt
+				set_country_flag = SOA_wc_e1_airmaintenance_completed
+				set_country_flag = { flag = SOA_wc_e1_airmaintenance_service_term days = 365 }
+				remove_ideas = SOA_wc_air_0
+				remove_ideas = SOA_wc_air_1
+				remove_ideas = SOA_wc_air_2
+				add_timed_idea = { idea = SOA_wc_air_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airdispersal_open
+		icon = GFX_SOA_wc_air
+		x = 10
+		y = 24
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_opened }
+				}
+				set_country_flag = SOA_wc_e1_airdispersal_opened
+				set_country_flag = { flag = SOA_wc_e1_airdispersal_pending days = 60 }
+				country_event = { id = ac_wc_soa.12 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airdispersal_p0_0
+		icon = GFX_SOA_wc_air
+		x = 8
+		y = 25
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airdispersal_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_airdispersal_p1_0
+			focus = SOA_wc_e1_airdispersal_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airdispersal_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_p0_0_receipt } has_country_flag = SOA_wc_e1_airdispersal_choice_0
+				}
+				set_country_flag = SOA_wc_e1_airdispersal_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airdispersal_p0_1
+		icon = GFX_SOA_wc_air
+		x = 8
+		y = 26
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airdispersal_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airdispersal_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_p0_1_receipt } has_country_flag = SOA_wc_e1_airdispersal_choice_0
+				}
+				set_country_flag = SOA_wc_e1_airdispersal_p0_1_receipt
+				air_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airdispersal_p0_2
+		icon = GFX_SOA_wc_air
+		x = 8
+		y = 27
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airdispersal_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airdispersal_choice_0 has_country_flag = SOA_wc_e1_airdispersal_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_p0_2_receipt } has_country_flag = SOA_wc_e1_airdispersal_choice_0 has_country_flag = SOA_wc_e1_airdispersal_done
+				}
+				set_country_flag = SOA_wc_e1_airdispersal_p0_2_receipt
+				set_country_flag = SOA_wc_e1_airdispersal_completed
+				set_country_flag = { flag = SOA_wc_e1_airdispersal_service_term days = 365 }
+				remove_ideas = SOA_wc_air_0
+				remove_ideas = SOA_wc_air_1
+				remove_ideas = SOA_wc_air_2
+				add_timed_idea = { idea = SOA_wc_air_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airdispersal_p1_0
+		icon = GFX_SOA_wc_air
+		x = 10
+		y = 25
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airdispersal_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_airdispersal_p0_0
+			focus = SOA_wc_e1_airdispersal_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airdispersal_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_p1_0_receipt } has_country_flag = SOA_wc_e1_airdispersal_choice_1
+				}
+				set_country_flag = SOA_wc_e1_airdispersal_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airdispersal_p1_1
+		icon = GFX_SOA_wc_air
+		x = 10
+		y = 26
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airdispersal_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airdispersal_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_p1_1_receipt } has_country_flag = SOA_wc_e1_airdispersal_choice_1
+				}
+				set_country_flag = SOA_wc_e1_airdispersal_p1_1_receipt
+				air_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airdispersal_p1_2
+		icon = GFX_SOA_wc_air
+		x = 10
+		y = 27
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airdispersal_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airdispersal_choice_1 has_country_flag = SOA_wc_e1_airdispersal_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_p1_2_receipt } has_country_flag = SOA_wc_e1_airdispersal_choice_1 has_country_flag = SOA_wc_e1_airdispersal_done
+				}
+				set_country_flag = SOA_wc_e1_airdispersal_p1_2_receipt
+				set_country_flag = SOA_wc_e1_airdispersal_completed
+				set_country_flag = { flag = SOA_wc_e1_airdispersal_service_term days = 365 }
+				remove_ideas = SOA_wc_air_0
+				remove_ideas = SOA_wc_air_1
+				remove_ideas = SOA_wc_air_2
+				add_timed_idea = { idea = SOA_wc_air_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airdispersal_p2_0
+		icon = GFX_SOA_wc_air
+		x = 12
+		y = 25
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airdispersal_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_airdispersal_p0_0
+			focus = SOA_wc_e1_airdispersal_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airdispersal_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_p2_0_receipt } has_country_flag = SOA_wc_e1_airdispersal_choice_2
+				}
+				set_country_flag = SOA_wc_e1_airdispersal_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airdispersal_p2_1
+		icon = GFX_SOA_wc_air
+		x = 12
+		y = 26
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airdispersal_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airdispersal_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_p2_1_receipt } has_country_flag = SOA_wc_e1_airdispersal_choice_2
+				}
+				set_country_flag = SOA_wc_e1_airdispersal_p2_1_receipt
+				air_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_airdispersal_p2_2
+		icon = GFX_SOA_wc_air
+		x = 12
+		y = 27
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_airdispersal_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_airdispersal_choice_2 has_country_flag = SOA_wc_e1_airdispersal_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_airdispersal_p2_2_receipt } has_country_flag = SOA_wc_e1_airdispersal_choice_2 has_country_flag = SOA_wc_e1_airdispersal_done
+				}
+				set_country_flag = SOA_wc_e1_airdispersal_p2_2_receipt
+				set_country_flag = SOA_wc_e1_airdispersal_completed
+				set_country_flag = { flag = SOA_wc_e1_airdispersal_service_term days = 365 }
+				remove_ideas = SOA_wc_air_0
+				remove_ideas = SOA_wc_air_1
+				remove_ideas = SOA_wc_air_2
+				add_timed_idea = { idea = SOA_wc_air_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_reserves_open
+		icon = GFX_SOA_wc_land
+		x = 18
+		y = 24
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_reserves_opened }
+				}
+				set_country_flag = SOA_wc_e1_reserves_opened
+				set_country_flag = { flag = SOA_wc_e1_reserves_pending days = 60 }
+				country_event = { id = ac_wc_soa.13 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_reserves_p0_0
+		icon = GFX_SOA_wc_land
+		x = 16
+		y = 25
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_reserves_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_reserves_p1_0
+			focus = SOA_wc_e1_reserves_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_reserves_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_reserves_p0_0_receipt } has_country_flag = SOA_wc_e1_reserves_choice_0
+				}
+				set_country_flag = SOA_wc_e1_reserves_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_reserves_p0_1
+		icon = GFX_SOA_wc_land
+		x = 16
+		y = 26
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_reserves_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_reserves_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_reserves_p0_1_receipt } has_country_flag = SOA_wc_e1_reserves_choice_0
+				}
+				set_country_flag = SOA_wc_e1_reserves_p0_1_receipt
+				army_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_reserves_p0_2
+		icon = GFX_SOA_wc_land
+		x = 16
+		y = 27
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_reserves_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_reserves_choice_0 has_country_flag = SOA_wc_e1_reserves_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_reserves_p0_2_receipt } has_country_flag = SOA_wc_e1_reserves_choice_0 has_country_flag = SOA_wc_e1_reserves_done
+				}
+				set_country_flag = SOA_wc_e1_reserves_p0_2_receipt
+				set_country_flag = SOA_wc_e1_reserves_completed
+				set_country_flag = { flag = SOA_wc_e1_reserves_service_term days = 365 }
+				remove_ideas = SOA_wc_land_0
+				remove_ideas = SOA_wc_land_1
+				remove_ideas = SOA_wc_land_2
+				add_timed_idea = { idea = SOA_wc_land_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_reserves_p1_0
+		icon = GFX_SOA_wc_land
+		x = 18
+		y = 25
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_reserves_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_reserves_p0_0
+			focus = SOA_wc_e1_reserves_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_reserves_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_reserves_p1_0_receipt } has_country_flag = SOA_wc_e1_reserves_choice_1
+				}
+				set_country_flag = SOA_wc_e1_reserves_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_reserves_p1_1
+		icon = GFX_SOA_wc_land
+		x = 18
+		y = 26
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_reserves_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_reserves_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_reserves_p1_1_receipt } has_country_flag = SOA_wc_e1_reserves_choice_1
+				}
+				set_country_flag = SOA_wc_e1_reserves_p1_1_receipt
+				army_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_reserves_p1_2
+		icon = GFX_SOA_wc_land
+		x = 18
+		y = 27
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_reserves_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_reserves_choice_1 has_country_flag = SOA_wc_e1_reserves_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_reserves_p1_2_receipt } has_country_flag = SOA_wc_e1_reserves_choice_1 has_country_flag = SOA_wc_e1_reserves_done
+				}
+				set_country_flag = SOA_wc_e1_reserves_p1_2_receipt
+				set_country_flag = SOA_wc_e1_reserves_completed
+				set_country_flag = { flag = SOA_wc_e1_reserves_service_term days = 365 }
+				remove_ideas = SOA_wc_land_0
+				remove_ideas = SOA_wc_land_1
+				remove_ideas = SOA_wc_land_2
+				add_timed_idea = { idea = SOA_wc_land_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_reserves_p2_0
+		icon = GFX_SOA_wc_land
+		x = 20
+		y = 25
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_reserves_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_reserves_p0_0
+			focus = SOA_wc_e1_reserves_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_reserves_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_reserves_p2_0_receipt } has_country_flag = SOA_wc_e1_reserves_choice_2
+				}
+				set_country_flag = SOA_wc_e1_reserves_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_reserves_p2_1
+		icon = GFX_SOA_wc_land
+		x = 20
+		y = 26
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_reserves_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_reserves_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_reserves_p2_1_receipt } has_country_flag = SOA_wc_e1_reserves_choice_2
+				}
+				set_country_flag = SOA_wc_e1_reserves_p2_1_receipt
+				army_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_reserves_p2_2
+		icon = GFX_SOA_wc_land
+		x = 20
+		y = 27
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_reserves_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_reserves_choice_2 has_country_flag = SOA_wc_e1_reserves_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_reserves_p2_2_receipt } has_country_flag = SOA_wc_e1_reserves_choice_2 has_country_flag = SOA_wc_e1_reserves_done
+				}
+				set_country_flag = SOA_wc_e1_reserves_p2_2_receipt
+				set_country_flag = SOA_wc_e1_reserves_completed
+				set_country_flag = { flag = SOA_wc_e1_reserves_service_term days = 365 }
+				remove_ideas = SOA_wc_land_0
+				remove_ideas = SOA_wc_land_1
+				remove_ideas = SOA_wc_land_2
+				add_timed_idea = { idea = SOA_wc_land_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_mobility_open
+		icon = GFX_SOA_wc_land
+		x = 2
+		y = 30
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_mobility_opened }
+				}
+				set_country_flag = SOA_wc_e1_mobility_opened
+				set_country_flag = { flag = SOA_wc_e1_mobility_pending days = 60 }
+				country_event = { id = ac_wc_soa.14 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_mobility_p0_0
+		icon = GFX_SOA_wc_land
+		x = 0
+		y = 31
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_mobility_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_mobility_p1_0
+			focus = SOA_wc_e1_mobility_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_mobility_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_mobility_p0_0_receipt } has_country_flag = SOA_wc_e1_mobility_choice_0
+				}
+				set_country_flag = SOA_wc_e1_mobility_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_mobility_p0_1
+		icon = GFX_SOA_wc_land
+		x = 0
+		y = 32
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_mobility_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_mobility_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_mobility_p0_1_receipt } has_country_flag = SOA_wc_e1_mobility_choice_0
+				}
+				set_country_flag = SOA_wc_e1_mobility_p0_1_receipt
+				army_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_mobility_p0_2
+		icon = GFX_SOA_wc_land
+		x = 0
+		y = 33
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_mobility_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_mobility_choice_0 has_country_flag = SOA_wc_e1_mobility_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_mobility_p0_2_receipt } has_country_flag = SOA_wc_e1_mobility_choice_0 has_country_flag = SOA_wc_e1_mobility_done
+				}
+				set_country_flag = SOA_wc_e1_mobility_p0_2_receipt
+				set_country_flag = SOA_wc_e1_mobility_completed
+				set_country_flag = { flag = SOA_wc_e1_mobility_service_term days = 365 }
+				remove_ideas = SOA_wc_land_0
+				remove_ideas = SOA_wc_land_1
+				remove_ideas = SOA_wc_land_2
+				add_timed_idea = { idea = SOA_wc_land_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_mobility_p1_0
+		icon = GFX_SOA_wc_land
+		x = 2
+		y = 31
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_mobility_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_mobility_p0_0
+			focus = SOA_wc_e1_mobility_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_mobility_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_mobility_p1_0_receipt } has_country_flag = SOA_wc_e1_mobility_choice_1
+				}
+				set_country_flag = SOA_wc_e1_mobility_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_mobility_p1_1
+		icon = GFX_SOA_wc_land
+		x = 2
+		y = 32
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_mobility_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_mobility_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_mobility_p1_1_receipt } has_country_flag = SOA_wc_e1_mobility_choice_1
+				}
+				set_country_flag = SOA_wc_e1_mobility_p1_1_receipt
+				army_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_mobility_p1_2
+		icon = GFX_SOA_wc_land
+		x = 2
+		y = 33
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_mobility_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_mobility_choice_1 has_country_flag = SOA_wc_e1_mobility_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_mobility_p1_2_receipt } has_country_flag = SOA_wc_e1_mobility_choice_1 has_country_flag = SOA_wc_e1_mobility_done
+				}
+				set_country_flag = SOA_wc_e1_mobility_p1_2_receipt
+				set_country_flag = SOA_wc_e1_mobility_completed
+				set_country_flag = { flag = SOA_wc_e1_mobility_service_term days = 365 }
+				remove_ideas = SOA_wc_land_0
+				remove_ideas = SOA_wc_land_1
+				remove_ideas = SOA_wc_land_2
+				add_timed_idea = { idea = SOA_wc_land_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_mobility_p2_0
+		icon = GFX_SOA_wc_land
+		x = 4
+		y = 31
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_mobility_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_mobility_p0_0
+			focus = SOA_wc_e1_mobility_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_mobility_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_mobility_p2_0_receipt } has_country_flag = SOA_wc_e1_mobility_choice_2
+				}
+				set_country_flag = SOA_wc_e1_mobility_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_mobility_p2_1
+		icon = GFX_SOA_wc_land
+		x = 4
+		y = 32
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_mobility_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_mobility_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_mobility_p2_1_receipt } has_country_flag = SOA_wc_e1_mobility_choice_2
+				}
+				set_country_flag = SOA_wc_e1_mobility_p2_1_receipt
+				army_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_mobility_p2_2
+		icon = GFX_SOA_wc_land
+		x = 4
+		y = 33
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_mobility_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_mobility_choice_2 has_country_flag = SOA_wc_e1_mobility_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_mobility_p2_2_receipt } has_country_flag = SOA_wc_e1_mobility_choice_2 has_country_flag = SOA_wc_e1_mobility_done
+				}
+				set_country_flag = SOA_wc_e1_mobility_p2_2_receipt
+				set_country_flag = SOA_wc_e1_mobility_completed
+				set_country_flag = { flag = SOA_wc_e1_mobility_service_term days = 365 }
+				remove_ideas = SOA_wc_land_0
+				remove_ideas = SOA_wc_land_1
+				remove_ideas = SOA_wc_land_2
+				add_timed_idea = { idea = SOA_wc_land_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_command_open
+		icon = GFX_SOA_wc_land
+		x = 10
+		y = 30
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_command_opened }
+				}
+				set_country_flag = SOA_wc_e1_command_opened
+				set_country_flag = { flag = SOA_wc_e1_command_pending days = 60 }
+				country_event = { id = ac_wc_soa.15 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_command_p0_0
+		icon = GFX_SOA_wc_land
+		x = 8
+		y = 31
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_command_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_command_p1_0
+			focus = SOA_wc_e1_command_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_command_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_command_p0_0_receipt } has_country_flag = SOA_wc_e1_command_choice_0
+				}
+				set_country_flag = SOA_wc_e1_command_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_command_p0_1
+		icon = GFX_SOA_wc_land
+		x = 8
+		y = 32
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_command_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_command_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_command_p0_1_receipt } has_country_flag = SOA_wc_e1_command_choice_0
+				}
+				set_country_flag = SOA_wc_e1_command_p0_1_receipt
+				army_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_command_p0_2
+		icon = GFX_SOA_wc_land
+		x = 8
+		y = 33
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_command_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_command_choice_0 has_country_flag = SOA_wc_e1_command_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_command_p0_2_receipt } has_country_flag = SOA_wc_e1_command_choice_0 has_country_flag = SOA_wc_e1_command_done
+				}
+				set_country_flag = SOA_wc_e1_command_p0_2_receipt
+				set_country_flag = SOA_wc_e1_command_completed
+				set_country_flag = { flag = SOA_wc_e1_command_service_term days = 365 }
+				remove_ideas = SOA_wc_land_0
+				remove_ideas = SOA_wc_land_1
+				remove_ideas = SOA_wc_land_2
+				add_timed_idea = { idea = SOA_wc_land_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_command_p1_0
+		icon = GFX_SOA_wc_land
+		x = 10
+		y = 31
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_command_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_command_p0_0
+			focus = SOA_wc_e1_command_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_command_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_command_p1_0_receipt } has_country_flag = SOA_wc_e1_command_choice_1
+				}
+				set_country_flag = SOA_wc_e1_command_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_command_p1_1
+		icon = GFX_SOA_wc_land
+		x = 10
+		y = 32
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_command_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_command_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_command_p1_1_receipt } has_country_flag = SOA_wc_e1_command_choice_1
+				}
+				set_country_flag = SOA_wc_e1_command_p1_1_receipt
+				army_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_command_p1_2
+		icon = GFX_SOA_wc_land
+		x = 10
+		y = 33
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_command_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_command_choice_1 has_country_flag = SOA_wc_e1_command_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_command_p1_2_receipt } has_country_flag = SOA_wc_e1_command_choice_1 has_country_flag = SOA_wc_e1_command_done
+				}
+				set_country_flag = SOA_wc_e1_command_p1_2_receipt
+				set_country_flag = SOA_wc_e1_command_completed
+				set_country_flag = { flag = SOA_wc_e1_command_service_term days = 365 }
+				remove_ideas = SOA_wc_land_0
+				remove_ideas = SOA_wc_land_1
+				remove_ideas = SOA_wc_land_2
+				add_timed_idea = { idea = SOA_wc_land_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_command_p2_0
+		icon = GFX_SOA_wc_land
+		x = 12
+		y = 31
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_command_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_command_p0_0
+			focus = SOA_wc_e1_command_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_command_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_command_p2_0_receipt } has_country_flag = SOA_wc_e1_command_choice_2
+				}
+				set_country_flag = SOA_wc_e1_command_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_command_p2_1
+		icon = GFX_SOA_wc_land
+		x = 12
+		y = 32
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_command_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_command_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_command_p2_1_receipt } has_country_flag = SOA_wc_e1_command_choice_2
+				}
+				set_country_flag = SOA_wc_e1_command_p2_1_receipt
+				army_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_command_p2_2
+		icon = GFX_SOA_wc_land
+		x = 12
+		y = 33
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_command_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_command_choice_2 has_country_flag = SOA_wc_e1_command_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_command_p2_2_receipt } has_country_flag = SOA_wc_e1_command_choice_2 has_country_flag = SOA_wc_e1_command_done
+				}
+				set_country_flag = SOA_wc_e1_command_p2_2_receipt
+				set_country_flag = SOA_wc_e1_command_completed
+				set_country_flag = { flag = SOA_wc_e1_command_service_term days = 365 }
+				remove_ideas = SOA_wc_land_0
+				remove_ideas = SOA_wc_land_1
+				remove_ideas = SOA_wc_land_2
+				add_timed_idea = { idea = SOA_wc_land_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_convoys_open
+		icon = GFX_SOA_wc_naval
+		x = 18
+		y = 30
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_convoys_opened }
+				}
+				set_country_flag = SOA_wc_e1_convoys_opened
+				set_country_flag = { flag = SOA_wc_e1_convoys_pending days = 60 }
+				country_event = { id = ac_wc_soa.16 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_convoys_p0_0
+		icon = GFX_SOA_wc_naval
+		x = 16
+		y = 31
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_convoys_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_convoys_p1_0
+			focus = SOA_wc_e1_convoys_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_convoys_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_convoys_p0_0_receipt } has_country_flag = SOA_wc_e1_convoys_choice_0
+				}
+				set_country_flag = SOA_wc_e1_convoys_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_convoys_p0_1
+		icon = GFX_SOA_wc_naval
+		x = 16
+		y = 32
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_convoys_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_convoys_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_convoys_p0_1_receipt } has_country_flag = SOA_wc_e1_convoys_choice_0
+				}
+				set_country_flag = SOA_wc_e1_convoys_p0_1_receipt
+				navy_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_convoys_p0_2
+		icon = GFX_SOA_wc_naval
+		x = 16
+		y = 33
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_convoys_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_convoys_choice_0 has_country_flag = SOA_wc_e1_convoys_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_convoys_p0_2_receipt } has_country_flag = SOA_wc_e1_convoys_choice_0 has_country_flag = SOA_wc_e1_convoys_done
+				}
+				set_country_flag = SOA_wc_e1_convoys_p0_2_receipt
+				set_country_flag = SOA_wc_e1_convoys_completed
+				set_country_flag = { flag = SOA_wc_e1_convoys_service_term days = 365 }
+				remove_ideas = SOA_wc_naval_0
+				remove_ideas = SOA_wc_naval_1
+				remove_ideas = SOA_wc_naval_2
+				add_timed_idea = { idea = SOA_wc_naval_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_convoys_p1_0
+		icon = GFX_SOA_wc_naval
+		x = 18
+		y = 31
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_convoys_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_convoys_p0_0
+			focus = SOA_wc_e1_convoys_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_convoys_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_convoys_p1_0_receipt } has_country_flag = SOA_wc_e1_convoys_choice_1
+				}
+				set_country_flag = SOA_wc_e1_convoys_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_convoys_p1_1
+		icon = GFX_SOA_wc_naval
+		x = 18
+		y = 32
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_convoys_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_convoys_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_convoys_p1_1_receipt } has_country_flag = SOA_wc_e1_convoys_choice_1
+				}
+				set_country_flag = SOA_wc_e1_convoys_p1_1_receipt
+				navy_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_convoys_p1_2
+		icon = GFX_SOA_wc_naval
+		x = 18
+		y = 33
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_convoys_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_convoys_choice_1 has_country_flag = SOA_wc_e1_convoys_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_convoys_p1_2_receipt } has_country_flag = SOA_wc_e1_convoys_choice_1 has_country_flag = SOA_wc_e1_convoys_done
+				}
+				set_country_flag = SOA_wc_e1_convoys_p1_2_receipt
+				set_country_flag = SOA_wc_e1_convoys_completed
+				set_country_flag = { flag = SOA_wc_e1_convoys_service_term days = 365 }
+				remove_ideas = SOA_wc_naval_0
+				remove_ideas = SOA_wc_naval_1
+				remove_ideas = SOA_wc_naval_2
+				add_timed_idea = { idea = SOA_wc_naval_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_convoys_p2_0
+		icon = GFX_SOA_wc_naval
+		x = 20
+		y = 31
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_convoys_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_convoys_p0_0
+			focus = SOA_wc_e1_convoys_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_convoys_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_convoys_p2_0_receipt } has_country_flag = SOA_wc_e1_convoys_choice_2
+				}
+				set_country_flag = SOA_wc_e1_convoys_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_convoys_p2_1
+		icon = GFX_SOA_wc_naval
+		x = 20
+		y = 32
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_convoys_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_convoys_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_convoys_p2_1_receipt } has_country_flag = SOA_wc_e1_convoys_choice_2
+				}
+				set_country_flag = SOA_wc_e1_convoys_p2_1_receipt
+				navy_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_convoys_p2_2
+		icon = GFX_SOA_wc_naval
+		x = 20
+		y = 33
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_convoys_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_convoys_choice_2 has_country_flag = SOA_wc_e1_convoys_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_convoys_p2_2_receipt } has_country_flag = SOA_wc_e1_convoys_choice_2 has_country_flag = SOA_wc_e1_convoys_done
+				}
+				set_country_flag = SOA_wc_e1_convoys_p2_2_receipt
+				set_country_flag = SOA_wc_e1_convoys_completed
+				set_country_flag = { flag = SOA_wc_e1_convoys_service_term days = 365 }
+				remove_ideas = SOA_wc_naval_0
+				remove_ideas = SOA_wc_naval_1
+				remove_ideas = SOA_wc_naval_2
+				add_timed_idea = { idea = SOA_wc_naval_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_coast_open
+		icon = GFX_SOA_wc_naval
+		x = 2
+		y = 36
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_coast_opened }
+				}
+				set_country_flag = SOA_wc_e1_coast_opened
+				set_country_flag = { flag = SOA_wc_e1_coast_pending days = 60 }
+				country_event = { id = ac_wc_soa.17 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_coast_p0_0
+		icon = GFX_SOA_wc_naval
+		x = 0
+		y = 37
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_coast_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_coast_p1_0
+			focus = SOA_wc_e1_coast_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_coast_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_coast_p0_0_receipt } has_country_flag = SOA_wc_e1_coast_choice_0
+				}
+				set_country_flag = SOA_wc_e1_coast_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_coast_p0_1
+		icon = GFX_SOA_wc_naval
+		x = 0
+		y = 38
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_coast_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_coast_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_coast_p0_1_receipt } has_country_flag = SOA_wc_e1_coast_choice_0
+				}
+				set_country_flag = SOA_wc_e1_coast_p0_1_receipt
+				navy_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_coast_p0_2
+		icon = GFX_SOA_wc_naval
+		x = 0
+		y = 39
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_coast_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_coast_choice_0 has_country_flag = SOA_wc_e1_coast_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_coast_p0_2_receipt } has_country_flag = SOA_wc_e1_coast_choice_0 has_country_flag = SOA_wc_e1_coast_done
+				}
+				set_country_flag = SOA_wc_e1_coast_p0_2_receipt
+				set_country_flag = SOA_wc_e1_coast_completed
+				set_country_flag = { flag = SOA_wc_e1_coast_service_term days = 365 }
+				remove_ideas = SOA_wc_naval_0
+				remove_ideas = SOA_wc_naval_1
+				remove_ideas = SOA_wc_naval_2
+				add_timed_idea = { idea = SOA_wc_naval_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_coast_p1_0
+		icon = GFX_SOA_wc_naval
+		x = 2
+		y = 37
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_coast_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_coast_p0_0
+			focus = SOA_wc_e1_coast_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_coast_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_coast_p1_0_receipt } has_country_flag = SOA_wc_e1_coast_choice_1
+				}
+				set_country_flag = SOA_wc_e1_coast_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_coast_p1_1
+		icon = GFX_SOA_wc_naval
+		x = 2
+		y = 38
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_coast_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_coast_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_coast_p1_1_receipt } has_country_flag = SOA_wc_e1_coast_choice_1
+				}
+				set_country_flag = SOA_wc_e1_coast_p1_1_receipt
+				navy_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_coast_p1_2
+		icon = GFX_SOA_wc_naval
+		x = 2
+		y = 39
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_coast_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_coast_choice_1 has_country_flag = SOA_wc_e1_coast_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_coast_p1_2_receipt } has_country_flag = SOA_wc_e1_coast_choice_1 has_country_flag = SOA_wc_e1_coast_done
+				}
+				set_country_flag = SOA_wc_e1_coast_p1_2_receipt
+				set_country_flag = SOA_wc_e1_coast_completed
+				set_country_flag = { flag = SOA_wc_e1_coast_service_term days = 365 }
+				remove_ideas = SOA_wc_naval_0
+				remove_ideas = SOA_wc_naval_1
+				remove_ideas = SOA_wc_naval_2
+				add_timed_idea = { idea = SOA_wc_naval_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_coast_p2_0
+		icon = GFX_SOA_wc_naval
+		x = 4
+		y = 37
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_coast_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_coast_p0_0
+			focus = SOA_wc_e1_coast_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_coast_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_coast_p2_0_receipt } has_country_flag = SOA_wc_e1_coast_choice_2
+				}
+				set_country_flag = SOA_wc_e1_coast_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_coast_p2_1
+		icon = GFX_SOA_wc_naval
+		x = 4
+		y = 38
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_coast_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_coast_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_coast_p2_1_receipt } has_country_flag = SOA_wc_e1_coast_choice_2
+				}
+				set_country_flag = SOA_wc_e1_coast_p2_1_receipt
+				navy_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_coast_p2_2
+		icon = GFX_SOA_wc_naval
+		x = 4
+		y = 39
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_coast_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_coast_choice_2 has_country_flag = SOA_wc_e1_coast_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_coast_p2_2_receipt } has_country_flag = SOA_wc_e1_coast_choice_2 has_country_flag = SOA_wc_e1_coast_done
+				}
+				set_country_flag = SOA_wc_e1_coast_p2_2_receipt
+				set_country_flag = SOA_wc_e1_coast_completed
+				set_country_flag = { flag = SOA_wc_e1_coast_service_term days = 365 }
+				remove_ideas = SOA_wc_naval_0
+				remove_ideas = SOA_wc_naval_1
+				remove_ideas = SOA_wc_naval_2
+				add_timed_idea = { idea = SOA_wc_naval_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_overseas_open
+		icon = GFX_SOA_wc_naval
+		x = 10
+		y = 36
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_overseas_opened }
+				}
+				set_country_flag = SOA_wc_e1_overseas_opened
+				set_country_flag = { flag = SOA_wc_e1_overseas_pending days = 60 }
+				country_event = { id = ac_wc_soa.18 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_overseas_p0_0
+		icon = GFX_SOA_wc_naval
+		x = 8
+		y = 37
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_overseas_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_overseas_p1_0
+			focus = SOA_wc_e1_overseas_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_overseas_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_overseas_p0_0_receipt } has_country_flag = SOA_wc_e1_overseas_choice_0
+				}
+				set_country_flag = SOA_wc_e1_overseas_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_overseas_p0_1
+		icon = GFX_SOA_wc_naval
+		x = 8
+		y = 38
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_overseas_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_overseas_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_overseas_p0_1_receipt } has_country_flag = SOA_wc_e1_overseas_choice_0
+				}
+				set_country_flag = SOA_wc_e1_overseas_p0_1_receipt
+				navy_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_overseas_p0_2
+		icon = GFX_SOA_wc_naval
+		x = 8
+		y = 39
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_overseas_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_overseas_choice_0 has_country_flag = SOA_wc_e1_overseas_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_overseas_p0_2_receipt } has_country_flag = SOA_wc_e1_overseas_choice_0 has_country_flag = SOA_wc_e1_overseas_done
+				}
+				set_country_flag = SOA_wc_e1_overseas_p0_2_receipt
+				set_country_flag = SOA_wc_e1_overseas_completed
+				set_country_flag = { flag = SOA_wc_e1_overseas_service_term days = 365 }
+				remove_ideas = SOA_wc_naval_0
+				remove_ideas = SOA_wc_naval_1
+				remove_ideas = SOA_wc_naval_2
+				add_timed_idea = { idea = SOA_wc_naval_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_overseas_p1_0
+		icon = GFX_SOA_wc_naval
+		x = 10
+		y = 37
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_overseas_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_overseas_p0_0
+			focus = SOA_wc_e1_overseas_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_overseas_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_overseas_p1_0_receipt } has_country_flag = SOA_wc_e1_overseas_choice_1
+				}
+				set_country_flag = SOA_wc_e1_overseas_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_overseas_p1_1
+		icon = GFX_SOA_wc_naval
+		x = 10
+		y = 38
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_overseas_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_overseas_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_overseas_p1_1_receipt } has_country_flag = SOA_wc_e1_overseas_choice_1
+				}
+				set_country_flag = SOA_wc_e1_overseas_p1_1_receipt
+				navy_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_overseas_p1_2
+		icon = GFX_SOA_wc_naval
+		x = 10
+		y = 39
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_overseas_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_overseas_choice_1 has_country_flag = SOA_wc_e1_overseas_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_overseas_p1_2_receipt } has_country_flag = SOA_wc_e1_overseas_choice_1 has_country_flag = SOA_wc_e1_overseas_done
+				}
+				set_country_flag = SOA_wc_e1_overseas_p1_2_receipt
+				set_country_flag = SOA_wc_e1_overseas_completed
+				set_country_flag = { flag = SOA_wc_e1_overseas_service_term days = 365 }
+				remove_ideas = SOA_wc_naval_0
+				remove_ideas = SOA_wc_naval_1
+				remove_ideas = SOA_wc_naval_2
+				add_timed_idea = { idea = SOA_wc_naval_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_overseas_p2_0
+		icon = GFX_SOA_wc_naval
+		x = 12
+		y = 37
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_overseas_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_overseas_p0_0
+			focus = SOA_wc_e1_overseas_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_overseas_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_overseas_p2_0_receipt } has_country_flag = SOA_wc_e1_overseas_choice_2
+				}
+				set_country_flag = SOA_wc_e1_overseas_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_overseas_p2_1
+		icon = GFX_SOA_wc_naval
+		x = 12
+		y = 38
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_overseas_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_overseas_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_overseas_p2_1_receipt } has_country_flag = SOA_wc_e1_overseas_choice_2
+				}
+				set_country_flag = SOA_wc_e1_overseas_p2_1_receipt
+				navy_experience = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_overseas_p2_2
+		icon = GFX_SOA_wc_naval
+		x = 12
+		y = 39
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_overseas_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_overseas_choice_2 has_country_flag = SOA_wc_e1_overseas_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_overseas_p2_2_receipt } has_country_flag = SOA_wc_e1_overseas_choice_2 has_country_flag = SOA_wc_e1_overseas_done
+				}
+				set_country_flag = SOA_wc_e1_overseas_p2_2_receipt
+				set_country_flag = SOA_wc_e1_overseas_completed
+				set_country_flag = { flag = SOA_wc_e1_overseas_service_term days = 365 }
+				remove_ideas = SOA_wc_naval_0
+				remove_ideas = SOA_wc_naval_1
+				remove_ideas = SOA_wc_naval_2
+				add_timed_idea = { idea = SOA_wc_naval_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_liaisons_open
+		icon = GFX_SOA_wc_intelligence
+		x = 18
+		y = 36
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_opened }
+				}
+				set_country_flag = SOA_wc_e1_liaisons_opened
+				set_country_flag = { flag = SOA_wc_e1_liaisons_pending days = 60 }
+				country_event = { id = ac_wc_soa.19 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_liaisons_p0_0
+		icon = GFX_SOA_wc_intelligence
+		x = 16
+		y = 37
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_liaisons_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_liaisons_p1_0
+			focus = SOA_wc_e1_liaisons_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_liaisons_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_p0_0_receipt } has_country_flag = SOA_wc_e1_liaisons_choice_0
+				}
+				set_country_flag = SOA_wc_e1_liaisons_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_liaisons_p0_1
+		icon = GFX_SOA_wc_intelligence
+		x = 16
+		y = 38
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_liaisons_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_liaisons_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_p0_1_receipt } has_country_flag = SOA_wc_e1_liaisons_choice_0
+				}
+				set_country_flag = SOA_wc_e1_liaisons_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_liaisons_p0_2
+		icon = GFX_SOA_wc_intelligence
+		x = 16
+		y = 39
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_liaisons_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_liaisons_choice_0 has_country_flag = SOA_wc_e1_liaisons_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_p0_2_receipt } has_country_flag = SOA_wc_e1_liaisons_choice_0 has_country_flag = SOA_wc_e1_liaisons_done
+				}
+				set_country_flag = SOA_wc_e1_liaisons_p0_2_receipt
+				set_country_flag = SOA_wc_e1_liaisons_completed
+				set_country_flag = { flag = SOA_wc_e1_liaisons_service_term days = 365 }
+				remove_ideas = SOA_wc_intelligence_0
+				remove_ideas = SOA_wc_intelligence_1
+				remove_ideas = SOA_wc_intelligence_2
+				add_timed_idea = { idea = SOA_wc_intelligence_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_liaisons_p1_0
+		icon = GFX_SOA_wc_intelligence
+		x = 18
+		y = 37
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_liaisons_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_liaisons_p0_0
+			focus = SOA_wc_e1_liaisons_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_liaisons_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_p1_0_receipt } has_country_flag = SOA_wc_e1_liaisons_choice_1
+				}
+				set_country_flag = SOA_wc_e1_liaisons_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_liaisons_p1_1
+		icon = GFX_SOA_wc_intelligence
+		x = 18
+		y = 38
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_liaisons_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_liaisons_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_p1_1_receipt } has_country_flag = SOA_wc_e1_liaisons_choice_1
+				}
+				set_country_flag = SOA_wc_e1_liaisons_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_liaisons_p1_2
+		icon = GFX_SOA_wc_intelligence
+		x = 18
+		y = 39
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_liaisons_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_liaisons_choice_1 has_country_flag = SOA_wc_e1_liaisons_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_p1_2_receipt } has_country_flag = SOA_wc_e1_liaisons_choice_1 has_country_flag = SOA_wc_e1_liaisons_done
+				}
+				set_country_flag = SOA_wc_e1_liaisons_p1_2_receipt
+				set_country_flag = SOA_wc_e1_liaisons_completed
+				set_country_flag = { flag = SOA_wc_e1_liaisons_service_term days = 365 }
+				remove_ideas = SOA_wc_intelligence_0
+				remove_ideas = SOA_wc_intelligence_1
+				remove_ideas = SOA_wc_intelligence_2
+				add_timed_idea = { idea = SOA_wc_intelligence_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_liaisons_p2_0
+		icon = GFX_SOA_wc_intelligence
+		x = 20
+		y = 37
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_liaisons_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_liaisons_p0_0
+			focus = SOA_wc_e1_liaisons_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_liaisons_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_p2_0_receipt } has_country_flag = SOA_wc_e1_liaisons_choice_2
+				}
+				set_country_flag = SOA_wc_e1_liaisons_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_liaisons_p2_1
+		icon = GFX_SOA_wc_intelligence
+		x = 20
+		y = 38
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_liaisons_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_liaisons_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_p2_1_receipt } has_country_flag = SOA_wc_e1_liaisons_choice_2
+				}
+				set_country_flag = SOA_wc_e1_liaisons_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_liaisons_p2_2
+		icon = GFX_SOA_wc_intelligence
+		x = 20
+		y = 39
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_liaisons_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_liaisons_choice_2 has_country_flag = SOA_wc_e1_liaisons_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_liaisons_p2_2_receipt } has_country_flag = SOA_wc_e1_liaisons_choice_2 has_country_flag = SOA_wc_e1_liaisons_done
+				}
+				set_country_flag = SOA_wc_e1_liaisons_p2_2_receipt
+				set_country_flag = SOA_wc_e1_liaisons_completed
+				set_country_flag = { flag = SOA_wc_e1_liaisons_service_term days = 365 }
+				remove_ideas = SOA_wc_intelligence_0
+				remove_ideas = SOA_wc_intelligence_1
+				remove_ideas = SOA_wc_intelligence_2
+				add_timed_idea = { idea = SOA_wc_intelligence_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_signals_open
+		icon = GFX_SOA_wc_intelligence
+		x = 2
+		y = 42
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_signals_opened }
+				}
+				set_country_flag = SOA_wc_e1_signals_opened
+				set_country_flag = { flag = SOA_wc_e1_signals_pending days = 60 }
+				country_event = { id = ac_wc_soa.20 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_signals_p0_0
+		icon = GFX_SOA_wc_intelligence
+		x = 0
+		y = 43
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_signals_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_signals_p1_0
+			focus = SOA_wc_e1_signals_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_signals_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_signals_p0_0_receipt } has_country_flag = SOA_wc_e1_signals_choice_0
+				}
+				set_country_flag = SOA_wc_e1_signals_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_signals_p0_1
+		icon = GFX_SOA_wc_intelligence
+		x = 0
+		y = 44
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_signals_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_signals_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_signals_p0_1_receipt } has_country_flag = SOA_wc_e1_signals_choice_0
+				}
+				set_country_flag = SOA_wc_e1_signals_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_signals_p0_2
+		icon = GFX_SOA_wc_intelligence
+		x = 0
+		y = 45
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_signals_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_signals_choice_0 has_country_flag = SOA_wc_e1_signals_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_signals_p0_2_receipt } has_country_flag = SOA_wc_e1_signals_choice_0 has_country_flag = SOA_wc_e1_signals_done
+				}
+				set_country_flag = SOA_wc_e1_signals_p0_2_receipt
+				set_country_flag = SOA_wc_e1_signals_completed
+				set_country_flag = { flag = SOA_wc_e1_signals_service_term days = 365 }
+				remove_ideas = SOA_wc_intelligence_0
+				remove_ideas = SOA_wc_intelligence_1
+				remove_ideas = SOA_wc_intelligence_2
+				add_timed_idea = { idea = SOA_wc_intelligence_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_signals_p1_0
+		icon = GFX_SOA_wc_intelligence
+		x = 2
+		y = 43
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_signals_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_signals_p0_0
+			focus = SOA_wc_e1_signals_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_signals_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_signals_p1_0_receipt } has_country_flag = SOA_wc_e1_signals_choice_1
+				}
+				set_country_flag = SOA_wc_e1_signals_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_signals_p1_1
+		icon = GFX_SOA_wc_intelligence
+		x = 2
+		y = 44
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_signals_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_signals_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_signals_p1_1_receipt } has_country_flag = SOA_wc_e1_signals_choice_1
+				}
+				set_country_flag = SOA_wc_e1_signals_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_signals_p1_2
+		icon = GFX_SOA_wc_intelligence
+		x = 2
+		y = 45
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_signals_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_signals_choice_1 has_country_flag = SOA_wc_e1_signals_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_signals_p1_2_receipt } has_country_flag = SOA_wc_e1_signals_choice_1 has_country_flag = SOA_wc_e1_signals_done
+				}
+				set_country_flag = SOA_wc_e1_signals_p1_2_receipt
+				set_country_flag = SOA_wc_e1_signals_completed
+				set_country_flag = { flag = SOA_wc_e1_signals_service_term days = 365 }
+				remove_ideas = SOA_wc_intelligence_0
+				remove_ideas = SOA_wc_intelligence_1
+				remove_ideas = SOA_wc_intelligence_2
+				add_timed_idea = { idea = SOA_wc_intelligence_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_signals_p2_0
+		icon = GFX_SOA_wc_intelligence
+		x = 4
+		y = 43
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_signals_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_signals_p0_0
+			focus = SOA_wc_e1_signals_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_signals_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_signals_p2_0_receipt } has_country_flag = SOA_wc_e1_signals_choice_2
+				}
+				set_country_flag = SOA_wc_e1_signals_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_signals_p2_1
+		icon = GFX_SOA_wc_intelligence
+		x = 4
+		y = 44
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_signals_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_signals_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_signals_p2_1_receipt } has_country_flag = SOA_wc_e1_signals_choice_2
+				}
+				set_country_flag = SOA_wc_e1_signals_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_signals_p2_2
+		icon = GFX_SOA_wc_intelligence
+		x = 4
+		y = 45
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_signals_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_signals_choice_2 has_country_flag = SOA_wc_e1_signals_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_signals_p2_2_receipt } has_country_flag = SOA_wc_e1_signals_choice_2 has_country_flag = SOA_wc_e1_signals_done
+				}
+				set_country_flag = SOA_wc_e1_signals_p2_2_receipt
+				set_country_flag = SOA_wc_e1_signals_completed
+				set_country_flag = { flag = SOA_wc_e1_signals_service_term days = 365 }
+				remove_ideas = SOA_wc_intelligence_0
+				remove_ideas = SOA_wc_intelligence_1
+				remove_ideas = SOA_wc_intelligence_2
+				add_timed_idea = { idea = SOA_wc_intelligence_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_supplierchecks_open
+		icon = GFX_SOA_wc_intelligence
+		x = 10
+		y = 42
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_opened }
+				}
+				set_country_flag = SOA_wc_e1_supplierchecks_opened
+				set_country_flag = { flag = SOA_wc_e1_supplierchecks_pending days = 60 }
+				country_event = { id = ac_wc_soa.21 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_supplierchecks_p0_0
+		icon = GFX_SOA_wc_intelligence
+		x = 8
+		y = 43
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_supplierchecks_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_supplierchecks_p1_0
+			focus = SOA_wc_e1_supplierchecks_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_supplierchecks_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_p0_0_receipt } has_country_flag = SOA_wc_e1_supplierchecks_choice_0
+				}
+				set_country_flag = SOA_wc_e1_supplierchecks_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_supplierchecks_p0_1
+		icon = GFX_SOA_wc_intelligence
+		x = 8
+		y = 44
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_supplierchecks_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_supplierchecks_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_p0_1_receipt } has_country_flag = SOA_wc_e1_supplierchecks_choice_0
+				}
+				set_country_flag = SOA_wc_e1_supplierchecks_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_supplierchecks_p0_2
+		icon = GFX_SOA_wc_intelligence
+		x = 8
+		y = 45
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_supplierchecks_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_supplierchecks_choice_0 has_country_flag = SOA_wc_e1_supplierchecks_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_p0_2_receipt } has_country_flag = SOA_wc_e1_supplierchecks_choice_0 has_country_flag = SOA_wc_e1_supplierchecks_done
+				}
+				set_country_flag = SOA_wc_e1_supplierchecks_p0_2_receipt
+				set_country_flag = SOA_wc_e1_supplierchecks_completed
+				set_country_flag = { flag = SOA_wc_e1_supplierchecks_service_term days = 365 }
+				remove_ideas = SOA_wc_intelligence_0
+				remove_ideas = SOA_wc_intelligence_1
+				remove_ideas = SOA_wc_intelligence_2
+				add_timed_idea = { idea = SOA_wc_intelligence_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_supplierchecks_p1_0
+		icon = GFX_SOA_wc_intelligence
+		x = 10
+		y = 43
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_supplierchecks_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_supplierchecks_p0_0
+			focus = SOA_wc_e1_supplierchecks_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_supplierchecks_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_p1_0_receipt } has_country_flag = SOA_wc_e1_supplierchecks_choice_1
+				}
+				set_country_flag = SOA_wc_e1_supplierchecks_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_supplierchecks_p1_1
+		icon = GFX_SOA_wc_intelligence
+		x = 10
+		y = 44
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_supplierchecks_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_supplierchecks_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_p1_1_receipt } has_country_flag = SOA_wc_e1_supplierchecks_choice_1
+				}
+				set_country_flag = SOA_wc_e1_supplierchecks_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_supplierchecks_p1_2
+		icon = GFX_SOA_wc_intelligence
+		x = 10
+		y = 45
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_supplierchecks_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_supplierchecks_choice_1 has_country_flag = SOA_wc_e1_supplierchecks_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_p1_2_receipt } has_country_flag = SOA_wc_e1_supplierchecks_choice_1 has_country_flag = SOA_wc_e1_supplierchecks_done
+				}
+				set_country_flag = SOA_wc_e1_supplierchecks_p1_2_receipt
+				set_country_flag = SOA_wc_e1_supplierchecks_completed
+				set_country_flag = { flag = SOA_wc_e1_supplierchecks_service_term days = 365 }
+				remove_ideas = SOA_wc_intelligence_0
+				remove_ideas = SOA_wc_intelligence_1
+				remove_ideas = SOA_wc_intelligence_2
+				add_timed_idea = { idea = SOA_wc_intelligence_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_supplierchecks_p2_0
+		icon = GFX_SOA_wc_intelligence
+		x = 12
+		y = 43
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_supplierchecks_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_supplierchecks_p0_0
+			focus = SOA_wc_e1_supplierchecks_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_supplierchecks_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_p2_0_receipt } has_country_flag = SOA_wc_e1_supplierchecks_choice_2
+				}
+				set_country_flag = SOA_wc_e1_supplierchecks_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_supplierchecks_p2_1
+		icon = GFX_SOA_wc_intelligence
+		x = 12
+		y = 44
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_supplierchecks_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_supplierchecks_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_p2_1_receipt } has_country_flag = SOA_wc_e1_supplierchecks_choice_2
+				}
+				set_country_flag = SOA_wc_e1_supplierchecks_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_supplierchecks_p2_2
+		icon = GFX_SOA_wc_intelligence
+		x = 12
+		y = 45
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_supplierchecks_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_supplierchecks_choice_2 has_country_flag = SOA_wc_e1_supplierchecks_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_supplierchecks_p2_2_receipt } has_country_flag = SOA_wc_e1_supplierchecks_choice_2 has_country_flag = SOA_wc_e1_supplierchecks_done
+				}
+				set_country_flag = SOA_wc_e1_supplierchecks_p2_2_receipt
+				set_country_flag = SOA_wc_e1_supplierchecks_completed
+				set_country_flag = { flag = SOA_wc_e1_supplierchecks_service_term days = 365 }
+				remove_ideas = SOA_wc_intelligence_0
+				remove_ideas = SOA_wc_intelligence_1
+				remove_ideas = SOA_wc_intelligence_2
+				add_timed_idea = { idea = SOA_wc_intelligence_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_central_open
+		icon = GFX_SOA_wc_diplomacy
+		x = 18
+		y = 42
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_central_opened }
+				}
+				set_country_flag = SOA_wc_e1_central_opened
+				set_country_flag = { flag = SOA_wc_e1_central_pending days = 60 }
+				country_event = { id = ac_wc_soa.22 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_central_p0_0
+		icon = GFX_SOA_wc_diplomacy
+		x = 16
+		y = 43
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_central_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_central_p1_0
+			focus = SOA_wc_e1_central_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_central_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_central_p0_0_receipt } has_country_flag = SOA_wc_e1_central_choice_0
+				}
+				set_country_flag = SOA_wc_e1_central_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_central_p0_1
+		icon = GFX_SOA_wc_diplomacy
+		x = 16
+		y = 44
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_central_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_central_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_central_p0_1_receipt } has_country_flag = SOA_wc_e1_central_choice_0
+				}
+				set_country_flag = SOA_wc_e1_central_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_central_p0_2
+		icon = GFX_SOA_wc_diplomacy
+		x = 16
+		y = 45
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_central_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_central_choice_0 has_country_flag = SOA_wc_e1_central_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_central_p0_2_receipt } has_country_flag = SOA_wc_e1_central_choice_0 has_country_flag = SOA_wc_e1_central_done
+				}
+				set_country_flag = SOA_wc_e1_central_p0_2_receipt
+				set_country_flag = SOA_wc_e1_central_completed
+				set_country_flag = { flag = SOA_wc_e1_central_service_term days = 365 }
+				remove_ideas = SOA_wc_diplomacy_0
+				remove_ideas = SOA_wc_diplomacy_1
+				remove_ideas = SOA_wc_diplomacy_2
+				add_timed_idea = { idea = SOA_wc_diplomacy_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_central_p1_0
+		icon = GFX_SOA_wc_diplomacy
+		x = 18
+		y = 43
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_central_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_central_p0_0
+			focus = SOA_wc_e1_central_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_central_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_central_p1_0_receipt } has_country_flag = SOA_wc_e1_central_choice_1
+				}
+				set_country_flag = SOA_wc_e1_central_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_central_p1_1
+		icon = GFX_SOA_wc_diplomacy
+		x = 18
+		y = 44
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_central_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_central_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_central_p1_1_receipt } has_country_flag = SOA_wc_e1_central_choice_1
+				}
+				set_country_flag = SOA_wc_e1_central_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_central_p1_2
+		icon = GFX_SOA_wc_diplomacy
+		x = 18
+		y = 45
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_central_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_central_choice_1 has_country_flag = SOA_wc_e1_central_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_central_p1_2_receipt } has_country_flag = SOA_wc_e1_central_choice_1 has_country_flag = SOA_wc_e1_central_done
+				}
+				set_country_flag = SOA_wc_e1_central_p1_2_receipt
+				set_country_flag = SOA_wc_e1_central_completed
+				set_country_flag = { flag = SOA_wc_e1_central_service_term days = 365 }
+				remove_ideas = SOA_wc_diplomacy_0
+				remove_ideas = SOA_wc_diplomacy_1
+				remove_ideas = SOA_wc_diplomacy_2
+				add_timed_idea = { idea = SOA_wc_diplomacy_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_central_p2_0
+		icon = GFX_SOA_wc_diplomacy
+		x = 20
+		y = 43
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_central_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_central_p0_0
+			focus = SOA_wc_e1_central_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_central_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_central_p2_0_receipt } has_country_flag = SOA_wc_e1_central_choice_2
+				}
+				set_country_flag = SOA_wc_e1_central_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_central_p2_1
+		icon = GFX_SOA_wc_diplomacy
+		x = 20
+		y = 44
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_central_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_central_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_central_p2_1_receipt } has_country_flag = SOA_wc_e1_central_choice_2
+				}
+				set_country_flag = SOA_wc_e1_central_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_central_p2_2
+		icon = GFX_SOA_wc_diplomacy
+		x = 20
+		y = 45
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_central_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_central_choice_2 has_country_flag = SOA_wc_e1_central_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_central_p2_2_receipt } has_country_flag = SOA_wc_e1_central_choice_2 has_country_flag = SOA_wc_e1_central_done
+				}
+				set_country_flag = SOA_wc_e1_central_p2_2_receipt
+				set_country_flag = SOA_wc_e1_central_completed
+				set_country_flag = { flag = SOA_wc_e1_central_service_term days = 365 }
+				remove_ideas = SOA_wc_diplomacy_0
+				remove_ideas = SOA_wc_diplomacy_1
+				remove_ideas = SOA_wc_diplomacy_2
+				add_timed_idea = { idea = SOA_wc_diplomacy_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fcu_open
+		icon = GFX_SOA_wc_diplomacy
+		x = 2
+		y = 48
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fcu_opened }
+				}
+				set_country_flag = SOA_wc_e1_fcu_opened
+				set_country_flag = { flag = SOA_wc_e1_fcu_pending days = 60 }
+				country_event = { id = ac_wc_soa.23 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fcu_p0_0
+		icon = GFX_SOA_wc_diplomacy
+		x = 0
+		y = 49
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fcu_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_fcu_p1_0
+			focus = SOA_wc_e1_fcu_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fcu_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fcu_p0_0_receipt } has_country_flag = SOA_wc_e1_fcu_choice_0
+				}
+				set_country_flag = SOA_wc_e1_fcu_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fcu_p0_1
+		icon = GFX_SOA_wc_diplomacy
+		x = 0
+		y = 50
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fcu_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fcu_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fcu_p0_1_receipt } has_country_flag = SOA_wc_e1_fcu_choice_0
+				}
+				set_country_flag = SOA_wc_e1_fcu_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fcu_p0_2
+		icon = GFX_SOA_wc_diplomacy
+		x = 0
+		y = 51
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fcu_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fcu_choice_0 has_country_flag = SOA_wc_e1_fcu_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fcu_p0_2_receipt } has_country_flag = SOA_wc_e1_fcu_choice_0 has_country_flag = SOA_wc_e1_fcu_done
+				}
+				set_country_flag = SOA_wc_e1_fcu_p0_2_receipt
+				set_country_flag = SOA_wc_e1_fcu_completed
+				set_country_flag = { flag = SOA_wc_e1_fcu_service_term days = 365 }
+				remove_ideas = SOA_wc_diplomacy_0
+				remove_ideas = SOA_wc_diplomacy_1
+				remove_ideas = SOA_wc_diplomacy_2
+				add_timed_idea = { idea = SOA_wc_diplomacy_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fcu_p1_0
+		icon = GFX_SOA_wc_diplomacy
+		x = 2
+		y = 49
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fcu_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_fcu_p0_0
+			focus = SOA_wc_e1_fcu_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fcu_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fcu_p1_0_receipt } has_country_flag = SOA_wc_e1_fcu_choice_1
+				}
+				set_country_flag = SOA_wc_e1_fcu_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fcu_p1_1
+		icon = GFX_SOA_wc_diplomacy
+		x = 2
+		y = 50
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fcu_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fcu_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fcu_p1_1_receipt } has_country_flag = SOA_wc_e1_fcu_choice_1
+				}
+				set_country_flag = SOA_wc_e1_fcu_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fcu_p1_2
+		icon = GFX_SOA_wc_diplomacy
+		x = 2
+		y = 51
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fcu_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fcu_choice_1 has_country_flag = SOA_wc_e1_fcu_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fcu_p1_2_receipt } has_country_flag = SOA_wc_e1_fcu_choice_1 has_country_flag = SOA_wc_e1_fcu_done
+				}
+				set_country_flag = SOA_wc_e1_fcu_p1_2_receipt
+				set_country_flag = SOA_wc_e1_fcu_completed
+				set_country_flag = { flag = SOA_wc_e1_fcu_service_term days = 365 }
+				remove_ideas = SOA_wc_diplomacy_0
+				remove_ideas = SOA_wc_diplomacy_1
+				remove_ideas = SOA_wc_diplomacy_2
+				add_timed_idea = { idea = SOA_wc_diplomacy_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fcu_p2_0
+		icon = GFX_SOA_wc_diplomacy
+		x = 4
+		y = 49
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fcu_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_fcu_p0_0
+			focus = SOA_wc_e1_fcu_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fcu_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fcu_p2_0_receipt } has_country_flag = SOA_wc_e1_fcu_choice_2
+				}
+				set_country_flag = SOA_wc_e1_fcu_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fcu_p2_1
+		icon = GFX_SOA_wc_diplomacy
+		x = 4
+		y = 50
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fcu_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fcu_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fcu_p2_1_receipt } has_country_flag = SOA_wc_e1_fcu_choice_2
+				}
+				set_country_flag = SOA_wc_e1_fcu_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_fcu_p2_2
+		icon = GFX_SOA_wc_diplomacy
+		x = 4
+		y = 51
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_fcu_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_fcu_choice_2 has_country_flag = SOA_wc_e1_fcu_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_fcu_p2_2_receipt } has_country_flag = SOA_wc_e1_fcu_choice_2 has_country_flag = SOA_wc_e1_fcu_done
+				}
+				set_country_flag = SOA_wc_e1_fcu_p2_2_receipt
+				set_country_flag = SOA_wc_e1_fcu_completed
+				set_country_flag = { flag = SOA_wc_e1_fcu_service_term days = 365 }
+				remove_ideas = SOA_wc_diplomacy_0
+				remove_ideas = SOA_wc_diplomacy_1
+				remove_ideas = SOA_wc_diplomacy_2
+				add_timed_idea = { idea = SOA_wc_diplomacy_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_relief_open
+		icon = GFX_SOA_wc_diplomacy
+		x = 10
+		y = 48
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = {
+			focus = SOA_wc_e1_authority_p0_2
+			focus = SOA_wc_e1_authority_p1_2
+			focus = SOA_wc_e1_authority_p2_2
+		}
+		available = {
+			ac_wc_soa_active = yes
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_relief_opened }
+				}
+				set_country_flag = SOA_wc_e1_relief_opened
+				set_country_flag = { flag = SOA_wc_e1_relief_pending days = 60 }
+				country_event = { id = ac_wc_soa.24 days = 1 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_relief_p0_0
+		icon = GFX_SOA_wc_diplomacy
+		x = 8
+		y = 49
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_relief_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_relief_p1_0
+			focus = SOA_wc_e1_relief_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_relief_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_relief_p0_0_receipt } has_country_flag = SOA_wc_e1_relief_choice_0
+				}
+				set_country_flag = SOA_wc_e1_relief_p0_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_relief_p0_1
+		icon = GFX_SOA_wc_diplomacy
+		x = 8
+		y = 50
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_relief_p0_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_relief_choice_0
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_relief_p0_1_receipt } has_country_flag = SOA_wc_e1_relief_choice_0
+				}
+				set_country_flag = SOA_wc_e1_relief_p0_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_relief_p0_2
+		icon = GFX_SOA_wc_diplomacy
+		x = 8
+		y = 51
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_relief_p0_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_relief_choice_0 has_country_flag = SOA_wc_e1_relief_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_relief_p0_2_receipt } has_country_flag = SOA_wc_e1_relief_choice_0 has_country_flag = SOA_wc_e1_relief_done
+				}
+				set_country_flag = SOA_wc_e1_relief_p0_2_receipt
+				set_country_flag = SOA_wc_e1_relief_completed
+				set_country_flag = { flag = SOA_wc_e1_relief_service_term days = 365 }
+				remove_ideas = SOA_wc_diplomacy_0
+				remove_ideas = SOA_wc_diplomacy_1
+				remove_ideas = SOA_wc_diplomacy_2
+				add_timed_idea = { idea = SOA_wc_diplomacy_0 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_relief_p1_0
+		icon = GFX_SOA_wc_diplomacy
+		x = 10
+		y = 49
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_relief_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_relief_p0_0
+			focus = SOA_wc_e1_relief_p2_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_relief_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_relief_p1_0_receipt } has_country_flag = SOA_wc_e1_relief_choice_1
+				}
+				set_country_flag = SOA_wc_e1_relief_p1_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_relief_p1_1
+		icon = GFX_SOA_wc_diplomacy
+		x = 10
+		y = 50
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_relief_p1_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_relief_choice_1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_relief_p1_1_receipt } has_country_flag = SOA_wc_e1_relief_choice_1
+				}
+				set_country_flag = SOA_wc_e1_relief_p1_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_relief_p1_2
+		icon = GFX_SOA_wc_diplomacy
+		x = 10
+		y = 51
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_relief_p1_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_relief_choice_1 has_country_flag = SOA_wc_e1_relief_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_relief_p1_2_receipt } has_country_flag = SOA_wc_e1_relief_choice_1 has_country_flag = SOA_wc_e1_relief_done
+				}
+				set_country_flag = SOA_wc_e1_relief_p1_2_receipt
+				set_country_flag = SOA_wc_e1_relief_completed
+				set_country_flag = { flag = SOA_wc_e1_relief_service_term days = 365 }
+				remove_ideas = SOA_wc_diplomacy_0
+				remove_ideas = SOA_wc_diplomacy_1
+				remove_ideas = SOA_wc_diplomacy_2
+				add_timed_idea = { idea = SOA_wc_diplomacy_1 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_relief_p2_0
+		icon = GFX_SOA_wc_diplomacy
+		x = 12
+		y = 49
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_relief_open }
+		mutually_exclusive = {
+			focus = SOA_wc_e1_relief_p0_0
+			focus = SOA_wc_e1_relief_p1_0
+		}
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_relief_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_relief_p2_0_receipt } has_country_flag = SOA_wc_e1_relief_choice_2
+				}
+				set_country_flag = SOA_wc_e1_relief_p2_0_receipt
+				custom_effect_tooltip = ac_wc_fiction_tt
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_relief_p2_1
+		icon = GFX_SOA_wc_diplomacy
+		x = 12
+		y = 50
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_relief_p2_0 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_relief_choice_2
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_relief_p2_1_receipt } has_country_flag = SOA_wc_e1_relief_choice_2
+				}
+				set_country_flag = SOA_wc_e1_relief_p2_1_receipt
+				add_political_power = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = SOA_wc_e1_relief_p2_2
+		icon = GFX_SOA_wc_diplomacy
+		x = 12
+		y = 51
+		cost = 5
+		cancel_if_invalid = yes
+		prerequisite = { focus = SOA_wc_e1_relief_p2_1 }
+		available = {
+			ac_wc_soa_active = yes has_country_flag = SOA_wc_e1_relief_choice_2 has_country_flag = SOA_wc_e1_relief_done
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ac_wc_soa_active = yes NOT = { has_country_flag = SOA_wc_e1_relief_p2_2_receipt } has_country_flag = SOA_wc_e1_relief_choice_2 has_country_flag = SOA_wc_e1_relief_done
+				}
+				set_country_flag = SOA_wc_e1_relief_p2_2_receipt
+				set_country_flag = SOA_wc_e1_relief_completed
+				set_country_flag = { flag = SOA_wc_e1_relief_service_term days = 365 }
+				remove_ideas = SOA_wc_diplomacy_0
+				remove_ideas = SOA_wc_diplomacy_1
+				remove_ideas = SOA_wc_diplomacy_2
+				add_timed_idea = { idea = SOA_wc_diplomacy_2 days = 365 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+}

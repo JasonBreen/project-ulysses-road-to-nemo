@@ -77,6 +77,15 @@ REVIEWED_BELKAN_OUTCOME_UPDATE=dict(
 )
 
 
+# The 1991 focus-screen fix adds one mark_focus_tree_layout_dirty line to
+# ac_pwi_start so the aftermath branch, now hidden by allow_branch until the
+# aftermath begins, appears when it starts. Pin only that byte transition.
+REVIEWED_PWI_LAYOUT_UPDATE=dict(
+    path='common/scripted_effects/ac_pwi.txt',
+    original_sha256='06449b2ad9a9a02924fab2066e9ea73bc808b73ab1e500ef91c1e705ce2a84e3',
+    reviewed_sha256='e64c3c2004a6391ef88286552a7fba3073c67afdd196531684327430ee0566d4',
+)
+
 def validate_reviewed_belkan_outcomes(data):
     for directory in (ROOT/'tools',ROOT/'tools/usea_expansion'):
         if str(directory)not in sys.path:sys.path.append(str(directory))
@@ -96,10 +105,29 @@ def validate_protected(path,expected,data):
             ('reviewed-release-owner',REVIEWED_RELEASE_UPDATE),
             ('reviewed-fat-character-owner',REVIEWED_FAT_CHARACTER_UPDATE),
             ('reviewed-starting-government-owner',REVIEWED_STARTING_GOVERNMENT_UPDATE),
-            ('reviewed-fat-doctrine-ids',REVIEWED_FAT_DOCTRINE_UPDATE)):
+            ('reviewed-fat-doctrine-ids',REVIEWED_FAT_DOCTRINE_UPDATE),
+            ('reviewed-pwi-layout-refresh',REVIEWED_PWI_LAYOUT_UPDATE)):
         if (path==update['path'] and expected==update['original_sha256']
                 and actual==update['reviewed_sha256']):return disposition
     raise ValueError('Inherited owner changed: '+path)
+
+# PR #84 commit 5daf9cafdb17fb39b489ba6ec90153cbbbf46fe3 assigns only
+# these two countries to their actual dedicated campaign trees. Preserve the
+# frozen engine_contract profile hashes and admit only regional_tree=False;
+# every other field must still reconstruct the original captured row exactly.
+REVIEWED_SOTOAN_TREES = {'SOA': 'ac_wc_soa_tree', 'CSO': 'ac_wc_cso_tree'}
+
+
+def validate_institution_profile(row, expected):
+    tag = row['tag']
+    original = row
+    if tag in ('FAT', 'SBK') or tag in REVIEWED_SOTOAN_TREES:
+        if row.get('regional_tree') is not False:
+            raise ValueError('Dedicated institution tree disposition changed: ' + tag)
+        original = dict(row, regional_tree=True)
+    if digest(json.dumps(original, sort_keys=True).encode()) != expected:
+        raise ValueError('Inherited institution profile changed: ' + tag)
+
 
 def capture(reference):
     protected={}

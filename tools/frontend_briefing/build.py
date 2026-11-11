@@ -85,16 +85,13 @@ def glyph(im, kind, rect, color=CYAN):
 
 
 def build():
-    im=panel(1225,1033);d=ImageDraw.Draw(im)
-    # Same map aperture, flag strip, history, information and focus rectangles.
-    d.rectangle((14,12,1211,626),fill=(5,15,26,255),outline=EDGE)
-    d.line((15,638,1210,638),fill=CYAN)
-    d.rectangle((15,648,1210,733),fill=PANEL)
-    box(d,(25,756,426,1009));box(d,(799,756,1200,1009))
-    box(d,(449,787,522,858),False);box(d,(535,787,778,858),False)
-    box(d,(449,879,778,975),False)
+    im=panel(1200,660);d=ImageDraw.Draw(im)
+    # Compact safe area: overview/list above, scrolling prose and details below.
+    box(d,(14,44,565,366),False);box(d,(584,44,1185,366),False)
+    box(d,(14,368,545,597));box(d,(554,368,870,597))
+    box(d,(880,368,1185,597),False)
     save('country_selection',im)
-    im=panel(579,512);box(ImageDraw.Draw(im),(16,295,563,487),False);save('select_date',im)
+    im=panel(780,620);box(ImageDraw.Draw(im),(20,322,759,546),False);save('select_date',im)
     for name,w,h in [('button148',148,36),('button221',221,36),('button123',123,36),('button261',261,36),('lobby_info',492,301),('lobby_settings',598,250)]:
         save(name,panel(w,h))
     for name,w,h in [('mini_selector',59,44),('country_entry',138,97),('bookmark_entry',232,211)]:

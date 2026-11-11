@@ -81,5 +81,7 @@ balance (#8).
   (Usea Depth minors, principals, regional owners). It is needed before the
   era-1 top-up waves (E1b, E1c), and its first step is checking that each owner
   generator keeps foreign marker blocks.
-- **Mass production still waits on your Perbla review.**
+- **Perbla approved (11 November 2026), as is**, as the template. Wave E1a is
+  next: era 1 (1991–2005) for the 29 countries that have nothing in it yet,
+  2,440 focuses in schema-2 specs.
 

@@ -70,6 +70,20 @@ The size comes from main's programme (`docs/WORLD_CAMPAIGNS_2040.md`):
 Schema 1 (the Perbla pilot) keeps the old flat rule: 120 own focuses, 10
 branches and open work after 2002.
 
+**Release countries (REL, SER, TER and others that own nothing in 1991):**
+- Their "own states" are their core states plus their history capital.
+- The tree applies only once the country exists, and every state build stays
+  guarded by `owns_state`.
+- Write about the released country. Do not assume when or how it was released:
+  `tools/release_foundations` owns that.
+- Where they share land with another tree, read that tree first and never
+  contradict it. Relentio, Serenava and Terentio are Perbla's crown lands; see
+  `tools/world_depth/pbl/content.py`.
+
+**The approved template** is the Perbla spec, `tools/world_depth/pbl/content.py`
+(your approval of 11 November 2026): match its depth, tone and kind of
+specificity, not its subjects.
+
 ## What "bespoke" means here (the build fails otherwise: `lint.py`)
 
 **Size and shape**

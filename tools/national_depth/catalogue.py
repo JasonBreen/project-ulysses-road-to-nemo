@@ -86,6 +86,16 @@ def own_states(tag, mod=MOD):
     for path in (mod / 'history/countries').glob(tag + ' *.txt'):
         match = re.search(r'^\s*capital\s*=\s*(\d+)', path.read_text(encoding='utf-8-sig', errors='replace'), re.M)
         capital = int(match[1]) if match else None
+    if not states:
+        # A release (REL, SER, TER...) owns nothing in 1991; its tree applies once it exists, on
+        # its core states and its history capital. Builds there stay guarded by owns_state.
+        for path in (mod / 'history/states').glob('*.txt'):
+            text = re.sub(r'#[^\n]*', '', path.read_text(encoding='utf-8-sig', errors='replace'))
+            ident = re.search(r'\bid\s*=\s*(\d+)', text)
+            if ident and re.search(r'\badd_core_of\s*=\s*%s\b' % tag, text):
+                states.add(int(ident[1]))
+        if capital is not None:
+            states.add(capital)
     return states, capital
 
 

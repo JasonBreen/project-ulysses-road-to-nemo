@@ -1,7 +1,10 @@
 """The bespoke and anti-filler gate for national-depth specs.
 
 These rules fail a build; they are what makes "bespoke" checkable. Thresholds
-come from the approved plan (6 November 2026).
+come from the approved plan (6 November 2026). Specs with SCHEMA = 2 are
+written to main's national-campaign era targets (decision of 11 November 2026):
+per-era focus counts from tools/world_campaigns/manifest.json, 4-8 decisions per
+era, at least one event chain, and exact Chronicle citations for Official rows.
 """
 from collections import Counter
 from pathlib import Path
@@ -60,9 +63,13 @@ def lint(module, others=(), strict=True):
             problems.append('%s: %s' % (c.tag, message))
     focuses = [f for b in m.BRANCHES for f in b.focuses]
     keys = {f.key for f in focuses}
-    if strict:
+    if strict and getattr(m, 'SCHEMA', 1) == 1:
         check(len(focuses) >= MIN_OWN, '%d own focuses; at least %d required' % (len(focuses), MIN_OWN))
         check(len(m.BRANCHES) >= MIN_BRANCHES, '%d branches; at least %d required' % (len(m.BRANCHES), MIN_BRANCHES))
+    elif strict:
+        # Schema 2: the era targets set the size; branches scale with it (about 12 focuses each).
+        wanted = max(6, len(focuses) // 12)
+        check(len(m.BRANCHES) >= wanted, '%d branches; at least %d required for %d focuses' % (len(m.BRANCHES), wanted, len(focuses)))
     exclusive = {f.key for f in focuses if f.exclusive} | {k for f in focuses for k in f.exclusive}
     check(len(exclusive) >= MIN_EXCLUSIVE_SHARE * len(focuses), 'only %d focuses in mutually exclusive groups' % len(exclusive))
     shapes = Counter(branch_shape(b) for b in m.BRANCHES)
@@ -99,8 +106,53 @@ def lint(module, others=(), strict=True):
                 problems.append('%s: descriptions of %s and %s are too similar' % (c.tag, key, other_key))
         if any(similarity(sh, osh) >= MAX_SIMILARITY for osh in theirs):
             problems.append('%s: description of %s repeats text from another tree' % (c.tag, key))
-    if strict:
+    # Every event is reachable: fired by a focus, a decision, or an option of a reachable event.
+    decisions = getattr(m, 'DECISIONS', ())
+    fired = {r.key for f in focuses for r in f.reward if isinstance(r, S.Event)}
+    fired |= {r.key for d in decisions for r in d.effects if isinstance(r, S.Event)}
+    chained = {e.key: {r.key for o in e.options for r in o.effects if isinstance(r, S.Event)} for e in m.EVENTS}
+    reached, frontier = set(), set(fired)
+    while frontier:
+        key = frontier.pop()
+        if key not in reached:
+            reached.add(key)
+            frontier |= chained.get(key, set())
+    check(reached >= {e.key for e in m.EVENTS}, 'events nothing fires: ' + ', '.join(sorted({e.key for e in m.EVENTS} - reached)))
+    decision_flags = {r.name for d in decisions for r in d.requires if isinstance(r, (S.HasFlag, S.NotFlag))}
+    check(decision_flags <= set_flags, 'decisions read flags nothing sets: ' + ', '.join(sorted(decision_flags - set_flags)))
+    schema = getattr(m, 'SCHEMA', 1)
+    if strict and schema == 1:
         late = [f for b in m.BRANCHES if b.era >= LATEST_FIRST_ERA for f in b.focuses if not f.exclusive]
         check(late, 'no non-exclusive focus opens in %d or later' % LATEST_FIRST_ERA)
+    if strict and schema >= 2:
+        problems.extend(era_problems(m, c, focuses, decisions, check))
     del keys
     return problems
+
+
+def era_problems(m, c, focuses, decisions, check):
+    """Schema 2: written to main's national-campaign era targets (tools/world_campaigns/manifest.json)."""
+    import catalogue
+    eras = tuple(getattr(m, 'ERAS', ()))
+    check(eras and all(e in catalogue.ERAS for e in eras), 'ERAS must name e1, e2 and/or e3')
+    prefix = '%s_%s_' % (c.tag, 'ud' if c.root == 'usea' else 'wd')
+    for era in eras:
+        first, last = catalogue.ERAS.get(era, (0, 0))
+        mine = [f for b in m.BRANCHES if first <= b.era <= last for f in b.focuses]
+        need, target = catalogue.era_need(c.tag, era, prefix)
+        check(len(mine) >= need, '%s: %d focuses open in %d-%d; the national-campaign target needs %d (of %d)' % (
+            era, len(mine), first, last, need, target))
+    outside = [b.key for b in m.BRANCHES if not any(catalogue.ERAS[e][0] <= b.era <= catalogue.ERAS[e][1] for e in eras if e in catalogue.ERAS)]
+    check(not outside, 'branches outside the claimed eras: ' + ', '.join(outside))
+    check(4 * len(eras) <= len(decisions) <= 8 * len(eras), '%d decisions; %d-%d required for %d era(s)' % (
+        len(decisions), 4 * len(eras), 8 * len(eras), len(eras)))
+    chains = [e.key for e in m.EVENTS if any(isinstance(r, S.Event) for o in e.options for r in o.effects)]
+    check(chains, 'no event chain: at least one event option must fire a follow-up event')
+    keys = catalogue.chronicle_keys()
+    for e in m.EVENTS:
+        if e.layer == 'Official':
+            check(e.citation in keys, e.key + ': an Official event must cite an exact Chronicle row (tools/lore/chronicle.json)')
+    for s in m.SOURCES:
+        if s.layer == 'Official':
+            check(s.citation in keys, 'an Official source must cite an exact Chronicle row: ' + s.note[:60])
+    return []

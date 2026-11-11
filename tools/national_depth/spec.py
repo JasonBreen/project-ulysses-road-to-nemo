@@ -1,7 +1,9 @@
 """The bespoke country spec: plain data a writer fills in, one module per country.
 
 A spec module defines COUNTRY, BRANCHES, IDEAS, EVENTS, OFFICES and SOURCES using
-the constructors below. Keys are short snake_case slugs; the compiler adds the
+the constructors below; DECISIONS is optional. A spec that sets SCHEMA = 2 is
+written to main's national-campaign era targets: it also sets ERAS (for example
+('e1',)) and is linted against tools/world_campaigns/manifest.json. Keys are short snake_case slugs; the compiler adds the
 country prefix (<TAG>_ud_ for Usea Depth, <TAG>_wd_ for World Depth). Rewards and
 requirements are drawn only from this catalogue, so every effect the compiler
 writes is one it knows how to check.
@@ -75,6 +77,18 @@ class EventDef:
     layer: str = 'Provisional gameplay'
     citation: str = ''
     picture: int = 0               # one of the country's three national pictures
+
+
+@dataclass(frozen=True)
+class DecisionDef:
+    key: str
+    title: str
+    desc: str                      # one or two sentences: what the decision does and costs
+    cost: int = 50                 # political power, 0-150
+    effects: tuple = ()            # the same rewards a focus may grant
+    requires: tuple = ()           # availability conditions, as for a focus
+    cooldown: int = 0              # days before it can be taken again; 0 means once only
+    ai: int = 1
 
 
 @dataclass(frozen=True)
@@ -174,6 +188,16 @@ class HasFlag:
 
 @dataclass(frozen=True)
 class NotFlag:
+    name: str
+
+
+@dataclass(frozen=True)
+class HasGlobal:
+    name: str                      # a global flag something in the mod already sets (checked at compile time)
+
+
+@dataclass(frozen=True)
+class NotGlobal:
     name: str
 
 

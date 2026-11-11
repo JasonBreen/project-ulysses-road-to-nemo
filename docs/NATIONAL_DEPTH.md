@@ -51,3 +51,35 @@ tracked by `tools/world_campaigns/manifest.json`.
 
 **Not verified natively:** parsing, the rendered focus screen, AI pacing and
 balance (#8).
+
+## Compiler aligned with the national-campaign targets (11 November 2026)
+
+- **Schema 2 specs** (`SCHEMA = 2`, `ERAS`) are linted against
+  `tools/world_campaigns/manifest.json`. Each claimed era must meet its target,
+  less what other owners delivered.
+  - `test_compiled_eras_match_national_campaign_credit` runs main's
+    `coverage.inventory` on the compiled fixture and confirms each branch is
+    credited to the intended era.
+- **Decisions.** `DecisionDef` gives one category per country, with 4–8
+  decisions per era. Decisions cannot change the government, and repeatable
+  decisions cannot build.
+- **Event chains.** At least one per schema-2 spec. Every event must be
+  reachable; this rule applies to every spec.
+- **Campaign hooks.** `HasGlobal` and `NotGlobal` accept only global flags that
+  some mod script sets, so a new tree cannot add a read-but-never-set flag.
+- **Buildings.**
+  - `dockyard` is allowed in coastal states only.
+  - A shared-slot check uses the base-game state categories (native check #8)
+    and the per-state caps.
+  - Mutually exclusive alternatives, including those exclusive through a parent
+    or a flag only one focus sets, count once.
+  - The check confirmed that Perbla's builds fit.
+- **Ownership guard.** `package.py` refuses to overwrite a file another
+  generator owns. World Depth names (`_wd_`) are reserved for this compiler.
+  Every other file must be listed in a package budget's `files` list.
+- **Not yet built: attach mode**, for countries that already have a tree
+  (Usea Depth minors, principals, regional owners). It is needed before the
+  era-1 top-up waves (E1b, E1c), and its first step is checking that each owner
+  generator keeps foreign marker blocks.
+- **Mass production still waits on your Perbla review.**
+

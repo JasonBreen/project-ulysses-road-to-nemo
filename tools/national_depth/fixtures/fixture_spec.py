@@ -11,7 +11,13 @@ PARAGRAPHS = (LONG + ' The minutes record a long argument about who would pay fo
 IDEAS = (IdeaDef('rail_board', 'Rail Board', 'A small board that keeps the rail survey honest.', {'production_speed_infrastructure_factor': 0.1}, ('rail', 'document')),
          IdeaDef('works_board', 'Works Board', 'A works office for the river towns.', {'production_speed_buildings_factor': 0.05}, ('tools', 'civil')))
 EVENTS = (EventDef('survey', 'The Customs Hall Survey', PARAGRAPHS,
-                   (Option('Publish the survey and its cost.', (Stability(0.02),)), Option('Keep the cost in committee.', (PP(25),))), picture=1),)
+                   (Option('Publish the survey and its cost.', (Stability(0.02), Event('ledger', 30))), Option('Keep the cost in committee.', (PP(25),))), picture=1),
+          EventDef('ledger', 'The Published Ledger', PARAGRAPHS,
+                   (Option('Answer the questions in the hall.', (Stability(0.01),)), Option('Refer them to the engineers.', (PP(10),))), picture=2))
+DECISIONS = (DecisionDef('river_dock', 'A Dock for the River Fleet', 'Build one dock on the coast once the gauge is agreed.', 50,
+                         (Build('dockyard', 1, 409),), requires=(HasFlag('gauge_agreed'),)),
+             DecisionDef('works_levy', 'A Works Levy', 'Raise a small levy for the works office; it can be repeated each year.', 25,
+                         (PP(30),), cooldown=365))
 OFFICES = (Office('council', 'River Towns Council', 'A collective council of the river towns.', 'democratic', 'centrism'),)
 BRANCHES = (
     Branch('rail', 'The Rail Survey', 1991, 'FOCUS_FILTER_INDUSTRY', (
@@ -30,6 +36,10 @@ BRANCHES = (
               reward=(Research('construction_tech'), Tooltip('Courses run at the works office.'))),
     )),
     Branch('later', 'The Later Years', 2004, 'FOCUS_FILTER_POLITICAL', (
-        Focus('later_review', 'Review the Works', 'Look back.', ('scales', 'document'), reward=(SwapIdea('works_board', 'rail_board'), XP('army', 10))),
+        Focus('later_review', 'Review the Works', 'Look back.', ('scales', 'document'), reward=(SwapIdea('works_board', 'rail_board'), XP('army', 10)),
+              requires=(NotGlobal('belka_won_belkan_war'),)),
+    )),
+    Branch('decade', 'The Second Decade', 2010, 'FOCUS_FILTER_INDUSTRY', (
+        Focus('decade_yards', 'Yards on the Coast', 'Open yards.', ('navy', 'tools'), reward=(Build('dockyard', 1, 475),)),
     )),
 )

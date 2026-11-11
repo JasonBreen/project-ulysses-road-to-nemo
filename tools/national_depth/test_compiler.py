@@ -37,7 +37,7 @@ def fixture():
 
 def variant(**changes):
     base = fixture()
-    module = types.SimpleNamespace(**{k: getattr(base, k) for k in ('COUNTRY', 'SOURCES', 'IDEAS', 'EVENTS', 'OFFICES', 'BRANCHES')})
+    module = types.SimpleNamespace(**{k: getattr(base, k) for k in ('COUNTRY', 'SOURCES', 'IDEAS', 'EVENTS', 'OFFICES', 'BRANCHES', 'DECISIONS')})
     for key, value in changes.items():
         setattr(module, key, value)
     return module
@@ -112,6 +112,8 @@ class Compiler(unittest.TestCase):
         wanted |= {w + '_desc' for w in wanted if not w.endswith('_tt_1')}
         wanted |= set(re.findall(r'(?:title|desc|name) = (ac_ud_dor\.\d+\.[a-z])\b', text))
         wanted |= set(re.findall(r'custom_effect_tooltip = (\S+)', text))
+        wanted |= set(re.findall(r'^\t(DOR_ud_\w+_decision) = \{', text, re.M))
+        wanted |= {w + '_desc' for w in wanted if w.endswith('_decision')} | {'ac_ud_dor_decisions'}
         wanted |= set(re.findall(r'set_country_flag = (DOR_ud_\w+)', text))
         self.assertEqual(set(), wanted - keys)
         self.assertIn('ac_ud_dor_tree', keys)
@@ -122,7 +124,7 @@ class Compiler(unittest.TestCase):
             self.assertIn(texture, self.outputs, name)
         icons = [digest(r, d) for r, d in self.outputs.items() if '/focus/' in r]
         self.assertEqual(len(icons), len(set(icons)))
-        self.assertEqual(8, len(icons))
+        self.assertEqual(9, len(icons))
 
     def test_validation_rejects_effects_outside_the_catalogue(self):
         base = fixture()
@@ -150,6 +152,68 @@ class Compiler(unittest.TestCase):
             with self.subTest(message=message):
                 with self.assertRaisesRegex(ValueError, re.escape(message)):
                     compile_country(module)
+
+    def test_decisions_hooks_and_chains_compile(self):
+        decisions = self.outputs['common/decisions/ac_ud_dor.txt'].decode()
+        self.assertIn('DOR_ud_river_dock_decision = {', decisions)
+        self.assertIn('fire_only_once = yes', decisions)
+        self.assertIn('days_re_enable = 365', decisions)
+        self.assertIn('has_country_flag = DOR_ud_gauge_agreed', decisions)
+        category = self.outputs['common/decisions/categories/ac_ud_dor.txt'].decode()
+        self.assertIn('ac_ud_dor_decisions = {', category)
+        self.assertIn('allowed = { original_tag = DOR }', category)
+        tree = self.outputs['common/national_focus/ac_ud_minor_dor.txt'].decode()
+        self.assertIn('NOT = { has_global_flag = belka_won_belkan_war }', tree)
+        events = self.outputs['events/ac_ud_dor.txt'].decode()
+        self.assertIn('id = ac_ud_dor.2\n\t\t\tdays = 30', events)
+        self.assertEqual(2, self.budget['decisions'])
+
+    def test_building_slots_coast_and_global_flags_are_checked(self):
+        base = fixture()
+        first = base.BRANCHES[0]
+
+        def with_reward(*reward, **changes):
+            focus = dataclasses.replace(first.focuses[0], reward=reward, **changes)
+            return variant(BRANCHES=(dataclasses.replace(first, focuses=(focus,) + first.focuses[1:]),) + base.BRANCHES[1:])
+        cases = [
+            (with_reward(S.Build('industrial_complex', 3, 409)), 'free slots'),
+            (with_reward(S.Build('dockyard', 1, 320)), 'has no coast'),
+            (with_reward(S.Build('infrastructure', 3, 149)), 'would exceed level 5'),
+            (with_reward(S.Idea('rail_board'), requires=(S.HasGlobal('no_such_outcome'),)), 'no mod script sets the global flag'),
+            (variant(DECISIONS=(S.DecisionDef('levy', 'Levy', 'A levy.', 10, (S.Build('arms_factory', 1, 0),), cooldown=30),)),
+             'cannot build'),
+            (variant(DECISIONS=(S.DecisionDef('coup', 'Coup', 'A coup.', 10, (S.Regime('council'),)),)), 'only through focuses'),
+        ]
+        for module, message in cases:
+            with self.subTest(message=message):
+                with self.assertRaisesRegex(ValueError, re.escape(message)):
+                    compile_country(module)
+        # Two exclusive focuses that each build in the same full state count once.
+        gauge, spurs = first.focuses[1], first.focuses[2]
+        ok = variant(BRANCHES=(dataclasses.replace(first, focuses=(first.focuses[0],
+                     dataclasses.replace(gauge, reward=(S.Build('industrial_complex', 1, 409), S.Flag('gauge_agreed'))),
+                     dataclasses.replace(spurs, reward=(S.Build('arms_factory', 1, 409),)), first.focuses[3])),) + base.BRANCHES[1:],
+                     DECISIONS=())
+        compile_country(ok)
+
+    def test_compiled_eras_match_national_campaign_credit(self):
+        sys.path.insert(0, str(ROOT / 'tools/world_campaigns'))
+        import coverage
+        tree = self.outputs['common/national_focus/ac_ud_minor_dor.txt'].decode()
+        shared = (ROOT / 'mod/2985041246/common/national_focus/ac_regional_foundation.txt').read_text(encoding='utf-8-sig')
+        rows = {r['id']: r['era'] for r in coverage.inventory([('fixture', tree), ('institutions', shared)])}
+        self.assertEqual('e1', rows['DOR_ud_rail_survey'])
+        self.assertEqual('e1', rows['DOR_ud_later_review'])
+        self.assertEqual('e2', rows['DOR_ud_decade_yards'])
+
+    def test_schema_two_lint_reads_the_era_targets(self):
+        base = fixture()
+        module = variant(SCHEMA=2, ERAS=('e1',), EVENTS=base.EVENTS[:1], DECISIONS=())
+        problems = '\n'.join(lint.lint(module))
+        for expected in ('national-campaign target needs', 'decisions; 4-8 required', 'branches outside the claimed eras: decade'):
+            self.assertIn(expected, problems)
+        orphan = variant(EVENTS=base.EVENTS + (dataclasses.replace(base.EVENTS[1], key='orphan'),))
+        self.assertIn('events nothing fires: orphan', '\n'.join(lint.lint(orphan, strict=False)))
 
     def test_lint_catches_filler_and_borrowed_text(self):
         base = fixture()

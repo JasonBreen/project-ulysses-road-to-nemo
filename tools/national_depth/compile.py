@@ -95,9 +95,11 @@ class Compiler:
         offices = {o.key: o for o in m.OFFICES}
         states, capital = catalogue.own_states(c.tag)
         self.require(capital in states, 'capital not among the 1991 states')
+        self.capital = capital
+        last_year = 2040 if getattr(m, 'SCHEMA', 1) >= 2 else 2020
         for b in m.BRANCHES:
             self.require(b.filter in catalogue.FILTERS, b.key + ': unknown search filter ' + b.filter)
-            self.require(1991 <= b.era <= 2020, b.key + ': era out of range')
+            self.require(1991 <= b.era <= last_year, b.key + ': era out of range')
             self.require(b.focuses, b.key + ': empty branch')
             for f in b.focuses:
                 where = f.key
@@ -107,12 +109,7 @@ class Compiler:
                 for ref in (*f.after, *f.after_any, *f.exclusive):
                     self.require(ref in keys and ref != f.key, where + ': unknown focus reference ' + ref)
                 for r in f.requires:
-                    if isinstance(r, S.Completed):
-                        self.require(r.focus in keys, where + ': unknown completed focus ' + r.focus)
-                    elif isinstance(r, S.After):
-                        self.require(re.fullmatch(r'\d{4}\.\d{1,2}\.\d{1,2}', r.date), where + ': bad date')
-                    else:
-                        self.require(isinstance(r, (S.HasFlag, S.NotFlag)), where + ': unknown requirement')
+                    self.check_requirement(r, where, keys)
                 for r in f.reward:
                     self.check_reward(r, where, ideas, events, offices, states)
                 for text in (f.title, f.desc):
@@ -131,19 +128,123 @@ class Compiler:
             for o in e.options:
                 for r in o.effects:
                     self.check_reward(r, e.key, ideas, events, offices, states)
+        decisions = getattr(m, 'DECISIONS', ())
+        self.require(len({d.key for d in decisions}) == len(decisions), 'duplicate decision key')
+        for d in decisions:
+            where = 'decision ' + d.key
+            self.require(re.fullmatch(r'[a-z][a-z0-9_]{2,40}', d.key), where + ': key must be snake_case')
+            self.require(0 <= d.cost <= 150 and 0 <= d.cooldown <= 3650 and d.effects, where + ': cost, cooldown or effects out of range')
+            for text in (d.title, d.desc):
+                self.require(text.isascii() and '"' not in text, where + ': ASCII text without double quotes required')
+            for r in d.requires:
+                self.check_requirement(r, where, keys)
+            for r in d.effects:
+                self.require(not isinstance(r, S.Regime), where + ': governments change only through focuses')
+                self.require(not (d.cooldown and isinstance(r, S.Build)), where + ': a repeatable decision cannot build (slots would be unbounded)')
+                self.check_reward(r, where, ideas, events, offices, states)
+        self.check_building_slots()
         for o in m.OFFICES:
             self.require(o.party in parties and o.ideology in parties[o.party], o.key + ': unknown party or sub-ideology')
         # Focus, idea, flag and office identifiers share one prefix; a collision would make two
         # objects share a localisation key, so one title would silently overwrite the other.
         flags = {r.name for b in m.BRANCHES for f in b.focuses for r in (*f.reward, *f.requires) if isinstance(r, (S.Flag, S.HasFlag, S.NotFlag))}
         flags |= {r.name for e in m.EVENTS for o in e.options for r in o.effects if isinstance(r, S.Flag)}
-        spaces = {'focus': set(keys), 'idea': set(ideas), 'flag': flags, 'office': {o.key + '_office' for o in m.OFFICES}}
+        flags |= {r.name for d in getattr(m, 'DECISIONS', ()) for r in (*d.effects, *d.requires) if isinstance(r, (S.Flag, S.HasFlag, S.NotFlag))}
+        spaces = {'focus': set(keys), 'idea': set(ideas), 'flag': flags, 'office': {o.key + '_office' for o in m.OFFICES},
+                  'decision': {d.key + '_decision' for d in getattr(m, 'DECISIONS', ())}}
         seen = {}
         for kind, members in spaces.items():
             for member in members:
                 self.require(member not in seen, 'identifier %s is both a %s and a %s' % (self.fid(member), seen.get(member), kind))
                 seen[member] = kind
         self.require(all(s.layer in catalogue.LAYERS for s in m.SOURCES) and m.SOURCES, 'sources need a known layer')
+
+    def check_requirement(self, r, where, keys):
+        if isinstance(r, S.Completed):
+            self.require(r.focus in keys, where + ': unknown completed focus ' + r.focus)
+        elif isinstance(r, S.After):
+            self.require(re.fullmatch(r'\d{4}\.\d{1,2}\.\d{1,2}', r.date), where + ': bad date')
+        elif isinstance(r, (S.HasGlobal, S.NotGlobal)):
+            # A campaign hook may only read an outcome the mod already records, so a new tree
+            # can never add a read-but-never-set global flag (tools/wiring).
+            self.require(r.name in catalogue.global_flags(), where + ': no mod script sets the global flag ' + r.name)
+        else:
+            self.require(isinstance(r, (S.HasFlag, S.NotFlag)), where + ': unknown requirement')
+
+    def check_building_slots(self):
+        """Every build fits its state: shared slots, per-state caps, and dockyards only on a coast.
+
+        Mutually exclusive focuses can never both complete, so for each state the worst case is the
+        heaviest set of focuses with no two exclusive (exact search; exclusive groups are small)."""
+        import itertools
+        m = self.m
+        exclusive = {}
+        for b in m.BRANCHES:
+            for f in b.focuses:
+                for other in f.exclusive:
+                    exclusive.setdefault(f.key, set()).add(other)
+                    exclusive.setdefault(other, set()).add(f.key)
+        parents = {f.key: set(f.after) | (set(f.after_any) if len(f.after_any) == 1 else set()) for b in m.BRANCHES for f in b.focuses}
+        # A flag only one focus sets (and no event or decision) makes that focus a hard requirement.
+        setters = {}
+        for b in m.BRANCHES:
+            for f in b.focuses:
+                for r in f.reward:
+                    if isinstance(r, S.Flag):
+                        setters.setdefault(r.name, set()).add(f.key)
+        for r in [r for e in m.EVENTS for o in e.options for r in o.effects] + [r for d in getattr(m, 'DECISIONS', ()) for r in d.effects]:
+            if isinstance(r, S.Flag):
+                setters.setdefault(r.name, set()).add(None)
+        for b in m.BRANCHES:
+            for f in b.focuses:
+                for r in f.requires:
+                    if isinstance(r, S.HasFlag) and len(setters.get(r.name, ())) == 1 and None not in setters[r.name]:
+                        parents[f.key] |= setters[r.name]
+                    elif isinstance(r, S.Completed):
+                        parents[f.key].add(r.focus)
+        lineage = {}
+
+        def line(key):
+            # The focus and every ancestor it cannot be completed without.
+            if key not in lineage:
+                lineage[key] = {key}
+                for parent in parents.get(key, ()):
+                    lineage[key] |= line(parent)
+            return lineage[key]
+
+        def clash(a, b):
+            return any(y in exclusive.get(x, ()) for x in line(a) for y in line(b))
+        by_key = {}          # (state, kind) -> {focus key or event/decision label: levels}
+        for owner, rewards in ([(f.key, f.reward) for b in m.BRANCHES for f in b.focuses] +
+                               [('event ' + e.key, o.effects) for e in m.EVENTS for o in e.options] +
+                               [('decision ' + d.key, d.effects) for d in getattr(m, 'DECISIONS', ())]):
+            for r in rewards:
+                if not isinstance(r, S.Build) or r.kind not in catalogue.BUILDINGS:
+                    continue
+                state = r.state or self.capital
+                if r.kind == 'dockyard':
+                    profile = catalogue.state_profile(state)
+                    self.require(profile is not None and profile[3], 'dockyard in state %d, which has no coast' % state)
+                key = (state, r.kind if r.kind in catalogue.STATE_CAPS else 'shared')
+                row = by_key.setdefault(key, {})
+                row[owner] = row.get(owner, 0) + r.level
+        for (state, kind), owners in sorted(by_key.items()):
+            profile = catalogue.state_profile(state)
+            self.require(profile is not None, 'no history for state %d' % state)
+            slots, shared, levels, _ = profile
+            names = sorted(owners)
+            self.require(len(names) <= 16, 'state %d: too many builds in one state to check; spread them' % state)
+            worst = 0
+            for size in range(1, len(names) + 1):
+                for subset in itertools.combinations(names, size):
+                    if any(a in parents and b in parents and clash(a, b) for a, b in itertools.combinations(subset, 2)):
+                        continue
+                    worst = max(worst, sum(owners[k] for k in subset))
+            if kind == 'shared':
+                self.require(shared + worst <= slots, 'state %d: up to %d shared buildings planned, %d free slots' % (state, worst, slots - shared))
+            else:
+                self.require(levels.get(kind, 0) + worst <= catalogue.STATE_CAPS[kind],
+                             'state %d: %s would exceed level %d' % (state, kind, catalogue.STATE_CAPS[kind]))
 
     def check_reward(self, r, where, ideas, events, offices, states):
         if isinstance(r, (S.Idea, S.RemoveIdea, S.TimedIdea)):
@@ -220,6 +321,10 @@ class Compiler:
             return 'NOT = { has_country_flag = %s }' % self.fid(r.name)
         if isinstance(r, S.Completed):
             return 'has_completed_focus = %s' % self.fid(r.focus)
+        if isinstance(r, S.HasGlobal):
+            return 'has_global_flag = %s' % r.name
+        if isinstance(r, S.NotGlobal):
+            return 'NOT = { has_global_flag = %s }' % r.name
         return 'date > %s' % r.date
 
     def compile(self):
@@ -337,9 +442,33 @@ class Compiler:
         if m.OFFICES:
             outputs['common/characters/%s.txt' % n['base']] = (provenance + block('characters', characters)).encode('utf-8')
             outputs['common/scripted_effects/%s.txt' % n['base']] = (provenance + effects).encode('utf-8')
+        # decisions: one category per country, shown only to that country
+        decisions = getattr(m, 'DECISIONS', ())
+        if decisions:
+            category = n['base'] + '_decisions'
+            self.loc[category] = c.name + ': National Measures'
+            self.loc[category + '_desc'] = ('Measures from the national programme of %s. Provisional gameplay unless a source ledger '
+                                            'row says otherwise.' % c.name)
+            rows = ''
+            for d in decisions:
+                ident = '%s_%s_%s_decision' % (c.tag, n['infix'], d.key)
+                self.loc[ident] = d.title
+                self.loc[ident + '_desc'] = d.desc
+                body = 'icon = generic_decision\nallowed = { original_tag = %s }\n' % c.tag
+                if d.requires:
+                    body += block('available', '\n'.join(self.requirement(r) for r in d.requires))
+                body += 'cost = %d\n' % d.cost
+                body += 'days_re_enable = %d\nfire_only_once = no\n' % d.cooldown if d.cooldown else 'fire_only_once = yes\n'
+                body += block('complete_effect', ''.join(self.reward(r, ident, i) for i, r in enumerate(d.effects)))
+                body += block('ai_will_do', 'base = %d' % d.ai)
+                rows += block(ident, body)
+            outputs['common/decisions/categories/%s.txt' % n['base']] = (provenance + block(
+                category, 'icon = generic_political_actions\nallowed = { original_tag = %s }\nvisible_when_empty = no' % c.tag)).encode('utf-8')
+            outputs['common/decisions/%s.txt' % n['base']] = (provenance + block(category, rows)).encode('utf-8')
         # readable flag labels
         for flag in sorted({r.name for b in m.BRANCHES for f in b.focuses for r in f.reward if isinstance(r, S.Flag)} |
-                           {r.name for e in m.EVENTS for o in e.options for r in o.effects if isinstance(r, S.Flag)}):
+                           {r.name for e in m.EVENTS for o in e.options for r in o.effects if isinstance(r, S.Flag)} |
+                           {r.name for d in decisions for r in d.effects if isinstance(r, S.Flag)}):
             self.loc[self.fid(flag)] = '%s: %s' % (c.name, flag.replace('_', ' ').capitalize())
         outputs['interface/%s.gfx' % n['base']] = block('spriteTypes', '\n'.join(sprites)).encode('utf-8')
         yml = 'l_english:\n' + ''.join(' %s:0 "%s"\n' % (k, quote(v)) for k, v in self.loc.items())
@@ -347,6 +476,8 @@ class Compiler:
         own = sum(len(b.focuses) for b in m.BRANCHES)
         budget = dict(tag=c.tag, tree=n['tree'], own_focuses=own, shared_focuses=len(reg_ids), total=own + len(reg_ids),
                       events=len(m.EVENTS), ideas=len(m.IDEAS), offices=len(m.OFFICES), panel=list(panel), lanes=len(lanes))
+        if decisions:
+            budget['decisions'] = len(decisions)
         for row in assets:
             row['sha256'] = hashlib.sha256(outputs[row['file']]).hexdigest()
         return outputs, budget, assets, positions

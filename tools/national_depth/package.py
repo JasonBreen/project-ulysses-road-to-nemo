@@ -84,11 +84,26 @@ def main():
         outputs, budget, assets, _ = compile_country(module)
         produced.update(outputs)
         row = packages.setdefault(package_dir(module, path), {'budgets': [], 'assets': [], 'root': module.COUNTRY.root,
-                                                              'package': module.COUNTRY.package})
+                                                              'package': module.COUNTRY.package, 'files': []})
+        row['files'] += sorted(outputs)
         row['budgets'].append(budget)
         row['assets'] += assets
     if problems:
         raise SystemExit('Lint failed:\n' + '\n'.join(problems))
+    # Never overwrite another generator's file: an existing output must be one this compiler
+    # recorded in a package budget (its 'files' list) on an earlier build.
+    ours = set()
+    for budget_path in list((ROOT / 'tools/world_depth').glob('*/budget.json')) + list((ROOT / 'tools/usea_depth').glob('*/budget.json')):
+        data = json.loads(budget_path.read_text(encoding='utf-8'))
+        if isinstance(data, dict) and data.get('compiler') == 'tools/national_depth':
+            ours.update(data.get('files', []))
+    # World Depth names (<TAG>_wd_, ac_wd_, AC_world_depth/) are reserved for this compiler; the Usea
+    # Depth names (_ud_) are shared with main's Usea Depth generators, so those need the manifest.
+    reserved = re.compile(r'(^|/)(ac_wd_|AC_world_depth/|[A-Z]{3}_wd_)')
+    foreign = [r for r in sorted(produced) if (MOD / r).exists() and r not in ours and not reserved.search(r)]
+    if foreign:
+        raise SystemExit('Refusing to overwrite files another generator owns (countries that already have a tree need '
+                         'attach mode):\n' + '\n'.join(foreign[:20]))
     stale = []
     for relative, data in sorted(produced.items()):
         target = MOD / relative
@@ -106,7 +121,8 @@ def main():
     for folder, row in packages.items():
         budget = dict(package=row['package'], focuses={b['tag']: b['own_focuses'] for b in row['budgets']},
                       trees={b['tree']: b['own_focuses'] for b in row['budgets']}, events=sum(b['events'] for b in row['budgets']),
-                      shared_institutional_focuses_per_tree=36, countries=row['budgets'], native_acceptance=False)
+                      shared_institutional_focuses_per_tree=36, countries=row['budgets'], native_acceptance=False,
+                      compiler='tools/national_depth', files=sorted(row['files']))
         if row['root'] == 'usea':
             budget['marker'] = None
         for name, data in (('budget.json', budget), ('assets.json', dict(schema=1, generator='tools/national_depth', pillow='11.3.0',

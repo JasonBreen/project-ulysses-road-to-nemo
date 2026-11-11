@@ -27,7 +27,17 @@ MODIFIERS = {
     'air_defence_factor': 0.10, 'static_anti_air_damage_factor': 0.15, 'naval_coordination': 0.10,
     'naval_speed_factor': 0.08, 'navy_org_factor': 0.10,
 }
-BUILDINGS = ('industrial_complex', 'arms_factory', 'infrastructure', 'air_base', 'radar_station')
+BUILDINGS = ('industrial_complex', 'arms_factory', 'infrastructure', 'air_base', 'radar_station', 'dockyard')
+# Buildings that share a state's slots, and per-state caps of the others (base game 1.19 rules).
+SHARED_BUILDINGS = ('industrial_complex', 'arms_factory', 'dockyard', 'synthetic_refinery', 'fuel_silo', 'rocket_site',
+                    'nuclear_reactor')
+STATE_CAPS = {'infrastructure': 5, 'air_base': 10, 'radar_station': 6}
+# Shared slots per state category. The mod does not replace common/state_category, so these are the
+# base game's values (1.19); a native check (#8) confirms them in the installed game.
+CATEGORY_SLOTS = {'wasteland': 0, 'enclave': 0, 'tiny_island': 0, 'pastoral': 1, 'small_island': 1, 'rural': 2,
+                  'town': 4, 'large_town': 5, 'city': 6, 'large_city': 8, 'metropolis': 10, 'megalopolis': 12}
+ERAS = {'e1': (1991, 2005), 'e2': (2006, 2020), 'e3': (2021, 2040)}
+_CACHE = {}
 TECH_CATEGORIES = ('industry', 'electronics', 'artillery', 'infantry_weapons', 'land_doctrine', 'air_doctrine',
                    'construction_tech', 'naval_equipment', 'radar_tech', 'logistics_tech', 'rocketry',
                    'excavation_tech', 'engineers_tech', 'train_tech', 'synth_resources')
@@ -77,3 +87,64 @@ def own_states(tag, mod=MOD):
         match = re.search(r'^\s*capital\s*=\s*(\d+)', path.read_text(encoding='utf-8-sig', errors='replace'), re.M)
         capital = int(match[1]) if match else None
     return states, capital
+
+
+def global_flags(mod=MOD):
+    """Global flags some mod script sets: the only ones a spec may read (HasGlobal/NotGlobal)."""
+    if 'global' not in _CACHE:
+        found = set()
+        for path in mod.rglob('*.txt'):
+            if 'localisation' in path.parts:
+                continue
+            text = re.sub(r'#[^\n]*', '', path.read_text(encoding='utf-8-sig', errors='replace'))
+            found |= set(re.findall(r'\bset_global_flag\s*=\s*\{?\s*(?:flag\s*=\s*)?([A-Za-z0-9_]+)', text))
+        _CACHE['global'] = found
+    return _CACHE['global']
+
+
+def state_profile(state, mod=MOD):
+    """(slots, existing shared buildings, other building levels, coastal) of a state, from its history."""
+    if 'states' not in _CACHE:
+        coastal = set()
+        for row in (mod / 'map/definition.csv').read_text(encoding='utf-8-sig', errors='replace').splitlines():
+            cells = row.split(';')
+            if len(cells) > 5 and cells[0].isdigit() and cells[5] == 'true':
+                coastal.add(int(cells[0]))
+        states = {}
+        for path in (mod / 'history/states').glob('*.txt'):
+            text = re.sub(r'#[^\n]*', '', path.read_text(encoding='utf-8-sig', errors='replace'))
+            ident = re.search(r'\bid\s*=\s*(\d+)', text)
+            if not ident:
+                continue
+            category = re.search(r'\bstate_category\s*=\s*([a-z_]+)', text)
+            provinces = re.search(r'\bprovinces\s*=\s*\{([^}]*)\}', text)
+            buildings = re.search(r'\bbuildings\s*=\s*\{(.*?)\n\t*\}', text, re.S)
+            levels = {}
+            if buildings:
+                body = re.sub(r'\d+\s*=\s*\{[^}]*\}', '', buildings[1])    # province-level buildings
+                for key, value in re.findall(r'([a-z_]+)\s*=\s*(\d+)', body):
+                    levels[key] = levels.get(key, 0) + int(value)
+            extra = sum(int(v) for v in re.findall(r'add_extra_state_shared_building_slots\s*=\s*(\d+)', text))
+            members = {int(p) for p in provinces[1].split()} if provinces else set()
+            slots = CATEGORY_SLOTS.get(category[1] if category else 'rural', 2) + extra
+            shared = sum(levels.get(k, 0) for k in SHARED_BUILDINGS)
+            states[int(ident[1])] = (slots, shared, levels, bool(members & coastal))
+        _CACHE['states'] = states
+    return _CACHE['states'].get(state)
+
+
+def era_need(tag, era, own_prefix, root=ROOT):
+    """Focuses a spec must supply for one era: the manifest target minus what other owners delivered."""
+    import json
+    manifest = json.loads((root / 'tools/world_campaigns/manifest.json').read_text(encoding='utf-8'))
+    for country in manifest['countries']:
+        if country['tag'] == tag:
+            row = next(e for e in country['eras'] if e['era'] == era)
+            others = [i for i in row['delivered_ids'] if not i.startswith(own_prefix)]
+            return max(0, row['target'] - len(others)), row['target']
+    raise ValueError('%s is not in the national-campaign manifest' % tag)
+
+
+def chronicle_keys(root=ROOT):
+    import json
+    return {row['key'] for row in json.loads((root / 'tools/lore/chronicle.json').read_text(encoding='utf-8'))['entries']}

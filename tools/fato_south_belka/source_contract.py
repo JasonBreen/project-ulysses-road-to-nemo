@@ -23,14 +23,16 @@ def digest(data):return hashlib.sha256(data.replace(b'\r\n',b'\n')).hexdigest()
 # Keep engine_contract.json's original fifteen captures. Only this exact,
 # separately reviewed release-owner revision is permitted in their composition.
 # It retires automatic production-line purchases; no national caller edits it.
+# 11 November 2026 (wiring audit, docs/WIRING_AUDIT.md): the generator no longer
+# emits the empty AWW/SER network-finish guard; nothing else in the owner changes.
 REVIEWED_RELEASE_UPDATE=dict(
     path='common/scripted_effects/ac_release_maintenance.txt',
     original_sha256='b73a36358dbcd17f41719c127302afac16c3fdb056668e043bcdc2c284e1dce0',
-    reviewed_sha256='1bd93b4d785649d031620ac749b96c9f31d4aa96d5a56ed516dd5ade6b73d575',
-    reviewed_commit='882c53e85d1c8f5eb4b004404b55677bb3c0b29f',
-    tested_source='51622f4d72c6e1c497156ce1dd7fed881723e3f0',
-    previous_reviewed_sha256='837d9946a1a72c93c67107f9243fe65ac1a6a2ea0ec1b133dbc7033fa867d67a',
-    previous_reviewed_commit='45da6a51393edd6b909f5bb45930e09d0c1350e5',
+    reviewed_sha256='573b60d29337f73cbe6e55bcad5db20cee7fc92327d928207d63b5d838d2d4e8',
+    reviewed_commit='7601c7c43fa1348c53b6f2806fd4f9096e9d63c4',
+    tested_source='7601c7c43fa1348c53b6f2806fd4f9096e9d63c4',
+    previous_reviewed_sha256='1bd93b4d785649d031620ac749b96c9f31d4aa96d5a56ed516dd5ade6b73d575',
+    previous_reviewed_commit='882c53e85d1c8f5eb4b004404b55677bb3c0b29f',
 )
 
 # The 1991 history-data cleanup removes FAT Hugo Havel's literal ``xxx``
@@ -86,6 +88,16 @@ REVIEWED_PWI_LAYOUT_UPDATE=dict(
     reviewed_sha256='e64c3c2004a6391ef88286552a7fba3073c67afdd196531684327430ee0566d4',
 )
 
+# Wiring audit repair (11 November 2026, docs/WIRING_AUDIT.md): the Excalibur AA
+# mission's activation read a flag nothing sets; it becomes always = no because
+# BLK_excalibur_fire_aa activates the mission directly. Pin only that transition.
+REVIEWED_WIRING_BLK_DECISIONS_UPDATE=dict(
+    path='common/decisions/BLK_decisions.txt',
+    original_sha256='8b6f8a136dc7151ffbb0d789f2faa48585b811345ba57e59ed48fdfc085f1a7f',
+    reviewed_sha256='4885c3999cb37f3c3e59f15455a51fb8c5f1b39af23c1f4af6ea061f2d50e0ed',
+    reviewed_commit='7601c7c43fa1348c53b6f2806fd4f9096e9d63c4',
+)
+
 def validate_reviewed_belkan_outcomes(data):
     for directory in (ROOT/'tools',ROOT/'tools/usea_expansion'):
         if str(directory)not in sys.path:sys.path.append(str(directory))
@@ -106,7 +118,8 @@ def validate_protected(path,expected,data):
             ('reviewed-fat-character-owner',REVIEWED_FAT_CHARACTER_UPDATE),
             ('reviewed-starting-government-owner',REVIEWED_STARTING_GOVERNMENT_UPDATE),
             ('reviewed-fat-doctrine-ids',REVIEWED_FAT_DOCTRINE_UPDATE),
-            ('reviewed-pwi-layout-refresh',REVIEWED_PWI_LAYOUT_UPDATE)):
+            ('reviewed-pwi-layout-refresh',REVIEWED_PWI_LAYOUT_UPDATE),
+            ('reviewed-wiring-excalibur-activation',REVIEWED_WIRING_BLK_DECISIONS_UPDATE)):
         if (path==update['path'] and expected==update['original_sha256']
                 and actual==update['reviewed_sha256']):return disposition
     raise ValueError('Inherited owner changed: '+path)

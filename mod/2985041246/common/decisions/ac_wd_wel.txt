@@ -1,0 +1,115 @@
+# Bespoke national tree; source: tools/national_depth (Wellow). Provisional gameplay unless a ledger row says otherwise. Native acceptance pending.
+ac_wd_wel_decisions = {
+	WEL_wd_winter_ferries_decision = {
+		icon = generic_decision
+		allowed = { original_tag = WEL }
+		available = {
+			has_country_flag = WEL_wd_ferry_network
+		}
+		cost = 40
+		days_re_enable = 365
+		fire_only_once = no
+		complete_effect = {
+			add_timed_idea = {
+				idea = WEL_wd_winter_ferries
+				days = 180
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	WEL_wd_draw_fuel_reserve_decision = {
+		icon = generic_decision
+		allowed = { original_tag = WEL }
+		available = {
+			has_country_flag = WEL_wd_fuel_reserve
+		}
+		cost = 50
+		days_re_enable = 365
+		fire_only_once = no
+		complete_effect = {
+			add_timed_idea = {
+				idea = WEL_wd_fuel_drawn
+				days = 120
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	WEL_wd_charter_relief_decision = {
+		icon = generic_decision
+		allowed = { original_tag = WEL }
+		available = {
+			has_country_flag = WEL_wd_relief_fleet
+		}
+		cost = 60
+		fire_only_once = yes
+		complete_effect = {
+			country_event = {
+				id = ac_wd_wel.14
+				days = 1
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	WEL_wd_coast_reserve_decision = {
+		icon = generic_decision
+		allowed = { original_tag = WEL }
+		cost = 35
+		days_re_enable = 180
+		fire_only_once = no
+		complete_effect = {
+			navy_experience = 10
+			add_war_support = 0.02
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	WEL_wd_island_airstrip_decision = {
+		icon = generic_decision
+		allowed = { original_tag = WEL }
+		available = {
+			has_country_flag = WEL_wd_island_airfields
+		}
+		cost = 75
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = {
+					owns_state = 131
+				}
+				131 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	WEL_wd_dues_amnesty_decision = {
+		icon = generic_decision
+		allowed = { original_tag = WEL }
+		available = {
+			has_completed_focus = WEL_wd_reg_harbour_offices
+		}
+		cost = 30
+		fire_only_once = yes
+		complete_effect = {
+			add_stability = 0.03
+			add_war_support = -0.01
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+}

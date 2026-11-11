@@ -86,7 +86,7 @@ def depth_cases():
     import package
     from compile import names
     rows = []
-    for path in package.discover():
+    for path in package.discover(built=True):
         module = package.load(path)
         c = module.COUNTRY
         n = names(c)

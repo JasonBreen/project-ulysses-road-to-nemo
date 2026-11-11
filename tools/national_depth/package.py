@@ -34,10 +34,15 @@ def load(path):
     return module
 
 
-def discover():
+def discover(built=False):
+    """Every spec; with built=True only specs whose package already has a compiled budget.json
+    (review pages and playtest cases cover what is in the mod, not work in progress)."""
     paths = sorted((ROOT / 'tools/usea_depth').glob('*/countries/*.py'), key=lambda p: p.as_posix())
     paths += sorted((ROOT / 'tools/world_depth').glob('*/content.py'), key=lambda p: p.as_posix())
-    return [p for p in paths if not p.name.startswith('_')]
+    paths = [p for p in paths if not p.name.startswith('_')]
+    if built:
+        paths = [p for p in paths if ((p.parent.parent if 'usea_depth' in p.parts else p.parent) / 'budget.json').exists()]
+    return paths
 
 
 def mod_focus_texts(exclude=()):

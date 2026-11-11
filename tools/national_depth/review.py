@@ -155,7 +155,7 @@ def main():
     art.require_pinned_pillow()
     font = atlas_font()
     rows, files = [], {}
-    for path in package.discover():
+    for path in package.discover(built=True):
         module = package.load(path)
         if args.only and module.COUNTRY.tag not in args.only:
             continue

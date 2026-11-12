@@ -28,7 +28,7 @@ def ids(nodes):return {k for k,_,_ in nodes}
 def read(path):return parse(path.read_text(encoding='utf-8-sig'))
 def digest(path):return hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
 sys.path.append(str(ROOT/'tools/air_program'))
-from reviewed_sources import reviewed_updates,validate_outcome,reviewed_ucw_updates,validate_hosting,validate_pwi_layout,PWI
+from reviewed_sources import reviewed_updates,validate_outcome,reviewed_ucw_updates,validate_hosting,validate_pwi_layout,PWI,validate_native_syntax,NATIVE_SYNTAX_FILES
 
 
 class Captured(unittest.TestCase):
@@ -258,17 +258,49 @@ class Definitions(Captured):
         self.assertEqual({prefix+'ac_economy_compat.txt',prefix+'ac_macro_effects.txt'},set(files))
         expected={prefix+'ac_economy_compat.txt':({'ac_econ_initialize'},{'ac_econ_adopt_release_account','ac_econ_try_fund_release_project'}),
                   prefix+'ac_macro_effects.txt':({'ac_macro_initialize'},set())}
+        # Native N007/N008 respelled some effects; that receipt is validated against
+        # these rows and supplies the only admitted newer fingerprints.
+        native=json.loads((HERE/'reviewed_native_syntax_updates.json').read_text())['files']
         for path,row in files.items():
             self.assertEqual([],row['removed']);self.assertEqual(expected[path],(set(row['changed']),set(row['added'])))
             current={key:value for key,_,value in read(ROOT/path)}
             old=row['unchanged_function_ast_sha256'];reviewed=row['reviewed_function_ast_sha256']
             self.assertEqual(set(current),set(old)|set(reviewed))
             self.assertFalse(set(old)&set(reviewed))
+            validate_native_syntax(row,native[path],(ROOT/path).read_text(encoding='utf-8-sig'))
+            respelled=native[path]['reviewed_function_ast_sha256']
             for name,body in current.items():
                 actual=hashlib.sha256(json.dumps(body,separators=(',',':')).encode()).hexdigest()
-                self.assertEqual((reviewed if name in reviewed else old)[name],actual,(path,name))
+                self.assertEqual(respelled[name] if name in respelled else (reviewed if name in reviewed else old)[name],actual,(path,name))
         result=subprocess.run([sys.executable,'-B','tools/economy_v2/build.py','--check'],cwd=ROOT,capture_output=True,text=True)
         self.assertEqual(0,result.returncode,result.stdout+result.stderr)
+
+    def test_native_syntax_receipt_admits_only_the_reviewed_respellings(self):
+        receipt=json.loads((HERE/'reviewed_native_syntax_updates.json').read_text())
+        owners=json.loads((HERE/'reviewed_owner_updates.json').read_text())['files']
+        baseline=json.loads((HERE/'preserved_sources.json').read_text())['sources']
+        self.assertEqual(NATIVE_SYNTAX_FILES,set(receipt['files']));self.assertFalse(receipt['native_acceptance'])
+        composed=reviewed_updates()
+        for path,row in receipt['files'].items():
+            previous=owners.get(path);source=(ROOT/path).read_text(encoding='utf-8-sig')
+            self.assertEqual(row,validate_native_syntax(previous,row,source))
+            # The original protected capture is still the start of the chain.
+            self.assertEqual(baseline[path],composed[path]['old_sha256']);self.assertEqual(row['new_sha256'],composed[path]['new_sha256'])
+            if previous is None:self.assertEqual(baseline[path],row['old_sha256'])
+            self.assertNotRegex(source,r'(?<![.\w])date \}|value = date\b|\w+ = no \}|check_variable = \{ \w+ [<>]= ')
+            name=row['changed'][0]
+            mutations=(source.replace('global.date','global.year',1) if row['substitutions']['global_date'] else source.replace('= yes','= no',1),
+                       source+'\nac_unreviewed_extra = { log = "unreviewed" }\n',
+                       source.replace(name+' = {',name+' = {\n\tlog = "unreviewed"',1))
+            for bad in mutations:
+                self.assertNotEqual(source,bad)
+                with self.assertRaises(ValueError):validate_native_syntax(previous,row,bad)
+            for field,value in (('added',['ac_unreviewed_extra']),('changed',row['changed'][1:]),
+                                ('substitutions',{**row['substitutions'],'negated_triggers':row['substitutions']['negated_triggers']+['has_war']})):
+                with self.assertRaises(ValueError):validate_native_syntax(previous,{**row,field:value},source)
+        macro='mod/2985041246/common/scripted_effects/ac_macro_effects.txt'
+        with self.assertRaisesRegex(ValueError,'does not continue'):
+            validate_native_syntax({**owners[macro],'new_sha256':'0'*64},receipt['files'][macro],(ROOT/macro).read_text(encoding='utf-8-sig'))
 
     def test_reviewed_campaign_delta_adds_only_shared_commit_effect(self):
         receipt=json.loads((HERE/'reviewed_campaign_updates.json').read_text());files=receipt['files']

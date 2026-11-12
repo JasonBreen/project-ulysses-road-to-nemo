@@ -31,6 +31,22 @@ class Macro(unittest.TestCase):
 
     def close(self,a,b):self.assertLess(abs(a-b),D('1e-18'))
 
+    def test_native_trigger_negation_and_inclusive_comparisons(self):
+        # The offline interpreter supports forms the native parser does not.
+        # N007: '= no' on scripted triggers skipped the fresh-state seed gate;
+        # inclusive shorthand produced native unexpected-token errors.
+        outputs=build()
+        for path,text in outputs.items():
+            if not path.startswith('common/') or not isinstance(text,str):continue
+            for key,body in walk(parse(text)):
+                if key=='check_variable':
+                    self.assertFalse(any(op in ('>=','<=') for _,op,_ in body),path)
+            self.assertNotRegex(text,r'\b(?:ac_macro_ready|ac_macro_mode|ac_econ_enabled|ac_econ_release_history)\s*=\s*no\b',path)
+        initializer=get(parse(outputs['common/scripted_effects/ac_macro_effects.txt']),'ac_macro_initialize')
+        seed_gate=next(get(body,'limit') for key,body in walk(initializer)
+                       if key=='if' and get(body,'ac_macro_seed_states')=='yes')
+        self.assertEqual('yes',get(get(seed_gate,'NOT'),'ac_econ_release_history'))
+
     def test_69_profiles_and_state_output_are_not_canon_claims(self):
         data=json.loads((ROOT/'tools/economy_v2/profiles.json').read_text())
         histories={p.name[:3] for p in (MOD/'history/countries').glob('*.txt')}
@@ -41,6 +57,20 @@ class Macro(unittest.TestCase):
             owned=any(s.owner==tag for s in self.base.states.values())
             self.assertEqual(owned,'ac_macro_initialized' in c.flags,tag)
             if not owned:self.assertFalse(c.variables,tag)
+
+    def test_monthly_dates_use_the_native_global_scope(self):
+        # N008: treating bare 'date' as today's numeric date in the interpreter
+        # hid a native zero-versus-zero settlement guard. The engine documents
+        # date under GLOBAL, also used by BFTB_Bulgaria's saved death date.
+        for path,text in build().items():
+            if path.startswith('common/') and isinstance(text,str):
+                self.assertNotRegex(text,r'\bac_macro_\w+\s*[=<>]+\s*date\b',path)
+        w,c=self.world()
+        with self.assertRaisesRegex(ValueError,'Unknown numeric observable date'):
+            w.number('date',c,{},c,None)
+        self.assertEqual(D(w.today),w.number('global.date',c,{},c,None))
+        w.month('SNS');self.assertEqual(D(w.today),c.variables['ac_macro_last_settlement'])
+        self.assertGreater(c.variables['ac_macro_last_revenue'],0)
 
     def test_refresh_startup_and_reload_never_reseed_cash_or_settle(self):
         w,c=self.world();before=copy.deepcopy(c.variables)

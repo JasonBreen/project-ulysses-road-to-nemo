@@ -27,6 +27,7 @@ replace_path="common/scientist_traits"
 path="mod/2985041246/"
 
 # Strangereal owns these authored systems; do not merge WWII/DLC country content.
+replace_path="events"
 replace_path="common/decisions"
 replace_path="common/national_focus"
 replace_path="common/continuous_focus"

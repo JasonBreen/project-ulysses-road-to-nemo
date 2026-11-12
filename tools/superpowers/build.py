@@ -172,20 +172,20 @@ def output():
         start='clr_country_flag = ac_snp_payment_authorized\n'+guard(ident+'_can_start = yes',fee()+guard('has_country_flag = ac_snp_payment_authorized',
             'clr_country_flag = ac_snp_payment_authorized\n'+pay_pp+'set_temp_variable = { ac_pol_capacity_delta = -4 }\nac_pol_change_capacity = yes\n'+
             'set_country_flag = '+ident+'_active\n'+guard('NOT = { has_variable = '+prefix+'_start_serial }','set_variable = { '+prefix+'_start_serial = 0 }')+
-            'add_to_variable = { '+prefix+'_start_serial = 1 }\nset_variable = { '+prefix+'_started = date }\nset_variable = { '+prefix+'_due = date }\nadd_to_variable = { '+prefix+'_due = 90 }\nset_variable = { '+prefix+'_elapsed = 0 }\n'+
+            'add_to_variable = { '+prefix+'_start_serial = 1 }\nset_variable = { '+prefix+'_started = global.date }\nset_variable = { '+prefix+'_due = global.date }\nadd_to_variable = { '+prefix+'_due = 90 }\nset_variable = { '+prefix+'_elapsed = 0 }\n'+
             guard('has_war = yes','set_country_flag = '+ident+'_wartime\nadd_timed_idea = { idea = '+ident+'_domestic_spirit days = 90 }')+
             block('else','clr_country_flag = '+ident+'_wartime\nadd_timed_idea = { idea = '+ident+'_spirit days = 90 }')+
             'country_event = { id = '+s.event+' days = 90 }\nac_snp_reconcile = yes'))
         effects[ident+'_start']=start
-        progress=guard('has_country_flag = '+ident+'_active has_variable = '+prefix+'_started','set_variable = { '+prefix+'_elapsed = date }\nsubtract_from_variable = { '+prefix+'_elapsed = '+prefix+'_started }\nclamp_variable = { var = '+prefix+'_elapsed min = 0 max = 90 }')
+        progress=guard('has_country_flag = '+ident+'_active has_variable = '+prefix+'_started','set_variable = { '+prefix+'_elapsed = global.date }\nsubtract_from_variable = { '+prefix+'_elapsed = '+prefix+'_started }\nclamp_variable = { var = '+prefix+'_elapsed min = 0 max = 90 }')
         effects[ident+'_progress']=guard(host(tag),progress)
-        finishable=active(tag)+' has_country_flag = '+ident+'_active has_variable = '+prefix+'_started has_variable = '+prefix+'_due check_variable = { var = '+prefix+'_due value = date compare = less_than_or_equals } check_variable = { var = '+prefix+'_started value = date compare = less_than } OR = { has_war = no has_country_flag = '+ident+'_wartime }'
+        finishable=active(tag)+' has_country_flag = '+ident+'_active has_variable = '+prefix+'_started has_variable = '+prefix+'_due check_variable = { var = '+prefix+'_due value = global.date compare = less_than_or_equals } check_variable = { var = '+prefix+'_started value = global.date compare = less_than } OR = { has_war = no has_country_flag = '+ident+'_wartime }'
         triggers[ident+'_finishable']=finishable
         release='remove_ideas = '+ident+'_spirit\nremove_ideas = '+ident+'_domestic_spirit\nclr_country_flag = '+ident+'_active\n'
         support_reward=''
         if tag=='OSE':support_reward='add_to_variable = { '+support+' = 3 }\nadd_to_variable = { ac_snp_ose_'+('security'if s.index==0 else'public')+' = 1 }\n'
         finish=('set_country_flag = '+ident+'_completed\nset_country_flag = '+bid(s.branch)+'_service_completed\nadd_to_variable = { ac_snp_completed = 1 }\nset_variable = { '+prefix+'_elapsed = 90 }\n'+
-            'set_variable = { '+prefix+'_last_completed_started = '+prefix+'_started }\nset_variable = { '+prefix+'_last_completed_on = date }\nset_variable = { '+prefix+'_last_completed_identity = THIS.id }\nset_variable = { '+prefix+'_last_completed_serial = 0 }\n'+
+            'set_variable = { '+prefix+'_last_completed_started = '+prefix+'_started }\nset_variable = { '+prefix+'_last_completed_on = global.date }\nset_variable = { '+prefix+'_last_completed_identity = THIS.id }\nset_variable = { '+prefix+'_last_completed_serial = 0 }\n'+
             guard('has_variable = '+prefix+'_start_serial','set_variable = { '+prefix+'_last_completed_serial = '+prefix+'_start_serial }')+release+
             guard('has_country_flag = '+ident+'_wartime','set_country_flag = '+bid(s.branch)+'_last_domestic')+block('else','clr_country_flag = '+bid(s.branch)+'_last_domestic')+
             'clr_country_flag = '+ident+'_wartime\nset_country_flag = { flag = '+ident+'_cooldown days = 90 }\n'+support_reward+'ac_snp_reconcile = yes\n')
@@ -194,7 +194,7 @@ def output():
             'set_country_flag = '+ident+'_interrupted\nset_variable = { ac_snp_last_interrupted = '+str(s.number+1)+' }\nset_variable = { ac_snp_last_interrupted_days = '+prefix+'_elapsed }\nclr_country_flag = '+ident+'_wartime\n'+('add_to_variable = { '+support+' = -3 }\n'if tag=='OSE'else'')+'ac_snp_reconcile = yes')
         # Exact due-date dispatch rejects an old/delayed timer. Weekly recovery
         # handles legitimate current work whose engine timer was not delivered.
-        timer_condition=ident+'_finishable = yes check_variable = { var = '+prefix+'_due value = date compare = equals }'
+        timer_condition=ident+'_finishable = yes check_variable = { var = '+prefix+'_due value = global.date compare = equals }'
         timers.append(block('country_event','id = '+s.event+'\nhidden = yes\nis_triggered_only = yes\ntrigger = { '+timer_condition+' }\n'+block('immediate',guard(timer_condition,ident+'_finish = yes'))))
         idea(ident+'_spirit',s.title,s.branch.institution+' sustains this ninety-day funded period. '+s.objective,s.modifiers)
         idea(ident+'_domestic_spirit',s.title+': Domestic Continuity',

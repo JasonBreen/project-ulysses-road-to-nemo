@@ -66,7 +66,9 @@ class World:
     def number(self,value,context,temp,root,previous):
         try:return D(str(value))
         except Exception:pass
-        if value=='date':return D(self.today)
+        # The installed dynamic-variable documentation assigns date to GLOBAL.
+        # A bare country/state 'date' is not the current date (native N008).
+        if value=='global.date':return D(self.today)
         if '.' in value:
             scope,variable=value.split('.',1)
             target=self.scope(scope,context,root,previous)

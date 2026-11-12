@@ -14,6 +14,7 @@ Run from the repository root:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -63,10 +64,17 @@ NEWS_DEFAULT = "gfx/AC_event_style/news_default.dds"
 PANEL = "gfx/interface/ac_visual_scrub/panel_placeholder.dds"
 PORTRAIT = "gfx/interface/ac_visual_scrub/portrait_placeholder.dds"
 AGENCY = "gfx/interface/ac_visual_scrub/agency_placeholder.dds"
+SCRUB_DIR = "gfx/interface/ac_visual_scrub/"
+DOCTRINE_DECOR = SCRUB_DIR + "doctrine_decor.dds"
 MENU_FALLBACK = "gfx/animated_textures/frontend_background/menu_fallback.dds"
 MENU = MENU_FALLBACK
+GLOBE_MANIFEST = ROOT / 'tools/usea_expansion/frontend_globe_original.json'
 LOGO = "gfx/interface/logo_game.dds"
-SELECT_DATE = "gfx/interface/ac_briefing/select_date.dds"
+# The archive's own 180 x 104 bookmark picture. The 780 x 620 briefing window
+# background must never be bound here: the bookmark entry is only 232 x 211.
+BOOKMARK_PICTURE = "gfx/interface/select_date_1936.dds"
+BOOKMARK_ENTRY_SIZE = (232, 211)
+BOOKMARK_ICON_OFFSET = (27, 28)
 ARTILLERY_BG = "gfx/interface/techtree/artillery_techtree_bg.dds"
 
 CONTENT_PREFIXES = (
@@ -90,6 +98,8 @@ CONTENT_PREFIXES = (
 # that displays them lives in the unreplaced countrytechnologyview.gfx, so the
 # file at that path is what the player sees. Artillery is kept: it is a
 # futuristic gun illustration already in the mod, not a vanilla photograph.
+# The engine draws these behind interactive research trees, so they are plain
+# navy backdrops; the names below only record which tab each one sits behind.
 EARTH_BACKGROUNDS = {
     "gfx/interface/techtree/infantry_techtree_bg.dds": "INFANTRY TAB",
     "gfx/interface/techtree/air_techtree_bg.dds": "AIR TAB",
@@ -130,6 +140,12 @@ GRAND_DOCTRINES = [
     "new_base_strike", "new_strategic_destruction", "new_battlefield_support",
     "new_operational_integrity",
 ]
+
+# Sprite names, roles, frame counts and sizes that the installed 1.19 doctrine
+# definitions request (see extract_doctrine_sprites.py). Names and dimensions
+# only; no installed pixels are read by this generator.
+DOCTRINE_SPRITES = json.loads((Path(__file__).resolve().parent / "doctrine_sprites.json").read_text(encoding="utf-8"))["sprites"]
+BRANCH_ART = {"land": IDEA_LAND, "sea": IDEA_NAVY, "air": IDEA_AIR, "special_forces": IDEA_SECURITY}
 
 TAGS = ("eng", "fra", "ger", "ita", "jap", "sov", "usa")
 TANK_WEIGHTS = ("light", "medium", "heavy")
@@ -183,6 +199,57 @@ def panel(width: int, height: int, label: str) -> Image.Image:
     return image
 
 
+def backdrop(width: int, height: int) -> Image.Image:
+    """Unlabelled navy fill for art the engine draws behind interactive content."""
+    return Image.new("RGBA", (width, height), NAVY)
+
+
+def doctrine_backdrop(width: int, height: int) -> str:
+    return f"{SCRUB_DIR}doctrine_backdrop_{width}x{height}.dds"
+
+
+def doctrine_milestone(branch: str) -> str:
+    return f"{SCRUB_DIR}doctrine_milestone_{branch}.dds"
+
+
+def doctrine_binding(name: str) -> tuple[str, int, str]:
+    row = DOCTRINE_SPRITES[name]
+    if row["role"] == "background":
+        return doctrine_backdrop(row["width"], row["height"]), 1, "Doctrine track background rebound to an unlabelled navy backdrop of the engine card size."
+    if row["role"] == "icon_frame":
+        return DOCTRINE_DECOR, row["frames"], "Doctrine track ornament rebound to a plain generated rule with the engine frame count."
+    if row["frames"] != 1:
+        return doctrine_milestone(row["branch"]), row["frames"], "Doctrine milestone badge rebound to existing mod branch art with the engine frame count."
+    return BRANCH_ART[row["branch"]], 1, "Subdoctrine icon rebound to existing mod branch art."
+
+
+def milestone_strip(branch: str, width: int, height: int, frames: int) -> Image.Image:
+    """Existing branch icon centred in each engine frame; earlier frames are dimmed."""
+    strip = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    cell = width // frames
+    with Image.open(MOD / BRANCH_ART[branch]) as source:
+        icon = source.convert("RGBA")
+    for index in range(frames):
+        used = icon
+        if index < frames - 1:
+            red, green, blue, alpha = icon.split()
+            dimmed = [band.point(lambda value: value * 11 // 20) for band in (red, green, blue)]
+            used = Image.merge("RGBA", (*dimmed, alpha))
+        strip.alpha_composite(used, (index * cell + (cell - icon.width) // 2, (height - icon.height) // 2))
+    return strip
+
+
+def decor_strip(width: int, height: int, frames: int) -> Image.Image:
+    """Transparent ornament strip with one thin rule per frame."""
+    strip = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(strip)
+    cell = width // frames
+    for index in range(frames):
+        colour = CYAN if index == frames - 1 else (CYAN[0] * 11 // 20, CYAN[1] * 11 // 20, CYAN[2] * 11 // 20, 255)
+        draw.rectangle((index * cell + 24, height - 6, (index + 1) * cell - 25, height - 5), fill=colour)
+    return strip
+
+
 def save_dds(path: Path, image: Image.Image) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     image.save(path, format="DDS")
@@ -217,11 +284,11 @@ def choose(name: str) -> tuple[str, int, str]:
     if name == "GFX_intelligence_agency_logo_ger":
         return AGENCY, 2, "Belka was still using the German agency logo sprite."
     if name == "GFX_frontend_bg":
-        return MENU, 1, "Main-menu background was an undefined engine sprite, so the vanilla menu showed through."
+        return MENU, 1, "Original archived globe fallback; the animated Ulysses tile assets are preserved."
     if name == "GFX_frontend_game_logo":
         return LOGO, 1, "Main-menu logo rebound to the existing Project Ulysses wordmark."
     if name == "GFX_select_date_1936":
-        return SELECT_DATE, 1, "1991 bookmark picture was still the vanilla 1936 date sprite."
+        return BOOKMARK_PICTURE, 1, "Both 1991 bookmarks keep this sprite name; bound to the archive's own bookmark picture so the lookup stays in the mod."
     if name == "GFX_leader_unknown" or name.startswith("GFX_portrait") or name.startswith("GFX_Portrait"):
         return PORTRAIT, 1, "Earth or unknown leader portrait rebound to a marked placeholder."
     if lowered.startswith("gfx_news_event_"):
@@ -250,7 +317,7 @@ def choose(name: str) -> tuple[str, int, str]:
         }.get(branch, SPEC_LAND), 1, "Facility specialisation icon aliased to the mod special-project icon."
     if "doctrine" in lowered or any(key in lowered for key in GRAND_DOCTRINES) or lowered.endswith("_bg") and any(key in lowered for key in ("warfare", "firepower", "battleplan", "assault", "fleet", "interdiction", "base_strike", "destruction", "battlefield", "integrity")):
         if lowered.endswith("_bg") or "_bg_" in lowered:
-            return PANEL, 1, "Grand-doctrine illustration rebound to a marked placeholder panel."
+            return PANEL, 1, "Grand-doctrine illustration rebound to an unlabelled navy backdrop."
         if any(word in lowered for word in ("naval", "fleet", "ship", "carrier", "submarine", "base_strike", "trade_interdiction")):
             return IDEA_NAVY, 1, "Naval doctrine icon rebound to existing mod navy art."
         if any(word in lowered for word in ("air", "strategic_destruction", "battlefield", "operational")):
@@ -293,7 +360,7 @@ def in_scope(name: str) -> bool:
     """Content pictures only. Buttons, flags, scrollbars and Paradox chrome stay."""
     if name in {"GFX_frontend_bg", "GFX_frontend_game_logo", "GFX_select_date_1936", "GFX_leader_unknown"}:
         return True
-    if name.startswith(CONTENT_PREFIXES):
+    if name.startswith(CONTENT_PREFIXES) or name in DOCTRINE_SPRITES:
         return True
     if name in {
         "GFX_buildings_strip", "GFX_naval_headquarter_buildings_bg",
@@ -386,6 +453,7 @@ def content_sprite_names() -> set[str]:
     names.update([
         "GFX_mob_warfare_bg", "GFX_sup_firepower_bg", "GFX_grand_battleplan_bg", "GFX_mass_assault_bg",
     ])
+    names.update(DOCTRINE_SPRITES)
     for weight in TANK_WEIGHTS:
         for role in TANK_ROLES:
             role_bit = f"_{role}" if role else ""
@@ -410,19 +478,34 @@ def content_sprite_names() -> set[str]:
     return {name for name in names if name.lower() not in defined and in_scope(name)}
 
 
+def backdrop_paths() -> list[str]:
+    """Every generated texture that sits behind controls and so carries no label."""
+    doctrine = {doctrine_backdrop(row["width"], row["height"]) for row in DOCTRINE_SPRITES.values() if row["role"] == "background"}
+    return sorted({PANEL, *EARTH_BACKGROUNDS, *doctrine})
+
+
 def write_placeholders() -> None:
-    save_dds(MOD / PANEL, panel(959, 715, "DOCTRINE / BUILDING"))
-    save_dds(MOD / MENU, panel(1920, 1080, "MAIN MENU"))
-    save_dds(MOD / PORTRAIT, panel(156, 210, "PORTRAIT"))
-    agency = Image.new("RGBA", (234, 119), (0, 0, 0, 0))
-    agency.paste(panel(117, 119, "AGENCY"), (0, 0))
-    agency.paste(panel(117, 119, "AGENCY"), (117, 0))
-    save_dds(MOD / AGENCY, agency)
-    for relative, label in EARTH_BACKGROUNDS.items():
+    save_dds(MOD / PANEL, backdrop(959, 715))
+    # Labelled placeholders depend on the host font, so existing files are kept.
+    if not (MOD / PORTRAIT).exists():
+        save_dds(MOD / PORTRAIT, panel(156, 210, "PORTRAIT"))
+    if not (MOD / AGENCY).exists():
+        agency = Image.new("RGBA", (234, 119), (0, 0, 0, 0))
+        agency.paste(panel(117, 119, "AGENCY"), (0, 0))
+        agency.paste(panel(117, 119, "AGENCY"), (117, 0))
+        save_dds(MOD / AGENCY, agency)
+    for relative in EARTH_BACKGROUNDS:
         path = MOD / relative
         with Image.open(path) as current:
             width, height = current.size
-        save_dds(path, panel(width, height, label))
+        save_dds(path, backdrop(width, height))
+    for row in DOCTRINE_SPRITES.values():
+        if row["role"] == "background":
+            save_dds(MOD / doctrine_backdrop(row["width"], row["height"]), backdrop(row["width"], row["height"]))
+        elif row["role"] == "icon_frame":
+            save_dds(MOD / DOCTRINE_DECOR, decor_strip(row["width"], row["height"], row["frames"]))
+        elif row["frames"] != 1:
+            save_dds(MOD / doctrine_milestone(row["branch"]), milestone_strip(row["branch"], row["width"], row["height"], row["frames"]))
 
 
 def sprite_block(name: str, texture: str, frames: int) -> str:
@@ -445,7 +528,43 @@ def validate_bindings(text: str, rows: list[dict]) -> None:
                     raise SystemExit("Invalid news picture dimensions: " + row["name"])
 
 
+def validate_presentation(rows: list[dict]) -> None:
+    """Size and frame contracts that a sprite-name match alone does not prove."""
+    for relative in backdrop_paths():
+        with Image.open(MOD / relative) as image:
+            colours = image.convert("RGBA").getcolors(maxcolors=2)
+        if colours is None or [colour for _count, colour in colours] != [NAVY]:
+            raise SystemExit(f"{relative} must be an unlabelled navy backdrop")
+    by_name = {row["name"]: row for row in rows}
+    bookmark = by_name.get("GFX_select_date_1936")
+    if bookmark:
+        with Image.open(MOD / bookmark["texture"]) as image:
+            fits = all(offset + size <= limit for offset, size, limit in zip(BOOKMARK_ICON_OFFSET, image.size, BOOKMARK_ENTRY_SIZE))
+        if not fits:
+            raise SystemExit("Bookmark picture overflows the bookmark entry: " + bookmark["texture"])
+    for name, expected in DOCTRINE_SPRITES.items():
+        row = by_name.get(name)
+        if row is None:
+            continue
+        if row["frames"] != expected["frames"]:
+            raise SystemExit(f"Doctrine sprite frame count differs from the engine definition: {name}")
+        if expected["role"] != "icon" or expected["frames"] != 1:
+            with Image.open(MOD / row["texture"]) as image:
+                if image.size != (expected["width"], expected["height"]):
+                    raise SystemExit(f"Doctrine sprite size differs from the engine definition: {name}")
+
+
+def validate_globe_assets() -> None:
+    """Never classify the owner's archived globe as replaceable placeholder art."""
+    original = json.loads(GLOBE_MANIFEST.read_text(encoding='utf-8'))
+    for relative, expected in original['assets'].items():
+        path = MOD / relative
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+            raise SystemExit('Archived Ulysses globe asset changed: ' + relative)
+
+
 def build(check_only: bool) -> int:
+    validate_globe_assets()
     if not check_only:
         write_placeholders()
     defined = defined_sprites()
@@ -454,6 +573,8 @@ def build(check_only: bool) -> int:
         if name in defined or name.lower() in {item.lower() for item in defined}:
             continue
         texture, frames, reason = choose(name)
+        if name in DOCTRINE_SPRITES:
+            texture, frames, reason = doctrine_binding(name)
         if name == "GFX_artillery_techtree_bg":
             texture, frames, reason = ARTILLERY_BG, 1, "Kept the existing futuristic artillery illustration and bound the sprite in the mod."
         if name in ("GFX_infantry_techtree_bg", "GFX_air_techtree_bg", "GFX_naval_techtree_bg", "GFX_industry_techtree_bg", "GFX_support_techtree_bg", "GFX_armortech_bg"):
@@ -465,7 +586,7 @@ def build(check_only: bool) -> int:
                 "GFX_support_techtree_bg": "gfx/interface/techtree/support_techtree_bg.dds",
                 "GFX_armortech_bg": "gfx/interface/armortech_bg.dds",
             }[name]
-            reason = "Earth photograph at the vanilla technology-background path replaced with a marked placeholder."
+            reason = "Earth photograph at the vanilla technology-background path replaced with an unlabelled navy backdrop."
         path = MOD / texture
         if not path.exists():
             raise SystemExit(f"Missing texture for {name}: {texture}")
@@ -475,6 +596,7 @@ def build(check_only: bool) -> int:
             raise SystemExit("Missing generated interface/zz_ac_visual_scrub.gfx")
         text = GFX_OUT.read_text(encoding="utf-8-sig")
         validate_bindings(text, rows)
+        validate_presentation(rows)
         if json.loads(INVENTORY.read_text(encoding="utf-8"))["sprites"] != rows:
             raise SystemExit("Stale visual scrub inventory")
         present = set(NAME_RE.findall(text))
@@ -485,11 +607,6 @@ def build(check_only: bool) -> int:
         overlap = sorted(present & defined)
         if overlap:
             raise SystemExit("Scrub gfx overrides sprites the mod already defines:\n" + "\n".join(overlap[:20]))
-        navy = (7, 20, 34, 255)
-        for relative in list(EARTH_BACKGROUNDS) + [MENU_FALLBACK, MENU]:
-            with Image.open(MOD / relative) as image:
-                if image.getpixel((40, 40)) != navy:
-                    raise SystemExit(f"{relative} is not the marked placeholder")
         if "Bundesnachrichtendienst" in (MOD / "history/countries/BLK - Belka.txt").read_text(encoding="utf-8-sig"):
             raise SystemExit("Belka history still shows the Earth agency name")
         if 'noOfFrames = 31' not in text.split('GFX_buildings_strip', 1)[1][:200]:
@@ -513,13 +630,14 @@ def build(check_only: bool) -> int:
             current = group
         body.append(sprite_block(row["name"], row["texture"], row["frames"]))
     body.append("}")
-    GFX_OUT.write_text("\n".join(body) + "\n", encoding="utf-8")
+    # LF on every host, matching .gitattributes, so hashes do not depend on where this ran.
+    GFX_OUT.write_text("\n".join(body) + "\n", encoding="utf-8", newline="\n")
     INVENTORY.write_text(json.dumps({
         "sprite_count": len(rows),
         "replaced_earth_backgrounds": sorted(EARTH_BACKGROUNDS),
         "kept_artillery_background": ARTILLERY_BG,
         "sprites": rows,
-    }, indent=2) + "\n", encoding="utf-8")
+    }, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"Wrote {GFX_OUT.relative_to(ROOT)} with {len(rows)} sprites.")
     return 0
 

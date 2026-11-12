@@ -22,6 +22,7 @@ from technical import Engine
 from capabilities import AIR, NAVY, ARMOR, equipment_for, design_for, dlc_cases, case_key, template_plans, divisions
 from worksheet import report
 from script import parse, get, walk
+from native_doctrines import TOKENS as DOCTRINE_TOKENS
 
 ROOT = compiler.ROOT; MOD = compiler.MOD
 parser = argparse.ArgumentParser(); parser.add_argument('--reference', type=Path); args, remainder = parser.parse_known_args()
@@ -499,7 +500,21 @@ class ActiveWorldTests(unittest.TestCase):
                 self.assertNotIn('recruit_character = DEL_artur_clarkson', history)
                 self.assertEqual(history.count('recruit_character = SHI_ac_government_office'), 1)
                 continue
-            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), old['baseline_history_sha256'], old['tag'])
+            # N003 changes only doctrine effect IDs. Project those values back
+            # to the frozen intake's invalid blanket-port spellings, then require
+            # the original whole-file hash; never refresh the captured baseline.
+            prior_ids = {'new_mobile_warfare': 'mobile_warfare',
+                         'new_fleet_in_being': 'fleet_in_being',
+                         'new_convoy_raiding': 'trade_interdiction',
+                         'new_base_strike': 'base_strike',
+                         'new_operational_integrity': 'operational_integrity',
+                         'new_battlefield_support': 'battlefield_support',
+                         'new_strategic_destruction': 'strategic_destruction'}
+            def prior_effect(match):
+                ident = match.group('ident')
+                return match.group(0)[:-len(ident)] + prior_ids[ident] if ident in prior_ids else match.group(0)
+            frozen = DOCTRINE_TOKENS.sub(prior_effect, path.read_bytes().decode('utf-8')).encode('utf-8')
+            self.assertEqual(hashlib.sha256(frozen).hexdigest(), old['baseline_history_sha256'], old['tag'])
 
     def test_ai_roles_and_targets_are_current_and_original_tag_scoped(self):
         for tag, profile in PROFILES.items():

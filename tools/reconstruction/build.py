@@ -132,7 +132,7 @@ def outputs():
         block("else", "set_country_flag = ac_rc_payment_authorized") +
         guard("has_country_flag = ac_rc_payment_authorized", "add_political_power = -35\nset_temp_variable = { ac_pol_capacity_delta = -4 }\nac_pol_change_capacity = yes"))
     effects["ac_rc_refresh_progress"] = guard("has_country_flag = ac_rc_service_active has_variable = ac_rc_service_started",
-        "set_variable = { ac_rc_elapsed = date }\nsubtract_from_variable = { ac_rc_elapsed = ac_rc_service_started }\nclamp_variable = { var = ac_rc_elapsed min = 0 max = 90 }")
+        "set_variable = { ac_rc_elapsed = global.date }\nsubtract_from_variable = { ac_rc_elapsed = ac_rc_service_started }\nclamp_variable = { var = ac_rc_elapsed min = 0 max = 90 }")
     cleanup = "".join("clr_country_flag = " + ident + "_active\nremove_ideas = " + ident + "_spirit\n" for _, _, ident in SERVICES)
     effects["ac_rc_interrupt_service"] = guard("ac_rc_participant = yes has_country_flag = ac_rc_service_active",
         "ac_rc_refresh_progress = yes\nset_variable = { ac_rc_last_delivered_days = ac_rc_elapsed }\nset_variable = { ac_rc_last_interrupted_service = ac_rc_current_service }\nset_country_flag = ac_rc_service_interrupted\n" +
@@ -143,7 +143,7 @@ def outputs():
         unlock = focus_id(branch, 0 if n == 0 else 3)
         condition = f"ac_rc_can_fund = yes tag = {branch.tag} original_tag = {branch.tag} has_completed_focus = {unlock}"
         authorize = "ac_rc_pay_programme = yes\n" + guard("has_country_flag = ac_rc_payment_authorized",
-            f"clr_country_flag = ac_rc_payment_authorized\nset_country_flag = ac_rc_service_active\nset_country_flag = {ident}_active\nset_country_flag = {{ flag = ac_rc_service_window days = 90 }}\nset_variable = {{ ac_rc_current_service = {number} }}\nset_variable = {{ ac_rc_service_started = date }}\nset_variable = {{ ac_rc_elapsed = 0 }}\nadd_timed_idea = {{ idea = {ident}_spirit days = 90 }}")
+            f"clr_country_flag = ac_rc_payment_authorized\nset_country_flag = ac_rc_service_active\nset_country_flag = {ident}_active\nset_country_flag = {{ flag = ac_rc_service_window days = 90 }}\nset_variable = {{ ac_rc_current_service = {number} }}\nset_variable = {{ ac_rc_service_started = global.date }}\nset_variable = {{ ac_rc_elapsed = 0 }}\nadd_timed_idea = {{ idea = {ident}_spirit days = 90 }}")
         effects[ident + "_start"] = guard(condition, authorize)
         finish = f"ac_rc_active = yes tag = {branch.tag} original_tag = {branch.tag} has_war = no has_country_flag = ac_rc_service_active has_country_flag = {ident}_active check_variable = {{ ac_rc_current_service = {number} }} NOT = {{ has_country_flag = ac_rc_service_window }}"
         effects[ident + "_finish"] = guard(finish,

@@ -13,7 +13,7 @@ python3 -B tools/visual_scrub/build_fallthroughs.py
 python3 -B tools/visual_scrub/build_fallthroughs.py --check
 ```
 
-`tools/visual_scrub/inventory.json` is the full sprite list (1012 names). The
+`tools/visual_scrub/inventory.json` is the full sprite list (1011 names). The
 check is part of `tools/Test-UlyssesStatic.ps1`.
 
 ## Why a slot still showed vanilla art

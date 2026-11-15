@@ -1,0 +1,2891 @@
+# Bespoke national tree; source: tools/national_depth (Wielvakia). Provisional gameplay unless a ledger row says otherwise. Native acceptance pending.
+focus_tree = {
+	id = ac_wd_wie_tree
+	country = { factor = 0 modifier = { add = 50 tag = WIE original_tag = WIE } }
+	default = no
+	reset_on_civilwar = no
+	initial_show_position = { focus = WIE_wd_adm_inventory }
+	continuous_focus_position = { x = 2208 y = 16 }
+	# The shared institutional programme (tools/institutions), unchanged.
+	shared_focus = ac_reg_register
+	shared_focus = ac_reg_audit
+	shared_focus = ac_reg_executive
+	shared_focus = ac_reg_districts
+	shared_focus = ac_reg_records
+	shared_focus = ac_reg_service_review
+	shared_focus = ac_reg_survey
+	shared_focus = ac_reg_civilian_contracts
+	shared_focus = ac_reg_protected_orders
+	shared_focus = ac_reg_spares
+	shared_focus = ac_reg_freight
+	shared_focus = ac_reg_productive_review
+	shared_focus = ac_reg_emergency_register
+	shared_focus = ac_reg_civil_protection
+	shared_focus = ac_reg_uniformed_reserve
+	shared_focus = ac_reg_stock_records
+	shared_focus = ac_reg_rehearsals
+	shared_focus = ac_reg_resilience_review
+	shared_focus = ac_reg_defense_register
+	shared_focus = ac_reg_staff_schools
+	shared_focus = ac_reg_field_priority
+	shared_focus = ac_reg_replacement_office
+	shared_focus = ac_reg_readiness_reports
+	shared_focus = ac_reg_defense_review
+	shared_focus = ac_reg_external_register
+	shared_focus = ac_reg_guarded_contacts
+	shared_focus = ac_reg_technical_contacts
+	shared_focus = ac_reg_domestic_contingency
+	shared_focus = ac_reg_bounded_commitments
+	shared_focus = ac_reg_external_review
+	shared_focus = ac_reg_institution_review
+	shared_focus = ac_reg_delegation
+	shared_focus = ac_reg_central_register
+	shared_focus = ac_reg_inspectors
+	shared_focus = ac_reg_succession_rules
+	shared_focus = ac_reg_institutional_settlement
+	focus = {
+		id = WIE_wd_adm_inventory
+		icon = GFX_ac_wd_focus_WIE_wd_adm_inventory
+		x = 3
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_office_inventory
+			country_event = {
+				id = ac_wd_wie.1
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_payroll
+		icon = GFX_ac_wd_focus_WIE_wd_adm_payroll
+		x = 2
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_adm_inventory
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = WIE_wd_payroll_printed
+			add_stability = -0.02
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_state_councils
+		icon = GFX_ac_wd_focus_WIE_wd_adm_state_councils
+		x = 4
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_adm_inventory
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_state_councils
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_chamber
+		icon = GFX_ac_wd_focus_WIE_wd_adm_chamber
+		x = 0
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_adm_payroll
+			focus = WIE_wd_adm_state_councils
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_adm_directorate
+			focus = WIE_wd_adm_office_stays
+			focus = WIE_wd_adm_staff
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_wie_regime_chamber_cabinet = yes
+			swap_ideas = {
+				remove_idea = WIE_wd_office_inventory
+				add_idea = WIE_wd_chamber_charter
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_staff
+		icon = GFX_ac_wd_focus_WIE_wd_adm_staff
+		x = 2
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_adm_payroll
+			focus = WIE_wd_adm_state_councils
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_adm_chamber
+			focus = WIE_wd_adm_directorate
+			focus = WIE_wd_adm_office_stays
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_wie_regime_staff_council = yes
+			swap_ideas = {
+				remove_idea = WIE_wd_office_inventory
+				add_idea = WIE_wd_staff_seals
+			}
+			set_country_flag = WIE_wd_rule_staff
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_directorate
+		icon = GFX_ac_wd_focus_WIE_wd_adm_directorate
+		x = 4
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_adm_payroll
+			focus = WIE_wd_adm_state_councils
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_adm_chamber
+			focus = WIE_wd_adm_office_stays
+			focus = WIE_wd_adm_staff
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_wie_regime_state_directorate = yes
+			swap_ideas = {
+				remove_idea = WIE_wd_office_inventory
+				add_idea = WIE_wd_directorate_order
+			}
+			set_country_flag = WIE_wd_rule_directorate
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_office_stays
+		icon = GFX_ac_wd_focus_WIE_wd_adm_office_stays
+		x = 6
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_adm_payroll
+			focus = WIE_wd_adm_state_councils
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_adm_chamber
+			focus = WIE_wd_adm_directorate
+			focus = WIE_wd_adm_staff
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_office_inventory
+				add_idea = WIE_wd_office_statute
+			}
+			add_political_power = 25
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_polling_day
+		icon = GFX_ac_wd_focus_WIE_wd_adm_polling_day
+		x = 0
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_adm_chamber
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_chamber_charter
+				add_idea = WIE_wd_elected_chamber
+			}
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_staff_budget
+		icon = GFX_ac_wd_focus_WIE_wd_adm_staff_budget
+		x = 2
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_adm_staff
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_staff_seals
+				add_idea = WIE_wd_staff_budget
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_leagues
+		icon = GFX_ac_wd_focus_WIE_wd_adm_leagues
+		x = 4
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_adm_directorate
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_directorate_order
+				add_idea = WIE_wd_directorate_leagues
+			}
+			add_war_support = 0.03
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_four_year_review
+		icon = GFX_ac_wd_focus_WIE_wd_adm_four_year_review
+		x = 6
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_adm_office_stays
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_office_statute
+				add_idea = WIE_wd_reviewed_office
+			}
+			add_political_power = 20
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_examinations
+		icon = GFX_ac_wd_focus_WIE_wd_adm_examinations
+		x = 2
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_adm_polling_day
+			focus = WIE_wd_adm_staff_budget
+			focus = WIE_wd_adm_leagues
+			focus = WIE_wd_adm_four_year_review
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = WIE_wd_payroll_printed
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_service_examinations
+		}
+	}
+
+	focus = {
+		id = WIE_wd_adm_compact
+		icon = GFX_ac_wd_focus_WIE_wd_adm_compact
+		x = 4
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_adm_polling_day
+			focus = WIE_wd_adm_staff_budget
+			focus = WIE_wd_adm_leagues
+			focus = WIE_wd_adm_four_year_review
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = WIE_wd_states_compact
+			add_stability = 0.03
+		}
+	}
+
+	focus = {
+		id = WIE_wd_oil_survey
+		icon = GFX_ac_wd_focus_WIE_wd_oil_survey
+		x = 12
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_field_survey
+			country_event = {
+				id = ac_wd_wie.3
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_oil_gathering_lines
+		icon = GFX_ac_wd_focus_WIE_wd_oil_gathering_lines
+		x = 11
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_oil_survey
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 326
+				}
+				326 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_oil_gangel_roads
+		icon = GFX_ac_wd_focus_WIE_wd_oil_gangel_roads
+		x = 13
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_oil_survey
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 325
+				}
+				325 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_oil_state_company
+		icon = GFX_ac_wd_focus_WIE_wd_oil_state_company
+		x = 11
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_oil_gathering_lines
+			focus = WIE_wd_oil_gangel_roads
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_oil_concessions
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_field_survey
+				add_idea = WIE_wd_national_oil_company
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_oil_concessions
+		icon = GFX_ac_wd_focus_WIE_wd_oil_concessions
+		x = 13
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_oil_gathering_lines
+			focus = WIE_wd_oil_gangel_roads
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_oil_state_company
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_field_survey
+				add_idea = WIE_wd_lowland_concessions
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_oil_capital_refinery
+		icon = GFX_ac_wd_focus_WIE_wd_oil_capital_refinery
+		x = 9
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_oil_state_company
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_oil_tank_farms
+		icon = GFX_ac_wd_focus_WIE_wd_oil_tank_farms
+		x = 11
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_oil_state_company
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = WIE_wd_fuel_reserve_held
+			add_political_power = -15
+		}
+	}
+
+	focus = {
+		id = WIE_wd_oil_licence_code
+		icon = GFX_ac_wd_focus_WIE_wd_oil_licence_code
+		x = 13
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_oil_concessions
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_lowland_concessions
+				add_idea = WIE_wd_regulated_concessions
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_oil_ring_road
+		icon = GFX_ac_wd_focus_WIE_wd_oil_ring_road
+		x = 15
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_oil_concessions
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 367
+				}
+				367 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_oil_trunk_pipeline
+		icon = GFX_ac_wd_focus_WIE_wd_oil_trunk_pipeline
+		x = 11
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_oil_capital_refinery
+			focus = WIE_wd_oil_tank_farms
+			focus = WIE_wd_oil_licence_code
+			focus = WIE_wd_oil_ring_road
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 372
+				}
+				372 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_tech_bonus = {
+				name = WIE_wd_oil_trunk_pipeline
+				bonus = 0.5
+				uses = 1
+				category = logistics_tech
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_oil_barrel_fund
+		icon = GFX_ac_wd_focus_WIE_wd_oil_barrel_fund
+		x = 13
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_oil_capital_refinery
+			focus = WIE_wd_oil_tank_farms
+			focus = WIE_wd_oil_licence_code
+			focus = WIE_wd_oil_ring_road
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = WIE_wd_states_compact
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_oil_revenue_fund
+			add_political_power = -20
+		}
+	}
+
+	focus = {
+		id = WIE_wd_ore_gallery_count
+		icon = GFX_ac_wd_focus_WIE_wd_ore_gallery_count
+		x = 20
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_mine_registry
+			country_event = {
+				id = ac_wd_wie.4
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_ore_winter_roads
+		icon = GFX_ac_wd_focus_WIE_wd_ore_winter_roads
+		x = 19
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_ore_gallery_count
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 372
+				}
+				372 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_ore_assay_laboratory
+		icon = GFX_ac_wd_focus_WIE_wd_ore_assay_laboratory
+		x = 21
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_ore_gallery_count
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = WIE_wd_ore_assay_laboratory
+				bonus = 0.5
+				uses = 1
+				category = excavation_tech
+			}
+			set_country_flag = WIE_wd_assay_lab_open
+		}
+	}
+
+	focus = {
+		id = WIE_wd_ore_raw_sales
+		icon = GFX_ac_wd_focus_WIE_wd_ore_raw_sales
+		x = 20
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_ore_winter_roads
+			focus = WIE_wd_ore_assay_laboratory
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_ore_home_alloys
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_mine_registry
+				add_idea = WIE_wd_ore_contracts
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_ore_home_alloys
+		icon = GFX_ac_wd_focus_WIE_wd_ore_home_alloys
+		x = 22
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_ore_winter_roads
+			focus = WIE_wd_ore_assay_laboratory
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_ore_raw_sales
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_mine_registry
+				add_idea = WIE_wd_alloy_reserve
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_ore_ten_year_terms
+		icon = GFX_ac_wd_focus_WIE_wd_ore_ten_year_terms
+		x = 19
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_ore_raw_sales
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_ore_contracts
+				add_idea = WIE_wd_long_ore_contracts
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_ore_armour_plate
+		icon = GFX_ac_wd_focus_WIE_wd_ore_armour_plate
+		x = 21
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_ore_home_alloys
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_alloy_reserve
+				add_idea = WIE_wd_plate_mills
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_ore_carbide_tools
+		icon = GFX_ac_wd_focus_WIE_wd_ore_carbide_tools
+		x = 21
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_ore_ten_year_terms
+			focus = WIE_wd_ore_armour_plate
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+			has_country_flag = WIE_wd_assay_lab_open
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = WIE_wd_ore_carbide_tools
+				bonus = 0.75
+				uses = 1
+				category = industry
+			}
+			army_experience = 5
+		}
+	}
+
+	focus = {
+		id = WIE_wd_ore_rescue_stations
+		icon = GFX_ac_wd_focus_WIE_wd_ore_rescue_stations
+		x = 18
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_ore_winter_roads
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_mine_rescue
+		}
+	}
+
+	focus = {
+		id = WIE_wd_ore_mining_school
+		icon = GFX_ac_wd_focus_WIE_wd_ore_mining_school
+		x = 19
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_ore_ten_year_terms
+			focus = WIE_wd_ore_armour_plate
+			focus = WIE_wd_ore_rescue_stations
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_metallurgy_school
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_armour_paper
+		icon = GFX_ac_wd_focus_WIE_wd_arm_armour_paper
+		x = 27
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_armour_first
+			country_event = {
+				id = ac_wd_wie.5
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_farnlands_range
+		icon = GFX_ac_wd_focus_WIE_wd_arm_farnlands_range
+		x = 25
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_arm_armour_paper
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 326
+				}
+				326 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			army_experience = 10
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_fuel_allowance
+		icon = GFX_ac_wd_focus_WIE_wd_arm_fuel_allowance
+		x = 27
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_arm_armour_paper
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_fuel_allowance
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_massed
+		icon = GFX_ac_wd_focus_WIE_wd_arm_massed
+		x = 25
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_arm_farnlands_range
+			focus = WIE_wd_arm_fuel_allowance
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_arm_motor_brigades
+			focus = WIE_wd_arm_passes
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_armour_first
+				add_idea = WIE_wd_massed_armour
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_passes
+		icon = GFX_ac_wd_focus_WIE_wd_arm_passes
+		x = 27
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_arm_farnlands_range
+			focus = WIE_wd_arm_fuel_allowance
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_arm_massed
+			focus = WIE_wd_arm_motor_brigades
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_armour_first
+				add_idea = WIE_wd_pass_defence
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_motor_brigades
+		icon = GFX_ac_wd_focus_WIE_wd_arm_motor_brigades
+		x = 29
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_arm_farnlands_range
+			focus = WIE_wd_arm_fuel_allowance
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_arm_massed
+			focus = WIE_wd_arm_passes
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_armour_first
+				add_idea = WIE_wd_motor_brigades
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_railhead_parks
+		icon = GFX_ac_wd_focus_WIE_wd_arm_railhead_parks
+		x = 25
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_arm_massed
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = WIE_wd_arm_railhead_parks
+				bonus = 0.5
+				uses = 1
+				category = engineers_tech
+			}
+			army_experience = 10
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_pass_works
+		icon = GFX_ac_wd_focus_WIE_wd_arm_pass_works
+		x = 27
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_arm_passes
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 372
+				}
+				372 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			army_experience = 5
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_valley_trials
+		icon = GFX_ac_wd_focus_WIE_wd_arm_valley_trials
+		x = 29
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_arm_motor_brigades
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_brigade_trials
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_call_up
+		icon = GFX_ac_wd_focus_WIE_wd_arm_call_up
+		x = 26
+		y = 16
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_arm_railhead_parks
+			focus = WIE_wd_arm_pass_works
+			focus = WIE_wd_arm_valley_trials
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_arm_career_crews
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_call_up_register
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_career_crews
+		icon = GFX_ac_wd_focus_WIE_wd_arm_career_crews
+		x = 28
+		y = 16
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_arm_railhead_parks
+			focus = WIE_wd_arm_pass_works
+			focus = WIE_wd_arm_valley_trials
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_arm_call_up
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_career_crews
+		}
+	}
+
+	focus = {
+		id = WIE_wd_arm_mobilisation_tables
+		icon = GFX_ac_wd_focus_WIE_wd_arm_mobilisation_tables
+		x = 29
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_arm_armour_paper
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = WIE_wd_rule_staff
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_mobilisation_tables
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_frontier_review
+		icon = GFX_ac_wd_focus_WIE_wd_bord_frontier_review
+		x = 3
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_frontier_review
+			country_event = {
+				id = ac_wd_wie.6
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_gangel_brief
+		icon = GFX_ac_wd_focus_WIE_wd_bord_gangel_brief
+		x = 0
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_bord_frontier_review
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			date > 1991.8.29
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = WIE_wd_gangel_brief
+			custom_effect_tooltip = WIE_wd_bord_gangel_brief_tt_1
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_northern_hours
+		icon = GFX_ac_wd_focus_WIE_wd_bord_northern_hours
+		x = 2
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_bord_frontier_review
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_northern_posts
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_centrum_trains
+		icon = GFX_ac_wd_focus_WIE_wd_bord_centrum_trains
+		x = 4
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_bord_frontier_review
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_ratian_rail
+				days = 730
+			}
+			add_tech_bonus = {
+				name = WIE_wd_bord_centrum_trains
+				bonus = 0.5
+				uses = 1
+				category = train_tech
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_gebet_liaison
+		icon = GFX_ac_wd_focus_WIE_wd_bord_gebet_liaison
+		x = 6
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_bord_frontier_review
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 325
+				}
+				325 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_open_crossings
+		icon = GFX_ac_wd_focus_WIE_wd_bord_open_crossings
+		x = 2
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_bord_northern_hours
+			focus = WIE_wd_bord_centrum_trains
+			focus = WIE_wd_bord_gebet_liaison
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_bord_armed_crossings
+			focus = WIE_wd_bord_convention
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_frontier_review
+				add_idea = WIE_wd_open_frontiers
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_armed_crossings
+		icon = GFX_ac_wd_focus_WIE_wd_bord_armed_crossings
+		x = 4
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_bord_northern_hours
+			focus = WIE_wd_bord_centrum_trains
+			focus = WIE_wd_bord_gebet_liaison
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_bord_convention
+			focus = WIE_wd_bord_open_crossings
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_frontier_review
+				add_idea = WIE_wd_armed_frontiers
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_convention
+		icon = GFX_ac_wd_focus_WIE_wd_bord_convention
+		x = 6
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_bord_northern_hours
+			focus = WIE_wd_bord_centrum_trains
+			focus = WIE_wd_bord_gebet_liaison
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_bord_armed_crossings
+			focus = WIE_wd_bord_open_crossings
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_frontier_review
+				add_idea = WIE_wd_convention_proposal
+			}
+			custom_effect_tooltip = WIE_wd_bord_convention_tt_1
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_transit_lanes
+		icon = GFX_ac_wd_focus_WIE_wd_bord_transit_lanes
+		x = 1
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_bord_open_crossings
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 325
+				}
+				325 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_political_power = 10
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_guard_corps
+		icon = GFX_ac_wd_focus_WIE_wd_bord_guard_corps
+		x = 3
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_bord_armed_crossings
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_armed_frontiers
+				add_idea = WIE_wd_frontier_guard
+			}
+			army_experience = 10
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_secretariat
+		icon = GFX_ac_wd_focus_WIE_wd_bord_secretariat
+		x = 5
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_bord_convention
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_convention_proposal
+				add_idea = WIE_wd_frontier_secretariat
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_bord_gangel_rallies
+		icon = GFX_ac_wd_focus_WIE_wd_bord_gangel_rallies
+		x = 0
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_bord_gangel_brief
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = WIE_wd_rule_directorate
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_war_support = 0.04
+			custom_effect_tooltip = WIE_wd_bord_gangel_rallies_tt_1
+		}
+	}
+
+	focus = {
+		id = WIE_wd_cst_naval_review
+		icon = GFX_ac_wd_focus_WIE_wd_cst_naval_review
+		x = 11
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_coast_command
+			country_event = {
+				id = ac_wd_wie.7
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_cst_cliff_radar
+		icon = GFX_ac_wd_focus_WIE_wd_cst_cliff_radar
+		x = 9
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_cst_naval_review
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 372
+				}
+				372 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_cst_slipway_hire
+		icon = GFX_ac_wd_focus_WIE_wd_cst_slipway_hire
+		x = 11
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_cst_naval_review
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_slipway_contracts
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_cst_ore_escorts
+		icon = GFX_ac_wd_focus_WIE_wd_cst_ore_escorts
+		x = 10
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_cst_cliff_radar
+			focus = WIE_wd_cst_slipway_hire
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_cst_inshore_boats
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_coast_command
+				add_idea = WIE_wd_ore_convoys
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_cst_inshore_boats
+		icon = GFX_ac_wd_focus_WIE_wd_cst_inshore_boats
+		x = 12
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_cst_cliff_radar
+			focus = WIE_wd_cst_slipway_hire
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_cst_ore_escorts
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_coast_command
+				add_idea = WIE_wd_inshore_patrols
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_cst_destroyer_refit
+		icon = GFX_ac_wd_focus_WIE_wd_cst_destroyer_refit
+		x = 10
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_cst_ore_escorts
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = WIE_wd_cst_destroyer_refit
+				bonus = 0.5
+				uses = 1
+				category = naval_equipment
+			}
+			navy_experience = 15
+		}
+	}
+
+	focus = {
+		id = WIE_wd_cst_fishery_patrols
+		icon = GFX_ac_wd_focus_WIE_wd_cst_fishery_patrols
+		x = 12
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_cst_inshore_boats
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_fishery_patrols
+				days = 1095
+			}
+			navy_experience = 5
+		}
+	}
+
+	focus = {
+		id = WIE_wd_cst_maritime_patrol
+		icon = GFX_ac_wd_focus_WIE_wd_cst_maritime_patrol
+		x = 10
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_cst_destroyer_refit
+			focus = WIE_wd_cst_fishery_patrols
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 372
+				}
+				372 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_cst_port_budget
+		icon = GFX_ac_wd_focus_WIE_wd_cst_port_budget
+		x = 13
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_cst_naval_review
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+			has_country_flag = WIE_wd_states_compact
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_vakia_port_fund
+		}
+	}
+
+	focus = {
+		id = WIE_wd_cst_naval_school
+		icon = GFX_ac_wd_focus_WIE_wd_cst_naval_school
+		x = 12
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_cst_destroyer_refit
+			focus = WIE_wd_cst_fishery_patrols
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_naval_school
+		}
+	}
+
+	focus = {
+		id = WIE_wd_air_count
+		icon = GFX_ac_wd_focus_WIE_wd_air_count
+		x = 19
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_air_review
+			country_event = {
+				id = ac_wd_wie.8
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_air_nadomlin_field
+		icon = GFX_ac_wd_focus_WIE_wd_air_nadomlin_field
+		x = 16
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_air_count
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 326
+				}
+				326 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_air_gangel_runway
+		icon = GFX_ac_wd_focus_WIE_wd_air_gangel_runway
+		x = 18
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_air_count
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+			has_country_flag = WIE_wd_gangel_brief
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 325
+				}
+				325 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_air_flying_hours
+		icon = GFX_ac_wd_focus_WIE_wd_air_flying_hours
+		x = 20
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_air_count
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_flying_hours
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_air_army_support
+		icon = GFX_ac_wd_focus_WIE_wd_air_army_support
+		x = 22
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_air_count
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = WIE_wd_air_army_support
+				bonus = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+			air_experience = 10
+		}
+	}
+
+	focus = {
+		id = WIE_wd_air_capital_control
+		icon = GFX_ac_wd_focus_WIE_wd_air_capital_control
+		x = 17
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_air_flying_hours
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 367
+				}
+				367 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_air_capital_pens
+		icon = GFX_ac_wd_focus_WIE_wd_air_capital_pens
+		x = 18
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_air_capital_control
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 367
+				}
+				367 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_air_hired_aggressors
+		icon = GFX_ac_wd_focus_WIE_wd_air_hired_aggressors
+		x = 19
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_air_flying_hours
+			focus = WIE_wd_air_army_support
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_air_home_aggressors
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+			date > 1998.6.19
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_aggressor_course
+		}
+	}
+
+	focus = {
+		id = WIE_wd_air_home_aggressors
+		icon = GFX_ac_wd_focus_WIE_wd_air_home_aggressors
+		x = 21
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_air_flying_hours
+			focus = WIE_wd_air_army_support
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_air_hired_aggressors
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_home_instructors
+		}
+	}
+
+	focus = {
+		id = WIE_wd_air_lowland_plan
+		icon = GFX_ac_wd_focus_WIE_wd_air_lowland_plan
+		x = 20
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_air_hired_aggressors
+			focus = WIE_wd_air_home_aggressors
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_lowland_air_plan
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_outbreak
+		icon = GFX_ac_wd_focus_WIE_wd_war_outbreak
+		x = 30
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.3.25
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_war_alert
+			country_event = {
+				id = ac_wd_wie.9
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_open_crossings
+		icon = GFX_ac_wd_focus_WIE_wd_war_open_crossings
+		x = 25
+		y = 19
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_war_outbreak
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_war_sealed_crossings
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_refuge_crossings
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_sealed_crossings
+		icon = GFX_ac_wd_focus_WIE_wd_war_sealed_crossings
+		x = 27
+		y = 19
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_war_outbreak
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_war_open_crossings
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_sealed_crossings
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_model_radar
+		icon = GFX_ac_wd_focus_WIE_wd_war_model_radar
+		x = 29
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_war_outbreak
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = ac_bwr_model
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 325
+				}
+				325 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_war_support = 0.02
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_reception_halls
+		icon = GFX_ac_wd_focus_WIE_wd_war_reception_halls
+		x = 28
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_war_open_crossings
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_reception_halls
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_gebet_line
+		icon = GFX_ac_wd_focus_WIE_wd_war_gebet_line
+		x = 32
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_war_sealed_crossings
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_gebet_line
+				days = 365
+			}
+			army_experience = 10
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_relief_fuel
+		icon = GFX_ac_wd_focus_WIE_wd_war_relief_fuel
+		x = 31
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_war_outbreak
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_country_flag = WIE_wd_fuel_reserve_held
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_relief_fuel
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_grain_stores
+		icon = GFX_ac_wd_focus_WIE_wd_war_grain_stores
+		x = 33
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_war_outbreak
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_dropped_nukes
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_grain_seal
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_stand_down
+		icon = GFX_ac_wd_focus_WIE_wd_war_stand_down
+		x = 30
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_war_open_crossings
+			focus = WIE_wd_war_sealed_crossings
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.6.20
+			NOT = { has_global_flag = belkan_war_is_happening }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			remove_ideas = WIE_wd_war_alert
+			add_stability = 0.03
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_reconstruction
+		icon = GFX_ac_wd_focus_WIE_wd_war_reconstruction
+		x = 29
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_war_stand_down
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_war_long_watch
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_lost_belkan_war
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_rebuild_contracts
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_long_watch
+		icon = GFX_ac_wd_focus_WIE_wd_war_long_watch
+		x = 31
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_war_stand_down
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_war_reconstruction
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_won_belkan_war
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_long_watch
+		}
+	}
+
+	focus = {
+		id = WIE_wd_war_officer_oath
+		icon = GFX_ac_wd_focus_WIE_wd_war_officer_oath
+		x = 35
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_war_outbreak
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.12.25
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_officer_oath
+		}
+	}
+
+	focus = {
+		id = WIE_wd_sky_announcement
+		icon = GFX_ac_wd_focus_WIE_wd_sky_announcement
+		x = 2
+		y = 24
+		cost = 5
+		available = {
+			NOT = { date < 1996.1.1 }
+			date > 1996.4.20
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_impact_watch
+			country_event = {
+				id = ac_wd_wie.11
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_sky_data_line
+		icon = GFX_ac_wd_focus_WIE_wd_sky_data_line
+		x = 0
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_sky_announcement
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = WIE_wd_sky_data_line
+				bonus = 0.5
+				uses = 1
+				category = electronics
+			}
+			set_country_flag = WIE_wd_orbit_updates
+		}
+	}
+
+	focus = {
+		id = WIE_wd_sky_city_shelters
+		icon = GFX_ac_wd_focus_WIE_wd_sky_city_shelters
+		x = 2
+		y = 25
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_sky_announcement
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_sky_dispersal
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_impact_watch
+				add_idea = WIE_wd_city_shelters
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_sky_dispersal
+		icon = GFX_ac_wd_focus_WIE_wd_sky_dispersal
+		x = 4
+		y = 25
+		cost = 10
+		prerequisite = {
+			focus = WIE_wd_sky_announcement
+		}
+		mutually_exclusive = {
+			focus = WIE_wd_sky_city_shelters
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = WIE_wd_impact_watch
+				add_idea = WIE_wd_dispersal_plans
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_sky_gallery_shelters
+		icon = GFX_ac_wd_focus_WIE_wd_sky_gallery_shelters
+		x = 0
+		y = 26
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_sky_city_shelters
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+			has_completed_focus = WIE_wd_ore_gallery_count
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_gallery_shelters
+		}
+	}
+
+	focus = {
+		id = WIE_wd_sky_evacuation_trains
+		icon = GFX_ac_wd_focus_WIE_wd_sky_evacuation_trains
+		x = 4
+		y = 26
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_sky_dispersal
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 326
+				}
+				326 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_tech_bonus = {
+				name = WIE_wd_sky_evacuation_trains
+				bonus = 0.5
+				uses = 1
+				category = train_tech
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_sky_impact_drills
+		icon = GFX_ac_wd_focus_WIE_wd_sky_impact_drills
+		x = 2
+		y = 26
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_sky_city_shelters
+			focus = WIE_wd_sky_dispersal
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+			date > 1998.7.29
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_impact_drills
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = WIE_wd_sky_recovery_teams
+		icon = GFX_ac_wd_focus_WIE_wd_sky_recovery_teams
+		x = 2
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_sky_gallery_shelters
+			focus = WIE_wd_sky_evacuation_trains
+			focus = WIE_wd_sky_impact_drills
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+			date > 1999.7.8
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = WIE_wd_recovery_teams
+			custom_effect_tooltip = WIE_wd_sky_recovery_teams_tt_1
+		}
+	}
+
+	focus = {
+		id = WIE_wd_sky_help_neighbours
+		icon = GFX_ac_wd_focus_WIE_wd_sky_help_neighbours
+		x = 2
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = WIE_wd_sky_recovery_teams
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+			has_country_flag = WIE_wd_orbit_updates
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = WIE_wd_regional_recovery
+				days = 730
+			}
+		}
+	}
+}

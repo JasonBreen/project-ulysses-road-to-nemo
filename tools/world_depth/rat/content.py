@@ -41,10 +41,10 @@ SOURCES = (
            'chromium 17, tungsten 16; naval bases at Roshniku and Isakas; two dockyards). State 472 is Ratio Valley (rural; five '
            'provinces, two on the coast; one civilian factory). State 489 is Zulian Coast (city; plains and urban; oil 33, steel '
            '31; naval bases including Sukaxhija; two dockyards). Land neighbours from map/provinces.bmp: Ustio (Boikos, against '
-           'Dormakaj), Gebet (Dormakaj), Wiesmont (Dormakaj, Centrum, Troton Mountains) and Sapin (Dormakaj, Centrum, Ratio '
+           'Dormakaj), Gebet (Dormakaj), Wielvakia (Dormakaj, Centrum, Troton Mountains) and Sapin (Dormakaj, Centrum, Ratio '
            'Valley, Zulian Coast). Railways from map/railways.txt: a level-3 trunk from Gebet through Dormakaj to Centrum, '
            'level-2 lines from Centrum to the Troton Mountains, Ratio Valley and the Zulian Coast, and level-1 links into Boikos, '
-           'Wiesmont and Sapin. No other place is named.',
+           'Wielvakia and Sapin. No other place is named.',
            'mod/2985041246/history/states/306-State_306.txt, 388-State_388.txt, 419-State_419.txt, 472-State_472.txt, '
            '489-State_489.txt; mod/2985041246/localisation/english/state_names_l_english.yml; '
            'mod/2985041246/localisation/english/victory_points_l_english.yml; '
@@ -69,8 +69,8 @@ SOURCES = (
            'mod/2985041246/localisation/english/country_UST_l_english.yml; mod/2985041246/events/Sapin.txt; '
            'mod/2985041246/common/on_actions/ac_on_actions.txt; docs/CANON_LEDGER.md'),
     Source('Mod provenance',
-           'Neighbour consistency: no other world-depth spec names Ratio, and Ustio, Gebet, Wiesmont and Sapin have no '
-           'world-depth spec. The tree keeps faith with the inherited Ustio texts: Ratio friendly to Ustio and nowhere near '
+           'Neighbour consistency: Ustio, Gebet and Sapin have no world-depth spec; Wielvakia\'s spec (tools/world_depth/wie) '
+           'was written later and agrees with this border. The tree keeps faith with the inherited Ustio texts: Ratio friendly to Ustio and nowhere near '
            'friendly with Belka (UST_deal, UST_ask_ratio_for_help), Ratian partisans outside Centrum control, and the purchase '
            'and referendum answers belonging to Ustio. It claims no action, consent or outcome for any neighbour.',
            'mod/2985041246/localisation/english/country_UST_l_english.yml'),
@@ -819,7 +819,7 @@ ARMOUR = Branch('armour', 'The Armoured Service', 1991, 'FOCUS_FILTER_ARMY_XP', 
           ('command', 'document'), after_any=('arm_plains', 'arm_passes', 'arm_motor'),
           reward=(Research('land_doctrine', 0.5, 1), XP('army', 15))),
     Focus('arm_garrisons', 'Garrisons for Four Frontiers',
-          "Ratio borders Ustio, Gebet, Wiesmont and Sapin, yet its army has always watched only the west. Standing garrisons are "
+          "Ratio borders Ustio, Gebet, Wielvakia and Sapin, yet its army has always watched only the west. Standing garrisons are "
           "assigned to each frontier with fixed rotation schedules, local maps and liaison officers. It costs barracks and "
           "manpower. It also means that no neighbour can be surprised by Ratian movements, or surprise Ratio with its own.",
           ('gate', 'security'), after=('arm_staff_course',), reward=(Flag('frontier_garrisons'), WarSupport(0.02))),
@@ -852,7 +852,7 @@ AIR = Branch('air', 'Wings over Dormakaj', 1993, 'FOCUS_FILTER_AIR_XP', (
           "anti-aircraft guns rather than fighters to keep raiders away.",
           ('air', 'security'), after=('air_dispersal',), exclusive=('air_interceptors',), reward=(SwapIdea('air_review', 'support_wing'),)),
     Focus('air_radar_hills', 'Radar on the Western Hills',
-          "A radar head on the hills above Dormakaj can see far enough across the frontiers with Ustio, Gebet and Wiesmont to give "
+          "A radar head on the hills above Dormakaj can see far enough across the frontiers with Ustio, Gebet and Wielvakia to give "
           "the fighters real warning. Linked to the control room at the base, it turns guesswork into interception. The "
           "neighbours will notice the mast and may ask what it watches. The air arm's honest answer is everything.",
           ('radar', 'communications'), after=('air_sixty',), reward=(Build('radar_station', 1, 306), Flag('radar_chain'))),

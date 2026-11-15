@@ -83,11 +83,19 @@ the packet keeps in step as content waves land.
 | `wire-sapin-chain-ends` | `event sapin_civil_war.1` in a diagnostic save. | `list_flags` shows `sap_political_crisis_over`, and no parliament event (`sapin_politics.4`–`.13`) follows. |
 | `wire-hoffnung-achievement` | Diagnostic save during Wacht am Wal with Excalibur land strikes unlocked. | A strike on Hoffnung (state 602) sets `used_excalibur_on_hoffnung_achievement`. Achievements stay off in a modified run, so read the flag rather than the achievement popup. |
 
-**National-depth trees (Perbla now; each later wave adds its own):**
+**National-depth trees (30: Perbla and the 29 wave-E1a trees):**
 1. Open the tree at 1920×1080 and at your UI scale, and screenshot it beside its
    review image in `docs/evidence/national-depth/`.
 2. Play 1991–1996 on the natural route. Take one regime path, whose AI weight
    is 0, and one exclusive economic path.
+3. **Releases.** Relentio, Serenava and Terentio exist only once released.
+   Reach them through their existing release path; a diagnostic save may use
+   the release decision directly. For Serenava, confirm that the capital moves
+   to state 581 on release (its inherited history capital, 236, is a Relentio
+   core).
+4. **If time is short:** take every screen case first, since they are quick.
+   Then play one tree per region in full (for example Nordlands, Aquitoria,
+   Nihon, Ratio and one release), and let the AI observer cover the rest.
 
 ## Save checkpoints
 
@@ -116,8 +124,8 @@ Raw saves stay outside Git. For Belkan checkpoints, use
 Run this together with the #70 Belkan run, after:
 - this branch's merge, wiring repairs and compiler alignment (done 11 November
   2026);
-- the first national-campaign wave (era 1 for the 29 countries with nothing
-  yet), which waits on your Perbla review.
+- the first national-campaign wave, era 1 for the 29 countries that had no tree
+  (done 15 November 2026; 483 cases in all).
 
 One isolated session then covers the wiring repairs, Usea Depth, Perbla and the
-new trees.
+29 new trees. Native results for these trees stay under #8.

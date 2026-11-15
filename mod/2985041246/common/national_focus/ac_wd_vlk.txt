@@ -1,0 +1,2881 @@
+# Bespoke national tree; source: tools/national_depth (Valka). Provisional gameplay unless a ledger row says otherwise. Native acceptance pending.
+focus_tree = {
+	id = ac_wd_vlk_tree
+	country = { factor = 0 modifier = { add = 50 tag = VLK original_tag = VLK } }
+	default = no
+	reset_on_civilwar = no
+	initial_show_position = { focus = VLK_wd_pol_tally }
+	continuous_focus_position = { x = 2208 y = 16 }
+	# The shared institutional programme (tools/institutions), unchanged.
+	shared_focus = ac_reg_register
+	shared_focus = ac_reg_audit
+	shared_focus = ac_reg_executive
+	shared_focus = ac_reg_districts
+	shared_focus = ac_reg_records
+	shared_focus = ac_reg_service_review
+	shared_focus = ac_reg_survey
+	shared_focus = ac_reg_civilian_contracts
+	shared_focus = ac_reg_protected_orders
+	shared_focus = ac_reg_spares
+	shared_focus = ac_reg_freight
+	shared_focus = ac_reg_productive_review
+	shared_focus = ac_reg_emergency_register
+	shared_focus = ac_reg_civil_protection
+	shared_focus = ac_reg_uniformed_reserve
+	shared_focus = ac_reg_stock_records
+	shared_focus = ac_reg_rehearsals
+	shared_focus = ac_reg_resilience_review
+	shared_focus = ac_reg_defense_register
+	shared_focus = ac_reg_staff_schools
+	shared_focus = ac_reg_field_priority
+	shared_focus = ac_reg_replacement_office
+	shared_focus = ac_reg_readiness_reports
+	shared_focus = ac_reg_defense_review
+	shared_focus = ac_reg_external_register
+	shared_focus = ac_reg_guarded_contacts
+	shared_focus = ac_reg_technical_contacts
+	shared_focus = ac_reg_domestic_contingency
+	shared_focus = ac_reg_bounded_commitments
+	shared_focus = ac_reg_external_review
+	shared_focus = ac_reg_institution_review
+	shared_focus = ac_reg_delegation
+	shared_focus = ac_reg_central_register
+	shared_focus = ac_reg_inspectors
+	shared_focus = ac_reg_succession_rules
+	shared_focus = ac_reg_institutional_settlement
+	focus = {
+		id = VLK_wd_pol_tally
+		icon = GFX_ac_wd_focus_VLK_wd_pol_tally
+		x = 3
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_split_country
+			country_event = {
+				id = ac_wd_vlk.1
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_nonaligned_rooms
+		icon = GFX_ac_wd_focus_VLK_wd_pol_nonaligned_rooms
+		x = 2
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_pol_tally
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = VLK_wd_nonaligned_hearing
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_nationalist_rooms
+		icon = GFX_ac_wd_focus_VLK_wd_pol_nationalist_rooms
+		x = 4
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_pol_tally
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = VLK_wd_nationalist_hearing
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_two_points
+		icon = GFX_ac_wd_focus_VLK_wd_pol_two_points
+		x = 3
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_pol_nonaligned_rooms
+		}
+		prerequisite = {
+			focus = VLK_wd_pol_nationalist_rooms
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 30
+			custom_effect_tooltip = VLK_wd_pol_two_points_tt_1
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_call_ballot
+		icon = GFX_ac_wd_focus_VLK_wd_pol_call_ballot
+		x = 2
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_pol_two_points
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_pol_keep_drawer
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_split_country
+				add_idea = VLK_wd_ballot_called
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_keep_drawer
+		icon = GFX_ac_wd_focus_VLK_wd_pol_keep_drawer
+		x = 4
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_pol_two_points
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_pol_call_ballot
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_split_country
+				add_idea = VLK_wd_ballot_drawer
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_list_cabinet
+		icon = GFX_ac_wd_focus_VLK_wd_pol_list_cabinet
+		x = 0
+		y = 16
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_pol_call_ballot
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_pol_two_thirds
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_vlk_regime_national_list = yes
+			set_country_flag = VLK_wd_order_list
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_two_thirds
+		icon = GFX_ac_wd_focus_VLK_wd_pol_two_thirds
+		x = 2
+		y = 16
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_pol_call_ballot
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_pol_list_cabinet
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_vlk_regime_union_assembly = yes
+			set_country_flag = VLK_wd_order_assembly
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_directors
+		icon = GFX_ac_wd_focus_VLK_wd_pol_directors
+		x = 4
+		y = 16
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_pol_keep_drawer
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_pol_caretaker
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_vlk_regime_directors_council = yes
+			set_country_flag = VLK_wd_order_directors
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_caretaker
+		icon = GFX_ac_wd_focus_VLK_wd_pol_caretaker
+		x = 6
+		y = 16
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_pol_keep_drawer
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_pol_directors
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_ballot_drawer
+				add_idea = VLK_wd_caretaker_accounts
+			}
+			set_country_flag = VLK_wd_order_caretaker
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_list_pledge
+		icon = GFX_ac_wd_focus_VLK_wd_pol_list_pledge
+		x = 0
+		y = 17
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_pol_list_cabinet
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_pol_ballot_date
+			focus = VLK_wd_pol_cross_cabinet
+			focus = VLK_wd_pol_weekly_resolutions
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_ballot_called
+				add_idea = VLK_wd_list_pledge
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_cross_cabinet
+		icon = GFX_ac_wd_focus_VLK_wd_pol_cross_cabinet
+		x = 2
+		y = 17
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_pol_two_thirds
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_pol_ballot_date
+			focus = VLK_wd_pol_list_pledge
+			focus = VLK_wd_pol_weekly_resolutions
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_ballot_called
+				add_idea = VLK_wd_both_camps_cabinet
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_weekly_resolutions
+		icon = GFX_ac_wd_focus_VLK_wd_pol_weekly_resolutions
+		x = 4
+		y = 17
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_pol_directors
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_pol_ballot_date
+			focus = VLK_wd_pol_cross_cabinet
+			focus = VLK_wd_pol_list_pledge
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_ballot_drawer
+				add_idea = VLK_wd_posted_resolutions
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_ballot_date
+		icon = GFX_ac_wd_focus_VLK_wd_pol_ballot_date
+		x = 6
+		y = 17
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_pol_caretaker
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_pol_cross_cabinet
+			focus = VLK_wd_pol_list_pledge
+			focus = VLK_wd_pol_weekly_resolutions
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_caretaker_accounts
+				add_idea = VLK_wd_ballot_date_set
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_pol_lot_clerks
+		icon = GFX_ac_wd_focus_VLK_wd_pol_lot_clerks
+		x = 3
+		y = 18
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_pol_list_pledge
+			focus = VLK_wd_pol_cross_cabinet
+			focus = VLK_wd_pol_weekly_resolutions
+			focus = VLK_wd_pol_ballot_date
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_lot_clerks
+		}
+	}
+
+	focus = {
+		id = VLK_wd_line_walk
+		icon = GFX_ac_wd_focus_VLK_wd_line_walk
+		x = 12
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_track_book
+			country_event = {
+				id = ac_wd_vlk.3
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_line_spur_roads
+		icon = GFX_ac_wd_focus_VLK_wd_line_spur_roads
+		x = 10
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_line_walk
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 359
+				}
+				359 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_line_district_d_roads
+		icon = GFX_ac_wd_focus_VLK_wd_line_district_d_roads
+		x = 12
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_line_walk
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 397
+				}
+				397 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_line_ploughs
+		icon = GFX_ac_wd_focus_VLK_wd_line_ploughs
+		x = 9
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_line_spur_roads
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_plough_wagons
+		}
+	}
+
+	focus = {
+		id = VLK_wd_line_drains
+		icon = GFX_ac_wd_focus_VLK_wd_line_drains
+		x = 11
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_line_district_d_roads
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_dry_ballast
+		}
+	}
+
+	focus = {
+		id = VLK_wd_line_capital_yard
+		icon = GFX_ac_wd_focus_VLK_wd_line_capital_yard
+		x = 14
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_line_walk
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_line_district_c_sidings
+		icon = GFX_ac_wd_focus_VLK_wd_line_district_c_sidings
+		x = 15
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_line_capital_yard
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 382
+				}
+				382 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_line_end_e
+		icon = GFX_ac_wd_focus_VLK_wd_line_end_e
+		x = 13
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_line_district_d_roads
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 414
+				}
+				414 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_line_steel_timetable
+		icon = GFX_ac_wd_focus_VLK_wd_line_steel_timetable
+		x = 11
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_line_ploughs
+			focus = VLK_wd_line_drains
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_line_service_timetable
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_track_book
+				add_idea = VLK_wd_steel_paths
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_line_service_timetable
+		icon = GFX_ac_wd_focus_VLK_wd_line_service_timetable
+		x = 13
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_line_ploughs
+			focus = VLK_wd_line_drains
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_line_steel_timetable
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_track_book
+				add_idea = VLK_wd_service_paths
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_line_telephones
+		icon = GFX_ac_wd_focus_VLK_wd_line_telephones
+		x = 12
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_line_steel_timetable
+			focus = VLK_wd_line_service_timetable
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_signal_wires
+			add_tech_bonus = {
+				name = VLK_wd_line_telephones
+				bonus = 0.5
+				uses = 1
+				category = train_tech
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_count
+		icon = GFX_ac_wd_focus_VLK_wd_steel_count
+		x = 21
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_ore_ledger
+			country_event = {
+				id = ac_wd_vlk.4
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_capital_wells
+		icon = GFX_ac_wd_focus_VLK_wd_steel_capital_wells
+		x = 19
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_steel_count
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = VLK_wd_steady_wells
+				days = 730
+			}
+			add_tech_bonus = {
+				name = VLK_wd_steel_capital_wells
+				bonus = 0.5
+				uses = 1
+				category = excavation_tech
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_arms_halls
+		icon = GFX_ac_wd_focus_VLK_wd_steel_arms_halls
+		x = 21
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_steel_count
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_one_line_per_hall
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_household
+		icon = GFX_ac_wd_focus_VLK_wd_steel_household
+		x = 23
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_steel_count
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_plate_exports
+		icon = GFX_ac_wd_focus_VLK_wd_steel_plate_exports
+		x = 18
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_steel_capital_wells
+			focus = VLK_wd_steel_arms_halls
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_steel_alloy_barter
+			focus = VLK_wd_steel_home_finishing
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_ore_ledger
+				add_idea = VLK_wd_plate_exports
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_home_finishing
+		icon = GFX_ac_wd_focus_VLK_wd_steel_home_finishing
+		x = 20
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_steel_capital_wells
+			focus = VLK_wd_steel_arms_halls
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_steel_alloy_barter
+			focus = VLK_wd_steel_plate_exports
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_ore_ledger
+				add_idea = VLK_wd_home_finishing
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_alloy_barter
+		icon = GFX_ac_wd_focus_VLK_wd_steel_alloy_barter
+		x = 22
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_steel_capital_wells
+			focus = VLK_wd_steel_arms_halls
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_steel_home_finishing
+			focus = VLK_wd_steel_plate_exports
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_ore_ledger
+				add_idea = VLK_wd_alloy_barter
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_north_mill
+		icon = GFX_ac_wd_focus_VLK_wd_steel_north_mill
+		x = 19
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_steel_plate_exports
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 359
+				}
+				359 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_district_d_works
+		icon = GFX_ac_wd_focus_VLK_wd_steel_district_d_works
+		x = 21
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_steel_home_finishing
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 397
+				}
+				397 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_alloy_school
+		icon = GFX_ac_wd_focus_VLK_wd_steel_alloy_school
+		x = 23
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_steel_alloy_barter
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_alloy_testing
+			add_tech_bonus = {
+				name = VLK_wd_steel_alloy_school
+				bonus = 0.5
+				uses = 2
+				category = industry
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_district_e_hall
+		icon = GFX_ac_wd_focus_VLK_wd_steel_district_e_hall
+		x = 24
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_steel_arms_halls
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 414
+				}
+				414 = {
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_steel_ingot_reserve
+		icon = GFX_ac_wd_focus_VLK_wd_steel_ingot_reserve
+		x = 21
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_steel_north_mill
+			focus = VLK_wd_steel_district_d_works
+			focus = VLK_wd_steel_alloy_school
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_ingot_reserve
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_muster
+		icon = GFX_ac_wd_focus_VLK_wd_guard_muster
+		x = 30
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_eight_battalions
+			country_event = {
+				id = ac_wd_vlk.5
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_flood_companies
+		icon = GFX_ac_wd_focus_VLK_wd_guard_flood_companies
+		x = 28
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_guard_muster
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_flood_companies
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_blizzard_drill
+		icon = GFX_ac_wd_focus_VLK_wd_guard_blizzard_drill
+		x = 30
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_guard_muster
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = VLK_wd_cold_drilled
+				days = 365
+			}
+			army_experience = 20
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_district_companies
+		icon = GFX_ac_wd_focus_VLK_wd_guard_district_companies
+		x = 29
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_guard_flood_companies
+			focus = VLK_wd_guard_blizzard_drill
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_guard_rail_reserve
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_eight_battalions
+				add_idea = VLK_wd_district_companies
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_rail_reserve
+		icon = GFX_ac_wd_focus_VLK_wd_guard_rail_reserve
+		x = 31
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_guard_flood_companies
+			focus = VLK_wd_guard_blizzard_drill
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_guard_district_companies
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_eight_battalions
+				add_idea = VLK_wd_rail_reserve
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_mountain_course
+		icon = GFX_ac_wd_focus_VLK_wd_guard_mountain_course
+		x = 29
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_guard_district_companies
+			focus = VLK_wd_guard_rail_reserve
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_climbing_course
+			add_tech_bonus = {
+				name = VLK_wd_guard_mountain_course
+				bonus = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_pioneers
+		icon = GFX_ac_wd_focus_VLK_wd_guard_pioneers
+		x = 31
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_guard_district_companies
+			focus = VLK_wd_guard_rail_reserve
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_pioneer_platoons
+			add_tech_bonus = {
+				name = VLK_wd_guard_pioneers
+				bonus = 0.75
+				uses = 1
+				category = engineers_tech
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_volunteer_lists
+		icon = GFX_ac_wd_focus_VLK_wd_guard_volunteer_lists
+		x = 32
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_guard_muster
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_district_volunteer_lists
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_lorries
+		icon = GFX_ac_wd_focus_VLK_wd_guard_lorries
+		x = 33
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_guard_volunteer_lists
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_lorry_companies
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_rescue_flight
+		icon = GFX_ac_wd_focus_VLK_wd_guard_rescue_flight
+		x = 29
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_guard_mountain_course
+			focus = VLK_wd_guard_pioneers
+			focus = VLK_wd_guard_lorries
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_guard_fighter_flight
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = air_base
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_ideas = VLK_wd_rescue_flight
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_fighter_flight
+		icon = GFX_ac_wd_focus_VLK_wd_guard_fighter_flight
+		x = 31
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_guard_mountain_course
+			focus = VLK_wd_guard_pioneers
+			focus = VLK_wd_guard_lorries
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_guard_rescue_flight
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+			}
+			add_ideas = VLK_wd_fighter_flight
+			air_experience = 20
+		}
+	}
+
+	focus = {
+		id = VLK_wd_guard_tented_hospitals
+		icon = GFX_ac_wd_focus_VLK_wd_guard_tented_hospitals
+		x = 27
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_guard_flood_companies
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_tented_hospitals
+		}
+	}
+
+	focus = {
+		id = VLK_wd_coast_sixty
+		icon = GFX_ac_wd_focus_VLK_wd_coast_sixty
+		x = 2
+		y = 20
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_sixty_convoys
+			country_event = {
+				id = ac_wd_vlk.6
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_coast_quay
+		icon = GFX_ac_wd_focus_VLK_wd_coast_quay
+		x = 0
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_coast_sixty
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 359
+				}
+				359 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_coast_capital_lighters
+		icon = GFX_ac_wd_focus_VLK_wd_coast_capital_lighters
+		x = 2
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_coast_sixty
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_capital_lighters
+		}
+	}
+
+	focus = {
+		id = VLK_wd_coast_south_landings
+		icon = GFX_ac_wd_focus_VLK_wd_coast_south_landings
+		x = 4
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_coast_sixty
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_south_landings
+		}
+	}
+
+	focus = {
+		id = VLK_wd_coast_cutters
+		icon = GFX_ac_wd_focus_VLK_wd_coast_cutters
+		x = 0
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_coast_quay
+			focus = VLK_wd_coast_capital_lighters
+			focus = VLK_wd_coast_south_landings
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_coast_freighters
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_sixty_convoys
+				add_idea = VLK_wd_coast_watch
+			}
+			navy_experience = 15
+		}
+	}
+
+	focus = {
+		id = VLK_wd_coast_freighters
+		icon = GFX_ac_wd_focus_VLK_wd_coast_freighters
+		x = 2
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_coast_quay
+			focus = VLK_wd_coast_capital_lighters
+			focus = VLK_wd_coast_south_landings
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_coast_cutters
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_sixty_convoys
+				add_idea = VLK_wd_freighter_credit
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_coast_slipway
+		icon = GFX_ac_wd_focus_VLK_wd_coast_slipway
+		x = 1
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_coast_cutters
+			focus = VLK_wd_coast_freighters
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 359
+				}
+				359 = {
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_coast_storm_radio
+		icon = GFX_ac_wd_focus_VLK_wd_coast_storm_radio
+		x = 4
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_coast_south_landings
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_storm_warnings
+		}
+	}
+
+	focus = {
+		id = VLK_wd_coast_headlands
+		icon = GFX_ac_wd_focus_VLK_wd_coast_headlands
+		x = 3
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_coast_storm_radio
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_headland_lights
+			add_tech_bonus = {
+				name = VLK_wd_coast_headlands
+				bonus = 0.5
+				uses = 1
+				category = naval_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_map
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_map
+		x = 10
+		y = 20
+		cost = 5
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_five_frontiers_desk
+			country_event = {
+				id = ac_wd_vlk.7
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_plains_post
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_plains_post
+		x = 7
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_hinge_map
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 397
+				}
+				397 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_timed_idea = {
+				idea = VLK_wd_southern_post
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_lorry_park
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_lorry_park
+		x = 9
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_hinge_map
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_timed_idea = {
+				idea = VLK_wd_frontier_lorry_park
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_hill_wardens
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_hill_wardens
+		x = 11
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_hinge_map
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_hill_wardens
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_firebreaks
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_firebreaks
+		x = 13
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_hinge_map
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_northern_firebreaks
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_transit_toll
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_transit_toll
+		x = 7
+		y = 22
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_hinge_plains_post
+			focus = VLK_wd_hinge_lorry_park
+			focus = VLK_wd_hinge_hill_wardens
+			focus = VLK_wd_hinge_firebreaks
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_hinge_transit_cost
+			focus = VLK_wd_hinge_trunk_reserved
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_five_frontiers_desk
+				add_idea = VLK_wd_transit_toll
+			}
+			set_country_flag = VLK_wd_posture_toll
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_transit_cost
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_transit_cost
+		x = 9
+		y = 22
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_hinge_plains_post
+			focus = VLK_wd_hinge_lorry_park
+			focus = VLK_wd_hinge_hill_wardens
+			focus = VLK_wd_hinge_firebreaks
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_hinge_transit_toll
+			focus = VLK_wd_hinge_trunk_reserved
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_five_frontiers_desk
+				add_idea = VLK_wd_transit_at_cost
+			}
+			set_country_flag = VLK_wd_posture_open
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_trunk_reserved
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_trunk_reserved
+		x = 11
+		y = 22
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_hinge_plains_post
+			focus = VLK_wd_hinge_lorry_park
+			focus = VLK_wd_hinge_hill_wardens
+			focus = VLK_wd_hinge_firebreaks
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_hinge_transit_cost
+			focus = VLK_wd_hinge_transit_toll
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_five_frontiers_desk
+				add_idea = VLK_wd_trunk_reserved
+			}
+			set_country_flag = VLK_wd_posture_closed
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_toll_receipts
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_toll_receipts
+		x = 8
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_hinge_transit_toll
+			focus = VLK_wd_hinge_transit_cost
+			focus = VLK_wd_hinge_trunk_reserved
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_hinge_depot_towns
+			focus = VLK_wd_hinge_permit_office
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+			has_country_flag = VLK_wd_posture_toll
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_transit_toll
+				add_idea = VLK_wd_toll_receipts
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_depot_towns
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_depot_towns
+		x = 10
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_hinge_transit_toll
+			focus = VLK_wd_hinge_transit_cost
+			focus = VLK_wd_hinge_trunk_reserved
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_hinge_permit_office
+			focus = VLK_wd_hinge_toll_receipts
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+			has_country_flag = VLK_wd_posture_open
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_transit_at_cost
+				add_idea = VLK_wd_depot_towns
+			}
+			if = {
+				limit = {
+					owns_state = 397
+				}
+				397 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_permit_office
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_permit_office
+		x = 12
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_hinge_transit_toll
+			focus = VLK_wd_hinge_transit_cost
+			focus = VLK_wd_hinge_trunk_reserved
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_hinge_depot_towns
+			focus = VLK_wd_hinge_toll_receipts
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+			has_country_flag = VLK_wd_posture_closed
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_trunk_reserved
+				add_idea = VLK_wd_permit_office
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_mountain_watch
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_mountain_watch
+		x = 13
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_hinge_hill_wardens
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_mountain_watch
+		}
+	}
+
+	focus = {
+		id = VLK_wd_hinge_letter_desk
+		icon = GFX_ac_wd_focus_VLK_wd_hinge_letter_desk
+		x = 10
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_hinge_toll_receipts
+			focus = VLK_wd_hinge_depot_towns
+			focus = VLK_wd_hinge_permit_office
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_neighbour_desk
+		}
+	}
+
+	focus = {
+		id = VLK_wd_sky_notice
+		icon = GFX_ac_wd_focus_VLK_wd_sky_notice
+		x = 18
+		y = 20
+		cost = 5
+		available = {
+			NOT = { date < 1994.1.1 }
+			date > 1994.12.10
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_impact_office
+			country_event = {
+				id = ac_wd_vlk.8
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_sky_ground_survey
+		icon = GFX_ac_wd_focus_VLK_wd_sky_ground_survey
+		x = 17
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_sky_notice
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = VLK_wd_sky_ground_survey
+				bonus = 0.5
+				uses = 1
+				category = construction_tech
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_sky_galleries
+		icon = GFX_ac_wd_focus_VLK_wd_sky_galleries
+		x = 16
+		y = 22
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_sky_ground_survey
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_sky_evacuation
+			focus = VLK_wd_sky_hall_cellars
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_impact_office
+				add_idea = VLK_wd_rock_galleries
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_sky_hall_cellars
+		icon = GFX_ac_wd_focus_VLK_wd_sky_hall_cellars
+		x = 18
+		y = 22
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_sky_ground_survey
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_sky_evacuation
+			focus = VLK_wd_sky_galleries
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_impact_office
+				add_idea = VLK_wd_hall_cellars
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_sky_evacuation
+		icon = GFX_ac_wd_focus_VLK_wd_sky_evacuation
+		x = 20
+		y = 22
+		cost = 10
+		prerequisite = {
+			focus = VLK_wd_sky_ground_survey
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_sky_galleries
+			focus = VLK_wd_sky_hall_cellars
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = VLK_wd_impact_office
+				add_idea = VLK_wd_evacuation_timetable
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_sky_impact_declared
+		icon = GFX_ac_wd_focus_VLK_wd_sky_impact_declared
+		x = 18
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_sky_galleries
+			focus = VLK_wd_sky_hall_cellars
+			focus = VLK_wd_sky_evacuation
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+			date > 1996.4.20
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = VLK_wd_shelter_priority
+				days = 730
+			}
+			add_stability = -0.02
+		}
+	}
+
+	focus = {
+		id = VLK_wd_sky_depots
+		icon = GFX_ac_wd_focus_VLK_wd_sky_depots
+		x = 17
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_sky_impact_declared
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_dark_year_depots
+		}
+	}
+
+	focus = {
+		id = VLK_wd_sky_sirens
+		icon = GFX_ac_wd_focus_VLK_wd_sky_sirens
+		x = 19
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_sky_notice
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_sunday_sirens
+		}
+	}
+
+	focus = {
+		id = VLK_wd_sky_roche_night
+		icon = GFX_ac_wd_focus_VLK_wd_sky_roche_night
+		x = 19
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_sky_impact_declared
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+			date > 1999.7.8
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = VLK_wd_roche_watch
+				days = 365
+			}
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = VLK_wd_sky_relief_trains
+		icon = GFX_ac_wd_focus_VLK_wd_sky_relief_trains
+		x = 18
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_sky_roche_night
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_relief_trains
+		}
+	}
+
+	focus = {
+		id = VLK_wd_wars_premiums
+		icon = GFX_ac_wd_focus_VLK_wd_wars_premiums
+		x = 24
+		y = 20
+		cost = 5
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.3.25
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = VLK_wd_war_premiums
+				days = 730
+			}
+			country_event = {
+				id = ac_wd_vlk.9
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_wars_hull_pool
+		icon = GFX_ac_wd_focus_VLK_wd_wars_hull_pool
+		x = 23
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_wars_premiums
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_wars_owners_risk
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_hull_pool
+		}
+	}
+
+	focus = {
+		id = VLK_wd_wars_owners_risk
+		icon = GFX_ac_wd_focus_VLK_wd_wars_owners_risk
+		x = 25
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_wars_premiums
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_wars_hull_pool
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_owners_risk
+			add_political_power = 20
+		}
+	}
+
+	focus = {
+		id = VLK_wd_wars_peace_buyers
+		icon = GFX_ac_wd_focus_VLK_wd_wars_peace_buyers
+		x = 23
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_wars_hull_pool
+			focus = VLK_wd_wars_owners_risk
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_wars_any_buyer
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_peace_buyers
+		}
+	}
+
+	focus = {
+		id = VLK_wd_wars_any_buyer
+		icon = GFX_ac_wd_focus_VLK_wd_wars_any_buyer
+		x = 25
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_wars_hull_pool
+			focus = VLK_wd_wars_owners_risk
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_wars_peace_buyers
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_any_buyer
+		}
+	}
+
+	focus = {
+		id = VLK_wd_wars_treaty
+		icon = GFX_ac_wd_focus_VLK_wd_wars_treaty
+		x = 24
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_wars_peace_buyers
+			focus = VLK_wd_wars_any_buyer
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.6.20
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = VLK_wd_treaty_trade
+				days = 365
+			}
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = VLK_wd_wars_fuel_tanks
+		icon = GFX_ac_wd_focus_VLK_wd_wars_fuel_tanks
+		x = 24
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_wars_treaty
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_winter_fuel_stock
+		}
+	}
+
+	focus = {
+		id = VLK_wd_wars_usean_rates
+		icon = GFX_ac_wd_focus_VLK_wd_wars_usean_rates
+		x = 24
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_wars_fuel_tanks
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 2003.8.22
+			has_global_flag = ac_ucw_isaf_formed
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = VLK_wd_usean_rates
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_wars_rebuilding
+		icon = GFX_ac_wd_focus_VLK_wd_wars_rebuilding
+		x = 24
+		y = 26
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_wars_usean_rates
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 2005.9.19
+			has_global_flag = ac_ucw_outcome_isaf_victory
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = VLK_wd_rebuilding_orders
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_cent_audit
+		icon = GFX_ac_wd_focus_VLK_wd_cent_audit
+		x = 5
+		y = 28
+		cost = 5
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_decade_audit
+			country_event = {
+				id = ac_wd_vlk.10
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_cent_list_term
+		icon = GFX_ac_wd_focus_VLK_wd_cent_list_term
+		x = 0
+		y = 29
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_cent_audit
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_cent_date_kept
+			focus = VLK_wd_cent_director_terms
+			focus = VLK_wd_cent_rule_renewed
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = VLK_wd_order_list
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_list_second_term
+		}
+	}
+
+	focus = {
+		id = VLK_wd_cent_rule_renewed
+		icon = GFX_ac_wd_focus_VLK_wd_cent_rule_renewed
+		x = 2
+		y = 29
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_cent_audit
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_cent_date_kept
+			focus = VLK_wd_cent_director_terms
+			focus = VLK_wd_cent_list_term
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = VLK_wd_order_assembly
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_rule_renewed
+		}
+	}
+
+	focus = {
+		id = VLK_wd_cent_director_terms
+		icon = GFX_ac_wd_focus_VLK_wd_cent_director_terms
+		x = 4
+		y = 29
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_cent_audit
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_cent_date_kept
+			focus = VLK_wd_cent_list_term
+			focus = VLK_wd_cent_rule_renewed
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = VLK_wd_order_directors
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_director_rotation
+		}
+	}
+
+	focus = {
+		id = VLK_wd_cent_date_kept
+		icon = GFX_ac_wd_focus_VLK_wd_cent_date_kept
+		x = 6
+		y = 29
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_cent_audit
+		}
+		mutually_exclusive = {
+			focus = VLK_wd_cent_director_terms
+			focus = VLK_wd_cent_list_term
+			focus = VLK_wd_cent_rule_renewed
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = VLK_wd_order_caretaker
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_date_kept
+		}
+	}
+
+	focus = {
+		id = VLK_wd_cent_passing_loops
+		icon = GFX_ac_wd_focus_VLK_wd_cent_passing_loops
+		x = 8
+		y = 29
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_cent_audit
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 382
+				}
+				382 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_cent_colleges
+		icon = GFX_ac_wd_focus_VLK_wd_cent_colleges
+		x = 10
+		y = 29
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_cent_audit
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_college_places
+			add_tech_bonus = {
+				name = VLK_wd_cent_colleges
+				bonus = 0.5
+				uses = 1
+				category = electronics
+			}
+		}
+	}
+
+	focus = {
+		id = VLK_wd_cent_second_tally
+		icon = GFX_ac_wd_focus_VLK_wd_cent_second_tally
+		x = 5
+		y = 30
+		cost = 5
+		prerequisite = {
+			focus = VLK_wd_cent_list_term
+			focus = VLK_wd_cent_rule_renewed
+			focus = VLK_wd_cent_director_terms
+			focus = VLK_wd_cent_date_kept
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = VLK_wd_second_tally
+		}
+	}
+}

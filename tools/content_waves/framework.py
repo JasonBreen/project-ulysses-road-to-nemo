@@ -195,7 +195,7 @@ def compile_wave(wave, event_base=None):
         block("else", f"set_country_flag = {P}_payment_authorized") +
         guard(f"has_country_flag = {P}_payment_authorized", "add_political_power = -35\nset_temp_variable = { ac_pol_capacity_delta = -4 }\nac_pol_change_capacity = yes")))
     effects[P + "_refresh_progress"] = guard(f"has_country_flag = {P}_service_active has_variable = {P}_service_started",
-        f"set_variable = {{ {P}_elapsed = date }}\nsubtract_from_variable = {{ {P}_elapsed = {P}_service_started }}\nclamp_variable = {{ var = {P}_elapsed min = 0 max = 90 }}")
+        f"set_variable = {{ {P}_elapsed = global.date }}\nsubtract_from_variable = {{ {P}_elapsed = {P}_service_started }}\nclamp_variable = {{ var = {P}_elapsed min = 0 max = 90 }}")
     cleanup = "".join(f"clr_country_flag = {ident}_active\nremove_ideas = {ident}_spirit\n" for _, _, ident in services)
     effects[P + "_interrupt_service"] = guard(f"{P}_participant = yes has_country_flag = {P}_service_active",
         f"{P}_refresh_progress = yes\nset_variable = {{ {P}_last_delivered_days = {P}_elapsed }}\nset_variable = {{ {P}_last_interrupted_service = {P}_current_service }}\nset_country_flag = {P}_service_interrupted\n" +
@@ -209,7 +209,7 @@ def compile_wave(wave, event_base=None):
         authorize = f"{P}_pay_programme = yes\n" + guard(f"has_country_flag = {P}_payment_authorized",
             f"clr_country_flag = {P}_payment_authorized\nset_country_flag = {P}_service_active\nset_country_flag = {ident}_active\n"
             f"set_country_flag = {{ flag = {P}_service_window days = 90 }}\nset_variable = {{ {P}_current_service = {number_} }}\n"
-            f"set_variable = {{ {P}_service_started = date }}\nset_variable = {{ {P}_elapsed = 0 }}\nadd_timed_idea = {{ idea = {ident}_spirit days = 90 }}")
+            f"set_variable = {{ {P}_service_started = global.date }}\nset_variable = {{ {P}_elapsed = 0 }}\nadd_timed_idea = {{ idea = {ident}_spirit days = 90 }}")
         effects[ident + "_start"] = guard(condition, authorize)
         finish = (f"{P}_active = yes tag = {branch.tag} original_tag = {branch.tag} has_war = no has_country_flag = {P}_service_active "
                   f"has_country_flag = {ident}_active check_variable = {{ {P}_current_service = {number_} }} NOT = {{ has_country_flag = {P}_service_window }}")

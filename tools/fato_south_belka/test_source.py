@@ -18,7 +18,7 @@ import build_art
 from source_contract import (validate,validate_protected,validate_institution_profile,
                              REVIEWED_SOTOAN_TREES,REVIEWED_RELEASE_UPDATE,
                              REVIEWED_FAT_CHARACTER_UPDATE,
-                             REVIEWED_FAT_DOCTRINE_UPDATE,
+                             RETIRED_FAT_DOCTRINE_UPDATE,
                              REVIEWED_STARTING_GOVERNMENT_UPDATE,
                              REVIEWED_BELKAN_OUTCOME_UPDATE)
 sys.path.insert(0,str(ROOT/'tools'))
@@ -127,19 +127,26 @@ class SourceAndArt(unittest.TestCase):
             with self.subTest(path=path,before=before),self.assertRaises(ValueError):
                 validate_protected(path,before,data)
 
-    def test_only_exact_reviewed_fat_doctrine_ids_are_admitted(self):
-        update=REVIEWED_FAT_DOCTRINE_UPDATE
+    def test_fat_doctrine_ids_keep_the_original_capture_and_reject_the_retired_respelling(self):
+        update=RETIRED_FAT_DOCTRINE_UPDATE
         capture=json.loads((HERE/'engine_contract.json').read_text())
         expected=capture['protected_sha256'][update['path']]
         self.assertEqual(update['original_sha256'],expected)
         actual=(MOD/update['path']).read_bytes()
-        self.assertEqual('reviewed-fat-doctrine-ids',
-                         validate_protected(update['path'],expected,actual))
+        self.assertEqual('original',validate_protected(update['path'],expected,actual))
+        retired=actual
+        for ident in update['doctrine_ids']:
+            effect=b'set_grand_doctrine = '+ident.encode()
+            self.assertEqual(1,actual.count(effect),ident)
+            retired=retired.replace(effect,b'set_grand_doctrine = '+ident[len('new_'):].encode())
+        # Native N003: the unprefixed ids assign no grand doctrine in 1.19.4.2.
+        self.assertEqual(update['retired_sha256'],hashlib.sha256(retired.replace(b'\r\n',b'\n')).hexdigest())
         for path,before,data in (
+                (update['path'],expected,retired),
                 (update['path'],expected,actual+b'\n'),
                 (update['path'],'0'*64,actual),
-                ('history/countries/SBK - South Belka.txt',expected,actual),
-                (update['path'],expected,actual.replace(b'mobile_warfare',b'new_mobile_warfare',1))):
+                ('history/countries/SBK - South Belka.txt',expected,retired),
+                (update['path'],expected,actual.replace(b'new_mobile_warfare',b'mobile_warfare',1))):
             with self.subTest(path=path,before=before),self.assertRaises(ValueError):
                 validate_protected(path,before,data)
 

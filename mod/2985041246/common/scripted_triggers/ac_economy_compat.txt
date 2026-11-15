@@ -22,7 +22,7 @@ ac_econ_ready = {
 	OR = { ac_econ_legacy_ready = yes ac_macro_ready = yes }
 }
 ac_econ_can_pay_programme = {
-	OR = { AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= 0.002 } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 2 } } }
+	OR = { AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { var = ac_macro_cash value = 0.002 compare = greater_than_or_equals } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { var = ac_econ_treasury value = 2 compare = greater_than_or_equals } } }
 }
 ac_econ_release_history = {
 	OR = {
@@ -44,5 +44,5 @@ ac_econ_release_history = {
 }
 ac_econ_can_fund_release_project = {
 	ac_econ_release_history = yes
-	OR = { ac_econ_enabled = no AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { ac_macro_cash >= 0.02 } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { ac_econ_treasury >= 20 } } }
+	OR = { NOT = { ac_econ_enabled = yes } AND = { ac_macro_ready = yes check_variable = { ac_macro_arrears = 0 } check_variable = { var = ac_macro_cash value = 0.02 compare = greater_than_or_equals } } AND = { ac_econ_legacy_ready = yes check_variable = { ac_econ_arrears = 0 } check_variable = { var = ac_econ_treasury value = 20 compare = greater_than_or_equals } } }
 }

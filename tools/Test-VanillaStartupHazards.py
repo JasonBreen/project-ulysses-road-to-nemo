@@ -1,10 +1,14 @@
-"""Static checks for vanilla on_actions that would address Earth provinces.
+"""Static checks for vanilla scripts that would address Earth map objects.
 
 The mod keeps loading every vanilla ``common/on_actions`` file it does not
 override. A vanilla file that adds province modifiers or names province IDs
 beyond the Strangereal map runs against the wrong provinces, or against
 provinces that do not exist. The 1.19.4 ``14_sea_on_actions.txt`` did this in
 ``on_startup``, and a new 1991 game crashed on its first daily tick.
+
+N006 reproduced another first-day crash when automatic vanilla events queried
+Earth-only states (including SEA_japan_news_events.03's state995). The authored
+event collection must replace the vanilla directory, rather than merge with it.
 
 The mod-side check always runs. The scan of the installed game's files runs
 only with ``--reference-game-root`` (or ``ULYSSES_GAME_ROOT``) and reads that
@@ -54,6 +58,30 @@ def hazards(path, limit):
 
 
 class ModOverrides(unittest.TestCase):
+    def test_authored_events_replace_earth_event_directory_in_every_descriptor(self):
+        for path in (MOD / 'descriptor.mod', MOD / 'ProjectUlysses.mod',
+                     MOD.parent / (MOD.name + '.mod')):
+            with self.subTest(descriptor=path.name):
+                self.assertRegex(uncommented(path), r'(?m)^replace_path\s*=\s*"events"\s*$')
+
+    def test_mod_event_calls_do_not_depend_on_removed_vanilla_definitions(self):
+        # Consume quoted strings/comments before looking for syntax. Descriptions
+        # and comments containing event-shaped examples are not event consumers.
+        token = re.compile(r'"(?:\\.|[^"\\])*"|#[^\n]*|[A-Za-z_][A-Za-z0-9_.]*|[={}0-9]+')
+        def code(path):
+            return ' '.join(m[0] for m in token.finditer(path.read_text(encoding='utf-8-sig'))
+                            if not m[0].startswith(('"', '#')))
+        declarations = '\n'.join(code(p) for p in (MOD / 'events').glob('*.txt'))
+        definitions = set(re.findall(r'\bid\s*=\s*([A-Za-z0-9_]+\.\d+)\b', declarations))
+        self.assertTrue(definitions)
+        unresolved = []
+        for folder in ('common', 'events', 'history'):
+            for path in (MOD / folder).rglob('*.txt'):
+                for ident in re.findall(r'\b(?:country_event|news_event)\s*=\s*(?:\{\s*(?:id\s*=\s*)?)?([A-Za-z0-9_]+\.\d+)\b', code(path)):
+                    if ident not in definitions:
+                        unresolved.append((path.relative_to(MOD).as_posix(), ident))
+        self.assertEqual([], unresolved)
+
     def test_earth_only_startup_files_are_blank(self):
         for name in BLANKED:
             with self.subTest(name=name):

@@ -16,8 +16,8 @@ set_variable = { ac_macro_settled_real_gdp = 0 }
 set_variable = { ac_macro_settled_tax_base = 0 }
 every_controlled_state = {
  if = { limit = { has_variable = ac_macro_real_output }
-  if = { limit = { OR = { NOT = { has_variable = ac_macro_claim_date } check_variable = { ac_macro_claim_date < date } } }
-   set_variable = { ac_macro_claim_date = date }
+  if = { limit = { OR = { NOT = { has_variable = ac_macro_claim_date } check_variable = { ac_macro_claim_date < global.date } } }
+   set_variable = { ac_macro_claim_date = global.date }
    set_variable = { ac_macro_claim_receiver = PREV.id }
    set_variable = { ac_macro_claim_output = ac_macro_real_output }
    set_temp_variable = { ac_macro_claim_factor = 1 }
@@ -26,7 +26,7 @@ every_controlled_state = {
    set_variable = { ac_macro_claim_tax_base = ac_macro_claim_output }
    if = { limit = { NOT = { is_owned_by = PREV } } multiply_variable = { ac_macro_claim_tax_base = 0.35 } }
   }
-  if = { limit = { check_variable = { ac_macro_claim_date = date } check_variable = { var = ac_macro_claim_receiver value = PREV.id compare = equals } }
+  if = { limit = { check_variable = { ac_macro_claim_date = global.date } check_variable = { var = ac_macro_claim_receiver value = PREV.id compare = equals } }
    add_to_variable = { PREV.ac_macro_settled_real_gdp = ac_macro_claim_output }
    add_to_variable = { PREV.ac_macro_settled_tax_base = ac_macro_claim_tax_base }
   }

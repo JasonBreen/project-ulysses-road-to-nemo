@@ -386,13 +386,10 @@ class WorldFoundationTests(unittest.TestCase):
             original=original_generated(relative,tag,old_rows[tag],old_profiles[tag],builder)
             if original is None:original=(MOD / relative).read_text(encoding='utf-8')
             self.assertEqual(hashlib.sha256(original.encode()).hexdigest(), digest, relative)
-        # Live histories use 1.17+ grand-doctrine ids. The inherited fingerprint
-        # stays on the pre-repair new_* technology ids, the same way the macro
-        # eligibility flag is excluded. Do not recapture the rest of the tree.
+        # Preserve the inherited fingerprint. Only superior_firepower differs
+        # from that capture in the verified mixed-prefix 1.19.4.2 schema.
         doctrine_fingerprint = {
             "superior_firepower": "new_superior_firepower",
-            "fleet_in_being": "new_fleet_in_being",
-            "operational_integrity": "new_operational_integrity",
         }
         def restore_doctrine(node):
             if node[0] == "set_grand_doctrine" and node[2] in doctrine_fingerprint:

@@ -28,7 +28,7 @@ def build_ui():
         button('macro_tab_'+str(i),title,28+158*i,108,f'set_variable = {{ ac_macro_ui_page = {i} }}')
         triggers.append(f'macro_tab_{i}_visible = {{ ac_macro_ready = yes }}')
     box('macro_inactive','These accounts are unavailable in this save. Full economic simulation initializes only new campaign histories; saved disabled and experimental economies retain their original rules and balances.',28,180,790,180)
-    triggers.append('macro_inactive_visible = { ac_macro_ready = no }')
+    triggers.append('macro_inactive_visible = { NOT = { ac_macro_ready = yes } }')
     box('macro_footer','All amounts: billions of abstract fiscal units, at current prices unless marked real. Fictional gameplay calibration. Forecast refresh never collects money or records a settlement.',28,650,790,40)
     # Page 0: macro stocks and the settled/forecast distinction.
     box('economy_title','OUTPUT AND PUBLIC ACCOUNTS',28,165,790,28,20,0)

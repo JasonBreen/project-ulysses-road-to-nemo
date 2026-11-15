@@ -11,6 +11,7 @@ MOD = ROOT / 'mod/2985041246'
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / 'tools/usea_expansion'))
 from script import parse, get, setv, render
+from native_doctrines import DEFAULTS as DOCTRINES
 
 NOTE = '# Anea foundation: provisional gameplay; source/placements in tools/anea/foundation.json.\n'
 ARMY = [('infantry', 'Territorial Infantry', 8, 10), ('motorized', 'Mobile Infantry', 2, 2), ('mechanized', 'Mechanized Reserve', 2, 2)]
@@ -127,8 +128,7 @@ def country_output(tag, row):
     text += f'set_stability = {0.65 if tag == "EMM" else 0.5}\nset_war_support = {0.35 if tag == "EMM" else 0.45}\n'
     text += block('add_ideas', 'volunteer_only\ncivilian_economy\nlimited_exports')
     text += block('set_technology', '\n'.join(k + ' = 1' for k in common))
-    # 1.17+ grand-doctrine ids. new_* are pre-1.17 technology ids and do not resolve.
-    text += 'set_grand_doctrine = superior_firepower\nset_grand_doctrine = fleet_in_being\nset_grand_doctrine = operational_integrity\n'
+    text += DOCTRINES
     airtechs = 'aa_lmg = 1\nearly_bombs = 1\naircraft_construction = 1\nengines_1 = 1\nengines_2 = 1\niw_small_airframe = 1\nbasic_small_airframe = 1'
     air = block('set_technology', airtechs)
     air += variant(tag + ' Service Fighter', 'small_plane_airframe_1', {'fixed_main_weapon_slot': 'light_mg_4x', 'engine_type_slot': 'engine_2_1x'})

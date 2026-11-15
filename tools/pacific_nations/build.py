@@ -104,9 +104,9 @@ def outputs():
             for lane in(1,2):
                 receipt='ac_snp_'+tag.lower()+'_'+b.parent+'_'+str(lane)
                 required=p+'_'+b.key+'_required_start_'+str(lane)
-                condition='has_country_flag = '+branch+('_civil_done'if lane==1 else'_protected_done')+' has_variable = '+required+' has_variable = '+receipt+'_last_completed_serial has_variable = '+receipt+'_last_completed_started has_variable = '+receipt+'_last_completed_on has_variable = '+receipt+'_last_completed_identity check_variable = { var = '+receipt+'_last_completed_identity value = THIS.id compare = equals } check_variable = { var = '+receipt+'_last_completed_serial value = '+required+' compare = greater_than_or_equals } check_variable = { var = '+receipt+'_last_completed_started value = '+p+'_'+b.key+'_requested compare = greater_than_or_equals } check_variable = { var = '+receipt+'_last_completed_on value = date compare = less_than_or_equals }'
+                condition='has_country_flag = '+branch+('_civil_done'if lane==1 else'_protected_done')+' has_variable = '+required+' has_variable = '+receipt+'_last_completed_serial has_variable = '+receipt+'_last_completed_started has_variable = '+receipt+'_last_completed_on has_variable = '+receipt+'_last_completed_identity check_variable = { var = '+receipt+'_last_completed_identity value = THIS.id compare = equals } check_variable = { var = '+receipt+'_last_completed_serial value = '+required+' compare = greater_than_or_equals } check_variable = { var = '+receipt+'_last_completed_started value = '+p+'_'+b.key+'_requested compare = greater_than_or_equals } check_variable = { var = '+receipt+'_last_completed_on value = global.date compare = less_than_or_equals }'
                 fresh.append(block('AND',condition))
-            request='set_variable = { '+p+'_'+b.key+'_requested = date }\nset_country_flag = '+branch+'_request_open\n'
+            request='set_variable = { '+p+'_'+b.key+'_requested = global.date }\nset_country_flag = '+branch+'_request_open\n'
             if len(b.steps)>4:
                 required_fields=[]
                 for lane in(1,2):

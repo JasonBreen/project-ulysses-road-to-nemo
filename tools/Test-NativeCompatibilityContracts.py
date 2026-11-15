@@ -7,10 +7,13 @@ import argparse
 import importlib.util
 import json
 import re
+import sys
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'tools/usea_expansion'))
+from native_doctrines import normalize as normalize_doctrines, invalid_references
 TECH_FOLDER_ROW_LIMIT = 40
 # Modules defined only by the quarantined 1.14 module files (inventory/inherited-legacy/
 # common/units/equipment/modules), i.e. absent from the installed 1.19 game and the mod.
@@ -73,6 +76,24 @@ def main() -> int:
     parser.add_argument("--mod-root", type=Path, default=ROOT / "mod" / "2985041246")
     args = parser.parse_args()
     mod_root = args.mod_root.resolve()
+
+    # Native N003: only effect values are normalized, and repeated generation
+    # preserves comments, quoted text, and already valid mixed-prefix IDs.
+    sample = ('# set_grand_doctrine = mobile_warfare\n'
+              'name = "set_grand_doctrine = fleet_in_being"\n'
+              'set_grand_doctrine = mobile_warfare\n'
+              'set_grand_doctrine = superior_firepower\n'
+              'set_grand_doctrine = trade_interdiction\n')
+    expected = sample.replace('\nset_grand_doctrine = mobile_warfare',
+                              '\nset_grand_doctrine = new_mobile_warfare')
+    expected = expected.replace('\nset_grand_doctrine = trade_interdiction',
+                                '\nset_grand_doctrine = new_convoy_raiding')
+    require(normalize_doctrines(sample) == expected, 'doctrine port altered unrelated text or a valid doctrine')
+    require(normalize_doctrines(expected) == expected, 'doctrine port is not idempotent')
+    require(normalize_doctrines('set_grand_doctrine = mobile_warfare_extra') ==
+            'set_grand_doctrine = mobile_warfare_extra', 'doctrine port rewrote a token substring')
+    doctrine_errors = invalid_references(mod_root)
+    require(not doctrine_errors, '\n'.join(doctrine_errors))
 
     # The mapper must not rewrite IDs the active technology overrides still define.
     mapper = load_mapper()
@@ -306,6 +327,23 @@ def main() -> int:
                 defined.add(variant.group(1))
     missing_variants = sorted(referenced - defined)
     require(not missing_variants, f"OOBs reference undefined equipment variants: {missing_variants[:5]}")
+
+    # Native N009: 1.19 naval dominance reads minimum_seazone_dominance from the terrain of
+    # every sea zone. The archive terrain predates that key; a fleet exercise then raised
+    # std::bad_optional_access. Static presence check only, not native acceptance.
+    terrain = re.sub(r"#[^\n]*", "", read(mod_root / "common" / "terrain" / "00_terrain.txt"))
+    sea_terrains = {}
+    for match in re.finditer(r"(?m)^\t(\w+)\s*=\s*\{", terrain):
+        block = braced_block(terrain, match.start())
+        if re.search(r"\bis_water\s*=\s*yes", block) and (match.group(1) == "ocean" or re.search(r"\bnaval_terrain\s*=\s*yes", block)):
+            sea_terrains[match.group(1)] = re.search(r"\bminimum_seazone_dominance\s*=\s*(\d+)", block)
+    require({"ocean", "water_fjords", "water_shallow_sea", "water_deep_ocean"} <= set(sea_terrains), f"sea terrain categories changed: {sorted(sea_terrains)}")
+    undefined_dominance = sorted(name for name, value in sea_terrains.items() if value is None or int(value.group(1)) <= 0)
+    require(not undefined_dominance, f"sea terrains lack minimum_seazone_dominance: {undefined_dominance}")
+    region_terrains: set[str] = set()
+    for path in (mod_root / "map" / "strategicregions").glob("*.txt"):
+        region_terrains.update(re.findall(r"\bnaval_terrain\s*=\s*(\w+)", read(path)))
+    require(region_terrains <= set(sea_terrains), f"strategic regions use sea terrains without a dominance value: {sorted(region_terrains - set(sea_terrains))}")
 
     print(
         "Native compatibility contracts passed: mapper IDs, Osea division names, tech rows, Sapin bonus, "

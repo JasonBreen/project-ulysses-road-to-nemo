@@ -25,8 +25,12 @@ python -B tools/Test-UseaExpansion.py
 python -B tools/audit_visual_dependencies.py --strict-all
 ```
 
-`repair_frontend.py` applies the full-viewport canvas and background-picker
-repair idempotently. `repair_research.py` is a migration driven by an engine
+`repair_frontend.py` preserves the archived 35-tile animated main-menu globe and
+applies the background-picker compatibility repair idempotently. The original
+layout is retained in `frontend_background_original.gui`; archive asset hashes
+and source revision are recorded in `frontend_globe_original.json`. The globe
+is owner-retained mod artwork and must not be overwritten by placeholder builds.
+`repair_research.py` is a migration driven by an engine
 dependency report, not a normal rebuild step. The committed GUI is its output.
 `capture_art_contract.py GAME_ROOT` is an explicit developer metadata import;
 normal artwork rebuilds do not read installed-game pixels or files.

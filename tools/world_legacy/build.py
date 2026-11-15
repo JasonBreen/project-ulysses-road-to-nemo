@@ -18,6 +18,7 @@ ROOT = HERE.parents[1]
 MOD = ROOT / 'mod/2985041246'
 sys.path.insert(0, str(ROOT / 'tools/usea_expansion'))
 from script import parse, get, setv, walk, render
+from native_doctrines import normalize as normalize_doctrines
 from primary import Primary
 sys.path.insert(0,str(ROOT/'tools/world_starts'))
 from armor import ARMOR
@@ -377,19 +378,9 @@ def compile_tag(tag,contract):
         for old,new in repairs:
             if original.count(old)!=1:raise ValueError('Reviewed BLK icon repair source changed')
             original=original.replace(old,new)
-    # Baseline snapshots keep pre-1.17 new_* technology ids. Live histories use
-    # the 1.17+ grand-doctrine ids. The captured baseline stays unchanged.
-    for old, new in (
-        ('new_mobile_warfare', 'mobile_warfare'),
-        ('new_superior_firepower', 'superior_firepower'),
-        ('new_fleet_in_being', 'fleet_in_being'),
-        ('new_base_strike', 'base_strike'),
-        ('new_operational_integrity', 'operational_integrity'),
-        ('new_strategic_destruction', 'strategic_destruction'),
-        ('new_battlefield_support', 'battlefield_support'),
-        ('new_convoy_raiding', 'trade_interdiction'),
-    ):
-        original=original.replace(old, new)
+    # Installed 1.19.4.2 IDs have mixed prefixes. Preserve the captured baseline
+    # and normalize only grand-doctrine effects, never arbitrary token substrings.
+    original = normalize_doctrines(original)
     # The original bookmark erroneously selected the designer navy in both arms.
     if tag=='OSE':original=original.replace('set_naval_oob = "OSE_navy_dlc"\n\t}', 'set_naval_oob = "OSE_navy_1991_legacy"\n\t}')
     else:original=original.replace('set_naval_oob = "'+tag+'_navy"','set_naval_oob = "'+tag+'_navy_1991_legacy"')

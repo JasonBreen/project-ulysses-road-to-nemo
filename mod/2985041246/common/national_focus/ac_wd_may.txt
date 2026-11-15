@@ -1,0 +1,2587 @@
+# Bespoke national tree; source: tools/national_depth (Malynea). Provisional gameplay unless a ledger row says otherwise. Native acceptance pending.
+focus_tree = {
+	id = ac_wd_may_tree
+	country = { factor = 0 modifier = { add = 50 tag = MAY original_tag = MAY } }
+	default = no
+	reset_on_civilwar = no
+	initial_show_position = { focus = MAY_wd_pol_administration_sits }
+	continuous_focus_position = { x = 2208 y = 16 }
+	# The shared institutional programme (tools/institutions), unchanged.
+	shared_focus = ac_reg_register
+	shared_focus = ac_reg_audit
+	shared_focus = ac_reg_executive
+	shared_focus = ac_reg_districts
+	shared_focus = ac_reg_records
+	shared_focus = ac_reg_service_review
+	shared_focus = ac_reg_survey
+	shared_focus = ac_reg_civilian_contracts
+	shared_focus = ac_reg_protected_orders
+	shared_focus = ac_reg_spares
+	shared_focus = ac_reg_freight
+	shared_focus = ac_reg_productive_review
+	shared_focus = ac_reg_emergency_register
+	shared_focus = ac_reg_civil_protection
+	shared_focus = ac_reg_uniformed_reserve
+	shared_focus = ac_reg_stock_records
+	shared_focus = ac_reg_rehearsals
+	shared_focus = ac_reg_resilience_review
+	shared_focus = ac_reg_defense_register
+	shared_focus = ac_reg_staff_schools
+	shared_focus = ac_reg_field_priority
+	shared_focus = ac_reg_replacement_office
+	shared_focus = ac_reg_readiness_reports
+	shared_focus = ac_reg_defense_review
+	shared_focus = ac_reg_external_register
+	shared_focus = ac_reg_guarded_contacts
+	shared_focus = ac_reg_technical_contacts
+	shared_focus = ac_reg_domestic_contingency
+	shared_focus = ac_reg_bounded_commitments
+	shared_focus = ac_reg_external_review
+	shared_focus = ac_reg_institution_review
+	shared_focus = ac_reg_delegation
+	shared_focus = ac_reg_central_register
+	shared_focus = ac_reg_inspectors
+	shared_focus = ac_reg_succession_rules
+	shared_focus = ac_reg_institutional_settlement
+	focus = {
+		id = MAY_wd_pol_administration_sits
+		icon = GFX_ac_wd_focus_MAY_wd_pol_administration_sits
+		x = 3
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_caretaker_rule
+			country_event = {
+				id = ac_wd_may.1
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_election_clause
+		icon = GFX_ac_wd_focus_MAY_wd_pol_election_clause
+		x = 3
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_pol_administration_sits
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 30
+			custom_effect_tooltip = MAY_wd_pol_election_clause_tt_1
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_ballot_path
+		icon = GFX_ac_wd_focus_MAY_wd_pol_ballot_path
+		x = 1
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_pol_election_clause
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_pol_board_path
+			focus = MAY_wd_pol_movement_path
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = MAY_wd_caretaker_rule
+				add_idea = MAY_wd_ballot_promised
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_board_path
+		icon = GFX_ac_wd_focus_MAY_wd_pol_board_path
+		x = 3
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_pol_election_clause
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_pol_ballot_path
+			focus = MAY_wd_pol_movement_path
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = MAY_wd_caretaker_rule
+				add_idea = MAY_wd_board_compact
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_movement_path
+		icon = GFX_ac_wd_focus_MAY_wd_pol_movement_path
+		x = 5
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_pol_election_clause
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_pol_ballot_path
+			focus = MAY_wd_pol_board_path
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = MAY_wd_caretaker_rule
+				add_idea = MAY_wd_movement_pressure
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_elected_council
+		icon = GFX_ac_wd_focus_MAY_wd_pol_elected_council
+		x = 1
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = MAY_wd_pol_ballot_path
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_pol_readiness_committee
+			focus = MAY_wd_pol_standing_board
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_may_regime_elected_council = yes
+			set_country_flag = MAY_wd_path_ballot
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_standing_board
+		icon = GFX_ac_wd_focus_MAY_wd_pol_standing_board
+		x = 3
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = MAY_wd_pol_board_path
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_pol_elected_council
+			focus = MAY_wd_pol_readiness_committee
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_may_regime_standing_board = yes
+			set_country_flag = MAY_wd_path_board
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_readiness_committee
+		icon = GFX_ac_wd_focus_MAY_wd_pol_readiness_committee
+		x = 5
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = MAY_wd_pol_movement_path
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_pol_elected_council
+			focus = MAY_wd_pol_standing_board
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_may_regime_readiness_committee = yes
+			set_country_flag = MAY_wd_path_front
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_ballot_rolls
+		icon = GFX_ac_wd_focus_MAY_wd_pol_ballot_rolls
+		x = 0
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_pol_elected_council
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_pol_board_minutes
+			focus = MAY_wd_pol_committee_decrees
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = MAY_wd_ballot_promised
+				add_idea = MAY_wd_ballot_restored
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_board_minutes
+		icon = GFX_ac_wd_focus_MAY_wd_pol_board_minutes
+		x = 2
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_pol_standing_board
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_pol_ballot_rolls
+			focus = MAY_wd_pol_committee_decrees
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = MAY_wd_board_compact
+				add_idea = MAY_wd_board_minutes
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_committee_decrees
+		icon = GFX_ac_wd_focus_MAY_wd_pol_committee_decrees
+		x = 6
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_pol_readiness_committee
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_pol_ballot_rolls
+			focus = MAY_wd_pol_board_minutes
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = MAY_wd_movement_pressure
+				add_idea = MAY_wd_readiness_decrees
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_charter_court
+		icon = GFX_ac_wd_focus_MAY_wd_pol_charter_court
+		x = 4
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_pol_elected_council
+			focus = MAY_wd_pol_standing_board
+			focus = MAY_wd_pol_readiness_committee
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_charter_court
+		}
+	}
+
+	focus = {
+		id = MAY_wd_pol_merit_service
+		icon = GFX_ac_wd_focus_MAY_wd_pol_merit_service
+		x = 3
+		y = 17
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_pol_charter_court
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_merit_service
+		}
+	}
+
+	focus = {
+		id = MAY_wd_port_hull_register
+		icon = GFX_ac_wd_focus_MAY_wd_port_hull_register
+		x = 12
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_hull_register
+			country_event = {
+				id = ac_wd_may.3
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_port_quay_roads
+		icon = GFX_ac_wd_focus_MAY_wd_port_quay_roads
+		x = 9
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_port_hull_register
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_port_open_charter
+		icon = GFX_ac_wd_focus_MAY_wd_port_open_charter
+		x = 11
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_port_hull_register
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_port_home_cargo
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_open_charters
+			set_country_flag = MAY_wd_open_registry
+		}
+	}
+
+	focus = {
+		id = MAY_wd_port_home_cargo
+		icon = GFX_ac_wd_focus_MAY_wd_port_home_cargo
+		x = 13
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_port_hull_register
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_port_open_charter
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_home_cargo_rule
+			set_country_flag = MAY_wd_home_cargo
+		}
+	}
+
+	focus = {
+		id = MAY_wd_port_pilots
+		icon = GFX_ac_wd_focus_MAY_wd_port_pilots
+		x = 10
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_port_quay_roads
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_pilot_guild
+		}
+	}
+
+	focus = {
+		id = MAY_wd_port_winter_roadstead
+		icon = GFX_ac_wd_focus_MAY_wd_port_winter_roadstead
+		x = 12
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_port_quay_roads
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_winter_roadstead
+		}
+	}
+
+	focus = {
+		id = MAY_wd_port_island_slip
+		icon = GFX_ac_wd_focus_MAY_wd_port_island_slip
+		x = 14
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_port_open_charter
+			focus = MAY_wd_port_home_cargo
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 290
+				}
+				290 = {
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_port_roadstead_radar
+		icon = GFX_ac_wd_focus_MAY_wd_port_roadstead_radar
+		x = 11
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_port_pilots
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = radar_station
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_port_submarine_word
+		icon = GFX_ac_wd_focus_MAY_wd_port_submarine_word
+		x = 15
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_port_hull_register
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			date > 1991.9.2
+			has_global_flag = ac_bwr_cinigrad
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = MAY_wd_lane_watch
+				days = 365
+			}
+			add_tech_bonus = {
+				name = MAY_wd_port_submarine_word
+				bonus = 0.5
+				uses = 1
+				category = naval_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_port_masters_school
+		icon = GFX_ac_wd_focus_MAY_wd_port_masters_school
+		x = 13
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_port_winter_roadstead
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_masters_school
+		}
+	}
+
+	focus = {
+		id = MAY_wd_isl_six_harbours
+		icon = GFX_ac_wd_focus_MAY_wd_isl_six_harbours
+		x = 21
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_island_isolation
+			country_event = {
+				id = ac_wd_may.4
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_isl_harbour_tracks
+		icon = GFX_ac_wd_focus_MAY_wd_isl_harbour_tracks
+		x = 20
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_isl_six_harbours
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 290
+				}
+				290 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_isl_harbour_radios
+		icon = GFX_ac_wd_focus_MAY_wd_isl_harbour_radios
+		x = 22
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_isl_six_harbours
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_island_radio
+		}
+	}
+
+	focus = {
+		id = MAY_wd_isl_own_purse
+		icon = GFX_ac_wd_focus_MAY_wd_isl_own_purse
+		x = 22
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_isl_harbour_radios
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_isl_capital_rule
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = MAY_wd_island_isolation
+				add_idea = MAY_wd_island_councils
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_isl_capital_rule
+		icon = GFX_ac_wd_focus_MAY_wd_isl_capital_rule
+		x = 24
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_isl_harbour_radios
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_isl_own_purse
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = MAY_wd_island_isolation
+				add_idea = MAY_wd_island_prefects
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_isl_cannery
+		icon = GFX_ac_wd_focus_MAY_wd_isl_cannery
+		x = 18
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_isl_harbour_tracks
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 290
+				}
+				290 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_isl_landing_strip
+		icon = GFX_ac_wd_focus_MAY_wd_isl_landing_strip
+		x = 20
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_isl_harbour_tracks
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 290
+				}
+				290 = {
+					add_building_construction = {
+						type = air_base
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_isl_hospital_rota
+		icon = GFX_ac_wd_focus_MAY_wd_isl_hospital_rota
+		x = 22
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_isl_own_purse
+			focus = MAY_wd_isl_capital_rule
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_hospital_rota
+		}
+	}
+
+	focus = {
+		id = MAY_wd_isl_island_deputies
+		icon = GFX_ac_wd_focus_MAY_wd_isl_island_deputies
+		x = 24
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_isl_own_purse
+			focus = MAY_wd_isl_capital_rule
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = MAY_wd_path_ballot
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_island_deputies
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = MAY_wd_isl_ring_road
+		icon = GFX_ac_wd_focus_MAY_wd_isl_ring_road
+		x = 18
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_isl_cannery
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 290
+				}
+				290 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_isl_watch_radar
+		icon = GFX_ac_wd_focus_MAY_wd_isl_watch_radar
+		x = 20
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_isl_landing_strip
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 290
+				}
+				290 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_def_battalion_roll
+		icon = GFX_ac_wd_focus_MAY_wd_def_battalion_roll
+		x = 30
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_thin_service
+			country_event = {
+				id = ac_wd_may.5
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_def_forest_roads
+		icon = GFX_ac_wd_focus_MAY_wd_def_forest_roads
+		x = 27
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_def_battalion_roll
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_def_capital_shore
+			focus = MAY_wd_def_southern_hill
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_forest_screens
+		}
+	}
+
+	focus = {
+		id = MAY_wd_def_southern_hill
+		icon = GFX_ac_wd_focus_MAY_wd_def_southern_hill
+		x = 29
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_def_battalion_roll
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_def_capital_shore
+			focus = MAY_wd_def_forest_roads
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_hill_garrison
+		}
+	}
+
+	focus = {
+		id = MAY_wd_def_capital_shore
+		icon = GFX_ac_wd_focus_MAY_wd_def_capital_shore
+		x = 31
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_def_battalion_roll
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_def_forest_roads
+			focus = MAY_wd_def_southern_hill
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_shore_lines
+		}
+	}
+
+	focus = {
+		id = MAY_wd_def_reserve_cards
+		icon = GFX_ac_wd_focus_MAY_wd_def_reserve_cards
+		x = 33
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_def_battalion_roll
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_reserve_cards
+		}
+	}
+
+	focus = {
+		id = MAY_wd_def_winter_drill
+		icon = GFX_ac_wd_focus_MAY_wd_def_winter_drill
+		x = 30
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_def_reserve_cards
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_winter_drill
+		}
+	}
+
+	focus = {
+		id = MAY_wd_def_rail_depots
+		icon = GFX_ac_wd_focus_MAY_wd_def_rail_depots
+		x = 28
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_def_forest_roads
+			focus = MAY_wd_def_southern_hill
+			focus = MAY_wd_def_capital_shore
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_rail_depots
+		}
+	}
+
+	focus = {
+		id = MAY_wd_def_frontier_wardens
+		icon = GFX_ac_wd_focus_MAY_wd_def_frontier_wardens
+		x = 32
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_def_reserve_cards
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = MAY_wd_path_front
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_frontier_wardens
+		}
+	}
+
+	focus = {
+		id = MAY_wd_def_civil_corps
+		icon = GFX_ac_wd_focus_MAY_wd_def_civil_corps
+		x = 30
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_def_winter_drill
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_civil_defence_corps
+		}
+	}
+
+	focus = {
+		id = MAY_wd_def_engineer_roads
+		icon = GFX_ac_wd_focus_MAY_wd_def_engineer_roads
+		x = 28
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_def_rail_depots
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 328
+				}
+				328 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_tech_bonus = {
+				name = MAY_wd_def_engineer_roads
+				bonus = 0.5
+				uses = 1
+				category = engineers_tech
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_def_mountain_companies
+		icon = GFX_ac_wd_focus_MAY_wd_def_mountain_companies
+		x = 32
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_def_winter_drill
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = MAY_wd_def_mountain_companies
+				bonus = 0.5
+				uses = 1
+				category = infantry_weapons
+			}
+			army_experience = 15
+		}
+	}
+
+	focus = {
+		id = MAY_wd_ind_works_inventory
+		icon = GFX_ac_wd_focus_MAY_wd_ind_works_inventory
+		x = 3
+		y = 19
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_works_audit
+			country_event = {
+				id = ac_wd_may.6
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_ind_steel_beds
+		icon = GFX_ac_wd_focus_MAY_wd_ind_steel_beds
+		x = 0
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_ind_works_inventory
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_steel_contracts
+			add_tech_bonus = {
+				name = MAY_wd_ind_steel_beds
+				bonus = 0.5
+				uses = 1
+				category = excavation_tech
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_ind_coastal_oil
+		icon = GFX_ac_wd_focus_MAY_wd_ind_coastal_oil
+		x = 2
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_ind_works_inventory
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_coastal_wells
+		}
+	}
+
+	focus = {
+		id = MAY_wd_ind_repair_first
+		icon = GFX_ac_wd_focus_MAY_wd_ind_repair_first
+		x = 2
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_ind_steel_beds
+			focus = MAY_wd_ind_coastal_oil
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_ind_fourth_line
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 328
+				}
+				328 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_ideas = MAY_wd_repair_economy
+		}
+	}
+
+	focus = {
+		id = MAY_wd_ind_fourth_line
+		icon = GFX_ac_wd_focus_MAY_wd_ind_fourth_line
+		x = 4
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_ind_steel_beds
+			focus = MAY_wd_ind_coastal_oil
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_ind_repair_first
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 328
+				}
+				328 = {
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_ideas = MAY_wd_arms_lines
+		}
+	}
+
+	focus = {
+		id = MAY_wd_ind_rolling_stock
+		icon = GFX_ac_wd_focus_MAY_wd_ind_rolling_stock
+		x = 4
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_ind_works_inventory
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = MAY_wd_rail_overhaul
+				days = 365
+			}
+			add_tech_bonus = {
+				name = MAY_wd_ind_rolling_stock
+				bonus = 0.5
+				uses = 1
+				category = train_tech
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_ind_timber
+		icon = GFX_ac_wd_focus_MAY_wd_ind_timber
+		x = 6
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_ind_coastal_oil
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_timber_trade
+		}
+	}
+
+	focus = {
+		id = MAY_wd_ind_tyre_works
+		icon = GFX_ac_wd_focus_MAY_wd_ind_tyre_works
+		x = 0
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_ind_steel_beds
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_tyre_works
+			add_tech_bonus = {
+				name = MAY_wd_ind_tyre_works
+				bonus = 0.5
+				uses = 1
+				category = synth_resources
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_ind_district_power
+		icon = GFX_ac_wd_focus_MAY_wd_ind_district_power
+		x = 4
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_ind_timber
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_district_power
+		}
+	}
+
+	focus = {
+		id = MAY_wd_ind_board_tenders
+		icon = GFX_ac_wd_focus_MAY_wd_ind_board_tenders
+		x = 6
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_ind_works_inventory
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = MAY_wd_path_board
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_board_tenders
+		}
+	}
+
+	focus = {
+		id = MAY_wd_ind_snow_trucks
+		icon = GFX_ac_wd_focus_MAY_wd_ind_snow_trucks
+		x = 2
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_ind_repair_first
+			focus = MAY_wd_ind_fourth_line
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = MAY_wd_ind_snow_trucks
+				bonus = 0.5
+				uses = 2
+				category = logistics_tech
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_nbr_frontier_walk
+		icon = GFX_ac_wd_focus_MAY_wd_nbr_frontier_walk
+		x = 14
+		y = 19
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_frontier_survey
+			country_event = {
+				id = ac_wd_may.7
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_nbr_equal_distance
+		icon = GFX_ac_wd_focus_MAY_wd_nbr_equal_distance
+		x = 9
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_nbr_frontier_walk
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_nbr_sea_first
+			focus = MAY_wd_nbr_small_neighbours
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_equal_distance
+		}
+	}
+
+	focus = {
+		id = MAY_wd_nbr_small_neighbours
+		icon = GFX_ac_wd_focus_MAY_wd_nbr_small_neighbours
+		x = 11
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_nbr_frontier_walk
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_nbr_equal_distance
+			focus = MAY_wd_nbr_sea_first
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_neighbour_consults
+		}
+	}
+
+	focus = {
+		id = MAY_wd_nbr_sea_first
+		icon = GFX_ac_wd_focus_MAY_wd_nbr_sea_first
+		x = 13
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_nbr_frontier_walk
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_nbr_equal_distance
+			focus = MAY_wd_nbr_small_neighbours
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_sea_orientation
+		}
+	}
+
+	focus = {
+		id = MAY_wd_nbr_eastern_railhead
+		icon = GFX_ac_wd_focus_MAY_wd_nbr_eastern_railhead
+		x = 15
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_nbr_frontier_walk
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 328
+				}
+				328 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_nbr_fire_towers
+		icon = GFX_ac_wd_focus_MAY_wd_nbr_fire_towers
+		x = 17
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_nbr_frontier_walk
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_fire_watch
+		}
+	}
+
+	focus = {
+		id = MAY_wd_nbr_hill_weather
+		icon = GFX_ac_wd_focus_MAY_wd_nbr_hill_weather
+		x = 19
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_nbr_frontier_walk
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_weather_service
+		}
+	}
+
+	focus = {
+		id = MAY_wd_nbr_frontier_radar
+		icon = GFX_ac_wd_focus_MAY_wd_nbr_frontier_radar
+		x = 14
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_nbr_equal_distance
+			focus = MAY_wd_nbr_small_neighbours
+			focus = MAY_wd_nbr_sea_first
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 328
+				}
+				328 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_war_charter_spring
+		icon = GFX_ac_wd_focus_MAY_wd_war_charter_spring
+		x = 24
+		y = 19
+		cost = 5
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.3.25
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_war_charter_boom
+			country_event = {
+				id = ac_wd_may.8
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_war_neutral_colours
+		icon = GFX_ac_wd_focus_MAY_wd_war_neutral_colours
+		x = 22
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_war_charter_spring
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_neutral_markings
+		}
+	}
+
+	focus = {
+		id = MAY_wd_war_neutral_ports
+		icon = GFX_ac_wd_focus_MAY_wd_war_neutral_ports
+		x = 22
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_war_neutral_colours
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_war_home_waters
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_neutral_port_trade
+		}
+	}
+
+	focus = {
+		id = MAY_wd_war_home_waters
+		icon = GFX_ac_wd_focus_MAY_wd_war_home_waters
+		x = 24
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_war_neutral_colours
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_war_neutral_ports
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_home_waters
+		}
+	}
+
+	focus = {
+		id = MAY_wd_war_crews_abroad
+		icon = GFX_ac_wd_focus_MAY_wd_war_crews_abroad
+		x = 24
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_war_charter_spring
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_country_flag = MAY_wd_open_registry
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_foreign_crews
+		}
+	}
+
+	focus = {
+		id = MAY_wd_war_home_holds
+		icon = GFX_ac_wd_focus_MAY_wd_war_home_holds
+		x = 26
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_war_charter_spring
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_country_flag = MAY_wd_home_cargo
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_home_holds
+		}
+	}
+
+	focus = {
+		id = MAY_wd_war_after_lumen
+		icon = GFX_ac_wd_focus_MAY_wd_war_after_lumen
+		x = 24
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_war_neutral_ports
+			focus = MAY_wd_war_home_waters
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.6.20
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			remove_ideas = MAY_wd_war_charter_boom
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = MAY_wd_war_belkan_lanes
+		icon = GFX_ac_wd_focus_MAY_wd_war_belkan_lanes
+		x = 23
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_war_after_lumen
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_won_belkan_war
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_belkan_routes
+		}
+	}
+
+	focus = {
+		id = MAY_wd_war_allied_cargo
+		icon = GFX_ac_wd_focus_MAY_wd_war_allied_cargo
+		x = 25
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_war_after_lumen
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_lost_belkan_war
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_allied_cargoes
+		}
+	}
+
+	focus = {
+		id = MAY_wd_war_civil_lessons
+		icon = GFX_ac_wd_focus_MAY_wd_war_civil_lessons
+		x = 26
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_war_neutral_colours
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = MAY_wd_war_civil_lessons
+				bonus = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+			army_experience = 10
+		}
+	}
+
+	focus = {
+		id = MAY_wd_sky_falling_sky
+		icon = GFX_ac_wd_focus_MAY_wd_sky_falling_sky
+		x = 32
+		y = 19
+		cost = 5
+		available = {
+			NOT = { date < 1996.1.1 }
+			date > 1996.4.20
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_impact_dread
+			country_event = {
+				id = ac_wd_may.9
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_sky_hill_galleries
+		icon = GFX_ac_wd_focus_MAY_wd_sky_hill_galleries
+		x = 29
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_sky_falling_sky
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_sky_sea_evacuation
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_hill_galleries
+		}
+	}
+
+	focus = {
+		id = MAY_wd_sky_sea_evacuation
+		icon = GFX_ac_wd_focus_MAY_wd_sky_sea_evacuation
+		x = 31
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_sky_falling_sky
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_sky_hill_galleries
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_convoy_evacuation
+		}
+	}
+
+	focus = {
+		id = MAY_wd_sky_firebreaks
+		icon = GFX_ac_wd_focus_MAY_wd_sky_firebreaks
+		x = 33
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_sky_falling_sky
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_firebreaks
+			capital_scope = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_sky_island_lifeboats
+		icon = GFX_ac_wd_focus_MAY_wd_sky_island_lifeboats
+		x = 35
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_sky_falling_sky
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_island_lifeboats
+		}
+	}
+
+	focus = {
+		id = MAY_wd_sky_year_stores
+		icon = GFX_ac_wd_focus_MAY_wd_sky_year_stores
+		x = 31
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_sky_hill_galleries
+			focus = MAY_wd_sky_sea_evacuation
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_district_stores
+		}
+	}
+
+	focus = {
+		id = MAY_wd_sky_mail_plane
+		icon = GFX_ac_wd_focus_MAY_wd_sky_mail_plane
+		x = 33
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_sky_island_lifeboats
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = air_base
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_sky_july_vigil
+		icon = GFX_ac_wd_focus_MAY_wd_sky_july_vigil
+		x = 32
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_sky_year_stores
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+			date > 1999.7.8
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_may.10
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_sky_district_check
+		icon = GFX_ac_wd_focus_MAY_wd_sky_district_check
+		x = 32
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_sky_july_vigil
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			remove_ideas = MAY_wd_impact_dread
+			add_stability = 0.03
+		}
+	}
+
+	focus = {
+		id = MAY_wd_sky_relief_berths
+		icon = GFX_ac_wd_focus_MAY_wd_sky_relief_berths
+		x = 32
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_sky_district_check
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_relief_berths
+		}
+	}
+
+	focus = {
+		id = MAY_wd_cent_ten_year_report
+		icon = GFX_ac_wd_focus_MAY_wd_cent_ten_year_report
+		x = 4
+		y = 26
+		cost = 5
+		available = {
+			NOT = { date < 2000.1.1 }
+			date > 2001.1.1
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_may.11
+				days = 1
+			}
+			add_political_power = 20
+		}
+	}
+
+	focus = {
+		id = MAY_wd_cent_graduate_tickets
+		icon = GFX_ac_wd_focus_MAY_wd_cent_graduate_tickets
+		x = 0
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_cent_ten_year_report
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_graduate_return
+		}
+	}
+
+	focus = {
+		id = MAY_wd_cent_island_school
+		icon = GFX_ac_wd_focus_MAY_wd_cent_island_school
+		x = 2
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_cent_ten_year_report
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_island_school
+		}
+	}
+
+	focus = {
+		id = MAY_wd_cent_listed_port
+		icon = GFX_ac_wd_focus_MAY_wd_cent_listed_port
+		x = 4
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_cent_ten_year_report
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_cent_public_port
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_port_shares
+		}
+	}
+
+	focus = {
+		id = MAY_wd_cent_public_port
+		icon = GFX_ac_wd_focus_MAY_wd_cent_public_port
+		x = 6
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_cent_ten_year_report
+		}
+		mutually_exclusive = {
+			focus = MAY_wd_cent_listed_port
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_public_port
+		}
+	}
+
+	focus = {
+		id = MAY_wd_cent_usean_lanes
+		icon = GFX_ac_wd_focus_MAY_wd_cent_usean_lanes
+		x = 8
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_cent_ten_year_report
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_global_flag = ac_ucw_war_started
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_may.12
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = MAY_wd_cent_relief_marks
+		icon = GFX_ac_wd_focus_MAY_wd_cent_relief_marks
+		x = 3
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_cent_usean_lanes
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_relief_charters
+		}
+	}
+
+	focus = {
+		id = MAY_wd_cent_isaf_peace
+		icon = GFX_ac_wd_focus_MAY_wd_cent_isaf_peace
+		x = 5
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_cent_usean_lanes
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_global_flag = ac_ucw_outcome_isaf_victory
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_usean_rebuilding
+		}
+	}
+
+	focus = {
+		id = MAY_wd_cent_erusean_peace
+		icon = GFX_ac_wd_focus_MAY_wd_cent_erusean_peace
+		x = 7
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_cent_usean_lanes
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_global_flag = ac_ucw_outcome_erusean_victory
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = MAY_wd_erusean_terms
+		}
+	}
+
+	focus = {
+		id = MAY_wd_cent_era_close
+		icon = GFX_ac_wd_focus_MAY_wd_cent_era_close
+		x = 1
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = MAY_wd_cent_listed_port
+			focus = MAY_wd_cent_public_port
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			date > 2005.1.1
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.03
+			add_war_support = 0.02
+			custom_effect_tooltip = MAY_wd_cent_era_close_tt_2
+		}
+	}
+}

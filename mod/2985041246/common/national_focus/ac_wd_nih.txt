@@ -1,0 +1,2875 @@
+# Bespoke national tree; source: tools/national_depth (Nihon). Provisional gameplay unless a ledger row says otherwise. Native acceptance pending.
+focus_tree = {
+	id = ac_wd_nih_tree
+	country = { factor = 0 modifier = { add = 50 tag = NIH original_tag = NIH } }
+	default = no
+	reset_on_civilwar = no
+	initial_show_position = { focus = NIH_wd_th_inquiry }
+	continuous_focus_position = { x = 2208 y = 16 }
+	# The shared institutional programme (tools/institutions), unchanged.
+	shared_focus = ac_reg_register
+	shared_focus = ac_reg_audit
+	shared_focus = ac_reg_executive
+	shared_focus = ac_reg_districts
+	shared_focus = ac_reg_records
+	shared_focus = ac_reg_service_review
+	shared_focus = ac_reg_survey
+	shared_focus = ac_reg_civilian_contracts
+	shared_focus = ac_reg_protected_orders
+	shared_focus = ac_reg_spares
+	shared_focus = ac_reg_freight
+	shared_focus = ac_reg_productive_review
+	shared_focus = ac_reg_emergency_register
+	shared_focus = ac_reg_civil_protection
+	shared_focus = ac_reg_uniformed_reserve
+	shared_focus = ac_reg_stock_records
+	shared_focus = ac_reg_rehearsals
+	shared_focus = ac_reg_resilience_review
+	shared_focus = ac_reg_defense_register
+	shared_focus = ac_reg_staff_schools
+	shared_focus = ac_reg_field_priority
+	shared_focus = ac_reg_replacement_office
+	shared_focus = ac_reg_readiness_reports
+	shared_focus = ac_reg_defense_review
+	shared_focus = ac_reg_external_register
+	shared_focus = ac_reg_guarded_contacts
+	shared_focus = ac_reg_technical_contacts
+	shared_focus = ac_reg_domestic_contingency
+	shared_focus = ac_reg_bounded_commitments
+	shared_focus = ac_reg_external_review
+	shared_focus = ac_reg_institution_review
+	shared_focus = ac_reg_delegation
+	shared_focus = ac_reg_central_register
+	shared_focus = ac_reg_inspectors
+	shared_focus = ac_reg_succession_rules
+	shared_focus = ac_reg_institutional_settlement
+	focus = {
+		id = NIH_wd_th_inquiry
+		icon = GFX_ac_wd_focus_NIH_wd_th_inquiry
+		x = 3
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_throne_inquiry
+			country_event = {
+				id = ac_wd_nih.1
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_commissioners
+		icon = GFX_ac_wd_focus_NIH_wd_th_commissioners
+		x = 3
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_th_inquiry
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 30
+			custom_effect_tooltip = NIH_wd_th_commissioners_tt_1
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_charter
+		icon = GFX_ac_wd_focus_NIH_wd_th_charter
+		x = 0
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_th_commissioners
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_th_houses
+			focus = NIH_wd_th_movement
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_throne_inquiry
+				add_idea = NIH_wd_chamber_promise
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_houses
+		icon = GFX_ac_wd_focus_NIH_wd_th_houses
+		x = 2
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_th_commissioners
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_th_charter
+			focus = NIH_wd_th_movement
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_throne_inquiry
+				add_idea = NIH_wd_houses_at_court
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_movement
+		icon = GFX_ac_wd_focus_NIH_wd_th_movement
+		x = 4
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_th_commissioners
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_th_charter
+			focus = NIH_wd_th_houses
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_throne_inquiry
+				add_idea = NIH_wd_movement_ministries
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_chamber
+		icon = GFX_ac_wd_focus_NIH_wd_th_chamber
+		x = 1
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_th_charter
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_th_committee
+			focus = NIH_wd_th_directory
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_nih_regime_crown_cabinet = yes
+			set_country_flag = NIH_wd_path_chamber
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_directory
+		icon = GFX_ac_wd_focus_NIH_wd_th_directory
+		x = 3
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_th_houses
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_th_chamber
+			focus = NIH_wd_th_committee
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_nih_regime_harbour_directory = yes
+			set_country_flag = NIH_wd_path_directory
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_committee
+		icon = GFX_ac_wd_focus_NIH_wd_th_committee
+		x = 5
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_th_movement
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_th_chamber
+			focus = NIH_wd_th_directory
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_nih_regime_movement_committee = yes
+			set_country_flag = NIH_wd_path_movement
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_island_seats
+		icon = GFX_ac_wd_focus_NIH_wd_th_island_seats
+		x = 1
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_th_chamber
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = NIH_wd_path_chamber
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_island_seats
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_accounts
+		icon = GFX_ac_wd_focus_NIH_wd_th_accounts
+		x = 3
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_th_directory
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = NIH_wd_path_directory
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_directory_accounts
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_wardens
+		icon = GFX_ac_wd_focus_NIH_wd_th_wardens
+		x = 5
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_th_committee
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = NIH_wd_path_movement
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_harbour_wardens
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_household
+		icon = GFX_ac_wd_focus_NIH_wd_th_household
+		x = 6
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_th_commissioners
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_court_household
+		}
+	}
+
+	focus = {
+		id = NIH_wd_th_statute
+		icon = GFX_ac_wd_focus_NIH_wd_th_statute
+		x = 3
+		y = 17
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_th_island_seats
+			focus = NIH_wd_th_accounts
+			focus = NIH_wd_th_wardens
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			date > 1996.1.1
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_settled_throne
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_circuit
+		icon = GFX_ac_wd_focus_NIH_wd_isl_circuit
+		x = 13
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_circuit_reports
+			country_event = {
+				id = ac_wd_nih.3
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_b_track
+		icon = GFX_ac_wd_focus_NIH_wd_isl_b_track
+		x = 9
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_isl_circuit
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 130
+				}
+				130 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_d_jetties
+		icon = GFX_ac_wd_focus_NIH_wd_isl_d_jetties
+		x = 11
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_isl_circuit
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 239
+				}
+				239 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_a_berth
+		icon = GFX_ac_wd_focus_NIH_wd_isl_a_berth
+		x = 13
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_isl_circuit
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 84
+				}
+				84 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_outlier
+		icon = GFX_ac_wd_focus_NIH_wd_isl_outlier
+		x = 15
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_isl_circuit
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 431
+				}
+				431 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_g_claim
+		icon = GFX_ac_wd_focus_NIH_wd_isl_g_claim
+		x = 17
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_isl_circuit
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = NIH_wd_g_answered
+			add_stability = 0.01
+			custom_effect_tooltip = NIH_wd_isl_g_claim_tt_2
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_g_office
+		icon = GFX_ac_wd_focus_NIH_wd_isl_g_office
+		x = 15
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_isl_g_claim
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = NIH_wd_g_answered
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_g_district_office
+			if = {
+				limit = {
+					owns_state = 524
+				}
+				524 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_crown_ferries
+		icon = GFX_ac_wd_focus_NIH_wd_isl_crown_ferries
+		x = 11
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_isl_d_jetties
+			focus = NIH_wd_isl_a_berth
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_isl_carriers
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_circuit_reports
+				add_idea = NIH_wd_crown_ferries
+			}
+			set_country_flag = NIH_wd_ferry_crown
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_carriers
+		icon = GFX_ac_wd_focus_NIH_wd_isl_carriers
+		x = 13
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_isl_d_jetties
+			focus = NIH_wd_isl_a_berth
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_isl_crown_ferries
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_circuit_reports
+				add_idea = NIH_wd_island_carriers
+			}
+			set_country_flag = NIH_wd_ferry_licensed
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_ferry_halls
+		icon = GFX_ac_wd_focus_NIH_wd_isl_ferry_halls
+		x = 12
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_isl_crown_ferries
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = NIH_wd_ferry_crown
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_ferry_crews
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_inspectors
+		icon = GFX_ac_wd_focus_NIH_wd_isl_inspectors
+		x = 14
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_isl_carriers
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = NIH_wd_ferry_licensed
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_ferry_inspectors
+		}
+	}
+
+	focus = {
+		id = NIH_wd_isl_timetable
+		icon = GFX_ac_wd_focus_NIH_wd_isl_timetable
+		x = 13
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_isl_ferry_halls
+			focus = NIH_wd_isl_inspectors
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_island_timetable
+		}
+	}
+
+	focus = {
+		id = NIH_wd_hl_register
+		icon = GFX_ac_wd_focus_NIH_wd_hl_register
+		x = 23
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_merchant_register
+			country_event = {
+				id = ac_wd_nih.4
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_hl_halls
+		icon = GFX_ac_wd_focus_NIH_wd_hl_halls
+		x = 20
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_hl_register
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_hiring_halls
+		}
+	}
+
+	focus = {
+		id = NIH_wd_hl_home_flag
+		icon = GFX_ac_wd_focus_NIH_wd_hl_home_flag
+		x = 22
+		y = 13
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_hl_register
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_hl_open_registry
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_merchant_register
+				add_idea = NIH_wd_home_flag_fleet
+			}
+			set_country_flag = NIH_wd_fleet_home
+		}
+	}
+
+	focus = {
+		id = NIH_wd_hl_open_registry
+		icon = GFX_ac_wd_focus_NIH_wd_hl_open_registry
+		x = 24
+		y = 13
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_hl_register
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_hl_home_flag
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_merchant_register
+				add_idea = NIH_wd_open_registry
+			}
+			set_country_flag = NIH_wd_fleet_open
+		}
+	}
+
+	focus = {
+		id = NIH_wd_hl_mutual
+		icon = GFX_ac_wd_focus_NIH_wd_hl_mutual
+		x = 26
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_hl_register
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_hull_mutual
+		}
+	}
+
+	focus = {
+		id = NIH_wd_hl_lane_radio
+		icon = GFX_ac_wd_focus_NIH_wd_hl_lane_radio
+		x = 20
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_hl_halls
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_lane_watch
+		}
+	}
+
+	focus = {
+		id = NIH_wd_hl_cadets
+		icon = GFX_ac_wd_focus_NIH_wd_hl_cadets
+		x = 22
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_hl_halls
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_cadet_school
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = NIH_wd_hl_d_yard
+		icon = GFX_ac_wd_focus_NIH_wd_hl_d_yard
+		x = 24
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_hl_home_flag
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = NIH_wd_fleet_home
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 239
+				}
+				239 = {
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_hl_fees
+		icon = GFX_ac_wd_focus_NIH_wd_hl_fees
+		x = 26
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_hl_open_registry
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = NIH_wd_fleet_open
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NIH_wd_registry_fees
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_hl_tankers
+		icon = GFX_ac_wd_focus_NIH_wd_hl_tankers
+		x = 23
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_hl_mutual
+			focus = NIH_wd_hl_lane_radio
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = NIH_wd_hl_tankers
+				bonus = 0.5
+				uses = 1
+				category = naval_equipment
+			}
+			navy_experience = 5
+		}
+	}
+
+	focus = {
+		id = NIH_wd_pl_wells
+		icon = GFX_ac_wd_focus_NIH_wd_pl_wells
+		x = 32
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_well_ledger
+			country_event = {
+				id = ac_wd_nih.5
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_pl_refinery
+		icon = GFX_ac_wd_focus_NIH_wd_pl_refinery
+		x = 29
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_pl_wells
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_hill_refinery
+			add_tech_bonus = {
+				name = NIH_wd_pl_refinery
+				bonus = 0.5
+				uses = 1
+				category = synth_resources
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_pl_b_works
+		icon = GFX_ac_wd_focus_NIH_wd_pl_b_works
+		x = 31
+		y = 13
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_pl_wells
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_pl_retool
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 130
+				}
+				130 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+			set_country_flag = NIH_wd_plants_spread
+		}
+	}
+
+	focus = {
+		id = NIH_wd_pl_retool
+		icon = GFX_ac_wd_focus_NIH_wd_pl_retool
+		x = 33
+		y = 13
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_pl_wells
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_pl_b_works
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_retooled_towns
+			set_country_flag = NIH_wd_plants_deepen
+		}
+	}
+
+	focus = {
+		id = NIH_wd_pl_b_second
+		icon = GFX_ac_wd_focus_NIH_wd_pl_b_second
+		x = 32
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_pl_b_works
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = NIH_wd_plants_spread
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 130
+				}
+				130 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_pl_shifts
+		icon = GFX_ac_wd_focus_NIH_wd_pl_shifts
+		x = 34
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_pl_retool
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = NIH_wd_plants_deepen
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_three_shift_rota
+		}
+	}
+
+	focus = {
+		id = NIH_wd_pl_steel
+		icon = GFX_ac_wd_focus_NIH_wd_pl_steel
+		x = 32
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_pl_b_second
+			focus = NIH_wd_pl_shifts
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_island_steel
+		}
+	}
+
+	focus = {
+		id = NIH_wd_pl_metal
+		icon = GFX_ac_wd_focus_NIH_wd_pl_metal
+		x = 32
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_pl_steel
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_light_metal_shops
+		}
+	}
+
+	focus = {
+		id = NIH_wd_pl_capital_plot
+		icon = GFX_ac_wd_focus_NIH_wd_pl_capital_plot
+		x = 30
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_pl_refinery
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_pl_rubber
+		icon = GFX_ac_wd_focus_NIH_wd_pl_rubber
+		x = 35
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_pl_wells
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NIH_wd_estate_rubber
+				days = 1095
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ms_muster
+		icon = GFX_ac_wd_focus_NIH_wd_ms_muster
+		x = 3
+		y = 19
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_service_list
+			country_event = {
+				id = ac_wd_nih.6
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ms_slipways
+		icon = GFX_ac_wd_focus_NIH_wd_ms_slipways
+		x = 1
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ms_muster
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = NIH_wd_ms_slipways
+				bonus = 0.5
+				uses = 2
+				category = naval_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ms_escorts
+		icon = GFX_ac_wd_focus_NIH_wd_ms_escorts
+		x = 3
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_ms_muster
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_ms_submarines
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_service_list
+				add_idea = NIH_wd_lane_escorts
+			}
+			set_country_flag = NIH_wd_navy_escort
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ms_submarines
+		icon = GFX_ac_wd_focus_NIH_wd_ms_submarines
+		x = 5
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_ms_muster
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_ms_escorts
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_service_list
+				add_idea = NIH_wd_strait_submarines
+			}
+			set_country_flag = NIH_wd_navy_submarine
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ms_heights_radar
+		icon = GFX_ac_wd_focus_NIH_wd_ms_heights_radar
+		x = 0
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ms_slipways
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = radar_station
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ms_drills
+		icon = GFX_ac_wd_focus_NIH_wd_ms_drills
+		x = 4
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ms_escorts
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+			has_country_flag = NIH_wd_navy_escort
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_escort_drills
+			navy_experience = 15
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ms_a_pens
+		icon = GFX_ac_wd_focus_NIH_wd_ms_a_pens
+		x = 6
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ms_submarines
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+			has_country_flag = NIH_wd_navy_submarine
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 84
+				}
+				84 = {
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ms_reserve
+		icon = GFX_ac_wd_focus_NIH_wd_ms_reserve
+		x = 2
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ms_slipways
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+			has_completed_focus = NIH_wd_hl_cadets
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_naval_reserve
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ms_boom
+		icon = GFX_ac_wd_focus_NIH_wd_ms_boom
+		x = 3
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ms_drills
+			focus = NIH_wd_ms_a_pens
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_harbour_booms
+		}
+	}
+
+	focus = {
+		id = NIH_wd_air_wings
+		icon = GFX_ac_wd_focus_NIH_wd_air_wings
+		x = 11
+		y = 19
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_two_wings
+			air_experience = 10
+		}
+	}
+
+	focus = {
+		id = NIH_wd_air_h_field
+		icon = GFX_ac_wd_focus_NIH_wd_air_h_field
+		x = 10
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_air_wings
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 582
+				}
+				582 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_air_wet_rules
+		icon = GFX_ac_wd_focus_NIH_wd_air_wet_rules
+		x = 12
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_air_wings
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_wet_season_flying
+		}
+	}
+
+	focus = {
+		id = NIH_wd_air_interceptors
+		icon = GFX_ac_wd_focus_NIH_wd_air_interceptors
+		x = 11
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_air_wet_rules
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_air_patrol
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_two_wings
+				add_idea = NIH_wd_capital_interceptors
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_air_patrol
+		icon = GFX_ac_wd_focus_NIH_wd_air_patrol
+		x = 13
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_air_wet_rules
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_air_interceptors
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_two_wings
+				add_idea = NIH_wd_lane_patrol
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_air_e_radar
+		icon = GFX_ac_wd_focus_NIH_wd_air_e_radar
+		x = 9
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_air_h_field
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 251
+				}
+				251 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_air_d_strip
+		icon = GFX_ac_wd_focus_NIH_wd_air_d_strip
+		x = 10
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_air_interceptors
+			focus = NIH_wd_air_patrol
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 239
+				}
+				239 = {
+					add_building_construction = {
+						type = air_base
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_air_north_ground
+		icon = GFX_ac_wd_focus_NIH_wd_air_north_ground
+		x = 11
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_air_d_strip
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+			has_completed_focus = NIH_wd_isl_outlier
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 431
+				}
+				431 = {
+					add_building_construction = {
+						type = air_base
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_air_support
+		icon = GFX_ac_wd_focus_NIH_wd_air_support
+		x = 12
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_air_interceptors
+			focus = NIH_wd_air_patrol
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = NIH_wd_air_support
+				bonus = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+			air_experience = 10
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ar_towns
+		icon = GFX_ac_wd_focus_NIH_wd_ar_towns
+		x = 18
+		y = 19
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_hill_battalions
+			custom_effect_tooltip = NIH_wd_ar_towns_tt_1
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ar_jungle
+		icon = GFX_ac_wd_focus_NIH_wd_ar_jungle
+		x = 17
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ar_towns
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_jungle_school
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ar_pay
+		icon = GFX_ac_wd_focus_NIH_wd_ar_pay
+		x = 19
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ar_towns
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_volunteer_pay
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ar_companies
+		icon = GFX_ac_wd_focus_NIH_wd_ar_companies
+		x = 16
+		y = 21
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_ar_jungle
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_ar_sailing
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_district_garrisons
+			set_country_flag = NIH_wd_army_garrison
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ar_sailing
+		icon = GFX_ac_wd_focus_NIH_wd_ar_sailing
+		x = 18
+		y = 21
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_ar_jungle
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_ar_companies
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_sailing_reserve
+			set_country_flag = NIH_wd_army_mobile
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ar_lines
+		icon = GFX_ac_wd_focus_NIH_wd_ar_lines
+		x = 17
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ar_companies
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+			has_country_flag = NIH_wd_army_garrison
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 84
+				}
+				84 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ar_embark
+		icon = GFX_ac_wd_focus_NIH_wd_ar_embark
+		x = 19
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ar_sailing
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+			has_country_flag = NIH_wd_army_mobile
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_embark_drill
+			army_experience = 10
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ar_depots
+		icon = GFX_ac_wd_focus_NIH_wd_ar_depots
+		x = 18
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ar_lines
+			focus = NIH_wd_ar_embark
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_depot_spares
+		}
+	}
+
+	focus = {
+		id = NIH_wd_ar_engineers
+		icon = GFX_ac_wd_focus_NIH_wd_ar_engineers
+		x = 20
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_ar_pay
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = NIH_wd_ar_engineers
+				bonus = 0.5
+				uses = 1
+				category = engineers_tech
+			}
+			army_experience = 5
+		}
+	}
+
+	focus = {
+		id = NIH_wd_st_bulletin
+		icon = GFX_ac_wd_focus_NIH_wd_st_bulletin
+		x = 25
+		y = 19
+		cost = 5
+		available = {
+			NOT = { date < 1994.1.1 }
+			date > 1994.12.10
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_star_bulletins
+			country_event = {
+				id = ac_wd_nih.7
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_st_observatory
+		icon = GFX_ac_wd_focus_NIH_wd_st_observatory
+		x = 23
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_st_bulletin
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_mountain_observatory
+		}
+	}
+
+	focus = {
+		id = NIH_wd_st_tide_gauges
+		icon = GFX_ac_wd_focus_NIH_wd_st_tide_gauges
+		x = 25
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_st_bulletin
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_tide_gauges
+		}
+	}
+
+	focus = {
+		id = NIH_wd_st_impact_word
+		icon = GFX_ac_wd_focus_NIH_wd_st_impact_word
+		x = 27
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_st_bulletin
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+			date > 1996.4.20
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_nih.8
+				days = 1
+			}
+			custom_effect_tooltip = NIH_wd_st_impact_word_tt_1
+		}
+	}
+
+	focus = {
+		id = NIH_wd_st_hill_shelters
+		icon = GFX_ac_wd_focus_NIH_wd_st_hill_shelters
+		x = 24
+		y = 21
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_st_impact_word
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_st_dispersal
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_hill_shelters
+			set_country_flag = NIH_wd_shelter_central
+		}
+	}
+
+	focus = {
+		id = NIH_wd_st_dispersal
+		icon = GFX_ac_wd_focus_NIH_wd_st_dispersal
+		x = 26
+		y = 21
+		cost = 10
+		prerequisite = {
+			focus = NIH_wd_st_impact_word
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_st_hill_shelters
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_island_stores
+			set_country_flag = NIH_wd_shelter_dispersed
+		}
+	}
+
+	focus = {
+		id = NIH_wd_st_galleries
+		icon = GFX_ac_wd_focus_NIH_wd_st_galleries
+		x = 24
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_st_hill_shelters
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+			has_country_flag = NIH_wd_shelter_central
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_shelter_galleries
+		}
+	}
+
+	focus = {
+		id = NIH_wd_st_store_ships
+		icon = GFX_ac_wd_focus_NIH_wd_st_store_ships
+		x = 26
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_st_dispersal
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+			has_country_flag = NIH_wd_shelter_dispersed
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NIH_wd_store_ships
+				days = 1095
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_st_roche
+		icon = GFX_ac_wd_focus_NIH_wd_st_roche
+		x = 25
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_st_galleries
+			focus = NIH_wd_st_store_ships
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+			date > 1999.7.8
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_nih.9
+				days = 1
+			}
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = NIH_wd_st_board
+		icon = GFX_ac_wd_focus_NIH_wd_st_board
+		x = 25
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_st_roche
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_emergency_board
+		}
+	}
+
+	focus = {
+		id = NIH_wd_fw_belkan
+		icon = GFX_ac_wd_focus_NIH_wd_fw_belkan
+		x = 32
+		y = 19
+		cost = 5
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.3.25
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_war_premiums
+			country_event = {
+				id = ac_wd_nih.10
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_fw_clean_cargo
+		icon = GFX_ac_wd_focus_NIH_wd_fw_clean_cargo
+		x = 31
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_fw_belkan
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_fw_any_buyer
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_war_premiums
+				add_idea = NIH_wd_clean_cargo
+			}
+			set_country_flag = NIH_wd_posture_clean
+		}
+	}
+
+	focus = {
+		id = NIH_wd_fw_any_buyer
+		icon = GFX_ac_wd_focus_NIH_wd_fw_any_buyer
+		x = 33
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_fw_belkan
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_fw_clean_cargo
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = NIH_wd_war_premiums
+				add_idea = NIH_wd_any_buyer
+			}
+			set_country_flag = NIH_wd_posture_open
+		}
+	}
+
+	focus = {
+		id = NIH_wd_fw_belka_won
+		icon = GFX_ac_wd_focus_NIH_wd_fw_belka_won
+		x = 30
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_fw_clean_cargo
+			focus = NIH_wd_fw_any_buyer
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_won_belkan_war
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NIH_wd_belkan_victor_terms
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_fw_belka_lost
+		icon = GFX_ac_wd_focus_NIH_wd_fw_belka_lost
+		x = 32
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_fw_clean_cargo
+			focus = NIH_wd_fw_any_buyer
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_lost_belkan_war
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NIH_wd_clause_lifted
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_fw_skully
+		icon = GFX_ac_wd_focus_NIH_wd_fw_skully
+		x = 34
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_fw_clean_cargo
+			focus = NIH_wd_fw_any_buyer
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.12.31
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_southern_watch
+		}
+	}
+
+	focus = {
+		id = NIH_wd_fw_coup
+		icon = GFX_ac_wd_focus_NIH_wd_fw_coup
+		x = 32
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_fw_skully
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1997.5.30
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_nih.11
+				days = 1
+			}
+			add_war_support = 0.01
+		}
+	}
+
+	focus = {
+		id = NIH_wd_fw_evacuees
+		icon = GFX_ac_wd_focus_NIH_wd_fw_evacuees
+		x = 30
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_fw_coup
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_country_flag = NIH_wd_posture_clean
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_evacuee_berths
+		}
+	}
+
+	focus = {
+		id = NIH_wd_fw_coup_rates
+		icon = GFX_ac_wd_focus_NIH_wd_fw_coup_rates
+		x = 32
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_fw_coup
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_country_flag = NIH_wd_posture_open
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NIH_wd_coup_premiums
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_fw_railgun
+		icon = GFX_ac_wd_focus_NIH_wd_fw_railgun
+		x = 34
+		y = 23
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_fw_coup
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1998.6.19
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_railgun_study
+		}
+	}
+
+	focus = {
+		id = NIH_wd_cw_crisis
+		icon = GFX_ac_wd_focus_NIH_wd_cw_crisis
+		x = 3
+		y = 26
+		cost = 5
+		available = {
+			NOT = { date < 2003.1.1 }
+			date > 2003.6.1
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_crisis_desk
+			country_event = {
+				id = ac_wd_nih.12
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_cw_war
+		icon = GFX_ac_wd_focus_NIH_wd_cw_war
+		x = 1
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_cw_crisis
+		}
+		available = {
+			NOT = { date < 2003.1.1 }
+			has_global_flag = ac_ucw_war_started
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NIH_wd_usean_war_rates
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_cw_averted
+		icon = GFX_ac_wd_focus_NIH_wd_cw_averted
+		x = 3
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_cw_crisis
+		}
+		available = {
+			NOT = { date < 2003.1.1 }
+			has_global_flag = ac_ucw_war_averted
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NIH_wd_quiet_lanes
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_cw_g_radar
+		icon = GFX_ac_wd_focus_NIH_wd_cw_g_radar
+		x = 5
+		y = 27
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_cw_crisis
+		}
+		available = {
+			NOT = { date < 2003.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 524
+				}
+				524 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_cw_neutral
+		icon = GFX_ac_wd_focus_NIH_wd_cw_neutral
+		x = 2
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_cw_war
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_cw_fuel
+		}
+		available = {
+			NOT = { date < 2003.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_neutral_lanes
+			set_country_flag = NIH_wd_lanes_neutral
+		}
+	}
+
+	focus = {
+		id = NIH_wd_cw_fuel
+		icon = GFX_ac_wd_focus_NIH_wd_cw_fuel
+		x = 4
+		y = 28
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_cw_war
+		}
+		mutually_exclusive = {
+			focus = NIH_wd_cw_neutral
+		}
+		available = {
+			NOT = { date < 2003.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_allied_fuel
+			set_country_flag = NIH_wd_lanes_fuel
+		}
+	}
+
+	focus = {
+		id = NIH_wd_cw_relief
+		icon = GFX_ac_wd_focus_NIH_wd_cw_relief
+		x = 0
+		y = 29
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_cw_neutral
+		}
+		available = {
+			NOT = { date < 2003.1.1 }
+			has_country_flag = NIH_wd_lanes_neutral
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_relief_voyages
+		}
+	}
+
+	focus = {
+		id = NIH_wd_cw_north_point
+		icon = GFX_ac_wd_focus_NIH_wd_cw_north_point
+		x = 6
+		y = 29
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_cw_fuel
+		}
+		available = {
+			NOT = { date < 2003.1.1 }
+			has_country_flag = NIH_wd_lanes_fuel
+			date > 2004.9.16
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NIH_wd_north_point_run
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_cw_isaf_won
+		icon = GFX_ac_wd_focus_NIH_wd_cw_isaf_won
+		x = 2
+		y = 29
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_cw_neutral
+			focus = NIH_wd_cw_fuel
+		}
+		available = {
+			NOT = { date < 2003.1.1 }
+			has_global_flag = ac_ucw_outcome_isaf_victory
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NIH_wd_reopened_ports
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = NIH_wd_cw_erusea_won
+		icon = GFX_ac_wd_focus_NIH_wd_cw_erusea_won
+		x = 4
+		y = 29
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_cw_neutral
+			focus = NIH_wd_cw_fuel
+		}
+		available = {
+			NOT = { date < 2003.1.1 }
+			has_global_flag = ac_ucw_outcome_erusean_victory
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = NIH_wd_erusean_terms
+				days = 730
+			}
+			add_political_power = 20
+		}
+	}
+
+	focus = {
+		id = NIH_wd_cw_accounts
+		icon = GFX_ac_wd_focus_NIH_wd_cw_accounts
+		x = 3
+		y = 30
+		cost = 5
+		prerequisite = {
+			focus = NIH_wd_cw_relief
+			focus = NIH_wd_cw_north_point
+			focus = NIH_wd_cw_averted
+			focus = NIH_wd_cw_g_radar
+			focus = NIH_wd_cw_isaf_won
+			focus = NIH_wd_cw_erusea_won
+		}
+		available = {
+			NOT = { date < 2003.1.1 }
+			date > 2005.1.1
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = NIH_wd_island_programme
+			custom_effect_tooltip = NIH_wd_cw_accounts_tt_1
+		}
+	}
+}

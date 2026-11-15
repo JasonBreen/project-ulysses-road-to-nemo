@@ -1,0 +1,2605 @@
+# Bespoke national tree; source: tools/national_depth (Romny). Provisional gameplay unless a ledger row says otherwise. Native acceptance pending.
+focus_tree = {
+	id = ac_wd_rmn_tree
+	country = { factor = 0 modifier = { add = 50 tag = RMN original_tag = RMN } }
+	default = no
+	reset_on_civilwar = no
+	initial_show_position = { focus = RMN_wd_pol_canvass }
+	continuous_focus_position = { x = 2208 y = 16 }
+	# The shared institutional programme (tools/institutions), unchanged.
+	shared_focus = ac_reg_register
+	shared_focus = ac_reg_audit
+	shared_focus = ac_reg_executive
+	shared_focus = ac_reg_districts
+	shared_focus = ac_reg_records
+	shared_focus = ac_reg_service_review
+	shared_focus = ac_reg_survey
+	shared_focus = ac_reg_civilian_contracts
+	shared_focus = ac_reg_protected_orders
+	shared_focus = ac_reg_spares
+	shared_focus = ac_reg_freight
+	shared_focus = ac_reg_productive_review
+	shared_focus = ac_reg_emergency_register
+	shared_focus = ac_reg_civil_protection
+	shared_focus = ac_reg_uniformed_reserve
+	shared_focus = ac_reg_stock_records
+	shared_focus = ac_reg_rehearsals
+	shared_focus = ac_reg_resilience_review
+	shared_focus = ac_reg_defense_register
+	shared_focus = ac_reg_staff_schools
+	shared_focus = ac_reg_field_priority
+	shared_focus = ac_reg_replacement_office
+	shared_focus = ac_reg_readiness_reports
+	shared_focus = ac_reg_defense_review
+	shared_focus = ac_reg_external_register
+	shared_focus = ac_reg_guarded_contacts
+	shared_focus = ac_reg_technical_contacts
+	shared_focus = ac_reg_domestic_contingency
+	shared_focus = ac_reg_bounded_commitments
+	shared_focus = ac_reg_external_review
+	shared_focus = ac_reg_institution_review
+	shared_focus = ac_reg_delegation
+	shared_focus = ac_reg_central_register
+	shared_focus = ac_reg_inspectors
+	shared_focus = ac_reg_succession_rules
+	shared_focus = ac_reg_institutional_settlement
+	focus = {
+		id = RMN_wd_pol_canvass
+		icon = GFX_ac_wd_focus_RMN_wd_pol_canvass
+		x = 3
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_borrowed_colours
+			country_event = {
+				id = ac_wd_rmn.1
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_movement_halls
+		icon = GFX_ac_wd_focus_RMN_wd_pol_movement_halls
+		x = 1
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_pol_canvass
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_rmn.2
+				days = 1
+			}
+			set_country_flag = RMN_wd_movement_read
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_notables
+		icon = GFX_ac_wd_focus_RMN_wd_pol_notables
+		x = 3
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_pol_canvass
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = RMN_wd_lists_published
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_papers
+		icon = GFX_ac_wd_focus_RMN_wd_pol_papers
+		x = 5
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_pol_canvass
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = RMN_wd_press_law
+			add_political_power = -10
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_works_councils
+		icon = GFX_ac_wd_focus_RMN_wd_pol_works_councils
+		x = 0
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_pol_movement_halls
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_works_councils
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_path_charter
+		icon = GFX_ac_wd_focus_RMN_wd_pol_path_charter
+		x = 6
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_pol_papers
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_pol_path_bench
+			focus = RMN_wd_pol_path_movement
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_borrowed_colours
+				add_idea = RMN_wd_rights_charter
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_path_bench
+		icon = GFX_ac_wd_focus_RMN_wd_pol_path_bench
+		x = 4
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_pol_notables
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_pol_path_charter
+			focus = RMN_wd_pol_path_movement
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_borrowed_colours
+				add_idea = RMN_wd_notables_bench
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_path_movement
+		icon = GFX_ac_wd_focus_RMN_wd_pol_path_movement
+		x = 2
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_pol_movement_halls
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_pol_path_bench
+			focus = RMN_wd_pol_path_charter
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_borrowed_colours
+				add_idea = RMN_wd_movement_pledge
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_regime_republic
+		icon = GFX_ac_wd_focus_RMN_wd_pol_regime_republic
+		x = 5
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_pol_path_charter
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_pol_regime_bench
+			focus = RMN_wd_pol_regime_movement
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_rmn_regime_constituent_cabinet = yes
+			set_country_flag = RMN_wd_rule_republic
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_regime_bench
+		icon = GFX_ac_wd_focus_RMN_wd_pol_regime_bench
+		x = 3
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_pol_path_bench
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_pol_regime_movement
+			focus = RMN_wd_pol_regime_republic
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_rmn_regime_district_bench = yes
+			set_country_flag = RMN_wd_rule_bench
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_regime_movement
+		icon = GFX_ac_wd_focus_RMN_wd_pol_regime_movement
+		x = 1
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_pol_path_movement
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_pol_regime_bench
+			focus = RMN_wd_pol_regime_republic
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_rmn_regime_movement_executive = yes
+			set_country_flag = RMN_wd_rule_movement
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_charter_court
+		icon = GFX_ac_wd_focus_RMN_wd_pol_charter_court
+		x = 5
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_pol_regime_republic
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_pol_bench_rotation
+			focus = RMN_wd_pol_movement_columns
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_rights_charter
+				add_idea = RMN_wd_charter_court
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_bench_rotation
+		icon = GFX_ac_wd_focus_RMN_wd_pol_bench_rotation
+		x = 3
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_pol_regime_bench
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_pol_charter_court
+			focus = RMN_wd_pol_movement_columns
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_notables_bench
+				add_idea = RMN_wd_rotating_bench
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_pol_movement_columns
+		icon = GFX_ac_wd_focus_RMN_wd_pol_movement_columns
+		x = 1
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_pol_regime_movement
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_pol_bench_rotation
+			focus = RMN_wd_pol_charter_court
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_movement_pledge
+				add_idea = RMN_wd_labour_columns
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dist_stakes
+		icon = GFX_ac_wd_focus_RMN_wd_dist_stakes
+		x = 11
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_district_survey
+			country_event = {
+				id = ac_wd_rmn.3
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dist_rail_corner
+		icon = GFX_ac_wd_focus_RMN_wd_dist_rail_corner
+		x = 9
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dist_stakes
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 549
+				}
+				549 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dist_junction_road
+		icon = GFX_ac_wd_focus_RMN_wd_dist_junction_road
+		x = 11
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dist_stakes
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 561
+				}
+				561 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dist_coast_road
+		icon = GFX_ac_wd_focus_RMN_wd_dist_coast_road
+		x = 13
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dist_stakes
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 573
+				}
+				573 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dist_planned_towns
+		icon = GFX_ac_wd_focus_RMN_wd_dist_planned_towns
+		x = 9
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_dist_rail_corner
+			focus = RMN_wd_dist_junction_road
+			focus = RMN_wd_dist_coast_road
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_dist_homesteads
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_district_survey
+				add_idea = RMN_wd_planned_towns
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dist_homesteads
+		icon = GFX_ac_wd_focus_RMN_wd_dist_homesteads
+		x = 11
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_dist_rail_corner
+			focus = RMN_wd_dist_junction_road
+			focus = RMN_wd_dist_coast_road
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_dist_planned_towns
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_district_survey
+				add_idea = RMN_wd_homestead_grants
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dist_rail_corner_works
+		icon = GFX_ac_wd_focus_RMN_wd_dist_rail_corner_works
+		x = 9
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dist_planned_towns
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 549
+				}
+				549 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dist_shore_mill
+		icon = GFX_ac_wd_focus_RMN_wd_dist_shore_mill
+		x = 13
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dist_homesteads
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 573
+				}
+				573 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dist_boards
+		icon = GFX_ac_wd_focus_RMN_wd_dist_boards
+		x = 11
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dist_planned_towns
+			focus = RMN_wd_dist_homesteads
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = RMN_wd_lists_published
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_district_boards
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dist_small_yard
+		icon = GFX_ac_wd_focus_RMN_wd_dist_small_yard
+		x = 13
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dist_coast_road
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 573
+				}
+				573 = {
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dist_settled_census
+		icon = GFX_ac_wd_focus_RMN_wd_dist_settled_census
+		x = 11
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dist_rail_corner_works
+			focus = RMN_wd_dist_shore_mill
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = RMN_wd_districts_settled
+			add_tech_bonus = {
+				name = RMN_wd_dist_settled_census
+				bonus = 0.5
+				uses = 1
+				category = construction_tech
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_works_sheet
+		icon = GFX_ac_wd_focus_RMN_wd_works_sheet
+		x = 18
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_works_inventory
+			country_event = {
+				id = ac_wd_rmn.4
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_works_marsh_drains
+		icon = GFX_ac_wd_focus_RMN_wd_works_marsh_drains
+		x = 16
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_works_sheet
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 541
+				}
+				541 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_works_centre_sheds
+		icon = GFX_ac_wd_focus_RMN_wd_works_centre_sheds
+		x = 18
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_works_sheet
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 536
+				}
+				536 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_works_spares
+		icon = GFX_ac_wd_focus_RMN_wd_works_spares
+		x = 16
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_works_marsh_drains
+			focus = RMN_wd_works_centre_sheds
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_works_civil
+			focus = RMN_wd_works_motor
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_works_inventory
+				add_idea = RMN_wd_spares_first
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_works_motor
+		icon = GFX_ac_wd_focus_RMN_wd_works_motor
+		x = 18
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_works_marsh_drains
+			focus = RMN_wd_works_centre_sheds
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_works_civil
+			focus = RMN_wd_works_spares
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_works_inventory
+				add_idea = RMN_wd_motor_works
+			}
+			if = {
+				limit = {
+					owns_state = 536
+				}
+				536 = {
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_works_civil
+		icon = GFX_ac_wd_focus_RMN_wd_works_civil
+		x = 20
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_works_marsh_drains
+			focus = RMN_wd_works_centre_sheds
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_works_motor
+			focus = RMN_wd_works_spares
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_works_inventory
+				add_idea = RMN_wd_civil_halls
+			}
+			if = {
+				limit = {
+					owns_state = 541
+				}
+				541 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_works_depots
+		icon = GFX_ac_wd_focus_RMN_wd_works_depots
+		x = 16
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_works_spares
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_spares_first
+				add_idea = RMN_wd_replacement_depots
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_works_tyre_line
+		icon = GFX_ac_wd_focus_RMN_wd_works_tyre_line
+		x = 18
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_works_motor
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_motor_works
+				add_idea = RMN_wd_truck_and_tyre
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_works_household
+		icon = GFX_ac_wd_focus_RMN_wd_works_household
+		x = 20
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_works_civil
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_civil_halls
+				add_idea = RMN_wd_household_lines
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_works_apprentices
+		icon = GFX_ac_wd_focus_RMN_wd_works_apprentices
+		x = 20
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_works_sheet
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_apprentice_benches
+		}
+	}
+
+	focus = {
+		id = RMN_wd_works_wagon_shop
+		icon = GFX_ac_wd_focus_RMN_wd_works_wagon_shop
+		x = 18
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_works_depots
+			focus = RMN_wd_works_tyre_line
+			focus = RMN_wd_works_household
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = RMN_wd_works_wagon_shop
+				bonus = 0.5
+				uses = 2
+				category = train_tech
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_res_ledger
+		icon = GFX_ac_wd_focus_RMN_wd_res_ledger
+		x = 25
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_resource_ledger
+			country_event = {
+				id = ac_wd_rmn.5
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_res_groves
+		icon = GFX_ac_wd_focus_RMN_wd_res_groves
+		x = 23
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_res_ledger
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = RMN_wd_res_sell_raw
+		icon = GFX_ac_wd_focus_RMN_wd_res_sell_raw
+		x = 24
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_res_groves
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_res_keep_home
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_resource_ledger
+				add_idea = RMN_wd_raw_exports
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_res_keep_home
+		icon = GFX_ac_wd_focus_RMN_wd_res_keep_home
+		x = 26
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_res_groves
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_res_sell_raw
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_resource_ledger
+				add_idea = RMN_wd_home_stock
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_res_quay_scales
+		icon = GFX_ac_wd_focus_RMN_wd_res_quay_scales
+		x = 24
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_res_sell_raw
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_raw_exports
+				add_idea = RMN_wd_graded_cargo
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_res_smelter
+		icon = GFX_ac_wd_focus_RMN_wd_res_smelter
+		x = 26
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_res_keep_home
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 549
+				}
+				549 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_res_war_prices
+		icon = GFX_ac_wd_focus_RMN_wd_res_war_prices
+		x = 25
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_res_ledger
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+			date > 1995.3.25
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = RMN_wd_war_premium
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_res_marsh_pits
+		icon = GFX_ac_wd_focus_RMN_wd_res_marsh_pits
+		x = 27
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_res_ledger
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = RMN_wd_res_marsh_pits
+				bonus = 0.5
+				uses = 2
+				category = excavation_tech
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_res_synthetic
+		icon = GFX_ac_wd_focus_RMN_wd_res_synthetic
+		x = 25
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_res_quay_scales
+			focus = RMN_wd_res_smelter
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = RMN_wd_res_synthetic
+				bonus = 0.5
+				uses = 2
+				category = synth_resources
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_guard_review
+		icon = GFX_ac_wd_focus_RMN_wd_guard_review
+		x = 3
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_guard_garrisons
+			country_event = {
+				id = ac_wd_rmn.6
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_guard_mountain_manual
+		icon = GFX_ac_wd_focus_RMN_wd_guard_mountain_manual
+		x = 0
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_guard_review
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = RMN_wd_guard_mountain_manual
+				bonus = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_guard_marsh_anchor
+		icon = GFX_ac_wd_focus_RMN_wd_guard_marsh_anchor
+		x = 2
+		y = 19
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_guard_review
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_guard_wheels
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_guard_garrisons
+				add_idea = RMN_wd_marsh_anchor
+			}
+			if = {
+				limit = {
+					owns_state = 541
+				}
+				541 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_guard_wheels
+		icon = GFX_ac_wd_focus_RMN_wd_guard_wheels
+		x = 4
+		y = 19
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_guard_review
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_guard_marsh_anchor
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_guard_garrisons
+				add_idea = RMN_wd_motor_columns
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_guard_district_rolls
+		icon = GFX_ac_wd_focus_RMN_wd_guard_district_rolls
+		x = 6
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_guard_review
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_district_rolls
+		}
+	}
+
+	focus = {
+		id = RMN_wd_guard_drill_clubs
+		icon = GFX_ac_wd_focus_RMN_wd_guard_drill_clubs
+		x = 4
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_guard_district_rolls
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+			has_country_flag = RMN_wd_movement_read
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_registered_clubs
+		}
+	}
+
+	focus = {
+		id = RMN_wd_guard_junction_company
+		icon = GFX_ac_wd_focus_RMN_wd_guard_junction_company
+		x = 6
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_guard_district_rolls
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = RMN_wd_junction_company
+			army_experience = 15
+		}
+	}
+
+	focus = {
+		id = RMN_wd_guard_batteries
+		icon = GFX_ac_wd_focus_RMN_wd_guard_batteries
+		x = 2
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_guard_marsh_anchor
+			focus = RMN_wd_guard_wheels
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = RMN_wd_guard_batteries
+				bonus = 0.5
+				uses = 1
+				category = artillery
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_guard_engineers
+		icon = GFX_ac_wd_focus_RMN_wd_guard_engineers
+		x = 0
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_guard_mountain_manual
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_crossing_drill
+		}
+	}
+
+	focus = {
+		id = RMN_wd_guard_map_games
+		icon = GFX_ac_wd_focus_RMN_wd_guard_map_games
+		x = 3
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_guard_batteries
+			focus = RMN_wd_guard_engineers
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = RMN_wd_guard_map_games
+				bonus = 0.5
+				uses = 1
+				category = logistics_tech
+			}
+			army_experience = 10
+		}
+	}
+
+	focus = {
+		id = RMN_wd_air_apron
+		icon = GFX_ac_wd_focus_RMN_wd_air_apron
+		x = 11
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_one_field_wing
+			country_event = {
+				id = ac_wd_rmn.7
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_air_second_field
+		icon = GFX_ac_wd_focus_RMN_wd_air_second_field
+		x = 9
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_air_apron
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 536
+				}
+				536 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_air_coast_radar
+		icon = GFX_ac_wd_focus_RMN_wd_air_coast_radar
+		x = 11
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_air_apron
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = radar_station
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_air_line_patrol
+		icon = GFX_ac_wd_focus_RMN_wd_air_line_patrol
+		x = 9
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_air_second_field
+			focus = RMN_wd_air_coast_radar
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_air_capital_cover
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_one_field_wing
+				add_idea = RMN_wd_frontier_patrol
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_air_capital_cover
+		icon = GFX_ac_wd_focus_RMN_wd_air_capital_cover
+		x = 11
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_air_second_field
+			focus = RMN_wd_air_coast_radar
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_air_line_patrol
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_one_field_wing
+				add_idea = RMN_wd_capital_umbrella
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_air_junction_radar
+		icon = GFX_ac_wd_focus_RMN_wd_air_junction_radar
+		x = 10
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_air_line_patrol
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 561
+				}
+				561 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_air_longer_runway
+		icon = GFX_ac_wd_focus_RMN_wd_air_longer_runway
+		x = 12
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_air_capital_cover
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_air_mechanics
+		icon = GFX_ac_wd_focus_RMN_wd_air_mechanics
+		x = 13
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_air_apron
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_ground_crews
+		}
+	}
+
+	focus = {
+		id = RMN_wd_air_club_scholarships
+		icon = GFX_ac_wd_focus_RMN_wd_air_club_scholarships
+		x = 13
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_air_mechanics
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			air_experience = 20
+			add_tech_bonus = {
+				name = RMN_wd_air_club_scholarships
+				bonus = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_front_walk
+		icon = GFX_ac_wd_focus_RMN_wd_front_walk
+		x = 20
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_frontier_desk
+			country_event = {
+				id = ac_wd_rmn.8
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_front_customs_huts
+		icon = GFX_ac_wd_focus_RMN_wd_front_customs_huts
+		x = 16
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_front_walk
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_customs_service
+		}
+	}
+
+	focus = {
+		id = RMN_wd_front_good_neighbour
+		icon = GFX_ac_wd_focus_RMN_wd_front_good_neighbour
+		x = 18
+		y = 19
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_front_walk
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_front_many_customers
+			focus = RMN_wd_front_watch_posts
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_frontier_desk
+				add_idea = RMN_wd_good_neighbour
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_front_many_customers
+		icon = GFX_ac_wd_focus_RMN_wd_front_many_customers
+		x = 20
+		y = 19
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_front_walk
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_front_good_neighbour
+			focus = RMN_wd_front_watch_posts
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_frontier_desk
+				add_idea = RMN_wd_many_customers
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_front_watch_posts
+		icon = GFX_ac_wd_focus_RMN_wd_front_watch_posts
+		x = 22
+		y = 19
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_front_walk
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_front_good_neighbour
+			focus = RMN_wd_front_many_customers
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_frontier_desk
+				add_idea = RMN_wd_watchers
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_front_junction_desk
+		icon = GFX_ac_wd_focus_RMN_wd_front_junction_desk
+		x = 18
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_front_customs_huts
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = RMN_wd_junction_company
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_junction_liaison
+		}
+	}
+
+	focus = {
+		id = RMN_wd_front_cinigrad_news
+		icon = GFX_ac_wd_focus_RMN_wd_front_cinigrad_news
+		x = 24
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_front_walk
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			date > 1991.9.2
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = RMN_wd_coast_watch
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_front_trade_fair
+		icon = GFX_ac_wd_focus_RMN_wd_front_trade_fair
+		x = 20
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_front_good_neighbour
+			focus = RMN_wd_front_many_customers
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = RMN_wd_trade_fair
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_front_thaw_bonds
+		icon = GFX_ac_wd_focus_RMN_wd_front_thaw_bonds
+		x = 22
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_front_good_neighbour
+			focus = RMN_wd_front_many_customers
+			focus = RMN_wd_front_watch_posts
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			date > 1999.10.8
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_thaw_credit
+		}
+	}
+
+	focus = {
+		id = RMN_wd_sky_bulletins
+		icon = GFX_ac_wd_focus_RMN_wd_sky_bulletins
+		x = 29
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1994.1.1 }
+			date > 1994.12.10
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_sky_watch
+		}
+	}
+
+	focus = {
+		id = RMN_wd_sky_announcement
+		icon = GFX_ac_wd_focus_RMN_wd_sky_announcement
+		x = 28
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_sky_bulletins
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+			date > 1996.4.20
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_rmn.9
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_sky_earth_shelters
+		icon = GFX_ac_wd_focus_RMN_wd_sky_earth_shelters
+		x = 27
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_sky_announcement
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_sky_inland_dispersal
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_sky_watch
+				add_idea = RMN_wd_earth_shelters
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_sky_inland_dispersal
+		icon = GFX_ac_wd_focus_RMN_wd_sky_inland_dispersal
+		x = 29
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = RMN_wd_sky_announcement
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_sky_earth_shelters
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_sky_watch
+				add_idea = RMN_wd_marsh_dispersal
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_sky_grain
+		icon = GFX_ac_wd_focus_RMN_wd_sky_grain
+		x = 31
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_sky_announcement
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_grain_pits
+		}
+	}
+
+	focus = {
+		id = RMN_wd_sky_sirens
+		icon = GFX_ac_wd_focus_RMN_wd_sky_sirens
+		x = 30
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_sky_bulletins
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_siren_code
+		}
+	}
+
+	focus = {
+		id = RMN_wd_sky_reserve_wards
+		icon = GFX_ac_wd_focus_RMN_wd_sky_reserve_wards
+		x = 27
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_sky_earth_shelters
+			focus = RMN_wd_sky_inland_dispersal
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_reserve_wards
+		}
+	}
+
+	focus = {
+		id = RMN_wd_sky_roche_night
+		icon = GFX_ac_wd_focus_RMN_wd_sky_roche_night
+		x = 29
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_sky_earth_shelters
+			focus = RMN_wd_sky_inland_dispersal
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+			date > 1999.7.8
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = RMN_wd_sky_passed
+			add_stability = 0.03
+		}
+	}
+
+	focus = {
+		id = RMN_wd_sky_tally
+		icon = GFX_ac_wd_focus_RMN_wd_sky_tally
+		x = 31
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_sky_grain
+		}
+		available = {
+			NOT = { date < 1994.1.1 }
+			has_country_flag = RMN_wd_sky_passed
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = RMN_wd_sky_tally
+				bonus = 0.5
+				uses = 1
+				category = construction_tech
+			}
+			add_stability = 0.02
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dec_audit
+		icon = GFX_ac_wd_focus_RMN_wd_dec_audit
+		x = 5
+		y = 23
+		cost = 5
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_decade_accounts
+			country_event = {
+				id = ac_wd_rmn.10
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dec_republic
+		icon = GFX_ac_wd_focus_RMN_wd_dec_republic
+		x = 0
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dec_audit
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_dec_bench
+			focus = RMN_wd_dec_movement
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = RMN_wd_rule_republic
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_second_session
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dec_bench
+		icon = GFX_ac_wd_focus_RMN_wd_dec_bench
+		x = 2
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dec_audit
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_dec_movement
+			focus = RMN_wd_dec_republic
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = RMN_wd_rule_bench
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_bench_tour
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dec_movement
+		icon = GFX_ac_wd_focus_RMN_wd_dec_movement
+		x = 4
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dec_audit
+		}
+		mutually_exclusive = {
+			focus = RMN_wd_dec_bench
+			focus = RMN_wd_dec_republic
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = RMN_wd_rule_movement
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_decree_codes
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dec_published
+		icon = GFX_ac_wd_focus_RMN_wd_dec_published
+		x = 6
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dec_audit
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = RMN_wd_press_law
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RMN_wd_decade_accounts
+				add_idea = RMN_wd_open_accounts
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dec_far_war
+		icon = GFX_ac_wd_focus_RMN_wd_dec_far_war
+		x = 8
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dec_audit
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_global_flag = ac_ucw_isaf_formed
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_far_war_freight
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dec_district_e_works
+		icon = GFX_ac_wd_focus_RMN_wd_dec_district_e_works
+		x = 10
+		y = 24
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dec_audit
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = RMN_wd_districts_settled
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 561
+				}
+				561 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = RMN_wd_dec_second_programme
+		icon = GFX_ac_wd_focus_RMN_wd_dec_second_programme
+		x = 5
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = RMN_wd_dec_republic
+			focus = RMN_wd_dec_bench
+			focus = RMN_wd_dec_movement
+			focus = RMN_wd_dec_published
+			focus = RMN_wd_dec_far_war
+			focus = RMN_wd_dec_district_e_works
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			date > 2003.1.1
+		}
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RMN_wd_second_programme
+		}
+	}
+}

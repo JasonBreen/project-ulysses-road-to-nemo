@@ -1,0 +1,2856 @@
+# Bespoke national tree; source: tools/national_depth (Dakrain). Provisional gameplay unless a ledger row says otherwise. Native acceptance pending.
+focus_tree = {
+	id = ac_wd_dak_tree
+	country = { factor = 0 modifier = { add = 50 tag = DAK original_tag = DAK } }
+	default = no
+	reset_on_civilwar = no
+	initial_show_position = { focus = DAK_wd_pol_last_ballot }
+	continuous_focus_position = { x = 2208 y = 16 }
+	# The shared institutional programme (tools/institutions), unchanged.
+	shared_focus = ac_reg_register
+	shared_focus = ac_reg_audit
+	shared_focus = ac_reg_executive
+	shared_focus = ac_reg_districts
+	shared_focus = ac_reg_records
+	shared_focus = ac_reg_service_review
+	shared_focus = ac_reg_survey
+	shared_focus = ac_reg_civilian_contracts
+	shared_focus = ac_reg_protected_orders
+	shared_focus = ac_reg_spares
+	shared_focus = ac_reg_freight
+	shared_focus = ac_reg_productive_review
+	shared_focus = ac_reg_emergency_register
+	shared_focus = ac_reg_civil_protection
+	shared_focus = ac_reg_uniformed_reserve
+	shared_focus = ac_reg_stock_records
+	shared_focus = ac_reg_rehearsals
+	shared_focus = ac_reg_resilience_review
+	shared_focus = ac_reg_defense_register
+	shared_focus = ac_reg_staff_schools
+	shared_focus = ac_reg_field_priority
+	shared_focus = ac_reg_replacement_office
+	shared_focus = ac_reg_readiness_reports
+	shared_focus = ac_reg_defense_review
+	shared_focus = ac_reg_external_register
+	shared_focus = ac_reg_guarded_contacts
+	shared_focus = ac_reg_technical_contacts
+	shared_focus = ac_reg_domestic_contingency
+	shared_focus = ac_reg_bounded_commitments
+	shared_focus = ac_reg_external_review
+	shared_focus = ac_reg_institution_review
+	shared_focus = ac_reg_delegation
+	shared_focus = ac_reg_central_register
+	shared_focus = ac_reg_inspectors
+	shared_focus = ac_reg_succession_rules
+	shared_focus = ac_reg_institutional_settlement
+	focus = {
+		id = DAK_wd_pol_last_ballot
+		icon = GFX_ac_wd_focus_DAK_wd_pol_last_ballot
+		x = 3
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_ballot_suspended
+			country_event = {
+				id = ac_wd_dak.1
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_left_talks
+		icon = GFX_ac_wd_focus_DAK_wd_pol_left_talks
+		x = 1
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_pol_last_ballot
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_round_table
+				days = 540
+			}
+			set_country_flag = DAK_wd_left_seated
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_officer_mess
+		icon = GFX_ac_wd_focus_DAK_wd_pol_officer_mess
+		x = 3
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_pol_last_ballot
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_garrison_inquiry
+				days = 365
+			}
+			army_experience = 15
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_princely_party
+		icon = GFX_ac_wd_focus_DAK_wd_pol_princely_party
+		x = 5
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_pol_last_ballot
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_princely_patrons
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_path_republic
+		icon = GFX_ac_wd_focus_DAK_wd_pol_path_republic
+		x = 0
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_pol_left_talks
+			focus = DAK_wd_pol_officer_mess
+			focus = DAK_wd_pol_princely_party
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_path_councils
+			focus = DAK_wd_pol_path_marshals
+			focus = DAK_wd_pol_path_presidency
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_ballot_suspended
+				add_idea = DAK_wd_republic_mandate
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_path_presidency
+		icon = GFX_ac_wd_focus_DAK_wd_pol_path_presidency
+		x = 2
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_pol_left_talks
+			focus = DAK_wd_pol_officer_mess
+			focus = DAK_wd_pol_princely_party
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_path_councils
+			focus = DAK_wd_pol_path_marshals
+			focus = DAK_wd_pol_path_republic
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_ballot_suspended
+				add_idea = DAK_wd_guardianship
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_path_councils
+		icon = GFX_ac_wd_focus_DAK_wd_pol_path_councils
+		x = 4
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_pol_left_talks
+			focus = DAK_wd_pol_officer_mess
+			focus = DAK_wd_pol_princely_party
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_path_marshals
+			focus = DAK_wd_pol_path_presidency
+			focus = DAK_wd_pol_path_republic
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_ballot_suspended
+				add_idea = DAK_wd_councils_mandate
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_path_marshals
+		icon = GFX_ac_wd_focus_DAK_wd_pol_path_marshals
+		x = 6
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_pol_left_talks
+			focus = DAK_wd_pol_officer_mess
+			focus = DAK_wd_pol_princely_party
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_path_councils
+			focus = DAK_wd_pol_path_presidency
+			focus = DAK_wd_pol_path_republic
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_ballot_suspended
+				add_idea = DAK_wd_marshals_order
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_seat_cabinet
+		icon = GFX_ac_wd_focus_DAK_wd_pol_seat_cabinet
+		x = 0
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_pol_path_republic
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_seat_committee
+			focus = DAK_wd_pol_seat_council
+			focus = DAK_wd_pol_seat_directorate
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_dak_regime_republic_cabinet = yes
+			set_country_flag = DAK_wd_path_republic
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_seat_council
+		icon = GFX_ac_wd_focus_DAK_wd_pol_seat_council
+		x = 2
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_pol_path_presidency
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_seat_cabinet
+			focus = DAK_wd_pol_seat_committee
+			focus = DAK_wd_pol_seat_directorate
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_dak_regime_presidential_council = yes
+			set_country_flag = DAK_wd_path_presidency
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_seat_committee
+		icon = GFX_ac_wd_focus_DAK_wd_pol_seat_committee
+		x = 4
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_pol_path_councils
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_seat_cabinet
+			focus = DAK_wd_pol_seat_council
+			focus = DAK_wd_pol_seat_directorate
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_dak_regime_workers_federation = yes
+			set_country_flag = DAK_wd_path_councils
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_seat_directorate
+		icon = GFX_ac_wd_focus_DAK_wd_pol_seat_directorate
+		x = 6
+		y = 15
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_pol_path_marshals
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_seat_cabinet
+			focus = DAK_wd_pol_seat_committee
+			focus = DAK_wd_pol_seat_council
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ac_wd_dak_regime_marshals_directorate = yes
+			set_country_flag = DAK_wd_path_marshals
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_open_chamber
+		icon = GFX_ac_wd_focus_DAK_wd_pol_open_chamber
+		x = 0
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_pol_seat_cabinet
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_decree_terms
+			focus = DAK_wd_pol_mill_councils
+			focus = DAK_wd_pol_officer_prefects
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_chamber_hearings
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_decree_terms
+		icon = GFX_ac_wd_focus_DAK_wd_pol_decree_terms
+		x = 2
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_pol_seat_council
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_mill_councils
+			focus = DAK_wd_pol_officer_prefects
+			focus = DAK_wd_pol_open_chamber
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_decree_terms
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_mill_councils
+		icon = GFX_ac_wd_focus_DAK_wd_pol_mill_councils
+		x = 4
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_pol_seat_committee
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_decree_terms
+			focus = DAK_wd_pol_officer_prefects
+			focus = DAK_wd_pol_open_chamber
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_mill_councils
+		}
+	}
+
+	focus = {
+		id = DAK_wd_pol_officer_prefects
+		icon = GFX_ac_wd_focus_DAK_wd_pol_officer_prefects
+		x = 6
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_pol_seat_directorate
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_pol_decree_terms
+			focus = DAK_wd_pol_mill_councils
+			focus = DAK_wd_pol_open_chamber
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 114
+				}
+				114 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_political_power = 15
+		}
+	}
+
+	focus = {
+		id = DAK_wd_stl_walk_mills
+		icon = GFX_ac_wd_focus_DAK_wd_stl_walk_mills
+		x = 12
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_mill_survey
+			country_event = {
+				id = ac_wd_dak.3
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_stl_tungsten_seams
+		icon = GFX_ac_wd_focus_DAK_wd_stl_tungsten_seams
+		x = 10
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_stl_walk_mills
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = DAK_wd_stl_tungsten_seams
+				bonus = 0.5
+				uses = 1
+				category = excavation_tech
+			}
+			set_country_flag = DAK_wd_seams_mapped
+		}
+	}
+
+	focus = {
+		id = DAK_wd_stl_ore_rail
+		icon = GFX_ac_wd_focus_DAK_wd_stl_ore_rail
+		x = 12
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_stl_walk_mills
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 234
+				}
+				234 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_stl_one_combine
+		icon = GFX_ac_wd_focus_DAK_wd_stl_one_combine
+		x = 11
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_stl_tungsten_seams
+			focus = DAK_wd_stl_ore_rail
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_stl_mill_shares
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_mill_survey
+				add_idea = DAK_wd_steel_combine
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_stl_mill_shares
+		icon = GFX_ac_wd_focus_DAK_wd_stl_mill_shares
+		x = 13
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_stl_tungsten_seams
+			focus = DAK_wd_stl_ore_rail
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_stl_one_combine
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_mill_survey
+				add_idea = DAK_wd_mill_shares
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_stl_munitions_hall
+		icon = GFX_ac_wd_focus_DAK_wd_stl_munitions_hall
+		x = 11
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_stl_one_combine
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_stl_partner_furnace
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 234
+				}
+				234 = {
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_stl_partner_furnace
+		icon = GFX_ac_wd_focus_DAK_wd_stl_partner_furnace
+		x = 13
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_stl_mill_shares
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_stl_munitions_hall
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 234
+				}
+				234 = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_stl_tool_works
+		icon = GFX_ac_wd_focus_DAK_wd_stl_tool_works
+		x = 9
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_stl_tungsten_seams
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_tungsten_tooling
+		}
+	}
+
+	focus = {
+		id = DAK_wd_stl_rescue_stations
+		icon = GFX_ac_wd_focus_DAK_wd_stl_rescue_stations
+		x = 14
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_stl_walk_mills
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_mine_safety
+		}
+	}
+
+	focus = {
+		id = DAK_wd_stl_tungsten_abroad
+		icon = GFX_ac_wd_focus_DAK_wd_stl_tungsten_abroad
+		x = 12
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_stl_munitions_hall
+			focus = DAK_wd_stl_partner_furnace
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_ore_contracts
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_stl_home_rails
+		icon = GFX_ac_wd_focus_DAK_wd_stl_home_rails
+		x = 15
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_stl_ore_rail
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = DAK_wd_stl_home_rails
+				bonus = 0.5
+				uses = 1
+				category = train_tech
+			}
+			set_country_flag = DAK_wd_home_rails
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sus_count_stocks
+		icon = GFX_ac_wd_focus_DAK_wd_sus_count_stocks
+		x = 21
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_sustainment_first
+			country_event = {
+				id = ac_wd_dak.6
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sus_rain_manoeuvres
+		icon = GFX_ac_wd_focus_DAK_wd_sus_rain_manoeuvres
+		x = 19
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sus_count_stocks
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_rain_manoeuvres
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sus_replacement_depots
+		icon = GFX_ac_wd_focus_DAK_wd_sus_replacement_depots
+		x = 21
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sus_count_stocks
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_replacement_depots
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sus_rail_spurs
+		icon = GFX_ac_wd_focus_DAK_wd_sus_rail_spurs
+		x = 23
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sus_count_stocks
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = DAK_wd_home_rails
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 114
+				}
+				114 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sus_universal_year
+		icon = GFX_ac_wd_focus_DAK_wd_sus_universal_year
+		x = 18
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sus_rain_manoeuvres
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_sus_volunteer_core
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_conscript_levy
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sus_volunteer_core
+		icon = GFX_ac_wd_focus_DAK_wd_sus_volunteer_core
+		x = 20
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sus_rain_manoeuvres
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_sus_universal_year
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_volunteer_core
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sus_mud_engineers
+		icon = GFX_ac_wd_focus_DAK_wd_sus_mud_engineers
+		x = 22
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sus_rain_manoeuvres
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = DAK_wd_sus_mud_engineers
+				bonus = 0.5
+				uses = 1
+				category = engineers_tech
+			}
+			set_country_flag = DAK_wd_mud_engineers
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sus_district_musters
+		icon = GFX_ac_wd_focus_DAK_wd_sus_district_musters
+		x = 20
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sus_universal_year
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_muster_drills
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sus_career_sergeants
+		icon = GFX_ac_wd_focus_DAK_wd_sus_career_sergeants
+		x = 22
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sus_volunteer_core
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_sergeant_school
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sus_tungsten_cores
+		icon = GFX_ac_wd_focus_DAK_wd_sus_tungsten_cores
+		x = 24
+		y = 14
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sus_replacement_depots
+		}
+		available = {
+			NOT = { date < 1991.1.1 }
+			has_country_flag = DAK_wd_seams_mapped
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_antitank_teams
+				days = 730
+			}
+			add_tech_bonus = {
+				name = DAK_wd_sus_tungsten_cores
+				bonus = 0.3
+				uses = 1
+				category = infantry_weapons
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_fro_two_maps
+		icon = GFX_ac_wd_focus_DAK_wd_fro_two_maps
+		x = 30
+		y = 12
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_claims_office
+			country_event = {
+				id = ac_wd_dak.2
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_fro_karluga_families
+		icon = GFX_ac_wd_focus_DAK_wd_fro_karluga_families
+		x = 27
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_fro_two_maps
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_kin_desk
+		}
+	}
+
+	focus = {
+		id = DAK_wd_fro_gatewood_line
+		icon = GFX_ac_wd_focus_DAK_wd_fro_gatewood_line
+		x = 29
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_fro_two_maps
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = DAK_wd_gatewood_line
+			add_stability = 0.02
+			custom_effect_tooltip = DAK_wd_fro_gatewood_line_tt_2
+		}
+	}
+
+	focus = {
+		id = DAK_wd_fro_nieblo_passes
+		icon = GFX_ac_wd_focus_DAK_wd_fro_nieblo_passes
+		x = 31
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_fro_two_maps
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_nieblo_passes
+				days = 1095
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_fro_leasath_posts
+		icon = GFX_ac_wd_focus_DAK_wd_fro_leasath_posts
+		x = 33
+		y = 13
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_fro_two_maps
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 234
+				}
+				234 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			army_experience = 10
+		}
+	}
+
+	focus = {
+		id = DAK_wd_fro_claim_statute
+		icon = GFX_ac_wd_focus_DAK_wd_fro_claim_statute
+		x = 29
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_fro_karluga_families
+			focus = DAK_wd_fro_gatewood_line
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_fro_claim_drawer
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_claims_office
+				add_idea = DAK_wd_claim_in_law
+			}
+			set_country_flag = DAK_wd_claim_pressed
+			custom_effect_tooltip = DAK_wd_fro_claim_statute_tt_2
+		}
+	}
+
+	focus = {
+		id = DAK_wd_fro_claim_drawer
+		icon = GFX_ac_wd_focus_DAK_wd_fro_claim_drawer
+		x = 31
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_fro_karluga_families
+			focus = DAK_wd_fro_gatewood_line
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_fro_claim_statute
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_claims_office
+				add_idea = DAK_wd_quiet_claim
+			}
+			set_country_flag = DAK_wd_claim_shelved
+		}
+	}
+
+	focus = {
+		id = DAK_wd_fro_desert_guard
+		icon = GFX_ac_wd_focus_DAK_wd_fro_desert_guard
+		x = 29
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_fro_claim_statute
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_frontier_guard
+			if = {
+				limit = {
+					owns_state = 234
+				}
+				234 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_fro_wells_commission
+		icon = GFX_ac_wd_focus_DAK_wd_fro_wells_commission
+		x = 31
+		y = 15
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_fro_claim_drawer
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+			has_country_flag = DAK_wd_gatewood_line
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_wells_commission
+		}
+	}
+
+	focus = {
+		id = DAK_wd_fro_market_days
+		icon = GFX_ac_wd_focus_DAK_wd_fro_market_days
+		x = 30
+		y = 16
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_fro_desert_guard
+			focus = DAK_wd_fro_wells_commission
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_crossing_markets
+				days = 1095
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_prt_two_harbours
+		icon = GFX_ac_wd_focus_DAK_wd_prt_two_harbours
+		x = 3
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_harbour_board
+			country_event = {
+				id = ac_wd_dak.4
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_prt_bell_dredging
+		icon = GFX_ac_wd_focus_DAK_wd_prt_bell_dredging
+		x = 1
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_prt_two_harbours
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = DAK_wd_channel_dredged
+			add_tech_bonus = {
+				name = DAK_wd_prt_bell_dredging
+				bonus = 0.3
+				uses = 1
+				category = naval_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_prt_oderin_slip
+		icon = GFX_ac_wd_focus_DAK_wd_prt_oderin_slip
+		x = 3
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_prt_two_harbours
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 114
+				}
+				114 = {
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_prt_harbour_police
+		icon = GFX_ac_wd_focus_DAK_wd_prt_harbour_police
+		x = 5
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_prt_two_harbours
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = DAK_wd_harbour_police
+			add_stability = 0.01
+		}
+	}
+
+	focus = {
+		id = DAK_wd_prt_free_port
+		icon = GFX_ac_wd_focus_DAK_wd_prt_free_port
+		x = 0
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_prt_bell_dredging
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_prt_naval_harbour
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_harbour_board
+				add_idea = DAK_wd_free_port
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_prt_naval_harbour
+		icon = GFX_ac_wd_focus_DAK_wd_prt_naval_harbour
+		x = 2
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_prt_bell_dredging
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_prt_free_port
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_harbour_board
+				add_idea = DAK_wd_naval_harbour
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_prt_escort_rota
+		icon = GFX_ac_wd_focus_DAK_wd_prt_escort_rota
+		x = 4
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_prt_free_port
+			focus = DAK_wd_prt_naval_harbour
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_escort_rota
+			navy_experience = 10
+		}
+	}
+
+	focus = {
+		id = DAK_wd_prt_hull_pool
+		icon = GFX_ac_wd_focus_DAK_wd_prt_hull_pool
+		x = 4
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_prt_oderin_slip
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_convoy_pool
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_prt_repair_berths
+		icon = GFX_ac_wd_focus_DAK_wd_prt_repair_berths
+		x = 2
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_prt_free_port
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_repair_berths
+		}
+	}
+
+	focus = {
+		id = DAK_wd_prt_fishing_coops
+		icon = GFX_ac_wd_focus_DAK_wd_prt_fishing_coops
+		x = 6
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_prt_oderin_slip
+		}
+		available = {
+			NOT = { date < 1992.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_fishing_coops
+				days = 1095
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_air_count_wing
+		icon = GFX_ac_wd_focus_DAK_wd_air_count_wing
+		x = 11
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_service_wing
+			country_event = {
+				id = ac_wd_dak.5
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_air_brunies_hardstands
+		icon = GFX_ac_wd_focus_DAK_wd_air_brunies_hardstands
+		x = 9
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_air_count_wing
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 234
+				}
+				234 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_air_coast_chain
+		icon = GFX_ac_wd_focus_DAK_wd_air_coast_chain
+		x = 11
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_air_count_wing
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 114
+				}
+				114 = {
+					add_building_construction = {
+						type = radar_station
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_air_spares_first
+		icon = GFX_ac_wd_focus_DAK_wd_air_spares_first
+		x = 13
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_air_count_wing
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = DAK_wd_spares_stocked
+			add_tech_bonus = {
+				name = DAK_wd_air_spares_first
+				bonus = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_air_interceptors
+		icon = GFX_ac_wd_focus_DAK_wd_air_interceptors
+		x = 10
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_air_brunies_hardstands
+			focus = DAK_wd_air_coast_chain
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_air_dispersal
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_service_wing
+				add_idea = DAK_wd_interceptor_net
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_air_dispersal
+		icon = GFX_ac_wd_focus_DAK_wd_air_dispersal
+		x = 12
+		y = 20
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_air_brunies_hardstands
+			focus = DAK_wd_air_coast_chain
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_air_interceptors
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_service_wing
+				add_idea = DAK_wd_dispersed_fields
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_air_scramble_room
+		icon = GFX_ac_wd_focus_DAK_wd_air_scramble_room
+		x = 10
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_air_interceptors
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 234
+				}
+				234 = {
+					add_building_construction = {
+						type = radar_station
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_air_grass_strips
+		icon = GFX_ac_wd_focus_DAK_wd_air_grass_strips
+		x = 12
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_air_dispersal
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 114
+				}
+				114 = {
+					add_building_construction = {
+						type = air_base
+						level = 3
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_air_hired_instructors
+		icon = GFX_ac_wd_focus_DAK_wd_air_hired_instructors
+		x = 10
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_air_scramble_room
+			focus = DAK_wd_air_grass_strips
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_air_home_school
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+			date > 1998.6.19
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_contract_instructors
+				days = 1095
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_air_home_school
+		icon = GFX_ac_wd_focus_DAK_wd_air_home_school
+		x = 12
+		y = 22
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_air_scramble_room
+			focus = DAK_wd_air_grass_strips
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_air_hired_instructors
+		}
+		available = {
+			NOT = { date < 1993.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_AIR_XP
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_home_school
+		}
+	}
+
+	focus = {
+		id = DAK_wd_war_news
+		icon = GFX_ac_wd_focus_DAK_wd_war_news
+		x = 20
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1995.1.1 }
+			date > 1995.3.25
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_war_desk
+			country_event = {
+				id = ac_wd_dak.7
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_war_neutral_ports
+		icon = GFX_ac_wd_focus_DAK_wd_war_neutral_ports
+		x = 16
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_war_news
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_war_osean_quays
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_war_desk
+				add_idea = DAK_wd_strict_neutrality
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_war_osean_quays
+		icon = GFX_ac_wd_focus_DAK_wd_war_osean_quays
+		x = 18
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_war_news
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_war_neutral_ports
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_war_desk
+				add_idea = DAK_wd_osean_freight
+			}
+			custom_effect_tooltip = DAK_wd_war_osean_quays_tt_1
+		}
+	}
+
+	focus = {
+		id = DAK_wd_war_contraband
+		icon = GFX_ac_wd_focus_DAK_wd_war_contraband
+		x = 20
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_war_news
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_country_flag = DAK_wd_harbour_police
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_contraband_searches
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_war_perbla_watch
+		icon = GFX_ac_wd_focus_DAK_wd_war_perbla_watch
+		x = 22
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_war_news
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_perbla_watch
+				days = 540
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_war_price_boards
+		icon = GFX_ac_wd_focus_DAK_wd_war_price_boards
+		x = 24
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_war_news
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_price_boards
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_war_belka_defeated
+		icon = GFX_ac_wd_focus_DAK_wd_war_belka_defeated
+		x = 19
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_war_neutral_ports
+			focus = DAK_wd_war_osean_quays
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_war_belka_prevails
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_lost_belkan_war
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_postwar_orders
+				days = 540
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_war_belka_prevails
+		icon = GFX_ac_wd_focus_DAK_wd_war_belka_prevails
+		x = 21
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_war_neutral_ports
+			focus = DAK_wd_war_osean_quays
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_war_belka_defeated
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+			has_global_flag = belka_won_belkan_war
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_northern_shadow
+			add_war_support = 0.03
+		}
+	}
+
+	focus = {
+		id = DAK_wd_war_distant_lessons
+		icon = GFX_ac_wd_focus_DAK_wd_war_distant_lessons
+		x = 20
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_war_belka_defeated
+			focus = DAK_wd_war_belka_prevails
+		}
+		available = {
+			NOT = { date < 1995.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = DAK_wd_war_distant_lessons
+				bonus = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+			set_country_flag = DAK_wd_war_lessons
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sky_impact_announced
+		icon = GFX_ac_wd_focus_DAK_wd_sky_impact_announced
+		x = 31
+		y = 18
+		cost = 5
+		available = {
+			NOT = { date < 1996.1.1 }
+			date > 1996.4.20
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_sky_desk
+			country_event = {
+				id = ac_wd_dak.9
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sky_storm_drains
+		icon = GFX_ac_wd_focus_DAK_wd_sky_storm_drains
+		x = 27
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sky_impact_announced
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+			has_country_flag = DAK_wd_mud_engineers
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_storm_drains
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sky_mill_cellars
+		icon = GFX_ac_wd_focus_DAK_wd_sky_mill_cellars
+		x = 29
+		y = 19
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_sky_impact_announced
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_sky_leave_cities
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_mill_shelters
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sky_leave_cities
+		icon = GFX_ac_wd_focus_DAK_wd_sky_leave_cities
+		x = 31
+		y = 19
+		cost = 10
+		prerequisite = {
+			focus = DAK_wd_sky_impact_announced
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_sky_mill_cellars
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_evacuation_timetables
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sky_radar_watch
+		icon = GFX_ac_wd_focus_DAK_wd_sky_radar_watch
+		x = 33
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sky_impact_announced
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 114
+				}
+				114 = {
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sky_lean_months
+		icon = GFX_ac_wd_focus_DAK_wd_sky_lean_months
+		x = 35
+		y = 19
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sky_impact_announced
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_relief_stocks
+				days = 1095
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sky_harbour_berths
+		icon = GFX_ac_wd_focus_DAK_wd_sky_harbour_berths
+		x = 30
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sky_mill_cellars
+			focus = DAK_wd_sky_leave_cities
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+			has_country_flag = DAK_wd_channel_dredged
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_evacuation_berths
+				days = 1095
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sky_roche_night
+		icon = GFX_ac_wd_focus_DAK_wd_sky_roche_night
+		x = 32
+		y = 20
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sky_mill_cellars
+			focus = DAK_wd_sky_leave_cities
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+			date > 1999.7.8
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_dak.10
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_sky_relief_office
+		icon = GFX_ac_wd_focus_DAK_wd_sky_relief_office
+		x = 31
+		y = 21
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_sky_roche_night
+		}
+		available = {
+			NOT = { date < 1996.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_relief_office
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_ten_years
+		icon = GFX_ac_wd_focus_DAK_wd_mil_ten_years
+		x = 9
+		y = 24
+		cost = 5
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_dak.11
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_republic_constitution
+		icon = GFX_ac_wd_focus_DAK_wd_mil_republic_constitution
+		x = 0
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_ten_years
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_mil_council_statute
+			focus = DAK_wd_mil_councils_charter
+			focus = DAK_wd_mil_order_code
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = DAK_wd_path_republic
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_republic_mandate
+				add_idea = DAK_wd_republic_constitution
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_council_statute
+		icon = GFX_ac_wd_focus_DAK_wd_mil_council_statute
+		x = 2
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_ten_years
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_mil_councils_charter
+			focus = DAK_wd_mil_order_code
+			focus = DAK_wd_mil_republic_constitution
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = DAK_wd_path_presidency
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_guardianship
+				add_idea = DAK_wd_council_statute
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_councils_charter
+		icon = GFX_ac_wd_focus_DAK_wd_mil_councils_charter
+		x = 4
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_ten_years
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_mil_council_statute
+			focus = DAK_wd_mil_order_code
+			focus = DAK_wd_mil_republic_constitution
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = DAK_wd_path_councils
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_councils_mandate
+				add_idea = DAK_wd_council_federation
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_order_code
+		icon = GFX_ac_wd_focus_DAK_wd_mil_order_code
+		x = 6
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_ten_years
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_mil_council_statute
+			focus = DAK_wd_mil_councils_charter
+			focus = DAK_wd_mil_republic_constitution
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = DAK_wd_path_marshals
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = DAK_wd_marshals_order
+				add_idea = DAK_wd_marshals_code
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_claim_white_paper
+		icon = GFX_ac_wd_focus_DAK_wd_mil_claim_white_paper
+		x = 8
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_ten_years
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_mil_quiet_decade
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = DAK_wd_claim_pressed
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_claim_rally
+				days = 365
+			}
+			custom_effect_tooltip = DAK_wd_mil_claim_white_paper_tt_1
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_quiet_decade
+		icon = GFX_ac_wd_focus_DAK_wd_mil_quiet_decade
+		x = 10
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_ten_years
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_mil_claim_white_paper
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = DAK_wd_claim_shelved
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_quiet_crossings
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_wage_accord
+		icon = GFX_ac_wd_focus_DAK_wd_mil_wage_accord
+		x = 12
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_ten_years
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = DAK_wd_left_seated
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_wage_accord
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_wing_decade
+		icon = GFX_ac_wd_focus_DAK_wd_mil_wing_decade
+		x = 14
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_ten_years
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = DAK_wd_spares_stocked
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 114
+				}
+				114 = {
+					add_building_construction = {
+						type = air_base
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			air_experience = 15
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_defence_review
+		icon = GFX_ac_wd_focus_DAK_wd_mil_defence_review
+		x = 16
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_ten_years
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_country_flag = DAK_wd_war_lessons
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = DAK_wd_defence_review
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_usean_freight
+		icon = GFX_ac_wd_focus_DAK_wd_mil_usean_freight
+		x = 18
+		y = 25
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_ten_years
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+			has_global_flag = ac_ucw_war_started
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ac_wd_dak.12
+				days = 1
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_peaceful_cargo
+		icon = GFX_ac_wd_focus_DAK_wd_mil_peaceful_cargo
+		x = 8
+		y = 26
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_usean_freight
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_mil_home_routes
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_usean_charters
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = DAK_wd_mil_home_routes
+		icon = GFX_ac_wd_focus_DAK_wd_mil_home_routes
+		x = 10
+		y = 26
+		cost = 5
+		prerequisite = {
+			focus = DAK_wd_mil_usean_freight
+		}
+		mutually_exclusive = {
+			focus = DAK_wd_mil_peaceful_cargo
+		}
+		available = {
+			NOT = { date < 2000.1.1 }
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DAK_wd_home_routes
+				days = 730
+			}
+		}
+	}
+}

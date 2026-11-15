@@ -86,3 +86,30 @@ Current static reading supersedes the earlier owner note that the DLP tree mount
 - **Crisis prerequisite and layout.** `BLK_the_crisis_continues` is still mounted only on `belka_start`. The natural election route completes it before `belka.13`; `keep_completed = yes` is intended to retain that completion, rather than replay the crisis branch after the election. It remains the briefing's prerequisite and `relative_position_id` in `common/national_focus/ac_belkan_campaign.txt`, with the shared branch offset at `x = 9`. Static inclusion and the offset do not prove the engine's retained-prerequisite or rendered-layout behavior.
 
 Native check, not run: repeat the natural election transition before selecting the briefing, while it is in progress, and after completion. Verify its retained crisis prerequisite, visible placement, no duplicate focus or lost completion, and progression through the children to `ac_campaign_prepared` and `ac_belkan_war_council`; save/reload around the swap. An early console-fired `belka.13` without the crisis prerequisite is a separate diagnostic, not proof of the natural route. See [the prewar test routes](BELKAN_WAR_PLAYTEST_PLAN.md#2-prewar). This documentation update changes no focus tree or gameplay.
+
+## Wiring pass (static, 2026-11-14)
+
+A static cross-reference audit of events, focuses, flags, ideas, decisions, sprites, and OOBs. Every item below is inherited archive content (mod provenance). No lore, names, or descriptions were written. Native HOI4 was not launched.
+
+### Wired in this pass
+
+| Change | Files | Why |
+| --- | --- | --- |
+| `UST_civil_war` and `UST_they_are_back` are mounted on `ustio_non_ali` (58 focuses with their descendants) | `common/national_focus/UST.txt` | `ustio_f.4` and `ustio_f.5` fire from the `UST_no_step_on_our_land` branch, which only that tree mounts, and force-complete those two roots. No tree mounted them, so the branch, including `UST_moblise_militia` and its PR #68 roster, could not be reached. Computed positions add no overlap. Both roots keep `available = { always = no }`. All 58 have names; 56 of their descriptions are still empty strings. |
+| The subsidy limit checks `geb_aristocrat_held_land_1` and `_2` | `common/national_focus/GEB_pre_belkan_war.txt` | `geb_aristocrat_held_land` is not a defined dynamic modifier, so the `NOT` was always true. This changes the reward: states holding either defined tier no longer receive `GEB_small_businesses_subsidization_modifier`. |
+| Removed the undefined `sap_improved_laser_guidance_systems` from a `remove_ideas` list | `common/national_focus/SAP_pre_belkan_war.txt` | `sap_improve_laser_guidance_systems` grants a tech bonus, not an idea. |
+| Removed the `BLK_grunder_air_designer` branch | `common/national_focus/BLK_DLP.txt` | The idea is not defined. The `mio:BLK_grunder_air` reward above it is unchanged, and the `else` (250 political power) could never run. |
+
+### Still unwired, owner decision
+
+- **Belkan coup event pictures.** `belka_dlp_coup.8` and `belka_dlp_coup.9` in `events/Belka.txt` use `picture = report_event_blk_parliament` without the `GFX_` prefix. `GFX_report_event_blk_parliament` is defined in `interface/ac_eventpictures.gfx`, and the scrub generator binds the bare name as `GFX_idea_report_event_blk_parliament`. The file is left unchanged: `tools/release_foundations` (`event_inputs.json`, the exact generated text) and `tools/fato_south_belka` (`engine_contract.json`) hold reviewed versions of `events/Belka.txt` and fail closed on any edit. Adding the prefix needs those contracts updated in the same change, and then the scrub regenerated.
+- **Belkan election tree.** `BLK_the_eagle_has_hallen` and its 16 descendants in `BLK_election_tree.txt` are mounted on no tree. The mount in `BLK.txt` is commented out, as it was in the baseline. None of the 17 has a name or description key, and nothing completes the root.
+- **`UST_mercs_are_up`.** Unmounted, `available = { always = no }`, and no event completes it.
+- **Events with no caller.** `awwnb.1` (already noted in [WORLD_RELEASE_FOUNDATIONS.md](WORLD_RELEASE_FOUNDATIONS.md)), `belka_dlp_war.103`, `belka_l_monarchy.1`, `belka_meme.1`, `belka_meme.2`, `gebet_election.2` (1996 elections), `osea_belka_land.3` (hidden; cores five states on Osea), `osea_congress.1` (marked incomplete), `osea_politics.8` (marked debug), `sapin.1`, `ustio.5` and `ustio.21` (both without effects), `war_event.1`, `war_event.2`. `world_event.2` is uncalled on purpose.
+- **Sapin civil-war scaffold.** Category `SAP_civil_war` is gated on `sap_imminent_civil_war_flag`, which nothing sets. `sap_imminent_republican_revolt_flag`, `sap_urf_split_flag`, `SAP_has_mobilized`, `SAP_politics_calmed`, and `sap_political_crisis_over` are also read and never set. `events/Sapin.txt` scopes to `SAR` and `SAM`, which the mod's `common/country_tags` does not define.
+- **Achievement `es_gibt_keine_hoffnung`.** It reads `used_excalibur_on_hoffnung_achievement`, which nothing sets.
+- **Unused definitions.** Category `CNEA_parliament_decisions_category` holds no decisions. `BLK_spring_of_nations` and `SBK_demob_idea` are never added.
+- **Law flags.** `eco_laws_unlocked_2` to `_4` and `man_laws_unlocked_3` to `_5` are never set, so those laws open only through their `has_war = yes` alternative.
+- **Placeholder event pictures.** 43 events use `picture = placeholder` and 11 use `picture = xxx`.
+
+Checked and left alone because they are intended: `ac_release_AWW_network_done` and `ac_release_SER_network_done` (those footprints have no missing rail edges), the generated `*_snc_*_request` effects (inlined by their protocol and renew effects), mission `BLK_excalibur_fire_during_aa` (activated directly by its decision), and the `*_AI_*_HISTORICAL` plan flags (the game-rule alternative covers them).

@@ -90,10 +90,11 @@ one another at dispatch and reply. Acceptance grants reciprocal +10 opinion for
 one year; refusal and silence grant nothing. The domestic programme does not
 require acceptance. Replies are once-only and invalid replies close harmlessly.
 
-New campaigns select the dedicated trees. Existing generic/regional saves may
-adopt them only while normal and continuous focuses are idle; completed content
-is retained and no starting grant or fiscal account is reseeded. Bespoke saved
-trees are never silently replaced. All UI changes are separately documented in
+New campaigns select the dedicated trees. Players continuing generic/regional
+saves may manually adopt them only while normal and continuous focuses are idle.
+The AI does not adopt them in existing saves. Completed content is retained and
+no starting grant or fiscal account is reseeded. Bespoke saved trees are never
+silently replaced. All UI changes are separately documented in
 [the screenshot repair record](WORLD_CAMPAIGNS_UI.md).
 
 ## Source layers

@@ -219,12 +219,12 @@ def add_focus(target, tag, chapter, ident, title, x, y, prereq, reward, explanat
         block('completion_reward', reward) + block('ai_will_do', 'factor = 1')))
 
 
-def decision(ident, title, desc, visible, available, effect, cost=25, cooldown=30, extra=''):
+def decision(ident, title, desc, visible, available, effect, cost=25, cooldown=30, extra='', ai_base=1):
     loc(ident, title)
     loc(ident + '_desc', desc)
     return block(ident, 'icon = ' + ident[:3] + '_wc_civil\n' + block('visible', visible) +
         block('available', available) + f'cost = {cost}\nfire_only_once = no\ndays_re_enable = {cooldown}\n' +
-        block('complete_effect', effect) + extra + block('ai_will_do', 'base = 1'))
+        block('complete_effect', effect) + extra + block('ai_will_do', f'base = {ai_base}'))
 
 
 def outputs():
@@ -235,7 +235,8 @@ def outputs():
     relations()
     for tag in COUNTRIES:
         # Independent migration decision: initial selection is engine-owned;
-        # saved generic/regional trees are replaced only while both are idle.
+        # players may replace saved generic/regional trees only when idle.
+        # AI must not replace a saved tree automatically during campaign resume.
         ident = tag + '_wc_adopt'
         loc(ident, 'Open the National Campaign')
         loc(ident + '_desc', 'Adopt the dedicated national campaign from an idle generic or regional tree. Completed focuses remain recorded. No starting forces, industry, fiscal account or old historical rewards are reseeded.')
@@ -244,7 +245,7 @@ def outputs():
         extra = decision(ident, LOC[ident], LOC[ident+'_desc'],
             f'ac_wc_{tag.lower()}_active = yes OR = {{ has_focus_tree = generic_focus has_focus_tree = ac_regional_foundation }}',
             'ac_pol_previous_tree_idle = yes',
-            guard('ac_pol_previous_tree_idle = yes', f'load_focus_tree = {{ tree = ac_wc_{tag.lower()}_tree keep_completed = yes }}'), cost=0)
+            guard('ac_pol_previous_tree_idle = yes', f'load_focus_tree = {{ tree = ac_wc_{tag.lower()}_tree keep_completed = yes }}'), cost=0, ai_base=0)
         at = current.rfind('}')
         OUT[path] = (current[:at] + extra + current[at:]).encode()
     loc('ac_wc_programmes', 'National Programmes')

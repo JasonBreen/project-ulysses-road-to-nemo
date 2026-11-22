@@ -240,15 +240,29 @@ class Campaigns(unittest.TestCase):
                 self.assertFalse(c.opinions)
 
     def test_actual_idle_migration_preserves_completions_and_blocks_continuous_work(self):
-        w = copy.deepcopy(self.base); c = w.countries['SOA']; c.focuses.add('army_effort')
-        for selected in ('equipment_effort','continuous_air_production'):
-            c.active_focus = selected; c.active_progress = .25
-            # The fixture must use a shipped focus name for the generic idle owner.
-            if selected == 'continuous_air_production':
-                self.assertIn(selected, (MOD/'common/scripted_triggers/ac_politics.txt').read_text())
-            with self.assertRaises(AssertionError): w.decide('SOA_wc_adopt','SOA')
-        c.active_focus = None; w.decide('SOA_wc_adopt','SOA')
-        self.assertEqual('ac_wc_soa_tree', c.tree); self.assertIn('army_effort', c.focuses)
+        for tag in COUNTRIES:
+            with self.subTest(tag=tag):
+                w = copy.deepcopy(self.base); c = w.countries[tag]
+                ident = tag + '_wc_adopt'
+                dedicated_tree = 'ac_wc_' + tag.lower() + '_tree'
+                # Disable old-save AI activation, not the human decision or fresh-start selector.
+                self.assertEqual({'base': '0'}, fields(fields(w.decisions[ident])['ai_will_do']))
+                nodes = fields(read(f'common/national_focus/ac_wc_{tag.lower()}.txt'))['focus_tree']
+                tree = fields(row for row in nodes if row[0] != 'focus')
+                self.assertEqual(dedicated_tree, tree['id'])
+                self.assertEqual('no', tree['default'])
+                self.assertEqual('0', fields(tree['country'])['factor'])
+                self.assertEqual({'add': '80', 'tag': tag, 'original_tag': tag},
+                                 fields(fields(tree['country'])['modifier']))
+                c.focuses.add('army_effort')
+                for selected in ('equipment_effort', 'continuous_air_production'):
+                    c.active_focus = selected; c.active_progress = .25
+                    with self.assertRaises(AssertionError):
+                        w.decide(ident, tag)
+                c.active_focus = None
+                w.decide(ident, tag)
+                self.assertEqual(dedicated_tree, c.tree)
+                self.assertIn('army_effort', c.focuses)
 
     def test_generation_provenance_counts_and_truthful_global_gaps(self):
         for script in ('build.py','build_art.py','coverage.py'):
